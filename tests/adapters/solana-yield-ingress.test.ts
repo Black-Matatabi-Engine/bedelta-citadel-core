@@ -78,23 +78,11 @@ describe("yield stacking", () => {
       }),
     });
 
-    const stack = await resolveYieldStack(
-      "ETH",
-      hl,
-      [
-        {
-          symbol: "USDC",
-          mint: "m",
-          baseApy: 0.05,
-          depthUsd: 2_000_000,
-          source: "default",
-          fetchedAt: "",
-        },
-      ],
-    );
+    const stack = await resolveYieldStack("ETH", "SOLANA", hl);
 
-    expect(stack.solanaBaseApy).toBe(0.05);
+    expect(stack.ingressChain).toBe("SOLANA");
+    expect(stack.chainBaseApy).toBe(0.051);
     expect(stack.hlFundingApy).toBeGreaterThan(0);
-    expect(stack.totalStackedApy).toBeCloseTo(stack.solanaBaseApy + stack.hlFundingApy);
+    expect(stack.totalStackedApy).toBeCloseTo(stack.chainBaseApy + stack.hlFundingApy);
   });
 });

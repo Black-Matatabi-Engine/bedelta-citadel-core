@@ -101,6 +101,11 @@ function isExpired(intent: CrossLegIntent, now: number): boolean {
   return now - intent.preparedAt > intent.ttlMs;
 }
 
+/** Exported for persistence crash-recovery checks */
+export function isPreparedIntentExpired(intent: CrossLegIntent, now: number): boolean {
+  return isExpired(intent, now);
+}
+
 function oppositeSide(side: IntentLegSide): IntentLegSide {
   switch (side) {
     case "BUY":
@@ -173,6 +178,16 @@ export function createCrossLegIntent(input: {
 export function getIntent(id: string): CrossLegIntent | undefined {
   const stored = ledgerStore.get(id);
   return stored ? cloneIntent(stored) : undefined;
+}
+
+/** Restore a persisted intent into the hot ledger */
+export function importCrossLegIntent(intent: CrossLegIntent): CrossLegIntent {
+  return persist(cloneIntent(intent));
+}
+
+/** List all in-memory intents — persistence sync helper */
+export function listAllIntents(): CrossLegIntent[] {
+  return Array.from(ledgerStore.values()).map(cloneIntent);
 }
 
 /** Clear ledger — test helper */

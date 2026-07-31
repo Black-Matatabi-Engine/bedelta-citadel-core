@@ -1,15 +1,17 @@
 /**
- * Yield Triangle Router — HL · Jupiter · GMX read-path with 2PC gate status.
+ * Yield Triangle Router — HL · Jupiter · GMX read-path with multi-chain ingress stacking.
  */
 
 import { hyperliquidYieldAdapter, HyperliquidYieldAdapter } from "../adapters/hyperliquid";
 import { jupiterAdapter } from "../adapters/jupiter";
 import { gmxAdapter } from "../adapters/gmx";
 import {
+  fetchAllArbitrumStableYields,
+  pickBestArbitrumStableIngress,
+} from "../adapters/arbitrum/arbitrum-yield-ingress";
+import {
   fetchAllSolanaStableYields,
   pickBestStableIngress,
-  type SolanaStableSymbol,
-  type SolanaStableYieldSnapshot,
 } from "../adapters/solana/solana-yield-ingress";
 import type {
   AdapterDepthSnapshot,
@@ -19,6 +21,7 @@ import type {
 } from "../adapters/types";
 import { readActiveSystemState } from "../core/state";
 import type { IntentPhase } from "../core/intent-ledger";
+import { calculateYieldFees } from "../core/fee-calculator";
 import {
   MAX_SLIPPAGE,
   VINE_SOIL_MAX_SLIPPAGE,
@@ -60,16 +63,29 @@ export interface YieldRecommendedRoute {
 }
 
 export type TargetVenue = "HYPERLIQUID";
-export type IngressChain = "SOLANA";
+export type IngressChain = "SOLANA" | "ARBITRUM";
 
 export interface YieldStackSnapshot {
-  stableSymbol: SolanaStableSymbol;
-  solanaBaseApy: number;
+  ingressChain: IngressChain;
+  stableSymbol: string;
+  chainBaseApy: number;
   hlFundingApy: number;
   hlLendApy: number;
-  /** Total APY = Solana Base Yield + HL Funding Rate */
+  /** Total APY = Chain Base Yield + HL Funding Rate */
   totalStackedApy: number;
   stableDepthUsd: number;
+  yieldSource: string;
+}
+
+export interface QueryYieldTriangleOptions {
+  ingressChain?: IngressChain;
+  adapters?: readonly IExchangeAdapter[];
+  hlAdapter?: HyperliquidYieldAdapter;
+}
+
+export function parseIngressChain(raw: string | null | undefined): IngressChain {
+  const value = (raw ?? "SOLANA").trim().toUpperCase();
+  return value === "ARBITRUM" ? "ARBITRUM" : "SOLANA";
 }
 
 export interface YieldRouterResult {
@@ -90,36 +106,61 @@ export interface YieldTriangleResponse extends YieldRouterResult {
   targetVenue: TargetVenue;
   ingressChain: IngressChain;
   yieldStack: YieldStackSnapshot;
+  /** Gross stacked APY before protocol performance fee */
+  grossApy: number;
+  /** Net APY after 15% performance fee */
+  netApy: number;
+  /** Protocol treasury take (15% of gross yield) */
+  protocolTreasuryFee: number;
   fetchedAt: string;
 }
 
-/** Total APY = Solana Base Yield + HL Funding Rate */
+/** Total APY = Chain Base Yield + HL Funding Rate */
 export function computeStackedTotalApy(
-  solanaBaseApy: number,
+  chainBaseApy: number,
   hlFundingApy: number,
 ): number {
-  return solanaBaseApy + hlFundingApy;
+  return chainBaseApy + hlFundingApy;
 }
 
 export async function resolveYieldStack(
   symbol: string,
+  ingressChain: IngressChain = "SOLANA",
   hlAdapter: HyperliquidYieldAdapter = hyperliquidYieldAdapter,
-  stableSnapshots?: readonly SolanaStableYieldSnapshot[],
 ): Promise<YieldStackSnapshot> {
-  const stables = stableSnapshots ?? (await fetchAllSolanaStableYields());
-  const best = pickBestStableIngress(stables) ?? stables[0]!;
   const [hlFundingApy, hlLendApy] = await Promise.all([
     hlAdapter.getFundingApy(symbol),
     hlAdapter.getVaultApy(symbol),
   ]);
-  const solanaBaseApy = best.baseApy;
+
+  if (ingressChain === "ARBITRUM") {
+    const stables = await fetchAllArbitrumStableYields();
+    const best = pickBestArbitrumStableIngress(stables) ?? stables[0]!;
+    const chainBaseApy = best.baseApy;
+    return {
+      ingressChain,
+      stableSymbol: best.symbol,
+      chainBaseApy,
+      hlFundingApy,
+      hlLendApy,
+      totalStackedApy: computeStackedTotalApy(chainBaseApy, hlFundingApy),
+      stableDepthUsd: best.depthUsd,
+      yieldSource: best.source,
+    };
+  }
+
+  const stables = await fetchAllSolanaStableYields();
+  const best = pickBestStableIngress(stables) ?? stables[0]!;
+  const chainBaseApy = best.baseApy;
   return {
+    ingressChain: "SOLANA",
     stableSymbol: best.symbol,
-    solanaBaseApy,
+    chainBaseApy,
     hlFundingApy,
     hlLendApy,
-    totalStackedApy: computeStackedTotalApy(solanaBaseApy, hlFundingApy),
+    totalStackedApy: computeStackedTotalApy(chainBaseApy, hlFundingApy),
     stableDepthUsd: best.depthUsd,
+    yieldSource: best.source,
   };
 }
 
@@ -273,27 +314,32 @@ export async function queryStructuralTriangle(
 /** Full triangle response with 2PC gate status and recommended route */
 export async function queryYieldTriangle(
   symbol: string,
-  adapters: readonly IExchangeAdapter[] = DEFAULT_TRIANGLE_ADAPTERS,
-  hlAdapter: HyperliquidYieldAdapter = hyperliquidYieldAdapter,
+  options: QueryYieldTriangleOptions = {},
 ): Promise<YieldTriangleResponse> {
+  const ingressChain = options.ingressChain ?? "SOLANA";
+  const adapters = options.adapters ?? DEFAULT_TRIANGLE_ADAPTERS;
+  const hlAdapter = options.hlAdapter ?? hyperliquidYieldAdapter;
+
   const triangle = await queryStructuralTriangle(symbol, adapters);
   const gateStatus = buildYieldTriangleGateStatus(triangle);
-  const yieldStack = await resolveYieldStack(symbol, hlAdapter);
+  const yieldStack = await resolveYieldStack(symbol, ingressChain, hlAdapter);
   const best = triangle.venues.find((v) => v.venue === triangle.bestApyVenue);
+  const fees = calculateYieldFees(yieldStack.totalStackedApy);
 
   return {
     ...triangle,
     gateStatus,
     guardLights: buildAdaptiveGuardLights(triangle),
     targetVenue: "HYPERLIQUID",
-    ingressChain: "SOLANA",
+    ingressChain,
     yieldStack,
+    grossApy: fees.grossApy,
+    netApy: fees.netApy,
+    protocolTreasuryFee: fees.protocolTreasuryFee,
     recommendedRoute: {
       venue: "hyperliquid",
-      apy: yieldStack.totalStackedApy,
-      edgeBps: Math.round(
-        (yieldStack.totalStackedApy - (best?.apy ?? 0)) * 10_000,
-      ),
+      apy: fees.netApy,
+      edgeBps: Math.round((fees.netApy - (best?.apy ?? 0)) * 10_000),
     },
     fetchedAt: new Date().toISOString(),
   };
