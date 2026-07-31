@@ -11,3 +11,4 @@ export * from "./solana/types";
 export * from "./solana/guards";
 export * from "./solana/depth-matrix";
 export * from "./solana/gates";
+export * from "./solana/solana-yield-ingress";

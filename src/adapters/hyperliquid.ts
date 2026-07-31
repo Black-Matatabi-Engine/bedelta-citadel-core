@@ -77,22 +77,21 @@ export class HyperliquidYieldAdapter implements IExchangeAdapter {
   }
 
   async getAPY(symbol?: string): Promise<number> {
-    let vaultApr = 0;
-    let fundingApr = 0;
-    try {
-      const vaults = await postInfo<HlVaultSummary[]>({ type: "vaultSummaries" }, this.opts);
-      const target = symbol ? findVault(vaults, symbol) : vaults[0];
-      vaultApr = parseFloat(target?.apr ?? "0");
-    } catch {
-      /* vault summaries optional on testnet */
-    }
+    const funding = await this.getFundingApy(symbol);
+    const vault = await this.getVaultApy(symbol);
+    const best = Math.max(funding, vault);
+    if (best > 0) return best;
+    return this.opts.defaultApy ?? 0.08;
+  }
 
+  /** Hourly funding rate annualized (absolute) */
+  async getFundingApy(symbol?: string): Promise<number> {
     try {
       const sym = (symbol ?? "ETH").toUpperCase();
       const data = await postInfo<
         [
           { universe: Array<{ name: string }> },
-          Array<{ funding?: string; markPx?: string }>,
+          Array<{ funding?: string }>,
         ]
       >({ type: "metaAndAssetCtxs" }, this.opts);
       const idx = data[0]?.universe.findIndex(
@@ -101,18 +100,24 @@ export class HyperliquidYieldAdapter implements IExchangeAdapter {
       const ctx = idx !== undefined && idx >= 0 ? data[1]?.[idx] : data[1]?.[0];
       const funding = parseFloat(ctx?.funding ?? "0");
       if (Number.isFinite(funding)) {
-        fundingApr = Math.abs(funding) * 24 * 365;
+        return Math.abs(funding) * 24 * 365;
       }
     } catch {
       /* funding read optional */
     }
+    return 0;
+  }
 
-    const best = Math.max(
-      Number.isFinite(vaultApr) ? vaultApr : 0,
-      Number.isFinite(fundingApr) ? fundingApr : 0,
-    );
-    if (best > 0) return best;
-    return this.opts.defaultApy ?? 0.08;
+  /** HL Lend / vault APR */
+  async getVaultApy(symbol?: string): Promise<number> {
+    try {
+      const vaults = await postInfo<HlVaultSummary[]>({ type: "vaultSummaries" }, this.opts);
+      const target = symbol ? findVault(vaults, symbol) : vaults[0];
+      const vaultApr = parseFloat(target?.apr ?? "0");
+      return Number.isFinite(vaultApr) ? vaultApr : 0;
+    } catch {
+      return 0;
+    }
   }
 
   async checkHealth(): Promise<AdapterHealthResult> {

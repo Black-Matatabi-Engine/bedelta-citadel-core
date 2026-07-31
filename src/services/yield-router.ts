@@ -2,9 +2,15 @@
  * Yield Triangle Router — HL · Jupiter · GMX read-path with 2PC gate status.
  */
 
-import { hyperliquidYieldAdapter } from "../adapters/hyperliquid";
+import { hyperliquidYieldAdapter, HyperliquidYieldAdapter } from "../adapters/hyperliquid";
 import { jupiterAdapter } from "../adapters/jupiter";
 import { gmxAdapter } from "../adapters/gmx";
+import {
+  fetchAllSolanaStableYields,
+  pickBestStableIngress,
+  type SolanaStableSymbol,
+  type SolanaStableYieldSnapshot,
+} from "../adapters/solana/solana-yield-ingress";
 import type {
   AdapterDepthSnapshot,
   AdapterHealthResult,
@@ -53,6 +59,19 @@ export interface YieldRecommendedRoute {
   edgeBps: number;
 }
 
+export type TargetVenue = "HYPERLIQUID";
+export type IngressChain = "SOLANA";
+
+export interface YieldStackSnapshot {
+  stableSymbol: SolanaStableSymbol;
+  solanaBaseApy: number;
+  hlFundingApy: number;
+  hlLendApy: number;
+  /** Total APY = Solana Base Yield + HL Funding Rate */
+  totalStackedApy: number;
+  stableDepthUsd: number;
+}
+
 export interface YieldRouterResult {
   symbol: string;
   soil: SoilResistanceResult;
@@ -68,7 +87,40 @@ export interface YieldTriangleResponse extends YieldRouterResult {
   gateStatus: YieldTriangleGateStatus;
   recommendedRoute: YieldRecommendedRoute;
   guardLights: AdaptiveGuardLights;
+  targetVenue: TargetVenue;
+  ingressChain: IngressChain;
+  yieldStack: YieldStackSnapshot;
   fetchedAt: string;
+}
+
+/** Total APY = Solana Base Yield + HL Funding Rate */
+export function computeStackedTotalApy(
+  solanaBaseApy: number,
+  hlFundingApy: number,
+): number {
+  return solanaBaseApy + hlFundingApy;
+}
+
+export async function resolveYieldStack(
+  symbol: string,
+  hlAdapter: HyperliquidYieldAdapter = hyperliquidYieldAdapter,
+  stableSnapshots?: readonly SolanaStableYieldSnapshot[],
+): Promise<YieldStackSnapshot> {
+  const stables = stableSnapshots ?? (await fetchAllSolanaStableYields());
+  const best = pickBestStableIngress(stables) ?? stables[0]!;
+  const [hlFundingApy, hlLendApy] = await Promise.all([
+    hlAdapter.getFundingApy(symbol),
+    hlAdapter.getVaultApy(symbol),
+  ]);
+  const solanaBaseApy = best.baseApy;
+  return {
+    stableSymbol: best.symbol,
+    solanaBaseApy,
+    hlFundingApy,
+    hlLendApy,
+    totalStackedApy: computeStackedTotalApy(solanaBaseApy, hlFundingApy),
+    stableDepthUsd: best.depthUsd,
+  };
 }
 
 function slippageGuardLight(ratio: number, warn: number, trip: number): GuardLight {
@@ -222,19 +274,26 @@ export async function queryStructuralTriangle(
 export async function queryYieldTriangle(
   symbol: string,
   adapters: readonly IExchangeAdapter[] = DEFAULT_TRIANGLE_ADAPTERS,
+  hlAdapter: HyperliquidYieldAdapter = hyperliquidYieldAdapter,
 ): Promise<YieldTriangleResponse> {
   const triangle = await queryStructuralTriangle(symbol, adapters);
   const gateStatus = buildYieldTriangleGateStatus(triangle);
+  const yieldStack = await resolveYieldStack(symbol, hlAdapter);
   const best = triangle.venues.find((v) => v.venue === triangle.bestApyVenue);
 
   return {
     ...triangle,
     gateStatus,
     guardLights: buildAdaptiveGuardLights(triangle),
+    targetVenue: "HYPERLIQUID",
+    ingressChain: "SOLANA",
+    yieldStack,
     recommendedRoute: {
-      venue: triangle.bestApyVenue,
-      apy: best?.apy ?? 0,
-      edgeBps: best?.edgeBps ?? 0,
+      venue: "hyperliquid",
+      apy: yieldStack.totalStackedApy,
+      edgeBps: Math.round(
+        (yieldStack.totalStackedApy - (best?.apy ?? 0)) * 10_000,
+      ),
     },
     fetchedAt: new Date().toISOString(),
   };

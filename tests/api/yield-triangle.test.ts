@@ -34,6 +34,16 @@ describe("yield triangle API", () => {
         jupiter: "green",
         polymarket: "green",
       },
+      targetVenue: "HYPERLIQUID",
+      ingressChain: "SOLANA",
+      yieldStack: {
+        stableSymbol: "USDC",
+        solanaBaseApy: 0.048,
+        hlFundingApy: 0.072,
+        hlLendApy: 0.06,
+        totalStackedApy: 0.12,
+        stableDepthUsd: 2_000_000,
+      },
       fetchedAt: "2026-08-01T00:00:00.000Z",
     });
 
@@ -41,9 +51,16 @@ describe("yield triangle API", () => {
       new Request("https://example.com/api/yield/triangle?symbol=ETH"),
     );
     expect(res.status).toBe(200);
-    const body = (await res.json()) as { symbol: string; gateStatus: { phase: string } };
+    const body = (await res.json()) as {
+      symbol: string;
+      gateStatus: { phase: string };
+      targetVenue: string;
+      ingressChain: string;
+    };
     expect(body.symbol).toBe("ETH");
     expect(body.gateStatus.phase).toBe("IDLE");
+    expect(body.targetVenue).toBe("HYPERLIQUID");
+    expect(body.ingressChain).toBe("SOLANA");
   });
 
   it("rejects invalid symbol", async () => {
