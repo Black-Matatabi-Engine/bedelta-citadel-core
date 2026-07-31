@@ -1,0 +1,60 @@
+{
+  "name": "bedelta-living-water",
+  "version": "1.0.0",
+  "description": "BeDelta Living Water — Hyperliquid-native yield ingress & session-key risk envelope",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "pnpm run build:spa && wrangler dev",
+    "dev:spa": "vite",
+    "build:spa": "vite build",
+    "build:worker": "pnpm run build:spa && pnpm exec tsc --noEmit && WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --outdir=dist-worker",
+    "build": "pnpm run build:worker",
+    "deploy": "pnpm run build:spa && wrangler deploy",
+    "deploy:cf": "node scripts/deploy-cf.mjs",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "wrangler types",
+    "test": "vitest run --coverage",
+    "test:watch": "vitest",
+    "test:dry-run": "tsx scripts/dry-run-sandbox.ts",
+    "test:soak": "tsx scripts/soak-test.ts",
+    "grant:verify": "vitest run tests/integration/hl-2pc-execution.test.ts tests/e2e/grant-sandbox-dryrun.test.ts",
+    "audit:log": "node scripts/generate-yellow-page.js",
+    "pgate:sync": "node scripts/pgate-sync.js",
+    "kv:ping": "wrangler kv key put system:ping OK --binding=SLIVERVINE_KV --remote",
+    "kv:heartbeat": "wrangler kv key put system:heartbeat \"{\\\"status\\\":\\\"ONLINE\\\",\\\"timestamp\\\":\\\"2026-07-26\\\"}\" --binding=SLIVERVINE_KV --remote",
+    "kv:demo": "wrangler kv key put system:demo_snapshot \"{\\\"protocol\\\":\\\"SliverVine\\\",\\\"version\\\":\\\"0.8.0-rc1\\\",\\\"status\\\":\\\"ARMED\\\",\\\"soil_resistance\\\":true,\\\"root_protection\\\":true,\\\"timestamp\\\":\\\"2026-07-26T02:10:00Z\\\"}\" --remote --namespace-id=af57772629914596b206aef2b5935cf5",
+    "sync:check": "git fetch origin && git status -uno",
+    "sync:pull": "git pull --rebase origin main",
+    "clean:commit": "git commit --amend --no-edit --author=':qum[x0sumx] | SilverVine <github@silvervinelabs.com>' && git push --force-with-lease",
+    "sync:push": "pnpm test && pnpm exec tsc --noEmit && git push origin main",
+    "eod:wrap": "bash scripts/san-eod.sh"
+  },
+  "keywords": [],
+  "author": ":qum[x0sumx]",
+  "license": "BUSL-1.1",
+  "devDependencies": {
+    "@cloudflare/workers-types": "^4.20250719.0",
+    "@tailwindcss/vite": "^4.1.11",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.0.2",
+    "@vitest/coverage-v8": "^3.2.4",
+    "tailwindcss": "^4.1.11",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3",
+    "vite": "^7.1.3",
+    "vitest": "^3.2.4",
+    "wrangler": "^4.113.0"
+  },
+  "volta": {
+    "node": "20.20.2"
+  },
+  "dependencies": {
+    "@msgpack/msgpack": "^3.1.3",
+    "@noble/hashes": "1.8.0",
+    "ethers": "^6.17.0",
+    "react": "19.2.8",
+    "react-dom": "19.2.8"
+  }
+}

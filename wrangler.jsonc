@@ -1,0 +1,37 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "slivervine-protocol",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-26",
+  "kv_namespaces": [
+    {
+      "binding": "SLIVERVINE_KV",
+      "id": "af57772629914596b206aef2b5935cf5",
+      "remote": true
+    },
+    {
+      "binding": "SYSTEM_STATE_KV",
+      "id": "af57772629914596b206aef2b5935cf5",
+      "remote": true
+    }
+  ],
+  "vars": {
+    "NEXT_PUBLIC_HUD_CANARY": "santenmoku"
+  },
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*", "/", "/index.html"],
+    "not_found_handling": "single-page-application"
+  },
+  "workers_dev": false,
+  "routes": [
+    {
+      "pattern": "dev-santenbokui.slivervine.xyz",
+      "custom_domain": true
+    }
+  ],
+  "triggers": {
+    "crons": ["*/1 * * * *"]
+  }
+}

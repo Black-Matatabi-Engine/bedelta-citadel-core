@@ -1,0 +1,28 @@
+# Core Dependencies & Builds
+node_modules/
+dist/
+.wrangler/
+coverage/
+.pnpm-store/
+
+# Environment & Secrets
+.dev.vars
+.env
+.env.*
+!.env.example
+wrangler.toml
+
+# Private Key / Signing Artifacts — Never Commit
+*.pem
+*.key
+id_rsa*
+*.p12
+*.pfx
+wallet.json
+**/private-keys/
+
+# Cursor & AI Engine Logs / Cache / OS Temp
+.cursor/
+.specstory/
+*.log
+.DS_Store

@@ -1,0 +1,1 @@
+wait ..我今早呢DD 用chatgpt 5.3 mini ok ? 因為我inside /doc 呢堆.md 我係米搵Composer 做返group sorting and 整理比返我搞好? 因為呢個我都想做返個SOP 我地太多msg. 我都消化唔哂.唔使咁樣的方法..冇可能令到已太散的idea 有整理式消化. 

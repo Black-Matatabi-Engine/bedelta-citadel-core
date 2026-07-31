@@ -1,0 +1,25 @@
+@import "tailwindcss";
+
+@source "./dashboard.ts";
+@source "./hud-client.ts";
+@source "./risk-client.ts";
+@source "./matrix-render.ts";
+
+@theme {
+  --color-moss: #0a1a17;
+  --color-moss-deep: #051311;
+  --color-copper: #8b5a2b;
+  --color-copper-rust: #6b4423;
+  --color-circuit: #50d2c1;
+  --color-circuit-dim: #45c4b4;
+  --color-glacier: #50d2c1;
+  --color-glacier-dim: #45c4b4;
+  --color-primary: #50d2c1;
+  --color-accent: #50d2c1;
+  --color-hl-dark-bg: #0a1a17;
+  --color-hl-card-green: #0a1f1a;
+  --color-hl-light-green-bg: #0f2a24;
+  --color-hl-light-green-text: #a0ffe0;
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: "JetBrains Mono", "Roboto Mono", ui-monospace, monospace;
+}

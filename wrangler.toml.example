@@ -1,0 +1,36 @@
+# wrangler.toml — local operator overlay (gitignored)
+# Copy from wrangler.toml.example and align namespace IDs with your account.
+# Committed source of truth: wrangler.jsonc
+
+name = "slivervine-protocol"
+main = "src/index.ts"
+compatibility_date = "2026-07-26"
+
+[[kv_namespaces]]
+binding = "SLIVERVINE_KV"
+id = "af57772629914596b206aef2b5935cf5"
+
+[[kv_namespaces]]
+binding = "SYSTEM_STATE_KV"
+id = "af57772629914596b206aef2b5935cf5"
+
+[vars]
+NEXT_PUBLIC_HUD_CANARY = "santenmoku"
+
+# XuanWu Triple-String unlock — NEVER commit literals; use wrangler secret put:
+#   wrangler secret put XUANWU_SALT          # 玄武
+#   wrangler secret put OWNER_IDENTITY       # 0xWallet
+#   wrangler secret put JAVIER_SIGNATURE     # Javier
+
+[assets]
+directory = "./dist"
+binding = "ASSETS"
+run_worker_first = [ "/api/*" ]
+not_found_handling = "single-page-application"
+
+[[routes]]
+pattern = "dev-santenbokui.slivervine.xyz"
+custom_domain = true
+
+[triggers]
+crons = [ "*/1 * * * *" ]
