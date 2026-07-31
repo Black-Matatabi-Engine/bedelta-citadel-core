@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "slivervine-protocol",
+  "name": "bedelta-living-water",
   "main": "src/index.ts",
   "compatibility_date": "2026-07-26",
   "kv_namespaces": [
@@ -16,7 +16,7 @@
     }
   ],
   "vars": {
-    "NEXT_PUBLIC_HUD_CANARY": "santenmoku"
+    "NEXT_PUBLIC_HUD_CANARY": "bedelta-stealth"
   },
   "assets": {
     "directory": "./dist",

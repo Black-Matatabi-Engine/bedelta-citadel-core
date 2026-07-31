@@ -21,7 +21,7 @@ import type {
 } from "../adapters/types";
 import { readActiveSystemState } from "../core/state";
 import type { IntentPhase } from "../core/intent-ledger";
-import { calculateYieldFees } from "../core/fee-calculator";
+import { calculateYieldFees, buildNetApyBand, type NetApyBand } from "../core/fee-calculator";
 import {
   MAX_SLIPPAGE,
   VINE_SOIL_MAX_SLIPPAGE,
@@ -112,6 +112,8 @@ export interface YieldTriangleResponse extends YieldRouterResult {
   netApy: number;
   /** Protocol treasury take (15% of gross yield) */
   protocolTreasuryFee: number;
+  /** Conservative net APY band (percent) — replaces single-point marketing claims */
+  netApyBand: NetApyBand;
   fetchedAt: string;
 }
 
@@ -325,6 +327,7 @@ export async function queryYieldTriangle(
   const yieldStack = await resolveYieldStack(symbol, ingressChain, hlAdapter);
   const best = triangle.venues.find((v) => v.venue === triangle.bestApyVenue);
   const fees = calculateYieldFees(yieldStack.totalStackedApy);
+  const netApyBand = buildNetApyBand(fees.netApy);
 
   return {
     ...triangle,
@@ -336,6 +339,7 @@ export async function queryYieldTriangle(
     grossApy: fees.grossApy,
     netApy: fees.netApy,
     protocolTreasuryFee: fees.protocolTreasuryFee,
+    netApyBand,
     recommendedRoute: {
       venue: "hyperliquid",
       apy: fees.netApy,

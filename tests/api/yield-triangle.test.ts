@@ -36,6 +36,7 @@ const MOCK_TRIANGLE = {
   grossApy: 0.12,
   netApy: 0.102,
   protocolTreasuryFee: 0.018,
+  netApyBand: { min: 6.2, base: 10.2, max: 22.4 },
   fetchedAt: "2026-08-01T00:00:00.000Z",
 };
 

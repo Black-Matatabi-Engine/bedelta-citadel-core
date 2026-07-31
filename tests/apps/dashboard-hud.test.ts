@@ -84,6 +84,7 @@ describe("dashboard yield view model", () => {
         grossApy: 0.12,
         netApy: 0.102,
         protocolTreasuryFee: 0.018,
+        netApyBand: { min: 6.2, base: 10.2, max: 22.4 },
       },
       false,
       null,

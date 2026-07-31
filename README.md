@@ -2,8 +2,8 @@
 
 **Architected by :qum[x0sumx]**
 
-[![Grant Audit](https://github.com/SilverVineLabs/santenbokui-fulldex/actions/workflows/grant-audit.yml/badge.svg)](https://github.com/SilverVineLabs/santenbokui-fulldex/actions/workflows/grant-audit.yml)
-![Vitest](https://img.shields.io/badge/Vitest-526%2B_Tests_Passing-brightgreen)
+[![Grant Audit](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml/badge.svg)](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml)
+![Vitest](https://img.shields.io/badge/Vitest-569%2B_Tests_Passing-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Clean-blue)
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
 ![Live Telemetry](https://img.shields.io/badge/Live_Telemetry-%2Fapi%2Ftelemetry%2Fhealth-informational)
@@ -19,7 +19,8 @@ Hyperliquid-first yield ingress on Cloudflare Workers — Session Key risk envel
 | **Session Key Envelope** | `src/adapters/hl/session-key-executor.ts` | TRADE_ONLY + Dynamic Max SL + testnet dry-run |
 | **2PC Intent Ledger** | `src/core/intent-ledger.ts` | Dual-leg prepare / commit / abort + flatten |
 | **HL ↔ 2PC Bridge** | `src/adapters/hl/hl-intent-bridge.ts` | TTL unwind integration |
-| **Yield Triangle API** | `GET /api/yield/triangle?symbol=ETH` | HL + Jupiter + GMX APY ranking |
+| **Crash Recovery Boot** | `src/core/intent-persistence.ts` · Worker `src/index.ts` | KV restore + TTL emergency unwind |
+| **Yield Triangle API** | `GET /api/yield/triangle?symbol=ETH` | HL ingress + conservative `netApyBand` |
 | **Zero-Key Sandbox** | `src/services/sandbox.ts` | Grant gate diagnostics (no keys) |
 
 ## Auditor 30-Second Verify
@@ -31,6 +32,12 @@ pnpm grant:verify
 ```
 
 Expected: HL 2PC TTL flatten test + HL → Polymarket → Jupiter zero-key dry-run **all green**.
+
+Optional HL testnet audit log:
+
+```bash
+pnpm grant:hl-testnet
+```
 
 ## Quick start
 

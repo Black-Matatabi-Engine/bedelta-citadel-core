@@ -8,6 +8,19 @@ export const PERFORMANCE_FEE_RATE = 0.15;
 /** Instant withdrawal convenience fee (0.1%) */
 export const INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE = 0.001;
 
+/** Conservative net APY band (percent points) for grant / API disclosure */
+export const CONSERVATIVE_NET_APY_BAND = {
+  min: 6.2,
+  base: 11.5,
+  max: 22.4,
+} as const;
+
+export interface NetApyBand {
+  min: number;
+  base: number;
+  max: number;
+}
+
 export interface YieldFeeBreakdown {
   grossApy: number;
   performanceFeeRate: number;
@@ -22,6 +35,24 @@ export interface WithdrawalFeeResult {
   convenienceFeeUsd: number;
   netWithdrawalUsd: number;
   convenienceFeeRate: number;
+}
+
+/** Build conservative net APY band — live net clamped into [min, max] */
+export function buildNetApyBand(liveNetApyFraction: number): NetApyBand {
+  const livePct = Number((liveNetApyFraction * 100).toFixed(1));
+  const base =
+    livePct > 0
+      ? Math.min(
+          CONSERVATIVE_NET_APY_BAND.max,
+          Math.max(CONSERVATIVE_NET_APY_BAND.min, livePct),
+        )
+      : CONSERVATIVE_NET_APY_BAND.base;
+
+  return {
+    min: CONSERVATIVE_NET_APY_BAND.min,
+    base,
+    max: CONSERVATIVE_NET_APY_BAND.max,
+  };
 }
 
 /** Apply 15% performance fee to gross APY */

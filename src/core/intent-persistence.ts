@@ -2,7 +2,6 @@
  * 2PC Intent persistence — Edge KV / D1 / DO-compatible crash recovery layer.
  */
 
-import type { KVNamespace } from "@cloudflare/workers-types";
 import {
   buildFlattenAction,
   importCrossLegIntent,
@@ -99,8 +98,21 @@ export class InMemoryIntentPersistenceStore implements IntentPersistenceStore {
   }
 }
 
+export interface KvNamespaceLike {
+  get(key: string): Promise<string | null>;
+  put(
+    key: string,
+    value: string,
+    options?: { expirationTtl?: number },
+  ): Promise<void>;
+  delete(key: string): Promise<void>;
+  list(options: { prefix: string }): Promise<{ keys: { name: string }[] }>;
+}
+
 /** Cloudflare KV-backed persistence adapter */
-export function createKvIntentPersistenceStore(kv: KVNamespace): IntentPersistenceStore {
+export function createKvIntentPersistenceStore(
+  kv: KvNamespaceLike,
+): IntentPersistenceStore {
   return {
     get: (key) => kv.get(key),
     put: (key, value, options) =>

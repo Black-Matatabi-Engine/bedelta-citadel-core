@@ -6,6 +6,7 @@ import {
   calculateYieldFees,
   netApyAfterPerformanceFee,
   protocolTreasuryFeeFromGross,
+  buildNetApyBand,
 } from "../../src/core/fee-calculator";
 
 describe("fee-calculator", () => {
@@ -33,5 +34,17 @@ describe("fee-calculator", () => {
   it("exposes helper accessors for net APY and treasury fee", () => {
     expect(netApyAfterPerformanceFee(0.2)).toBeCloseTo(0.17);
     expect(protocolTreasuryFeeFromGross(0.2)).toBeCloseTo(0.03);
+  });
+
+  it("buildNetApyBand clamps live net into conservative band", () => {
+    const band = buildNetApyBand(0.102);
+    expect(band.min).toBe(6.2);
+    expect(band.max).toBe(22.4);
+    expect(band.base).toBeCloseTo(10.2);
+  });
+
+  it("uses planning base when live net is zero", () => {
+    const band = buildNetApyBand(0);
+    expect(band.base).toBe(11.5);
   });
 });

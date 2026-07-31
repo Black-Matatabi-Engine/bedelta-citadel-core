@@ -1,182 +1,96 @@
-# BeDelta Living Water: Hyperliquid-Native Yield Ingress & Session-Key Risk Envelope
+# BeDelta Living Water — Hyperliquid Foundation Grant Pack
 
-**Applicant:** SilverVine Labs  
-**Project:** BeDelta Living Water (`bedelta-living-water`)  
-**Track:** Hyperliquid Foundation — Ecosystem Infrastructure & Yield Ingress  
-**Submission:** August 2026  
-**Auditor guide:** [SUBMISSION.md](./SUBMISSION.md)
+**Project:** `bedelta-living-water`  
+**Focus:** Hyperliquid-native yield ingress · Session-key risk envelope · 2PC intent ledger  
+**Author:** SilverVine Labs / :qum[x0sumx]
 
 ---
 
-## 1. Executive Summary
+## 1. Project Overview
 
-BeDelta Living Water is a **Hyperliquid-first yield ingress layer** deployed on Cloudflare Workers. It routes cross-venue capital signals from Solana (Jupiter) and Arbitrum (GMX) toward Hyperliquid Lend / perp hedge legs, while enforcing a mandatory **Session-Key Risk Envelope** (TRADE_ONLY, Dynamic Max SL) and a **2PC Intent Ledger** that prevents single-leg exposure on partial failure.
+BeDelta Living Water routes idle stable yield from **Solana / Arbitrum read-paths** into **Hyperliquid** as the sole hedge anchor (`targetVenue: "HYPERLIQUID"`). Execution is gated by:
 
-Grant auditors can verify the entire Wave 1 MVP **without private keys, funded wallets, or exchange API secrets** via `pnpm grant:verify`.
+- **Session Key TRADE_ONLY** + Dynamic Max SL (`Account Balance × 1% + $100`)
+- **2PC Intent Ledger** — dual-leg prepare → commit | abort with reduce-only flatten on partial failure / TTL
+- **Soil resistance** — cross-venue slippage + depth circuit breaker before any prepare
 
-| Deliverable (Milestone 1) | Module | Status |
-|---|---|---|
-| Session Key TRADE_ONLY + Dynamic Max SL | `src/adapters/hl/session-key-executor.ts` | Testnet dry-run path |
-| 2PC dual-leg Intent Ledger | `src/core/intent-ledger.ts` | Prepare / Commit / Abort + flatten |
-| HL ↔ 2PC execution bridge | `src/adapters/hl/hl-intent-bridge.ts` | TTL unwind integration test |
-| Yield Triangle read-path API | `GET /api/yield/triangle?symbol=ETH` | Live JSON |
-| Zero-key grant sandbox | `src/services/sandbox.ts` | HL → Poly → Jup gate sequence |
-| Workers-safe EIP-712 hashing | `src/adapters/hl/crypto.ts` | No ethers on hash hot path |
+Wave 1 is **read-path + testnet execution proof** — not a live cross-chain bridge. Milestone 2 covers capital bridge + Durable Object ledger hardening.
 
 ---
 
-## 2. Value Add to Hyperliquid
+## 2. Milestone ↔ Code Path (1-Page)
 
-### 2.1 Problem
-
-Hyperliquid competes for **Net New TVL** and **persistent OI** against CEX and multi-chain DeFi. Idle capital on Solana and Arbitrum often never reaches HL Lend / perp books because:
-
-| Pain Point | Ecosystem Impact |
-|---|---|
-| No unified yield ranking toward HL | Capital stays on origin chain |
-| Session keys over-permissioned elsewhere | Institutions avoid agent delegation |
-| Cross-venue execution without atomicity | Single-leg fills leave naked delta |
-| No edge-native ingress router | Policy gates live off-chain inconsistently |
-
-### 2.2 BeDelta Solution — Yield Ingress, Not a Bridge
-
-We are **not** a generic bridge. BeDelta Living Water is a **Yield Engine & Cross-Margin Router** that:
-
-1. **Reads** cross-venue APY / depth / funding (Jupiter quote, GMX markets, HL vault + funding).
-2. **Ranks** routes via `queryYieldTriangle()` with soil-resistance gating.
-3. **Executes** on HL through Session Keys scoped to **ORDER_EXECUTE / ORDER_CANCEL only** (no withdrawal, no leverage mutation).
-4. **Coordinates** dual-leg intents via 2PC — if the second leg fails or TTL expires, HL positions are **reduce-only flattened** automatically.
-
-```text
-  Solana (Jupiter)          Arbitrum (GMX)
-         │                           │
-         └───────────┬───────────────┘
-                     │  read-path APY / depth
-                     ▼
-         ┌───────────────────────────┐
-         │  Cloudflare Edge Worker   │
-         │  /api/yield/triangle      │
-         │  checkSoilResistance()    │
-         │  2PC Intent Ledger        │
-         └─────────────┬─────────────┘
-                       │ Session Key (TRADE_ONLY)
-                       ▼
-              ┌─────────────────┐
-              │   Hyperliquid   │
-              │  Lend · Perps   │  ← Net New TVL / OI destination
-              └─────────────────┘
-```
-
-### 2.3 Hyperliquid-Specific KPIs
-
-| HL KPI | BeDelta Mechanism |
-|---|---|
-| **HL Lend / Vault TVL** | Yield Triangle surfaces HL vault APR + funding; recommended route defaults to HL when edge wins |
-| **Perp OI depth** | Delta-neutral sleeve (HL perp leg) under 2PC — no orphan exposure on abort |
-| **Builder / agent adoption** | `BeDeltaSessionKey` EIP-712 agent with auto-sever on R20 hardlock |
-| **Institutional trust** | Dynamic Max SL = `(Equity × 1%) + $100` welded before every order wire |
+| Milestone | Deliverable | Code Path | Verify |
+|-----------|-------------|-----------|--------|
+| **M1a** | Session Key envelope | `src/adapters/hl/session-key-executor.ts` | `pnpm grant:verify` |
+| **M1b** | 2PC intent ledger | `src/core/intent-ledger.ts` | `tests/core/intent-ledger.test.ts` |
+| **M1c** | HL ↔ 2PC bridge + TTL flatten | `src/adapters/hl/hl-intent-bridge.ts` | `tests/integration/hl-2pc-execution.test.ts` |
+| **M1d** | Crash recovery boot | `src/core/intent-persistence.ts` · `src/index.ts` | `tests/core/intent-persistence.test.ts` |
+| **M1e** | Yield Triangle API | `GET /api/yield/triangle` · `src/services/yield-router.ts` | `tests/api/yield-triangle.test.ts` |
+| **M1f** | Multi-chain ingress (read-path) | `src/adapters/solana/solana-yield-ingress.ts` · `src/adapters/arbitrum/arbitrum-yield-ingress.ts` | integration tests |
+| **M1g** | Commercial fee engine | `src/core/fee-calculator.ts` | `tests/core/fee-calculator.test.ts` |
+| **M1h** | Grant sandbox (zero-key) | `src/services/sandbox.ts` | `tests/e2e/grant-sandbox-dryrun.test.ts` |
+| **M1i** | HL testnet live script | `scripts/verify-hl-testnet.ts` | `pnpm grant:hl-testnet` |
+| **M2** | Live capital bridge + DO ledger | Roadmap appendix | — |
 
 ---
 
-## 3. Architecture (Code-Aligned)
-
-### 3.1 Risk Envelope (Session Key — TRADE_ONLY)
-
-| Control | Implementation |
-|---|---|
-| Permission scope | `ORDER_EXECUTE` · `ORDER_CANCEL` only (`src/services/hyperliquidAdapter.ts`) |
-| Dynamic Max SL | `assertSessionKeyExecutionGates()` (`src/services/session-key-adapter.ts`) |
-| EIP-712 L1 signing | `src/adapters/hl/auth.ts` — phantom Agent, chainId 1337 |
-| Workers-safe hash | `createL1ActionHash()` via `@noble/hashes` (`src/adapters/hl/crypto.ts`) |
-| Testnet transport | `executeSignedAction()` → `src/adapters/hl/execution-transport.ts` |
-| Agent name | `BeDeltaSessionKey` |
-
-### 3.2 2PC Intent Ledger
-
-```text
-PENDING ──prepare──► PREPARED ──commit──► COMMITTED
-   │                    │
-   └──── abort ─────────┴──── TTL / failure ──► ABORTED (+ HL reduce-only flatten)
-```
-
-| Phase | Function | File |
-|---|---|---|
-| Create intent | `createCrossLegIntent()` | `src/core/intent-ledger.ts` |
-| Prepare | `prepareIntent()` | partial fail → flatten prepared legs |
-| Commit | `commitIntent()` | TTL expire → flatten prepared legs only |
-| HL bridge | `createHlIntentBridge()` | `src/adapters/hl/hl-intent-bridge.ts` |
-| Flatten | `flattenHlLeg()` | `src/adapters/hl/session-key-executor.ts` |
-
-**Verified:** `tests/integration/hl-2pc-execution.test.ts`
-
-### 3.3 Yield Triangle API
-
-**Endpoint:** `GET /api/yield/triangle?symbol=ETH`
-
-| Field | Source |
-|---|---|
-| `venues[].apy` | HL vault + funding · Jupiter quote · GMX funding/borrow |
-| `soil` | `checkSoilResistance()` |
-| `gateStatus.intent2pcReady` | soil OK + signing channel open |
-| `gateStatus.dynamicMaxSlUsd` | `SystemState.dynamicMaxSL` |
-| `recommendedRoute` | highest APY healthy venue |
-
-Modules: `src/services/yield-router.ts` · `src/api/routes/yield.ts`
-
-### 3.4 Zero-Key Grant Sandbox
+## 3. Auditor 30-Second Verify
 
 ```bash
+pnpm install
+pnpm exec tsc --noEmit
 pnpm grant:verify
 ```
 
-Module: `simulateTransactionIntent()` · `tests/e2e/grant-sandbox-dryrun.test.ts`
+**Expected:** HL 2PC TTL flatten integration + HL → Polymarket → Jupiter zero-key dry-run **all green**.
 
----
+Full regression (569+ tests):
 
-## 4. Milestone Roadmap
-
-### Milestone 1 — MVP & Testnet Live Path (Wave 1 Grant Ask)
-
-| Item | Acceptance Criteria | Evidence |
-|---|---|---|
-| Session Key envelope | TRADE_ONLY + EIP-712 sign path | `tests/adapters/hl/auth.test.ts` |
-| HL testnet execution wire | limit / market / cancel + dry-run | `tests/adapters/hl/execution.test.ts` |
-| 2PC Intent Ledger | Prepare / Commit / Abort | `tests/core/intent-ledger.test.ts` |
-| HL 2PC integration | TTL → HL flatten | `tests/integration/hl-2pc-execution.test.ts` |
-| Yield Triangle API | gate status JSON | `tests/api/yield-triangle.test.ts` |
-| Grant verify one-liner | `pnpm grant:verify` green | [SUBMISSION.md](./SUBMISSION.md) |
-| CI | typecheck + 526 Vitest | `.github/workflows/grant-audit.yml` |
-
-### Milestone 2 — Wave 2 (Appendix — Not Wave 1 Claims)
-
-| Item | Description |
-|---|---|
-| LayerZero OApp | Cross-chain deposit/withdraw messaging (A存 / B提) |
-| WaterPool smart contract | On-chain margin pool + internal netting ledger |
-| Polymarket live tail sleeve | CLOB execution beyond read-path |
-| Durable Object ledger | Replace in-memory intent store |
-| Mainnet Session Key pilot | External signer HSM integration |
-
-> Wave 2 is roadmap appendix only — not required to verify Milestone 1.
-
----
-
-## 5. Repository Map
-
-```text
-src/core/intent-ledger.ts
-src/adapters/hl/{auth,crypto,session-key-executor,hl-intent-bridge,execution-transport}.ts
-src/services/{yield-router,sandbox}.ts
-src/api/routes/yield.ts
-tests/integration/hl-2pc-execution.test.ts
-tests/e2e/grant-sandbox-dryrun.test.ts
+```bash
+pnpm test
 ```
+
+Optional HL testnet audit log (dry-run by default; set `HL_TESTNET_PRIVATE_KEY` for live):
+
+```bash
+pnpm grant:hl-testnet
+```
+
+---
+
+## 4. Conservative Net APY Methodology (6–12% Target Band)
+
+We **do not** pitch a single headline APY. The API returns:
+
+```json
+"netApyBand": { "min": 6.2, "base": 11.5, "max": 22.4 }
+```
+
+| Component | Typical Range (annualized) |
+|-----------|----------------------------|
+| Solana / Arbitrum stable base | 3.5–5.1% |
+| HL funding (1× short hedge) | 2–10% (regime-dependent) |
+| **Gross stacked** | ~6–15% |
+| Less 15% performance fee | **~5.1–12.75% net** |
+
+- **`min` (6.2%)** — conservative floor after performance fee  
+- **`base` (11.5%)** — central planning scenario; live API clamps measured net into band  
+- **`max` (22.4%)** — stress ceiling (extreme funding); not a sustained marketing claim  
+
+Formula: `netApy = (chainBaseApy + hlFundingApy) × 0.85` — see `src/core/fee-calculator.ts`.
+
+---
+
+## 5. Demo Checklist (5 min)
+
+1. `pnpm grant:verify` — terminal green  
+2. `curl "/api/yield/triangle?symbol=ETH&ingressChain=SOLANA"` — show `netApyBand`, `targetVenue`, `gateStatus`  
+3. `pnpm grant:hl-testnet` — structured audit JSON  
+4. Open HUD (`pnpm dev:spa`) — Yield Triangle + Live Intent Stream  
 
 ---
 
 ## 6. License
 
-**BUSL-1.1** — Additional Use Grant permits DEX Foundation Grant evaluator review.  
-**Spec:** [Risk Envelope](../architecture/Risk_Envelope_Pgate.md)
-
-*Run `pnpm grant:verify` to reproduce all Milestone 1 claims.*
+BUSL-1.1 with **Additional Use Grant** for Hyperliquid Foundation grant evaluators — see [LICENSE](../../LICENSE).

@@ -19,6 +19,7 @@
     "test:dry-run": "tsx scripts/dry-run-sandbox.ts",
     "test:soak": "tsx scripts/soak-test.ts",
     "grant:verify": "vitest run tests/integration/hl-2pc-execution.test.ts tests/e2e/grant-sandbox-dryrun.test.ts",
+    "grant:hl-testnet": "tsx scripts/verify-hl-testnet.ts",
     "audit:log": "node scripts/generate-yellow-page.js",
     "pgate:sync": "node scripts/pgate-sync.js",
     "kv:ping": "wrangler kv key put system:ping OK --binding=SLIVERVINE_KV --remote",

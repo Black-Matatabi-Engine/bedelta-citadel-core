@@ -2,6 +2,11 @@ import type { Env } from "./env";
 import { routeRequest } from "./api/routes";
 import { runSoakTelemetryTick } from "./services/soak-telemetry";
 import { severSigningChannel } from "./services/session-key-adapter";
+import {
+  bootstrapIntentPersistence,
+  createKvIntentPersistenceStore,
+  syncLedgerToPersistence,
+} from "./core/intent-persistence";
 
 export type { Env };
 export {
@@ -83,13 +88,44 @@ async function runScheduledSoakTelemetry(env: Env): Promise<void> {
   await runSoakTelemetryTick({ kv: env.SLIVERVINE_KV });
 }
 
-async function runScheduledJobs(env: Env): Promise<void> {
-  // Market sensors (HL funding + Pyth confidence) run client-side on slivervine.xyz.
-  // Worker cron retains soak telemetry only — avoids KV 429 write storms.
-  await runScheduledSoakTelemetry(env);
+let intentPersistenceBootPromise: Promise<void> | null = null;
+
+/** Restore 2PC ledger from KV and emergency-unwind expired PREPARED intents */
+async function ensureIntentPersistenceBoot(env: Env): Promise<void> {
+  const kv = env.SLIVERVINE_KV ?? env.SYSTEM_STATE_KV;
+  if (!kv) return;
+
+  if (!intentPersistenceBootPromise) {
+    intentPersistenceBootPromise = (async () => {
+      const store = createKvIntentPersistenceStore(kv);
+      const result = await bootstrapIntentPersistence(store);
+      console.log(
+        "[bedelta] intent persistence boot",
+        JSON.stringify({
+          restoredCount: result.restoredCount,
+          unwound: result.unwound.length,
+        }),
+      );
+    })().catch((err) => {
+      intentPersistenceBootPromise = null;
+      console.error("[bedelta] intent persistence boot failed", err);
+      throw err;
+    });
+  }
+
+  await intentPersistenceBootPromise;
 }
 
-console.log("[slivervine] worker boot");
+async function runScheduledJobs(env: Env): Promise<void> {
+  await ensureIntentPersistenceBoot(env);
+  await runScheduledSoakTelemetry(env);
+  const kv = env.SLIVERVINE_KV ?? env.SYSTEM_STATE_KV;
+  if (kv) {
+    await syncLedgerToPersistence(createKvIntentPersistenceStore(kv));
+  }
+}
+
+console.log("[bedelta-living-water] worker boot");
 
 const GEO_BLOCKED_COUNTRIES = new Set(["US", "CU", "IR", "KP", "SY"]);
 
@@ -109,7 +145,7 @@ function enforceGeoCompliance(request: Request): Response | null {
 }
 
 /**
- * SliverVine Workers entry — API routes + static SPA via ASSETS binding.
+ * BeDelta Living Water Workers entry — API routes + static SPA via ASSETS binding.
  * wrangler.jsonc runs the worker first for `/api/*`; all other paths fall through to dist/.
  */
 export default {
@@ -118,6 +154,12 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ): Promise<Response> {
+    ctx.waitUntil(
+      ensureIntentPersistenceBoot(env).catch((err) => {
+        console.error("[bedelta] fetch persistence boot failed", err);
+      }),
+    );
+
     const geoResponse = enforceGeoCompliance(request);
     if (geoResponse) return geoResponse;
     return routeRequest(request, env, ctx);
@@ -128,10 +170,10 @@ export default {
     env: Env,
     ctx: ExecutionContext,
   ): Promise<void> {
-    console.log("[slivervine] cron fired", controller.cron);
+    console.log("[bedelta-living-water] cron fired", controller.cron);
     ctx.waitUntil(
       runScheduledJobs(env).catch((err) => {
-        console.error("[slivervine] scheduled cron failed", err);
+        console.error("[bedelta-living-water] scheduled cron failed", err);
       }),
     );
   },
