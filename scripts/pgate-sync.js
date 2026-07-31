@@ -16,7 +16,7 @@ const WRANGLER = join(ROOT, "wrangler.jsonc");
 
 const VERSION = "v0.8.0-rc1";
 const EXPECTED_TESTS = 398;
-const REQUIRED_DOMAINS = ["silvervinelabs.com", "slivervine.xyz"];
+const REQUIRED_DOMAINS = ["silvervinelabs.com", "bedeltawater.slivervine.xyz"];
 const COMMIT_MSG = "chore(pgate): sync production gate audit and metrics v0.8.0-rc1";
 
 function log(step, msg) {
@@ -59,8 +59,10 @@ function parseWranglerKv() {
   const raw = readFileSync(WRANGLER, "utf8");
   const json = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/\/\/.*$/gm, "").replace(/,\s*([}\]])/g, "$1");
   const config = JSON.parse(json);
-  const ns = (config.kv_namespaces ?? []).find((n) => n.binding === "SLIVERVINE_KV");
-  if (!ns?.id) throw new Error("SLIVERVINE_KV namespace not found in wrangler.jsonc");
+  const ns =
+    (config.kv_namespaces ?? []).find((n) => n.binding === "BEDELTA_WATER_KV") ??
+    (config.kv_namespaces ?? []).find((n) => n.binding === "SLIVERVINE_KV");
+  if (!ns?.id) throw new Error("BEDELTA_WATER_KV / SLIVERVINE_KV namespace not found in wrangler.jsonc");
   return { binding: ns.binding, id: ns.id };
 }
 
@@ -96,8 +98,8 @@ function metricsBlock({ passed, total, testFiles, kv, timestamp, tscClean }) {
 | Vitest master suite | \`npm test\` | **${passed} / ${total}** passed · **${testFiles}** files · 100% green |
 | TypeScript | \`npx tsc --noEmit\` | **${tscClean ? "CLEAN" : "FAILED"}** (0 errors) |
 | Protocol version | — | **${VERSION}** |
-| KV binding | \`SLIVERVINE_KV\` | \`${kv.id}\` |
-| Domains | — | \`slivervine.xyz\` · \`silvervinelabs.com\` |
+| KV binding | \`BEDELTA_WATER_KV\` | \`${kv.id}\` |
+| Domains | — | \`bedeltawater.slivervine.xyz\` · \`silvervinelabs.com\` |
 | Last synced | Asia/Taipei | **${timestamp}** |
 <!-- pgate:sync:metrics:end -->`;
 }
@@ -107,6 +109,7 @@ function ensurePgateTemplate() {
   return `# Pgate.md — Production Gate Audit & Personal Operations SOP
 
 **Protocol:** SliverVine Protocol · Santenmoku ${VERSION}
+**Product:** BeDelta Living Water
 **Scope:** Technical audit · domain mapping · KV state · grant reproducibility
 
 ---
@@ -116,7 +119,7 @@ function ensurePgateTemplate() {
 | Role | Canonical Name | Domain |
 |---|---|---|
 | Official Protocol | **SliverVine Protocol** | Code · docs · grant audit |
-| Core Quant DApp | **slivervine.xyz** | Workers API · telemetry |
+| BeDelta Worker / DApp | **bedeltawater.slivervine.xyz** | Workers API · telemetry |
 | Public PR Brand | **SilverVine Labs** | Grant · brand |
 | Public Website Shield | **silvervinelabs.com** | Marketing HUD |
 
@@ -137,7 +140,7 @@ npx tsc --noEmit
 npm run test:soak
 \`\`\`
 
-**Steel Core:** [slivervine.xyz](https://slivervine.xyz)
+**Steel Core:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 **PR Shield:** [silvervinelabs.com](https://silvervinelabs.com)
 `;
 }
@@ -154,7 +157,7 @@ function syncMetrics(content, block) {
 function validatePgate(content, { passed, total, kv }) {
   const checks = [
     [VERSION, "protocol version"],
-    ["slivervine.xyz", "core DApp domain"],
+    ["bedeltawater.slivervine.xyz", "core DApp domain"],
     ["silvervinelabs.com", "PR shield domain"],
     ["SliverVine Protocol", "protocol name"],
     [kv.binding, "KV binding name"],

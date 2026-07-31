@@ -23,7 +23,7 @@ describe("generateOgPreviewMetadata", () => {
   it("builds structured OG metadata for telemetry audit endpoint", () => {
     const meta = generateOgPreviewMetadata({
       pathname: "/api/telemetry/health",
-      origin: "https://slivervine.xyz",
+      origin: "https://bedeltawater.slivervine.xyz",
       criIndex: 95,
       hudState: "GREEN",
     });
@@ -31,9 +31,9 @@ describe("generateOgPreviewMetadata", () => {
     expect(meta.title).toContain("Telemetry");
     expect(meta.description).toContain("CRI 95");
     expect(meta.description).toContain("HUD GREEN");
-    expect(meta.url).toBe("https://slivervine.xyz/api/telemetry/health");
+    expect(meta.url).toBe("https://bedeltawater.slivervine.xyz/api/telemetry/health");
     expect(meta.type).toBe("website");
-    expect(meta.siteName).toBe("SliverVine Protocol");
+    expect(meta.siteName).toBe("SilverVine Protocol");
     expect(meta.image).toContain("/og/grant-audit-card.png");
   });
 });
@@ -42,7 +42,7 @@ describe("renderOgMetaTags", () => {
   it("renders Open Graph and Twitter card meta tags", () => {
     const meta = generateOgPreviewMetadata({
       pathname: "/api/state",
-      origin: "https://slivervine.xyz",
+      origin: "https://bedeltawater.slivervine.xyz",
     });
     const tags = renderOgMetaTags(meta);
 

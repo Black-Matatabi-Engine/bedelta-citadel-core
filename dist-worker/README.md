@@ -1,1 +1,1 @@
-This folder contains the built output assets for the worker "slivervine-protocol" generated at 2026-07-27T01:03:05.218Z.
+This folder contains the built output assets for the worker "bedelta-living-water" generated at 2026-07-31T23:55:35.920Z.

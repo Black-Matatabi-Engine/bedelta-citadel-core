@@ -1,6 +1,6 @@
 import { CORS_JSON_HEADERS } from "../../services/config";
 
-export const GRANT_AUDIT_VERSION_HEADER = "X-SliverVine-Version";
+export const GRANT_AUDIT_VERSION_HEADER = "X-SilverVine-Version";
 export const GRANT_AUDIT_DEFENSE_HEADER = "X-Defense-Matrix";
 
 export const GRANT_AUDIT_VERSION = "v0.8-santenmoku";
@@ -31,7 +31,8 @@ export interface OgPreviewInput {
   hudState?: string;
 }
 
-const DEFAULT_ORIGIN = "https://slivervine.xyz";
+/** Deploy SSOT — see docs/architecture/BRAND_SSOT.md */
+const DEFAULT_ORIGIN = "https://bedeltawater.slivervine.xyz";
 const DEFAULT_OG_IMAGE = `${DEFAULT_ORIGIN}/og/grant-audit-card.png`;
 
 const ENDPOINT_COPY: Record<
@@ -39,24 +40,24 @@ const ENDPOINT_COPY: Record<
   { title: string; description: string }
 > = {
   "/api/telemetry/health": {
-    title: "SliverVine Grant Audit — Live Telemetry",
+    title: "BeDelta Living Water — Live Telemetry",
     description:
       "Public CRI index, soil resistance status, active venues, and circuit breaker health.",
   },
   "/api/state": {
-    title: "SliverVine Grant Audit — System State",
+    title: "BeDelta Living Water — System State",
     description:
-      "Authoritative Pgate system snapshot for grant auditor verification.",
+      "Authoritative Risk Envelope system snapshot for grant auditor verification.",
   },
   "/api/data": {
-    title: "SliverVine Grant Audit — Matrix Data",
+    title: "BeDelta Living Water — Matrix Data",
     description:
       "Cross-venue arbitrage matrix feed with risk tripped flags for auditor review.",
   },
   "/api/hedge/evaluate": {
-    title: "SliverVine Grant Audit — Tail Hedge Evaluation",
+    title: "BeDelta Living Water — Tail Hedge Evaluation",
     description:
-      "Polymarket tail-hedge trigger evaluation gated by unified Pgate policy.",
+      "Polymarket tail-hedge trigger evaluation gated by unified Risk Envelope policy.",
   },
 };
 
@@ -80,7 +81,7 @@ export function generateOgPreviewMetadata(input: OgPreviewInput): OgPreviewMetad
     description: `${copy.description}${criSuffix}${hudSuffix}`,
     url: `${origin}${pathname}`,
     type: "website",
-    siteName: "SliverVine Protocol",
+    siteName: "SilverVine Protocol",
     image: DEFAULT_OG_IMAGE,
   };
 }

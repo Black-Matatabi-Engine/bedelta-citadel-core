@@ -1,8 +1,9 @@
-# SliverVine Protocol · Santenmoku v0.8 White Paper
+# BeDelta Living Water · SliverVine Protocol · Santenmoku v0.8 White Paper
 
-**Protocol:** SliverVine Protocol · Santenmoku v0.8.0-rc1  
+**Protocol:** SliverVine Protocol · Santenmoku v0.8.0-rc1 · Product: BeDelta Living Water  
 **Architected by:** :qum[x0sumx]  
-**Surface:** `slivervine.xyz` · modular dashboard under `src/ui/`  
+**Surface:** `bedeltawater.slivervine.xyz` · modular dashboard under `src/ui/`  
+**Entity:** SilverVine Labs · `silvervinelabs.com`  
 **Canonical modules:** `src/services/` · `src/ui/components/` · Cloudflare Workers Edge
 
 ---

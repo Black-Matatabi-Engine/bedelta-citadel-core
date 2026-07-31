@@ -249,7 +249,7 @@ async function warmupCrypto(): Promise<void> {
 }
 
 async function main(): Promise<void> {
-  console.log("=== SliverVine Dry-Run Sandbox · Hyperliquid Testnet Stress ===\n");
+  console.log("=== BeDelta Living Water Dry-Run Sandbox · Hyperliquid Testnet Stress ===\n");
 
   __setSystemStateForTests({
     ...buildSystemState({

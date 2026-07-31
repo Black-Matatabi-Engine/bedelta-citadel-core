@@ -9,8 +9,6 @@ import { applyGrantAuditHeaders, handleOgPreviewRequest } from "./middleware/og-
 import { hardlockResponse } from "./hardlock-response";
 import { HardlockError } from "../services/risk-control";
 
-console.log("[slivervine] routes initialized");
-
 /**
  * Pathname / method dispatch — decoupled from arbitrage services.
  * Static SPA is served via wrangler ASSETS at `/` (see wrangler.jsonc).

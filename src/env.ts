@@ -9,9 +9,11 @@ export interface Env {
   USE_PYTHON_GATEWAY?: string;
   /** Static assets (public/) — brand images etc. */
   ASSETS?: Fetcher;
-  /** Primary KV — system state · matrix · soak · risk logs */
+  /** Isolated BeDelta Water KV (wrangler.jsonc SSOT) */
+  BEDELTA_WATER_KV?: KVNamespace;
+  /** Compat alias — same namespace as BEDELTA_WATER_KV */
   SLIVERVINE_KV?: KVNamespace;
-  /** Alias binding — same namespace as SLIVERVINE_KV (system:state SSOT) */
+  /** Alias binding — same namespace as BEDELTA_WATER_KV (system:state SSOT) */
   SYSTEM_STATE_KV?: KVNamespace;
   /** XuanWu Triple-String unlock — inject via wrangler secret put (never commit) */
   XUANWU_SALT?: string;

@@ -45,5 +45,5 @@ console.log("[deploy:cf] Wrangler deploy…");
 run("pnpm", ["exec", "wrangler", "deploy"]);
 
 console.log("[deploy:cf] Post-deploy verification:");
-console.log('  curl -s -H "X-Santenmoku-Canary: santenmoku" https://dev-santenbokui.slivervine.xyz/api/hud-stream | jq .');
-console.log("  curl -s https://dev-santenbokui.slivervine.xyz/api/telemetry/health | jq .");
+console.log('  curl -s -H "X-Santenmoku-Canary: santenmoku" https://bedeltawater.slivervine.xyz/api/hud-stream | jq .');
+console.log("  curl -s https://bedeltawater.slivervine.xyz/api/telemetry/health | jq .");

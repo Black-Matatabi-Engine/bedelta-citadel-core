@@ -5,17 +5,23 @@
   "compatibility_date": "2026-07-26",
   "kv_namespaces": [
     {
+      "binding": "BEDELTA_WATER_KV",
+      "id": "60db4bcba35248dba594ef109e4065b1",
+      "remote": true
+    },
+    {
       "binding": "SLIVERVINE_KV",
-      "id": "af57772629914596b206aef2b5935cf5",
+      "id": "60db4bcba35248dba594ef109e4065b1",
       "remote": true
     },
     {
       "binding": "SYSTEM_STATE_KV",
-      "id": "af57772629914596b206aef2b5935cf5",
+      "id": "60db4bcba35248dba594ef109e4065b1",
       "remote": true
     }
   ],
   "vars": {
+    "ENVIRONMENT": "production",
     "NEXT_PUBLIC_HUD_CANARY": "bedelta-stealth"
   },
   "assets": {
@@ -27,7 +33,7 @@
   "workers_dev": false,
   "routes": [
     {
-      "pattern": "dev-santenbokui.slivervine.xyz",
+      "pattern": "bedeltawater.slivervine.xyz",
       "custom_domain": true
     }
   ],

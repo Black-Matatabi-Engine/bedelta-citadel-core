@@ -1,5 +1,5 @@
 /**
- * SliverVine KV store — native Cloudflare Workers KV persistence (SLIVERVINE_KV binding).
+ * BeDelta KV store — Workers KV via BEDELTA_WATER_KV (compat alias: SLIVERVINE_KV).
  * Local `wrangler dev` defaults to Miniflare SQLite unless wrangler.jsonc sets `"remote": true`
  * on this binding (or CLI uses `--remote`). Verify live writes: `npm run kv:ping`.
  */

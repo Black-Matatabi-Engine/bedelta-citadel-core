@@ -156,7 +156,7 @@ function main(): void {
 
   const md = `# Grant Technical Appendix
 
-**SliverVine Protocol · Santenmoku ${PROTOCOL_VERSION}**  
+**BeDelta Living Water · SliverVine Protocol · Santenmoku ${PROTOCOL_VERSION}**  
 **Architected by ${AUTHOR}**  
 **Generated:** ${ts}  
 **Entity:** SilverVine Labs · \`github@silvervinelabs.com\`
@@ -242,7 +242,7 @@ ${defenseMatrixStatus()}
 | **Architect** | **${AUTHOR}** |
 | **Entity** | SilverVine Labs |
 | **Contact** | \`github@silvervinelabs.com\` |
-| **Protocol** | SliverVine Protocol ${PROTOCOL_VERSION} |
+| **Protocol** | BeDelta Living Water · SliverVine Protocol ${PROTOCOL_VERSION} |
 | **Certification** | This appendix was auto-generated from live test, coverage, backtest, and KV sync benchmarks. |
 
 ---

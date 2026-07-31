@@ -51,7 +51,7 @@ pnpm install
 pnpm run typecheck
 pnpm exec vitest run tests/e2e/grant-sandbox-dryrun.test.ts
 pnpm exec vitest run tests/core/intent-ledger.test.ts
-curl -s https://slivervine.xyz/api/telemetry/health | jq .
+curl -s https://bedeltawater.slivervine.xyz/api/telemetry/health | jq .
 ```
 
 | Step | Command | Expected |
@@ -67,13 +67,16 @@ curl -s https://slivervine.xyz/api/telemetry/health | jq .
 
 | Binding | Key | Purpose |
 |---------|-----|---------|
-| `SLIVERVINE_KV` | `system:state` | SystemState snapshot |
-| `SLIVERVINE_KV` | `telemetry:soak-rolling` | Soak tick buffer |
+| `BEDELTA_WATER_KV` | `system:state` | SystemState snapshot (isolated) |
+| `SLIVERVINE_KV` | `system:state` | Compat alias → same namespace |
+| `BEDELTA_WATER_KV` | `telemetry:soak-rolling` | Soak tick buffer |
 
 ```bash
 pnpm run kv:ping
 pnpm run kv:heartbeat
 ```
+
+See [`BRAND_SSOT.md`](BRAND_SSOT.md) for deploy lock.
 
 ---
 
@@ -84,5 +87,5 @@ Legacy v1 SSR dashboard, DonDon HUD engine, and monolith sources live under `arc
 ---
 
 **License:** BUSL-1.1  
-**Steel Core:** [slivervine.xyz](https://slivervine.xyz)  
+**Steel Core:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
 **Entity:** SilverVine Labs
