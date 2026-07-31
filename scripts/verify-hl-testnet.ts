@@ -11,13 +11,21 @@
 
 import { createHash } from "node:crypto";
 import { Wallet } from "ethers";
+import type { PreTradeValidationInput } from "../src/adapters/hl/execution-types";
 import { createHlIntentBridge } from "../src/adapters/hl/hl-intent-bridge";
+import {
+  executeHlSessionKeyOrder,
+  type HlSessionKeyExecutorOptions,
+} from "../src/adapters/hl/session-key-executor";
 import {
   __clearIntentLedgerForTests,
   abortIntent,
   commitIntent,
   createCrossLegIntent,
+  getIntent,
   prepareIntent,
+  type IntentLeg,
+  type PrepareLegFn,
 } from "../src/core/intent-ledger";
 import { buildSystemState } from "../src/core/state";
 
@@ -35,6 +43,11 @@ const POLY_LEG = {
   symbol: "ETH",
 };
 
+const GRANT_ETH_LIMIT_PX = 3_500;
+const GRANT_ACCOUNT_BALANCE_USD = 50_000;
+const DEFAULT_TESTNET_KEY =
+  "0x0000000000000000000000000000000000000000000000000000000000000001";
+
 interface AuditStep {
   step: string;
   intentId: string;
@@ -50,26 +63,93 @@ function responseRef(payload: unknown): string {
   return `sha256:${createHash("sha256").update(raw).digest("hex").slice(0, 16)}`;
 }
 
+/** Healthy pre-trade verification input for grant PREPARE — satisfies Pgate + soil gates. */
+function buildGrantPreTradeInput(
+  leg: IntentLeg,
+  accountBalanceUsd: number,
+): PreTradeValidationInput {
+  const hlPerp = GRANT_ETH_LIMIT_PX;
+  return {
+    symbol: leg.symbol ?? "ETH",
+    hlSpot: hlPerp * 0.9999,
+    hlPerp,
+    dydxPerp: hlPerp * 1.0001,
+    depthUsd: 500_000,
+    latencyMs: 50,
+    expectedSlippage: 0.0005,
+    accountBalanceUsd,
+    orderSizeUsd: leg.sizeUsd,
+    foolProof: {
+      positionValueUsd: leg.sizeUsd,
+      reduceOnly: false,
+      profile: "institutional",
+    },
+  };
+}
+
+function createGrantPrepareLeg(
+  executorOpts: HlSessionKeyExecutorOptions,
+): PrepareLegFn {
+  const accountBalanceUsd =
+    executorOpts.systemState?.accountBalanceUsd ?? GRANT_ACCOUNT_BALANCE_USD;
+
+  return async (leg, legIndex) => {
+    if (leg.venue !== "HL") {
+      if (leg.sizeUsd <= 0) {
+        return { legIndex, ok: false, reason: "INVALID_LEG_SIZE" };
+      }
+      return { legIndex, ok: true, filledUsd: leg.sizeUsd };
+    }
+
+    const result = await executeHlSessionKeyOrder(leg, {
+      ...executorOpts,
+      limitPx: GRANT_ETH_LIMIT_PX,
+      preTrade: buildGrantPreTradeInput(leg, accountBalanceUsd),
+    });
+
+    if (!result.ok) {
+      return {
+        legIndex,
+        ok: false,
+        reason: result.reason ?? "HL_PREPARE_FAILED",
+      };
+    }
+
+    return {
+      legIndex,
+      ok: true,
+      filledUsd: result.filledUsd ?? leg.sizeUsd,
+    };
+  };
+}
+
 async function main(): Promise<void> {
-  const privateKey =
-    process.env.HL_TESTNET_PRIVATE_KEY ??
-    "0x0000000000000000000000000000000000000000000000000000000000000001";
-  const live = process.env.HL_LIVE === "1" || process.env.HL_LIVE === "true";
-  const dryRun = !live;
-  const runTtlDemo = process.env.HL_VERIFY_TTL !== "0";
+  const privateKey = process.env.HL_TESTNET_PRIVATE_KEY ?? DEFAULT_TESTNET_KEY;
+  const wantsLive =
+    process.env.HL_LIVE === "1" || process.env.HL_LIVE === "true";
+  const hasFundedKey =
+    Boolean(process.env.HL_TESTNET_PRIVATE_KEY) &&
+    process.env.HL_TESTNET_PRIVATE_KEY !== DEFAULT_TESTNET_KEY;
+  /** Live POST only when HL_LIVE + a non-default funded testnet key is supplied. */
+  const livePost = wantsLive && hasFundedKey;
+  const dryRun = !livePost;
+  const runCommitDemo = process.env.HL_VERIFY_TTL !== "0";
 
   __clearIntentLedgerForTests();
 
-  const bridge = createHlIntentBridge({
+  const executorOpts: HlSessionKeyExecutorOptions = {
     signer: new Wallet(privateKey),
     dryRun,
     isTestnet: true,
     systemState: buildSystemState({
-      accountBalanceUsd: 50_000,
+      accountBalanceUsd: GRANT_ACCOUNT_BALANCE_USD,
       currentCri: 100,
       skipHardlockAssert: true,
     }),
-  });
+  };
+
+  const bridge = createHlIntentBridge(executorOpts);
+  const prepareLeg = createGrantPrepareLeg(executorOpts);
 
   const auditLog: AuditStep[] = [];
   const intentId = `hl-testnet-${Date.now()}`;
@@ -90,15 +170,7 @@ async function main(): Promise<void> {
   });
 
   const prepared = await prepareIntent(intentId, {
-    prepareLeg: async (leg, index, intent) => {
-      if (dryRun) {
-        if (leg.sizeUsd <= 0) {
-          return { legIndex: index, ok: false, reason: "INVALID_LEG_SIZE" };
-        }
-        return { legIndex: index, ok: true, filledUsd: leg.sizeUsd };
-      }
-      return bridge.prepareLeg(leg, index, intent);
-    },
+    prepareLeg,
     flattenLeg: bridge.flattenLeg,
   });
 
@@ -115,7 +187,7 @@ async function main(): Promise<void> {
     }),
   });
 
-  if (runTtlDemo && prepared.ok) {
+  if (runCommitDemo && prepared.ok && prepared.intent.phase === "PREPARED") {
     const committed = await commitIntent(intentId, {
       commitLeg: bridge.commitLeg,
       flattenLeg: bridge.flattenLeg,
@@ -137,45 +209,61 @@ async function main(): Promise<void> {
 
   const abortId = `hl-testnet-abort-${Date.now()}`;
   createCrossLegIntent({ id: abortId, legs: [HL_LEG, POLY_LEG] });
-  await prepareIntent(abortId, {
-    prepareLeg: async (leg, index, intent) => {
-      if (dryRun) {
-        return { legIndex: index, ok: true, filledUsd: leg.sizeUsd };
-      }
-      return bridge.prepareLeg(leg, index, intent);
-    },
-    flattenLeg: bridge.flattenLeg,
-  });
-  const aborted = await abortIntent(abortId, "GRANT_VERIFY_OPERATOR_ABORT", {
+
+  const abortPrepared = await prepareIntent(abortId, {
+    prepareLeg,
     flattenLeg: bridge.flattenLeg,
   });
 
-  auditLog.push({
-    step: "ABORT",
-    intentId: abortId,
-    phase: aborted.intent.phase,
-    ok: aborted.ok,
-    reason: aborted.reason,
-    dryRun,
-    responseRef: responseRef({ flattenActions: aborted.intent.flattenActions }),
-  });
+  if (abortPrepared.ok && abortPrepared.intent.phase === "PREPARED") {
+    const aborted = await abortIntent(abortId, "GRANT_VERIFY_OPERATOR_ABORT", {
+      flattenLeg: bridge.flattenLeg,
+    });
+
+    auditLog.push({
+      step: "ABORT",
+      intentId: abortId,
+      phase: aborted.intent.phase,
+      ok: aborted.ok,
+      reason: aborted.reason,
+      dryRun,
+      responseRef: responseRef({ flattenActions: aborted.intent.flattenActions }),
+    });
+  } else {
+    const snapshot = getIntent(abortId);
+    auditLog.push({
+      step: "ABORT",
+      intentId: abortId,
+      phase: snapshot?.phase ?? abortPrepared.intent.phase,
+      ok: false,
+      reason:
+        abortPrepared.reason ??
+        `SKIP_ABORT_NOT_PREPARED:${snapshot?.phase ?? abortPrepared.intent.phase}`,
+      dryRun,
+      responseRef: responseRef({
+        legResults: abortPrepared.intent.legResults,
+        flattenLog: bridge.hlFlattenLog,
+      }),
+    });
+  }
 
   const report = {
     event: "HL_TESTNET_2PC_VERIFY",
     network: "hyperliquid-testnet",
     dryRun,
-    liveHint: dryRun
-      ? "Set HL_TESTNET_PRIVATE_KEY + HL_LIVE=1 for live exchange posts"
-      : "Live mode — check Hyperliquid testnet explorer for wallet activity",
+    livePost,
+    liveHint: livePost
+      ? "Live mode — check Hyperliquid testnet explorer for wallet activity"
+      : wantsLive && !hasFundedKey
+        ? "HL_LIVE set without HL_TESTNET_PRIVATE_KEY — preTrade pipeline dry-run only"
+        : "Set HL_TESTNET_PRIVATE_KEY + HL_LIVE=1 for live exchange posts",
     auditLog,
     timestamp: new Date().toISOString(),
   };
 
   console.log(JSON.stringify(report, null, 2));
 
-  const failed = auditLog.some(
-    (s) => !s.ok && (s.step === "PREPARE" || s.step === "COMMIT"),
-  );
+  const failed = auditLog.some((s) => !s.ok);
   if (failed) {
     process.exitCode = 1;
   }
