@@ -28,6 +28,7 @@ export {
   readBlackSwanActiveTriggers,
   type BlackSwanLogEvent,
   type BlackSwanLogPayload,
+  type LubanBand,
 } from "./black-swan-logger";
 
 /** Slippage fuse — trips above 2.5% */

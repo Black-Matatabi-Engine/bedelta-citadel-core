@@ -1,5 +1,6 @@
 /**
  * Commercial fee engine — 15% performance fee + 0.1% instant withdrawal convenience fee.
+ * DonDon charity share aligns with docs/architecture/DONDON_CHARITY_ENGINE.md.
  */
 
 /** Protocol performance fee on gross yield (15%) */
@@ -7,6 +8,12 @@ export const PERFORMANCE_FEE_RATE = 0.15;
 
 /** Instant withdrawal convenience fee (0.1%) */
 export const INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE = 0.001;
+
+/** DonDon Protection Pool share — 10 bps = 0.1% */
+export const DONDON_CHARITY_BPS = 10;
+
+/** DonDon rate as decimal (0.001) — mirrors DONDON_CHARITY_BPS */
+export const DONDON_CHARITY_RATE = DONDON_CHARITY_BPS / 10_000;
 
 /** Conservative net APY band (percent points) for grant / API disclosure */
 export const CONSERVATIVE_NET_APY_BAND = {
@@ -28,6 +35,8 @@ export interface YieldFeeBreakdown {
   netApy: number;
   protocolTreasuryFee: number;
   instantWithdrawalFeeRate: number;
+  /** APY fraction routed to DonDon Protection Pool (0.1% of gross) */
+  dondonCharityShare: number;
 }
 
 export interface WithdrawalFeeResult {
@@ -35,6 +44,8 @@ export interface WithdrawalFeeResult {
   convenienceFeeUsd: number;
   netWithdrawalUsd: number;
   convenienceFeeRate: number;
+  /** USD routed to DonDon from convenience fee (full 0.1% when feeRate matches) */
+  dondonCharityShare: number;
 }
 
 /** Build conservative net APY band — live net clamped into [min, max] */
@@ -68,6 +79,7 @@ export function calculateYieldFees(grossApy: number): YieldFeeBreakdown {
     netApy,
     protocolTreasuryFee: performanceFeeApy,
     instantWithdrawalFeeRate: INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE,
+    dondonCharityShare: safeGross * DONDON_CHARITY_RATE,
   };
 }
 
@@ -78,11 +90,16 @@ export function calculateInstantWithdrawalFee(
 ): WithdrawalFeeResult {
   const safeAmount = Math.max(0, withdrawalUsd);
   const convenienceFeeUsd = safeAmount * feeRate;
+  const dondonCharityShare =
+    feeRate === INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE
+      ? convenienceFeeUsd
+      : safeAmount * DONDON_CHARITY_RATE;
   return {
     withdrawalUsd: safeAmount,
     convenienceFeeUsd,
     netWithdrawalUsd: safeAmount - convenienceFeeUsd,
     convenienceFeeRate: feeRate,
+    dondonCharityShare,
   };
 }
 

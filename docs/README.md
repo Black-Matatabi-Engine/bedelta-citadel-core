@@ -40,3 +40,11 @@
 
 ## 11-archive-and-notes
 - [11-archive-and-notes](11-archive-and-notes/)
+
+## architecture (SSOT)
+- [Risk_Envelope_Pgate.md](architecture/Risk_Envelope_Pgate.md)
+- [WEB2_VS_WEB3_QUANT_MAP.md](architecture/WEB2_VS_WEB3_QUANT_MAP.md)
+- [LUBAN_EXOSKELETON_CUSHION.md](architecture/LUBAN_EXOSKELETON_CUSHION.md)
+- [IRONBANK_RWA_SILVER_STANDARD.md](architecture/IRONBANK_RWA_SILVER_STANDARD.md)
+- [DONDON_CHARITY_ENGINE.md](architecture/DONDON_CHARITY_ENGINE.md)
+- [TANG_CLAN_QUANT_ARSENAL.md](architecture/TANG_CLAN_QUANT_ARSENAL.md)

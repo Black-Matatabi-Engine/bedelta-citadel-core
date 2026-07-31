@@ -1,5 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
+  DONDON_CHARITY_BPS,
+  DONDON_CHARITY_RATE,
   INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE,
   PERFORMANCE_FEE_RATE,
   calculateInstantWithdrawalFee,
@@ -16,12 +18,15 @@ describe("fee-calculator", () => {
     expect(fees.protocolTreasuryFee).toBeCloseTo(0.018);
     expect(fees.netApy).toBeCloseTo(0.102);
     expect(fees.netApy + fees.protocolTreasuryFee).toBeCloseTo(0.12);
+    expect(DONDON_CHARITY_BPS).toBe(10);
+    expect(fees.dondonCharityShare).toBeCloseTo(0.12 * DONDON_CHARITY_RATE);
   });
 
   it("returns zero fees for zero gross APY", () => {
     const fees = calculateYieldFees(0);
     expect(fees.netApy).toBe(0);
     expect(fees.protocolTreasuryFee).toBe(0);
+    expect(fees.dondonCharityShare).toBe(0);
   });
 
   it("computes 0.1% instant withdrawal convenience fee", () => {
@@ -29,6 +34,7 @@ describe("fee-calculator", () => {
     expect(result.convenienceFeeRate).toBe(INSTANT_WITHDRAWAL_CONVENIENCE_FEE_RATE);
     expect(result.convenienceFeeUsd).toBeCloseTo(10);
     expect(result.netWithdrawalUsd).toBeCloseTo(9_990);
+    expect(result.dondonCharityShare).toBeCloseTo(10);
   });
 
   it("exposes helper accessors for net APY and treasury fee", () => {

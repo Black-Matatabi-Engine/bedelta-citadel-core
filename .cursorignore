@@ -1,5 +1,5 @@
 # Exclude non-code assets and heavy docs from Cursor Indexing
-docs/
+#docs/
 coverage/
 dist/
 node_modules/

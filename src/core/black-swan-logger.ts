@@ -13,11 +13,16 @@ export type BlackSwanLogEvent =
 
 export type BlackSwanLogLevel = "warn" | "error";
 
+/** LuBan exoskeleton band — collapse boundary telemetry on black-swan events */
+export type LubanBand = "SAFE" | "CAUTION" | "CRITICAL" | "COLLAPSE";
+
 export interface BlackSwanLogPayload {
   level: BlackSwanLogLevel;
   module: "black-swan-defense";
   event: BlackSwanLogEvent;
   hudTag: typeof BLACK_SWAN_HUD_TAG | null;
+  /** LuBan Metric posture at log time */
+  lubanBand: LubanBand;
   timestamp: string;
   symbol: string;
   message: string;
@@ -63,13 +68,17 @@ export function setBlackSwanDefenseActive(
 }
 
 export function emitBlackSwanLog(
-  input: Omit<BlackSwanLogPayload, "module" | "timestamp"> & { at?: number },
+  input: Omit<BlackSwanLogPayload, "module" | "timestamp" | "lubanBand"> & {
+    at?: number;
+    lubanBand?: LubanBand;
+  },
 ): BlackSwanLogPayload {
   const payload: BlackSwanLogPayload = {
     level: input.level,
     module: "black-swan-defense",
     event: input.event,
     hudTag: input.hudTag ?? (defenseActive ? BLACK_SWAN_HUD_TAG : null),
+    lubanBand: input.lubanBand ?? (defenseActive ? "COLLAPSE" : "SAFE"),
     timestamp: isoNow(input.at),
     symbol: input.symbol,
     message: input.message,
@@ -104,6 +113,7 @@ export function logBlackSwanTrip(input: {
       ? "BLACK_SWAN_DEVIATION_LOCK"
       : "BLACK_SWAN_LIQUIDITY_HALT",
     hudTag: BLACK_SWAN_HUD_TAG,
+    lubanBand: "COLLAPSE",
     symbol: input.symbol,
     message: `${BLACK_SWAN_HUD_TAG} ${input.triggers.join("|")}`,
     details: input.details,
@@ -122,6 +132,7 @@ export function logBlackSwanEmergencyFlatten(input: {
     level: "error",
     event: "BLACK_SWAN_EMERGENCY_FLATTEN",
     hudTag: BLACK_SWAN_HUD_TAG,
+    lubanBand: "COLLAPSE",
     symbol: input.symbol,
     message: `${BLACK_SWAN_HUD_TAG} emergency auto-flatten via 2PC`,
     details: {

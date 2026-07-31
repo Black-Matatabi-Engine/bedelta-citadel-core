@@ -44,6 +44,14 @@ describe("GET /api/telemetry/health", () => {
       dynamicMaxSlUsd: expect.any(Number),
     });
     expect(body.counterAttackStatus).toBe("STANDBY");
+    expect(body.lubanExoskeleton).toEqual({
+      status: "SAFE",
+      cushionArmed: true,
+    });
+    expect(body.dondonCharityEngine).toEqual({
+      status: "ACTIVE",
+      feeBps: 10,
+    });
     expect(typeof body.timestamp).toBe("string");
   });
 
@@ -65,6 +73,11 @@ describe("GET /api/telemetry/health", () => {
     expect(body.circuitBreakers.r20Locked).toBe(true);
     expect(body.circuitBreakers.signingChannelOpen).toBe(false);
     expect(body.counterAttackStatus).toBe("LOCKED");
+    expect(body.lubanExoskeleton).toEqual({
+      status: "COLLAPSE",
+      cushionArmed: true,
+    });
+    expect(body.dondonCharityEngine.feeBps).toBe(10);
     expect(body.accountBalanceUsd).toBeUndefined();
     expect(body.systemState).toBeUndefined();
     expect(serialized).not.toMatch(FORBIDDEN_PAYLOAD_KEYS);

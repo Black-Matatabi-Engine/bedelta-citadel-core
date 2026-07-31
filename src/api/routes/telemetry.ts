@@ -5,6 +5,7 @@ import {
   readBlackSwanActiveTriggers,
   type BlackSwanLogPayload,
 } from "../../core/black-swan-guard";
+import { DONDON_CHARITY_BPS } from "../../core/fee-calculator";
 import {
   isR20Locked,
   readActiveSystemState,
@@ -22,6 +23,8 @@ import {
 } from "../../services/santenmoku-three-eye";
 
 export type SoilResistanceTelemetryStatus = "PASS" | "STANDBY" | "LOCKED";
+
+export type LubanExoskeletonStatus = "SAFE" | "CAUTION" | "CRITICAL" | "COLLAPSE";
 
 export interface TelemetryHealthResponse {
   success: true;
@@ -48,6 +51,16 @@ export interface TelemetryHealthResponse {
     triggers: readonly string[];
     recentLogs: readonly BlackSwanLogPayload[];
   };
+  /** LuBan exoskeleton posture — Grant-visible cushion arming */
+  lubanExoskeleton: {
+    status: LubanExoskeletonStatus;
+    cushionArmed: boolean;
+  };
+  /** DonDon 0.1% charity engine — fee policy disclosure */
+  dondonCharityEngine: {
+    status: "ACTIVE" | "PAUSED";
+    feeBps: number;
+  };
 }
 
 function resolveSoilResistanceStatus(
@@ -56,6 +69,15 @@ function resolveSoilResistanceStatus(
   if (isR20Locked(state) || state.hardlock) return "LOCKED";
   if (state.isHedgeActive) return "PASS";
   return "STANDBY";
+}
+
+function resolveLubanExoskeletonStatus(
+  state: CoreSystemState,
+): LubanExoskeletonStatus {
+  if (isBlackSwanDefenseActive() || state.hardlock || isR20Locked(state)) {
+    return "COLLAPSE";
+  }
+  return "SAFE";
 }
 
 /** GET /api/telemetry/health — public metrics without secrets or internal config. */
@@ -87,6 +109,14 @@ export function handleTelemetryHealthRequest(): Response {
       hudTag: getBlackSwanDefenseHudLabel(),
       triggers: readBlackSwanActiveTriggers(),
       recentLogs: getRecentBlackSwanLogs(),
+    },
+    lubanExoskeleton: {
+      status: resolveLubanExoskeletonStatus(state),
+      cushionArmed: true,
+    },
+    dondonCharityEngine: {
+      status: "ACTIVE",
+      feeBps: DONDON_CHARITY_BPS,
     },
   };
 
