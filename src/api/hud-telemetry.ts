@@ -2,6 +2,11 @@
  * GET /api/hud-stream — debounced Santenmoku HUD telemetry (100ms).
  */
 
+import {
+  getBlackSwanDefenseHudLabel,
+  isBlackSwanDefenseActive,
+  readBlackSwanActiveTriggers,
+} from "../core/black-swan-guard";
 import { isR20Locked, readActiveSystemState, type CoreSystemState } from "../core/state";
 import { CORS_JSON_HEADERS } from "../services/config";
 import { validateHudStreamRequest } from "../services/defense/ui-canary";
@@ -65,6 +70,11 @@ export interface HudStreamPayload {
     estimatedPnlUsd: number;
     criIndex: number;
     hudState: string;
+  };
+  blackSwanDefense: {
+    active: boolean;
+    hudTag: string | null;
+    triggers: readonly string[];
   };
 }
 
@@ -152,6 +162,11 @@ export function buildHudStreamPayload(now = Date.now()): HudStreamPayload {
       estimatedPnlUsd,
       criIndex: state.currentCri,
       hudState: dryRun ? "IDLE" : state.hudState,
+    },
+    blackSwanDefense: {
+      active: isBlackSwanDefenseActive(),
+      hudTag: getBlackSwanDefenseHudLabel(),
+      triggers: readBlackSwanActiveTriggers(),
     },
   };
 }

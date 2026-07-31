@@ -1,4 +1,11 @@
 import {
+  getBlackSwanDefenseHudLabel,
+  getRecentBlackSwanLogs,
+  isBlackSwanDefenseActive,
+  readBlackSwanActiveTriggers,
+  type BlackSwanLogPayload,
+} from "../../core/black-swan-guard";
+import {
   isR20Locked,
   readActiveSystemState,
   type CoreSystemState,
@@ -35,6 +42,12 @@ export interface TelemetryHealthResponse {
     dynamicMaxSlUsd: number;
   };
   counterAttackStatus: CounterAttackStatus;
+  blackSwanDefense: {
+    active: boolean;
+    hudTag: string | null;
+    triggers: readonly string[];
+    recentLogs: readonly BlackSwanLogPayload[];
+  };
 }
 
 function resolveSoilResistanceStatus(
@@ -69,6 +82,12 @@ export function handleTelemetryHealthRequest(): Response {
       dynamicMaxSlUsd: state.dynamicMaxSL,
     },
     counterAttackStatus: readCounterAttackTelemetryStatus(state),
+    blackSwanDefense: {
+      active: isBlackSwanDefenseActive(),
+      hudTag: getBlackSwanDefenseHudLabel(),
+      triggers: readBlackSwanActiveTriggers(),
+      recentLogs: getRecentBlackSwanLogs(),
+    },
   };
 
   return new Response(JSON.stringify(body), {
