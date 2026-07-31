@@ -13,7 +13,20 @@ import type {
 } from "../adapters/types";
 import { readActiveSystemState } from "../core/state";
 import type { IntentPhase } from "../core/intent-ledger";
-import { checkSoilResistance, type SoilResistanceResult } from "./risk-control";
+import {
+  MAX_SLIPPAGE,
+  VINE_SOIL_MAX_SLIPPAGE,
+  checkSoilResistance,
+  type SoilResistanceResult,
+} from "./risk-control";
+
+export type GuardLight = "green" | "amber" | "red";
+
+export interface AdaptiveGuardLights {
+  hyperliquid: GuardLight;
+  jupiter: GuardLight;
+  polymarket: GuardLight;
+}
 
 export interface YieldVenueSnapshot {
   venue: TriangleVenueId;
@@ -54,7 +67,43 @@ export interface YieldRouterResult {
 export interface YieldTriangleResponse extends YieldRouterResult {
   gateStatus: YieldTriangleGateStatus;
   recommendedRoute: YieldRecommendedRoute;
+  guardLights: AdaptiveGuardLights;
   fetchedAt: string;
+}
+
+function slippageGuardLight(ratio: number, warn: number, trip: number): GuardLight {
+  if (ratio >= trip) return "red";
+  if (ratio >= warn) return "amber";
+  return "green";
+}
+
+/** Jupiter ingress + Polymarket orderbook guard lights for HUD */
+export function buildAdaptiveGuardLights(result: YieldRouterResult): AdaptiveGuardLights {
+  const jup = result.venues.find((v) => v.venue === "jupiter");
+  const hl = result.venues.find((v) => v.venue === "hyperliquid");
+  const crossSlip = result.soil.crossVenueSlippage;
+  const spotPerp = result.soil.spotPerpSlippage;
+
+  let jupiter: GuardLight = "green";
+  if (!jup?.health.ok) {
+    jupiter = "red";
+  } else if (crossSlip >= MAX_SLIPPAGE || result.soil.tripped) {
+    jupiter = "red";
+  } else if (crossSlip >= VINE_SOIL_MAX_SLIPPAGE) {
+    jupiter = "amber";
+  }
+
+  let polymarket = slippageGuardLight(spotPerp, VINE_SOIL_MAX_SLIPPAGE, MAX_SLIPPAGE);
+  if (!result.soil.ok) polymarket = "red";
+
+  let hyperliquid: GuardLight = "green";
+  if (!hl?.health.ok) {
+    hyperliquid = "red";
+  } else if (!result.soilOk) {
+    hyperliquid = "amber";
+  }
+
+  return { hyperliquid, jupiter, polymarket };
 }
 
 export const DEFAULT_TRIANGLE_ADAPTERS: readonly IExchangeAdapter[] = [
@@ -181,6 +230,7 @@ export async function queryYieldTriangle(
   return {
     ...triangle,
     gateStatus,
+    guardLights: buildAdaptiveGuardLights(triangle),
     recommendedRoute: {
       venue: triangle.bestApyVenue,
       apy: best?.apy ?? 0,

@@ -17,6 +17,6 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "src/**/*.tsx"],
+  "include": ["src/**/*.ts", "src/**/*.tsx", "apps/**/*.ts", "apps/**/*.tsx"],
   "exclude": ["node_modules", "dist", "tests", "vitest.config.ts"]
 }

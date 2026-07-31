@@ -29,6 +29,11 @@ describe("yield triangle API", () => {
         reasons: [],
       },
       recommendedRoute: { venue: "hyperliquid", apy: 0.12, edgeBps: 50 },
+      guardLights: {
+        hyperliquid: "green",
+        jupiter: "green",
+        polymarket: "green",
+      },
       fetchedAt: "2026-08-01T00:00:00.000Z",
     });
 

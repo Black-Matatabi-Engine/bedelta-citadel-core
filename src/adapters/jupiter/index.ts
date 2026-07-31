@@ -441,3 +441,5 @@ export type { CoreSystemState, SystemState } from "../../core/state";
 export { R20_LOCKED, isR20Locked, readActiveSystemState } from "../../core/state";
 export type { SoilResistanceInput, SoilResistanceResult } from "../../core/risk";
 export { checkSoilResistance, vineWrapProtection } from "../../core/risk";
+
+export * from "./ingress-guard";

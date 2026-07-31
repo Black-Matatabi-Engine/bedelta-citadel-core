@@ -9,7 +9,7 @@ const rootDir = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   define: {
-    "import.meta.env.NEXT_PUBLIC_HUD_CANARY": JSON.stringify("santenmoku"),
+    "import.meta.env.NEXT_PUBLIC_HUD_CANARY": JSON.stringify("bedelta-stealth"),
   },
   publicDir: "public",
   build: {

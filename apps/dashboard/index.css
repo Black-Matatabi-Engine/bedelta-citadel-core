@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@source "../../index.html";
+@source "./**/*.{ts,tsx}";
+
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+}
+
+@layer base {
+  :root {
+    --hud-bg: #030304;
+    --hud-panel: #0a0a0c;
+    --hud-border: rgba(63, 63, 70, 0.45);
+    --hud-text: #e4e4e7;
+    --hud-muted: #71717a;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    background-color: var(--hud-bg);
+    background-image:
+      radial-gradient(ellipse 100% 60% at 50% -10%, rgba(39, 39, 42, 0.35), transparent 55%),
+      linear-gradient(180deg, #030304 0%, #050506 100%);
+    color: var(--hud-text);
+    font-family: var(--font-sans);
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+  }
+}
+
+@layer components {
+  .font-data {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .stealth-shell {
+    color: var(--hud-text);
+  }
+
+  .hud-panel {
+    border: 1px solid var(--hud-border);
+    border-radius: 0.5rem;
+    background: linear-gradient(165deg, rgba(10, 10, 12, 0.95), rgba(3, 3, 4, 0.98));
+    padding: 1rem 1.125rem;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
+  }
+
+  .intent-log {
+    max-height: 420px;
+    scrollbar-width: thin;
+    scrollbar-color: #3f3f46 transparent;
+  }
+
+  .intent-log::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .intent-log::-webkit-scrollbar-thumb {
+    background: #3f3f46;
+    border-radius: 3px;
+  }
+}
