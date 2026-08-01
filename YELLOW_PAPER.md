@@ -1,7 +1,7 @@
-# BeDelta Living Water · SliverVine Protocol · Santenmoku v0.8 Yellow Paper
+# BeΔ Living Water · SliverVine Protocol · Santenmoku v0.8 Yellow Paper
 
 **Document class:** Formal specification (mathematics · state machines · access control)  
-**Protocol:** SliverVine Protocol · Santenmoku v0.8.0-rc1 · Product: BeDelta Living Water  
+**Protocol:** SliverVine Protocol · Santenmoku v0.8.0-rc1 · Product: BeΔ Living Water  
 **Deploy:** `bedeltawater.slivervine.xyz` · `BEDELTA_WATER_KV`  
 
 **Canonical modules:** `src/core/state.ts` · `src/services/systemState.ts` · `src/services/cri-engine.ts` · `src/services/criEngine.ts` · `src/services/risk-control.ts` · `src/services/rootProtectionService.ts` · `src/v2/services/demo-roles.ts`

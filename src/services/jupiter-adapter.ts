@@ -1,5 +1,5 @@
 /**
- * Jupiter Aggregator adapter — BeDelta / SilverVine services layer.
+ * Jupiter Aggregator adapter — BeΔ / SilverVine services layer.
  * Workers-safe fetch · SystemState circuit breakers · soil resistance linkage.
  */
 

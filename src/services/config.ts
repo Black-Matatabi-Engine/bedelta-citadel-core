@@ -1,6 +1,6 @@
 import type { Env } from "../env";
 
-export const APP_VERSION = "v0.8.0 — BeDelta Living Water · Santenmoku";
+export const APP_VERSION = "v0.8.0 — BeΔ Living Water · Santenmoku";
 
 export const DEFAULT_TOKENS: readonly string[] = [
   "BTC",

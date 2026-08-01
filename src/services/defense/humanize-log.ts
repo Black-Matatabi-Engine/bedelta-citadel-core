@@ -3,7 +3,7 @@
  * Never surface raw SQL / stack / API jargon to the public DEBUG CONSOLE.
  */
 
-const PRODUCT = "BeDelta";
+const PRODUCT = "BeΔ";
 
 /** Map machine logs / errors into operator-facing English. */
 export function humanizeSystemLog(raw: string): string {

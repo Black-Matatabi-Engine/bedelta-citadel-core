@@ -1,5 +1,5 @@
 /**
- * Polymarket CLOB adapter — BeDelta / SilverVine services layer.
+ * Polymarket CLOB adapter — BeΔ / SilverVine services layer.
  * Native fetch only · SystemState circuit breakers · soil resistance linkage.
  */
 

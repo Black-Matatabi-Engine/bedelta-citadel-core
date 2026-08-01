@@ -1,5 +1,5 @@
 /**
- * SilverVine / BeDelta services barrel — venue adapters + Santenmoku Three-Eye audit.
+ * SilverVine / BeΔ services barrel — venue adapters + Santenmoku Three-Eye audit.
  */
 
 export {

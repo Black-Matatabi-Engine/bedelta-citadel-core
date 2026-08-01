@@ -11,7 +11,7 @@ if (!rootEl) {
 
 createRoot(rootEl).render(
   <StrictMode>
-    <TerminalErrorBoundary title="BeDelta Living Water — HUD">
+    <TerminalErrorBoundary title="BeΔ Living Water — HUD">
       <App />
     </TerminalErrorBoundary>
   </StrictMode>,

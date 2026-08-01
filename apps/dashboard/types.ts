@@ -32,6 +32,7 @@ export interface YieldTriangleViewModel {
   jupiterImpactBps: number;
   polymarketSpreadBps: number;
   fundingRateBps: number;
+  netApyBand: { min: number; base: number; max: number } | null;
   gateStatus: YieldTriangleGateStatus;
   guardLights: AdaptiveGuardLights;
   fetchedAt: string;

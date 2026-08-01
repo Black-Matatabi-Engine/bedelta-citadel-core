@@ -15,7 +15,7 @@ Do **not** collapse SIL ↔ SLI. Fix entity typos only; keep runtime bindings.
 | Protocol face (code / legacy greenpapers) | **SliverVine Protocol** (SLI-) | Blind mass-replace to SilverVine Protocol without glossary |
 | DApp / Worker deploy | **`bedeltawater.slivervine.xyz`** | `dev-santenbokui.slivervine.xyz` · silvervine.xyz |
 | Parent SLI zone | `slivervine.xyz` | silvervine.xyz |
-| Product (Grant Wave 1) | **BeDelta Living Water** | BeDeltaLivingWater / LivingPool as primary title |
+| Product (Grant Wave 1) | **BeΔ Living Water** (display) · code id `bedelta-*` | BeDeltaLivingWater / LivingPool as primary title |
 | Risk layer (Grant English) | **Risk Envelope** (aka Santenmoku / Pgate) | Tang Clan / Iron Bank mythology in grant pack |
 | Isolated KV | **`BEDELTA_WATER_KV`** | Shared legacy namespace IDs |
 
@@ -44,12 +44,12 @@ curl -s https://bedeltawater.slivervine.xyz/api/telemetry/health | jq .
 
 | Sleeve | Role | Prefix examples |
 |--------|------|-----------------|
-| Yield (BeDelta) | Water / TVL ingress | `routeYieldIngress`, `calcStackedApy` |
+| Yield (BeΔ) | Water / TVL ingress | `routeYieldIngress`, `calcStackedApy` |
 | Risk (HTAC / Santenmoku) | Shield / envelope | `assertSoilSafe`, `triggerR20Deadlock` |
 | Execution (TWAP+) | Spear | `executeTwapOrder` |
 | Charity (DonDon) | 0.1% social | `routeDondonPool` |
 
-Public brand umbrella stays **SilverVine**; execution zone stays **slivervine.xyz**; this Worker’s public face is **BeDelta Living Water** at `bedeltawater.slivervine.xyz`.
+Public brand umbrella stays **SilverVine**; execution zone stays **slivervine.xyz**; this Worker’s public face is **BeΔ Living Water** at `bedeltawater.slivervine.xyz`.
 
 ---
 

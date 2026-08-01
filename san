@@ -3,26 +3,43 @@ set -e # 遇到任何錯誤立即停止，防止壞代碼被 commit/push
 
 GREEN='\033[0;32m'
 BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}[1/6] 🛡️ Running Typecheck & Test suite...${NC}"
+DEPLOY_FLAG=false
+
+# 解析 CLI 參數
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -d|--deploy) DEPLOY_FLAG=true ;;
+        *) echo -e "${YELLOW}Unknown option: $1. Use -d or --deploy to trigger Cloudflare deployment.${NC}" ;;
+    esac
+    shift
+done
+
+echo -e "${BLUE}[1/5] 🛡️ Running Typecheck & Test suite...${NC}"
 pnpm run typecheck
 pnpm run test
 
-echo -e "${BLUE}[2/6] 📜 Running Yellow Page Audit Log...${NC}"
+echo -e "${BLUE}[2/5] 📜 Running Yellow Page Audit Log...${NC}"
 pnpm run audit:log
 
-echo -e "${BLUE}[3/6] 🔄 Pulling latest changes from Remote (Rebase)...${NC}"
+echo -e "${BLUE}[3/5] 🔄 Pulling latest changes from Remote (Rebase)...${NC}"
 git pull origin main --rebase
 
-echo -e "${BLUE}[4/6] 📦 Staging & Committing EOD Log...${NC}"
+echo -e "${BLUE}[4/5] 📦 Staging & Committing EOD Log...${NC}"
 git add .
 git commit -m "chore(audit): daily EOD yellow page audit log sync" --author=":qum[x0sumx] | SilverVine <github@silvervinelabs.com>" || echo "No changes to commit"
 
-echo -e "${BLUE}[5/6] 🚀 Syncing & Pushing to Remote Repository...${NC}"
+echo -e "${BLUE}[5/5] 🚀 Syncing & Pushing to Remote Repository...${NC}"
 pnpm run sync:push
 
-echo -e "${BLUE}[6/6] 🌐 Deploying to Cloudflare Worker (slivervine-protocol)...${NC}"
-pnpm exec wrangler deploy
-
-echo -e "${GREEN}[✅ ALL DONE] EOD Wrap Completed! Telemetry & Deploy Pipeline Active.${NC}"
+# 判定是否觸發 Deploy
+if [ "$DEPLOY_FLAG" = true ]; then
+    echo -e "${BLUE}[6/6] 🌐 Deploying to Cloudflare Worker (bedelta-living-water)...${NC}"
+    pnpm exec wrangler deploy
+    echo -e "${GREEN}[✅ ALL DONE] Full EOD Wrap & Production Deployment Complete!${NC}"
+else
+    echo -e "${YELLOW}[ℹ️ SKIP DEPLOY] Code pushed to Git. Run './san.sh -d' to deploy to Cloudflare Worker.${NC}"
+    echo -e "${GREEN}[✅ ALL DONE] Local Audit & Git Sync Completed!${NC}"
+fi

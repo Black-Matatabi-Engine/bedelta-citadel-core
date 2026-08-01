@@ -1,26 +1,27 @@
-# BeDelta Living Water — Hyperliquid Foundation Grant Pack
+# BeΔ Living Water — Hyperliquid Foundation Grant Pack
 
 **Project:** `bedelta-living-water`  
+**Live HUD:** [https://bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
+**Entity:** [SilverVine Labs](https://silvervinelabs.com) · [GitHub](https://github.com/SilverVineLabs/bedelta-living-water)  
 **Hero thesis:** Hyperliquid-native yield ingress → HL perp OI  
-**Wave:** Solo-built infrastructure MVP (Wave 1)  
-**Author:** SilverVine Labs / :qum[x0sumx]
+**Wave:** Solo-built infrastructure MVP (Wave 1)
 
-> **Scope honesty:** Wave 1 is **read-path + testnet execution proof** — not a live cross-chain capital bridge. Bridge deployment and Durable Object ledger hardening are **Milestone 2**.
+> **Scope honesty:** Wave 1 is **read-path + Hyperliquid Testnet execution proof** — not a live cross-chain capital bridge. Bridge deployment and Durable Object ledger hardening are **Milestone 2**.
 
-> **Milestone 2+ (not Wave 1):** LuBan Cushion and DonDon on-chain routing are Milestone 2+ specifications (fee & telemetry aligned); Wave 1 ships the core BeDelta Risk Envelope and 2PC Intent Ledger on Hyperliquid.
+> **Milestone 2+ (not Wave 1):** LuBan Cushion and DonDon on-chain routing are Milestone 2+ specifications (fee & telemetry aligned); Wave 1 ships the core BeΔ Risk Envelope and 2PC Intent Ledger on Hyperliquid.
 
 ---
 
 ## 1. One-Sentence Pitch
 
-**BeDelta Living Water** routes idle stable yield from **Solana / Arbitrum** into **Hyperliquid** as the sole 1× short hedge venue — gated by **Session Key TRADE_ONLY**, **Dynamic Max SL** (`Balance × 1% + $100`), and a **2PC Intent Ledger** with TTL abort + reduce-only flatten — so external capital becomes **sticky HL open interest** without naked cross-venue delta.
+**BeΔ Living Water** routes idle stable yield from **Solana / Arbitrum** into **Hyperliquid** as the sole 1× short hedge venue — gated by **Session Key TRADE_ONLY**, **Dynamic Max SL** (`Balance × 1% + $100`), and a **2PC Intent Ledger** with TTL abort + reduce-only flatten — so external capital becomes **sticky HL open interest** without naked cross-venue delta.
 
 ---
 
 ## 2. Why Hyperliquid (Ecosystem Fit · TVL / OI)
 
-| HL outcome | BeDelta mechanism |
-|------------|-------------------|
+| HL outcome | BeΔ mechanism |
+|------------|---------------|
 | **Open Interest** | Every deployed dollar pairs with an HL 1× short hedge leg |
 | **TVL stickiness** | Yield Triangle makes HL the *required* hedge anchor (`targetVenue: "HYPERLIQUID"`) |
 | **Safer builder flow** | Session Key cannot withdraw; soil + root + black-swan fuses block toxic opens |
@@ -30,7 +31,7 @@
 
 | KPI | Target (post-M2 bridge) |
 |-----|-------------------------|
-| Testnet 2PC intents verified | Reproducible via `pnpm grant:verify` / `grant:hl-testnet` |
+| Hyperliquid Testnet 2PC intents verified | Reproducible via `pnpm grant:verify` / `grant:hl-testnet` |
 | Hedge notional (pilot) | Track HL short notional vs ingress deposits |
 | OI contribution | 1:1 mapping design — $1 ingress → ~$1 HL hedge OI (delta-neutral) |
 
@@ -69,7 +70,7 @@
 | **M1f** | Ingress read-path (SOL / ARB) | `src/adapters/solana/*` · `arbitrum/*` | integration tests |
 | **M1g** | Fee engine | `src/core/fee-calculator.ts` | `tests/core/fee-calculator.test.ts` |
 | **M1h** | Zero-key sandbox | `src/services/sandbox.ts` | `tests/e2e/grant-sandbox-dryrun.test.ts` |
-| **M1i** | HL testnet audit script | `scripts/verify-hl-testnet.ts` | `pnpm grant:hl-testnet` |
+| **M1i** | Hyperliquid Testnet audit script | `scripts/verify-hl-testnet.ts` | `pnpm grant:hl-testnet` |
 | **M1j** | Black-swan circuit | `src/core/black-swan-guard.ts` | `tests/stress/black-swan-scenario.test.ts` |
 | **M2** | Live capital bridge + DO ledger | Roadmap | — |
 | **M2+** | LuBan cushion · DonDon on-chain | Appendix below | Spec + fee/telemetry align |
@@ -88,10 +89,10 @@ pnpm grant:verify
 
 ```bash
 pnpm test          # 575/575
-pnpm grant:hl-testnet   # structured 2PC audit JSON (dry-run default)
+pnpm grant:hl-testnet   # Hyperliquid Testnet 2PC audit JSON (dry-run default)
 ```
 
-Live testnet (optional):
+Live Hyperliquid Testnet (optional):
 
 ```bash
 HL_TESTNET_PRIVATE_KEY=0x... HL_LIVE=1 pnpm grant:hl-testnet
@@ -127,15 +128,16 @@ We do **not** pitch a single headline APY. API returns:
 ## 7. Demo Checklist (5 min)
 
 1. `pnpm grant:verify` — terminal green  
-2. `curl "/api/yield/triangle?symbol=ETH&ingressChain=SOLANA"` — `targetVenue`, `netApyBand`, `gateStatus`  
-3. `pnpm grant:hl-testnet` — PREPARE → COMMIT audit JSON  
-4. `curl "/api/telemetry/health"` — CRI · circuit breakers · soil status  
+2. `curl -s "https://bedeltawater.slivervine.xyz/api/yield/triangle?symbol=ETH&ingressChain=SOLANA"` — `targetVenue`, `netApyBand`, `gateStatus`  
+3. `pnpm grant:hl-testnet` — Hyperliquid Testnet PREPARE → COMMIT audit JSON  
+4. `curl -s "https://bedeltawater.slivervine.xyz/api/telemetry/health"` — CRI · circuit breakers · soil status  
+5. Open [Live HUD](https://bedeltawater.slivervine.xyz/) — BeΔ Edge status  
 
 ---
 
 ## Appendix A — Milestone 2+ Roadmap (Not Wave 1 Claims)
 
-> LuBan Cushion and DonDon on-chain routing are Milestone 2+ specifications (fee & telemetry aligned); Wave 1 ships the core BeDelta Risk Envelope and 2PC Intent Ledger on Hyperliquid.
+> LuBan Cushion and DonDon on-chain routing are Milestone 2+ specifications (fee & telemetry aligned); Wave 1 ships the core BeΔ Risk Envelope and 2PC Intent Ledger on Hyperliquid.
 
 | Item | Wave 1 status | Milestone 2+ |
 |------|---------------|--------------|
@@ -155,4 +157,5 @@ Architecture references (internal SSOT — not Wave 1 deliverables):
 
 BUSL-1.1 with **Additional Use Grant** for Hyperliquid Foundation grant evaluators — see [LICENSE](../../LICENSE).
 
-**Quick submit card:** [SUBMISSION.md](./SUBMISSION.md)
+**Quick submit card:** [SUBMISSION.md](./SUBMISSION.md)  
+**Brand / contact:** [silvervinelabs.com](https://silvervinelabs.com) · [GitHub repo](https://github.com/SilverVineLabs/bedelta-living-water)

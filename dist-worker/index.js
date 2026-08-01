@@ -2,7 +2,7 @@ var __defProp = Object.defineProperty;
 var __name = (target, value) => __defProp(target, "name", { value, configurable: true });
 
 // src/services/config.ts
-var APP_VERSION = "v0.8.0 \u2014 BeDelta Living Water \xB7 Santenmoku";
+var APP_VERSION = "v0.8.0 \u2014 Be\u0394 Living Water \xB7 Santenmoku";
 var DEFAULT_TOKENS = [
   "BTC",
   "ETH",
@@ -40,48 +40,48 @@ var CORS_JSON_HEADERS = {
 };
 
 // src/services/defense/humanize-log.ts
-var PRODUCT = "\u8518\u5929\u6728";
+var PRODUCT = "Be\u0394";
 function humanizeSystemLog(raw) {
   const line = String(raw ?? "").trim();
   if (!line) return "";
   const upper = line.toUpperCase();
-  if (/CROSS_VENUE_SLIPPAGE|SPOT_PERP_SLIPPAGE|SOIL_RESISTANCE_TRIP|SPREAD_TOO_HIGH|價差過大/.test(
+  if (/CROSS_VENUE_SLIPPAGE|SPOT_PERP_SLIPPAGE|SOIL_RESISTANCE_TRIP|SPREAD_TOO_HIGH/.test(
     upper
   ) || /SOIL RESISTANCE CIRCUIT BREAKER TRIPPED/i.test(line)) {
-    return `[Co-Pilot Care] Soil capacity exceeded \u2014 DonDon auto-capped order size. Your equity is protected.`;
+    return `[Risk] ${PRODUCT} soil capacity exceeded \u2014 order size auto-capped. Equity protected.`;
   }
-  if (/CRI.?HARDLOCK|HARDLOCK|簽名通道已切斷|PHYSICAL DEADLOCK/i.test(upper) || /CRI_HARDLOCK/i.test(line)) {
-    return `[\u98A8\u63A7\u6B7B\u9396] ${PRODUCT}\u89F8\u767C\u7269\u7406\u6B7B\u9396\uFF0CCRI \u6B78\u96F6\uFF0CHot Key \u7C3D\u540D\u901A\u9053\u5DF2\u5207\u65B7`;
+  if (/CRI.?HARDLOCK|HARDLOCK|PHYSICAL DEADLOCK/i.test(upper) || /CRI_HARDLOCK/i.test(line)) {
+    return `[Risk] Physical deadlock \u2014 CRI zeroed; Hot Key signing channel severed.`;
   }
   if (/ROOT_PROTECTION_TRIP|MAX.?SL|RISKLIMITEXCEEDED/i.test(line)) {
-    return `[Co-Pilot Care] Dynamic Max SL weld engaged \u2014 Javier capped max risk to protect your equity.`;
+    return `[Risk] Dynamic Max SL engaged \u2014 max loss capped. Equity protected.`;
   }
-  if (/DEPTH_USD|MINDEPTH|流動性不足/i.test(line)) {
-    return `[\u98A8\u63A7\u63D0\u793A] \u76E4\u53E3\u6DF1\u5EA6\u4E0D\u8DB3\uFF0C${PRODUCT}\u571F\u58E4\u963B\u6297\u9632\u7DDA\u5DF2\u62D2\u7D55\u9032\u5834`;
+  if (/DEPTH_USD|MINDEPTH/i.test(line)) {
+    return `[Risk] Insufficient book depth \u2014 soil resistance rejected entry.`;
   }
   if (/RPC_NODE_NOT_ALLOWLISTED|NOT ON ALLOWLIST/i.test(line)) {
-    return `[\u98A8\u63A7\u63D0\u793A] \u5075\u6E2C\u5230\u672A\u6388\u6B0A\u7684 RPC \u7BC0\u9EDE\u8ACB\u6C42\uFF0C${PRODUCT}\u5DF2\u6514\u622A\uFF08\u50C5\u5141\u8A31\u767D\u540D\u55AE\u7BC0\u9EDE\uFF09`;
+    return `[Risk] Unauthorized RPC host blocked \u2014 allowlist only.`;
   }
-  if (/PIN LOCK|PINNED.*MAX|FOMO|置頂.*上限|風控死鎖/i.test(line)) {
-    return `[\u98A8\u63A7\u6B7B\u9396] \u70BA\u4E86\u9632\u6B62\u60C5\u7DD2 FOMO\uFF0C\u7F6E\u9802\u6838\u5FC3\u76E3\u63A7\u6A19\u7684\u7269\u7406\u4E0A\u9650\u70BA 3 \u500B\u3002`;
+  if (/PIN LOCK|PINNED.*MAX|FOMO/i.test(line)) {
+    return `[Risk] Watchlist hard-cap is 3 symbols \u2014 FOMO latch engaged.`;
   }
   if (/ALLMIDS.*FAILED|HL META.*FAILED|NETWORK ERROR|FETCH FAILED/i.test(line)) {
-    return `[\u7CFB\u7D71\u63D0\u793A] \u884C\u60C5\u7BC0\u9EDE\u66AB\u6642\u7E41\u5FD9\uFF0C${PRODUCT}\u6B63\u5728\u91CD\u8A66\u540C\u6B65\uFF0C\u8ACB\u7A0D\u5019\u518D FORCE REFRESH`;
+    return `[System] Market node busy \u2014 retry sync, then FORCE REFRESH.`;
   }
   if (/SQL(STATE|EXCEPTION|ERROR)|SQLITE|POSTGRES|MYSQL|PRAGMA/i.test(line)) {
-    return `[\u7CFB\u7D71\u63D0\u793A] \u5167\u90E8\u8CC7\u6599\u6821\u9A57\u672A\u901A\u904E\uFF0C${PRODUCT}\u5DF2\u5B89\u5168\u964D\u7D1A\uFF0C\u4E0D\u5F71\u97FF\u60A8\u7684\u700F\u89BD`;
+    return `[System] Internal validation failed \u2014 safe degrade; UI remains available.`;
   }
   if (/ECONNREFUSED|ETIMEDOUT|ENOTFOUND|HTTP\s*[45]\d\d|STATUS\s*[45]\d\d/i.test(line)) {
-    return `[\u7CFB\u7D71\u63D0\u793A] \u5916\u90E8\u884C\u60C5\u901A\u9053\u77ED\u66AB\u4E2D\u65B7\uFF0C${PRODUCT}\u9632\u79A6\u77E9\u9663\u7DAD\u6301\u5F85\u6A5F\uFF0C\u7A0D\u5F8C\u81EA\u52D5\u6062\u5FA9`;
+    return `[System] External market feed interrupted \u2014 defense matrix on standby.`;
   }
   if (/STACK TRACE|AT\s+\S+\.(TS|JS):\d+|TYPEERROR:|REFERENCEERROR:/i.test(line)) {
-    return `[\u7CFB\u7D71\u63D0\u793A] \u5F15\u64CE\u5167\u90E8\u81EA\u6AA2\u89F8\u767C\u4FDD\u8B77\uFF0C${PRODUCT}\u5DF2\u9694\u96E2\u7570\u5E38\u4E26\u7E7C\u7E8C\u670D\u52D9`;
+    return `[System] Engine self-check tripped \u2014 fault isolated; service continues.`;
   }
-  if (line.startsWith("[\u98A8\u63A7") || line.startsWith("[\u7CFB\u7D71") || line.startsWith("[TRADFI]") || line.startsWith("[allMids]") || line.startsWith("[HL") || line.startsWith("[API]") || line.startsWith("[BUNDLE]") || line.startsWith("[PIPELINE]") || line.startsWith("[SYSTEM]")) {
+  if (line.startsWith("[Risk]") || line.startsWith("[System]") || line.startsWith("[TRADFI]") || line.startsWith("[allMids]") || line.startsWith("[HL") || line.startsWith("[API]") || line.startsWith("[BUNDLE]") || line.startsWith("[PIPELINE]") || line.startsWith("[SYSTEM]")) {
     return line;
   }
   if (/[{}\[\]]/.test(line) && /error|exception|failed/i.test(line)) {
-    return `[\u7CFB\u7D71\u63D0\u793A] \u540C\u6B65\u904E\u7A0B\u51FA\u73FE\u6CE2\u52D5\uFF0C${PRODUCT}\u5DF2\u5B8C\u6210\u81EA\u7652\uFF0C\u8ACB\u67E5\u770B\u9762\u677F\u6700\u65B0\u5831\u50F9`;
+    return `[System] Sync volatility absorbed \u2014 check panel for latest marks.`;
   }
   return line;
 }
@@ -92,10 +92,10 @@ function humanizeSystemLogs(lines) {
 __name(humanizeSystemLogs, "humanizeSystemLogs");
 
 // src/services/humanize-log.ts
-var HARDLOCK_HUMAN = "[\u98A8\u63A7\u6B7B\u9396] \u8518\u5929\u6728\u89F8\u767C\u7269\u7406\u6B7B\u9396\uFF0CCRI \u6B78\u96F6\uFF0CHot Key \u7C3D\u540D\u901A\u9053\u5DF2\u5207\u65B7";
+var HARDLOCK_HUMAN = "[Risk] Physical deadlock \u2014 CRI zeroed; Hot Key signing channel severed.";
 function humanizeHardlockMessage(raw) {
   const line = String(raw ?? "").trim();
-  if (/CRI.?HARDLOCK|HARDLOCK|CRI.*0|簽名通道/i.test(line)) {
+  if (/CRI.?HARDLOCK|HARDLOCK|CRI.*0|SIGNING CHANNEL/i.test(line)) {
     return HARDLOCK_HUMAN;
   }
   return humanizeSystemLog(line) || HARDLOCK_HUMAN;
@@ -418,12 +418,12 @@ var BAGUA_GATE_UI = {
 };
 var TAIJI_MODE_UI = {
   YANG_STRIKE: {
-    label: "( ATTACK \u967D MODE )",
+    label: "( ATTACK MODE )",
     tooltip: `Yang offensive engine \u2014 Tensile \u2265 ${TAIJI_YANG_CRI_MIN}, friction clear, signing channel open.`,
     cssClass: "taiji-mode-yang"
   },
   YIN_YIELD: {
-    label: "( GUARD \u9670 MODE )",
+    label: "( GUARD MODE )",
     tooltip: `Yin guard engine \u2014 capital rotated to vault lend / ${BRAND_DELTA_SYMBOL}-neutral sleeves.`,
     cssClass: "taiji-mode-yin"
   }
@@ -1961,15 +1961,15 @@ var RISK_EVAL_CAPITAL_USD = 1e4;
 var RULE_FUNDING_STD_MAX = 0.015;
 function pickStrategy(hlFunding, annualYield) {
   if (annualYield <= STRATEGY_APR_THRESHOLD) {
-    return "\u3010 \u89C0\u671B\u5176\u8B8A / HOLD \u3011";
+    return "[ HOLD ]";
   }
   if (hlFunding > 0) {
-    return "\u3010 \u{1F4C8}\u8CB7 HL \u73FE + \u{1F4C9}\u7A7A HL \u5408 \u3011";
+    return "[ LONG HL SPOT + SHORT HL PERP ]";
   }
   if (hlFunding < 0) {
-    return "\u3010 \u{1F4C9}\u7A7A HL \u73FE + \u{1F4C8}\u591A HL \u5408 \u3011";
+    return "[ SHORT HL SPOT + LONG HL PERP ]";
   }
-  return "\u3010 \u89C0\u671B\u5176\u8B8A / HOLD \u3011";
+  return "[ HOLD ]";
 }
 __name(pickStrategy, "pickStrategy");
 function applyRiskToRow(symbol, c1_spot, d1_perp, dydxPerp, strategy, depthUsd2) {
@@ -2020,7 +2020,7 @@ function applyRiskToRow(symbol, c1_spot, d1_perp, dydxPerp, strategy, depthUsd2)
     (r) => r.startsWith("SPOT_PERP_SLIPPAGE") || r.startsWith("DEPTH_USD") || r === "INSUFFICIENT_HL_DEPTH"
   ) ? "SPREAD_TOO_HIGH" : "HOLD";
   return {
-    j1_strategy: actionStatus === "SPREAD_TOO_HIGH" ? "\u3010\u26A0\uFE0F \u50F9\u5DEE\u904E\u5927\u62D2\u7D55\u958B\u5009\u3011" : "\u3010 \u89C0\u671B\u5176\u8B8A / HOLD \xB7 \u98A8\u63A7\u7194\u65B7 \u3011",
+    j1_strategy: actionStatus === "SPREAD_TOO_HIGH" ? "[ REJECT \u2014 SPREAD TOO WIDE ]" : "[ HOLD \xB7 RISK BREAKER ]",
     actionStatus,
     risk_tripped: true,
     risk_reasons: reasons,
@@ -2201,7 +2201,7 @@ function assembleMatrix(hkt, maps, tokens = DEFAULT_TOKENS) {
       spotBasis,
       hlPerpPx,
       dydxPerp[symbol] ?? 0,
-      "\u3010 Rule B \u5996\u5E63\u84C4\u6C34\u6C60 / HIGH RATE \u3011",
+      "[ Rule B HIGH-RATE POOL ]",
       dayVol > 0 ? dayVol : void 0
     );
     const row = {
@@ -2212,7 +2212,7 @@ function assembleMatrix(hkt, maps, tokens = DEFAULT_TOKENS) {
       e1_hl_funding: e1_funding,
       h1_annual_hl,
       i1_annual_cross: Math.abs(h1_annual_hl),
-      j1_strategy: "\u3010 Rule B \u5996\u5E63\u84C4\u6C34\u6C60 \u3011",
+      j1_strategy: "[ Rule B HIGH-RATE POOL ]",
       k1_basis_sp: 0,
       n1_friction: DEFAULT_FRICTION,
       o1_cost_usd: DEFAULT_FIXED_COST_USD,
@@ -2474,7 +2474,7 @@ async function handleDataRequest(env, ctx) {
     }
     console.error("[API] /api/data failed", error);
     const message = error instanceof Error ? error.message : String(error);
-    const friendly = humanizeSystemLogs([message])[0] ?? "[\u7CFB\u7D71\u63D0\u793A] \u8518\u5929\u6728\u66AB\u6642\u7121\u6CD5\u5B8C\u6210\u540C\u6B65\uFF0C\u8ACB\u7A0D\u5F8C\u518D\u8A66";
+    const friendly = humanizeSystemLogs([message])[0] ?? "[System] Sync unavailable \u2014 retry shortly";
     const body = { success: false, error: friendly };
     return new Response(JSON.stringify(body), {
       status: 500,
@@ -4237,7 +4237,7 @@ async function handlePageRequest(env, request) {
     return env.ASSETS.fetch(request);
   }
   return new Response(
-    "BeDelta Living Water \u2014 build SPA with `pnpm run build:spa` before serving.",
+    "Be\u0394 Living Water \u2014 build SPA with `pnpm run build:spa` before serving.",
     {
       status: 503,
       headers: { "Content-Type": "text/plain; charset=utf-8" }
@@ -5094,19 +5094,19 @@ var DEFAULT_ORIGIN = "https://bedeltawater.slivervine.xyz";
 var DEFAULT_OG_IMAGE = `${DEFAULT_ORIGIN}/og/grant-audit-card.png`;
 var ENDPOINT_COPY = {
   "/api/telemetry/health": {
-    title: "BeDelta Living Water \u2014 Live Telemetry",
+    title: "Be\u0394 Living Water \u2014 Live Telemetry",
     description: "Public CRI index, soil resistance status, active venues, and circuit breaker health."
   },
   "/api/state": {
-    title: "BeDelta Living Water \u2014 System State",
+    title: "Be\u0394 Living Water \u2014 System State",
     description: "Authoritative Risk Envelope system snapshot for grant auditor verification."
   },
   "/api/data": {
-    title: "BeDelta Living Water \u2014 Matrix Data",
+    title: "Be\u0394 Living Water \u2014 Matrix Data",
     description: "Cross-venue arbitrage matrix feed with risk tripped flags for auditor review."
   },
   "/api/hedge/evaluate": {
-    title: "BeDelta Living Water \u2014 Tail Hedge Evaluation",
+    title: "Be\u0394 Living Water \u2014 Tail Hedge Evaluation",
     description: "Polymarket tail-hedge trigger evaluation gated by unified Risk Envelope policy."
   }
 };

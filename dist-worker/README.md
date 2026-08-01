@@ -1,1 +1,1 @@
-This folder contains the built output assets for the worker "bedelta-living-water" generated at 2026-07-31T23:55:35.920Z.
+This folder contains the built output assets for the worker "bedelta-living-water" generated at 2026-08-01T00:55:56.240Z.

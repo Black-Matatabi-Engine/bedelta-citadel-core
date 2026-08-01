@@ -1,10 +1,12 @@
-# BeDelta Living Water — Hyperliquid-Native Yield Ingress & Session-Key Risk Envelope
+# BeΔ Living Water — Hyperliquid-Native Yield Ingress & Session-Key Risk Envelope
 
 [![Grant Audit](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml/badge.svg)](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml)
 ![Vitest](https://img.shields.io/badge/Vitest-575_Tests_Passing-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Clean-blue)
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
 ![Live Telemetry](https://img.shields.io/badge/Live_Telemetry-%2Fapi%2Ftelemetry%2Fhealth-informational)
+
+**Entity:** [SilverVine Labs](https://silvervinelabs.com) · **Repo:** [github.com/SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) · **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 
 ## Auditor — 30-Second CLI Verify
 
@@ -17,7 +19,7 @@ pnpm grant:verify
 curl -s https://bedeltawater.slivervine.xyz/api/telemetry/health | jq .
 ```
 
-**Core commands:** `pnpm build` · `pnpm test` (575/575) · `pnpm grant:verify` · `pnpm grant:hl-testnet`
+**Core commands:** `pnpm build` · `pnpm test` (575/575) · `pnpm grant:verify` · `pnpm grant:hl-testnet` (Hyperliquid Testnet)
 
 ---
 
@@ -29,7 +31,7 @@ Hyperliquid-first yield ingress on Cloudflare Workers — Session Key risk envel
 
 | Module | Path | Role |
 |--------|------|------|
-| **Session Key Envelope** | `src/adapters/hl/session-key-executor.ts` | TRADE_ONLY + Dynamic Max SL + testnet dry-run |
+| **Session Key Envelope** | `src/adapters/hl/session-key-executor.ts` | TRADE_ONLY + Dynamic Max SL + Hyperliquid Testnet dry-run |
 | **2PC Intent Ledger** | `src/core/intent-ledger.ts` | Dual-leg prepare / commit / abort + flatten |
 | **HL ↔ 2PC Bridge** | `src/adapters/hl/hl-intent-bridge.ts` | TTL unwind integration |
 | **Crash Recovery Boot** | `src/core/intent-persistence.ts` · Worker `src/index.ts` | KV restore + TTL emergency unwind |
@@ -40,7 +42,7 @@ Hyperliquid-first yield ingress on Cloudflare Workers — Session Key risk envel
 
 `pnpm grant:verify` — HL 2PC TTL flatten + HL → Polymarket → Jupiter zero-key dry-run **all green**.
 
-Optional HL testnet audit log:
+Optional Hyperliquid Testnet audit log:
 
 ```bash
 pnpm grant:hl-testnet

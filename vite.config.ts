@@ -21,9 +21,8 @@ export default defineConfig({
   },
   server: {
     proxy: {
-      // 必須指定當前端存取 /api 時，才代理轉發至 8789 後端
-      '/api': {
-        target: 'http://localhost:8789',
+      "/api": {
+        target: "http://localhost:8789",
         changeOrigin: true,
       },
     },

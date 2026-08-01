@@ -9,7 +9,7 @@ export interface Env {
   USE_PYTHON_GATEWAY?: string;
   /** Static assets (public/) — brand images etc. */
   ASSETS?: Fetcher;
-  /** Isolated BeDelta Water KV (wrangler.jsonc SSOT) */
+  /** Isolated BeΔ Water KV (wrangler.jsonc SSOT) */
   BEDELTA_WATER_KV?: KVNamespace;
   /** Compat alias — same namespace as BEDELTA_WATER_KV */
   SLIVERVINE_KV?: KVNamespace;

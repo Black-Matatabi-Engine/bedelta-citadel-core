@@ -13,7 +13,7 @@ export async function handlePageRequest(
   }
 
   return new Response(
-    "BeDelta Living Water — build SPA with `pnpm run build:spa` before serving.",
+    "BeΔ Living Water — build SPA with `pnpm run build:spa` before serving.",
     {
       status: 503,
       headers: { "Content-Type": "text/plain; charset=utf-8" },

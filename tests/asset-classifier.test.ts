@@ -125,7 +125,7 @@ describe("defense rpc whitelist + humanize", () => {
     );
     expect(msg).toContain("[Risk]");
     expect(msg).toContain("Equity protected");
-    expect(msg).toContain("BeDelta");
+    expect(msg).toContain("BeΔ");
     expect(msg).not.toMatch(/SPOT_PERP/i);
   });
 });

@@ -145,7 +145,7 @@ function enforceGeoCompliance(request: Request): Response | null {
 }
 
 /**
- * BeDelta Living Water Workers entry — API routes + static SPA via ASSETS binding.
+ * BeΔ Living Water Workers entry — API routes + static SPA via ASSETS binding.
  * wrangler.jsonc runs the worker first for `/api/*`; all other paths fall through to dist/.
  */
 export default {

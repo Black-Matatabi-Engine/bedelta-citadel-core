@@ -40,22 +40,22 @@ const ENDPOINT_COPY: Record<
   { title: string; description: string }
 > = {
   "/api/telemetry/health": {
-    title: "BeDelta Living Water — Live Telemetry",
+    title: "BeΔ Living Water — Live Telemetry",
     description:
       "Public CRI index, soil resistance status, active venues, and circuit breaker health.",
   },
   "/api/state": {
-    title: "BeDelta Living Water — System State",
+    title: "BeΔ Living Water — System State",
     description:
       "Authoritative Risk Envelope system snapshot for grant auditor verification.",
   },
   "/api/data": {
-    title: "BeDelta Living Water — Matrix Data",
+    title: "BeΔ Living Water — Matrix Data",
     description:
       "Cross-venue arbitrage matrix feed with risk tripped flags for auditor review.",
   },
   "/api/hedge/evaluate": {
-    title: "BeDelta Living Water — Tail Hedge Evaluation",
+    title: "BeΔ Living Water — Tail Hedge Evaluation",
     description:
       "Polymarket tail-hedge trigger evaluation gated by unified Risk Envelope policy.",
   },

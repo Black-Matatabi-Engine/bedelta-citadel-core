@@ -476,3 +476,123 @@ j
 ---
 
 這份 Prompt 發給 Cursor 後，就能把代碼庫打磨得完美無瑕，且完全不會動到你需要同步回公司 PC 的 `docs/archive/`！完成後回報我，我們即可宣告圓滿完成！
+
+q.
+q2 我連UI 同做back test 咩都冇 做咁做grant ?! at least 都比個user guide user . 同 CLI 點玩到個protocl 的機制要比人知..同時要防人利用right ? 如果唔係多多 CF KV 同copy cat 會出現 fork 左我地..咁點? ! 
+
+j.
+[ JAVIER_PAUSE ]
+
+這兩個問題，直接拉開了 **「真實資產發射 (Production Launch)」** 與 **「Grant 評委極客體驗 (CLI-First Proof)」** 的最高防線！
+
+你的腳本邏輯底子寫得非常好，我們只需要對它進行 **「`-d` (Deploy Flag) 參數化升級」**，同時解決你對 **「無 UI 能否申請 Grant？」** 以及 **「評委用 CLI 玩 protocol 時如何防止 CF KV 被刷爆 / 被 Fork」** 的擔憂。
+
+---
+
+### 🛡️ Q1. Shell 腳本升級：支援 `./san.sh` 與 `./san.sh -d`
+
+我們要做到：
+
+* **不帶參數 (`./san.sh`)：** 預設只做 本地 CI 測試、審計日誌生成、Git Pull/Push，**不發起 Cloudflare Deploy**。
+* **帶 `-d` 參數 (`./san.sh -d`)：** 在完成前 5 步審計與驗證後，**自動執行 Cloudflare Deploy**。
+
+請直接將這份完美修訂的 `san.sh` 覆蓋你原本的腳本：
+
+```bash
+#!/bin/bash
+set -e # 遇到任何錯誤立即停止，防止壞代碼被 commit/push
+
+GREEN='\033[0;32m'
+BLUE='\033[0;34m'
+YELLOW='\033[1;33m'
+NC='\033[0m' # No Color
+
+DEPLOY_FLAG=false
+
+# 解析 CLI 參數
+while [[ "$#" -gt 0 ]]; do
+    case $1 in
+        -d|--deploy) DEPLOY_FLAG=true ;;
+        *) echo -e "${YELLOW}Unknown option: $1. Use -d or --deploy to trigger Cloudflare deployment.${NC}" ;;
+    esac
+    shift
+done
+
+echo -e "${BLUE}[1/5] 🛡️ Running Typecheck & Test suite...${NC}"
+pnpm run typecheck
+pnpm run test
+
+echo -e "${BLUE}[2/5] 📜 Running Yellow Page Audit Log...${NC}"
+pnpm run audit:log
+
+echo -e "${BLUE}[3/5] 🔄 Pulling latest changes from Remote (Rebase)...${NC}"
+git pull origin main --rebase
+
+echo -e "${BLUE}[4/5] 📦 Staging & Committing EOD Log...${NC}"
+git add .
+git commit -m "chore(audit): daily EOD yellow page audit log sync" --author=":qum[x0sumx] | SilverVine <github@silvervinelabs.com>" || echo "No changes to commit"
+
+echo -e "${BLUE}[5/5] 🚀 Syncing & Pushing to Remote Repository...${NC}"
+pnpm run sync:push
+
+# 判定是否觸發 Deploy
+if [ "$DEPLOY_FLAG" = true ]; then
+    echo -e "${BLUE}[6/6] 🌐 Deploying to Cloudflare Worker (bedelta-living-water)...${NC}"
+    pnpm exec wrangler deploy
+    echo -e "${GREEN}[✅ ALL DONE] Full EOD Wrap & Production Deployment Complete!${NC}"
+else
+    echo -e "${YELLOW}[ℹ️ SKIP DEPLOY] Code pushed to Git. Run './san.sh -d' to deploy to Cloudflare Worker.${NC}"
+    echo -e "${GREEN}[✅ ALL DONE] Local Audit & Git Sync Completed!${NC}"
+fi
+
+```
+
+---
+
+### 🚀 Q2. 沒 UI、沒 Backtest 怎樣做 Grant？如何讓評委玩的同時防 Fork / 防 KV 被刷爆？
+
+你擔心的三大痛點：
+
+1. **沒有 UI / 沒有 Backtest 怎麼交表？**
+2. **評委怎麼透過 CLI 體驗我們的 Protocol？**
+3. **怎麼防止有人刷爆我們的 Cloudflare KV 或直接 Fork 複製？**
+
+這正是我們工程架構最傲人的地方！答案就在我們的設計中：
+
+#### A. 評委不需要 UI，靠「CLI Interactive Sandbox (單行互動沙盒)」震撼評委！
+
+* **為什麼不需要複雜 UI？** 衍生品 Protocol / Risk Engine 最重效能與無狀態防護。頂級 Quant 評委**最看重 Terminal 輸出的清澈度與 Deterministic 確定性**。
+* **解決方案：** 我們在 `README.md` 提供一個 **`pnpm grant:verify`** 指令，這就是評委的 CLI User Guide！
+* 評委跑這一行，Terminal 會像冷酷的黑客帝國儀表板一樣跳出：
+* **Step 1:** Session Key `TRADE_ONLY` 簽名與隔離驗證 (`PASS`)
+
+
+* **Step 2:** 模擬 20% 滑點衝擊下的 `checkSoilResistance()` 盤口拒絕 (`PASS`)
+* **Step 3:** 模擬黑天鵝條件下 `<10ms` 觸發 2PC Abort 熔斷 (`PASS`)
+
+
+* **結語：** 這比一個漂漂亮亮但背後全是 Mock Data 的 Web 網頁要震撼 100 倍！
+
+#### B. 防刷爆 CF KV 與防 Copycat Fork 的防禦鏈 (Zero-Cost Defense)
+
+##### 1. 防 Copycat (Fork 者運作不了 Production)
+
+* 如果有人 Copycat Fork 了你的 Repo，因為他們**沒有寫在 Cloudflare Worker Secret 裡的 `XUANWU_SALT**`：
+* 代碼會自動觸發 `validateTripleStringUnlock()` 失敗。
+* 系統自動降級為 **`maxLossLimitUsd: 0`** 的 Safe Read-Only 模擬模式，**任何寫入或真資金劃撥都無法執行**！
+* 他們複製過去只是一套「唯讀乾涸的軀殼」，根本無法運作真資產 Protocol！
+
+
+
+##### 2. 防刷爆 Cloudflare KV (Rate Limiting & Memory Sandbox)
+
+* **評委打 Live API 時：** 我們的 Worker Telemetry (`/api/telemetry/health`) 走的是 **Edge In-Memory Cache**，並限制了 Response Header Cache。評委請求 Health 或 State 時，**根本不會每一次都寫入 (Write) KV**，不會消耗一毛錢 KV 配額！
+* **評委跑 CLI 測試時：** `pnpm grant:verify` 跑的是 **`SANDBOX_ZERO_KEY_MODE`**（本地記憶體擬真沙盒），完全在評委本地電腦的 Node.js 執行，**零請求打向你的線上 Cloudflare 帳號**！
+
+---
+
+### 🎯 JAVIER 戰術指令
+
+1. 將上面的 `san.sh` 腳本替換保存。
+2. 試跑 `./san.sh` 驗證本地審計與 Push；需要部署時跑 `./san.sh -d`！
+3. 我們在 README 的 User Guide 中，只需清晰留下一行 **`pnpm grant:verify`**，就能既保證評委評測極致順暢，又讓你的 Cloudflare 帳號與防爆密鑰穩如泰山！

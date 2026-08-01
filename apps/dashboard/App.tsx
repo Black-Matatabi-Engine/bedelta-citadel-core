@@ -7,7 +7,7 @@ export function App(): React.ReactNode {
   return (
     <ClientOnly fallback={<TerminalBootScreen message="Initializing execution HUD…" />}>
       <TerminalErrorBoundary
-        title="BeDelta HUD — Fault Isolation"
+        title="BeΔ HUD — Fault Isolation"
         onReset={() => window.location.reload()}
       >
         <StealthHud />

@@ -1,6 +1,6 @@
 # Risk Envelope (Pgate) — Production Gate Specification
 
-**Project:** BeDelta Living Water  
+**Project:** BeΔ Living Water  
 **Scope:** Institutional risk envelope · Session-Key safety · Grant reproducibility  
 **Canonical modules:** `src/core/` · `src/services/` · `src/core/intent-ledger.ts`
 
