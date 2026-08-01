@@ -23,7 +23,7 @@ export function renderStrategyBuilder(
         <h3 class="brand-hero-title brand-hero-title--section">⚙️ Strategy Builder · 4-Step Order</h3>
         <p class="brand-hero-subtitle">Accordion wizard · only one step expanded</p>
       </div>
-      <div id="consoleSelectedLabel" class="inject-status-badge ml-auto">未選擇標的</div>
+      <div id="consoleSelectedLabel" class="inject-status-badge ml-auto">No symbol selected</div>
     </div>
   </header>
 
@@ -38,7 +38,7 @@ export function renderStrategyBuilder(
         <span class="sb-step-chevron" aria-hidden="true">▾</span>
       </button>
       <div class="sb-step-panel">
-        <p class="text-[11px] text-gray-400 mb-3">點擊上方矩陣 Token 注入，或選擇對沖結構：</p>
+        <p class="text-[11px] text-gray-400 mb-3">Inject a matrix token above, or pick a hedge structure:</p>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-3">
           <label class="sb-pair-option">
             <input type="radio" name="sbPairMode" value="spot_long_perp_short" checked onchange="onStrategyPairChange()" />
@@ -75,7 +75,7 @@ export function renderStrategyBuilder(
                 <span id="bestPairSymbol" class="bg-[#10b981] text-white px-2 py-0.5 rounded text-xs font-bold">---</span>
                 <span id="bestPairYield" class="text-xs font-mono text-emerald-400 font-bold">---% APR</span>
               </div>
-              <div id="bestPairAction" class="text-[10px] font-bold mb-1">等待注入…</div>
+              <div id="bestPairAction" class="text-[10px] font-bold mb-1">Awaiting inject…</div>
               <div class="text-[11px] text-gray-400">7d: <span id="bestPairProfit" class="text-emerald-400 font-mono font-bold">---</span>
                 · 30d: <span id="bestPairProfit30" class="text-circuit/80 font-mono font-bold">---</span></div>
             </div>
@@ -132,10 +132,10 @@ export function renderStrategyBuilder(
       <div class="sb-step-panel">
         <div class="flex flex-wrap items-center gap-3 mb-4">
           <span class="max-sl-lock-badge" id="strategyMaxSlLockBadge">Max SL Lock: ${maxSlLabel}</span>
-          <button type="button" id="sopGuideBtn" onclick="openSopGuide()" class="sop-guide-trigger-btn">❓ 風控 SOP</button>
+          <button type="button" id="sopGuideBtn" onclick="openSopGuide()" class="sop-guide-trigger-btn">Risk SOP</button>
         </div>
         <div class="flex flex-col gap-2 mb-4 p-3 rounded-lg border border-emerald-500/25 bg-black/30">
-          <div class="text-xs font-bold text-gray-300">Soil 阻力監控防線</div>
+          <div class="text-xs font-bold text-gray-300">Soil Resistance Monitor</div>
           <div id="consoleSlippageReadout" class="text-lg font-black text-[#52D0B6]">--</div>
           <div id="consoleSoilBadge" class="soil-badge soil-loose w-fit">[ SOIL: LOOSE ] 🟢</div>
         </div>
@@ -162,11 +162,11 @@ export function renderStrategyBuilder(
       </button>
       <div class="sb-step-panel attack-zone" id="attackExecuteZone">
         <div id="step4SopCard" class="p-3 rounded-xl border border-[#10b981]/30 bg-[#042d20]/50 text-gray-200 mb-3 text-[11px] leading-relaxed">
-          Cross-chain / cross-book execution · 確認 Soil、結算倒數與 Max SL ${maxSlShort} 後再 ATTACK。
+          Cross-chain / cross-book execution · confirm Soil, settlement countdown, and Max SL ${maxSlShort} before ATTACK.
         </div>
         <div id="attackExecuteRow" class="flex flex-col sm:flex-row items-center justify-between gap-3">
           <span id="attackWarning" class="text-sm text-amber-300 font-bold flex items-center gap-2 text-left">
-            ⚠️ 開倉提示：請確認 Soil Resistance 與結算倒數
+            Confirm Soil Resistance and settlement countdown before entry
           </span>
           <div class="flex items-center gap-2 shrink-0 ml-auto">
             <span id="attackLockdownLabel" class="hidden text-xs font-black text-red-400 border border-red-500/40 bg-red-950/40 px-2 py-1 rounded animate-pulse">🔒 LOCKDOWN</span>

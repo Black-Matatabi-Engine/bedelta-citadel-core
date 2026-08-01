@@ -143,7 +143,7 @@ export async function handleDataRequest(
     const message = error instanceof Error ? error.message : String(error);
     const friendly =
       humanizeSystemLogs([message])[0] ??
-      "[系統提示] 蔘天木暫時無法完成同步，請稍後再試";
+      "[System] Sync unavailable — retry shortly";
     const body: MatrixErrorResponse = { success: false, error: friendly };
     return new Response(JSON.stringify(body), {
       status: 500,

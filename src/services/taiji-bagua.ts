@@ -113,13 +113,13 @@ export const TAIJI_MODE_UI: Readonly<
   Record<TaijiMode, { label: string; tooltip: string; cssClass: string }>
 > = {
   YANG_STRIKE: {
-    label: "( ATTACK 陽 MODE )",
+    label: "( ATTACK MODE )",
     tooltip:
       `Yang offensive engine — Tensile ≥ ${TAIJI_YANG_CRI_MIN}, friction clear, signing channel open.`,
     cssClass: "taiji-mode-yang",
   },
   YIN_YIELD: {
-    label: "( GUARD 陰 MODE )",
+    label: "( GUARD MODE )",
     tooltip:
       `Yin guard engine — capital rotated to vault lend / ${BRAND_DELTA_SYMBOL}-neutral sleeves.`,
     cssClass: "taiji-mode-yin",

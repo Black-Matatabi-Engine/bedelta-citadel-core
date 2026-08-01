@@ -31,11 +31,11 @@ const CAT_IMAGES: Record<HudState, string> = {
 };
 
 const HUD_LABELS: Record<HudState, string> = {
-  IDLE: "Standby · 待機",
-  GREEN: "Green Scan · 綠燈",
-  AMBER: "Amber Alert · 黃燈",
-  SANTENMOKU: "SANTENMOKU · 三天目",
-  BLOCKED: "DEADLOCK · 死鎖",
+  IDLE: "Standby",
+  GREEN: "Green Scan",
+  AMBER: "Amber Alert",
+  SANTENMOKU: "SANTENMOKU",
+  BLOCKED: "DEADLOCK",
 };
 
 function hudStateClass(hudState: HudState): string {

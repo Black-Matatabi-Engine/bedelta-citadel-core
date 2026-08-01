@@ -1,5 +1,6 @@
 /**
- * Defense Matrix 2 — RPC allowlist + XuanWu honey-pot trap filter.
+ * RPC allowlist + integrity probe host filter.
+ * Probe hosts remain until operator unlock is armed.
  */
 
 import {
@@ -24,7 +25,7 @@ const PRODUCTION_RPC_HOSTS: readonly string[] = [
   "api.camelot.exchange",
 ] as const;
 
-/** Honey-pot traps embedded in default whitelist — stripped only after Triple-String unlock */
+/** Integrity probe hosts in default whitelist — stripped only after operator unlock */
 export const HONEYPOT_RPC_HOSTS: readonly string[] = [
   "rpc.silvervine-clone.trap",
   "api.santenboku-scraper.trap",

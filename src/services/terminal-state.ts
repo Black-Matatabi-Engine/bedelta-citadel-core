@@ -7,10 +7,10 @@
 export type ActivePageStep = 1 | 2 | 3 | 4;
 
 export const PAGE_STEP_TITLES = {
-  1: "Step 1 🌲 聖樹根系防禦與宏觀感知 (Sanctuary Defense Grid)",
-  2: "Step 2 🌴 世界樹資產矩陣與跨市場套利",
+  1: "Step 1 · Sanctuary Defense Grid",
+  2: "Step 2 · Cross-Market Asset Matrix",
   3: "Step 3 🏛️ SANTENBOKU Vault",
-  4: "Step 4 📜 歷史倉位與套利日誌",
+  4: "Step 4 · Position & Arbitrage Log",
 } as const;
 
 /** Hard lock: Strategy Builder cannot open new orders beyond this count. */

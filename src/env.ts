@@ -15,7 +15,7 @@ export interface Env {
   SLIVERVINE_KV?: KVNamespace;
   /** Alias binding — same namespace as BEDELTA_WATER_KV (system:state SSOT) */
   SYSTEM_STATE_KV?: KVNamespace;
-  /** XuanWu Triple-String unlock — inject via wrangler secret put (never commit) */
+  /** Runtime integrity unlock — inject via wrangler secret put (never commit) */
   XUANWU_SALT?: string;
   OWNER_IDENTITY?: string;
   JAVIER_SIGNATURE?: string;

@@ -1,4 +1,4 @@
-// Copyright (c) 2026 SilverVine Labs (qum0x & Javier). All Rights Reserved.
+// Copyright (c) 2026 SilverVine Labs. All Rights Reserved.
 
 import { useEffect, useMemo, useState, type ReactNode } from "react";
 import {

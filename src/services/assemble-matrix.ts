@@ -32,16 +32,16 @@ export const RULE_FUNDING_STD_MAX = 0.015;
 
 function pickStrategy(hlFunding: number, annualYield: number): string {
   if (annualYield <= STRATEGY_APR_THRESHOLD) {
-    return "【 觀望其變 / HOLD 】";
+    return "[ HOLD ]";
   }
 
   if (hlFunding > 0) {
-    return "【 📈買 HL 現 + 📉空 HL 合 】";
+    return "[ LONG HL SPOT + SHORT HL PERP ]";
   }
   if (hlFunding < 0) {
-    return "【 📉空 HL 現 + 📈多 HL 合 】";
+    return "[ SHORT HL SPOT + LONG HL PERP ]";
   }
-  return "【 觀望其變 / HOLD 】";
+  return "[ HOLD ]";
 }
 
 function applyRiskToRow(
@@ -120,8 +120,8 @@ function applyRiskToRow(
   return {
     j1_strategy:
       actionStatus === "SPREAD_TOO_HIGH"
-        ? "【⚠️ 價差過大拒絕開倉】"
-        : "【 觀望其變 / HOLD · 風控熔斷 】",
+        ? "[ REJECT — SPREAD TOO WIDE ]"
+        : "[ HOLD · RISK BREAKER ]",
     actionStatus,
     risk_tripped: true,
     risk_reasons: reasons,
@@ -418,7 +418,7 @@ export function assembleMatrix(
       spotBasis,
       hlPerpPx,
       dydxPerp[symbol] ?? 0,
-      "【 Rule B 妖幣蓄水池 / HIGH RATE 】",
+      "[ Rule B HIGH-RATE POOL ]",
       dayVol > 0 ? dayVol : undefined,
     );
 
@@ -430,7 +430,7 @@ export function assembleMatrix(
       e1_hl_funding: e1_funding,
       h1_annual_hl,
       i1_annual_cross: Math.abs(h1_annual_hl),
-      j1_strategy: "【 Rule B 妖幣蓄水池 】",
+      j1_strategy: "[ Rule B HIGH-RATE POOL ]",
       k1_basis_sp: 0,
       n1_friction: DEFAULT_FRICTION,
       o1_cost_usd: DEFAULT_FIXED_COST_USD,

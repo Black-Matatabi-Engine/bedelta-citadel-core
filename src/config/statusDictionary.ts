@@ -324,7 +324,7 @@ export const STATUS_DICTIONARY = {
     GOD_MODE: {
       emoji: "👁️",
       label: "SANTENMOKU PROTOCOL: ENGAGED",
-      subtitle: "Three-Eyes (三天目) physical override",
+      subtitle: "Three-Eyes physical override",
       cssClass: "is-god-mode",
     },
     BLOCKED: {

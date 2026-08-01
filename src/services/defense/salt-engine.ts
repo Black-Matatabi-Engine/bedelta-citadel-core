@@ -1,5 +1,6 @@
 /**
- * Defense Matrix 1 — XuanWu Triple-String unlock + encrypted risk thresholds.
+ * Runtime integrity gate — operator unlock envelope + encrypted risk thresholds.
+ * Absent secrets → live risk stays disarmed (sandbox / read-only).
  */
 
 import { vineWrapProtection, type RootProtectionInput } from "../risk-control";
@@ -43,7 +44,7 @@ function readProcessEnv(): XuanwuEnv {
   return {};
 }
 
-/** Triple-String unlock — all three literals must match exactly */
+/** Operator unlock — all three literals must match exactly */
 export function validateTripleStringUnlock(
   env: XuanwuEnv = readProcessEnv(),
 ): boolean {
@@ -52,6 +53,13 @@ export function validateTripleStringUnlock(
     env.OWNER_IDENTITY?.trim() === OWNER_IDENTITY_TAG &&
     env.JAVIER_SIGNATURE?.trim() === JAVIER_SIGNATURE_LITERAL
   );
+}
+
+/** Live risk arming requires unlock; otherwise sandbox / read-only only. */
+export function isLiveRiskArmingEnabled(
+  env: XuanwuEnv = readProcessEnv(),
+): boolean {
+  return validateTripleStringUnlock(env);
 }
 
 export function readXuanwuSalt(env: XuanwuEnv = readProcessEnv()): string | null {
@@ -116,6 +124,10 @@ export function isXuanwuRpcStripAuthorized(
   return validateTripleStringUnlock(env);
 }
 
+/**
+ * Arms dynamic Max SL from encrypted thresholds.
+ * Without unlock secrets, maxLossLimit=0 → live risk stays disarmed (sandbox-safe).
+ */
 export function enforceXuanwuSaltGate(
   input: Omit<RootProtectionInput, "maxLossLimit">,
   env: XuanwuEnv = readProcessEnv(),

@@ -12,12 +12,12 @@ export function DexSettlementCountdown(): React.ReactNode {
         "circuit-panel dex-settlement-box",
         lockdownActive ? "dex-settlement-box--lockdown" : "",
       ].join(" ")}
-      aria-label="DEX 結算倒數"
+      aria-label="DEX settlement countdown"
     >
       <div className="flex flex-wrap items-center gap-2 text-base font-black text-[#45C4B4]">
-        <span>⏱️ DEX 結算倒數</span>
+        <span>DEX Settlement Countdown</span>
         {lockdownActive ? (
-          <span className="countdown-lockdown-pill">🛡️ SETTLEMENT LOCKDOWN</span>
+          <span className="countdown-lockdown-pill">SETTLEMENT LOCKDOWN</span>
         ) : null}
       </div>
       <p className="mt-3 text-base font-black text-[var(--text-primary)]">
@@ -28,8 +28,8 @@ export function DexSettlementCountdown(): React.ReactNode {
       </p>
       <p className={lockdownActive ? "mt-2 text-xs" : "funding-yield-fact mt-2"}>
         {lockdownActive
-          ? `⚠️ 結算前 ${SETTLEMENT_LOCKDOWN_SEC / 60} 分鐘禁止開倉 · 剩餘 ${secondsLeft}s`
-          : "💰 Funding Yield Fact: Every 1 hour, peer-to-peer interest is settled in Real USDC."}
+          ? `No new entries ${SETTLEMENT_LOCKDOWN_SEC / 60}m before settlement · ${secondsLeft}s remaining`
+          : "Funding Yield Fact: Every 1 hour, peer-to-peer interest is settled in Real USDC."}
       </p>
     </section>
   );

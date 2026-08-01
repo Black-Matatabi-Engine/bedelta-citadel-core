@@ -1,5 +1,5 @@
 /**
- * Demo Control Hub persona roles — Trader / Auditor / Risk Manager (Javier).
+ * Demo Control Hub persona roles — Trader / Auditor / Risk Manager.
  */
 
 export type DemoPersonaRole = "TRADER" | "AUDITOR" | "RISK_MANAGER";
@@ -45,7 +45,7 @@ export const DEMO_ROLE_CONFIG: Readonly<Record<DemoPersonaRole, DemoRoleConfig>>
     },
     RISK_MANAGER: {
       id: "RISK_MANAGER",
-      label: "Risk Manager (Javier)",
+      label: "Risk Manager",
       themeClass: "role-risk-manager",
       readOnly: false,
       faultInjection: true,

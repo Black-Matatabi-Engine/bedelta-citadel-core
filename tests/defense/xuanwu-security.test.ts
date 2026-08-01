@@ -48,8 +48,8 @@ afterEach(() => {
   __setHudCanaryEnvForTests(undefined);
 });
 
-describe("XuanWu Triple-String salt-engine", () => {
-  it("passes when all 3 secrets (玄武, 0xWallet, Javier) are supplied", () => {
+describe("Runtime integrity gate — salt-engine", () => {
+  it("passes when all 3 operator unlock secrets are supplied", () => {
     __setXuanwuEnvForTests({ ...TRIPLE_STRING_ENV });
     expect(validateTripleStringUnlock()).toBe(true);
     const thresholds = resolveXuanwuThresholds();
@@ -60,7 +60,7 @@ describe("XuanWu Triple-String salt-engine", () => {
     expect(computeXuanwuMaxLossLimitUsd(10_000, thresholds)).toBe(200);
   });
 
-  it("decrypts threshold blob with canonical 玄武 salt", () => {
+  it("decrypts threshold blob with canonical operator salt", () => {
     const decoded = decodeThresholdBlob(
       XUANWU_ENC_THRESHOLDS,
       XUANWU_CANONICAL_SALT,
@@ -73,8 +73,8 @@ describe("XuanWu Triple-String salt-engine", () => {
     ["missing all keys", {}],
     ["wrong salt", { ...TRIPLE_STRING_ENV, XUANWU_SALT: "wrong" }],
     ["wrong owner tag", { ...TRIPLE_STRING_ENV, OWNER_IDENTITY: "0xEvil" }],
-    ["wrong Javier sig", { ...TRIPLE_STRING_ENV, JAVIER_SIGNATURE: "javier" }],
-    ["missing Javier only", { XUANWU_SALT: XUANWU_CANONICAL_SALT, OWNER_IDENTITY: OWNER_IDENTITY_TAG }],
+    ["wrong operator sig", { ...TRIPLE_STRING_ENV, JAVIER_SIGNATURE: "javier" }],
+    ["missing operator sig only", { XUANWU_SALT: XUANWU_CANONICAL_SALT, OWNER_IDENTITY: OWNER_IDENTITY_TAG }],
   ])("rootProtection deadlock when %s", (_label, env) => {
     __setXuanwuEnvForTests(env);
     expect(resolveXuanwuThresholds().valid).toBe(false);
@@ -99,8 +99,8 @@ describe("XuanWu Triple-String salt-engine", () => {
   });
 });
 
-describe("XuanWu honey-pot rpc-whitelist", () => {
-  it("strips honey-pots when Triple-String validation passes", () => {
+describe("Integrity probe rpc-whitelist", () => {
+  it("strips probe hosts when operator unlock validation passes", () => {
     const hosts = listInternalRpcHosts(TRIPLE_STRING_ENV);
     for (const trap of HONEYPOT_RPC_HOSTS) {
       expect(hosts).not.toContain(trap);
@@ -114,14 +114,14 @@ describe("XuanWu honey-pot rpc-whitelist", () => {
     ).toThrow(RpcNodeNotAllowlistedError);
   });
 
-  it("retains honey-pots without Triple-String unlock", () => {
+  it("retains probe hosts without operator unlock", () => {
     const hosts = listInternalRpcHosts({});
     for (const trap of HONEYPOT_RPC_HOSTS) {
       expect(hosts).toContain(trap);
     }
   });
 
-  it("circuit-breaks honey-pot fetch with 500 + simulated slippage", async () => {
+  it("circuit-breaks probe fetch with 500 + simulated slippage", async () => {
     await expect(
       fetchAllowlisted(`https://${HONEYPOT_RPC_HOSTS[1]}/quote`, {}, [], {}),
     ).rejects.toMatchObject({
@@ -177,7 +177,7 @@ describe("XuanWu ui-canary HUD handshake", () => {
     expect(assertUiWorkerHandshake()).toEqual({ ok: true });
   });
 
-  it("generates stable 玄武 Canvas/WebGL watermark payload", () => {
+  it("generates stable Canvas/WebGL watermark payload", () => {
     const payload = generateCanvasWatermarkPayload();
     expect(payload.seed).toBe("玄武");
     expect(payload.hash).toMatch(/^xw-[0-9a-f]{8}$/);

@@ -6,15 +6,15 @@ export interface MarketSentimentRadarProps {
 }
 
 function vixMood(vix: number) {
-  if (vix >= 22) return { label: "傳統市場：高波動 / High Vol", emoji: "😰", alert: true };
-  if (vix > 20) return { label: "傳統市場：升溫 / Elevated", emoji: "😬", alert: true };
-  return { label: "傳統市場：平穩 / Stable", emoji: "😌", alert: false };
+  if (vix >= 22) return { label: "TradFi · High Vol", emoji: "↑", alert: true };
+  if (vix > 20) return { label: "TradFi · Elevated", emoji: "↑", alert: true };
+  return { label: "TradFi · Stable", emoji: "·", alert: false };
 }
 
 function dvolMood(dvol: number) {
-  if (dvol >= 55) return { label: "加密市場：恐慌 / Panic", emoji: "🔥", alert: true };
-  if (dvol >= 45) return { label: "加密市場：升溫 / Elevated", emoji: "😬", alert: true };
-  return { label: "加密市場：橫盤蓄勢 / Low Vol", emoji: "😌", alert: false };
+  if (dvol >= 55) return { label: "Crypto · Panic", emoji: "↑", alert: true };
+  if (dvol >= 45) return { label: "Crypto · Elevated", emoji: "↑", alert: true };
+  return { label: "Crypto · Low Vol", emoji: "·", alert: false };
 }
 
 export function MarketSentimentRadar({
@@ -28,11 +28,11 @@ export function MarketSentimentRadar({
   return (
     <section
       className="circuit-panel step1-glacier-card vol-filter-panel p-4"
-      aria-label="全球市場情緒雷達"
+      aria-label="Global market sentiment radar"
     >
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
         <h2 className="section-header font-hud">
-          🎭 全球市場情緒雷達 (Market Sentiment)
+          Global Market Sentiment
         </h2>
         <span
           className={[

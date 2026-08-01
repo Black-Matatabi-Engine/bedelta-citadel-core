@@ -11,11 +11,11 @@ describe("copilot-care-messages", () => {
       soilCapacityPct: 0.005,
       cappedMaxSlUsd: 350,
     });
-    expect(msg).toContain("🐾 [DonDon Co-Pilot]:");
+    expect(msg).toContain("[Risk Co-Pilot]:");
     expect(msg).toContain("$25,000");
     expect(msg).toContain("0.50%");
     expect(msg).toContain("$350");
-    expect(msg).toContain("Your equity is protected");
+    expect(msg).toContain("Equity protected");
   });
 
   it("computes basis hedge prefill from matrix row", () => {

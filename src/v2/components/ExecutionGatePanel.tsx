@@ -37,10 +37,10 @@ export function ExecutionGatePanel({
       <div className="mt-4 flex flex-1 flex-col items-center justify-center gap-4 text-center">
         {executionLocked ? (
           <>
-            <p className="text-lg font-black text-indigo-200">( GUARD 陰 MODE )</p>
+            <p className="text-lg font-black text-indigo-200">( GUARD MODE )</p>
             <p className="font-data text-xs text-amber-100/90">
               {lockReason ??
-                "🐾 DonDon Co-Pilot: Javier's dynamic shield is protecting your equity."}
+                "[Risk Co-Pilot] Dynamic Max SL is protecting equity."}
             </p>
           </>
         ) : (

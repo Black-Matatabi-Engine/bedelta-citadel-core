@@ -1,16 +1,29 @@
 # BeDelta Living Water — Hyperliquid-Native Yield Ingress & Session-Key Risk Envelope
 
-**Architected by :qum[x0sumx]**
-
 [![Grant Audit](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml/badge.svg)](https://github.com/SilverVineLabs/bedelta-living-water/actions/workflows/grant-audit.yml)
-![Vitest](https://img.shields.io/badge/Vitest-569%2B_Tests_Passing-brightgreen)
+![Vitest](https://img.shields.io/badge/Vitest-575_Tests_Passing-brightgreen)
 ![TypeScript](https://img.shields.io/badge/TypeScript-Clean-blue)
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
 ![Live Telemetry](https://img.shields.io/badge/Live_Telemetry-%2Fapi%2Ftelemetry%2Fhealth-informational)
 
+## Auditor — 30-Second CLI Verify
+
+```bash
+pnpm install
+pnpm grant:verify
+```
+
+```bash
+curl -s https://bedeltawater.slivervine.xyz/api/telemetry/health | jq .
+```
+
+**Core commands:** `pnpm build` · `pnpm test` (575/575) · `pnpm grant:verify` · `pnpm grant:hl-testnet`
+
+---
+
 Hyperliquid-first yield ingress on Cloudflare Workers — Session Key risk envelope · 2PC intent ledger · Yield Triangle API · Jupiter / GMX read-path.
 
-**Grant auditors:** [docs/grant/HYPERLIQUID.md](docs/grant/HYPERLIQUID.md) · [docs/grant/SUBMISSION.md](docs/grant/SUBMISSION.md) · [Risk Envelope spec](docs/architecture/Risk_Envelope_Pgate.md)
+**Grant pack:** [docs/grant/HYPERLIQUID.md](docs/grant/HYPERLIQUID.md) · [docs/grant/SUBMISSION.md](docs/grant/SUBMISSION.md) · [Brand SSOT](docs/architecture/BRAND_SSOT.md) · [Risk Envelope](docs/architecture/Risk_Envelope_Pgate.md)
 
 ## Wave 1 — Hyperliquid Grant MVP
 
@@ -23,15 +36,9 @@ Hyperliquid-first yield ingress on Cloudflare Workers — Session Key risk envel
 | **Yield Triangle API** | `GET /api/yield/triangle?symbol=ETH` | HL ingress + conservative `netApyBand` |
 | **Zero-Key Sandbox** | `src/services/sandbox.ts` | Grant gate diagnostics (no keys) |
 
-## Auditor 30-Second Verify
+## Expected Verify Output
 
-```bash
-pnpm install
-pnpm exec tsc --noEmit
-pnpm grant:verify
-```
-
-Expected: HL 2PC TTL flatten test + HL → Polymarket → Jupiter zero-key dry-run **all green**.
+`pnpm grant:verify` — HL 2PC TTL flatten + HL → Polymarket → Jupiter zero-key dry-run **all green**.
 
 Optional HL testnet audit log:
 
@@ -39,18 +46,18 @@ Optional HL testnet audit log:
 pnpm grant:hl-testnet
 ```
 
-## Quick start
+## Local Dev
 
 ```bash
 pnpm install
-pnpm run typecheck
+pnpm typecheck
 pnpm test
 pnpm run dev
 ```
 
 ## CI
 
-`.github/workflows/grant-audit.yml` — typecheck · full Vitest · Yellow Page audit log on `main`.
+`.github/workflows/grant-audit.yml` — typecheck · full Vitest · audit log on `main`.
 
 ## License
 

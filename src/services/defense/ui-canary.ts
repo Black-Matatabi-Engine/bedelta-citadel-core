@@ -1,5 +1,5 @@
 /**
- * Defense Matrix 3 — Santenmoku HUD canary handshake + Xuanwu watermark hash.
+ * HUD canary handshake + integrity watermark hash.
  */
 
 export const HUD_CANARY_EXPECTED = "santenmoku" as const;

@@ -119,12 +119,13 @@ describe("defense rpc whitelist + humanize", () => {
     ).toThrow(RpcNodeNotAllowlistedError);
   });
 
-  it("humanizes soil trip into DonDon co-pilot care language", () => {
+  it("humanizes soil trip into risk co-pilot care language", () => {
     const msg = humanizeSystemLog(
       "Soil resistance circuit breaker tripped — SPOT_PERP_SLIPPAGE",
     );
-    expect(msg).toContain("[Co-Pilot Care]");
-    expect(msg).toContain("equity is protected");
+    expect(msg).toContain("[Risk]");
+    expect(msg).toContain("Equity protected");
+    expect(msg).toContain("BeDelta");
     expect(msg).not.toMatch(/SPOT_PERP/i);
   });
 });

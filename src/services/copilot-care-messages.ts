@@ -1,14 +1,14 @@
-/** DonDon Co-Pilot — humanized guardrail copy (English, grant-facing). */
+/** Risk co-pilot — cold English guardrail copy (grant-facing). */
 
-export const COPILOT_PREFIX = "🐾 [DonDon Co-Pilot]:" as const;
-export const YIN_GUARD_MODE_BADGE = "[ YIN GUARD MODE ]" as const;
+export const COPILOT_PREFIX = "[Risk Co-Pilot]:" as const;
+export const YIN_GUARD_MODE_BADGE = "[ GUARD MODE ]" as const;
 export const AUTO_PILOT_BASIS_BADGE =
-  "[ ⚡ Auto-Pilot Basis Arbitrage : Zero-Friction Setup ]" as const;
+  "[ Auto-Pilot Basis Arbitrage : Zero-Friction Setup ]" as const;
 export const MILESTONE_SANDBOX_BADGE =
   "[ Remark: Milestone 2 Deliverable — Live Sandbox Execution Active ]" as const;
 
 export const R20_DEADLOCK_OVERLAY_TITLE =
-  "🛡️ [R20 PHYSICAL DEADLOCK ENGAGED]" as const;
+  "[R20 PHYSICAL DEADLOCK ENGAGED]" as const;
 export const R20_DEADLOCK_OVERLAY_BODY =
   "Hot Key signing channel severed. Session keys revoked. All open orders auto-suppressed." as const;
 
@@ -46,7 +46,7 @@ export function formatCopilotSoilCareMessage(input: CopilotSoilCareInput): strin
   const pct = ((input.soilCapacityPct ?? 0.005) * 100).toFixed(2);
   return (
     `${COPILOT_PREFIX} Order size $${fmtUsd(input.orderSizeUsd)} exceeds soil capacity (${pct}%). ` +
-    `Javier's dynamic shield auto-capped max risk to $${fmtUsd(input.cappedMaxSlUsd)}. Your equity is protected.`
+    `Dynamic Max SL auto-capped max risk to $${fmtUsd(input.cappedMaxSlUsd)}. Equity protected.`
   );
 }
 

@@ -163,7 +163,7 @@ export function TraderDashboard({
               SLIVERVINE · SANTENMOKU LEAN UI
             </p>
             <p className="mt-1 text-sm text-[var(--text-secondary)]">
-              4-Step Macro Focus · Santenboku / 蔘天木
+              4-Step Macro Focus · Santenboku
               {!isMockMode && displayedPairCount !== undefined
                 ? ` · ${displayedPairCount} pairs`
                 : isMockMode && displayedPairCount !== undefined

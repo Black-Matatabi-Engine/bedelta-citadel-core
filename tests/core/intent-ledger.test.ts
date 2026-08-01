@@ -35,7 +35,7 @@ describe("intent-ledger 2PC", () => {
     expect(result.intent.phase).toBe("COMMITTED");
   });
 
-  it("aborts and flattens when one leg prepare fails (单脚防护)", async () => {
+  it("aborts and flattens when one leg prepare fails (single-leg guard)", async () => {
     const flattenSpy = vi.fn(async (_action: FlattenAction) => ({ ok: true }));
 
     createCrossLegIntent({ id: "intent-3", legs: [HL_LEG, POLY_LEG] });
