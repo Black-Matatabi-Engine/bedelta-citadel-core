@@ -538,6 +538,8 @@ B2B Option B (slippage-savings fee) remains a separate commercial SKU and is not
 | [`../audit/`](../audit/) | Principal audit · Robinhood Chain safety gate |
 | [`../../docker/README.md`](../../docker/README.md) | Sidecar |
 | [`../grants/arbitrum/ARBITRUM_ONE_PAGER.md`](../grants/arbitrum/ARBITRUM_ONE_PAGER.md) | Grant one-pager |
+| [`CROSS_CHAIN_RISK_AND_EVOLUTION.md`](./CROSS_CHAIN_RISK_AND_EVOLUTION.md) | 3-Stage Roadmap · 60 Invariants · Grant SSOT |
+| [`../internal/CROSS_CHAIN_RISK_AND_EVOLUTION_ZH.md`](../internal/CROSS_CHAIN_RISK_AND_EVOLUTION_ZH.md) | 跨鏈風險與 60 重反思架構演進（繁中 SSOT） |
 | [`../internal/ZERODEV_SMART_ROUTING_DEEP_DIVE.md`](../internal/ZERODEV_SMART_ROUTING_DEEP_DIVE.md) | ZeroDev Smart Routing 深度解析（繁中） |
 | [`../internal/HOT_COLD_PATH_DECOUPLING.md`](../internal/HOT_COLD_PATH_DECOUPLING.md) | Hot/Cold Path 解耦架構（繁中） |
 | [`../internal/WASM_STYLUS_DUAL_ENGINE_ROADMAP.md`](../internal/WASM_STYLUS_DUAL_ENGINE_ROADMAP.md) | Wasm / Stylus 雙引擎路線圖（繁中） |

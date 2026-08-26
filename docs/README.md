@@ -16,6 +16,7 @@
 | # | Document | Role |
 |---|----------|------|
 | 1 | [`architecture/TECHNICAL_SPECIFICATION.md`](./architecture/TECHNICAL_SPECIFICATION.md) | Yellow Paper — Triangle Liquidity Loop · R01–R20 · ERC/EIP wiki |
+| 1b | [`architecture/CROSS_CHAIN_RISK_AND_EVOLUTION.md`](./architecture/CROSS_CHAIN_RISK_AND_EVOLUTION.md) | 3-Stage Roadmap · 60 Invariants · Tiered Liquidity Stacking (Grant SSOT) |
 | 2 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | SDK Integration — `@slivervine/citadel-sdk` (Apache-2.0) |
 | 3 | [`audit/PRINCIPAL_AUDIT_REPORT.md`](./audit/PRINCIPAL_AUDIT_REPORT.md) | Security Audit — liability decoupling · Gate / survival matrix |
 | 4 | [`grants/SUBMISSION.md`](./grants/SUBMISSION.md) | Buildathon Main Submission — Arbitrum Open House pack |
@@ -39,7 +40,8 @@
 ```text
 docs/
   VERIFICATION_MATRIX.md   Evaluator Tier 1–5 CLI map (start here)
-  architecture/            Yellow Paper (TECHNICAL_SPECIFICATION)
+  architecture/            Yellow Paper · Cross-Chain Risk & Evolution (Grant SSOT)
+  internal/                  中文 SSOT 備份 (CROSS_CHAIN_RISK_AND_EVOLUTION_ZH)
   sdk/                     Citadel SDK blueprint (public)
   audit/                   Principal audit · Robinhood Chain safety gate
   grants/                  SUBMISSION + arbitrum/ + gmx/
