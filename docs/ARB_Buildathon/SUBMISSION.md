@@ -23,7 +23,7 @@
 |---|--------|------------------------|
 | **1** | Ephemeral Ignition Signers | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** on Mainnet Gate `0xb174…` — public auditability without production HSM exposure. Gate shape = consume-once EIP-712; production rotation via native governance. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet GM fill scheduled post-Grant M6. → [§4 GMX](#4-gmx) |
-| **3** | Pendle Safety Sentinel | **Pendle Institutional Safety Sentinel** — 60s TTL Oracle · 5 Pool Invariants · `PENDLE_ORACLE_STALE` soil fuse. Safety-layer positioning; not a YT yield product. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
+| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()`. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Sepolia live stream and One production SQL documented separately. → [§5 Dune](#5-dune-analytics) |
 | **5** | Agent Integration Roadmap | **v1.0:** executable Reference Harness (`examples/adapters/` · `withCitadelShield`). **V1.1 Open PR Spec:** `@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield` — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR. Not v1.0 published npm packages. → [Reference Interceptor Harness](#reference-interceptor-harness--virtuals-protocol--elizaos-agent-swarms) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
@@ -51,13 +51,13 @@
 | **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Emerging Draft policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **180 test files \| 803 PASS Clean** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft |
-| **Product-Market Fit** | GMX v2 +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **Reference Pre-Broadcast Interceptor Adapter** + **`withCitadelShield` zero-touch decorator** for Virtuals Protocol & ElizaOS agent frameworks ([`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) · [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Institutional Shield (V1.0 Core Pillar 3)** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
+| **Product-Market Fit** | GMX v2 +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **Reference Pre-Broadcast Interceptor Adapter** + **`withCitadelShield` zero-touch decorator** for Virtuals Protocol & ElizaOS agent frameworks ([`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) · [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Core Pillar 3 (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
 
 #### Innovation and Creativity — Conceptual Framing
 
 - **Pre-Consensus Intent Clearing**: Intercepts toxic AI Agent payloads at **p50 ~106µs** on Cloudflare Edge **before** they reach Arbitrum Sequencer queues, Bundler ingress, or public mempools — **0-Gas loss prevention** (fail-closed severance; no wasted Bundler gas on doomed UserOps).
 - **PEV (Prevented Exploit Volume) — Dune Analytics Primitive**: Introduces **PEV** as a structured telemetry metric — nominal USD volume of toxic intents blocked pre-broadcast — indexable via `RiskTripBlocked` / soil-trip events and grant-audit JSON (`duneTelemetry`). See [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
-- **Yield Safety Sentinel for Pendle**: Off-chain circuit breaker guarding Pendle **PT/YT** pool positions against **expiry blackholes** and **oracle decoupling** — protects capital from liquidation cascades **without competing on YT yield** ([`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)).
+- **Yield Safety Sentinel for Pendle**: Off-chain circuit breaker guarding Pendle **PT/YT** pool positions against **expiry blackholes** and **oracle decoupling** — plus **Pendle AI Guarded Pool Factory** for agent pool creation pre-flight ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)) — protects capital from liquidation cascades **without competing on YT yield** ([`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)).
 - **Zero-Gas Pre-Broadcast Circuit Breaker**: Unlike on-chain pause functions that incur gas and await block confirmation, Citadel severs the EIP-712 signing channel at sub-ms latency *before* consensus ingress.
 - **Autonomous Reflex Arc (Agentic Safety Substrate)**: Off-chain "spinal reflex" for AI Agents — intercepts toxic intents without burning LLM tokens or adding cloud round-trips.
 
@@ -150,7 +150,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · Pendle Institutional Safety Sentinel · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299 (10 bps CaaS = V2.0) · v1.0 Reference Agent harness + V1.1 npm plugin spec · Stylus V2.0 roadmap probe; live gateway = Solidity Gate · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
+**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299 (10 bps CaaS = V2.0) · v1.0 Reference Agent harness + V1.1 npm plugin spec · Stylus V2.0 roadmap probe; live gateway = Solidity Gate · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---
 
@@ -198,7 +198,7 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 | Ecosystem | Role for SliverVine | Why they win together | SSOT |
 |-----------|---------------------|----------------------|------|
 | **Arbitrum** | Pre-consensus execution primitive on **42161** | Live immutable Gate + Edge clearing before Sequencer ingress | Mainnet Tx · `SliverVineGate.sol` |
-| **Pendle** | **Institutional Shield** (V1.0 Core Pillar 3 · not yield competitor) | Sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT expiry / shadow-margin guards | `pendle-market-oracle-adapter.ts` · `pendle-gmx-cross-guard.ts` |
+| **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Core Pillar 3) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free via SaaS Request Credits | `pendle-market-oracle-adapter.ts` · `pendle-pool-factory-adapter.ts` · `pendle-gmx-cross-guard.ts` |
 | **Dune** | **PEV** + `RiskTripBlocked` telemetry | Indexes off-chain blocked attacks; Sepolia live · One SQL spec | `DUNE_DASHBOARD_SPECIFICATION.md` |
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `gmx-v2-order-payload.ts` |
 | **Virtuals / ElizaOS** | Agent pre-consensus firewall | `withCitadelShield` 1-line SDK · Reference harness | `decorator.ts` · `agent-interceptor-demo.ts` |
@@ -220,17 +220,29 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 3. Pendle Finance (V1.0 Live · Core Pillar 3)
 
-* **Pendle Institutional Safety Sentinel (not a yield product):** Citadel operates **strictly as an institutional pre-execution safety layer** — validating **60s TTL Oracle** and **5 Pool Invariants** (maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE`). **No APY / yield claims**; defends PT/YT expiry blackholes and oracle decoupling — **not a Pendle YT competitor**.
-* **Autonomous AI Agent Pool Selection with Microsecond Safety Guardrails (p50 ~106µs)**: `validateAIPoolSelection()` gates `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` intents — wired via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)).
-* **Pendle Safety Sentinel Alignment**: Citadel functions as an **institutional pre-execution safety layer** — not a Pendle yield optimizer — guarding PT/YT pools against **expiry blackholes** and **oracle decoupling** before mempool broadcast.
+V1.0 ships **two complementary Pendle integrations** — institutional safety layer, not a yield product:
+
+**1. Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard
+
+* Citadel operates as an **institutional pre-execution safety layer** for existing PT/YT exposure — **60s TTL Oracle** with **`PENDLE_ORACLE_STALE`** soil fuse · expiry **<7d** + yield jitter **>200 bps** → fail-closed
+* **Dynamic Market Oracle** ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts)): zero-I/O sync `ingest()` / `resolve()` in-memory cache · **TTL default 60s**
+* **Cross-Guard** ([`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)): Shadow Margin vs GMX maintenance · Observatory Paradox fix (`close`/`reduce` greenlit)
+* **Expiry Guard** ([`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts)): `evaluatePendlePtExpiryRiskFromRegistry`
+* Defends PT/YT expiry blackholes and oracle decoupling — **not a Pendle YT competitor**
+
+**2. Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()`
+
+* **Adapter SSOT** ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)): sync pre-flight validation for AI agent pool selection at **p50 ~106µs**
+* Gates **`PENDLE_CREATE_POOL`** / **`PENDLE_ADD_LIQUIDITY`** intents via optional `pendlePoolFactory` soil probe wired into `checkSoilResistance()`
+* **5 Pool Invariants:** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist (`eETH` / `ETH` / `USDC`) · supported intent taxonomy
+* Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](../../tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts)
+
+> **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**, metered seamlessly via Citadel's **Cloudflare-style SaaS Request Credits** ($0 / $49 / $299 tiers).
+
 * **Integration (P0/P1 Code-Verified)**:
   * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
-  * **Dynamic Market Oracle**: [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) — zero-I/O sync `ingest()` / `resolve()` in-memory cache · **TTL default 60s**
-  * **Cross-Guard**: [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `evaluatePendleGmxCrossGuardFromRegistry` · Shadow Margin vs GMX maintenance
-  * **Expiry Guard**: [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) · `evaluatePendlePtExpiryRiskFromRegistry`
-  * **AI Pool Factory**: [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · `validateAIPoolSelection()` · `pendlePoolFactory` soil probe
   * **Shared Types**: [`core/pendle-types.ts`](../../src/core/pendle-types.ts)
-* **Soil Fuse Wiring (Fail-Closed)**: `pendleOracle` and `pendleCrossGuard` probes wired into `checkSoilResistance()` (`collectExternalSoilFlags`) — emits **`PENDLE_ORACLE_STALE`** when feed is missing, TTL-expired, or carries invalid fields (zero/negative price, etc.). De-leverage intents (`close`/`reduce`) remain greenlit (Observatory Paradox fix).
+* **Soil Fuse Wiring (Fail-Closed)**: `pendleOracle`, `pendleCrossGuard`, and `pendlePoolFactory` probes wired into `checkSoilResistance()` (`collectExternalSoilFlags`) — emits **`PENDLE_ORACLE_STALE`** when feed is missing, TTL-expired, or carries invalid fields (zero/negative price, etc.)
 * **Performance**: Oracle resolution is **purely cached / synchronous** — no `fetch()` on the hot path; coexists with Shield **p50 ~106µs** budget.
 * **Arbitrum One PT Markets (Registry SSOT)**:
   * **PT-eETH:** `0x8B330d3A50a624f1fE1744d037048BdBc9664E5D`
