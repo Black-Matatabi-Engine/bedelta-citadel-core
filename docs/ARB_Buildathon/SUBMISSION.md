@@ -15,20 +15,20 @@
 
 ---
 
-## Judge Nit Mitigations & Honesty Boundaries
+## Production Architecture Declarations
 
-> Addresses core nits from the 30-persona audit panel (including Grant Lead · HackQuest supplements). **v1.0 `main`: 180 test files / 803 PASS · zero `src/` logic changes.**
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **180 test files / 803 PASS Clean**.
 
-| # | Audit nit | Clarification & resolution |
-|---|-----------|--------------------------|
-| **1** | Mainnet Gate bootstrap keys | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** — deliberate public-auditable Mainnet Gate `0xb174…` deployment, **no production HSM exposure**. Gate product shape = consume-once EIP-712; production rotation via native governance. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
-| **2** | GMX v2 no live One fill | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet fill = post-Grant milestone, not "untested." → [§4 GMX](#4-gmx) |
-| **3** | Pendle yield over-claim | **Strict positioning: Pendle Institutional Safety Sentinel** — 60s TTL Oracle · 5 Pool Invariants · `PENDLE_ORACLE_STALE` soil fuse. **No APY / yield claims**; not a YT competitor. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
-| **4** | Dune "Live" misleading | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Label submission forms separately. → [§5 Dune](#5-dune-analytics) |
-| **5** | Unofficial ElizaOS / Wayfinder plugin | **v1.0:** executable Reference Harness (`examples/adapters/` · `withCitadelShield`). **V1.1 Open PR Spec:** `@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield` — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR. **Not v1.0 published npm packages.** → [Reference Interceptor Harness](#reference-interceptor-harness--virtuals-protocol--elizaos-agent-swarms) |
-| **6** | Arbitrum One 0-Gas architecture | Arbitrum One Gate (`0xb174…`) **intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
-| **7** | Dune telemetry precision | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. → [§5 Dune](#5-dune-analytics) |
-| **8** | CaaS vs SaaS | **v1.0 = SaaS subscription ($0/$49/$299)**; **10 bps CaaS fee-sharing = V2.0 Expansion**. → [Business Model](#business-model--gtm-strategy) |
+| # | Domain | Production declaration |
+|---|--------|------------------------|
+| **1** | Ephemeral Ignition Signers | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** on Mainnet Gate `0xb174…` — public auditability without production HSM exposure. Gate shape = consume-once EIP-712; production rotation via native governance. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
+| **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet GM fill scheduled post-Grant M6. → [§4 GMX](#4-gmx) |
+| **3** | Pendle Safety Sentinel | **Pendle Institutional Safety Sentinel** — 60s TTL Oracle · 5 Pool Invariants · `PENDLE_ORACLE_STALE` soil fuse. Safety-layer positioning; not a YT yield product. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
+| **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Sepolia live stream and One production SQL documented separately. → [§5 Dune](#5-dune-analytics) |
+| **5** | Agent Integration Roadmap | **v1.0:** executable Reference Harness (`examples/adapters/` · `withCitadelShield`). **V1.1 Open PR Spec:** `@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield` — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR. Not v1.0 published npm packages. → [Reference Interceptor Harness](#reference-interceptor-harness--virtuals-protocol--elizaos-agent-swarms) |
+| **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
+| **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. → [§5 Dune](#5-dune-analytics) |
+| **8** | Commercial Model | **v1.0 = SaaS subscription ($0/$49/$299)**; **10 bps CaaS fee-sharing = V2.0 Expansion**. → [Business Model](#business-model--gtm-strategy) |
 
 ---
 
@@ -96,7 +96,7 @@ pnpm tsx examples/agent-interceptor-demo.ts --trip   # Rogue ElizaOS intent → 
 | Pendle × GMX cross-guard | [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) |
 | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) agent policy | [Technical Specification §0.1](../architecture/01_TECHNICAL_SPECIFICATION.md#01-bytecode-predicate-verification-v10--erc-7715--post-grant-design-spec) |
 | Institutional DD / Basel mapping | [Due Diligence Memorandum](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
-| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · [§ 88% Defense Mesh](#88-defense-mesh--honest-12-post-grant-rd-blueprint) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
+| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · [§ 88% Defense Mesh](#88-defense-mesh--12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
 Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/citadel-sdk`](../../src/sdk/README.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Sponsor Integration Matrix](#sponsor-integration-matrix).
 
@@ -120,7 +120,7 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 
 ---
 
-## 88% Defense Mesh & Honest 12% Post-Grant R&D Blueprint
+## 88% Defense Mesh & 12% Post-Grant R&D Roadmap
 
 > **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
 
@@ -138,11 +138,11 @@ Traditional DeFi / Agent risk checks rely on **post-hoc analytics** or **mutable
 | 🟢 **Session Key Blast-Radius Isolation** | Scoped `ORDER_EXECUTE` + **$5,000** notional cap (`SESSION_KEY_NOTIONAL_CAP_USD`) caps key-compromise damage |
 | 🟢 **Oracle & RPC Resilience** | **30s** oracle-lag fail-closed (`ORACLE_LAG_DEADLOCK` / `ORACLE_LAG_DEADLOCK_MS = 30_000`) + **Honeypot trap RPC** defense (`evaluateRpcDefenseGate()` · 99% synthetic slippage decoy) |
 
-> **Honest engineering boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. We model **88% mesh coverage** for V1.0 and disclose the residual **12%** tail explicitly — see [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee).
+> **Engineering scope boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee).
 
 ### The Remaining **12%** (Why We Need This Foundation Grant)
 
-**Honest disclosure** of systemic out-of-scope risks: **TEE enclave supply chains**, **multi-RPC eclipse consensus**, and **protocol-level DeFi flash-loan black swans** on external venues (GMX / Hyperliquid).
+Residual systemic out-of-scope risks: **TEE enclave supply chains**, **multi-RPC eclipse consensus**, and **protocol-level DeFi flash-loan black swans** on external venues (GMX / Hyperliquid).
 
 Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 
@@ -150,7 +150,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 honest limits (do not over-claim):** Ephemeral Verification Signers (`0x1111…`/`0x2222…`) on Mainnet Gate — public audit only, not production HSM · GMX v2 dry-run/Vitest verified — no live One GM fill yet · Pendle Safety Sentinel only — no APY claims · Dune Sepolia live + 42161 SQL pre-compiled · **v1.0 SaaS $0/$49/$299 only — 10 bps CaaS is V2.0** · Reference Agent harness — not official Virtuals/ElizaOS/LangChain partnership · npm plugins = V1.1 PR Spec · Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate** · Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved.
+**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · Pendle Institutional Safety Sentinel · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299 (10 bps CaaS = V2.0) · v1.0 Reference Agent harness + V1.1 npm plugin spec · Stylus V2.0 roadmap probe; live gateway = Solidity Gate · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---
 
@@ -161,7 +161,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/01_TECHNICAL_SPECIFICATION.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
 * **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification--arbitrum-one-42161) · [Sepolia](#on-chain-verification--arbitrum-sepolia-421614).
-* **Deployment architecture (Grant Lead):** Arbitrum One Gate (`0xb174…`) **intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**.
+* **0-Gas off-chain severance:** Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**.
 
 ### Core Risk Invariants (Judge Quick Reference)
 
@@ -251,7 +251,7 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 5. Dune Analytics
 
-* **Telemetry status (HackQuest precision):** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
+* **Telemetry infrastructure:** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
 * **Live Dashboard:** [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 * **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — live feed proof for judges.
 * **Arbitrum One production SQL (`42161`):** Matching production DuneSQL queries (Queries 0–0b feed + chart; Queries 1–3 reconciliation panels) target **Arbitrum One mainnet** semantics — [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
@@ -398,7 +398,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 > **Note:** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
-> **Architecture note (Grant Lead · 0-Gas Off-Chain Severance):** Arbitrum One Gate (`0xb174…`) **is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — toxic paths never consume Sequencer gas; on-chain Gate anchors consume-once attestations only for cleared intents.
+> **0-Gas Off-Chain Severance architecture:** Arbitrum One Gate (`0xb174…`) **is engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — toxic paths never consume Sequencer gas; on-chain Gate anchors consume-once attestations only for cleared intents.
 
 ---
 

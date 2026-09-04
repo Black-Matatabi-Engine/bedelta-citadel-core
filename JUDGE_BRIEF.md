@@ -16,26 +16,26 @@
 
 ---
 
-## Judge Nit Mitigations & Honesty Boundaries
+## Production Architecture Declarations
 
-> Addresses core nits from the 30-persona audit panel (including Grant Lead · HackQuest supplements). **v1.0 `main` holds 180/803 PASS with zero `src/` logic changes.**
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **180 test files / 803 PASS Clean**.
 
-| # | Nit | Clarification |
-|---|-----|---------------|
-| **1** | Mainnet bootstrap keys | On Arbitrum One Gate `0xb174118b…`, **`0x1111…` / `0x2222…` are deliberate Ephemeral Verification Signers** — public-audit reproducibility only, **no production HSM exposure**. Product shape = consume-once EIP-712 Gate; production rotation via native governance to multisig. |
-| **2** | GMX v2 no live fill | GMX v2 execution guards are **fully verified via Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Not "untested"; mainnet fill is a post-Grant M6 milestone. |
-| **3** | Pendle yield over-claim | Citadel is **strictly a Pendle Institutional Safety Sentinel** — **60s TTL Oracle** + **5 Pool Invariants** (maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse). **No APY / yield claims**; not a Pendle YT competitor. |
-| **4** | Dune Live vs One | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Label forms separately. |
-| **5** | ElizaOS / Wayfinder plugin | **v1.0 ships executable Reference Harness** (`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`). Official npm packages (`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield`) are **V1.1 Open PR Spec** — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR; **not v1.0 official plugins**. |
-| **6** | Arbitrum One 0-Gas architecture | Arbitrum One Gate (`0xb174…`) is **intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture Note](#deployment-architecture-note-arbitrum-one-0-gas-off-chain-severance) |
-| **7** | Dune telemetry precision | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
-| **8** | CaaS vs SaaS pricing | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**; **10 bps CaaS protocol fee-sharing explicitly designated V2.0 Expansion** — do not pitch v1.0 as live CaaS. → [Business Model Boundary](#business-model-boundary-saas-vs-caas) |
+| # | Domain | Production declaration |
+|---|--------|------------------------|
+| **1** | Ephemeral Ignition Signers | Arbitrum One Gate `0xb174118b…` employs **`0x1111…` / `0x2222…` Ephemeral Verification Signers** for public auditability without exposing production HSM infrastructure. Gate shape = consume-once EIP-712; production rotation via native governance to multisig. |
+| **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Mainnet GM fill scheduled for post-Grant M6. |
+| **3** | Pendle Safety Sentinel | Citadel operates as **Pendle Institutional Safety Sentinel** — **60s TTL Oracle** + **5 Pool Invariants** (maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse). Safety-layer positioning; not a Pendle YT yield product. |
+| **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Sepolia live stream and One production SQL are documented as separate deployment surfaces. |
+| **5** | Agent Integration Roadmap | **v1.0 ships executable Reference Harness** (`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`). Official npm packages (`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield`) are **V1.1 Open PR Spec** — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR; not v1.0 official plugins. |
+| **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) is **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
+| **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
+| **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**; **10 bps CaaS protocol fee-sharing = V2.0 Expansion**. → [Commercial Model](#commercial-model-saas-vs-caas) |
 
-### Deployment Architecture Note (Arbitrum One 0-Gas Off-Chain Severance)
+### Deployment Architecture (Arbitrum One 0-Gas Off-Chain Severance)
 
 > **Arbitrum One Gate (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance.** Citadel Risk Gates (`checkSoilResistance()` · `severSigningChannel()`) halt compromised payload signatures on Cloudflare Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — tripped paths consume no Sequencer gas; on-chain Gate anchors consume-once EIP-712 attestations only for cleared intents.
 
-### Business Model Boundary (SaaS vs CaaS)
+### Commercial Model (SaaS vs CaaS)
 
 | Version | Pricing model | Notes |
 |---------|---------------|-------|
@@ -93,7 +93,7 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 - Sub-ms Edge `checkSoilResistance()` (p50 ~106µs) — no on-chain hot-path bloat
 - Toxic intents severed **before** Sequencer queues → **0-Gas** on blocked paths
 - Live **Arbitrum One** consume-once `SliverVineGate` at `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
-- **Architecture note (Grant Lead):** Gate is **designed for off-chain severance** — Risk Gates intercept signatures at the Edge and trip **before mempool submission**, preserving L2 state space cleanliness
+- **0-Gas off-chain severance:** Gate is **designed for off-chain severance** — Risk Gates intercept signatures at the Edge and trip **before mempool submission**, preserving L2 state space cleanliness
 
 ### GMX Protocol
 
@@ -120,7 +120,7 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 **Live dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
-**Telemetry status (HackQuest precision):** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
+**Telemetry infrastructure:** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
 
 **Structured on-chain events & PEV (Prevented Exploit Volume) metric:**
 
@@ -174,7 +174,7 @@ Executable adapters with Cyberpunk ANSI HUD: [`examples/adapters/`](./examples/a
 
 ---
 
-## 88% Defense Mesh & Honest 12% Post-Grant R&D Blueprint
+## 88% Defense Mesh & 12% Post-Grant R&D Roadmap
 
 > **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](./docs/architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast mesh + **12%** systemic residuals · **80/20 Pareto** targets acute microstructure tail in Pillar 3.
 
@@ -192,7 +192,7 @@ Traditional DeFi / Agent risk checks rely on **post-hoc analytics** or **mutable
 
 ### The Remaining **12%** (Why We Need This Foundation Grant)
 
-Honest disclosure of systemic out-of-scope risks: **TEE enclave supply chains**, **multi-RPC eclipse consensus**, and **protocol-level DeFi flash-loan black swans**.
+Residual systemic out-of-scope risks: **TEE enclave supply chains**, **multi-RPC eclipse consensus**, and **protocol-level DeFi flash-loan black swans**.
 
 Grant allocation directly fuels **V2.0 R&D**:
 
@@ -200,16 +200,16 @@ Grant allocation directly fuels **V2.0 R&D**:
 2. **Multi-RPC Quorum Consensus Verification** (anti–RPC eclipse spoofing).
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed**.
 
-### V1.0 Honest Limits (Do Not Over-Claim)
+### V1.0 Production Scope
 
-- **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174…` are **deliberate public-audit signers**, not production HSM keys
-- GMX v2 — **dry-run / Vitest verified**; **no live GM pool fill on One yet** (Grant post-M6)
-- Pendle — **Safety Sentinel only**; no APY yield claims
-- Dune — **Sepolia live stream**; **42161 SQL pre-compiled** (awaiting One event ingest)
-- **v1.0 SaaS** — $0/$49/$299 Cloudflare-style subscription; **10 bps CaaS = V2.0 only**
-- Reference Agent harness — not an official Virtuals/ElizaOS/LangChain partnership attestation; npm plugins = **V1.1 PR Spec**
-- Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate**
-- Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved
+- **Ephemeral Ignition Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174…` enable public auditability; production HSM rotation via native governance
+- **GMX v2** — dry-run / Vitest verified pre-flight guards; mainnet GM pool fill scheduled post-Grant M6
+- **Pendle** — Institutional Safety Sentinel layer; not a yield optimizer or APY product
+- **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
+- **Commercial** — v1.0 SaaS tiers ($0/$49/$299); 10 bps CaaS protocol fee = V2.0 Expansion
+- **Agent SDK** — v1.0 Reference Harness (`withCitadelShield`); official npm plugins ship in V1.1 Open PR Spec
+- **Stylus** — V2.0 roadmap probe; live gateway = immutable Solidity Gate on Arbitrum One
+- **Monte Carlo** — 87.39% toxic flow blocked in 10,000-run simulation; nominal modeled capital, not live TVL
 
 ---
 

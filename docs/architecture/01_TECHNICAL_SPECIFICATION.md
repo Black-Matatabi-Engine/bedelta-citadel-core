@@ -835,7 +835,7 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 | **Session blast-radius** | ✅ $5k cap · scoped `ORDER_EXECUTE` | Varies | **Unbound drain risk** | Framework-dependent | ✅ ERC-4337 scopes |
 | **Prompt injection immunity** | ✅ Bytecode predicates | Partial | Partial | **Vulnerable** at hook | **Vulnerable** to injected UserOps |
 
-> See also [§0 Competitive Matrix — Pre-Execution vs. Post-Execution Risk](#️-competitive-matrix--pre-execution-vs-post-execution-risk) · [88% Defense Mesh](../ARB_Buildathon/SUBMISSION.md#88-defense-mesh--honest-12-post-grant-rd-blueprint) in [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · [Risk Spectrum §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) (formal **88% / 12%** + **80/20 Pareto** definition).
+> See also [§0 Competitive Matrix — Pre-Execution vs. Post-Execution Risk](#️-competitive-matrix--pre-execution-vs-post-execution-risk) · [88% Defense Mesh](../ARB_Buildathon/SUBMISSION.md#88-defense-mesh--12-post-grant-rd-roadmap) in [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · [Risk Spectrum §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) (formal **88% / 12%** + **80/20 Pareto** definition).
 
 ### Supplementary Industry References
 
