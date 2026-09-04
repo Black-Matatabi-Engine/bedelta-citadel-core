@@ -170,11 +170,11 @@ $$
 $$
 
 $$
-\text{lostUsd} \equiv 0 \quad \forall \, \text{InFlightBridgeCapital}
+\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}
 $$
 
 $$
-t_{\text{reflector\_p50}} \sim 106\,\mu\text{s} \ll t_{\text{mempool\_broadcast}}
+t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s} \ll t_{\text{mempool\_broadcast}}
 $$
 
 Full derivations: [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats) · [Verification Matrix](../VERIFICATION_MATRIX.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md).

@@ -77,7 +77,7 @@ Security diligence is first-class: **3-Tier Audit Matrix** — security tier **5
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Aligned with emerging Draft (Virtuals Protocol) — **not a finalized standard** |
 
-**Core invariants:** $\Delta_{\text{net}} \equiv 0$ · $\text{lostUsd} \equiv 0$ on in-flight bridge capital · $t_{\text{reflector\_p50}} \sim 106\,\mu\text{s}$ — [Technical Specification §3.1](../../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
+**Core invariants:** $\Delta_{\text{net}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
 
 ---
 
