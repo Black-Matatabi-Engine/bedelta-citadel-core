@@ -7,7 +7,7 @@
 | **Buildathon** | Arbitrum Open House Singapore Online Buildathon |
 | **Live Gate (Sepolia)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **event streaming verified on Sepolia** (`0xb174…`); production DuneSQL queries target **Arbitrum One (`42161`)** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Live Event Telemetry actively streams on Sepolia Testnet** (`0xb174…`); **Arbitrum One (`42161`) SQL Query Indexers fully pre-compiled for production event ingestion** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 
 > **Note:** Initial mainnet deployment utilizes **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
@@ -17,15 +17,18 @@
 
 ## 評審 Nit 澄清與誠實邊界（Judge Nit Mitigations）
 
-> 直接回應 30-Persona 審計五項核心 nit。**v1.0 `main`：180 test files / 803 PASS · 零 `src/` 邏輯變更。**
+> 直接回應 30-Persona 審計核心 nit（含 Grant Lead · HackQuest 補充項）。**v1.0 `main`：180 test files / 803 PASS · 零 `src/` 邏輯變更。**
 
 | # | 審計 Nit | 澄清與解決狀態 |
 |---|----------|----------------|
 | **1** | 主網 Gate 臨時 Bootstrap 密鑰 | `0x1111…`/`0x2222…` 為 **Ephemeral Verification Signers（臨時驗證簽名者）**——刻意用於主網 Gate `0xb174…` 的公開可審計部署，**不暴露生產 HSM**。Gate 產品形狀 = consume-once EIP-712；生產輪替走原生治理。→ [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **2** | GMX v2 無 live One fill | GMX v2 執行防護經 **Vitest CLI + dry-run 管線**驗證（`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）——**live GM pool 資本部署前**保證 **0-Gas pre-flight** 熔斷。主網 fill = Grant 後里程碑，非「未測試」。→ [§4 GMX](#4-gmx) |
 | **3** | Pendle yield 掛名過深 | **嚴格定位：Pendle Institutional Safety Sentinel**——60s TTL Oracle · 5 Pool Invariants · `PENDLE_ORACLE_STALE` soil fuse。**不作 APY / yield 收益宣稱**；非 YT 競品。→ [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
-| **4** | Dune「Live」誤導 | **Dune SQL 已預編譯鎖定 Arbitrum One（42161）**；**即時遙測串流運行於 Sepolia testnet**（`IntentAttested` · `RiskTripBlocked`）。評審表單須分開標註。→ [§5 Dune](#5-dune-analytics) |
+| **4** | Dune「Live」誤導 | **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**。評審表單須分開標註。→ [§5 Dune](#5-dune-analytics) |
 | **5** | 非官方 ElizaOS / Wayfinder plugin | **v1.0**：可執行 Reference Harness（`examples/adapters/` · `withCitadelShield`）。**V1.1 Open PR Spec**：`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield` — 見 [V1.1 Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR。**非 v1.0 已發布 npm 套件**。→ [Reference Interceptor Harness](#reference-interceptor-harness--virtuals-protocol--elizaos-agent-swarms) |
+| **6** | Arbitrum One 0-Gas 架構 | Arbitrum One Gate（`0xb174…`）**刻意工程化為 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates 於 Edge **mempool 提交前**攔截受污染 payload 簽名，**保持 L2 狀態空間潔淨**。→ [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
+| **7** | Dune 遙測精確度 | **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**。→ [§5 Dune](#5-dune-analytics) |
+| **8** | CaaS vs SaaS | **v1.0 = SaaS 訂閱（$0/$49/$299）**；**10 bps CaaS 分潤 = V2.0 Expansion**。→ [Business Model](#business-model--gtm-strategy) |
 
 ---
 
@@ -147,7 +150,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 honest limits (do not over-claim):** Ephemeral Verification Signers (`0x1111…`/`0x2222…`) on Mainnet Gate — public audit only, not production HSM · GMX v2 dry-run/Vitest verified — no live One GM fill yet · Pendle Safety Sentinel only — no APY claims · Dune Sepolia live + 42161 SQL pre-compiled · Reference Agent harness — not official Virtuals/ElizaOS/LangChain partnership · npm plugins = V1.1 PR Spec · Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate** · Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved.
+**V1.0 honest limits (do not over-claim):** Ephemeral Verification Signers (`0x1111…`/`0x2222…`) on Mainnet Gate — public audit only, not production HSM · GMX v2 dry-run/Vitest verified — no live One GM fill yet · Pendle Safety Sentinel only — no APY claims · Dune Sepolia live + 42161 SQL pre-compiled · **v1.0 SaaS $0/$49/$299 only — 10 bps CaaS is V2.0** · Reference Agent harness — not official Virtuals/ElizaOS/LangChain partnership · npm plugins = V1.1 PR Spec · Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate** · Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved.
 
 ---
 
@@ -158,6 +161,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/01_TECHNICAL_SPECIFICATION.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
 * **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification--arbitrum-one-42161) · [Sepolia](#on-chain-verification--arbitrum-sepolia-421614).
+* **Deployment 架構（Grant Lead）**：Arbitrum One Gate（`0xb174…`）**intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**。
 
 ### Core Risk Invariants (Judge Quick Reference)
 
@@ -181,9 +185,9 @@ Full derivations: [Technical Specification §3.1](../architecture/01_TECHNICAL_S
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **180 test files \| 803 PASS Clean** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $0/$49/$299** · **180 test files \| 803 PASS Clean** |
 | **V1.5** | ⏳ Roadmap Spec | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement for multi-agent swarms · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
-| **V2.0** | ⏳ Design Spec | Institutional CaaS (`@slivervine/citadel-sdk`) for AI DEXs and Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks |
+| **V2.0** | ⏳ Design Spec | Institutional **CaaS** (`@slivervine/citadel-sdk`) for AI DEXs and Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks — **explicitly V2.0; not v1.0 SaaS** |
 
 Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters** — they do not define product identity. Aave/Morpho APY figures are *(Hurdle-rate probe only — not a yield-stacking product track)*.
 
@@ -247,7 +251,7 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 5. Dune Analytics
 
-* **遙測狀態（誠實邊界）**：**Dune SQL 索引查詢已預編譯鎖定 Arbitrum One（42161）語意**；**即時事件串流目前運行於 Sepolia testnet** Gate `0xb174…`。
+* **遙測狀態（HackQuest 精確表述）**：**Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**。
 * **Live Dashboard:** [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 * **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — live feed proof for judges.
 * **Arbitrum One production SQL (`42161`):** Matching production DuneSQL queries (Queries 0–0b feed + chart; Queries 1–3 reconciliation panels) target **Arbitrum One mainnet** semantics — [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
@@ -330,9 +334,13 @@ Hyperliquid Session Key Adapter and TCA provenance (`src/data/verified-5tx-lib/v
 
 ## Business Model & GTM Strategy
 
+> **收費模型邊界（繁中 SSOT）**：**v1.0 採 Cloudflare 式 SaaS 訂閱（$0 / $49 / $299）**；**10 bps CaaS 協議分潤明確標示為 V2.0 Expansion**——不得與 v1.0 SaaS 或 GMX +10 bps `uiFeeReceiver` 混稱。
+
 SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfront) and adopts an **Infra-First, Multi-Tiered Monetization Engine**:
 
-1. **Pay-per-Intent Micro-Attestation Fee (Primary Engine)**:
+1. **Cloudflare-Style SaaS Subscription (v1.0 Primary — $0 / $49 / $299)**:
+ * Edge API tiered access for institutions and agent swarms — **not** the V2.0 CaaS protocol fee rail.
+2. **Pay-per-Intent Micro-Attestation Fee (Adjunct)**:
  * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway (`@slivervine/citadel-sdk`).
  * Charged $0.01 – $0.05 per signed attestation, deducting micro-fees automatically without requiring credit card friction.
 2. **Telemetry & Risk Data API (Data Engine)**:
@@ -354,7 +362,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
   - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
-  - **V2.0 CaaS rail (Design Spec):** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks. v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane (not the V2.0 CaaS fee).
+  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks. **v1.0 operates on SaaS ($0/$49/$299)**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane (not the V2.0 CaaS fee).
 
 ---
 
@@ -389,6 +397,8 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · [`DeployArbitrumOneGate.s.sol`](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) |
 
 > **Note:** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
+
+> **架構註記（Grant Lead · 0-Gas Off-Chain Severance）：** Arbitrum One Gate（`0xb174…`）**is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — toxic paths never consume Sequencer gas; on-chain Gate anchors consume-once attestations only for cleared intents.
 
 ---
 

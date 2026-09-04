@@ -18,15 +18,29 @@
 
 ## 評審 Nit 澄清與誠實邊界（Judge Nit Mitigations）
 
-> 本節直接回應 30-Persona 審計（`docs/internal/0903_Grok_EH_ZH.md` · `0904_Grok_M_ZH.md` · `0904_Grok_PM_ZH.md`）五項核心 nit。**v1.0 `main` 維持 180/803 PASS；零 `src/` 邏輯變更。**
+> 本節直接回應 30-Persona 審計核心 nit（含 Grant Lead · HackQuest 補充項）。**v1.0 `main` 維持 180/803 PASS；零 `src/` 邏輯變更。**
 
 | # | Nit | 澄清（繁中 SSOT） |
 |---|-----|-------------------|
 | **1** | 主網 Bootstrap 密鑰 | Arbitrum One Gate `0xb174118b…` 上的 **`0x1111…` / `0x2222…` 為刻意設計的 Ephemeral Verification Signers（臨時驗證簽名者）**——僅供公開審計可重現性，**不暴露生產 HSM 基礎設施**。產品形狀為 consume-once EIP-712 Gate；生產環境透過原生治理函數輪替至多簽。 |
 | **2** | GMX v2 無 live fill | GMX v2 執行防護已透過 **Vitest CLI + dry-run 管線**完整驗證（`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）——在 **live GM pool 資本部署前**保證 **0-Gas 預飛行（pre-flight）熔斷**；非「未測試」，而是「主網 fill 待 Grant M6 後啟用」。 |
 | **3** | Pendle yield 掛名 | Citadel **嚴格定位為 Pendle Institutional Safety Sentinel**——驗證 **60s TTL Oracle** 與 **5 項 Pool Invariants**（maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse）。**不作任何 APY / yield 收益宣稱**；非 Pendle YT 競品。 |
-| **4** | Dune Live vs One | **Dune SQL 索引查詢已預編譯鎖定 Arbitrum One（42161）語意**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）；**即時遙測串流目前運行於 Sepolia testnet** Gate `0xb174…`（`IntentAttested` · `RiskTripBlocked`）。表單填寫時須分開標註「Sepolia live」與「One SQL spec」。 |
+| **4** | Dune Live vs One | **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）。表單填寫時須分開標註。 |
 | **5** | ElizaOS / Wayfinder plugin | **v1.0 交付可執行 Reference Harness**（`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`）。官方 npm 套件（`@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield`）屬 **V1.1 Open PR Spec**——見 [V1.1 Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR；**非 v1.0 已簽約官方 plugin**。 |
+| **6** | Arbitrum One 0-Gas 架構 | Arbitrum One Gate（`0xb174…`）**刻意工程化為 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates 在 Edge 於 **mempool 提交前**攔截受污染 payload 簽名，**保持 L2 狀態空間潔淨**——熱路徑不燒鏈上 gas。→ [Deployment 架構註記](#deployment-架構註記-arbitrum-one-0-gas-off-chain-severance) |
+| **7** | Dune 遙測精確度 | **Live Event Telemetry 現正於 Sepolia Testnet 主動串流**；**Arbitrum One（42161）SQL Query Indexers 已完整預編譯**，待生產事件 ingest。→ [Dune Analytics](#dune-analytics) |
+| **8** | CaaS vs SaaS 收費 | **v1.0 = Cloudflare 式 SaaS 訂閱（$0 / $49 / $299）**；**10 bps CaaS 協議分潤明確標示為 V2.0 Expansion**——v1.0 不得口播為已收費 CaaS。→ [商業模式邊界](#商業模式邊界-saas-vs-caas) |
+
+### Deployment 架構註記（Arbitrum One 0-Gas Off-Chain Severance）
+
+> **Arbitrum One Gate（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）刻意工程化為 0-Gas Pre-Execution Off-Chain Severance。** Citadel Risk Gates（`checkSoilResistance()` · `severSigningChannel()`）在 Cloudflare Edge **於 mempool 提交前**攔截受污染 payload 簽名，**保持 Arbitrum L2 狀態空間潔淨**——熔斷路徑不消耗 Sequencer gas；鏈上 Gate 僅在通過預執行審計後承載 consume-once EIP-712 attestation。
+
+### 商業模式邊界（SaaS vs CaaS）
+
+| 版本 | 收費模型 | 說明 |
+|------|----------|------|
+| **v1.0（現行）** | **Cloudflare 式 SaaS 訂閱** | **$0 / $49 / $299** 三層 Edge API 存取 · Dune 公開儀表板免費 |
+| **V2.0（路線圖）** | **CaaS 協議分潤** | **10 bps protocol authorization fee** on pre-execution risk checks · 與 v1.0 GMX +10 bps `uiFeeReceiver` **分軌** |
 
 ---
 
@@ -79,6 +93,7 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 - Sub-ms Edge `checkSoilResistance()` (p50 ~106µs) — no on-chain hot-path bloat
 - Toxic intents severed **before** Sequencer queues → **0-Gas** on blocked paths
 - Live **Arbitrum One** consume-once `SliverVineGate` at `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
+- **架構註記（Grant Lead）**：Gate **刻意為 Off-Chain Severance 設計**——Risk Gates 於 Edge 攔截簽名、**mempool 提交前熔斷**，保持 L2 狀態空間潔淨
 
 ### GMX Protocol
 
@@ -105,7 +120,7 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 **Live dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
-**遙測狀態（誠實邊界）：** Dune SQL **已預編譯鎖定 Arbitrum One（42161）**；**即時事件串流運行於 Sepolia testnet**。
+**遙測狀態（HackQuest 精確表述）：** **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**。
 
 **Structured on-chain events & PEV (Prevented Exploit Volume) metric:**
 
@@ -191,6 +206,7 @@ Grant allocation directly fuels **V2.0 R&D**:
 - GMX v2 — **dry-run / Vitest verified**; **no live GM pool fill on One yet** (Grant post-M6)
 - Pendle — **Safety Sentinel only**; no APY yield claims
 - Dune — **Sepolia live stream**; **42161 SQL pre-compiled** (awaiting One event ingest)
+- **v1.0 SaaS** — $0/$49/$299 Cloudflare-style subscription; **10 bps CaaS = V2.0 only**
 - Reference Agent harness — not an official Virtuals/ElizaOS/LangChain partnership attestation; npm plugins = **V1.1 PR Spec**
 - Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate**
 - Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved
