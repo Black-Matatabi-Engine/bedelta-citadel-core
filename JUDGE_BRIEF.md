@@ -16,31 +16,31 @@
 
 ---
 
-## 評審 Nit 澄清與誠實邊界（Judge Nit Mitigations）
+## Judge Nit Mitigations & Honesty Boundaries
 
-> 本節直接回應 30-Persona 審計核心 nit（含 Grant Lead · HackQuest 補充項）。**v1.0 `main` 維持 180/803 PASS；零 `src/` 邏輯變更。**
+> Addresses core nits from the 30-persona audit panel (including Grant Lead · HackQuest supplements). **v1.0 `main` holds 180/803 PASS with zero `src/` logic changes.**
 
-| # | Nit | 澄清（繁中 SSOT） |
-|---|-----|-------------------|
-| **1** | 主網 Bootstrap 密鑰 | Arbitrum One Gate `0xb174118b…` 上的 **`0x1111…` / `0x2222…` 為刻意設計的 Ephemeral Verification Signers（臨時驗證簽名者）**——僅供公開審計可重現性，**不暴露生產 HSM 基礎設施**。產品形狀為 consume-once EIP-712 Gate；生產環境透過原生治理函數輪替至多簽。 |
-| **2** | GMX v2 無 live fill | GMX v2 執行防護已透過 **Vitest CLI + dry-run 管線**完整驗證（`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）——在 **live GM pool 資本部署前**保證 **0-Gas 預飛行（pre-flight）熔斷**；非「未測試」，而是「主網 fill 待 Grant M6 後啟用」。 |
-| **3** | Pendle yield 掛名 | Citadel **嚴格定位為 Pendle Institutional Safety Sentinel**——驗證 **60s TTL Oracle** 與 **5 項 Pool Invariants**（maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse）。**不作任何 APY / yield 收益宣稱**；非 Pendle YT 競品。 |
-| **4** | Dune Live vs One | **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）。表單填寫時須分開標註。 |
-| **5** | ElizaOS / Wayfinder plugin | **v1.0 交付可執行 Reference Harness**（`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`）。官方 npm 套件（`@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield`）屬 **V1.1 Open PR Spec**——見 [V1.1 Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR；**非 v1.0 已簽約官方 plugin**。 |
-| **6** | Arbitrum One 0-Gas 架構 | Arbitrum One Gate（`0xb174…`）**刻意工程化為 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates 在 Edge 於 **mempool 提交前**攔截受污染 payload 簽名，**保持 L2 狀態空間潔淨**——熱路徑不燒鏈上 gas。→ [Deployment 架構註記](#deployment-架構註記-arbitrum-one-0-gas-off-chain-severance) |
-| **7** | Dune 遙測精確度 | **Live Event Telemetry 現正於 Sepolia Testnet 主動串流**；**Arbitrum One（42161）SQL Query Indexers 已完整預編譯**，待生產事件 ingest。→ [Dune Analytics](#dune-analytics) |
-| **8** | CaaS vs SaaS 收費 | **v1.0 = Cloudflare 式 SaaS 訂閱（$0 / $49 / $299）**；**10 bps CaaS 協議分潤明確標示為 V2.0 Expansion**——v1.0 不得口播為已收費 CaaS。→ [商業模式邊界](#商業模式邊界-saas-vs-caas) |
+| # | Nit | Clarification |
+|---|-----|---------------|
+| **1** | Mainnet bootstrap keys | On Arbitrum One Gate `0xb174118b…`, **`0x1111…` / `0x2222…` are deliberate Ephemeral Verification Signers** — public-audit reproducibility only, **no production HSM exposure**. Product shape = consume-once EIP-712 Gate; production rotation via native governance to multisig. |
+| **2** | GMX v2 no live fill | GMX v2 execution guards are **fully verified via Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Not "untested"; mainnet fill is a post-Grant M6 milestone. |
+| **3** | Pendle yield over-claim | Citadel is **strictly a Pendle Institutional Safety Sentinel** — **60s TTL Oracle** + **5 Pool Invariants** (maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse). **No APY / yield claims**; not a Pendle YT competitor. |
+| **4** | Dune Live vs One | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Label forms separately. |
+| **5** | ElizaOS / Wayfinder plugin | **v1.0 ships executable Reference Harness** (`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`). Official npm packages (`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield`) are **V1.1 Open PR Spec** — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR; **not v1.0 official plugins**. |
+| **6** | Arbitrum One 0-Gas architecture | Arbitrum One Gate (`0xb174…`) is **intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture Note](#deployment-architecture-note-arbitrum-one-0-gas-off-chain-severance) |
+| **7** | Dune telemetry precision | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
+| **8** | CaaS vs SaaS pricing | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**; **10 bps CaaS protocol fee-sharing explicitly designated V2.0 Expansion** — do not pitch v1.0 as live CaaS. → [Business Model Boundary](#business-model-boundary-saas-vs-caas) |
 
-### Deployment 架構註記（Arbitrum One 0-Gas Off-Chain Severance）
+### Deployment Architecture Note (Arbitrum One 0-Gas Off-Chain Severance)
 
-> **Arbitrum One Gate（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）刻意工程化為 0-Gas Pre-Execution Off-Chain Severance。** Citadel Risk Gates（`checkSoilResistance()` · `severSigningChannel()`）在 Cloudflare Edge **於 mempool 提交前**攔截受污染 payload 簽名，**保持 Arbitrum L2 狀態空間潔淨**——熔斷路徑不消耗 Sequencer gas；鏈上 Gate 僅在通過預執行審計後承載 consume-once EIP-712 attestation。
+> **Arbitrum One Gate (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance.** Citadel Risk Gates (`checkSoilResistance()` · `severSigningChannel()`) halt compromised payload signatures on Cloudflare Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — tripped paths consume no Sequencer gas; on-chain Gate anchors consume-once EIP-712 attestations only for cleared intents.
 
-### 商業模式邊界（SaaS vs CaaS）
+### Business Model Boundary (SaaS vs CaaS)
 
-| 版本 | 收費模型 | 說明 |
-|------|----------|------|
-| **v1.0（現行）** | **Cloudflare 式 SaaS 訂閱** | **$0 / $49 / $299** 三層 Edge API 存取 · Dune 公開儀表板免費 |
-| **V2.0（路線圖）** | **CaaS 協議分潤** | **10 bps protocol authorization fee** on pre-execution risk checks · 與 v1.0 GMX +10 bps `uiFeeReceiver` **分軌** |
+| Version | Pricing model | Notes |
+|---------|---------------|-------|
+| **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$0 / $49 / $299** Edge API tiers · free public Dune dashboard |
+| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | **10 bps protocol authorization fee** on pre-execution risk checks · separate from v1.0 GMX +10 bps `uiFeeReceiver` |
 
 ---
 
@@ -93,25 +93,25 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 - Sub-ms Edge `checkSoilResistance()` (p50 ~106µs) — no on-chain hot-path bloat
 - Toxic intents severed **before** Sequencer queues → **0-Gas** on blocked paths
 - Live **Arbitrum One** consume-once `SliverVineGate` at `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
-- **架構註記（Grant Lead）**：Gate **刻意為 Off-Chain Severance 設計**——Risk Gates 於 Edge 攔截簽名、**mempool 提交前熔斷**，保持 L2 狀態空間潔淨
+- **Architecture note (Grant Lead):** Gate is **designed for off-chain severance** — Risk Gates intercept signatures at the Edge and trip **before mempool submission**, preserving L2 state space cleanliness
 
 ### GMX Protocol
 
-**+10 bps builder lane & depth/slippage fuse · Dry-Run 驗證（0-Gas pre-flight）：**
+**+10 bps builder lane & depth/slippage fuse · Dry-run verification (0-Gas pre-flight):**
 
 - Qualified GM payloads route `uiFeeReceiver` builder fee
 - Pre-execution soil fuse (cross-venue slippage + depth) before DataStore broadcast
-- **Vitest CLI + dry-run 管線已驗證** — `pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`；**live GM pool 資本部署前**保證 0-Gas 預飛行保護（主網 fill 屬 Grant 後里程碑，非 v1.0 未測試）
+- **Vitest CLI + dry-run pipelines verified** — `pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`; **0-Gas pre-flight protection** before live GM pool capital deployment (mainnet fill is a post-Grant milestone, not an untested v1.0 gap)
 
 ### Pendle Finance (V1.0 Live · Core Pillar 3)
 
-**Pendle Institutional Safety Sentinel（非 yield 產品）— 60s TTL Oracle · 5 Pool Invariants：**
+**Pendle Institutional Safety Sentinel (not a yield product) — 60s TTL Oracle · 5 Pool Invariants:**
 
 - **Dynamic Market Oracle** ([`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts)): sync in-memory `ingest()` / `resolve()` — **no hot-path I/O** · **TTL default 60s**
 - **Registry hydration** ([`pendle-pt-registry.ts`](./src/adapters/pendle/pendle-pt-registry.ts)): `hydrateFromOracle` overrides `impliedYield`, `ptPriceInAsset`, `liquidityConstant`, `expirySec`
 - **Soil fuse wiring**: `pendleOracle` + `pendleCrossGuard` → `checkSoilResistance()` · emits **`PENDLE_ORACLE_STALE`** on missing / stale / invalid feeds
 - Expiry **<7d** + yield jitter **>200 bps** → fail-closed · Shadow margin cross-check vs GMX maintenance before risk-increasing intents
-- Protects PT/YT capital from liquidation blackholes — **not a competing yield product** · **不作 APY 收益宣稱** · coexists with Shield **p50 ~106µs**
+- Protects PT/YT capital from liquidation blackholes — **not a competing yield product** · **no APY yield claims** · coexists with Shield **p50 ~106µs**
 - `validateAIPoolSelection()` pre-flights `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts))
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts)
@@ -120,7 +120,7 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 **Live dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
-**遙測狀態（HackQuest 精確表述）：** **Live Event Telemetry actively streams on Sepolia Testnet**；**Arbitrum One（42161）SQL Query Indexers fully pre-compiled for production event ingestion**。
+**Telemetry status (HackQuest precision):** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
 
 **Structured on-chain events & PEV (Prevented Exploit Volume) metric:**
 
@@ -132,10 +132,10 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 ### AI Agent Ecosystem Runtimes (Virtuals / ElizaOS / LangChain TS & Python)
 
-**v1.0：可執行 Reference Harness · V1.1：官方 npm 規格 PR（`@elizaos/plugin-citadel-guard`）**
+**v1.0: executable Reference Harness · V1.1: official npm spec PR (`@elizaos/plugin-citadel-guard`)**
 
-- **v1.0 已交付**：`withCitadelShield` decorator · `examples/adapters/` · `pnpm demo:agent` — 可重現 CLI 驗證
-- **V1.1 Open PR Spec**： [V1.1 Agent Frameworks Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · ElizaOS `@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield` — **非 v1.0 官方 npm 發布**
+- **v1.0 delivered:** `withCitadelShield` decorator · `examples/adapters/` · `pnpm demo:agent` — reproducible CLI verification
+- **V1.1 Open PR Spec:** [V1.1 Agent Frameworks Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · ElizaOS `@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield` — **not v1.0 official npm releases**
 
 **Zero-touch integration for agent swarms (TS decorator + Python REST):**
 
