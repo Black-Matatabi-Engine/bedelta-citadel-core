@@ -9,9 +9,25 @@
 | **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **event streaming verified on Sepolia** (`0xb174…`); production DuneSQL queries target **Arbitrum One (`42161`)** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 
-> **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
+> **Note:** Initial mainnet deployment utilizes **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
 > **Core Pitch:** **SliverVine Citadel Shield** is a **Pre-Consensus Intent Firewall & Execution Safety Primitive** for AI Agents on Arbitrum. It intercepts toxic payloads at sub-ms (p50 ~106µs) **before** Arbitrum Sequencer queues — 0-Gas fail-closed severance via `checkSoilResistance()` plus immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
+
+---
+
+## 評審 Nit 澄清與誠實邊界（Judge Nit Mitigations）
+
+> 直接回應 30-Persona 審計五項核心 nit。**v1.0 `main`：180 test files / 803 PASS · 零 `src/` 邏輯變更。**
+
+| # | 審計 Nit | 澄清與解決狀態 |
+|---|----------|----------------|
+| **1** | 主網 Gate 臨時 Bootstrap 密鑰 | `0x1111…`/`0x2222…` 為 **Ephemeral Verification Signers（臨時驗證簽名者）**——刻意用於主網 Gate `0xb174…` 的公開可審計部署，**不暴露生產 HSM**。Gate 產品形狀 = consume-once EIP-712；生產輪替走原生治理。→ [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
+| **2** | GMX v2 無 live One fill | GMX v2 執行防護經 **Vitest CLI + dry-run 管線**驗證（`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）——**live GM pool 資本部署前**保證 **0-Gas pre-flight** 熔斷。主網 fill = Grant 後里程碑，非「未測試」。→ [§4 GMX](#4-gmx) |
+| **3** | Pendle yield 掛名過深 | **嚴格定位：Pendle Institutional Safety Sentinel**——60s TTL Oracle · 5 Pool Invariants · `PENDLE_ORACLE_STALE` soil fuse。**不作 APY / yield 收益宣稱**；非 YT 競品。→ [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
+| **4** | Dune「Live」誤導 | **Dune SQL 已預編譯鎖定 Arbitrum One（42161）**；**即時遙測串流運行於 Sepolia testnet**（`IntentAttested` · `RiskTripBlocked`）。評審表單須分開標註。→ [§5 Dune](#5-dune-analytics) |
+| **5** | 非官方 ElizaOS / Wayfinder plugin | **v1.0**：可執行 Reference Harness（`examples/adapters/` · `withCitadelShield`）。**V1.1 Open PR Spec**：`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield` — 見 [V1.1 Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR。**非 v1.0 已發布 npm 套件**。→ [Reference Interceptor Harness](#reference-interceptor-harness--virtuals-protocol--elizaos-agent-swarms) |
+
+---
 
 **Philosophy:** **BeDelta (BeΔ)** = Market Delta-Neutrality & Execution Safety · **SliverVine** = fragmented intent protection & steel trading execution.
 
@@ -50,7 +66,9 @@
 
 #### Reference Interceptor Harness — Virtuals Protocol & ElizaOS Agent Swarms
 
-- **Harness scope**: [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) is a **Reference Interceptor Harness & Adapter** for Virtuals Protocol and ElizaOS agent swarms — not a production partnership attestation.
+- **v1.0 已交付（可執行 Reference Harness）**：[`examples/adapters/`](../../examples/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · `pnpm demo:agent` — CLI 可重現 ALLOW / `--trip` FAIL_CLOSED
+- **V1.1 Open PR Spec（非 v1.0 npm 發布）**：[V1.1 Agent Frameworks Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield` · `feature/v1.1-agent-frameworks-spec` PR
+- **Harness scope**: [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) is a **Reference Interceptor Harness & Adapter** for Virtuals Protocol and ElizaOS agent swarms — **not a production partnership attestation or official npm plugin release**
 - **Zero-touch SDK**: [`withCitadelShield`](../../src/sdk/decorator.ts) decorator wraps any agent execution hook with inline `checkSoilResistance()` pre-broadcast severance — compatible with Express middleware, LangChain tool runners, and ElizaOS action handlers.
 - **Integration path**: Demonstrates `@slivervine/citadel-sdk` pre-broadcast interception wiring for evaluator reproduction.
 - **Live Pre-Broadcast Protection**: Intercepts AI Agent UserOps on Cloudflare Edge before Mempool/Bundler dispatch *(local harness latency is uncapped; production Edge target p50 ~106µs)*.
@@ -129,7 +147,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 honest limits (do not over-claim):** Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on mainnet deploy — public verification only · Reference Agent harness — not an official Virtuals / ElizaOS / LangChain partnership attestation · Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate** · Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved.
+**V1.0 honest limits (do not over-claim):** Ephemeral Verification Signers (`0x1111…`/`0x2222…`) on Mainnet Gate — public audit only, not production HSM · GMX v2 dry-run/Vitest verified — no live One GM fill yet · Pendle Safety Sentinel only — no APY claims · Dune Sepolia live + 42161 SQL pre-compiled · Reference Agent harness — not official Virtuals/ElizaOS/LangChain partnership · npm plugins = V1.1 PR Spec · Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate** · Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved.
 
 ---
 
@@ -198,7 +216,8 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 3. Pendle Finance (V1.0 Live · Core Pillar 3)
 
-* **Autonomous AI Agent Pool Selection with Microsecond Safety Guardrails (p50 ~106µs)**: `validateAIPoolSelection()` gates `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` intents — maturity ≥7d · yield drift ≤300bps · min $100K liquidity · underlying whitelist — wired via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)).
+* **Pendle Institutional Safety Sentinel（非 yield 產品）**：Citadel **嚴格作為機構級預執行安全層**——驗證 **60s TTL Oracle** 與 **5 Pool Invariants**（maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE`）。**不作 APY / yield 收益宣稱**；防禦 PT/YT 到期黑洞與 oracle 脫鉤，**非 Pendle YT 競品**。
+* **Autonomous AI Agent Pool Selection with Microsecond Safety Guardrails (p50 ~106µs)**: `validateAIPoolSelection()` gates `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` intents — wired via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)).
 * **Pendle Safety Sentinel Alignment**: Citadel functions as an **institutional pre-execution safety layer** — not a Pendle yield optimizer — guarding PT/YT pools against **expiry blackholes** and **oracle decoupling** before mempool broadcast.
 * **Integration (P0/P1 Code-Verified)**:
   * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
@@ -222,11 +241,13 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 4. GMX
 
+* **Dry-Run / Vitest 驗證（0-Gas pre-flight）**：GMX v2 執行防護經 `pnpm demo` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) 完整驗證——在 **live GM pool 資本部署前**保證預飛行熔斷；主網 fill 屬 Grant 後里程碑。
 * **Integration**: `evaluatePendleGmxCrossGuard` (`src/guards/pendle-gmx-cross-guard.ts`) & GMX Order Payload Guard (`src/services/adapters/gmx-v2-order-payload-guards.ts`).
 * **Mechanism**: Implements Shadow Margin accounting. Evaluates whether swapping out PT collateral under dynamic fees threatens GMX Maintenance Margin. Builder fee SSOT: **`GMX_UI_FEE_BPS` = 10** (`src/config/gmx-revenue.ts`); payload price-impact gate uses **`DEFAULT_GMX_PENALTY_BPS` = 50** (`src/services/yield/gmx-v2-price-impact.ts`).
 
 ### 5. Dune Analytics
 
+* **遙測狀態（誠實邊界）**：**Dune SQL 索引查詢已預編譯鎖定 Arbitrum One（42161）語意**；**即時事件串流目前運行於 Sepolia testnet** Gate `0xb174…`。
 * **Live Dashboard:** [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 * **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — live feed proof for judges.
 * **Arbitrum One production SQL (`42161`):** Matching production DuneSQL queries (Queries 0–0b feed + chart; Queries 1–3 reconciliation panels) target **Arbitrum One mainnet** semantics — [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
@@ -367,7 +388,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 |----------|------|----------------------------|-------|
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · [`DeployArbitrumOneGate.s.sol`](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) |
 
-> **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
+> **Note:** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
 ---
 

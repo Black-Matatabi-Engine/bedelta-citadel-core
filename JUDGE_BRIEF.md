@@ -16,6 +16,20 @@
 
 ---
 
+## 評審 Nit 澄清與誠實邊界（Judge Nit Mitigations）
+
+> 本節直接回應 30-Persona 審計（`docs/internal/0903_Grok_EH_ZH.md` · `0904_Grok_M_ZH.md` · `0904_Grok_PM_ZH.md`）五項核心 nit。**v1.0 `main` 維持 180/803 PASS；零 `src/` 邏輯變更。**
+
+| # | Nit | 澄清（繁中 SSOT） |
+|---|-----|-------------------|
+| **1** | 主網 Bootstrap 密鑰 | Arbitrum One Gate `0xb174118b…` 上的 **`0x1111…` / `0x2222…` 為刻意設計的 Ephemeral Verification Signers（臨時驗證簽名者）**——僅供公開審計可重現性，**不暴露生產 HSM 基礎設施**。產品形狀為 consume-once EIP-712 Gate；生產環境透過原生治理函數輪替至多簽。 |
+| **2** | GMX v2 無 live fill | GMX v2 執行防護已透過 **Vitest CLI + dry-run 管線**完整驗證（`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）——在 **live GM pool 資本部署前**保證 **0-Gas 預飛行（pre-flight）熔斷**；非「未測試」，而是「主網 fill 待 Grant M6 後啟用」。 |
+| **3** | Pendle yield 掛名 | Citadel **嚴格定位為 Pendle Institutional Safety Sentinel**——驗證 **60s TTL Oracle** 與 **5 項 Pool Invariants**（maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist · `PENDLE_ORACLE_STALE` soil fuse）。**不作任何 APY / yield 收益宣稱**；非 Pendle YT 競品。 |
+| **4** | Dune Live vs One | **Dune SQL 索引查詢已預編譯鎖定 Arbitrum One（42161）語意**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）；**即時遙測串流目前運行於 Sepolia testnet** Gate `0xb174…`（`IntentAttested` · `RiskTripBlocked`）。表單填寫時須分開標註「Sepolia live」與「One SQL spec」。 |
+| **5** | ElizaOS / Wayfinder plugin | **v1.0 交付可執行 Reference Harness**（`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`）。官方 npm 套件（`@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield`）屬 **V1.1 Open PR Spec**——見 [V1.1 Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR；**非 v1.0 已簽約官方 plugin**。 |
+
+---
+
 ## 30-Second Identity
 
 SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execution safety primitive**: sub-ms intent clearing on Cloudflare Edge (`checkSoilResistance()`, p50 ~106µs · **`pkg/soil_core.wasm` — independent of AA**) **plus** an immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. ZeroDev Kernel v3 is an **opt-in Pillar 1 AA delivery layer** (`USE_ZERODEV_AA` default-off) — not the source of sub-ms latency. Toxic AI Agent UserOps are severed **before** Sequencer queues — **0-Gas** on blocked paths.
@@ -68,28 +82,30 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 ### GMX Protocol
 
-**+10 bps builder lane & depth/slippage fuse:**
+**+10 bps builder lane & depth/slippage fuse · Dry-Run 驗證（0-Gas pre-flight）：**
 
 - Qualified GM payloads route `uiFeeReceiver` builder fee
 - Pre-execution soil fuse (cross-venue slippage + depth) before DataStore broadcast
+- **Vitest CLI + dry-run 管線已驗證** — `pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`；**live GM pool 資本部署前**保證 0-Gas 預飛行保護（主網 fill 屬 Grant 後里程碑，非 v1.0 未測試）
 
 ### Pendle Finance (V1.0 Live · Core Pillar 3)
 
-**Autonomous AI Agent Pool Selection with Microsecond Safety Guardrails (p50 ~106µs)** — `validateAIPoolSelection()` pre-flights `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` (maturity ≥7d · yield drift ≤300bps · $100K min liquidity · asset whitelist) via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts)).
-
-**Institutional Safety Sentinel — Zero-I/O Sync Hot-Path Oracle + Stale-Data Fail-Closed Fuse:**
+**Pendle Institutional Safety Sentinel（非 yield 產品）— 60s TTL Oracle · 5 Pool Invariants：**
 
 - **Dynamic Market Oracle** ([`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts)): sync in-memory `ingest()` / `resolve()` — **no hot-path I/O** · **TTL default 60s**
 - **Registry hydration** ([`pendle-pt-registry.ts`](./src/adapters/pendle/pendle-pt-registry.ts)): `hydrateFromOracle` overrides `impliedYield`, `ptPriceInAsset`, `liquidityConstant`, `expirySec`
 - **Soil fuse wiring**: `pendleOracle` + `pendleCrossGuard` → `checkSoilResistance()` · emits **`PENDLE_ORACLE_STALE`** on missing / stale / invalid feeds
 - Expiry **<7d** + yield jitter **>200 bps** → fail-closed · Shadow margin cross-check vs GMX maintenance before risk-increasing intents
-- Protects PT/YT capital from liquidation blackholes — **not a competing yield product** · coexists with Shield **p50 ~106µs**
+- Protects PT/YT capital from liquidation blackholes — **not a competing yield product** · **不作 APY 收益宣稱** · coexists with Shield **p50 ~106µs**
+- `validateAIPoolSelection()` pre-flights `PENDLE_CREATE_POOL` / `PENDLE_ADD_LIQUIDITY` via optional `pendlePoolFactory` soil probe ([`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts))
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts)
 
 ### Dune Analytics
 
 **Live dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+
+**遙測狀態（誠實邊界）：** Dune SQL **已預編譯鎖定 Arbitrum One（42161）**；**即時事件串流運行於 Sepolia testnet**。
 
 **Structured on-chain events & PEV (Prevented Exploit Volume) metric:**
 
@@ -100,6 +116,11 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 → [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) · `scripts/emit-sepolia-telemetry-events.ts`
 
 ### AI Agent Ecosystem Runtimes (Virtuals / ElizaOS / LangChain TS & Python)
+
+**v1.0：可執行 Reference Harness · V1.1：官方 npm 規格 PR（`@elizaos/plugin-citadel-guard`）**
+
+- **v1.0 已交付**：`withCitadelShield` decorator · `examples/adapters/` · `pnpm demo:agent` — 可重現 CLI 驗證
+- **V1.1 Open PR Spec**： [V1.1 Agent Frameworks Roadmap（feature branch）](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · ElizaOS `@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield` — **非 v1.0 官方 npm 發布**
 
 **Zero-touch integration for agent swarms (TS decorator + Python REST):**
 
@@ -166,8 +187,11 @@ Grant allocation directly fuels **V2.0 R&D**:
 
 ### V1.0 Honest Limits (Do Not Over-Claim)
 
-- Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) — public verification only
-- Reference Agent harness — not an official Virtuals/ElizaOS/LangChain partnership attestation
+- **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174…` are **deliberate public-audit signers**, not production HSM keys
+- GMX v2 — **dry-run / Vitest verified**; **no live GM pool fill on One yet** (Grant post-M6)
+- Pendle — **Safety Sentinel only**; no APY yield claims
+- Dune — **Sepolia live stream**; **42161 SQL pre-compiled** (awaiting One event ingest)
+- Reference Agent harness — not an official Virtuals/ElizaOS/LangChain partnership attestation; npm plugins = **V1.1 PR Spec**
 - Stylus = **V2.0 roadmap probe**; live gateway = **Solidity Gate**
 - Monte Carlo **87.39%** toxic flow blocked — *nominal simulated*; not live TVL saved
 
