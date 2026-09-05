@@ -31,6 +31,7 @@ import {
   hrtimeElapsedUs,
   resolveLatency,
   printDynamicBenchmarkBreakdown,
+  printIntentLayerBanner,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
 
@@ -169,6 +170,7 @@ async function main(): Promise<void> {
   const trip = process.argv.includes("--trip");
   seedAdapterProbes(NOW_MS);
   printBanner("Quad-Agent Framework Demo");
+  printIntentLayerBanner();
   printMode(trip);
 
   console.log(`${BOLD}Citadel Pre-Execution Risk Gateway — Four Major AI Agent Frameworks${R}\n`);

@@ -155,6 +155,47 @@ pnpm demo:quad         # All four AI frameworks (combined)
 
 ---
 
+## Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+
+SliverVine Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理與 EIP-712 簽名之間 — 而非被動 JSON-RPC 轉發器。於任何 hot-key 簽名管道開啟前，驗證**語意意圖**（venue allowlist、calldata 形狀、risk bitmask）。
+
+### LLM vs Citadel 延遲 — ASCII 工作流
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
+│                                                                              │
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                mempool path │
+│  (GPT-4 / Claude inference)       (FAIL-CLOSED · 0-Gas)          (if cleared)│
+└──────────────────────────────────────────────────────────────────────────────┘
+         │                                    │                         │
+         └──────────── calldata intent ───────┴── bitmask severance ────┘
+```
+
+### 一般 RPC Gateway vs Citadel Shield
+
+| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
+|------|-----------------|-------------------------------|
+| **層級位置** | 傳輸中繼（HTTP/WSS → node） | **簽名前意圖防火牆**（LLM 輸出 → calldata gate） |
+| **延遲特性** | 網路 RTT（50–300ms+） | **~14.0µs** 純 invariant · **~106µs** 完整 matrix（Edge 目標 `<106µs`） |
+| **驗證範圍** | 無（轉發不透明 calldata） | Venue allowlist · soil fuse · R17/R20 bitmask · session-key 上限 |
+| **失敗模式** | Best-effort 轉發錯誤 | **FAIL-CLOSED** — `severSigningChannel()` · **0-Gas**（無 mempool 廣播） |
+| **AI agent 安全** | 無幻覺防護 | 不支援 venue / 有毒 calldata 於 EIP-712 簽名前切斷 |
+| **Demo 證明** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
+
+### Fail-Closed 演練 — AI Prompt 幻覺
+
+**情境：** AI agent 幻覺出 **Aerodrome**（Base DEX）交換路由，但營運商政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
+
+1. **LLM 產出 calldata** 指向不支援 venue（`~2,000ms` 推理延遲）。
+2. **Citadel Intent Layer** 依 venue bitmask 解析 calldata — Aerodrome 不在 allowlist → **~14.0µs** 內 **FAIL-CLOSED**。
+3. **`severSigningChannel()`** 關閉 EIP-712 hot-key 管道 — **0-Gas**，無 Sequencer 佇列進入。
+4. **Judge 重現：** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+
+---
+
 ## ⚡ 30 秒快速審計（最快 Judge 驗證）
 
 ### 3-Tier Demo Suite（CLI SSOT）

@@ -251,6 +251,28 @@ SliverVine 將 risk management 從「naive blocking」轉為 **Intent-Aware Navi
 2. **Intent Taxonomy**：方向性區分，將 `RISK_INCREASE`（`open`/`increase` → strict Fail-Closed evaluation）與 `RISK_DECREASE`（`close`/`reduce` → greenlighted with safety routing）分離 — [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard)。
 3. **Shadow Margin Engine**：Pre-execution PT exit proceeds vs GMX maintenance margin — [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats)。
 
+### Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+
+Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理（`~1,000ms–5,000ms`）與 EIP-712 簽名之間 — 非被動 JSON-RPC 中繼。Pre-flight invariant 檢查於 **~14.0µs–106µs**（Edge 目標 `<106µs`）內以 **FAIL-CLOSED** 語意執行。
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)│
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
+|------|-----------------|-------------------------------|
+| **位置** | 傳輸中繼 | 簽名前意圖防火牆 |
+| **延遲** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** 完整 matrix |
+| **範圍** | 不透明 calldata 轉發 | Venue allowlist · soil fuse · R17/R20 bitmask |
+| **失敗時** | 轉發錯誤 | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
+| **AI 幻覺** | 無防護 | 不支援 venue（如 **Aerodrome**）於 **~14.0µs** 切斷 |
+
+**Fail-Closed 演練：** Agent 幻覺 Aerodrome 路由，政策僅 allowlist GMX/Pendle/Uniswap（Arbitrum）→ Citadel 標記 calldata → 廣播前切斷簽名 → `pnpm demo:quad -- --trip` 重現。
+
 ### Legal & Regulatory Positioning
 
 > **DISCLAIMER**：SliverVine Protocol 僅提供 software-based risk analytics、monitoring、policy enforcement 與 execution-safety tooling。不提供 asset custody、underwriting、indemnity、reimbursement、profit guarantees、uptime SLA 或任何 insurance-like coverage。所有 risk decisions 為 algorithmic，基於 user-defined policy parameters 與 protocol-aware market signals。所收費用僅為 software access 與 API metering fees，不產生補償金融損失之義務。

@@ -118,6 +118,16 @@ export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {
   console.log(`${BOLD}[BENCHMARK]${R} Runtime: Node.js CLI Harness · probing…`);
 }
 
+export function printIntentLayerBanner(): void {
+  console.log(`${CORE_BRIGHT_CYAN}┌─ Intent Layer Architecture ─────────────────────────────────┐${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R} ${GRAY}[LLM Reasoning Layer: ~1000ms–5000ms]${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R}          ${BOLD}↓${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R} ${GUARD_BRIGHT_GREEN}${BOLD}[Citadel Intent Layer: ~14.0µs (FAIL-CLOSED)]${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R}          ${BOLD}↓${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R} ${EXEC_BRIGHT_YELLOW}[EIP-712 Sign / Chain]${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}└─────────────────────────────────────────────────────────────┘${R}`);
+}
+
 /** Per-line soil fuse / execution telemetry (Node harness E2E). */
 export function formatExecutionLatency(us: number): string {
   return `${EXEC_BRIGHT_YELLOW}${BOLD}▸ Execution Latency: ${formatLatencyLabel(us)}${R}`;

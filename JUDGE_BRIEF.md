@@ -84,6 +84,39 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
+## Why Citadel Shield is NOT a Normal RPC Gateway (The Intent & Calldata Layer)
+
+Citadel Shield sits at the **Intent & Calldata Layer** — between LLM reasoning and EIP-712 signing — not as a passive JSON-RPC relay. It validates semantic intent (venue allowlists, calldata shape, risk bitmask) **before** any hot-key signature pipeline opens.
+
+### LLM vs Citadel Latency — ASCII Workflow
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)│
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Dimension | Normal RPC Gateway | Citadel Shield (Intent Layer) |
+|-----------|-------------------|-------------------------------|
+| **Layer** | Transport relay | Pre-signature intent firewall |
+| **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** matrix (Edge `<106µs`) |
+| **Validation** | Opaque forward | Venue allowlist · soil fuse · R17/R20 bitmask |
+| **Failure** | Relay errors | **FAIL-CLOSED** · **0-Gas** · `severSigningChannel()` |
+| **AI safety** | None | Hallucinated venues severed pre-sign |
+| **Demo** | — | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
+
+### Fail-Closed Walkthrough — AI Prompt Hallucination
+
+**Scenario:** Agent hallucinates **Aerodrome** swap while policy allowlists only **GMX v2 / Pendle / Uniswap V3** on Arbitrum One.
+
+1. LLM emits unsupported-venue calldata (`~2,000ms` reasoning).
+2. Citadel Intent Layer flags Aerodrome outside bitmask → **FAIL-CLOSED** in **~14.0µs**.
+3. `severSigningChannel()` — **0-Gas**, no mempool broadcast.
+4. Reproduce: `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+
 ## Judge Quickstart Instructions
 
 ```bash

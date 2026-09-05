@@ -249,6 +249,28 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 2. **Intent Taxonomy**: Directional division separating `RISK_INCREASE` (`open`/`increase` → strict Fail-Closed evaluation) from `RISK_DECREASE` (`close`/`reduce` → greenlighted with safety routing) — [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard).
 3. **Shadow Margin Engine**: Pre-execution PT exit proceeds vs GMX maintenance margin — [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
 
+### Why Citadel Shield is NOT a Normal RPC Gateway (The Intent & Calldata Layer)
+
+Citadel Shield operates at the **Intent & Calldata Layer** — between LLM reasoning (`~1,000ms–5,000ms`) and EIP-712 signing — not as a passive JSON-RPC relay. Pre-flight invariant checks run in **~14.0µs–106µs** (Edge target `<106µs`) with **FAIL-CLOSED** semantics.
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)│
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Dimension | Normal RPC Gateway | Citadel Shield (Intent Layer) |
+|-----------|-------------------|-------------------------------|
+| **Position** | Transport relay | Pre-signature intent firewall |
+| **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** full matrix |
+| **Scope** | Opaque calldata forward | Venue allowlist · soil fuse · R17/R20 bitmask |
+| **On failure** | Relay error | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
+| **AI hallucination** | Unprotected | Unsupported venue (e.g. **Aerodrome**) severed in **~14.0µs** |
+
+**Fail-Closed walkthrough:** Agent hallucinates Aerodrome swap while policy allowlists GMX/Pendle/Uniswap on Arbitrum → Citadel flags calldata → signature severed pre-broadcast → reproduce via `pnpm demo:quad -- --trip`.
+
 ### Legal & Regulatory Positioning
 
 > **DISCLAIMER**: SliverVine Protocol provides software-based risk analytics, monitoring, policy enforcement, and execution-safety tooling only. It does NOT provide asset custody, underwriting, indemnity, reimbursement, profit guarantees, uptime SLAs, or any form of insurance-like coverage. All risk decisions are algorithmic and based on user-defined policy parameters and protocol-aware market signals. Fees charged are software access and API metering fees only, creating no obligation to compensate financial losses.

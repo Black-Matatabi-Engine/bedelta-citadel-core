@@ -150,6 +150,47 @@ pnpm demo:quad         # All four AI frameworks (combined)
 
 ---
 
+## Why Citadel Shield is NOT a Normal RPC Gateway (The Intent & Calldata Layer)
+
+SliverVine Citadel Shield operates at the **Intent & Calldata Layer** — between LLM reasoning and EIP-712 signing — not as a passive JSON-RPC forwarder. It validates **semantic intent** (venue allowlists, calldata shape, risk bitmask) before any hot-key signature pipeline opens.
+
+### LLM vs Citadel Latency — ASCII Workflow
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
+│                                                                              │
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                mempool path │
+│  (GPT-4 / Claude inference)       (FAIL-CLOSED · 0-Gas)          (if cleared)│
+└──────────────────────────────────────────────────────────────────────────────┘
+         │                                    │                         │
+         └──────────── calldata intent ───────┴── bitmask severance ────┘
+```
+
+### Normal RPC Gateway vs Citadel Shield
+
+| Dimension | Normal RPC Gateway | Citadel Shield (Intent Layer) |
+|-----------|-------------------|-------------------------------|
+| **Layer position** | Transport relay (HTTP/WSS → node) | **Pre-signature intent firewall** (LLM output → calldata gate) |
+| **Latency profile** | Network RTT (50–300ms+) | **~14.0µs** pure invariant · **~106µs** full matrix (Edge target `<106µs`) |
+| **Validation scope** | None (forwards opaque calldata) | Venue allowlist · soil fuse · R17/R20 bitmask · session-key caps |
+| **Failure mode** | Best-effort relay errors | **FAIL-CLOSED** — `severSigningChannel()` · **0-Gas** (no mempool broadcast) |
+| **AI agent safety** | No hallucination guard | Unsupported venue / toxic calldata severed **before** EIP-712 sign |
+| **Demo proof** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
+
+### Fail-Closed Walkthrough — AI Prompt Hallucination
+
+**Scenario:** An AI agent hallucinates a swap route to **Aerodrome** (Base DEX) while the operator policy only allowlists **GMX v2 / Pendle / Uniswap V3** on Arbitrum One.
+
+1. **LLM emits calldata** targeting an unsupported venue (`~2,000ms` reasoning latency).
+2. **Citadel Intent Layer** parses calldata against the venue bitmask — Aerodrome not in allowlist → **FAIL-CLOSED** in **~14.0µs**.
+3. **`severSigningChannel()`** closes the EIP-712 hot-key pipeline — **0-Gas**, no Sequencer queue entry.
+4. **Judge reproduction:** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+
+---
+
 ## ⚡ 30-Second Express Audit (Fastest Judge Verification)
 
 ### 3-Tier Demo Suite (CLI SSOT)

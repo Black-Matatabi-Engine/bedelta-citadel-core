@@ -89,6 +89,39 @@ SliverVine **不是** Wasm 滑點計算器。它是**共識前執行安全原語
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
+## Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+
+Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理與 EIP-712 簽名之間 — 非被動 JSON-RPC 中繼。於 hot-key 簽名管道開啟前驗證語意意圖（venue allowlist、calldata 形狀、risk bitmask）。
+
+### LLM vs Citadel 延遲 — ASCII 工作流
+
+```
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
+│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
+│  ████████████████████████████     ██                             ─────────   │
+│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)  │
+└──────────────────────────────────────────────────────────────────────────────┘
+```
+
+| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
+|------|-----------------|-------------------------------|
+| **層級** | 傳輸中繼 | 簽名前意圖防火牆 |
+| **延遲** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** matrix（Edge `<106µs`） |
+| **驗證** | 不透明轉發 | Venue allowlist · soil fuse · R17/R20 bitmask |
+| **失敗** | 轉發錯誤 | **FAIL-CLOSED** · **0-Gas** · `severSigningChannel()` |
+| **AI 安全** | 無 | 幻覺 venue 於簽名前切斷 |
+| **Demo** | — | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
+
+### Fail-Closed 演練 — AI Prompt 幻覺
+
+**情境：** Agent 幻覺 **Aerodrome** 路由，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
+
+1. LLM 產出不支援 venue calldata（`~2,000ms`）。
+2. Citadel Intent Layer 判定 Aerodrome 不在 bitmask → **~14.0µs** **FAIL-CLOSED**。
+3. `severSigningChannel()` — **0-Gas**，無 mempool 廣播。
+4. 重現：`pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+
 ## Judge Quickstart Instructions
 
 ```bash
