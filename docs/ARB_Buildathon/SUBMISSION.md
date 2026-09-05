@@ -1,19 +1,35 @@
 # SUBMISSION.md: SliverVine Citadel Shield — Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
-## ⚡ 3-Second TL;DR for Judges (ELI5)
+## ⚡ 3-Second TL;DR for Judges (Neuromorphic Security)
 
-**Citadel Shield = the sub-millisecond ESP / anti-lock brake system for autonomous AI agents.**
+**Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
-| | **LLM Brain** | **Citadel Pre-Flight Shield** |
-|---|---------------|-------------------------------|
-| **Speed** | ~2,000ms (slow reasoning, prone to hallucinations) | **14.0µs** (deterministic 0-Gas safety deadlock) |
-| **On bad intent** | May route to unauthorized venue (e.g. **Aerodrome**) | **FAIL-CLOSED** — severs signature channel, **$0 Gas** |
+| | **Cerebrum (LLM Agent)** | **Cerebellum (Citadel Shield)** |
+|---|--------------------------|----------------------------------|
+| **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
+| **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
+| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
+| **On threat** | May emit dangerous calldata (e.g. **Aerodrome**) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+
+### Neuromorphic Workflow
 
 ```
-[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-**Plain English:** If an AI agent hallucinates or tries to send funds to an unauthorized contract, Citadel severs the signature channel in **14 microseconds** without spending a single cent of Gas. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues dangerous calldata, Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | Field | Value |
@@ -265,27 +281,34 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 2. **Intent Taxonomy**: Directional division separating `RISK_INCREASE` (`open`/`increase` → strict Fail-Closed evaluation) from `RISK_DECREASE` (`close`/`reduce` → greenlighted with safety routing) — [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard).
 3. **Shadow Margin Engine**: Pre-execution PT exit proceeds vs GMX maintenance margin — [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
 
-### Why Citadel Shield is NOT a Normal RPC Gateway (The Intent & Calldata Layer)
+### Why Citadel Shield is NOT a Normal RPC Gateway (Cerebrum vs. Cerebellum)
 
-Citadel Shield operates at the **Intent & Calldata Layer** — between LLM reasoning (`~1,000ms–5,000ms`) and EIP-712 signing — not as a passive JSON-RPC relay. Pre-flight invariant checks run in **~14.0µs–106µs** (Edge target `<106µs`) with **FAIL-CLOSED** semantics.
+Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans; Citadel **Cerebellum** executes involuntary safety reflexes before EIP-712 signing.
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
-│  ████████████████████████████     ██                             ─────────   │
-│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)│
-└──────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-| Dimension | Normal RPC Gateway | Citadel Shield (Intent Layer) |
-|-----------|-------------------|-------------------------------|
-| **Position** | Transport relay | Pre-signature intent firewall |
+| Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
+|-----------|-------------------|-----------------------------|
+| **Role** | Transport relay | Involuntary safety reflex |
 | **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** full matrix |
-| **Scope** | Opaque calldata forward | Venue allowlist · soil fuse · R17/R20 bitmask |
-| **On failure** | Relay error | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
-| **AI hallucination** | Unprotected | Unsupported venue (e.g. **Aerodrome**) severed in **~14.0µs** |
+| **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
+| **AI safety** | Unprotected | Unsupported venue (e.g. **Aerodrome**) severed in **<14.0µs** |
 
-**Fail-Closed walkthrough:** Agent hallucinates Aerodrome swap while policy allowlists GMX/Pendle/Uniswap on Arbitrum → Citadel flags calldata → signature severed pre-broadcast → reproduce via `pnpm demo:quad -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum hallucinates Aerodrome swap while policy allowlists GMX/Pendle/Uniswap on Arbitrum → Cerebellum reflex deadlock → signature severed pre-broadcast → reproduce via `pnpm demo:quad -- --trip`.
 
 ### Legal & Regulatory Positioning
 

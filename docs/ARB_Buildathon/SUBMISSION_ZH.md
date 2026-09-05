@@ -2,20 +2,36 @@
 
 # SUBMISSION.md：SliverVine Citadel Shield — Arbitrum 上 AI Agent 的預共識意圖防火牆與執行安全原語
 
-## ⚡ 3 秒 TL;DR 給 Judges（ELI5）
+## ⚡ 3 秒 TL;DR 給 Judges（神經形態安全架構）
 
-**Citadel Shield = 自主 AI Agent 的亞毫秒級 ESP / 防鎖死煞車系統。**
+**大腦皮層 vs. 小腦 — Citadel Shield 是自主 AI Agent 的非自主反射弧。**
 
-| | **LLM 大腦** | **Citadel Pre-Flight 護盾** |
-|---|-------------|---------------------------|
-| **速度** | ~2,000ms（慢速推理，易幻覺） | **14.0µs**（確定性 0-Gas 安全死鎖） |
-| **惡意意圖** | 可能路由至未授權 venue（如 **Aerodrome**） | **FAIL-CLOSED** — 切斷簽名通道，**$0 Gas** |
+| | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
+|---|-------------------------|---------------------------|
+| **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
+| **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
+| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
+| **威脅時** | 可能產出危險 calldata（如 **Aerodrome**） | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+
+### 神經形態工作流
 
 ```
-[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-**白話文：** 若 AI agent 幻覺或試圖將資金送往未授權合約，Citadel 於 **14 微秒**內切斷簽名通道，不花費一分 Gas。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**核心敘事：** 若 LLM 大腦皮層因幻覺或 prompt injection 產出危險 calldata，Citadel 小腦於 **<14.0µs** 觸發即時物理死鎖，於執行前切斷 EIP-712 通道 — **$0 Gas**。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | 欄位 | 值 |
@@ -267,27 +283,34 @@ SliverVine 將 risk management 從「naive blocking」轉為 **Intent-Aware Navi
 2. **Intent Taxonomy**：方向性區分，將 `RISK_INCREASE`（`open`/`increase` → strict Fail-Closed evaluation）與 `RISK_DECREASE`（`close`/`reduce` → greenlighted with safety routing）分離 — [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard)。
 3. **Shadow Margin Engine**：Pre-execution PT exit proceeds vs GMX maintenance margin — [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats)。
 
-### Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+### Why Citadel Shield is NOT a Normal RPC Gateway（大腦皮層 vs. 小腦）
 
-Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理（`~1,000ms–5,000ms`）與 EIP-712 簽名之間 — 非被動 JSON-RPC 中繼。Pre-flight invariant 檢查於 **~14.0µs–106µs**（Edge 目標 `<106µs`）內以 **FAIL-CLOSED** 語意執行。
+Citadel Shield 是 **小腦與反射弧** — LLM **大腦皮層**負責規劃；Citadel **小腦**於 EIP-712 簽名前執行非自主安全反射。
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
-│  ████████████████████████████     ██                             ─────────   │
-│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)│
-└──────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
-|------|-----------------|-------------------------------|
-| **位置** | 傳輸中繼 | 簽名前意圖防火牆 |
+| 維度 | 一般 RPC Gateway | Citadel Shield（小腦） |
+|------|-----------------|----------------------|
+| **角色** | 傳輸中繼 | 非自主安全反射 |
 | **延遲** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** 完整 matrix |
-| **範圍** | 不透明 calldata 轉發 | Venue allowlist · soil fuse · R17/R20 bitmask |
-| **失敗時** | 轉發錯誤 | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
-| **AI 幻覺** | 無防護 | 不支援 venue（如 **Aerodrome**）於 **~14.0µs** 切斷 |
+| **幻覺時** | 轉發 calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
+| **AI 安全** | 無防護 | 不支援 venue（如 **Aerodrome**）於 **<14.0µs** 切斷 |
 
-**Fail-Closed 演練：** Agent 幻覺 Aerodrome 路由，政策僅 allowlist GMX/Pendle/Uniswap（Arbitrum）→ Citadel 標記 calldata → 廣播前切斷簽名 → `pnpm demo:quad -- --trip` 重現。
+**Fail-Closed 演練：** 大腦皮層幻覺 Aerodrome 路由，政策僅 allowlist GMX/Pendle/Uniswap（Arbitrum）→ 小腦反射死鎖 → 廣播前切斷簽名 → `pnpm demo:quad -- --trip` 重現。
 
 ### Legal & Regulatory Positioning
 

@@ -5,22 +5,36 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
-## ⚡ 3 秒 TL;DR 給 Judges（ELI5）
+## ⚡ 3 秒 TL;DR 給 Judges（神經形態安全架構）
 
-**Citadel Shield = 自主 AI Agent 的亞毫秒級 ESP / 防鎖死煞車系統。**
+**大腦皮層 vs. 小腦 — Citadel Shield 是自主 AI Agent 的非自主反射弧。**
 
-| | **LLM 大腦** | **Citadel Pre-Flight 護盾** |
-|---|-------------|---------------------------|
-| **速度** | ~2,000ms（慢速推理，易幻覺） | **14.0µs**（確定性 0-Gas 安全死鎖） |
-| **職責** | 從自然語言規劃交易 | 於任何簽名**之前**驗證 calldata |
-| **惡意意圖** | 可能路由至錯誤 venue（如 Aerodrome） | **FAIL-CLOSED** — 切斷通道，**$0 Gas** |
+| | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
+|---|-------------------------|---------------------------|
+| **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
+| **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
+| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
+| **威脅時** | 可能產出危險 calldata（如 **Aerodrome**） | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+
+### 神經形態工作流
 
 ```
-[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
-   （思考規劃 — 可能幻覺）                  （氣囊彈出 — 切斷簽名）                      （僅通過後上鏈）
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-**白話文：** 若 AI agent 幻覺或試圖將資金送往未授權合約（如政策僅允許 GMX/Pendle/Uniswap 卻指向 **Aerodrome**），Citadel 於 **14 微秒**內**切斷簽名通道** — 不花費一分 Gas。
+**核心敘事：** 若 LLM 大腦皮層因幻覺或 prompt injection 產出危險 calldata，Citadel 小腦於 **<14.0µs** 觸發即時物理死鎖，於執行前切斷 EIP-712 通道 — **$0 Gas**。
 
 **30 秒驗證：** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
@@ -175,43 +189,45 @@ pnpm demo:quad         # All four AI frameworks (combined)
 
 ---
 
-## Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+## Why Citadel Shield is NOT a Normal RPC Gateway（大腦皮層 vs. 小腦）
 
-SliverVine Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理與 EIP-712 簽名之間 — 而非被動 JSON-RPC 轉發器。於任何 hot-key 簽名管道開啟前，驗證**語意意圖**（venue allowlist、calldata 形狀、risk bitmask）。
+Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 轉發器。LLM **大腦皮層**負責規劃；Citadel **小腦**於 EIP-712 簽名前對每個 intent payload 執行非自主安全反射。
 
-### LLM vs Citadel 延遲 — ASCII 工作流
+### 神經形態反射架構
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
-│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
-│                                                                              │
-│  ████████████████████████████     ██                             ─────────   │
-│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                mempool path │
-│  (GPT-4 / Claude inference)       (FAIL-CLOSED · 0-Gas)          (if cleared)│
-└──────────────────────────────────────────────────────────────────────────────┘
-         │                                    │                         │
-         └──────────── calldata intent ───────┴── bitmask severance ────┘
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-### 一般 RPC Gateway vs Citadel Shield
+### 一般 RPC Gateway vs Citadel 小腦
 
-| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
-|------|-----------------|-------------------------------|
-| **層級位置** | 傳輸中繼（HTTP/WSS → node） | **簽名前意圖防火牆**（LLM 輸出 → calldata gate） |
-| **延遲特性** | 網路 RTT（50–300ms+） | **~14.0µs** 純 invariant · **~106µs** 完整 matrix（Edge 目標 `<106µs`） |
-| **驗證範圍** | 無（轉發不透明 calldata） | Venue allowlist · soil fuse · R17/R20 bitmask · session-key 上限 |
-| **失敗模式** | Best-effort 轉發錯誤 | **FAIL-CLOSED** — `severSigningChannel()` · **0-Gas**（無 mempool 廣播） |
-| **AI agent 安全** | 無幻覺防護 | 不支援 venue / 有毒 calldata 於 EIP-712 簽名前切斷 |
+| 維度 | 一般 RPC Gateway | Citadel Shield（小腦） |
+|------|-----------------|----------------------|
+| **認知角色** | 傳輸中繼（無反射） | **非自主安全反射**（簽名前死鎖） |
+| **延遲** | 50–300ms+ RTT | **~14.0µs** 純 invariant · **~106µs** 完整 matrix（Edge `<106µs`） |
+| **確定性** | N/A | **100% 確定性** bitmask 評估 |
+| **幻覺時** | 轉發不透明 calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
 | **Demo 證明** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
 
-### Fail-Closed 演練 — AI Prompt 幻覺
+### Fail-Closed 演練 — 大腦皮層幻覺
 
-**情境：** AI agent 幻覺出 **Aerodrome**（Base DEX）交換路由，但營運商政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
+**情境：** LLM **大腦皮層**幻覺出 **Aerodrome** 路由，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
 
-1. **LLM 產出 calldata** 指向不支援 venue（`~2,000ms` 推理延遲）。
-2. **Citadel Intent Layer** 依 venue bitmask 解析 calldata — Aerodrome 不在 allowlist → **~14.0µs** 內 **FAIL-CLOSED**。
-3. **`severSigningChannel()`** 關閉 EIP-712 hot-key 管道 — **0-Gas**，無 Sequencer 佇列進入。
+1. **大腦皮層產出 calldata** 指向不支援 venue（`~2,000ms` Chain-of-Thought）。
+2. **小腦反射**解析 venue bitmask — Aerodrome 不在 allowlist → **<14.0µs** 內 **FAIL-CLOSED**。
+3. **`severSigningChannel()`** 觸發物理死鎖 — **0-Gas**，無 Sequencer 佇列進入。
 4. **Judge 重現：** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ---

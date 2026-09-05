@@ -3,20 +3,32 @@
 
 # JUDGE_BRIEF.md — SliverVine Citadel Shield（1 頁 Buildathon 簡報）
 
-## ⚡ 3 秒 TL;DR 給 Judges（ELI5）
+## ⚡ 3 秒 TL;DR 給 Judges（神經形態安全架構）
 
-**Citadel Shield = 自主 AI Agent 的亞毫秒級 ESP / 防鎖死煞車系統。**
+**大腦皮層 vs. 小腦 — Citadel Shield 是自主 AI Agent 的非自主反射弧。**
 
-| | **LLM 大腦** | **Citadel Pre-Flight 護盾** |
-|---|-------------|---------------------------|
-| **速度** | ~2,000ms（慢速推理，易幻覺） | **14.0µs**（確定性 0-Gas 安全死鎖） |
-| **惡意意圖** | 可能路由至未授權 venue（如 **Aerodrome**） | **FAIL-CLOSED** — 切斷簽名通道，**$0 Gas** |
+| | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
+|---|-------------------------|---------------------------|
+| **速度** | ~1,000ms–5,000ms（慢速 CoT · 非確定性） | **14.0µs–106µs**（100% 確定性 · 0-Gas） |
+| **威脅時** | 幻覺 / prompt injection（如 **Aerodrome**） | **<14.0µs** 反射死鎖 — 切斷 EIP-712 通道 |
 
 ```
-[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-**白話文：** 若 AI agent 幻覺或試圖將資金送往未授權合約，Citadel 於 **14 微秒**內切斷簽名通道，不花費一分 Gas。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**核心敘事：** 若 LLM 大腦皮層產出危險 calldata，Citadel 小腦於 **<14.0µs** 觸發物理死鎖 — **$0 Gas**。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | Field | Value |
@@ -105,37 +117,40 @@ SliverVine **不是** Wasm 滑點計算器。它是**共識前執行安全原語
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
-## Why Citadel Shield is NOT a Normal RPC Gateway（Intent & Calldata Layer）
+## Why Citadel Shield is NOT a Normal RPC Gateway（大腦皮層 vs. 小腦）
 
-Citadel Shield 運作於 **Intent & Calldata Layer** — 介於 LLM 推理與 EIP-712 簽名之間 — 非被動 JSON-RPC 中繼。於 hot-key 簽名管道開啟前驗證語意意圖（venue allowlist、calldata 形狀、risk bitmask）。
-
-### LLM vs Citadel 延遲 — ASCII 工作流
+Citadel Shield 是 **小腦與反射弧** — LLM **大腦皮層**負責規劃；Citadel **小腦**於 EIP-712 簽名前執行非自主安全反射。
 
 ```
-┌──────────────────────────────────────────────────────────────────────────────┐
-│  LLM Reasoning Layer              Citadel Shield Pre-Flight        On-Chain  │
-│  (Prompt → Plan → Calldata)       Invariant Check                  Sign/Chain│
-│  ████████████████████████████     ██                             ─────────   │
-│  ~1,000ms – 5,000ms               ~14.0µs – 106µs                (if cleared)  │
-└──────────────────────────────────────────────────────────────────────────────┘
+┌──────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
+└──────────────────────────────────────────────┘
+                         │ (Intent Payload)
+                         ▼
+┌──────────────────────────────────────────────┐
+│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
+└──────────────────────────────────────────────┘
+                         │
+           ┌─────────────┴─────────────┐
+           ▼                           ▼
+     [ PASS: <106µs ]            [ FAIL: <14µs ]
+    Signature Released          Reflex Deadlock Severed
 ```
 
-| 維度 | 一般 RPC Gateway | Citadel Shield（Intent Layer） |
-|------|-----------------|-------------------------------|
-| **層級** | 傳輸中繼 | 簽名前意圖防火牆 |
+| 維度 | 一般 RPC Gateway | Citadel Shield（小腦） |
+|------|-----------------|----------------------|
+| **角色** | 傳輸中繼 | 非自主安全反射 |
 | **延遲** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** matrix（Edge `<106µs`） |
-| **驗證** | 不透明轉發 | Venue allowlist · soil fuse · R17/R20 bitmask |
-| **失敗** | 轉發錯誤 | **FAIL-CLOSED** · **0-Gas** · `severSigningChannel()` |
-| **AI 安全** | 無 | 幻覺 venue 於簽名前切斷 |
+| **幻覺時** | 轉發 calldata | **FAIL-CLOSED** · **0-Gas** · `severSigningChannel()` |
 | **Demo** | — | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
 
-### Fail-Closed 演練 — AI Prompt 幻覺
+### Fail-Closed 演練 — 大腦皮層幻覺
 
-**情境：** Agent 幻覺 **Aerodrome** 路由，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
+**情境：** 大腦皮層幻覺 **Aerodrome**，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**。
 
-1. LLM 產出不支援 venue calldata（`~2,000ms`）。
-2. Citadel Intent Layer 判定 Aerodrome 不在 bitmask → **~14.0µs** **FAIL-CLOSED**。
-3. `severSigningChannel()` — **0-Gas**，無 mempool 廣播。
+1. 大腦皮層產出不支援 venue calldata（`~2,000ms` CoT）。
+2. 小腦反射 → **<14.0µs** 內 **FAIL-CLOSED**。
+3. `severSigningChannel()` — **0-Gas**，無廣播。
 4. 重現：`pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ## Judge Quickstart Instructions
