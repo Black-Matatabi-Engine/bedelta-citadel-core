@@ -1,10 +1,13 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_VARIATIONAL_STALE_QUOTE,
   FLAGS_IMBALANCE_TRIP,
   FLAGS_SEVERED,
   FLAGS_YIELD_SHOCK,
   evaluateGmxFlags,
   evaluatePendleFlags,
+  evaluateVariationalFlags,
   packProtocolLane,
   PROTO_VECT_LEN,
 } from "../../src/core/risk-engine-core";
@@ -38,6 +41,36 @@ describe("auto severance on bitmask trips", () => {
     __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
     const flags = evaluatePendleFlags(0.095, 0.062);
     expect(flags & FLAGS_YIELD_SHOCK).not.toBe(0);
+    expect(flags & FLAGS_SEVERED).not.toBe(0);
+    expect(readActiveSystemState().signingChannelOpen).toBe(false);
+  });
+
+  it("severSigningChannel when Variational stale quote trips", () => {
+    __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
+    const flags = evaluateVariationalFlags({
+      quotePriceUsd: 3500,
+      oracleMarkUsd: 3500,
+      quoteTimestampMs: 1_700_000_000_000,
+      nowMs: 1_700_000_001_000,
+      tradeSizeUsd: 5_000,
+      olpDepthUsd: 100_000,
+    });
+    expect(flags & FLAG_VARIATIONAL_STALE_QUOTE).not.toBe(0);
+    expect(flags & FLAGS_SEVERED).not.toBe(0);
+    expect(readActiveSystemState().signingChannelOpen).toBe(false);
+  });
+
+  it("severSigningChannel when Variational OLP depth trips", () => {
+    __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
+    const flags = evaluateVariationalFlags({
+      quotePriceUsd: 3500,
+      oracleMarkUsd: 3500,
+      quoteTimestampMs: 1_700_000_000_000,
+      nowMs: 1_700_000_000_200,
+      tradeSizeUsd: 20_000,
+      olpDepthUsd: 100_000,
+    });
+    expect(flags & FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED).not.toBe(0);
     expect(flags & FLAGS_SEVERED).not.toBe(0);
     expect(readActiveSystemState().signingChannelOpen).toBe(false);
   });

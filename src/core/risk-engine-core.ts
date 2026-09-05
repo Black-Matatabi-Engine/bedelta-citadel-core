@@ -1,4 +1,4 @@
-/** Lean Santenmoku risk engine — f64 protocol lanes + bitmask invariants (<200 LOC). */
+/** Lean Santenmoku risk engine — f64 protocol lanes + bitmask invariants. */
 import { HardlockError, RiskLimitExceeded, vineWrapProtection } from "./risk";
 import type { CitadelRiskGateVerdict, GatewayRulesInput, GatewayRulesResult } from "./risk-engine-lib/risk-engine-types";
 import {
@@ -14,6 +14,8 @@ import {
   FLAGS_NAV_VIOLATION,
   FLAGS_SLIPPAGE_TRIP,
   FLAGS_YIELD_SHOCK,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_VARIATIONAL_STALE_QUOTE,
 } from "./risk-flags";
 import {
   CAMELOT_SLIPPAGE_MAX_BPS,
@@ -25,6 +27,9 @@ import {
   PENDLE_YIELD_SHOCK_MAX_BPS,
   RADIANT_HF_MIN,
   STABILIZER_DEPEG_MAX_BPS,
+  VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
+  VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
+  VARIATIONAL_QUOTE_MAX_AGE_MS,
 } from "./risk-engine-limits";
 import { applyAutoSeveranceOnFlags } from "./risk-severance";
 import {
@@ -50,6 +55,8 @@ export {
   FLAGS_HL_SPREAD,
   FLAGS_HL_RATE,
   FLAGS_DEPEG_TRIP,
+  FLAG_VARIATIONAL_STALE_QUOTE,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
 } from "./risk-flags";
 
 export const PROTO_VECT_LEN = 24;
@@ -70,7 +77,20 @@ export {
   JONES_NAV_MAX_BPS,
   HL_SPREAD_MAX_BPS,
   HL_RATE_LIMIT_RPM,
+  VARIATIONAL_QUOTE_MAX_AGE_MS,
+  VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
+  VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
 } from "./risk-engine-limits";
+
+export interface VariationalFlagInput {
+  quotePriceUsd: number;
+  oracleMarkUsd: number;
+  quoteTimestampMs: number;
+  nowMs: number;
+  tradeSizeUsd: number;
+  olpDepthUsd: number;
+  longTailAsset?: boolean;
+}
 
 const GATEWAY_CLEAR: GatewayRulesResult = Object.freeze({ blocked: false, tripped: false, crashed: false, failClosed: false, reasons: Object.freeze([]) });
 const PAYLOAD_POISON: GatewayRulesResult = Object.freeze({ blocked: true, tripped: true, crashed: false, failClosed: true, reasons: Object.freeze(["PAYLOAD_POISON_FAIL_CLOSED"]) });
@@ -135,6 +155,21 @@ export function evaluateHlSessionFlags(sessionValid: boolean, orderSize: number,
 
 export function evaluateDepegFlags(pegDeviationBps: number, maxBps = STABILIZER_DEPEG_MAX_BPS): number {
   const f = pegDeviationBps > maxBps ? FLAGS_DEPEG_TRIP : FLAGS_CLEAR;
+  return applyAutoSeveranceOnFlags(f);
+}
+
+export function evaluateVariationalFlags(input: VariationalFlagInput): number {
+  let f = FLAGS_CLEAR;
+  const ageMs = input.nowMs - input.quoteTimestampMs;
+  if (ageMs > VARIATIONAL_QUOTE_MAX_AGE_MS) f |= FLAG_VARIATIONAL_STALE_QUOTE;
+  else if (input.oracleMarkUsd > 0) {
+    const devBps = (Math.abs(input.quotePriceUsd - input.oracleMarkUsd) / input.oracleMarkUsd) * 10_000;
+    if (devBps > VARIATIONAL_PRICE_DEVIATION_MAX_BPS) f |= FLAG_VARIATIONAL_STALE_QUOTE;
+  }
+  const depth = input.olpDepthUsd;
+  if (input.longTailAsset !== false && depth > 0 && input.tradeSizeUsd / depth > VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION) {
+    f |= FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED;
+  }
   return applyAutoSeveranceOnFlags(f);
 }
 

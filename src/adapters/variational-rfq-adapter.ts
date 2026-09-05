@@ -1,8 +1,21 @@
-/** Variational Omni RFQ pre-flight guard — quote freshness & OLP depth invariants. */
+/** Variational Omni RFQ pre-flight guard — delegates to core bitmask engine. */
 
-export const VARIATIONAL_QUOTE_MAX_AGE_MS = 500;
-export const VARIATIONAL_PRICE_DEVIATION_MAX_BPS = 30;
-export const VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION = 0.15;
+import {
+  evaluateVariationalFlags,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_VARIATIONAL_STALE_QUOTE,
+  FLAGS_CLEAR,
+  FLAGS_SEVERED,
+} from "../core/risk-engine-core";
+import {
+  VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
+  VARIATIONAL_QUOTE_MAX_AGE_MS,
+} from "../core/risk-engine-limits";
+export {
+  VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
+  VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
+  VARIATIONAL_QUOTE_MAX_AGE_MS,
+} from "../core/risk-engine-limits";
 
 export interface VariationalRFQPayload {
   symbol: string;
@@ -21,39 +34,46 @@ export interface VariationalRFQResult {
   status: "ALLOW" | "FAIL_CLOSED";
   reason?: string;
   detail?: string;
+  /** Core bitmask flags (includes FLAGS_SEVERED when auto-sever tripped). */
+  flags: number;
+}
+
+function staleQuoteDetail(payload: VariationalRFQPayload): string {
+  const ageMs = payload.nowMs - payload.quoteTimestampMs;
+  if (ageMs > VARIATIONAL_QUOTE_MAX_AGE_MS) {
+    return `quoteAgeMs=${ageMs}>${VARIATIONAL_QUOTE_MAX_AGE_MS}`;
+  }
+  const mark = payload.oracleMarkUsd;
+  const devBps = mark > 0 ? (Math.abs(payload.quotePriceUsd - mark) / mark) * 10_000 : 0;
+  return `priceDevBps=${devBps.toFixed(1)}>${VARIATIONAL_PRICE_DEVIATION_MAX_BPS}`;
 }
 
 export function validateVariationalRFQIntent(payload: VariationalRFQPayload): VariationalRFQResult {
-  const ageMs = payload.nowMs - payload.quoteTimestampMs;
-  if (ageMs > VARIATIONAL_QUOTE_MAX_AGE_MS) {
+  const flags = evaluateVariationalFlags(payload);
+  const tripMask = FLAG_VARIATIONAL_STALE_QUOTE | FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED;
+  if ((flags & tripMask) === FLAGS_CLEAR) {
+    return { ok: true, status: "ALLOW", detail: "OLP depth ok", flags };
+  }
+  if (flags & FLAG_VARIATIONAL_STALE_QUOTE) {
     return {
       ok: false,
       status: "FAIL_CLOSED",
       reason: "FAIL_CLOSED: VARIATIONAL_STALE_QUOTE_BREACH",
-      detail: `quoteAgeMs=${ageMs}>${VARIATIONAL_QUOTE_MAX_AGE_MS}`,
+      detail: staleQuoteDetail(payload),
+      flags,
     };
   }
-  const mark = payload.oracleMarkUsd;
-  if (mark > 0) {
-    const devBps = (Math.abs(payload.quotePriceUsd - mark) / mark) * 10_000;
-    if (devBps > VARIATIONAL_PRICE_DEVIATION_MAX_BPS) {
-      return {
-        ok: false,
-        status: "FAIL_CLOSED",
-        reason: "FAIL_CLOSED: VARIATIONAL_STALE_QUOTE_BREACH",
-        detail: `priceDevBps=${devBps.toFixed(1)}>${VARIATIONAL_PRICE_DEVIATION_MAX_BPS}`,
-      };
-    }
-  }
-  const longTail = payload.longTailAsset !== false;
-  const depth = payload.olpDepthUsd;
-  if (longTail && depth > 0 && payload.tradeSizeUsd / depth > VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION) {
-    return {
-      ok: false,
-      status: "FAIL_CLOSED",
-      reason: "FAIL_CLOSED: VARIATIONAL_OLP_DEPTH_BREACH",
-      detail: `utilPct=${((payload.tradeSizeUsd / depth) * 100).toFixed(1)}>15`,
-    };
-  }
-  return { ok: true, status: "ALLOW", detail: "OLP depth ok" };
+  const utilPct = ((payload.tradeSizeUsd / payload.olpDepthUsd) * 100).toFixed(1);
+  return {
+    ok: false,
+    status: "FAIL_CLOSED",
+    reason: "FAIL_CLOSED: VARIATIONAL_OLP_DEPTH_BREACH",
+    detail: `utilPct=${utilPct}>15`,
+    flags,
+  };
+}
+
+export function formatVariationalFlagMask(flags: number): string {
+  const core = flags & ~FLAGS_SEVERED;
+  return core === FLAGS_CLEAR ? "0x0" : `0x${core.toString(16)}`;
 }

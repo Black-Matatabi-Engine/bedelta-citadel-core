@@ -1,10 +1,12 @@
 import { describe, expect, it } from "vitest";
 import {
+  formatVariationalFlagMask,
   validateVariationalRFQIntent,
   VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
 } from "../../src/adapters/variational-rfq-adapter";
+import { FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED, FLAG_VARIATIONAL_STALE_QUOTE } from "../../src/core/risk-engine-core";
 
 const BASE = {
   symbol: "LONG_TAIL_PERP",
@@ -23,6 +25,7 @@ describe("validateVariationalRFQIntent", () => {
     expect(r.ok).toBe(true);
     expect(r.status).toBe("ALLOW");
     expect(r.detail).toBe("OLP depth ok");
+    expect(r.flags).toBe(0);
   });
 
   it("stale quote or price deviation → VARIATIONAL_STALE_QUOTE_BREACH", () => {
@@ -31,6 +34,8 @@ describe("validateVariationalRFQIntent", () => {
       quoteTimestampMs: BASE.nowMs - VARIATIONAL_QUOTE_MAX_AGE_MS - 1,
     });
     expect(stale.reason).toBe("FAIL_CLOSED: VARIATIONAL_STALE_QUOTE_BREACH");
+    expect(stale.flags & FLAG_VARIATIONAL_STALE_QUOTE).not.toBe(0);
+    expect(formatVariationalFlagMask(stale.flags)).toBe(`0x${FLAG_VARIATIONAL_STALE_QUOTE.toString(16)}`);
 
     const dev = validateVariationalRFQIntent({
       ...BASE,
@@ -46,5 +51,6 @@ describe("validateVariationalRFQIntent", () => {
     });
     expect(r.ok).toBe(false);
     expect(r.reason).toBe("FAIL_CLOSED: VARIATIONAL_OLP_DEPTH_BREACH");
+    expect(r.flags & FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED).not.toBe(0);
   });
 });

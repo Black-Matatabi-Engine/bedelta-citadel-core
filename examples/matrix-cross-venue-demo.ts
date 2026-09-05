@@ -31,9 +31,11 @@ import {
   evaluateRadiantLendingGuard,
 } from "../src/adapters/radiant/radiant-lending-adapter";
 import {
+  formatVariationalFlagMask,
   validateVariationalRFQIntent,
   type VariationalRFQPayload,
 } from "../src/adapters/variational-rfq-adapter";
+import { FLAGS_SEVERED } from "../src/core/risk-engine-core";
 import {
   __setSystemStateForTests,
   buildSystemState,
@@ -343,6 +345,12 @@ function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
   const t0 = hrtimeStart();
   const r = validateVariationalRFQIntent(variationalPayload(nowMs, ctx.perpVariational));
   const us = hrtimeElapsedUs(t0);
+  const fuseColor = r.ok ? GREEN : YELLOW;
+  const fuseVerdict = r.ok ? "PASS" : "REJECT";
+  const severed = (r.flags & FLAGS_SEVERED) !== 0 ? " | R20_SEVERED" : "";
+  console.log(
+    `  ${fuseColor}[FUSE] evaluateVariationalFlags() -> ${fuseVerdict} | bitmask=${formatVariationalFlagMask(r.flags)}${severed} | ${formatGuardTime(us)}${R}`,
+  );
   const color = r.ok ? GREEN : RED;
   const label = r.ok ? "ALLOWED" : (r.reason ?? "FAIL_CLOSED");
   const tail = r.ok ? (r.detail ?? "OLP depth ok") : (r.detail ?? "trip");

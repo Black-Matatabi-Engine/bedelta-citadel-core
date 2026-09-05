@@ -29,6 +29,8 @@ export {
   FLAGS_HL_SPREAD,
   FLAGS_HL_RATE,
   FLAGS_DEPEG_TRIP,
+  FLAG_VARIATIONAL_STALE_QUOTE,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
   PROTO_VECT_LEN,
   PROTO_SLOT,
   PROTO_GMX,
@@ -45,10 +47,13 @@ export {
   evaluateJonesFlags,
   evaluateHlSessionFlags,
   evaluateDepegFlags,
+  evaluateVariationalFlags,
   checkSoilResistance,
   evaluateGatewayRules,
   assertCitadelRiskGate,
   evaluateGlobalRiskPolicy,
 } from "./risk-engine-core";
+
+export type { VariationalFlagInput } from "./risk-engine-core";
 
 export { isGatewayNominalFastPath } from "./risk-engine-core";
