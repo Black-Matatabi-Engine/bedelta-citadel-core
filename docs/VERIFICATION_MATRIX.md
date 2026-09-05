@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **184 test files | 815 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **185 test files | 818 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,12 +15,12 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **184 test files \| 815 PASS Clean** | `pnpm test -- --run` |
+| **Vitest baseline** | **185 test files \| 818 PASS Clean** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
-| **Virtuals GAME adapter** | `evaluateVirtualsGameTask()` — GAME Worker pre-broadcast guard | [`virtuals-game-adapter.ts`](../src/adapters/virtuals/virtuals-game-adapter.ts) |
-| **LangChain Citadel tool** | `CitadelRiskGuardTool` — StructuredTool + LangGraph state-node guard | [`langchain-citadel-tool.ts`](../src/adapters/langchain/langchain-citadel-tool.ts) |
-| **ElizaOS shield** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-shield.ts`](../src/adapters/elizaos/elizaos-shield.ts) |
+| **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
+| **Virtuals GAME adapter** | `evaluateVirtualsGameTask()` — GAME Worker pre-broadcast guard | [`virtuals-game-adapter.ts`](../src/adapters/virtuals/virtuals-game-adapter.ts) · `pnpm demo:virtuals` |
+| **LangChain Citadel tool** | `CitadelRiskGuardTool` — StructuredTool + LangGraph state-node guard | [`langchain-citadel-tool.ts`](../src/adapters/langchain/langchain-citadel-tool.ts) · `pnpm demo:langchain` |
 | **Stabilizer Sepolia adapter** | Universal Cross-DEX Testnet Sandbox on **421614** — 1:1 capacity · de-peg severance · cross-pass routing | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ >50bps peg guard · 60s LLM cooldown | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:stabilizer` |
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
@@ -47,7 +47,7 @@
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (184 files / 815 tests)
+pnpm test       # Full System Regression Suite (185 files / 818 tests)
 ```
 
 | Command | Proves | Expected |
@@ -55,6 +55,9 @@ pnpm test       # Full System Regression Suite (184 files / 815 tests)
 | `pnpm demo` | Tri-Pillar micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
+| `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:virtuals` | Virtuals GAME worker task guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:langchain` | LangChain CitadelRiskGuardTool invoke | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:wayfinder -- --trip` | 0-Gas Fail-Closed soil trip | `FAIL_CLOSED` · 0-Gas intercept |
 | `pnpm demo:wayfinder -- --stabilizer` | Sepolia Stabilizer 1:1 stablecoin swap (Wayfinder harness) | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach (Wayfinder harness) | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
@@ -62,7 +65,7 @@ pnpm test       # Full System Regression Suite (184 files / 815 tests)
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **184 test files \| 815 PASS Clean** |
+| `pnpm test` | Full Vitest regression bar | **185 test files \| 818 PASS Clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -87,7 +90,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **184 test files \| 815 PASS Clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **185 test files \| 818 PASS Clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -351,13 +354,29 @@ FAIL_CLOSED  ALLOW (identical Mainnet bytecode · 0-Gas on block)
 
 ---
 
-### 3. Virtuals Protocol GAME Adapter (V1.0 Live)
+### 3. ElizaOS Citadel Plugin (V1.0 Live)
 
 **Command:**
 
 ```bash
-pnpm demo:quad
-pnpm exec vitest run tests/adapters/virtuals-game-adapter.test.ts
+pnpm demo:elizaos
+pnpm exec vitest run tests/adapters/elizaos-plugin.test.ts
+```
+
+| Scope | Detail |
+|-------|--------|
+| Adapter SSOT | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) — `evaluateElizaCitadelAction()` |
+| Demo | `pnpm demo:elizaos` · `--trip` for FAIL_CLOSED |
+
+---
+
+### 4. Virtuals Protocol GAME Adapter (V1.0 Live)
+
+**Command:**
+
+```bash
+pnpm demo:virtuals
+pnpm exec vitest run tests/adapters/virtuals-adapter.test.ts
 ```
 
 | Scope | Detail |
@@ -374,13 +393,13 @@ pnpm exec vitest run tests/adapters/virtuals-game-adapter.test.ts
 
 ---
 
-### 4. LangChain / LangGraph CitadelRiskGuardTool (V1.0 Live)
+### 5. LangChain / LangGraph CitadelRiskGuardTool (V1.0 Live)
 
 **Command:**
 
 ```bash
-pnpm demo:quad
-pnpm exec vitest run tests/adapters/langchain-citadel-tool.test.ts
+pnpm demo:langchain
+pnpm exec vitest run tests/adapters/langchain-tool.test.ts
 ```
 
 | Scope | Detail |
@@ -394,15 +413,6 @@ pnpm exec vitest run tests/adapters/langchain-citadel-tool.test.ts
 | Normal tool invoke | `status: ALLOW` · `output: SOIL_PASS` |
 | Toxic slippage soil trip | `FAIL_CLOSED` |
 | Parameter hallucination (NaN / negative depth) | `FAIL_CLOSED` · `PARAMETER_HALLUCINATION` |
-
----
-
-### 5. ElizaOS Shield Adapter (V1.0 Live)
-
-| Scope | Detail |
-|-------|--------|
-| Adapter SSOT | [`elizaos-shield.ts`](../src/adapters/elizaos/elizaos-shield.ts) — `evaluateElizaCitadelAction()` |
-| Demo | `pnpm demo:quad` |
 
 ---
 
@@ -467,10 +477,12 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:virtuals` | Virtuals GAME worker guard | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
-| `pnpm demo:wayfinder -- --stabilizer` | Stabilizer via Wayfinder harness | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **184 test files \| 815 PASS Clean** |
+| `pnpm test` | Full Vitest + coverage | **185 test files \| 818 PASS Clean** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -514,4 +526,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 184 test files | 815 PASS Clean*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 185 test files | 818 PASS Clean*

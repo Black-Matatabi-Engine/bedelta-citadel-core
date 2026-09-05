@@ -4,7 +4,7 @@
  * Usage: pnpm demo:quad
  * Trip:  pnpm demo:quad -- --trip
  */
-import { evaluateElizaCitadelAction } from "../src/adapters/elizaos/elizaos-shield";
+import { evaluateElizaCitadelAction } from "../src/adapters/elizaos/elizaos-citadel-plugin";
 import { CitadelRiskGuardTool } from "../src/adapters/langchain/langchain-citadel-tool";
 import { evaluateVirtualsGameTask } from "../src/adapters/virtuals/virtuals-game-adapter";
 import { wayfinderCitadelShieldHook } from "../src/adapters/wayfinder/wayfinder-shield";

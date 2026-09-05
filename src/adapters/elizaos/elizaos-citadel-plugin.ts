@@ -1,5 +1,5 @@
 /**
- * ElizaOS Framework adapter — pre-broadcast soil guard for Action handlers.
+ * ElizaOS Citadel Plugin — pre-broadcast soil guard for Action handlers.
  */
 import { verifyAgentIntent } from "../../sdk/agent-intent";
 import {
@@ -125,10 +125,16 @@ export async function evaluateElizaCitadelAction(
   }
 }
 
-export const elizaCitadelShieldAction = {
-  name: "CITADEL_SOIL_GUARD",
-  description: "ElizaOS action — evaluateElizaCitadelAction() pre-broadcast soil guard.",
-  handler: evaluateElizaCitadelAction,
+export const elizaCitadelPlugin = {
+  name: "slivervine-citadel-shield",
+  description: "ElizaOS plugin — evaluateElizaCitadelAction() pre-broadcast soil guard.",
+  actions: [
+    {
+      name: "CITADEL_SOIL_GUARD",
+      description: "Pre-consensus intent firewall before trade intent broadcast.",
+      handler: evaluateElizaCitadelAction,
+    },
+  ],
 };
 
 export { __clearCitadelCooldownsForTests };
