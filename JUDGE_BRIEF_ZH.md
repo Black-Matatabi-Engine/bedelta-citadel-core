@@ -31,34 +31,41 @@
 |---|--------|------------------------|
 | **1** | Ephemeral Ignition Signers | Arbitrum One Gate `0xb174118b…` 採用 **`0x1111…` / `0x2222…` Ephemeral Verification Signers** 供公開可審計性，不暴露生產 HSM 基礎設施。Gate 形狀 = consume-once EIP-712；生產輪替透過原生治理至多簽。 |
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 執行防護透過 **Vitest CLI + dry-run pipelines** 驗證（`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）— 於 live GM pool 資本部署前 **0-Gas pre-flight severance**。主網 GM fill 排程於 Grant 後 M6。 |
-| **3** | Pendle Core Pillar 3 | **V1.0 雙交付物：** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse。AI pool 建立/驗證 **免協議稅**；透過 Citadel SaaS Request Credits 計量。→ [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
+| **3** | Pendle Core Pillar 3 | **V1.0 雙交付物：** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse。AI pool 建立/驗證 **免協議稅**；SaaS Request Credits 計量於 **V1.1** 推出。→ [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry 於 Sepolia Testnet 活躍串流**；**Arbitrum One (42161) SQL Query Indexers 已完整預編譯供生產事件攝取**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）。Sepolia live stream 與 One production SQL 記載為獨立部署面。 |
 | **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals (GAME) · LangChain · Stabilizer ([`src/adapters/`](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage)) · 獨立 CLI `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · **192 test files | 836 PASS Clean (100% PASS)** |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate（`0xb174…`）**工程化為 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates 於 Edge **mempool 提交前**中止受損 payload 簽名，維持 **L2 state space cleanliness** — 熱路徑不消耗鏈上 gas。→ [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
 | **7** | Dune Analytics | **Live Event Telemetry 於 Sepolia Testnet 活躍串流**；**Arbitrum One (42161) SQL Query Indexers 已完整預編譯**供生產事件攝取。→ [Dune Analytics](#dune-analytics) |
-| **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS（$10 / $99 / $299 / $1,999+）** · 年付折扣 · 嚴格 RPS 上限 · **10 bps CaaS = V2.0 Expansion**。→ [Commercial Model](#commercial-model-saas-vs-caas) |
+| **8** | Commercial Model | **v1.0 = 公開 Open Gateway**（`X-Citadel-Tier: public`）· **V1.1 = 四層 SaaS**（Milestone 1）· **10 bps CaaS = V2.0**。→ [Commercial Model](#commercial-model-saas-vs-caas) |
 
 ### Deployment Architecture (Arbitrum One 0-Gas Off-Chain Severance)
 
 > **Arbitrum One Gate（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）刻意工程化為 0-Gas Pre-Execution Off-Chain Severance。** Citadel Risk Gates（`checkSoilResistance()` · `severSigningChannel()`）於 Cloudflare Edge **mempool 提交前**中止受損 payload 簽名，維持 **Arbitrum L2 state space cleanliness** — 觸發路徑不消耗 Sequencer gas；鏈上 Gate 僅為已清算意圖錨定 consume-once EIP-712 attestation。
 
-### Commercial Model (SaaS vs CaaS)
+### Commercial Model（V1.0 公開 Gateway · V1.1 SaaS · V2.0 CaaS）
 
-| Version | Pricing model | Notes |
-|---------|---------------|-------|
-| **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$10 / $99 / $299 / $1,999+** Edge API 分層 · 年付折扣 · `X-Citadel-Tier` + `X-Citadel-RPS-Limit` 回應標頭 |
-| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | 執行前風險檢查 **10 bps protocol authorization fee** · 與 v1.0 GMX +10 bps `uiFeeReceiver` 分離 |
+| Version | Architecture | Notes |
+|---------|--------------|-------|
+| **v1.0（現行 — 提交基線）** | **Public Open Gateway** | Buildathon / hackathon 評測 · 輕量 Edge RPS 限流（IP/header）· `X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5` |
+| **V1.1（Grant 後 Milestone 1）** | **KV API Key 計量 + 四層 SaaS** | 下方付費分層 · 多租戶 rate limiter |
+| **V2.0（roadmap）** | **CaaS protocol fee-sharing** | 執行前風險檢查 **10 bps** · 與 v1.0 GMX +10 bps `uiFeeReceiver` 分離 |
 
-#### v1.0 SaaS 分層規格
+#### V1.0 提交基線（現行）
+
+- **公開 open gateway** 供 judges 與 developers 評測 — 無需付費 API Key。
+- **防護：** 輕量 Edge RPS rate limiter（header/IP）保護 memory queue 免受 Sybil DoS。
+- **Demo 標頭：** 所有 gateway 回應附帶 `X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5`。
+
+#### V1.1 路線圖 — 四層商業模型（Milestone 1 Post-Grant）
 
 | 層級 | 月費 | 年付（按年計費） | RPS | 意圖/月 | 權益 |
 |------|------|-----------------|-----|---------|------|
-| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B 反 Sybil 入門門檻 · Edge soil fuse |
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B 反 Sybil 入門門檻 |
 | **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM 閉源核心 · R17 日損熔斷 |
-| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | 優先熱路徑分配 · R20 自動切斷 · 租戶隔離 |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | 優先 memory queue · R20 自動切斷 · 租戶隔離 |
 | **Enterprise Dedicated** | **$1,999+** | 客製合約 | **1,000+** | 客製 | 專用 Cloudflare Edge 節點 · 客製 Rust/WASM 風控模組 · 私有 MEV 路由 |
 
-> **商業邊界：** **$10/月最低入門** — 無 $0 層級或免費 API Key。年付享 **20% 折扣**（$96 / $950 / $2,870）。各層級均為 **best-effort**（無 uptime SLA）。Gateway 回應附帶 `X-Citadel-Tier` 與 `X-Citadel-RPS-Limit`。**V1.1 路線圖：** 完整 API Key KV 意圖計量。
+> **範圍誠實性：** v1.0 提交僅交付 **public open gateway**。**四層付費模型為 V1.1 Milestone 1**（Cloudflare KV API Key 計量）。各層級均為 **best-effort**（無 uptime SLA）。
 
 ---
 
@@ -167,7 +174,7 @@ V1.0 交付**兩項互補 Pendle 整合** — 機構安全層，非收益產品�
 - **5 Pool Invariants:** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist (`eETH` / `ETH` / `USDC`) · supported intent taxonomy
 - Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](./tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](./tests/adapters/pendle-pool-factory.test.ts)
 
-> **DX & Pricing:** 透過 **Pendle AI Guarded Pool Factory** 的 AI Agent pool 建立與參數驗證 **100% 免協議稅**，透過 Citadel **SaaS Request Credits** 計量（Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**）。
+> **DX & Pricing:** 透過 **Pendle AI Guarded Pool Factory** 的 AI Agent pool 建立與參數驗證 **100% 免協議稅**。計量 SaaS Request Credits 於 **V1.1** 推出（Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**）。
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts)
 
@@ -377,7 +384,7 @@ Grant allocation directly fuels **V2.0 R&D**:
 - **GMX v2** — dry-run / Vitest verified pre-flight guards; mainnet GM pool fill scheduled post-Grant M6
 - **Pendle** — Institutional Safety Sentinel (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants); protocol-tax-free · SaaS Request Credits
 - **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
-- **Commercial** — v1.0 SaaS（$10/$99/$299/$1,999+）· 嚴格 RPS 上限 · 年付折扣 · 無免費 API Key；10 bps CaaS = V2.0 Expansion
+- **Commercial** — v1.0 公開 open gateway（`public` tier · 5 RPS 標頭）· V1.1 四層 SaaS 路線圖 · 10 bps CaaS = V2.0
 - **Agent SDK** — **V1.0 Live Native Integrations** for Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer (`src/adapters/`) · `withCitadelShield` decorator · `pnpm demo:quad` · **Milestone 1 (Weeks 2–3 post-grant):** upstream PRs to `@elizaos/plugin-citadel` + `@virtuals/plugin-citadel`
 - **Stylus** — V2.0 dual-execution Rust coprocessor (`check_soil_resistance_stylus` · `pnpm build:stylus`)；**9/9 PASS（50bps 對齊）**；planned EIP-1967 upgradeable proxy deploy — live gateway = immutable Solidity Gate on Arbitrum One
 - **Auto severance** — `FLAGS_*` bitmask trips invoke `severSigningChannel()` inside `risk-engine-core` / `soil-resistance` without external orchestration; **Variational RFQ** invariants (**Bits 12–13**: `FLAG_VARIATIONAL_STALE_QUOTE` · `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED`) integrated in `evaluateVariationalFlags()` and bound to `FLAGS_AUTO_SEVER_MASK`

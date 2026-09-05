@@ -24,12 +24,12 @@
 |---|--------|------------------------|
 | **1** | Ephemeral Ignition Signers | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** on Mainnet Gate `0xb174…` — public auditability without production HSM exposure. Gate shape = consume-once EIP-712; production rotation via native governance. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet GM fill scheduled post-Grant M6. → [§4 GMX](#4-gmx) |
-| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
+| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered SaaS Request Credits launch in **V1.1**. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Sepolia live stream and One production SQL documented separately. → [§5 Dune](#5-dune-analytics) |
 | **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **192 test files | 834 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. → [§5 Dune](#5-dune-analytics) |
-| **8** | Commercial Model | **v1.0 = SaaS ($10 / $99 / $299 / $1,999+)** · annual discount · strict RPS caps; **10 bps CaaS = V2.0 Expansion**. → [Business Model](#business-model--gtm-strategy) |
+| **8** | Commercial Model | **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public`) · **V1.1 = 4-Tier SaaS** (Milestone 1) · **10 bps CaaS = V2.0**. → [Business Model](#business-model--gtm-strategy) |
 
 ---
 
@@ -285,7 +285,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS **$10/$99/$299/$1,999+** (10 bps CaaS = V2.0) · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
+**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Dune Sepolia live stream + 42161 SQL pre-compiled · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · V1.1 4-tier SaaS roadmap · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---
 
@@ -320,7 +320,8 @@ Full derivations: [Technical Specification §3.1](../architecture/01_TECHNICAL_S
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $10/$99/$299/$1,999+** · **192 test files \| 836 PASS Clean (100% PASS)** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · **192 test files \| 836 PASS Clean (100% PASS)** |
+| **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement for multi-agent swarms · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | Institutional **CaaS** (`@slivervine/citadel-sdk`) for AI DEXs and Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks — **explicitly V2.0; not v1.0 SaaS** |
 
@@ -333,7 +334,7 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 | Ecosystem | Role for SliverVine | Why they win together | SSOT |
 |-----------|---------------------|----------------------|------|
 | **Arbitrum** | Pre-consensus execution primitive on **42161** | Live immutable Gate + Edge clearing before Sequencer ingress | Mainnet Tx · `SliverVineGate.sol` |
-| **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Core Pillar 3) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free via SaaS Request Credits | `pendle-market-oracle-adapter.ts` · `pendle-pool-factory-adapter.ts` · `pendle-gmx-cross-guard.ts` |
+| **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Core Pillar 3) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free · SaaS credits in V1.1 | `pendle-market-oracle-adapter.ts` · `pendle-pool-factory-adapter.ts` · `pendle-gmx-cross-guard.ts` |
 | **Dune** | **PEV** + `RiskTripBlocked` telemetry | Indexes off-chain blocked attacks; Sepolia live · One SQL spec | `DUNE_DASHBOARD_SPECIFICATION.md` |
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `gmx-v2-order-payload.ts` |
 | **Wayfinder** | Native pre-execution risk firewall on **42161** | `wayfinderCitadelShieldHook` · soil fuse + 8-dimension intent gate · 0-Gas fail-closed | `wayfinder-shield.ts` · `pnpm demo:wayfinder` |
@@ -374,7 +375,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 * **5 Pool Invariants:** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist (`eETH` / `ETH` / `USDC`) · supported intent taxonomy
 * Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](../../tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts)
 
-> **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**, metered via Citadel **SaaS Request Credits** (Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**).
+> **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**. Metered SaaS Request Credits launch in **V1.1** (Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**).
 
 * **Integration (P0/P1 Code-Verified)**:
   * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
@@ -483,27 +484,32 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ## Business Model & GTM Strategy
 
-> **Pricing model boundary:** **v1.0 uses Cloudflare-style SaaS subscription ($10 / $99 / $299 / $1,999+)** with **annual billing discount** and **strict RPS caps**; **10 bps CaaS protocol fee-sharing is explicitly designated V2.0 Expansion** — do not conflate with v1.0 SaaS or GMX +10 bps `uiFeeReceiver`.
+> **Pricing model boundary:** **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5`) for Buildathon evaluation. **V1.1 = 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) with KV API Key metering (Milestone 1 post-grant). **10 bps CaaS protocol fee-sharing is explicitly designated V2.0 Expansion** — do not conflate with v1.0 gateway or GMX +10 bps `uiFeeReceiver`.
 
 SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfront) and adopts an **Infra-First, Multi-Tiered Monetization Engine**:
 
-1. **Cloudflare-Style SaaS Subscription (v1.0 Primary — $10 / $99 / $299 / $1,999+)**:
- * **$10/mo minimum** — no $0 tier or free API keys. Paid API keys required for Edge gateway access.
+1. **V1.0 Public Open Gateway (Current — Submission Baseline)**:
+ * **No paid API key required** for hackathon / judge evaluation.
+ * Lightweight Edge RPS rate limiter (header/IP-based) protects memory queues against Sybil DoS.
+ * Gateway responses include `X-Citadel-Tier: public` and `X-Citadel-RPS-Limit: 5`.
+
+2. **V1.1 Cloudflare-Style SaaS Subscription (Milestone 1 Post-Grant — $10 / $99 / $299 / $1,999+)**:
+ * Cloudflare KV API Key metering + multi-tenant rate limiter.
  * Gateway responses include `X-Citadel-Tier` (`starter` | `pro` | `business` | `enterprise`) and `X-Citadel-RPS-Limit` (`5` | `50` | `200` | `1000`).
- * **V1.1 Roadmap:** full API Key KV intent metering per billing cycle.
 
 | Tier | Monthly | Annual (billed yearly) | RPS | Intents / mo | Entitlements |
 |------|---------|------------------------|-----|--------------|--------------|
-| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier · Edge soil fuse |
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier |
 | **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM closed kernel · R17 daily loss prevention |
-| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority hot-path allocation · R20 auto-severance · tenant isolation |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority memory queue · R20 auto-severance · tenant isolation |
 | **Enterprise Dedicated** | **$1,999+** | Custom contract | **1,000+** | Custom | Dedicated Cloudflare Edge nodes · custom Rust/WASM risk modules · private MEV routing |
-2. **Pay-per-Intent Micro-Attestation Fee (Adjunct)**:
+
+3. **Pay-per-Intent Micro-Attestation Fee (Adjunct)**:
  * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway (`@slivervine/citadel-sdk`).
  * Charged $0.01 – $0.05 per signed attestation, deducting micro-fees automatically without requiring credit card friction.
-2. **Telemetry & Risk Data API (Data Engine)**:
+4. **Telemetry & Risk Data API (Data Engine)**:
  * Access to real-time Yield Convexity and Liquidity Void feeds via WebSocket/REST for hedge funds and quant vaults ($199–$1,999/month).
-3. **Edge Execution Alliance (Partnership Model)**:
+5. **Edge Execution Alliance (Partnership Model)**:
  * Acts as the **Sub-ms Intent Execution Edge** for macro risk engines (e.g., Chaos Labs, Gauntlet). Chaos Labs provides macro parameter tuning; SliverVine enforces microsecond off-chain intent protection.
 
 **GMX builder lane (adjacent):** +10 bps `uiFeeReceiver` on unsigned GMX v2 payloads — see [`gmx/GMX_BUILDERS_PITCH.md`](../grants/gmx/GMX_BUILDERS_PITCH.md).
@@ -518,9 +524,9 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
   - **Public Dune Telemetry Dashboard** (read-only, no API key): Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)) for judge and developer auditing — distinct from paid Edge API tiers.
   - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
-- **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
-  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks. **v1.0 operates on SaaS ($10/$99/$299/$1,999+)**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane (not the V2.0 CaaS fee).
+- **Stage 2: B2B Monetization & Risk API Launch (Post-9/14 — V1.1)**
+  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks. **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane (not the V2.0 CaaS fee).
 
 ---
 

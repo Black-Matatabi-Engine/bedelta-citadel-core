@@ -1,5 +1,5 @@
 import type { Env } from "../env";
-import { applyPublicApiResponseHeaders } from "../middleware/citadel-tier-headers";
+import { applyPublicApiResponseHeaders, enforcePublicGatewayRps } from "../middleware/citadel-tier-headers";
 import { hardlockResponse } from "./hardlock-response";
 import { HardlockError } from "../services/risk-control";
 import {
@@ -27,6 +27,9 @@ export async function routeRequest(
   ctx: ExecutionContext,
 ): Promise<Response> {
   try {
+    const rpsBlock = enforcePublicGatewayRps(request);
+    if (rpsBlock) return rpsBlock;
+
     const url = new URL(request.url);
 
     if (isExecutionLogsPath(url.pathname) && request.method === "GET") {

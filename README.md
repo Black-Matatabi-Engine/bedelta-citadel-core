@@ -260,16 +260,26 @@ Derivations & R01–R20 bounds: [Technical Specification §3.1](./docs/architect
 
 **Risk spectrum (88% / 12%):** Formal mathematical definition — [Risk Mitigation & Disclaimer Framework §0.1](./docs/architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
 
-## 💳 Commercial Model — SaaS Tier Matrix (v1.0)
+## 💳 Commercial Model — V1.0 Open Gateway · V1.1 SaaS Roadmap
+
+### V1.0 Submission Baseline (Current)
+
+| Attribute | Value |
+|-----------|-------|
+| **Architecture** | Public Open Gateway for Buildathon / hackathon evaluation |
+| **Protection** | Lightweight Edge RPS rate limiter (header/IP-based) against Sybil DoS |
+| **Demo headers** | `X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5` |
+
+### V1.1 Roadmap — 4-Tier Commercial Model (Milestone 1 Post-Grant)
 
 | Tier | Monthly | Annual (billed yearly) | RPS | Intents / mo | Entitlements |
 |------|---------|------------------------|-----|--------------|--------------|
-| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier · Edge soil fuse |
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier |
 | **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM closed kernel · R17 daily loss prevention |
-| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority hot-path allocation · R20 auto-severance · tenant isolation |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority memory queue · R20 auto-severance · tenant isolation |
 | **Enterprise Dedicated** | **$1,999+** | Custom contract | **1,000+** | Custom | Dedicated Cloudflare Edge nodes · custom Rust/WASM risk modules · private MEV routing |
 
-> **$10/mo minimum** — no $0 tier or free API keys. Gateway responses expose `X-Citadel-Tier` and `X-Citadel-RPS-Limit`. **V1.1 Roadmap:** full API Key KV intent metering.
+> **Scope honesty:** v1.0 ships the **public open gateway** only. The **4-tier paid model is V1.1 Milestone 1** (Cloudflare KV API Key metering).
 
 ## 🛣️ Post-Buildathon B2B Commercialization & PMF Roadmap (Post-9/14)
 
@@ -282,8 +292,8 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
   - **Reference Interceptor Harness**: [`examples/agent-interceptor-demo.ts`](./examples/agent-interceptor-demo.ts) — Reference Interceptor Harness & Adapter for Virtuals Protocol and ElizaOS agent swarms (evaluator-reproducible; not a production partnership attestation).
   - **Zero-Touch SDK**: [`withCitadelShield`](./src/sdk/decorator.ts) — one-line decorator wrapping agent execution hooks with inline `checkSoilResistance()` pre-broadcast severance (`import { withCitadelShield } from '@slivervine/citadel-sdk'`).
 
-- **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+- **Stage 2: B2B Monetization & Risk API Launch (Post-9/14 — V1.1)**
+  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
   - **V2.0 CaaS rail (Design Spec):** `@slivervine/citadel-sdk` + **10 bps protocol authorization fee** on pre-execution risk checks. Live v1.0 builder lane remains GMX **+10 bps `uiFeeReceiver`**.
 
 ---

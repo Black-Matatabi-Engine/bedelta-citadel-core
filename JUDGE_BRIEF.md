@@ -26,34 +26,41 @@
 |---|--------|------------------------|
 | **1** | Ephemeral Ignition Signers | Arbitrum One Gate `0xb174118b…` employs **`0x1111…` / `0x2222…` Ephemeral Verification Signers** for public auditability without exposing production HSM infrastructure. Gate shape = consume-once EIP-712; production rotation via native governance to multisig. |
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Mainnet GM fill scheduled for post-Grant M6. |
-| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
+| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered SaaS Request Credits launch in **V1.1**. → [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Sepolia live stream and One production SQL are documented as separate deployment surfaces. |
 | **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals (GAME) · LangChain · Stabilizer ([`src/adapters/`](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage)) · standalone CLIs `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · **192 test files | 834 PASS Clean (100% PASS)** |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) is **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
 | **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
-| **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS ($10 / $99 / $299 / $1,999+)** · annual discount · strict RPS caps · **10 bps CaaS = V2.0 Expansion**. → [Commercial Model](#commercial-model-saas-vs-caas) |
+| **8** | Commercial Model | **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public`) · **V1.1 = 4-Tier SaaS** (Milestone 1) · **10 bps CaaS = V2.0**. → [Commercial Model](#commercial-model-saas-vs-caas) |
 
 ### Deployment Architecture (Arbitrum One 0-Gas Off-Chain Severance)
 
 > **Arbitrum One Gate (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance.** Citadel Risk Gates (`checkSoilResistance()` · `severSigningChannel()`) halt compromised payload signatures on Cloudflare Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — tripped paths consume no Sequencer gas; on-chain Gate anchors consume-once EIP-712 attestations only for cleared intents.
 
-### Commercial Model (SaaS vs CaaS)
+### Commercial Model (V1.0 Open Gateway · V1.1 SaaS · V2.0 CaaS)
 
-| Version | Pricing model | Notes |
-|---------|---------------|-------|
-| **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$10 / $99 / $299 / $1,999+** Edge API tiers · annual billing discount · `X-Citadel-Tier` + `X-Citadel-RPS-Limit` headers |
-| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | **10 bps protocol authorization fee** on pre-execution risk checks · separate from v1.0 GMX +10 bps `uiFeeReceiver` |
+| Version | Architecture | Notes |
+|---------|--------------|-------|
+| **v1.0 (current — submission baseline)** | **Public Open Gateway** | Buildathon / hackathon evaluation · lightweight Edge RPS limiter (IP/header) · `X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5` |
+| **V1.1 (Milestone 1 post-grant)** | **KV API Key Metering + 4-Tier SaaS** | Paid tiers below · multi-tenant rate limiter |
+| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | **10 bps protocol authorization fee** · separate from v1.0 GMX +10 bps `uiFeeReceiver` |
 
-#### v1.0 SaaS Tier Breakdown
+#### V1.0 Submission Baseline (Current)
+
+- **Public open gateway** for judges and developers — no paid API key required for evaluation.
+- **Protection:** Lightweight Edge RPS rate limiter (header/IP-based) safeguards memory queues against Sybil DoS.
+- **Demo headers:** `X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5` on all gateway responses.
+
+#### V1.1 Roadmap — 4-Tier Commercial Model (Milestone 1 Post-Grant)
 
 | Tier | Monthly | Annual (billed yearly) | RPS | Intents / mo | Entitlements |
 |------|---------|------------------------|-----|--------------|--------------|
-| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier · Edge soil fuse |
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier |
 | **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM closed kernel · R17 daily loss prevention |
-| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority hot-path allocation · R20 auto-severance · tenant isolation |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority memory queue · R20 auto-severance · tenant isolation |
 | **Enterprise Dedicated** | **$1,999+** | Custom contract | **1,000+** | Custom | Dedicated Cloudflare Edge nodes · custom Rust/WASM risk modules · private MEV routing |
 
-> **Commercial boundary:** **$10/mo minimum** — no $0 tier or free API keys. Annual billing applies **20% discount** ($96 / $950 / $2,870). All tiers are **best-effort** (no uptime SLA). Gateway responses expose `X-Citadel-Tier` and `X-Citadel-RPS-Limit`. **V1.1 Roadmap:** full API Key KV intent metering.
+> **Scope honesty:** v1.0 submission ships the **public open gateway** only. The **4-tier paid model is V1.1 Milestone 1** (Cloudflare KV API Key metering). All tiers are **best-effort** (no uptime SLA).
 
 ---
 
@@ -162,7 +169,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 - **5 Pool Invariants:** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist (`eETH` / `ETH` / `USDC`) · supported intent taxonomy
 - Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](./tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](./tests/adapters/pendle-pool-factory.test.ts)
 
-> **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**, metered via Citadel **SaaS Request Credits** (Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**).
+> **DX & Pricing:** AI Agent pool creation through **Pendle AI Guarded Pool Factory** is **100% free from protocol tax**. Metered SaaS Request Credits launch in **V1.1** (Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**).
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts)
 
@@ -372,7 +379,7 @@ Grant allocation directly fuels **V2.0 R&D**:
 - **GMX v2** — dry-run / Vitest verified pre-flight guards; mainnet GM pool fill scheduled post-Grant M6
 - **Pendle** — Institutional Safety Sentinel (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants); protocol-tax-free · SaaS Request Credits
 - **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
-- **Commercial** — v1.0 SaaS ($10/$99/$299/$1,999+) · strict RPS caps · annual discount · no free API keys; 10 bps CaaS = V2.0 Expansion
+- **Commercial** — v1.0 public open gateway (`public` tier · 5 RPS headers) · V1.1 4-tier SaaS roadmap · 10 bps CaaS = V2.0
 - **Agent SDK** — **V1.0 Live Native Integrations** for Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer (`src/adapters/`) · `withCitadelShield` decorator · `pnpm demo:quad` · **Milestone 1 (Weeks 2–3 post-grant):** upstream PRs to `@elizaos/plugin-citadel` + `@virtuals/plugin-citadel`
 - **Stylus** — V2.0 dual-execution Rust coprocessor (`check_soil_resistance_stylus` · `pnpm build:stylus`); planned EIP-1967 upgradeable proxy deploy — live gateway = immutable Solidity Gate on Arbitrum One
 - **Auto severance** — `FLAGS_*` bitmask trips invoke `severSigningChannel()` inside `risk-engine-core` / `soil-resistance` without external orchestration; **Variational RFQ** invariants (**Bits 12–13**: `FLAG_VARIATIONAL_STALE_QUOTE` · `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED`) integrated in `evaluateVariationalFlags()` and bound to `FLAGS_AUTO_SEVER_MASK`
