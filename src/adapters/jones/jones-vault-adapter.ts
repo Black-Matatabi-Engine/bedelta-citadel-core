@@ -3,6 +3,7 @@
  * Share slippage validation · flash-loan sandwich protection · soil fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
+import { evaluateJonesFlags } from "../../core/risk-engine-core";
 import {
   JONES_ARBITRUM_CHAIN_ID,
   JONES_FLASH_SANDWICH_DEVIATION_BPS,
@@ -85,7 +86,8 @@ export function verifyJonesVaultSharePrice(input: {
 
   let sandwichOk = true;
   const deviation = input.blockPriceDeviationBps ?? 0;
-  if (input.rebalancePending && deviation > JONES_FLASH_SANDWICH_DEVIATION_BPS) {
+  const jonesFlags = evaluateJonesFlags(shareSlippageBps, deviation, Boolean(input.rebalancePending));
+  if (jonesFlags !== 0 && input.rebalancePending && deviation > JONES_FLASH_SANDWICH_DEVIATION_BPS) {
     sandwichOk = false;
     reasons.push(
       `JONES_FLASH_SANDWICH_TRIP:deviationBps=${deviation}>${JONES_FLASH_SANDWICH_DEVIATION_BPS}`,

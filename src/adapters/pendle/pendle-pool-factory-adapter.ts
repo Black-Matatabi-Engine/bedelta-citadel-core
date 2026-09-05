@@ -7,6 +7,7 @@ import type {
   AIPoolSelectionVerdict,
   PendlePoolFactorySoilInput,
 } from "../../core/pendle-types";
+import { FLAGS_YIELD_SHOCK, PENDLE_YIELD_SHOCK_MAX_BPS, evaluatePendleFlags } from "../../core/risk-engine-core";
 import { PENDLE_PT_MIN_DAYS_TO_MATURITY, MS_PER_DAY } from "./pendle-pt-expiry-guard";
 import {
   evaluatePendleOracleSoilGate,
@@ -14,7 +15,7 @@ import {
 } from "./pendle-market-oracle-adapter";
 import { resolvePendlePtRegistryEntry } from "./pendle-pt-registry";
 
-export const PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS = 150 as const;
+export const PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS = PENDLE_YIELD_SHOCK_MAX_BPS;
 export const PENDLE_POOL_YIELD_DRIFT_MAX_BPS = PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS;
 export const PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD = 100_000 as const;
 
@@ -64,7 +65,7 @@ export function validateAIPoolSelection(
   if (daysToMaturity < PENDLE_PT_MIN_DAYS_TO_MATURITY) {
     reasons.push(PENDLE_POOL_MATURITY_CLIFF);
   }
-  if (yieldDriftBps > PENDLE_POOL_YIELD_DRIFT_MAX_BPS) {
+  if (evaluatePendleFlags(params.impliedYield, params.oracleYield) & FLAGS_YIELD_SHOCK) {
     reasons.push(PENDLE_POOL_YIELD_DRIFT_BREACH);
   }
   if (params.initialLiquidityUsd < PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD) {

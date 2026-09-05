@@ -3,6 +3,7 @@
  * Health Factor validation · cross-chain liquidation boundary · soil fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
+import { evaluateRadiantFlags } from "../../core/risk-engine-core";
 import {
   RADIANT_ARBITRUM_CHAIN_ID,
   RADIANT_CROSS_CHAIN_HF_BUFFER,
@@ -80,7 +81,7 @@ export function verifyRadiantHealthFactor(input: {
 
   if (healthFactor < RADIANT_HF_LIQUIDATION_THRESHOLD) {
     reasons.push(`RADIANT_HF_LIQUIDATABLE:hf=${healthFactor.toFixed(4)}<${RADIANT_HF_LIQUIDATION_THRESHOLD}`);
-  } else if (healthFactor < RADIANT_HF_FAIL_CLOSED_THRESHOLD) {
+  } else if (evaluateRadiantFlags(healthFactor) !== 0) {
     reasons.push(
       `RADIANT_HF_FAIL_CLOSED:hf=${healthFactor.toFixed(4)}<${RADIANT_HF_FAIL_CLOSED_THRESHOLD}`,
     );

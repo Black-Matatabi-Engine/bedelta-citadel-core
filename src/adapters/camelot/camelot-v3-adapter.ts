@@ -3,6 +3,7 @@
  * Depth · dynamic fee impact · checkSoilResistance() 0-Gas fail-closed fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
+import { evaluateCamelotFlags } from "../../core/risk-engine-core";
 import {
   CAMELOT_V3_ARBITRUM_CHAIN_ID,
   CAMELOT_V3_MAX_DYNAMIC_FEE_BPS,
@@ -141,11 +142,6 @@ export function verifyCamelotPoolLiquidity(input: {
   if (!dynamicFeeOk) {
     reasons.push(`CAMELOT_V3_DYNAMIC_FEE_BREACH:feeBps=${dynamicFeeBps}>${CAMELOT_V3_MAX_DYNAMIC_FEE_BPS}`);
   }
-  if (directionalFeeBps > CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS) {
-    reasons.push(
-      `CAMELOT_V3_DIRECTIONAL_FEE_BREACH:feeBps=${directionalFeeBps}>${CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS}`,
-    );
-  }
 
   if (input.tickRangeLiquidityUsd !== undefined) {
     const tick = verifyCamelotTickDepth({
@@ -162,10 +158,17 @@ export function verifyCamelotPoolLiquidity(input: {
     dynamicFeeBps,
     directionalFeeBps,
   );
-  if (estimatedSlippageBps > CAMELOT_V3_MAX_SLIPPAGE_BPS) {
-    reasons.push(
-      `CAMELOT_V3_SLIPPAGE_BREACH:estimatedBps=${estimatedSlippageBps.toFixed(1)}>${CAMELOT_V3_MAX_SLIPPAGE_BPS}`,
-    );
+  if (evaluateCamelotFlags(estimatedSlippageBps, directionalFeeBps, CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS) !== 0) {
+    if (estimatedSlippageBps > CAMELOT_V3_MAX_SLIPPAGE_BPS) {
+      reasons.push(
+        `CAMELOT_V3_SLIPPAGE_BREACH:estimatedBps=${estimatedSlippageBps.toFixed(1)}>${CAMELOT_V3_MAX_SLIPPAGE_BPS}`,
+      );
+    }
+    if (directionalFeeBps > CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS) {
+      reasons.push(
+        `CAMELOT_V3_DIRECTIONAL_FEE_BREACH:feeBps=${directionalFeeBps}>${CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS}`,
+      );
+    }
   }
 
   return {
