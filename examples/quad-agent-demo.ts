@@ -25,8 +25,8 @@ import {
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import {
+  DEMO_LATENCY_LEGEND,
   formatHarnessLatencyLabel,
-  formatLatencyLabel,
   hrtimeStart,
   hrtimeElapsedUs,
   resolveLatency,
@@ -171,7 +171,7 @@ async function main(): Promise<void> {
   printMode(trip);
 
   console.log(`${BOLD}Citadel Pre-Execution Risk Gateway — Four Major AI Agent Frameworks${R}`);
-  console.log(`${GRAY}Latency: Node.js test harness wall-clock vs Edge WASM p50 (~106µs)${R}\n`);
+  console.log(`${GRAY}${DEMO_LATENCY_LEGEND}${R}\n`);
 
   const results: FrameworkResult[] = [];
   for (const run of [runWayfinder, runElizaOS, runVirtuals, runLangChain]) {

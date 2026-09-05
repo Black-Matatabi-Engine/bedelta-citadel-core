@@ -23,7 +23,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { formatLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
   hudIntent("jones-demo", "Jones DAO", "REBALANCE", "jGLP vault · Arbitrum One");
@@ -47,7 +47,7 @@ function runHealthy(nowMs: number): number {
   console.log(`${R}  shareSlippage=${result.shareSlippageBps.toFixed(1)}bps · shareOk=${result.shareOk}`);
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Jones vault rebalance · slippage ${result.shareSlippageBps.toFixed(1)}bps · ${formatLatencyLabel(latencyUs)}`, latencyUs);
+  hudDispatched(`Jones vault rebalance · slippage ${result.shareSlippageBps.toFixed(1)}bps`, latencyUs);
   return latencyUs;
 }
 
@@ -91,9 +91,9 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Jones DAO Vault Guard Demo");
   printMode(trip);
-  console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Jones guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Jones guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

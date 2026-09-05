@@ -1,6 +1,7 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
 export const EDGE_WASM_P50_US = 106;
+export const DEMO_LATENCY_LEGEND = "Node.js test harness wall-clock vs Edge WASM Core (~106µs p50)";
 
 export function hrtimeStart(): bigint {
   return process.hrtime.bigint();

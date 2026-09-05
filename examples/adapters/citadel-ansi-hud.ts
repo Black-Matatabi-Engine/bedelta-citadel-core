@@ -2,7 +2,7 @@
  * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
-import { hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
+import { formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
@@ -81,11 +81,6 @@ function formatTripAlert(reasons: string[]): string {
   return `SOIL_RESISTANCE_TRIP: ${primary.replace(/=/g, " ")}`;
 }
 
-function formatLatency(us: number): string {
-  const ms = us / 1000;
-  return ms >= 1 ? `${YELLOW}${ms.toFixed(1)}ms${R}` : `${YELLOW}${us.toFixed(1)}µs${R}`;
-}
-
 function hudLine(tag: string, body: string, color: string): void {
   console.log(`${color}${BOLD}[${tag}]${R}    ${body}`);
 }
@@ -97,10 +92,10 @@ export function hudIntent(agentId: string, framework: string, intent: string, ve
 
 export function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void {
   if (!pass) hudLine("ALERT", formatTripAlert(reasons), RED);
-  const passLabel = pass ? `${GREEN}true${R}` : `${RED}false${R}`;
+  const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
   hudLine(
     "FUSE",
-    `checkSoilResistance() -> PASS: ${passLabel} | latency: ${formatLatency(latencyUs)} ${GRAY}(Edge p50: ~106µs)${R}`,
+    `checkSoilResistance() -> ${verdict} | ${formatHarnessLatencyLabel(latencyUs)}`,
     pass ? GREEN : YELLOW,
   );
 }
@@ -118,7 +113,7 @@ export function hudChannelOpen(): void {
 }
 
 export function hudDispatched(target: string, latencyUs: number): void {
-  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | latency: ${formatLatency(latencyUs)}`, GREEN);
+  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatHarnessLatencyLabel(latencyUs)}`, GREEN);
 }
 
 export const COOLDOWN_MS = 60_000;

@@ -46,8 +46,8 @@ import {
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import {
+  DEMO_LATENCY_LEGEND,
   formatHarnessLatencyLabel,
-  formatLatencyLabel,
   hrtimeElapsedUs,
   hrtimeStart,
 } from "./lib/demo-timing";
@@ -361,7 +361,7 @@ function runCircuitBreaker(
   const ok = finalResult.rows.every((r) => r.status === "FAIL_CLOSED");
   console.log(
     ok
-      ? `${GREEN}${label} TRIP OK — ${finalResult.rows.length}/${finalResult.rows.length} FAIL_CLOSED · ${formatLatencyLabel(hrtimeElapsedUs(t0))}${R}`
+      ? `${GREEN}${label} TRIP OK — ${finalResult.rows.length}/${finalResult.rows.length} FAIL_CLOSED · ${formatHarnessLatencyLabel(hrtimeElapsedUs(t0))}${R}`
       : `${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`,
   );
   return ok;
@@ -384,6 +384,7 @@ function main(): void {
         ? "Spot & Lending Vault Loop (Camelot → Radiant → Jones)"
         : "Full 6-Protocol Cross-Venue Matrix";
   printBanner(`Cross-Venue Matrix · ${loopTitle}`);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}`);
   seedAdapterProbes(nowMs);
   resetState();
 
@@ -396,7 +397,7 @@ function main(): void {
     } else {
       printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, ctx, readActiveSystemState()));
     }
-    console.log(`\n${GREEN}Nominal matrix PASS · ${formatLatencyLabel(hrtimeElapsedUs(t0))}${R}`);
+    console.log(`\n${GREEN}Nominal matrix PASS · ${formatHarnessLatencyLabel(hrtimeElapsedUs(t0))}${R}`);
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
@@ -417,7 +418,7 @@ function main(): void {
     allOk = runCircuitBreaker("Combined · 6-Protocol", ALL_KEYS, "all", nowMs, gmxTrip, spotAnomaly, t0) && allOk;
   }
 
-  const elapsed = formatLatencyLabel(hrtimeElapsedUs(t0));
+  const elapsed = formatHarnessLatencyLabel(hrtimeElapsedUs(t0));
   console.log(
     allOk
       ? `\n${GREEN}MATRIX COMPLETE — all loops FAIL_CLOSED · ${elapsed}${R}`

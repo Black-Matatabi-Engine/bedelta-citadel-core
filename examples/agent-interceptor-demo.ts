@@ -7,6 +7,7 @@
  * Rogue: pnpm tsx examples/agent-interceptor-demo.ts --trip
  */
 import { assertCitadelRiskGate, type CitadelRiskGateInput } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate";
+import { formatHarnessLatencyLabel } from "./lib/demo-timing";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { __resetArbitrumGasGuardForTests } from "../src/services/risk/arbitrum-gas-guard";
 import {
@@ -115,11 +116,6 @@ function formatTripAlert(reasons: string[]): string {
   return `SOIL_RESISTANCE_TRIP: ${primary.replace(/=/g, " ")}`;
 }
 
-function formatLatency(us: number): string {
-  const ms = us / 1000;
-  return ms >= 1 ? `${YELLOW}${ms.toFixed(1)}ms${R}` : `${YELLOW}${us.toFixed(1)}µs${R}`;
-}
-
 function hudLine(tag: string, body: string, color: string): void {
   console.log(`${color}${BOLD}[${tag}]${R}    ${body}`);
 }
@@ -137,10 +133,10 @@ function hudIntent(agentId: string, framework: string, intent: string, venue: st
 
 function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void {
   if (!pass) hudLine("ALERT", formatTripAlert(reasons), RED);
-  const passLabel = pass ? `${GREEN}true${R}` : `${RED}false${R}`;
+  const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
   hudLine(
     "FUSE",
-    `checkSoilResistance() -> PASS: ${passLabel} | latency: ${formatLatency(latencyUs)} ${GRAY}(Edge p50: ~106µs)${R}`,
+    `checkSoilResistance() -> ${verdict} | ${formatHarnessLatencyLabel(latencyUs)}`,
     pass ? GREEN : YELLOW,
   );
 }
@@ -172,7 +168,7 @@ function hudChannelOpen(): void {
 function hudDispatched(target: string, latencyUs: number): void {
   hudLine(
     "DISPATCH",
-    `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | latency: ${formatLatency(latencyUs)}`,
+    `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatHarnessLatencyLabel(latencyUs)}`,
     GREEN,
   );
 }
@@ -213,9 +209,7 @@ export async function virtualsAgentExecutionHook(userOpDraft: AgentUserOpDraft) 
   }
 
   if (!hudEnabled) {
-    console.log(
-      `[Citadel] Soil Check PASS | Measured Local Harness Latency: ${measuredUs.toFixed(1)}µs (Production Edge Target: p50 ~106µs via Rust Wasm #![no_std])`,
-    );
+    console.log(`[Citadel] Soil Check PASS | ${formatHarnessLatencyLabel(measuredUs)}`);
   }
 
   const gate = assertCitadelRiskGate(soil);

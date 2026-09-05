@@ -23,7 +23,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { formatLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
   hudIntent("camelot-demo", "Camelot V3", "V3_SPOT_SWAP", "WETH/USDC · Arbitrum One");
@@ -50,7 +50,7 @@ function runHealthy(nowMs: number): number {
   );
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Camelot V3 WETH/USDC spot swap · guard ${formatLatencyLabel(latencyUs)}`, latencyUs);
+  hudDispatched("Camelot V3 WETH/USDC spot swap", latencyUs);
   return latencyUs;
 }
 
@@ -93,9 +93,9 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Camelot V3 Concentrated Liquidity Demo");
   printMode(trip);
-  console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Camelot guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Camelot guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

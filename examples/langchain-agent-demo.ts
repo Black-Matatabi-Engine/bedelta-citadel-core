@@ -24,7 +24,7 @@ import {
   seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
-import { measureAsync, resolveLatency } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, measureAsync, resolveLatency } from "./lib/demo-timing";
 
 const AGENT_ID = "langchain-demo";
 
@@ -35,6 +35,7 @@ async function main(): Promise<void> {
 
   printBanner("LangChain / LangGraph Demo");
   printMode(trip);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
 
   const intent = trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT";
   hudIntent(AGENT_ID, "LangChain", intent, "LangGraph state node · GMX v2 ETH/USDC GM");

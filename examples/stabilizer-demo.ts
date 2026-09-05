@@ -26,7 +26,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { measureSync, resolveLatency } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, measureSync, resolveLatency } from "./lib/demo-timing";
 
 const AGENT_ID = "stabilizer-demo";
 
@@ -69,6 +69,7 @@ async function runDemo(trip: boolean): Promise<void> {
 
   printBanner("Stabilizer Protocol · Sepolia Testnet");
   printMode(trip);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
 
   hudIntent(
     AGENT_ID,

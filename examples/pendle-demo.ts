@@ -30,7 +30,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { formatLatencyLabel, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
 
 const HEALTHY_SOIL = {
   symbol: "ETH",
@@ -88,7 +88,7 @@ function runHealthy(nowMs: number): number {
   );
   hudSoilFuse(soil.ok, soilUs, soil.reasons);
   hudChannelOpen();
-  hudDispatched(`Pendle guarded pool · validate ${formatLatencyLabel(validateUs)}`, totalUs);
+  hudDispatched("Pendle guarded pool · validateAIPoolSelection", totalUs);
   return totalUs;
 }
 
@@ -122,9 +122,9 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Pendle Institutional Shield Demo");
   printMode(trip);
-  console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Pendle guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Pendle guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

@@ -23,7 +23,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { formatLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
+import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
   hudIntent("radiant-demo", "Radiant Capital", "BORROW", "WETH/USDC · Arbitrum One");
@@ -45,7 +45,7 @@ function runHealthy(nowMs: number): number {
   console.log(`${R}  healthFactor=${result.healthFactor.toFixed(4)} · hfOk=${result.hfOk}`);
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Radiant lending guard · HF ${result.healthFactor.toFixed(2)} · ${formatLatencyLabel(latencyUs)}`, latencyUs);
+  hudDispatched(`Radiant lending guard · HF ${result.healthFactor.toFixed(2)}`, latencyUs);
   return latencyUs;
 }
 
@@ -88,9 +88,9 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Radiant Capital Lending Guard Demo");
   printMode(trip);
-  console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
+  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Radiant guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Radiant guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 
