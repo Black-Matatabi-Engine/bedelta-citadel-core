@@ -151,6 +151,28 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 - **Demo:** `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip Interception)
 - **Tests:** [`tests/adapters/wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts)
 
+**AI Agent execution flow (Wayfinder / Virtuals):**
+
+```text
+[ Wayfinder Agent Engine / Virtuals Agent Swarm ]
+                    │
+                    ▼
+        wayfinderCitadelShieldHook  (wayfinder-shield.ts)
+                    │
+                    ▼
+        verifyAgentIntent()  (8-dimension gate)
+                    │
+                    ▼
+        checkSoilResistance()  (Pillar 3 soil fuse · p50 ~106µs)
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+     FAIL_CLOSED           ALLOW
+     (0-Gas intercept)         │
+                               ▼
+                    [ On-Chain Execution · Arbitrum 42161 ]
+```
+
 ### AI Agent Ecosystem Runtimes (Virtuals / ElizaOS / LangChain TS & Python)
 
 **v1.0: Wayfinder native adapter + executable Reference Harness · V1.1: official npm spec PR (`@elizaos/plugin-citadel-guard`)**

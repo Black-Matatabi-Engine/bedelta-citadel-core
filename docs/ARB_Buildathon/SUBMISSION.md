@@ -80,6 +80,28 @@ pnpm demo:wayfinder              # Normal Wayfinder route interception → ALLOW
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip interception
 ```
 
+**AI Agent execution flow (Wayfinder / Virtuals):**
+
+```text
+[ Wayfinder Agent Engine / Virtuals Agent Swarm ]
+                    │
+                    ▼
+        wayfinderCitadelShieldHook  (wayfinder-shield.ts)
+                    │
+                    ▼
+        verifyAgentIntent()  (8-dimension gate)
+                    │
+                    ▼
+        checkSoilResistance()  (Pillar 3 soil fuse · p50 ~106µs)
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+     FAIL_CLOSED           ALLOW
+     (0-Gas intercept)         │
+                               ▼
+                    [ On-Chain Execution · Arbitrum 42161 ]
+```
+
 #### Reference Interceptor Harness — Virtuals Protocol & ElizaOS Agent Swarms
 
 - **v1.0 delivered (Wayfinder native + Reference Harness):** [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · [`examples/adapters/`](../../examples/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · `pnpm demo:wayfinder` · `pnpm demo:agent` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED

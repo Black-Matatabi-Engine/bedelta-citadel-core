@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **180 test files | 803 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **181 test files | 806 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,7 +15,8 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **180 test files \| 803 PASS Clean** | `pnpm test -- --run` |
+| **Vitest baseline** | **181 test files \| 806 PASS Clean** | `pnpm test -- --run` |
+| **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
@@ -41,14 +42,16 @@
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (180 files / 803 tests)
+pnpm test       # Full System Regression Suite (181 files / 806 tests)
 ```
 
 | Command | Proves | Expected |
 |---------|--------|----------|
 | `pnpm demo` | Tri-Pillar micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
-| `pnpm test` | Full Vitest regression bar | **180 test files \| 803 PASS Clean** |
+| `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
+| `pnpm demo:wayfinder -- --trip` | 0-Gas Fail-Closed soil trip | `FAIL_CLOSED` · 0-Gas intercept |
+| `pnpm test` | Full Vitest regression bar | **181 test files \| 806 PASS Clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -73,7 +76,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **180 test files \| 803 PASS Clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **181 test files \| 806 PASS Clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -238,7 +241,54 @@ pnpm exec vitest run tests/demo/pendle-ai-agent-flow.demo.test.ts
 
 ## Zone C — Outside Three Pillars (Ecosystem & Simulation Harnesses)
 
-### 1. AI Agent Interceptor Harness (Virtuals Protocol / ElizaOS / LangChain)
+### 1. Wayfinder Native Adapter (V1.0 Live · Arbitrum AI Agent Engine)
+
+**Command:**
+
+```bash
+pnpm demo:wayfinder
+# or: npx tsx examples/wayfinder-agent-demo.ts
+pnpm demo:wayfinder -- --trip   # 0-Gas Fail-Closed soil trip
+pnpm exec vitest run tests/adapters/wayfinder-shield.test.ts
+```
+
+| Scope | Detail |
+|-------|--------|
+| Adapter SSOT | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` |
+| Integrates | `checkSoilResistance()` (Pillar 3 soil fuse) + `verifyAgentIntent()` (8-dimension validation) |
+| Chain | Arbitrum One (`42161`) — native pre-execution risk firewall for Wayfinder Agent Engine |
+
+| Test scenario | File | Expected |
+|---------------|------|----------|
+| Normal Arbitrum route intent | [`wayfinder-shield.test.ts`](../tests/adapters/wayfinder-shield.test.ts) | `status: ALLOW` · `allowedToSign: true` |
+| Toxic soil trip (high slippage / depth) | same | `status: FAIL_CLOSED` · 0-Gas · `reasons` populated |
+| Session key clip / expiry violation | same | `status: FAIL_CLOSED` · `allowedToSign: false` |
+
+**AI Agent execution flow (Wayfinder / Virtuals):**
+
+```text
+[ Wayfinder Agent Engine / Virtuals Agent Swarm ]
+                    │
+                    ▼
+        wayfinderCitadelShieldHook  (wayfinder-shield.ts)
+                    │
+                    ▼
+        verifyAgentIntent()  (8-dimension gate)
+                    │
+                    ▼
+        checkSoilResistance()  (Pillar 3 soil fuse · p50 ~106µs)
+                    │
+          ┌─────────┴─────────┐
+          ▼                   ▼
+     FAIL_CLOSED           ALLOW
+     (0-Gas intercept)         │
+                               ▼
+                    [ On-Chain Execution · Arbitrum 42161 ]
+```
+
+---
+
+### 2. AI Agent Interceptor Harness (Virtuals Protocol / ElizaOS / LangChain)
 
 **Command:**
 
@@ -256,7 +306,7 @@ pnpm demo:agent --trip   # FAIL_CLOSED path
 
 ---
 
-### 2. Quantitative Stress Benchmark (Survival Benchmark)
+### 3. Quantitative Stress Benchmark (Survival Benchmark)
 
 **Command:**
 
@@ -273,7 +323,7 @@ pnpm tsx scripts/generate-survival-report.ts
 
 ---
 
-### 3. Production Telemetry & Provenance (Optional / Network)
+### 4. Production Telemetry & Provenance (Optional / Network)
 
 | Surface | Command | Expected |
 |---------|---------|----------|
@@ -298,8 +348,9 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm verify:negative` | Negative soil-trip proofs | Depth breach fail-closed |
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:agent` | AI agent interceptor harness | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **180 test files \| 803 PASS Clean** |
+| `pnpm test` | Full Vitest + coverage | **181 test files \| 806 PASS Clean** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -343,4 +394,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 180 test files | 803 PASS Clean*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 181 test files | 806 PASS Clean*
