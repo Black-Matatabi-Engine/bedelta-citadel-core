@@ -7,7 +7,8 @@
  * Rogue: pnpm tsx examples/agent-interceptor-demo.ts --trip
  */
 import { assertCitadelRiskGate, type CitadelRiskGateInput } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate";
-import { formatExecutionLatency, formatGuardTime, printBenchmarkBanner } from "./lib/demo-timing";
+import { printBenchmarkBanner, printExecutionLatencyBlock, printGuardTimeBlock, formatExecutionLatency } from "./lib/demo-timing";
+import { captureSoilBenchmark } from "./lib/demo-benchmark";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { __resetArbitrumGasGuardForTests } from "../src/services/risk/arbitrum-gas-guard";
 import {
@@ -86,7 +87,7 @@ function printBanner(): void {
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${padBanner(BANNER_INNER)}${R}${CYAN}│${R}`);
   console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
-  printBenchmarkBanner();
+  printBenchmarkBanner(captureSoilBenchmark(HEALTHY));
 }
 
 function printMode(trip: boolean): void {
@@ -135,11 +136,8 @@ function hudIntent(agentId: string, framework: string, intent: string, venue: st
 function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void {
   if (!pass) hudLine("ALERT", formatTripAlert(reasons), RED);
   const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
-  hudLine(
-    "FUSE",
-    `checkSoilResistance() -> ${verdict} | ${formatExecutionLatency(latencyUs)}`,
-    pass ? GREEN : YELLOW,
-  );
+  hudLine("FUSE", `checkSoilResistance() -> ${verdict}`, pass ? GREEN : YELLOW);
+  printExecutionLatencyBlock(latencyUs, "    ");
 }
 
 function hudSevered(trigger: string): void {
@@ -167,11 +165,8 @@ function hudChannelOpen(): void {
 }
 
 function hudDispatched(target: string, latencyUs: number): void {
-  hudLine(
-    "DISPATCH",
-    `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatGuardTime(latencyUs)}`,
-    GREEN,
-  );
+  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target}`, GREEN);
+  printGuardTimeBlock(latencyUs, "    ");
 }
 
 export async function virtualsAgentExecutionHook(userOpDraft: AgentUserOpDraft) {

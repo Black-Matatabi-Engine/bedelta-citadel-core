@@ -2,7 +2,8 @@
  * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
-import { formatExecutionLatency, formatGuardTime, printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
+import { printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart, printExecutionLatencyBlock, printGuardTimeBlock, type DemoBenchmarkSnapshot } from "../lib/demo-timing";
+import { captureSoilBenchmark } from "../lib/demo-benchmark";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
@@ -47,12 +48,12 @@ function padBanner(text: string): string {
   return `${"─".repeat(Math.floor(pad / 2))}${inner}${"─".repeat(Math.ceil(pad / 2))}`;
 }
 
-export function printBanner(subtitle: string): void {
+export function printBanner(subtitle: string, benchmark?: DemoBenchmarkSnapshot): void {
   const inner = `🛡️  SliverVine Citadel Shield · ${subtitle}`;
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${padBanner(inner)}${R}${CYAN}│${R}`);
   console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
-  printBenchmarkBanner();
+  printBenchmarkBanner(benchmark ?? captureSoilBenchmark(HEALTHY_SOIL));
 }
 
 export function printMode(trip: boolean): void {
@@ -99,11 +100,8 @@ export function hudIntent(agentId: string, framework: string, intent: string, ve
 export function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void {
   if (!pass) hudLine("ALERT", formatTripAlert(reasons), RED);
   const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
-  hudLine(
-    "FUSE",
-    `checkSoilResistance() -> ${verdict} | ${formatExecutionLatency(latencyUs)}`,
-    pass ? GREEN : YELLOW,
-  );
+  hudLine("FUSE", `checkSoilResistance() -> ${verdict}`, pass ? GREEN : YELLOW);
+  printExecutionLatencyBlock(latencyUs, "    ");
 }
 
 export function hudSevered(trigger: string): void {
@@ -119,7 +117,8 @@ export function hudChannelOpen(): void {
 }
 
 export function hudDispatched(target: string, latencyUs: number): void {
-  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatGuardTime(latencyUs)}`, GREEN);
+  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target}`, GREEN);
+  printGuardTimeBlock(latencyUs, "    ");
 }
 
 export const COOLDOWN_MS = 60_000;

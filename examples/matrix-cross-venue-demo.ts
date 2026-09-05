@@ -55,13 +55,14 @@ import {
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import {
-  formatExecutionLatency,
-  formatGuardTime,
   hrtimeElapsedUs,
   hrtimeStart,
   CORE_BRIGHT_CYAN,
   GUARD_BRIGHT_GREEN,
+  printExecutionLatencyBlock,
+  printGuardTimeBlock,
 } from "./lib/demo-timing";
+import { captureSoilBenchmark } from "./lib/demo-benchmark";
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
@@ -353,23 +354,24 @@ function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
   const fuseVerdict = r.ok ? "PASS" : "REJECT";
   const severed = (r.flags & FLAGS_SEVERED) !== 0 ? " | R20_SEVERED" : "";
   console.log(
-    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}evaluateVariationalFlags() -> ${fuseVerdict} | bitmask=${formatVariationalFlagMask(r.flags)}${severed} | ${formatGuardTime(us)}`,
+    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}evaluateVariationalFlags() -> ${fuseVerdict}`,
   );
+  console.log(`      bitmask=${formatVariationalFlagMask(r.flags)}${severed}`);
+  printGuardTimeBlock(us);
   const color = r.ok ? GREEN : RED;
   const dispatchTag = r.ok ? GUARD_BRIGHT_GREEN : RED;
   const label = r.ok ? "ALLOWED" : (r.reason ?? "FAIL_CLOSED");
   const tail = r.ok ? (r.detail ?? "OLP depth ok") : (r.detail ?? "trip");
-  console.log(
-    `  ${dispatchTag}${BOLD}[DISPATCH]${R} ${color}${label} | target: Variational Omni RFQ -> ${tail} | ${formatGuardTime(us)}${R}`,
-  );
+  console.log(`  ${dispatchTag}${BOLD}[DISPATCH]${R} ${color}${label}`);
+  console.log(`      target: Variational Omni RFQ -> ${tail}`);
+  printGuardTimeBlock(us);
 }
 
 function printMatrix(title: string, result: LoopEvalResult, opts?: PrintMatrixOpts): void {
   console.log(`\n${YELLOW}${title}${R}`);
   const soilLabel = result.soilProbe.tripped ? "REJECT" : "PASS";
-  console.log(
-    `  checkSoilResistance() -> ${soilLabel} | ${formatExecutionLatency(result.soilLatencyUs)}`,
-  );
+  console.log(`  checkSoilResistance() -> ${soilLabel}`);
+  printExecutionLatencyBlock(result.soilLatencyUs);
   for (const row of result.rows) {
     const color = row.status === "ALLOW" ? GREEN : RED;
     console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)} ${row.detail}${R}`);
@@ -487,11 +489,14 @@ function runCircuitBreaker(
   printMatrix(`${label} · Step 4 — FAIL_CLOSED (zero-gas severance)`, finalResult, printOpts(tripCtx));
 
   const ok = tripSuccess(finalResult.rows, hedge, loop);
-  console.log(
-    ok
-      ? `${GREEN}${label} TRIP OK — ${finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length}/${finalResult.rows.length} FAIL_CLOSED · ${formatGuardTime(hrtimeElapsedUs(t0))}${R}`
-      : `${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`,
-  );
+  if (ok) {
+    console.log(
+      `${GREEN}${label} TRIP OK — ${finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length}/${finalResult.rows.length} FAIL_CLOSED${R}`,
+    );
+    printGuardTimeBlock(hrtimeElapsedUs(t0), "  ");
+  } else {
+    console.log(`${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`);
+  }
   return ok;
 }
 
@@ -521,9 +526,16 @@ function main(): void {
       : loop === "spot"
         ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue)"
         : "Full Cross-Venue Matrix (Dual Perp Hedge)";
-  printBanner(`Cross-Venue Matrix · ${loopTitle}`);
   seedAdapterProbes(nowMs);
   resetState();
+
+  const benchCtx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
+  const benchKeys = loop === "perp" ? perpKeys : loop === "spot" ? SPOT_KEYS : allKeys;
+  const benchSoil = { ...HEALTHY_SOIL, at: new Date(nowMs) };
+  const benchmark = captureSoilBenchmark(benchSoil, () => {
+    evaluateLoop(benchKeys, nowMs, benchCtx, readActiveSystemState());
+  });
+  printBanner(`Cross-Venue Matrix · ${loopTitle}`, benchmark);
 
   const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge });
 
@@ -536,7 +548,8 @@ function main(): void {
     } else {
       printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
     }
-    console.log(`\n${GREEN}Nominal matrix PASS · ${formatGuardTime(hrtimeElapsedUs(t0))}${R}`);
+    console.log(`\n${GREEN}Nominal matrix PASS${R}`);
+    printGuardTimeBlock(hrtimeElapsedUs(t0), "  ");
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
@@ -557,12 +570,14 @@ function main(): void {
     allOk = runCircuitBreaker("Combined · Full Matrix", allKeys, "all", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
   }
 
-  const elapsed = formatGuardTime(hrtimeElapsedUs(t0));
-  console.log(
-    allOk
-      ? `\n${GREEN}MATRIX COMPLETE — all loops FAIL_CLOSED · ${elapsed}${R}`
-      : `\n${RED}MATRIX INCOMPLETE — see loop output above · ${elapsed}${R}`,
-  );
+  const elapsedUs = hrtimeElapsedUs(t0);
+  if (allOk) {
+    console.log(`\n${GREEN}MATRIX COMPLETE — all loops FAIL_CLOSED${R}`);
+    printGuardTimeBlock(elapsedUs, "  ");
+  } else {
+    console.log(`\n${RED}MATRIX INCOMPLETE — see loop output above${R}`);
+    printGuardTimeBlock(elapsedUs, "  ");
+  }
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
   if (!allOk) process.exitCode = 1;
 }
