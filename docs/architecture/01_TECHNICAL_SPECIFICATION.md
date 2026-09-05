@@ -22,9 +22,9 @@ This document is **invariant-first** (Yellow Paper style): topology, thresholds,
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with full native multi-protocol coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO), plus **Hyperliquid** — an **Independent L1 High-Frequency Orderbook AppChain** that originated alongside Arbitrum's perp liquidity ecosystem — as the cross-chain session-key hedge leg. Pillar 3 Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with full native multi-protocol coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue), plus **Hyperliquid** — an **Independent L1 High-Frequency Orderbook AppChain** that originated alongside Arbitrum's perp liquidity ecosystem — as the cross-chain session-key hedge leg. Pillar 3 Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
 
-**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
+**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
 
 ```text
 [ Optional Permissioned Ingress (e.g. Robinhood Chain 46630 / 4663) ]
@@ -165,9 +165,9 @@ Agent Cross-Pass Route (Sepolia 421614)
 |----------|-------|-------------------------|-------------|
 | **GMX v2** | Arbitrum One | Pool Imbalance Ratio: \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) |
 | **Pendle** | Arbitrum One | Discounted Implied Yield Shock: \|Yield_current − Yield_oracle\| > **150 bps** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
-| **Camelot V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`camelot-v3-adapter.ts`](../../src/adapters/camelot/camelot-v3-adapter.ts) |
-| **Radiant Capital** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`radiant-lending-adapter.ts`](../../src/adapters/radiant/radiant-lending-adapter.ts) |
-| **Jones DAO** | Arbitrum One | Vault NAV Share Price Volatility > **0.30%** single-block NAV deviation (**30 bps**) | [`jones-vault-adapter.ts`](../../src/adapters/jones/jones-vault-adapter.ts) |
+| **Uniswap V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`uniswap-v3-adapter.ts`](../../src/adapters/uniswap/uniswap-v3-adapter.ts) |
+| **Aave V3** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`aave-v3-adapter.ts`](../../src/adapters/aave/aave-v3-adapter.ts) |
+| **Morpho Blue** | Arbitrum One | Oracle staleness > **1h** or price deviation > **0.30% (**30 bps**) | [`morpho-blue-adapter.ts`](../../src/adapters/morpho/morpho-blue-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
 
 | Component | Venue | Role |
@@ -390,13 +390,13 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 ### 2.5 Strategic Blue-Chip Ecosystem & Settlement Roadmap (V1.0 Core + V1.5 / V2.0)
 
-> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** is a **v1.0 Live Core Pillar 3** pre-execution firewall (not a fee-capture path). **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Camelot and Variational remain modular post-grant settlement extensions.
+> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** is a **v1.0 Live Core Pillar 3** pre-execution firewall (not a fee-capture path). **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Uniswap V3 and Variational remain modular post-grant settlement extensions.
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
 | **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **190 test files \| 828 PASS Clean (100% PASS)** |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
-| **Camelot DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Camelot API on RPC allowlist (`api.camelot.exchange`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
+| **Uniswap V3 DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Uniswap V3 API on RPC allowlist (`api.uniswap.org`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
 
 ```text
@@ -405,7 +405,7 @@ v1.0 Active Triangle (42161)
          │
          ├──► V1.0: Pendle Institutional Shield (Pillar 3 · sync oracle · soil fuse)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
-         └──► V1.5+: Camelot zero-slippage settle
+         └──► V1.5+: Uniswap V3 zero-slippage settle
          └──► V2.0: Variational native perp hedge (HL complement/alternative)
 ```
 
@@ -578,7 +578,7 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
 | **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **190 test files \| 828 PASS Clean (100% PASS)** |
-| **Camelot DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Camelot **V1.5** | ✅ Stabilizer Live · ⏳ Camelot Roadmap Spec |
+| **Uniswap V3 DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Uniswap V3 **V1.5** | ✅ Stabilizer Live · ⏳ Uniswap V3 Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
 
 See [§2.5 Strategic Blue-Chip Ecosystem & Settlement Roadmap](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) for integration anchors.
@@ -814,12 +814,12 @@ Evaluator-facing comparison of SliverVine Protocol versus legacy execution, agen
 
 ### 6.9 Strategic Blue-Chip Ecosystem & Settlement Integrations (V1.0 Core + V1.5 / V2.0)
 
-> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Camelot and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) and [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20).
+> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Uniswap V3 and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) and [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20).
 
 | Venue | Integration surface | Reflex hook | Horizon |
 |-------|-------------------|-------------|---------|
 | **Pendle Finance** | PT/YT registry + sync oracle + cross-guard · soil-wired | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` · `PENDLE_ORACLE_STALE` · `evaluatePendleGmxCrossGuard()` · maturity &lt;7d + jitter &gt;200 bps fail-closed | **V1.0** |
-| **Camelot DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Camelot pool depth · RPC allowlist `api.camelot.exchange` | **V1.5** |
+| **Uniswap V3 DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Uniswap V3 pool depth · RPC allowlist `api.uniswap.org` | **V1.5** |
 | **Stabilizer** | Sepolia universal sandbox · zero-slippage stablecoin cross-pass routing | `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as Mainnet | **V1.0** | ✅ Live · Sepolia `421614` |
 | **Variational** | Next-gen decentralized perps · cross-venue margin routing (HL complement) | `checkSoilResistance()` on Variational orderbook depth · session-key clip (R06/R07) | **V2.0** |
 

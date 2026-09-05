@@ -1,35 +1,35 @@
 #!/usr/bin/env tsx
 /**
- * Cross-Venue Matrix Demo — flexible capital loops across 6 protocols.
+ * Cross-Venue Matrix Demo — flexible capital loops across 7 protocols.
  * Usage:
  *   pnpm demo:matrix                      # --loop=all (default)
  *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL + Variational (both hedges)
  *   pnpm demo:matrix -- --loop=perp --hedge=variational
  *   pnpm demo:matrix -- --loop=perp --hedge=hyperliquid
- *   pnpm demo:matrix -- --loop=spot       # Camelot → Radiant → Jones spot loop
- *   pnpm demo:matrix -- --loop=spot --radiant
+ *   pnpm demo:matrix -- --loop=spot       # Uniswap V3 → Aave V3 → Morpho Blue spot loop
+ *   pnpm demo:matrix -- --loop=spot --aave
  *   pnpm demo:matrix -- --healthy-only
  * Trip:  pnpm demo:matrix -- --trip --gmx
  */
 import {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  evaluateCamelotV3SwapGuard,
-} from "../src/adapters/camelot/camelot-v3-adapter";
+  AAVE_ARBITRUM_CHAIN_ID,
+  evaluateAaveV3Guard,
+} from "../src/adapters/aave/aave-v3-adapter";
 import { verifyGmxPoolImbalance } from "../src/adapters/gmx/gmx-v2-invariants";
 import { evaluateHyperliquidSessionGuard } from "../src/adapters/hl/hyperliquid-session-guard";
 import {
-  JONES_ARBITRUM_CHAIN_ID,
-  evaluateJonesVaultGuard,
-} from "../src/adapters/jones/jones-vault-adapter";
+  MORPHO_ARBITRUM_CHAIN_ID,
+  evaluateMorphoBlueGuard,
+} from "../src/adapters/morpho/morpho-blue-adapter";
 import {
   PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD,
   validateAIPoolSelection,
 } from "../src/adapters/pendle/pendle-pool-factory-adapter";
 import { PENDLE_PT_MARKET_PT_EETH } from "../src/adapters/pendle/pendle-pt-registry";
 import {
-  RADIANT_ARBITRUM_CHAIN_ID,
-  evaluateRadiantLendingGuard,
-} from "../src/adapters/radiant/radiant-lending-adapter";
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  evaluateUniswapV3SwapGuard,
+} from "../src/adapters/uniswap/uniswap-v3-adapter";
 import {
   formatVariationalFlagMask,
   validateVariationalRFQIntent,
@@ -64,8 +64,8 @@ type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
 type PerpHedge = "hyperliquid" | "variational" | "both";
 type PerpAnomaly = "pendle" | "gmx" | "variational";
-type SpotAnomaly = "jones" | "radiant";
-type VenueKey = "pendle" | "gmx" | "hl" | "variational" | "camelot" | "radiant" | "jones" | "soil";
+type SpotAnomaly = "morpho" | "aave";
+type VenueKey = "pendle" | "gmx" | "hl" | "variational" | "uniswap" | "aave" | "morpho" | "soil";
 
 interface VenueRow {
   venue: string;
@@ -78,8 +78,8 @@ interface TripContext {
   perpPendle: boolean;
   perpGmx: boolean;
   perpVariational: boolean;
-  spotJones: boolean;
-  spotRadiant: boolean;
+  spotMorpho: boolean;
+  spotAave: boolean;
 }
 
 interface LoopEvalResult {
@@ -94,7 +94,7 @@ interface PrintMatrixOpts {
   hedge: PerpHedge;
 }
 
-const SPOT_KEYS: VenueKey[] = ["camelot", "radiant", "jones", "soil"];
+const SPOT_KEYS: VenueKey[] = ["uniswap", "aave", "morpho", "soil"];
 
 const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
@@ -119,7 +119,7 @@ function parseHedge(argv: string[]): PerpHedge {
 }
 
 function parseSpotAnomaly(argv: string[]): SpotAnomaly {
-  return argv.includes("--radiant") ? "radiant" : "jones";
+  return argv.includes("--aave") ? "aave" : "morpho";
 }
 
 function parsePerpAnomaly(argv: string[], gmxTrip: boolean, hedge: PerpHedge): PerpAnomaly {
@@ -155,8 +155,8 @@ function buildTripContext(
     perpPendle: perpActive && perpAnomaly === "pendle",
     perpGmx: perpActive && perpAnomaly === "gmx",
     perpVariational: perpActive && perpAnomaly === "variational",
-    spotJones: spotActive && spotAnomaly === "jones",
-    spotRadiant: spotActive && spotAnomaly === "radiant",
+    spotMorpho: spotActive && spotAnomaly === "morpho",
+    spotAave: spotActive && spotAnomaly === "aave",
   };
 }
 
@@ -243,9 +243,9 @@ function evaluateVenue(
           : r.detail ?? "OLP depth ok";
       return { venue: "Variational RFQ", status: gateStatus(state, r.ok), detail };
     }
-    case "camelot": {
-      const r = evaluateCamelotV3SwapGuard({
-        chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
+    case "uniswap": {
+      const r = evaluateUniswapV3SwapGuard({
+        chainId: UNISWAP_V3_ARBITRUM_CHAIN_ID,
         tokenIn: "WETH",
         tokenOut: "USDC",
         amountInUsd: 25_000,
@@ -262,53 +262,54 @@ function evaluateVenue(
         : ctx.active && isR20Locked(state)
           ? "FAIL_CLOSED: R20_DEADLOCK"
           : r.status;
-      return { venue: "Camelot V3", status: gateStatus(state, r.ok), detail };
+      return { venue: "Uniswap V3", status: gateStatus(state, r.ok), detail };
     }
-    case "radiant": {
-      const radiantTrip = ctx.spotRadiant;
-      const r = evaluateRadiantLendingGuard({
-        chainId: RADIANT_ARBITRUM_CHAIN_ID,
+    case "aave": {
+      const aaveTrip = ctx.spotAave;
+      const r = evaluateAaveV3Guard({
+        chainId: AAVE_ARBITRUM_CHAIN_ID,
         market: "WETH/USDC",
         collateralUsd: 150_000,
-        debtUsd: radiantTrip ? 120_000 : 80_000,
+        debtUsd: aaveTrip ? 120_000 : 80_000,
         liquidationThreshold: 0.825,
-        projectedHealthFactor: radiantTrip ? 1.05 : 1.42,
+        projectedHealthFactor: aaveTrip ? 1.05 : 1.42,
         refPriceUsd: 3500,
         spotPriceUsd: 3500,
         depthUsd: 500_000,
         nowMs,
       });
-      const detail = !r.ok && ctx.spotRadiant
-        ? "FAIL_CLOSED: RADIANT_HEALTH_FACTOR_BREACH"
+      const detail = !r.ok && ctx.spotAave
+        ? "FAIL_CLOSED: AAVE_HEALTH_FACTOR_BREACH"
         : !r.ok
           ? r.reasons.join("|") || "lending guard trip"
           : ctx.active && isR20Locked(state)
             ? "FAIL_CLOSED: R20_DEADLOCK"
             : `HF ${r.healthFactor.toFixed(2)} nominal`;
-      return { venue: "Radiant", status: gateStatus(state, r.ok), detail };
+      return { venue: "Aave V3", status: gateStatus(state, r.ok), detail };
     }
-    case "jones": {
-      const r = evaluateJonesVaultGuard({
-        chainId: JONES_ARBITRUM_CHAIN_ID,
-        vaultId: "jGLP",
-        action: "REBALANCE",
+    case "morpho": {
+      const r = evaluateMorphoBlueGuard({
+        chainId: MORPHO_ARBITRUM_CHAIN_ID,
+        marketId: "WETH/USDC",
+        action: "SUPPLY",
         amountUsd: 50_000,
-        vaultTvlUsd: 5_000_000,
-        expectedSharePriceUsd: 1.245,
-        quotedSharePriceUsd: ctx.spotJones ? 1.252 : 1.246,
+        marketLiquidityUsd: ctx.spotMorpho ? 80_000 : 5_000_000,
+        oraclePriceUsd: ctx.spotMorpho ? 3650 : 3500,
+        referencePriceUsd: 3500,
+        oracleTimestampMs: ctx.spotMorpho ? nowMs - 5_000_000 : nowMs - 120_000,
         refPriceUsd: 3500,
         spotPriceUsd: 3500,
-        depthUsd: 400_000,
+        depthUsd: ctx.spotMorpho ? 6_000 : 400_000,
         nowMs,
       });
-      const detail = !r.ok && ctx.spotJones
-        ? "FAIL_CLOSED: JONES_NAV_DEVIATION_BREACH"
+      const detail = !r.ok && ctx.spotMorpho
+        ? "FAIL_CLOSED: MORPHO_ORACLE_STALE"
         : !r.ok
-          ? r.reasons.join("|") || "vault guard trip"
+          ? r.reasons.join("|") || "oracle guard trip"
           : ctx.active && isR20Locked(state)
             ? "FAIL_CLOSED: R20_DEADLOCK"
-            : `NAV slippage ${r.shareSlippageBps.toFixed(1)}bps nominal`;
-      return { venue: "Jones DAO", status: gateStatus(state, r.ok), detail };
+            : `oracle age ${r.oracleAgeMs}ms nominal`;
+      return { venue: "Morpho Blue", status: gateStatus(state, r.ok), detail };
     }
     case "soil":
       return {
@@ -385,9 +386,9 @@ function anomalyLabel(
   perpAnomaly: PerpAnomaly,
 ): string {
   if (loop === "spot") {
-    return spotAnomaly === "radiant"
-      ? "Radiant projected HF < 1.15"
-      : "Jones NAV deviation > 30bps";
+    return spotAnomaly === "aave"
+      ? "Aave V3 projected HF < 1.15"
+      : "Morpho Blue oracle stale / deviation > 30bps";
   }
   if (perpAnomaly === "gmx") return "GMX pool imbalance >0.35";
   if (perpAnomaly === "variational") return "Variational stale quote / OLP depth breach";
@@ -395,9 +396,9 @@ function anomalyLabel(
 }
 
 function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
-  if (spotAnomaly === "radiant") {
-    const r = evaluateRadiantLendingGuard({
-      chainId: RADIANT_ARBITRUM_CHAIN_ID,
+  if (spotAnomaly === "aave") {
+    const r = evaluateAaveV3Guard({
+      chainId: AAVE_ARBITRUM_CHAIN_ID,
       market: "WETH/USDC",
       collateralUsd: 150_000,
       debtUsd: 120_000,
@@ -408,23 +409,24 @@ function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
       depthUsd: 500_000,
       nowMs,
     });
-    console.log(`  Radiant guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
+    console.log(`  Aave guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
     return;
   }
-  const r = evaluateJonesVaultGuard({
-    chainId: JONES_ARBITRUM_CHAIN_ID,
-    vaultId: "jGLP",
-    action: "REBALANCE",
-    amountUsd: 50_000,
-    vaultTvlUsd: 5_000_000,
-    expectedSharePriceUsd: 1.245,
-    quotedSharePriceUsd: 1.252,
+  const r = evaluateMorphoBlueGuard({
+    chainId: MORPHO_ARBITRUM_CHAIN_ID,
+    marketId: "WETH/USDC",
+    action: "BORROW",
+    amountUsd: 200_000,
+    marketLiquidityUsd: 80_000,
+    oraclePriceUsd: 3650,
+    referencePriceUsd: 3500,
+    oracleTimestampMs: nowMs - 5_000_000,
     refPriceUsd: 3500,
     spotPriceUsd: 3500,
-    depthUsd: 400_000,
+    depthUsd: 6_000,
     nowMs,
   });
-  console.log(`  Jones vault guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
+  console.log(`  Morpho guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
 }
 
 function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
@@ -438,8 +440,8 @@ function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
     perpPendle: perpAnomaly === "pendle",
     perpGmx: perpAnomaly === "gmx",
     perpVariational: false,
-    spotJones: false,
-    spotRadiant: false,
+    spotMorpho: false,
+    spotAave: false,
   };
   const soilTrip = checkSoilResistance(soilForStep(nowMs, ctx));
   console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
@@ -513,7 +515,7 @@ function main(): void {
     loop === "perp"
       ? perpLoopTitle(hedge)
       : loop === "spot"
-        ? "Spot & Lending Vault Loop (Camelot → Radiant → Jones)"
+        ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue)"
         : "Full Cross-Venue Matrix (Dual Perp Hedge)";
   printBanner(`Cross-Venue Matrix · ${loopTitle}`);
   seedAdapterProbes(nowMs);

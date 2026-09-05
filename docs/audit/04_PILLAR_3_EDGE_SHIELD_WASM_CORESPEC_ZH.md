@@ -31,7 +31,7 @@
 | **Worker bundle** | **69.32 KiB gzip**（`pnpm bundle:measure`） |
 | **防禦矩陣** | **17 Active \| 2 Refactored \| 1 Deprecated** |
 | **Fail-closed 姿態** | 任何 soil / oracle / sequencer trip → `signingChannelOpen: false` |
-| **Stylus dual-execution** | **9/9 PASS**（`pnpm build:stylus` · **50 bps** Camelot 對齊） | [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) |
+| **Stylus dual-execution** | **9/9 PASS**（`pnpm build:stylus` · **50 bps** Uniswap V3 對齊） | [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) |
 | **攔截網覆蓋** | **88%** 預廣播 · **12%** 系統性殘差（Fail-Closed）— [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 ---

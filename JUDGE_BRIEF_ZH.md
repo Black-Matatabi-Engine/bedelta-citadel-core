@@ -14,7 +14,7 @@
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
 | **Verified Commit** | `main` @ **`1acbc24`** (`bedelta-citadel-core`) |
 | **Worker Bundle** | **69.32 KiB gzip** (`pnpm bundle:measure` · `pass: true` · &lt;70 KiB) |
-| **Tests** | `pnpm test` → **192 test files | 836 PASS Clean (100% PASS)** · **3-Tier Demo Suite** (`demo:{gmx,hl,pendle,camelot,radiant,jones}` · `demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `demo:{stabilizer,e2e}`) · `pnpm demo` (12 Tri-Pillar) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Tests** | `pnpm test` → **192 test files | 836 PASS Clean (100% PASS)** · **3-Tier Demo Suite** (`demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `demo:{stabilizer,e2e}`) · `pnpm demo` (12 Tri-Pillar) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 | **Stylus Probe** | **9/9 PASS（50bps 對齊）** · `pnpm build:stylus` |
 | **Branch Policy** | `main`（Grant Public SSOT）vs `feat/wasm-opsec-kernel-experiment`（Closed WASM Kernel） |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
@@ -55,7 +55,7 @@
 
 SliverVine **不是** Wasm 滑點計算器。它是**共識前執行安全原語**：Cloudflare Edge 亞毫秒意圖清算（`checkSoilResistance()`，p50 ~106µs · **`pkg/soil_core.wasm` — 獨立於 AA**）**加上** Arbitrum One 上不可變 **EIP-712 consume-once `SliverVineGate`**。ZeroDev Kernel v3 為**可選 Pillar 1 AA 交付層**（`USE_ZERODEV_AA` 預設關閉）— 非亞毫秒延遲來源。有毒 AI Agent UserOp 於 Sequencer 佇列**之前**切斷 — 阻斷路徑 **0-Gas**。
 
-**主要執行邊界：** 完整 Arbitrum 原生多協議覆蓋（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。
+**主要執行邊界：** 完整 Arbitrum 原生多協議覆蓋（GMX v2、Pendle、Uniswap V3、Aave V3、Morpho Blue、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。
 
 **Hyperliquid** 為與 Arbitrum 永續流動性生態同源的**獨立 L1 高頻訂單簿 AppChain** — session-key 對沖 adapter，非 Arbitrum 原生執行。
 
@@ -65,9 +65,9 @@ SliverVine **不是** Wasm 滑點計算器。它是**共識前執行安全原語
 |----------|-------|-------------------|--------|
 | **GMX v2** | Arbitrum One | \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | `gmx-v2-invariants.ts` |
 | **Pendle** | Arbitrum One | \|Yield_current − Yield_oracle\| > **150 bps** | `pendle-pool-factory-adapter.ts` |
-| **Camelot V3** | Arbitrum One | Tick depth · slippage/penalty > **0.50%** (**50 bps**) | `camelot-v3-adapter.ts` |
-| **Radiant Capital** | Arbitrum One | Health Factor HF < **1.15** | `radiant-lending-adapter.ts` |
-| **Jones DAO** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `jones-vault-adapter.ts` |
+| **Uniswap V3** | Arbitrum One | Tick depth · slippage/penalty > **0.50%** (**50 bps**) | `uniswap-v3-adapter.ts` |
+| **Aave V3** | Arbitrum One | Health Factor HF < **1.15** | `aave-v3-adapter.ts` |
+| **Morpho Blue** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `morpho-blue-adapter.ts` |
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
@@ -79,7 +79,7 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (192 files / 836 tests)
 ```
 
-Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones,matrix}` · `--trip` for Fail-Closed demos
+Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` · `--trip` for Fail-Closed demos
 
 > All verification commands: [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
 
@@ -87,7 +87,7 @@ Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (S
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · Variational RFQ · **7-protocol cross-venue matrix** |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Four major AI frameworks + combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | **12 ANSI scenarios** — GMX · HL · Pendle · p50 ~106µs |
@@ -160,37 +160,37 @@ V1.0 交付**兩項互補 Pendle 整合** — 機構安全層，非收益產品�
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts)
 
-### Camelot V3 (V1.0 Live · Arbitrum Native Spot Liquidity)
+### Uniswap V3 (V1.0 Live · Arbitrum Native Spot Liquidity)
 
-Citadel 為 **Arbitrum One (`42161`)** 上 Camelot V3 現貨交換的**執行前集中流動性防火牆**：
+Citadel 為 **Arbitrum One (`42161`)** 上 Uniswap V3 現貨交換的**執行前集中流動性防火牆**：
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| **V3 Liquidity Guard** | [`camelot-v3-adapter.ts`](./src/adapters/camelot/camelot-v3-adapter.ts) | `verifyCamelotPoolLiquidity()` — active CL depth · utilization cap · dynamic fee impact |
+| **V3 Liquidity Guard** | [`uniswap-v3-adapter.ts`](./src/adapters/uniswap/uniswap-v3-adapter.ts) | `verifyUniswapPoolLiquidity()` — active CL depth · utilization cap · dynamic fee impact |
 | **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on depleted depth / cross-venue slippage |
-| **CLI Demo** | `pnpm demo:camelot` | WETH/USDC spot swap guard · `--trip` for FAIL_CLOSED |
+| **CLI Demo** | `pnpm demo:uniswap` | WETH/USDC spot swap guard · `--trip` for FAIL_CLOSED |
 
-→ Tests: [`tests/adapters/camelot-v3-adapter.test.ts`](./tests/adapters/camelot-v3-adapter.test.ts)
+→ Tests: [`tests/adapters/uniswap-v3-adapter.test.ts`](./tests/adapters/uniswap-v3-adapter.test.ts)
 
-### Radiant Capital (V1.0 Live · Arbitrum Native Lending)
+### Aave V3 (V1.0 Live · Arbitrum Native Lending)
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| **HF Guard** | [`radiant-lending-adapter.ts`](./src/adapters/radiant/radiant-lending-adapter.ts) | `verifyRadiantHealthFactor()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary |
+| **HF Guard** | [`aave-v3-adapter.ts`](./src/adapters/aave/aave-v3-adapter.ts) | `verifyAaveHealthFactor()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary |
 | **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on depleted collateral depth |
-| **CLI Demo** | `pnpm demo:radiant` | WETH/USDC borrow guard · `--trip` for FAIL_CLOSED |
+| **CLI Demo** | `pnpm demo:aave` | WETH/USDC borrow guard · `--trip` for FAIL_CLOSED |
 
-→ Tests: [`tests/adapters/radiant-lending-adapter.test.ts`](./tests/adapters/radiant-lending-adapter.test.ts)
+→ Tests: [`tests/adapters/aave-v3-adapter.test.ts`](./tests/adapters/aave-v3-adapter.test.ts)
 
-### Jones DAO (V1.0 Live · Arbitrum Vault Strategies)
+### Morpho Blue (V1.0 Live · Arbitrum Vault Strategies)
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| **Vault Guard** | [`jones-vault-adapter.ts`](./src/adapters/jones/jones-vault-adapter.ts) | `verifyJonesVaultSharePrice()` — share slippage cap · flash-loan sandwich trip |
+| **Vault Guard** | [`morpho-blue-adapter.ts`](./src/adapters/morpho/morpho-blue-adapter.ts) | `verifyMorphoOracle()` — oracle freshness · price deviation cap |
 | **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on toxic vault depth |
-| **CLI Demo** | `pnpm demo:jones` | jGLP rebalance guard · `--trip` for FAIL_CLOSED |
+| **CLI Demo** | `pnpm demo:morpho` | jGLP rebalance guard · `--trip` for FAIL_CLOSED |
 
-→ Tests: [`tests/adapters/jones-vault-adapter.test.ts`](./tests/adapters/jones-vault-adapter.test.ts)
+→ Tests: [`tests/adapters/morpho-blue-adapter.test.ts`](./tests/adapters/morpho-blue-adapter.test.ts)
 
 ### Dune Analytics
 
@@ -294,7 +294,7 @@ pnpm demo:matrix -- --loop=perp     # Pendle → GMX → dual perp hedge (HL + V
 pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
 pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
 pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
-pnpm demo:matrix -- --loop=spot     # Camelot → Radiant → Jones spot loop
+pnpm demo:matrix -- --loop=spot     # Uniswap V3 → Aave V3 → Morpho Blue spot loop
 pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 ```
 

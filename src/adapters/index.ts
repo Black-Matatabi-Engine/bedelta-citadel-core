@@ -1,33 +1,33 @@
 /** SliverVine Citadel adapter barrel — V1.0 native integrations. */
 export {
-  evaluateCamelotV3SwapGuard,
-  estimateCamelotV3SlippageBps,
-  verifyCamelotPoolLiquidity,
-  verifyCamelotTickDepth,
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  type CamelotV3GuardResult,
-  type CamelotV3LiquidityResult,
-  type CamelotV3SwapInput,
-} from "./camelot/camelot-v3-adapter";
+  evaluateUniswapV3SwapGuard,
+  estimateUniswapV3SlippageBps,
+  verifyUniswapPoolLiquidity,
+  verifyUniswapTickDepth,
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  type UniswapV3GuardResult,
+  type UniswapV3LiquidityResult,
+  type UniswapV3SwapInput,
+} from "./uniswap/uniswap-v3-adapter";
 export {
-  evaluateJonesVaultGuard,
-  verifyJonesVaultSharePrice,
-  computeJonesShareSlippageBps,
-  JONES_ARBITRUM_CHAIN_ID,
-  type JonesVaultGuardResult,
-  type JonesVaultInput,
-  type JonesVaultShareResult,
-} from "./jones/jones-vault-adapter";
+  evaluateMorphoBlueGuard,
+  verifyMorphoOracle,
+  computeMorphoPriceDeviationBps,
+  MORPHO_ARBITRUM_CHAIN_ID,
+  type MorphoBlueGuardResult,
+  type MorphoBlueMarketInput,
+  type MorphoOracleResult,
+} from "./morpho/morpho-blue-adapter";
 export {
-  evaluateRadiantLendingGuard,
-  verifyRadiantHealthFactor,
-  computeRadiantHealthFactor,
-  RADIANT_ARBITRUM_CHAIN_ID,
-  RADIANT_HF_FAIL_CLOSED_THRESHOLD,
-  type RadiantHealthFactorResult,
-  type RadiantLendingGuardResult,
-  type RadiantLendingInput,
-} from "./radiant/radiant-lending-adapter";
+  evaluateAaveV3Guard,
+  verifyAaveHealthFactor,
+  computeAaveHealthFactor,
+  AAVE_ARBITRUM_CHAIN_ID,
+  AAVE_HF_FAIL_CLOSED_THRESHOLD,
+  type AaveHealthFactorResult,
+  type AaveLendingGuardResult,
+  type AaveLendingInput,
+} from "./aave/aave-v3-adapter";
 export {
   evaluateHyperliquidSessionGuard,
   HL_ORDERBOOK_SPREAD_MAX_BPS,

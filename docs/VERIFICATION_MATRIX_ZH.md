@@ -33,9 +33,9 @@
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Agent SDK decorator** | `withCitadelShield` — 零接觸預廣播包裝器 | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../examples/agent-interceptor-demo.ts) |
-| **核心 DEX demos（Tier 1）** | GMX v2 · Hyperliquid · Pendle · Camelot V3 · Radiant · Jones DAO 獨立 CLI | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`camelot-demo.ts`](../examples/camelot-demo.ts) · [`radiant-demo.ts`](../examples/radiant-demo.ts) · [`jones-demo.ts`](../examples/jones-demo.ts) · `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` |
-| **Camelot V3 adapter** | `evaluateCamelotV3SwapGuard()` — CL tick depth · directional dynamic fee · soil fuse | [`camelot-v3-adapter.ts`](../src/adapters/camelot/camelot-v3-adapter.ts) · `pnpm demo:camelot` |
-| **Radiant Capital adapter** | `evaluateRadiantLendingGuard()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary | [`radiant-lending-adapter.ts`](../src/adapters/radiant/radiant-lending-adapter.ts) · `pnpm demo:radiant` |
+| **核心 DEX demos（Tier 1）** | GMX v2 · Hyperliquid · Pendle · Uniswap V3 · Aave V3 · Morpho Blue 獨立 CLI | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`uniswap-demo.ts`](../examples/uniswap-demo.ts) · [`aave-demo.ts`](../examples/aave-demo.ts) · [`morpho-demo.ts`](../examples/morpho-demo.ts) · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` |
+| **Uniswap V3 adapter** | `evaluateUniswapV3SwapGuard()` — CL tick depth · directional dynamic fee · soil fuse | [`uniswap-v3-adapter.ts`](../src/adapters/uniswap/uniswap-v3-adapter.ts) · `pnpm demo:uniswap` |
+| **Aave V3 adapter** | `evaluateAaveV3Guard()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary | [`aave-v3-adapter.ts`](../src/adapters/aave/aave-v3-adapter.ts) · `pnpm demo:aave` |
 | **Hyperliquid L1 session guard** | `evaluateHyperliquidSessionGuard()` — Independent L1 HF Orderbook AppChain · MaxSizePerOrder · rate limit (120/min) · spread > **20 bps** | [`hyperliquid-session-guard.ts`](../src/adapters/hl/hyperliquid-session-guard.ts) · `pnpm demo:hl` |
 | **Variational Omni RFQ adapter** | `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` — quote stale **>500ms** 或 oracle drift **>30 bps** · OLP depth utilization **>15%**（long-tail）· 核心 bitmask 中 **Bits 12–13** · `FLAGS_AUTO_SEVER_MASK` | [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) · [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 | **GMX v2 pool invariants** | `verifyGmxPoolImbalance()` · `verifyGmxCollateralReserve()` — imbalance > **0.35** · reserve < **105%** | [`gmx-v2-invariants.ts`](../src/adapters/gmx/gmx-v2-invariants.ts) · `pnpm demo:gmx` |
@@ -48,7 +48,7 @@
 
 **核心不變量：** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats)。
 
-**主要執行邊界：** 完整 Arbitrum 原生多協議覆蓋（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP hedging。
+**主要執行邊界：** 完整 Arbitrum 原生多協議覆蓋（GMX v2、Pendle、Uniswap V3、Aave V3、Morpho Blue、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP hedging。
 
 ### 量身打造之數學不變量（全部七個協議）
 
@@ -56,9 +56,9 @@
 |----------|-------|-------------------|---------|
 | **GMX v2** | Arbitrum One | \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | `gmx-v2-invariants.ts` |
 | **Pendle** | Arbitrum One | \|Yield_current − Yield_oracle\| > **150 bps** | `pendle-pool-factory-adapter.ts` |
-| **Camelot V3** | Arbitrum One | Active tick depth · slippage/penalty > **0.50%**（**50 bps**） | `camelot-v3-adapter.ts` |
-| **Radiant Capital** | Arbitrum One | Health Factor HF < **1.15** | `radiant-lending-adapter.ts` |
-| **Jones DAO** | Arbitrum One | Single-block NAV deviation > **0.30%**（**30 bps**） | `jones-vault-adapter.ts` |
+| **Uniswap V3** | Arbitrum One | Active tick depth · slippage/penalty > **0.50%**（**50 bps**） | `uniswap-v3-adapter.ts` |
+| **Aave V3** | Arbitrum One | Health Factor HF < **1.15** | `aave-v3-adapter.ts` |
+| **Morpho Blue** | Arbitrum One | Single-block NAV deviation > **0.30%**（**30 bps**） | `morpho-blue-adapter.ts` |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** 或 oracle drift **>30 bps** · OLP depth utilization **>15%**（long-tail）· **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
@@ -72,7 +72,7 @@
 
 | 層級 | 指令 | 範圍 |
 |------|----------|-------|
-| **Tier 1 — 原生協議** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · **7 協議跨場所矩陣** |
+| **Tier 1 — 原生協議** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · **7 協議跨場所矩陣** |
 | **Tier 2 — Agent 框架** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · 四框架合併 |
 | **Tier 3 — 沙盒與 E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5 步宏觀生命週期 |
 | **Vitest 矩陣** | `pnpm demo` | 12 個 Tri-Pillar ANSI 情境（`tests/demo/`） |
@@ -94,15 +94,15 @@ pnpm test       # Full System Regression Suite (192 files / 836 tests)
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:camelot` | Camelot V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:radiant` | Radiant Capital HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:jones` | Jones DAO vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:uniswap` | Uniswap V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:aave` | Aave V3 HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:morpho` | Morpho Blue vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:matrix` | 完整 7 協議跨場所矩陣（`--loop=all`） | **7/7 ALLOW** 正常 · **7/7 FAIL_CLOSED** trip |
 | `pnpm demo:matrix -- --loop=perp` | Delta-neutral perp stack（Pendle → GMX → HL + Variational） | **3/3 + Soil** |
 | `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational Omni RFQ hedge leg · stale quote trip | `ALLOW` / `--trip` **FAIL_CLOSED**（`VARIATIONAL_STALE_QUOTE_BREACH`） |
 | `pnpm demo:matrix -- --loop=perp --hedge=hyperliquid` | 僅 Hyperliquid L1 hedge leg | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:matrix -- --loop=perp --hedge=both` | 雙 perp hedge（HL + Variational，預設） | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix -- --loop=spot` | Spot & lending vault loop（Camelot → Radiant → Jones） | **3/3 + Soil** |
+| `pnpm demo:matrix -- --loop=spot` | Spot & lending vault loop（Uniswap V3 → Aave V3 → Morpho Blue） | **3/3 + Soil** |
 | `pnpm demo:matrix -- --healthy-only` | 僅正常 pre-flight（無 R20 sever） | **ALLOW** |
 | `pnpm demo:matrix -- --trip --gmx` | GMX pool imbalance (>0.35) trip 變體 | **FAIL_CLOSED** |
 | `pnpm demo:e2e` | 5 步 Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
@@ -503,7 +503,7 @@ pnpm tsx scripts/generate-survival-report.ts
 | Sidecar health | [`docker/README.md`](../docker/README.md) | `curl -sS http://localhost:8080/health \| jq .` |
 | Live grant audit | 需網路 | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
 | 5-TX testnet proof | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet anchor in `verified_5tx_results.json` |
-| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
+| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
 
 **Sidecar build：**
 
@@ -523,14 +523,14 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:gmx` | GMX v2 shadow margin CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle guarded pool factory CLI | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:camelot` | Camelot V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:radiant` | Radiant Capital lending HF CLI | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:jones` | Jones DAO vault guard CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:uniswap` | Uniswap V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:aave` | Aave V3 lending HF CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:morpho` | Morpho Blue vault guard CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:matrix` | Cross-venue 7-protocol circuit breaker CLI（`--loop=all`） | **7/7 ALLOW** / trip **7/7 FAIL_CLOSED** |
 | `pnpm demo:matrix -- --loop=perp` | Perp stack loop（Pendle → GMX → HL + Variational） | **4/4 FAIL_CLOSED** trip |
 | `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational RFQ OLP / stale-quote guard | `ALLOW` / `--trip` **FAIL_CLOSED** |
 | `pnpm demo:matrix -- --loop=perp --hedge=both` | Dual hedge（HL + Variational，預設） | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix -- --loop=spot` | Spot vault loop（Camelot → Radiant → Jones） | **4/4 FAIL_CLOSED** trip |
+| `pnpm demo:matrix -- --loop=spot` | Spot vault loop（Uniswap V3 → Aave V3 → Morpho Blue） | **4/4 FAIL_CLOSED** trip |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |

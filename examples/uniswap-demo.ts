@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Radiant Capital Demo — Health Factor & cross-chain liquidation boundary guard.
- * Usage: pnpm demo:radiant
- * Trip:  pnpm demo:radiant -- --trip
+ * Uniswap V3 Demo — Concentrated liquidity depth & dynamic fee pre-flight.
+ * Usage: pnpm demo:uniswap
+ * Trip:  pnpm demo:uniswap -- --trip
  */
 import {
-  RADIANT_ARBITRUM_CHAIN_ID,
-  evaluateRadiantLendingGuard,
-} from "../src/adapters/radiant/radiant-lending-adapter";
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  evaluateUniswapV3SwapGuard,
+} from "../src/adapters/uniswap/uniswap-v3-adapter";
 import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
@@ -26,51 +26,56 @@ import {
 import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
-  hudIntent("radiant-demo", "Radiant Capital", "BORROW", "WETH/USDC · Arbitrum One");
+  hudIntent("uniswap-demo", "Uniswap V3", "V3_SPOT_SWAP", "WETH/USDC · Arbitrum One");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateRadiantLendingGuard({
-      chainId: RADIANT_ARBITRUM_CHAIN_ID,
-      market: "WETH/USDC",
-      collateralUsd: 150_000,
-      debtUsd: 80_000,
-      liquidationThreshold: 0.825,
-      projectedHealthFactor: 1.42,
-      refPriceUsd: 3500,
+    evaluateUniswapV3SwapGuard({
+      chainId: UNISWAP_V3_ARBITRUM_CHAIN_ID,
+      tokenIn: "WETH",
+      tokenOut: "USDC",
+      amountInUsd: 25_000,
+      activeLiquidityUsd: 2_500_000,
+      dynamicFeeBps: 5,
+      tickRangeLiquidityUsd: 200_000,
+      tickSpacing: 60,
+      directionalFeeBps: 2,
       spotPriceUsd: 3500,
+      refPriceUsd: 3500,
       depthUsd: 500_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  healthFactor=${result.healthFactor.toFixed(4)} · hfOk=${result.hfOk}`);
+  console.log(
+    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
+  );
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Radiant lending guard · HF ${result.healthFactor.toFixed(2)}`, latencyUs);
+  hudDispatched("Uniswap V3 WETH/USDC spot swap", latencyUs);
   return latencyUs;
 }
 
 function runTrip(nowMs: number): number {
-  hudIntent("radiant-demo", "Radiant Capital", "HF_BREACH", "Cross-chain liquidation boundary");
+  hudIntent("uniswap-demo", "Uniswap V3", "DEPLETED_CL_SWAP", "WETH/USDC · toxic utilization");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateRadiantLendingGuard({
-      chainId: RADIANT_ARBITRUM_CHAIN_ID,
-      market: "WETH/USDC",
-      collateralUsd: 95_000,
-      debtUsd: 80_000,
-      liquidationThreshold: 0.825,
-      projectedHealthFactor: 1.08,
-      crossChainSourceHf: 1.35,
-      crossChainDestHf: 1.12,
-      refPriceUsd: 3500,
+    evaluateUniswapV3SwapGuard({
+      chainId: UNISWAP_V3_ARBITRUM_CHAIN_ID,
+      tokenIn: "WETH",
+      tokenOut: "USDC",
+      amountInUsd: 600_000,
+      activeLiquidityUsd: 200_000,
+      dynamicFeeBps: 85,
       spotPriceUsd: 3500,
+      refPriceUsd: 3500,
       depthUsd: 8_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  healthFactor=${result.healthFactor.toFixed(4)} · hfOk=${result.hfOk}`);
+  console.log(
+    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
+  );
   hudSoilFuse(false, latencyUs, result.reasons);
-  hudSevered("RADIANT_HF_FAIL_CLOSED");
+  hudSevered("UNISWAP_V3_LIQUIDITY_DEPLETED");
   hudBlocked();
   if (!result.reasons.includes("SOIL_RESISTANCE_TRIP")) {
     console.error(`${RED}Expected SOIL_RESISTANCE_TRIP in reasons${R}`);
@@ -86,10 +91,10 @@ async function main(): Promise<void> {
   }
   const nowMs = Date.now();
   seedAdapterProbes(nowMs);
-  printBanner("Radiant Capital Lending Guard Demo");
+  printBanner("Uniswap V3 Concentrated Liquidity Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Radiant guard · ${formatGuardTime(latencyUs)}${R}\n`);
+  console.log(`\n${R}Uniswap guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

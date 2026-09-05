@@ -2,40 +2,38 @@
 import { HardlockError, RiskLimitExceeded, vineWrapProtection } from "./risk";
 import type { CitadelRiskGateVerdict, GatewayRulesInput, GatewayRulesResult } from "./risk-engine-lib/risk-engine-types";
 import {
+  FLAG_AAVE_HEALTH_FACTOR_LOW,
+  FLAG_MORPHO_ORACLE_STALE,
+  FLAG_UNISWAP_SLIPPAGE_EXCEEDED,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_VARIATIONAL_STALE_QUOTE,
   FLAGS_CLEAR,
   FLAGS_COLLATERAL_TRIP,
   FLAGS_DEPEG_TRIP,
-  FLAGS_HF_TRIP,
   FLAGS_HL_RATE,
   FLAGS_HL_SESSION,
   FLAGS_HL_SIZE,
   FLAGS_HL_SPREAD,
   FLAGS_IMBALANCE_TRIP,
-  FLAGS_NAV_VIOLATION,
-  FLAGS_SLIPPAGE_TRIP,
   FLAGS_YIELD_SHOCK,
-  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
-  FLAG_VARIATIONAL_STALE_QUOTE,
 } from "./risk-flags";
 import {
-  CAMELOT_SLIPPAGE_MAX_BPS,
+  AAVE_HF_MIN,
   GMX_COLLATERAL_MIN,
   GMX_IMBALANCE_MAX,
   HL_RATE_LIMIT_RPM,
   HL_SPREAD_MAX_BPS,
-  JONES_NAV_MAX_BPS,
+  MORPHO_ORACLE_MAX_AGE_MS,
+  MORPHO_PRICE_DEVIATION_MAX_BPS,
   PENDLE_YIELD_SHOCK_MAX_BPS,
-  RADIANT_HF_MIN,
   STABILIZER_DEPEG_MAX_BPS,
+  UNISWAP_SLIPPAGE_MAX_BPS,
   VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
 } from "./risk-engine-limits";
 import { applyAutoSeveranceOnFlags } from "./risk-severance";
-import {
-  isPendingGmxSkewTripped,
-  recordPendingGmxSkew,
-} from "./pending-exposure-window";
+import { isPendingGmxSkewTripped, recordPendingGmxSkew } from "./pending-exposure-window";
 import { checkSoilResistance, isGatewayNominalFastPath } from "./risk-engine-soil";
 
 export { evaluateGlobalRiskPolicy } from "./risk-engine-policy";
@@ -47,9 +45,9 @@ export {
   FLAGS_IMBALANCE_TRIP,
   FLAGS_COLLATERAL_TRIP,
   FLAGS_YIELD_SHOCK,
-  FLAGS_SLIPPAGE_TRIP,
-  FLAGS_HF_TRIP,
-  FLAGS_NAV_VIOLATION,
+  FLAG_UNISWAP_SLIPPAGE_EXCEEDED,
+  FLAG_AAVE_HEALTH_FACTOR_LOW,
+  FLAG_MORPHO_ORACLE_STALE,
   FLAGS_HL_SESSION,
   FLAGS_HL_SIZE,
   FLAGS_HL_SPREAD,
@@ -63,18 +61,19 @@ export const PROTO_VECT_LEN = 24;
 export const PROTO_SLOT = 4;
 export const PROTO_GMX = 0;
 export const PROTO_PENDLE = 4;
-export const PROTO_CAMELOT = 8;
-export const PROTO_RADIANT = 12;
-export const PROTO_JONES = 16;
+export const PROTO_UNISWAP = 8;
+export const PROTO_AAVE = 12;
+export const PROTO_MORPHO = 16;
 export const PROTO_HL = 20;
 
 export {
   GMX_IMBALANCE_MAX,
   GMX_COLLATERAL_MIN,
   PENDLE_YIELD_SHOCK_MAX_BPS,
-  CAMELOT_SLIPPAGE_MAX_BPS,
-  RADIANT_HF_MIN,
-  JONES_NAV_MAX_BPS,
+  UNISWAP_SLIPPAGE_MAX_BPS,
+  AAVE_HF_MIN,
+  MORPHO_ORACLE_MAX_AGE_MS,
+  MORPHO_PRICE_DEVIATION_MAX_BPS,
   HL_SPREAD_MAX_BPS,
   HL_RATE_LIMIT_RPM,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
@@ -124,23 +123,23 @@ export function evaluatePendleFlags(yieldCurrent: number, yieldOracle: number): 
   return applyAutoSeveranceOnFlags(f);
 }
 
-export function evaluateCamelotFlags(slippageBps: number, directionalFeeBps: number, maxDirBps: number): number {
-  const f = (slippageBps > CAMELOT_SLIPPAGE_MAX_BPS || directionalFeeBps > maxDirBps) ? FLAGS_SLIPPAGE_TRIP : FLAGS_CLEAR;
+export function evaluateUniswapFlags(slippageBps: number, directionalFeeBps: number, maxDirBps: number): number {
+  const f = (slippageBps > UNISWAP_SLIPPAGE_MAX_BPS || directionalFeeBps > maxDirBps) ? FLAG_UNISWAP_SLIPPAGE_EXCEEDED : FLAGS_CLEAR;
   return applyAutoSeveranceOnFlags(f);
 }
 
-export function evaluateRadiantFlags(hf: number, projected?: number, crossDest?: number): number {
+export function evaluateAaveFlags(hf: number, projected?: number, crossDest?: number): number {
   let f = FLAGS_CLEAR;
-  if (!Number.isFinite(hf) || hf < RADIANT_HF_MIN) f |= FLAGS_HF_TRIP;
-  if (projected !== undefined && projected < RADIANT_HF_MIN) f |= FLAGS_HF_TRIP;
-  if (crossDest !== undefined && crossDest < RADIANT_HF_MIN) f |= FLAGS_HF_TRIP;
+  if (!Number.isFinite(hf) || hf < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
+  if (projected !== undefined && projected < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
+  if (crossDest !== undefined && crossDest < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
   return applyAutoSeveranceOnFlags(f);
 }
 
-export function evaluateJonesFlags(shareBps: number, navDevBps: number, sandwichTrip: boolean): number {
+export function evaluateMorphoFlags(oracleAgeMs: number, priceDeviationBps: number): number {
   let f = FLAGS_CLEAR;
-  if (shareBps > JONES_NAV_MAX_BPS) f |= FLAGS_NAV_VIOLATION;
-  if (sandwichTrip && navDevBps > JONES_NAV_MAX_BPS) f |= FLAGS_NAV_VIOLATION;
+  if (oracleAgeMs > MORPHO_ORACLE_MAX_AGE_MS) f |= FLAG_MORPHO_ORACLE_STALE;
+  if (priceDeviationBps > MORPHO_PRICE_DEVIATION_MAX_BPS) f |= FLAG_MORPHO_ORACLE_STALE;
   return applyAutoSeveranceOnFlags(f);
 }
 

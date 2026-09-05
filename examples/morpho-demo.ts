@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Jones DAO Demo — Vault share-price slippage & flash-loan sandwich guard.
- * Usage: pnpm demo:jones
- * Trip:  pnpm demo:jones -- --trip
+ * Morpho Blue Demo — Oracle freshness & market liquidity pre-flight.
+ * Usage: pnpm demo:morpho
+ * Trip:  pnpm demo:morpho -- --trip
  */
 import {
-  JONES_ARBITRUM_CHAIN_ID,
-  evaluateJonesVaultGuard,
-} from "../src/adapters/jones/jones-vault-adapter";
+  MORPHO_ARBITRUM_CHAIN_ID,
+  evaluateMorphoBlueGuard,
+} from "../src/adapters/morpho/morpho-blue-adapter";
 import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
@@ -26,17 +26,17 @@ import {
 import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
-  hudIntent("jones-demo", "Jones DAO", "REBALANCE", "jGLP vault · Arbitrum One");
+  hudIntent("morpho-demo", "Morpho Blue", "MARKET_SUPPLY", "WETH/USDC · Arbitrum One");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateJonesVaultGuard({
-      chainId: JONES_ARBITRUM_CHAIN_ID,
-      vaultId: "jGLP",
-      action: "REBALANCE",
+    evaluateMorphoBlueGuard({
+      chainId: MORPHO_ARBITRUM_CHAIN_ID,
+      marketId: "WETH/USDC",
+      action: "SUPPLY",
       amountUsd: 50_000,
-      vaultTvlUsd: 5_000_000,
-      expectedSharePriceUsd: 1.245,
-      quotedSharePriceUsd: 1.246,
-      rebalancePending: false,
+      marketLiquidityUsd: 5_000_000,
+      oraclePriceUsd: 3500,
+      referencePriceUsd: 3500,
+      oracleTimestampMs: nowMs - 120_000,
       refPriceUsd: 3500,
       spotPriceUsd: 3500,
       depthUsd: 400_000,
@@ -44,26 +44,25 @@ function runHealthy(nowMs: number): number {
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  shareSlippage=${result.shareSlippageBps.toFixed(1)}bps · shareOk=${result.shareOk}`);
+  console.log(`${R}  oracleAgeMs=${result.oracleAgeMs} · oracleOk=${result.oracleOk}${R}`);
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Jones vault rebalance · slippage ${result.shareSlippageBps.toFixed(1)}bps`, latencyUs);
+  hudDispatched("Morpho Blue WETH/USDC supply", latencyUs);
   return latencyUs;
 }
 
 function runTrip(nowMs: number): number {
-  hudIntent("jones-demo", "Jones DAO", "FLASH_SANDWICH", "jGLP · pending rebalance");
+  hudIntent("morpho-demo", "Morpho Blue", "STALE_ORACLE", "WETH/USDC · toxic oracle age");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateJonesVaultGuard({
-      chainId: JONES_ARBITRUM_CHAIN_ID,
-      vaultId: "jGLP",
-      action: "REBALANCE",
-      amountUsd: 50_000,
-      vaultTvlUsd: 5_000_000,
-      expectedSharePriceUsd: 1.245,
-      quotedSharePriceUsd: 1.32,
-      rebalancePending: true,
-      blockPriceDeviationBps: 35,
+    evaluateMorphoBlueGuard({
+      chainId: MORPHO_ARBITRUM_CHAIN_ID,
+      marketId: "WETH/USDC",
+      action: "BORROW",
+      amountUsd: 200_000,
+      marketLiquidityUsd: 80_000,
+      oraclePriceUsd: 3650,
+      referencePriceUsd: 3500,
+      oracleTimestampMs: nowMs - 5_000_000,
       refPriceUsd: 3500,
       spotPriceUsd: 3500,
       depthUsd: 6_000,
@@ -71,9 +70,9 @@ function runTrip(nowMs: number): number {
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  shareSlippage=${result.shareSlippageBps.toFixed(1)}bps · shareOk=${result.shareOk}`);
+  console.log(`${R}  oracleAgeMs=${result.oracleAgeMs} · oracleOk=${result.oracleOk}${R}`);
   hudSoilFuse(false, latencyUs, result.reasons);
-  hudSevered("JONES_FLASH_SANDWICH_TRIP");
+  hudSevered("MORPHO_ORACLE_STALE");
   hudBlocked();
   if (!result.reasons.includes("SOIL_RESISTANCE_TRIP")) {
     console.error(`${RED}Expected SOIL_RESISTANCE_TRIP in reasons${R}`);
@@ -89,10 +88,10 @@ async function main(): Promise<void> {
   }
   const nowMs = Date.now();
   seedAdapterProbes(nowMs);
-  printBanner("Jones DAO Vault Guard Demo");
+  printBanner("Morpho Blue Oracle Guard Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Jones guard · ${formatGuardTime(latencyUs)}${R}\n`);
+  console.log(`\n${R}Morpho guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

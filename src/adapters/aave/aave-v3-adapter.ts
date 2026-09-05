@@ -1,24 +1,24 @@
 /**
- * Radiant Capital — Arbitrum lending pre-flight guard.
+ * Aave V3 — Arbitrum lending pre-flight guard.
  * Health Factor validation · cross-chain liquidation boundary · soil fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
-import { evaluateRadiantFlags } from "../../core/risk-engine-core";
+import { evaluateAaveFlags } from "../../core/risk-engine-core";
 import {
-  RADIANT_ARBITRUM_CHAIN_ID,
-  RADIANT_CROSS_CHAIN_HF_BUFFER,
-  RADIANT_HF_FAIL_CLOSED_THRESHOLD,
-  RADIANT_HF_LIQUIDATION_THRESHOLD,
-} from "./radiant-lending-constants";
+  AAVE_ARBITRUM_CHAIN_ID,
+  AAVE_CROSS_CHAIN_HF_BUFFER,
+  AAVE_HF_FAIL_CLOSED_THRESHOLD,
+  AAVE_HF_LIQUIDATION_THRESHOLD,
+} from "./aave-v3-constants";
 
 export {
-  RADIANT_ARBITRUM_CHAIN_ID,
-  RADIANT_CROSS_CHAIN_HF_BUFFER,
-  RADIANT_HF_FAIL_CLOSED_THRESHOLD,
-  RADIANT_HF_LIQUIDATION_THRESHOLD,
-} from "./radiant-lending-constants";
+  AAVE_ARBITRUM_CHAIN_ID,
+  AAVE_CROSS_CHAIN_HF_BUFFER,
+  AAVE_HF_FAIL_CLOSED_THRESHOLD,
+  AAVE_HF_LIQUIDATION_THRESHOLD,
+} from "./aave-v3-constants";
 
-export interface RadiantLendingInput {
+export interface AaveLendingInput {
   chainId: number;
   market: string;
   collateralUsd: number;
@@ -37,7 +37,7 @@ export interface RadiantLendingInput {
   at?: Date;
 }
 
-export interface RadiantHealthFactorResult {
+export interface AaveHealthFactorResult {
   ok: boolean;
   healthFactor: number;
   projectedOk: boolean;
@@ -45,7 +45,7 @@ export interface RadiantHealthFactorResult {
   reasons: string[];
 }
 
-export interface RadiantLendingGuardResult {
+export interface AaveLendingGuardResult {
   ok: boolean;
   status: "ALLOW" | "FAIL_CLOSED";
   reasons: string[];
@@ -55,7 +55,7 @@ export interface RadiantLendingGuardResult {
   latencyUs: number;
 }
 
-export function computeRadiantHealthFactor(input: {
+export function computeAaveHealthFactor(input: {
   collateralUsd: number;
   debtUsd: number;
   liquidationThreshold: number;
@@ -68,30 +68,30 @@ export function computeRadiantHealthFactor(input: {
   return (collateral * ltv) / debt;
 }
 
-export function verifyRadiantHealthFactor(input: {
+export function verifyAaveHealthFactor(input: {
   collateralUsd: number;
   debtUsd: number;
   liquidationThreshold: number;
   projectedHealthFactor?: number;
   crossChainSourceHf?: number;
   crossChainDestHf?: number;
-}): RadiantHealthFactorResult {
+}): AaveHealthFactorResult {
   const reasons: string[] = [];
-  const healthFactor = computeRadiantHealthFactor(input);
+  const healthFactor = computeAaveHealthFactor(input);
 
-  if (healthFactor < RADIANT_HF_LIQUIDATION_THRESHOLD) {
-    reasons.push(`RADIANT_HF_LIQUIDATABLE:hf=${healthFactor.toFixed(4)}<${RADIANT_HF_LIQUIDATION_THRESHOLD}`);
-  } else if (evaluateRadiantFlags(healthFactor) !== 0) {
+  if (healthFactor < AAVE_HF_LIQUIDATION_THRESHOLD) {
+    reasons.push(`AAVE_HF_LIQUIDATABLE:hf=${healthFactor.toFixed(4)}<${AAVE_HF_LIQUIDATION_THRESHOLD}`);
+  } else if (evaluateAaveFlags(healthFactor) !== 0) {
     reasons.push(
-      `RADIANT_HF_FAIL_CLOSED:hf=${healthFactor.toFixed(4)}<${RADIANT_HF_FAIL_CLOSED_THRESHOLD}`,
+      `AAVE_HF_FAIL_CLOSED:hf=${healthFactor.toFixed(4)}<${AAVE_HF_FAIL_CLOSED_THRESHOLD}`,
     );
   }
 
   const projected = input.projectedHealthFactor ?? healthFactor;
-  const projectedOk = projected >= RADIANT_HF_FAIL_CLOSED_THRESHOLD;
+  const projectedOk = projected >= AAVE_HF_FAIL_CLOSED_THRESHOLD;
   if (!projectedOk) {
     reasons.push(
-      `RADIANT_PROJECTED_HF_FAIL_CLOSED:projected=${projected.toFixed(4)}<${RADIANT_HF_FAIL_CLOSED_THRESHOLD}`,
+      `AAVE_PROJECTED_HF_FAIL_CLOSED:projected=${projected.toFixed(4)}<${AAVE_HF_FAIL_CLOSED_THRESHOLD}`,
     );
   }
 
@@ -99,14 +99,14 @@ export function verifyRadiantHealthFactor(input: {
   const src = input.crossChainSourceHf;
   const dest = input.crossChainDestHf;
   if (src !== undefined && dest !== undefined) {
-    crossChainOk = dest >= src - RADIANT_CROSS_CHAIN_HF_BUFFER;
+    crossChainOk = dest >= src - AAVE_CROSS_CHAIN_HF_BUFFER;
     if (!crossChainOk) {
       reasons.push(
-        `RADIANT_CROSS_CHAIN_HF_BOUNDARY:dest=${dest.toFixed(4)}<source=${src.toFixed(4)}-buffer=${RADIANT_CROSS_CHAIN_HF_BUFFER}`,
+        `AAVE_CROSS_CHAIN_HF_BOUNDARY:dest=${dest.toFixed(4)}<source=${src.toFixed(4)}-buffer=${AAVE_CROSS_CHAIN_HF_BUFFER}`,
       );
     }
-    if (dest < RADIANT_HF_FAIL_CLOSED_THRESHOLD) {
-      reasons.push(`RADIANT_CROSS_CHAIN_DEST_HF_LOW:dest=${dest.toFixed(4)}`);
+    if (dest < AAVE_HF_FAIL_CLOSED_THRESHOLD) {
+      reasons.push(`AAVE_CROSS_CHAIN_DEST_HF_LOW:dest=${dest.toFixed(4)}`);
       crossChainOk = false;
     }
   }
@@ -120,8 +120,8 @@ export function verifyRadiantHealthFactor(input: {
   };
 }
 
-function buildRadiantSoilInput(input: RadiantLendingInput, healthFactor: number): SoilResistanceInput {
-  const hfDepthScale = Math.max(0, (healthFactor - RADIANT_HF_FAIL_CLOSED_THRESHOLD) * 100_000);
+function buildAaveSoilInput(input: AaveLendingInput, healthFactor: number): SoilResistanceInput {
+  const hfDepthScale = Math.max(0, (healthFactor - AAVE_HF_FAIL_CLOSED_THRESHOLD) * 100_000);
   return {
     symbol: input.market,
     hlSpot: input.refPriceUsd,
@@ -134,18 +134,18 @@ function buildRadiantSoilInput(input: RadiantLendingInput, healthFactor: number)
   };
 }
 
-export function evaluateRadiantLendingGuard(input: RadiantLendingInput): RadiantLendingGuardResult {
+export function evaluateAaveV3Guard(input: AaveLendingInput): AaveLendingGuardResult {
   const t0 = performance.now();
   const reasons: string[] = [];
 
-  if (input.chainId !== RADIANT_ARBITRUM_CHAIN_ID) {
-    reasons.push(`RADIANT_CHAIN_UNSUPPORTED:chainId=${input.chainId}`);
+  if (input.chainId !== AAVE_ARBITRUM_CHAIN_ID) {
+    reasons.push(`AAVE_CHAIN_UNSUPPORTED:chainId=${input.chainId}`);
   }
 
-  const hf = verifyRadiantHealthFactor(input);
+  const hf = verifyAaveHealthFactor(input);
   if (!hf.ok) reasons.push(...hf.reasons);
 
-  const soilProbe = checkSoilResistance(buildRadiantSoilInput(input, hf.healthFactor));
+  const soilProbe = checkSoilResistance(buildAaveSoilInput(input, hf.healthFactor));
   const soilOk = soilProbe.ok;
   if (!soilOk) reasons.push("SOIL_RESISTANCE_TRIP", ...soilProbe.reasons);
 

@@ -28,8 +28,8 @@
 | **決策延遲** | p50 ~106 µs（`checkSoilResistance()` / Shield 熱路徑） | Resilience / soil benchmark harness |
 | **混沌矩陣** | **255 / 255** 毒性情境阻擋 · `failClosedRate: 100.00%` · `capitalLossUsd: 0` | [`chaos-blackswan-metrics.json`](./chaos-blackswan-metrics.json) |
 | **風險光譜（建模）** | **88%** 預廣播攔截網 · **12%** 不可消除系統性殘差（`88% + 12% = 100%`） | [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
-| **原生協議矩陣** | **7 協議**（GMX v2 · Pendle · HL · Camelot V3 · Radiant · Jones · **Variational Bits 12–13**）· **4 AI 框架** | `pnpm demo:matrix` · `pnpm demo:quad` |
-| **Stylus dual-execution** | **9/9 PASS**（50 bps Camelot 對齊） | `pnpm build:stylus` |
+| **原生協議矩陣** | **7 協議**（GMX v2 · Pendle · HL · Uniswap V3 · Aave V3 · Morpho Blue · **Variational Bits 12–13**）· **4 AI 框架** | `pnpm demo:matrix` · `pnpm demo:quad` |
+| **Stylus dual-execution** | **9/9 PASS**（50 bps Uniswap V3 aligned） | `pnpm build:stylus` |
 
 **單一回歸短語（所有審計文案）：**  
 `192 test files | 836 PASS Clean` · `3-Tier Security Matrix: 5/0/0 PASS` · Wasm `<28kb` / `<60µs` · Worker **69.32 KiB gzip**。

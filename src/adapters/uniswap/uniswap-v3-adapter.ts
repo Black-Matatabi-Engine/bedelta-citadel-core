@@ -1,29 +1,29 @@
 /**
- * Camelot V3 — Arbitrum concentrated-liquidity spot swap pre-flight guard.
+ * Uniswap V3 — Arbitrum concentrated-liquidity spot swap pre-flight guard.
  * Depth · dynamic fee impact · checkSoilResistance() 0-Gas fail-closed fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
-import { evaluateCamelotFlags } from "../../core/risk-engine-core";
+import { evaluateUniswapFlags } from "../../core/risk-engine-core";
 import {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  CAMELOT_V3_MAX_DYNAMIC_FEE_BPS,
-  CAMELOT_V3_MAX_SLIPPAGE_BPS,
-  CAMELOT_V3_MAX_UTILIZATION,
-  CAMELOT_V3_MIN_ACTIVE_LIQUIDITY_USD,
-  CAMELOT_V3_MIN_TICK_DEPTH_RATIO,
-  CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS,
-  CAMELOT_V3_UTILIZATION_SLIPPAGE_FACTOR_BPS,
-} from "./camelot-v3-constants";
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  UNISWAP_V3_MAX_DYNAMIC_FEE_BPS,
+  UNISWAP_V3_MAX_SLIPPAGE_BPS,
+  UNISWAP_V3_MAX_UTILIZATION,
+  UNISWAP_V3_MIN_ACTIVE_LIQUIDITY_USD,
+  UNISWAP_V3_MIN_TICK_DEPTH_RATIO,
+  UNISWAP_V3_MAX_DIRECTIONAL_FEE_BPS,
+  UNISWAP_V3_UTILIZATION_SLIPPAGE_FACTOR_BPS,
+} from "./uniswap-v3-constants";
 
 export {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  CAMELOT_V3_MAX_DYNAMIC_FEE_BPS,
-  CAMELOT_V3_MAX_SLIPPAGE_BPS,
-  CAMELOT_V3_MAX_UTILIZATION,
-  CAMELOT_V3_MIN_ACTIVE_LIQUIDITY_USD,
-} from "./camelot-v3-constants";
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  UNISWAP_V3_MAX_DYNAMIC_FEE_BPS,
+  UNISWAP_V3_MAX_SLIPPAGE_BPS,
+  UNISWAP_V3_MAX_UTILIZATION,
+  UNISWAP_V3_MIN_ACTIVE_LIQUIDITY_USD,
+} from "./uniswap-v3-constants";
 
-export interface CamelotV3SwapInput {
+export interface UniswapV3SwapInput {
   chainId: number;
   tokenIn: string;
   tokenOut: string;
@@ -44,7 +44,7 @@ export interface CamelotV3SwapInput {
   at?: Date;
 }
 
-export interface CamelotV3LiquidityResult {
+export interface UniswapV3LiquidityResult {
   ok: boolean;
   liquidityOk: boolean;
   utilizationOk: boolean;
@@ -54,7 +54,7 @@ export interface CamelotV3LiquidityResult {
   reasons: string[];
 }
 
-export interface CamelotV3GuardResult {
+export interface UniswapV3GuardResult {
   ok: boolean;
   status: "ALLOW" | "FAIL_CLOSED";
   reasons: string[];
@@ -64,7 +64,7 @@ export interface CamelotV3GuardResult {
   latencyUs: number;
 }
 
-export function estimateCamelotV3SlippageBps(
+export function estimateUniswapV3SlippageBps(
   amountInUsd: number,
   activeLiquidityUsd: number,
   dynamicFeeBps: number,
@@ -73,10 +73,10 @@ export function estimateCamelotV3SlippageBps(
   if (!Number.isFinite(amountInUsd) || amountInUsd <= 0) return dynamicFeeBps + directionalFeeBps;
   if (!Number.isFinite(activeLiquidityUsd) || activeLiquidityUsd <= 0) return Number.POSITIVE_INFINITY;
   const utilization = amountInUsd / activeLiquidityUsd;
-  return dynamicFeeBps + directionalFeeBps + utilization * CAMELOT_V3_UTILIZATION_SLIPPAGE_FACTOR_BPS;
+  return dynamicFeeBps + directionalFeeBps + utilization * UNISWAP_V3_UTILIZATION_SLIPPAGE_FACTOR_BPS;
 }
 
-export function verifyCamelotTickDepth(input: {
+export function verifyUniswapTickDepth(input: {
   amountInUsd: number;
   tickRangeLiquidityUsd: number;
   tickSpacing?: number;
@@ -84,27 +84,27 @@ export function verifyCamelotTickDepth(input: {
   const reasons: string[] = [];
   const amountInUsd = Number(input.amountInUsd);
   const tickLiquidity = Number(input.tickRangeLiquidityUsd);
-  const minDepth = amountInUsd * CAMELOT_V3_MIN_TICK_DEPTH_RATIO;
+  const minDepth = amountInUsd * UNISWAP_V3_MIN_TICK_DEPTH_RATIO;
   if (!Number.isFinite(tickLiquidity) || tickLiquidity < minDepth) {
     reasons.push(
-      `CAMELOT_V3_TICK_DEPTH_INSUFFICIENT:tickLiquidity=${tickLiquidity}<required=${minDepth.toFixed(0)}`,
+      `UNISWAP_V3_TICK_DEPTH_INSUFFICIENT:tickLiquidity=${tickLiquidity}<required=${minDepth.toFixed(0)}`,
     );
   }
   const spacing = input.tickSpacing ?? 0;
   if (spacing > 0 && spacing < 1) {
-    reasons.push(`CAMELOT_V3_TICK_SPACING_INVALID:spacing=${spacing}`);
+    reasons.push(`UNISWAP_V3_TICK_SPACING_INVALID:spacing=${spacing}`);
   }
   return { ok: reasons.length === 0, reasons };
 }
 
-export function verifyCamelotPoolLiquidity(input: {
+export function verifyUniswapPoolLiquidity(input: {
   amountInUsd: number;
   activeLiquidityUsd: number;
   dynamicFeeBps: number;
   directionalFeeBps?: number;
   tickRangeLiquidityUsd?: number;
   tickSpacing?: number;
-}): CamelotV3LiquidityResult {
+}): UniswapV3LiquidityResult {
   const reasons: string[] = [];
   const amountInUsd = Number(input.amountInUsd);
   const activeLiquidityUsd = Number(input.activeLiquidityUsd);
@@ -119,32 +119,32 @@ export function verifyCamelotPoolLiquidity(input: {
       dynamicFeeOk: false,
       utilization: 0,
       estimatedSlippageBps: 0,
-      reasons: ["CAMELOT_V3_AMOUNT_INVALID"],
+      reasons: ["UNISWAP_V3_AMOUNT_INVALID"],
     };
   }
 
-  const liquidityOk = activeLiquidityUsd >= CAMELOT_V3_MIN_ACTIVE_LIQUIDITY_USD;
+  const liquidityOk = activeLiquidityUsd >= UNISWAP_V3_MIN_ACTIVE_LIQUIDITY_USD;
   if (!liquidityOk) {
     reasons.push(
-      `CAMELOT_V3_ACTIVE_LIQUIDITY_LOW:liquidity=${activeLiquidityUsd}<min=${CAMELOT_V3_MIN_ACTIVE_LIQUIDITY_USD}`,
+      `UNISWAP_V3_ACTIVE_LIQUIDITY_LOW:liquidity=${activeLiquidityUsd}<min=${UNISWAP_V3_MIN_ACTIVE_LIQUIDITY_USD}`,
     );
   }
 
   const utilization = activeLiquidityUsd > 0 ? amountInUsd / activeLiquidityUsd : Number.POSITIVE_INFINITY;
-  const utilizationOk = utilization <= CAMELOT_V3_MAX_UTILIZATION;
+  const utilizationOk = utilization <= UNISWAP_V3_MAX_UTILIZATION;
   if (!utilizationOk) {
     reasons.push(
-      `CAMELOT_V3_LIQUIDITY_DEPLETED:utilization=${(utilization * 100).toFixed(1)}%>${CAMELOT_V3_MAX_UTILIZATION * 100}%`,
+      `UNISWAP_V3_LIQUIDITY_DEPLETED:utilization=${(utilization * 100).toFixed(1)}%>${UNISWAP_V3_MAX_UTILIZATION * 100}%`,
     );
   }
 
-  const dynamicFeeOk = dynamicFeeBps <= CAMELOT_V3_MAX_DYNAMIC_FEE_BPS;
+  const dynamicFeeOk = dynamicFeeBps <= UNISWAP_V3_MAX_DYNAMIC_FEE_BPS;
   if (!dynamicFeeOk) {
-    reasons.push(`CAMELOT_V3_DYNAMIC_FEE_BREACH:feeBps=${dynamicFeeBps}>${CAMELOT_V3_MAX_DYNAMIC_FEE_BPS}`);
+    reasons.push(`UNISWAP_V3_DYNAMIC_FEE_BREACH:feeBps=${dynamicFeeBps}>${UNISWAP_V3_MAX_DYNAMIC_FEE_BPS}`);
   }
 
   if (input.tickRangeLiquidityUsd !== undefined) {
-    const tick = verifyCamelotTickDepth({
+    const tick = verifyUniswapTickDepth({
       amountInUsd,
       tickRangeLiquidityUsd: input.tickRangeLiquidityUsd,
       tickSpacing: input.tickSpacing,
@@ -152,21 +152,21 @@ export function verifyCamelotPoolLiquidity(input: {
     if (!tick.ok) reasons.push(...tick.reasons);
   }
 
-  const estimatedSlippageBps = estimateCamelotV3SlippageBps(
+  const estimatedSlippageBps = estimateUniswapV3SlippageBps(
     amountInUsd,
     activeLiquidityUsd,
     dynamicFeeBps,
     directionalFeeBps,
   );
-  if (evaluateCamelotFlags(estimatedSlippageBps, directionalFeeBps, CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS) !== 0) {
-    if (estimatedSlippageBps > CAMELOT_V3_MAX_SLIPPAGE_BPS) {
+  if (evaluateUniswapFlags(estimatedSlippageBps, directionalFeeBps, UNISWAP_V3_MAX_DIRECTIONAL_FEE_BPS) !== 0) {
+    if (estimatedSlippageBps > UNISWAP_V3_MAX_SLIPPAGE_BPS) {
       reasons.push(
-        `CAMELOT_V3_SLIPPAGE_BREACH:estimatedBps=${estimatedSlippageBps.toFixed(1)}>${CAMELOT_V3_MAX_SLIPPAGE_BPS}`,
+        `UNISWAP_V3_SLIPPAGE_BREACH:estimatedBps=${estimatedSlippageBps.toFixed(1)}>${UNISWAP_V3_MAX_SLIPPAGE_BPS}`,
       );
     }
-    if (directionalFeeBps > CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS) {
+    if (directionalFeeBps > UNISWAP_V3_MAX_DIRECTIONAL_FEE_BPS) {
       reasons.push(
-        `CAMELOT_V3_DIRECTIONAL_FEE_BREACH:feeBps=${directionalFeeBps}>${CAMELOT_V3_MAX_DIRECTIONAL_FEE_BPS}`,
+        `UNISWAP_V3_DIRECTIONAL_FEE_BREACH:feeBps=${directionalFeeBps}>${UNISWAP_V3_MAX_DIRECTIONAL_FEE_BPS}`,
       );
     }
   }
@@ -182,7 +182,7 @@ export function verifyCamelotPoolLiquidity(input: {
   };
 }
 
-function buildCamelotSoilInput(input: CamelotV3SwapInput): SoilResistanceInput {
+function buildUniswapSoilInput(input: UniswapV3SwapInput): SoilResistanceInput {
   const remainingDepth = Math.max(0, input.activeLiquidityUsd - input.amountInUsd);
   return {
     symbol: `${input.tokenIn}/${input.tokenOut}`,
@@ -196,19 +196,19 @@ function buildCamelotSoilInput(input: CamelotV3SwapInput): SoilResistanceInput {
   };
 }
 
-export function evaluateCamelotV3SwapGuard(input: CamelotV3SwapInput): CamelotV3GuardResult {
+export function evaluateUniswapV3SwapGuard(input: UniswapV3SwapInput): UniswapV3GuardResult {
   const t0 = performance.now();
   const reasons: string[] = [];
 
-  if (input.chainId !== CAMELOT_V3_ARBITRUM_CHAIN_ID) {
-    reasons.push(`CAMELOT_V3_CHAIN_UNSUPPORTED:chainId=${input.chainId}`);
+  if (input.chainId !== UNISWAP_V3_ARBITRUM_CHAIN_ID) {
+    reasons.push(`UNISWAP_V3_CHAIN_UNSUPPORTED:chainId=${input.chainId}`);
   }
-  if (input.tokenIn === input.tokenOut) reasons.push("CAMELOT_V3_NOOP_SWAP");
+  if (input.tokenIn === input.tokenOut) reasons.push("UNISWAP_V3_NOOP_SWAP");
 
-  const liquidity = verifyCamelotPoolLiquidity(input);
+  const liquidity = verifyUniswapPoolLiquidity(input);
   if (!liquidity.ok) reasons.push(...liquidity.reasons);
 
-  const soilProbe = checkSoilResistance(buildCamelotSoilInput(input));
+  const soilProbe = checkSoilResistance(buildUniswapSoilInput(input));
   const soilOk = soilProbe.ok;
   if (!soilOk) reasons.push("SOIL_RESISTANCE_TRIP", ...soilProbe.reasons);
 

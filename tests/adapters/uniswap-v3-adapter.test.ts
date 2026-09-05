@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from "vitest";
 import {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  evaluateCamelotV3SwapGuard,
-  verifyCamelotPoolLiquidity,
-} from "../../src/adapters/camelot/camelot-v3-adapter";
+  UNISWAP_V3_ARBITRUM_CHAIN_ID,
+  evaluateUniswapV3SwapGuard,
+  verifyUniswapPoolLiquidity,
+} from "../../src/adapters/uniswap/uniswap-v3-adapter";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { seedSafeArbitrumProbes } from "../helpers/arbitrum-probe-seed";
 import { SAFE_TRADING_TIME } from "../helpers/system-time";
@@ -11,7 +11,7 @@ import { SAFE_TRADING_TIME } from "../helpers/system-time";
 const NOW_MS = SAFE_TRADING_TIME.getTime();
 
 const HEALTHY_SWAP = {
-  chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
+  chainId: UNISWAP_V3_ARBITRUM_CHAIN_ID,
   tokenIn: "WETH",
   tokenOut: "USDC",
   amountInUsd: 25_000,
@@ -23,7 +23,7 @@ const HEALTHY_SWAP = {
   spotPriceUsd: 3500,
   refPriceUsd: 3500,
   depthUsd: 500_000,
-  agentId: "camelot-test-agent",
+  agentId: "uniswap-test-agent",
   nowMs: NOW_MS,
   at: SAFE_TRADING_TIME,
 };
@@ -32,12 +32,12 @@ afterEach(() => {
   __resetArbitrumGasGuardForTests();
 });
 
-describe("camelot-v3-adapter", () => {
+describe("uniswap-v3-adapter", () => {
   it("normal V3 swap within pool depth → ALLOW", () => {
     seedSafeArbitrumProbes(NOW_MS);
-    expect(verifyCamelotPoolLiquidity(HEALTHY_SWAP).ok).toBe(true);
+    expect(verifyUniswapPoolLiquidity(HEALTHY_SWAP).ok).toBe(true);
 
-    const result = evaluateCamelotV3SwapGuard(HEALTHY_SWAP);
+    const result = evaluateUniswapV3SwapGuard(HEALTHY_SWAP);
     expect(result.ok).toBe(true);
     expect(result.status).toBe("ALLOW");
     expect(result.liquidityOk).toBe(true);
@@ -48,7 +48,7 @@ describe("camelot-v3-adapter", () => {
 
   it("high slippage / depleted V3 liquidity → SOIL_RESISTANCE_TRIP, FAIL_CLOSED", () => {
     seedSafeArbitrumProbes(NOW_MS);
-    const depleted = evaluateCamelotV3SwapGuard({
+    const depleted = evaluateUniswapV3SwapGuard({
       ...HEALTHY_SWAP,
       amountInUsd: 600_000,
       activeLiquidityUsd: 200_000,
@@ -63,9 +63,9 @@ describe("camelot-v3-adapter", () => {
     expect(
       depleted.reasons.some(
         (r) =>
-          r.startsWith("CAMELOT_V3_LIQUIDITY_DEPLETED") ||
-          r.startsWith("CAMELOT_V3_SLIPPAGE_BREACH") ||
-          r.startsWith("CAMELOT_V3_DYNAMIC_FEE_BREACH"),
+          r.startsWith("UNISWAP_V3_LIQUIDITY_DEPLETED") ||
+          r.startsWith("UNISWAP_V3_SLIPPAGE_BREACH") ||
+          r.startsWith("UNISWAP_V3_DYNAMIC_FEE_BREACH"),
       ),
     ).toBe(true);
   });

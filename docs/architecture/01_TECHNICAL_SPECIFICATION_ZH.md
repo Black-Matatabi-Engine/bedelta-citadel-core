@@ -24,9 +24,9 @@
 
 ## 0. 統一機構預執行管線
 
-Santenmoku 為 **統一亞毫秒級預執行網關**。**重心 = Arbitrum One**，具完整原生多協議覆蓋（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO），外加 **Hyperliquid** — 與 Arbitrum 永續流動性生態並生的 **獨立 L1 高頻訂單簿 AppChain** — 作為跨鏈 session-key 對沖腿。支柱三 Wasm Shield 為技術護城河。許可制鏈（如 Robinhood Chain）為 **支援的入場範例**，非產品身份。
+Santenmoku 為 **統一亞毫秒級預執行網關**。**重心 = Arbitrum One**，具完整原生多協議覆蓋（GMX v2、Pendle、Uniswap V3、Aave V3、Morpho Blue），外加 **Hyperliquid** — 與 Arbitrum 永續流動性生態並生的 **獨立 L1 高頻訂單簿 AppChain** — 作為跨鏈 session-key 對沖腿。支柱三 Wasm Shield 為技術護城河。許可制鏈（如 Robinhood Chain）為 **支援的入場範例**，非產品身份。
 
-**主要執行邊界：** Arbitrum 原生多協議完整覆蓋（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）。
+**主要執行邊界：** Arbitrum 原生多協議完整覆蓋（GMX v2、Pendle、Uniswap V3、Aave V3、Morpho Blue）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）。
 
 ```text
 [ Optional Permissioned Ingress (e.g. Robinhood Chain 46630 / 4663) ]
@@ -161,7 +161,7 @@ Agent Cross-Pass Route (Sepolia 421614)
 
 **SliverVine Citadel Shield（BeDelta Living Water v1.0 / BeΔ）為 Arbitrum 上 AI Agent 的預共識意圖防火牆與執行安全原語。**
 
-**主要執行包絡：** Arbitrum One **全原生多協議覆蓋**（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。Delta-Neutral GM 核心仍為 GMX v2 **ETH/USDC** + HL **1× short**，由支柱三 sub-ms Wasm Shield 守護。
+**主要執行包絡：** Arbitrum One **全原生多協議覆蓋**（GMX v2、Pendle、Uniswap V3、Aave V3、Morpho Blue、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。Delta-Neutral GM 核心仍為 GMX v2 **ETH/USDC** + HL **1× short**，由支柱三 sub-ms Wasm Shield 守護。
 
 ### 1.0 量身訂製數學不變量（協議物理邊界）
 
@@ -169,9 +169,9 @@ Agent Cross-Pass Route (Sepolia 421614)
 |----------|-------|-------------------------|-------------|
 | **GMX v2** | Arbitrum One | Pool Imbalance Ratio: \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) |
 | **Pendle** | Arbitrum One | Discounted Implied Yield Shock: \|Yield_current − Yield_oracle\| > **150 bps** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
-| **Camelot V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`camelot-v3-adapter.ts`](../../src/adapters/camelot/camelot-v3-adapter.ts) |
-| **Radiant Capital** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`radiant-lending-adapter.ts`](../../src/adapters/radiant/radiant-lending-adapter.ts) |
-| **Jones DAO** | Arbitrum One | Vault NAV Share Price Volatility > **0.30%** single-block NAV deviation (**30 bps**) | [`jones-vault-adapter.ts`](../../src/adapters/jones/jones-vault-adapter.ts) |
+| **Uniswap V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`uniswap-v3-adapter.ts`](../../src/adapters/uniswap/uniswap-v3-adapter.ts) |
+| **Aave V3** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`aave-v3-adapter.ts`](../../src/adapters/aave/aave-v3-adapter.ts) |
+| **Morpho Blue** | Arbitrum One | Oracle staleness > **1h** or price deviation > **0.30% (**30 bps**) | [`morpho-blue-adapter.ts`](../../src/adapters/morpho/morpho-blue-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
 | **Variational Omni RFQ** | Arbitrum One | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth **>15%** · **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · `FLAGS_AUTO_SEVER_MASK` | [`evaluateVariationalFlags()`](../../src/core/risk-engine-core.ts) · [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) |
 
@@ -395,13 +395,13 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 ### 2.5 戰略藍籌生態與結算路線圖（V1.0 Core + V1.5 / V2.0）
 
-> **範圍誠實性：** v1.0 active 執行與費用捕捉仍為 Arbitrum One 上 **GMX v2 ETH/USDC GM + Hyperliquid 1× short**（§2 三角）。**Pendle Institutional Shield** 與 **Variational Omni RFQ**（核心 bitmask **Bits 12–13**）為 **v1.0 Live** 預執行防火牆。**Stabilizer Sepolia Cross-Pass Sandbox** 於 `421614` **v1.0 Live**。Camelot 為模組化 grant 後結算擴展。
+> **範圍誠實性：** v1.0 active 執行與費用捕捉仍為 Arbitrum One 上 **GMX v2 ETH/USDC GM + Hyperliquid 1× short**（§2 三角）。**Pendle Institutional Shield** 與 **Variational Omni RFQ**（核心 bitmask **Bits 12–13**）為 **v1.0 Live** 預執行防火牆。**Stabilizer Sepolia Cross-Pass Sandbox** 於 `421614` **v1.0 Live**。Uniswap V3 為模組化 grant 後結算擴展。
 
 | 夥伴 / 場所 | 策略角色 | Citadel 整合 | 時間範圍 | 狀態 |
 |-----------------|----------------|---------------------|---------|--------|
 | **Pendle Finance**（Yield & Rate Hedging） | yield-tokenization 市場中 AI agent 的 PT/YT 安全哨兵 — **非收益競品** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **192 個測試檔案 \| 836 PASS Clean（100% PASS）** |
 | **Stabilizer**（Sepolia Cross-Pass Sandbox） | AI agent 穩定幣再平衡通用 testnet sandbox · `421614` 上 cross-pass 路由至 GMX v2 + Pendle | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
-| **Camelot DEX**（Native Liquidity） | Arbitrum 原生 `GRAIL` 流動性深度以降低 delta-neutral 再平衡摩擦 | Camelot API on RPC allowlist (`api.camelot.exchange`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
+| **Uniswap V3 DEX**（Native Liquidity） | Arbitrum 原生 `GRAIL` 流動性深度以降低 delta-neutral 再平衡摩擦 | Uniswap V3 API on RPC allowlist (`api.uniswap.org`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational Omni RFQ** | Arbitrum 同鏈 RFQ OLP 對沖腿 — Hyperliquid 對沖的補充/替代 | `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` · quote stale / drift / OLP depth · **Bits 12–13** · `FLAGS_AUTO_SEVER_MASK` | **V1.0** | ✅ Live · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
 ```text
@@ -410,7 +410,7 @@ v1.0 Active Triangle (42161)
          │
          ├──► V1.0: Pendle Institutional Shield (Pillar 3 · sync oracle · soil fuse)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
-         └──► V1.5+: Camelot zero-slippage settle
+         └──► V1.5+: Uniswap V3 zero-slippage settle
          └──► V1.0 Live: Variational Omni RFQ hedge (HL complement/alternative · Bits 12–13)
 ```
 
@@ -583,7 +583,7 @@ Gate 不得假設三角跨場所 instant atomicity；庫存會計在各自窗口
 | 擴展 | 結算角色 | 時間範圍 | 狀態 |
 |-----------|-----------------|---------|--------|
 | **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **192 個測試檔案 \| 836 PASS Clean（100% PASS）** |
-| **Camelot DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Camelot **V1.5** | ✅ Stabilizer Live · ⏳ Camelot Roadmap Spec |
+| **Uniswap V3 DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Uniswap V3 **V1.5** | ✅ Stabilizer Live · ⏳ Uniswap V3 Roadmap Spec |
 | **Variational Omni RFQ** | Same-chain RFQ OLP hedge · quote stale **>500ms** / drift **>30 bps** / OLP **>15%** · core bitmask **Bits 12–13** | **V1.0** | ✅ Live · `evaluateVariationalFlags()` |
 
 整合錨點見 [§2.5 戰略藍籌生態與結算路線圖](#25-戰略-blue-chip-生態與結算路線圖v10-core--v15--v20)。
@@ -819,12 +819,12 @@ allowedToSign =
 
 ### 6.9 策略 Blue-Chip 生態與結算整合（V1.0 Core + V1.5 / V2.0）
 
-> **商業邊界：** v1.0 費用捕捉與流動性路由綁定 **GMX v2 GM + HL delta-neutral** 執行。**Pendle Institutional Shield** 與 **Stabilizer Sepolia Cross-Pass Sandbox** 為 **v1.0 Live** 預執行防火牆。Camelot 與 Variational 擴展結算平面 — 見 [§2.5](#25-戰略-blue-chip-生態與結算路線圖v10-core--v15--v20) 與 [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20)。
+> **商業邊界：** v1.0 費用捕捉與流動性路由綁定 **GMX v2 GM + HL delta-neutral** 執行。**Pendle Institutional Shield** 與 **Stabilizer Sepolia Cross-Pass Sandbox** 為 **v1.0 Live** 預執行防火牆。Uniswap V3 與 Variational 擴展結算平面 — 見 [§2.5](#25-戰略-blue-chip-生態與結算路線圖v10-core--v15--v20) 與 [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20)。
 
 | 場所 | 整合介面 | 反射 hook | 時間範圍 |
 |-------|-------------------|-------------|---------|
 | **Pendle Finance** | PT/YT registry + sync oracle + cross-guard · soil-wired | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` · `PENDLE_ORACLE_STALE` · `evaluatePendleGmxCrossGuard()` · maturity &lt;7d + jitter &gt;200 bps fail-closed | **V1.0** |
-| **Camelot DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Camelot pool depth · RPC allowlist `api.camelot.exchange` | **V1.5** |
+| **Uniswap V3 DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Uniswap V3 pool depth · RPC allowlist `api.uniswap.org` | **V1.5** |
 | **Stabilizer** | Sepolia universal sandbox · zero-slippage stablecoin cross-pass routing | `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as Mainnet | **V1.0** | ✅ Live · Sepolia `421614` |
 | **Variational Omni RFQ** | Arbitrum 同鏈 RFQ OLP 對沖 · session-key clip (R06/R07) | `evaluateVariationalFlags()` · `validateVariationalRFQIntent()` · **Bits 12–13** | **V1.0** |
 

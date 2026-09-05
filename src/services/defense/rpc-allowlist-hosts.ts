@@ -27,7 +27,7 @@ const PRODUCTION_RPC_HOSTS: readonly string[] = [
   "api-v3.raydium.io",
   "api.mainnet.orca.so",
   "gateway.thegraph.com",
-  "api.camelot.exchange",
+  "api.uniswap.org",
 ] as const;
 
 /** Integrity probe hosts in default whitelist — stripped only after operator unlock */
