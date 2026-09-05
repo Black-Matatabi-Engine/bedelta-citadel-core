@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **185 test files | 818 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **186 test files | 820 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,7 +15,7 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **185 test files \| 818 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Vitest baseline** | **186 test files \| 820 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -26,7 +26,8 @@
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../examples/agent-interceptor-demo.ts) |
-| **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · `pnpm demo:{gmx,hl,pendle}` |
+| **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle · Camelot V3 standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`camelot-demo.ts`](../examples/camelot-demo.ts) · `pnpm demo:{gmx,hl,pendle,camelot}` |
+| **Camelot V3 adapter** | `evaluateCamelotV3SwapGuard()` — concentrated liquidity depth · dynamic fee impact · soil fuse | [`camelot-v3-adapter.ts`](../src/adapters/camelot/camelot-v3-adapter.ts) · `pnpm demo:camelot` |
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **DuneSQL (Sepolia ingest)** | Event streaming verified on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](./telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **DuneSQL (Arbitrum One prod)** | Queries 0–0b feed + chart; Queries 1–3 reconciliation — production SQL targets **ChainID `42161`** | Same spec |
@@ -46,7 +47,7 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Core DEX** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` | GMX v2 shadow margin · HL session key · Pendle PT/YT sentinel |
+| **Tier 1 — Core DEX** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` | GMX v2 · HL session key · Pendle · Camelot V3 spot liquidity |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -59,7 +60,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (185 files / 818 tests)
+pnpm test       # Full System Regression Suite (186 files / 820 tests)
 ```
 
 | Command | Proves | Expected |
@@ -68,6 +69,7 @@ pnpm test       # Full System Regression Suite (185 files / 818 tests)
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:camelot` | Camelot V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -80,7 +82,7 @@ pnpm test       # Full System Regression Suite (185 files / 818 tests)
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **185 test files \| 818 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest regression bar | **186 test files \| 820 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -105,7 +107,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **185 test files \| 818 PASS Clean (100% PASS)** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **186 test files \| 820 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -466,7 +468,7 @@ pnpm tsx scripts/generate-survival-report.ts
 | Sidecar health | [`docker/README.md`](../docker/README.md) | `curl -sS http://localhost:8080/health \| jq .` |
 | Live grant audit | Network required | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
 | 5-TX testnet proof | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet anchor in `verified_5tx_results.json` |
-| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
+| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,camelot}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
 
 **Sidecar build:**
 
@@ -486,6 +488,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:gmx` | GMX v2 shadow margin CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle guarded pool factory CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:camelot` | Camelot V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |
@@ -493,7 +496,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **185 test files \| 818 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest + coverage | **186 test files \| 820 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -537,4 +540,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 185 test files | 818 PASS Clean (100% PASS)*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 186 test files | 820 PASS Clean (100% PASS)*
