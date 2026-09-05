@@ -197,13 +197,15 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain · pnpm demo:stabilizer
 pnpm demo:quad              # All four AI frameworks combined → ALLOW
 pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
+pnpm demo:matrix            # 6-protocol cross-venue matrix → nominal PASS
+pnpm demo:matrix -- --trip  # Layer-1 soil trip + R20 sever → universal FAIL_CLOSED
 ```
 
 - **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · **190 test files | 828 PASS Clean (100% PASS)**
 
 #### Supplementary Agent Demos
 
-- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED
+- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones,matrix}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED · Worker bundle **68.9 KiB gzip** (`pnpm bundle:measure`)
 - **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/)
 
 ---

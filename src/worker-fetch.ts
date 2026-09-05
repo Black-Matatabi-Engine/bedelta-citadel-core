@@ -1,12 +1,5 @@
 import type { Env } from "./env";
-import { routeRequest } from "./api/routes";
-import {
-  handleExecutionLogsRequest,
-} from "./api/routes/logs";
-import {
-  handleGrantAuditRequest,
-  isGrantAuditApiPath,
-} from "./routes/grant-audit";
+import { routeRequest } from "./api/routes-lean";
 import {
   applyEngineModeResponseHeaders,
   parseEngineModeHeader,
@@ -14,8 +7,12 @@ import {
 import { CORS_JSON_HEADERS } from "./services/config";
 import { severSigningChannel } from "./services/session-key-adapter-lib/session-key-gates";
 import { configureTelegramAlert } from "./services/telemetry/telegram-alert";
-import { ensureIntentPersistenceBoot } from "./worker-scheduled";
 import { fetchStaticAsset, isWorkerApiPath, DUNE_TELEMETRY_PORTAL_URL } from "./worker-routing";
+import {
+  handleGrantAuditRequest,
+  isGrantAuditApiPath,
+} from "./api/routes/grant-audit";
+import { handleExecutionLogsRequest } from "./api/routes/logs";
 
 const GEO_BLOCKED_COUNTRIES = new Set(["US", "CU", "IR", "KP", "SY"]);
 
@@ -64,11 +61,7 @@ export async function handleWorkerFetch(
     TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHAT_ID: env.TELEGRAM_CHAT_ID,
   });
-  ctx.waitUntil(
-    ensureIntentPersistenceBoot(env).catch((err) => {
-      console.error("[bedelta] fetch persistence boot failed", err);
-    }),
-  );
+  void ctx;
 
   const geoResponse = enforceGeoCompliance(request);
   if (geoResponse) return geoResponse;

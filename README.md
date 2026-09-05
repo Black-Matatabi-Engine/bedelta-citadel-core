@@ -148,7 +148,7 @@ All standalone demos measure latency via `process.hrtime.bigint()` (µs precisio
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · **6-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -160,6 +160,7 @@ pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
 pnpm demo:camelot  # Camelot V3 concentrated liquidity · dynamic fee guard
 pnpm demo:radiant  # Radiant Capital HF & cross-chain liquidation guard
 pnpm demo:jones    # Jones DAO vault share-price & sandwich guard
+pnpm demo:matrix   # Cross-venue 6-protocol circuit breaker (Pendle·GMX·HL·Camelot·Radiant·Jones)
 # Append -- --trip on any Tier 1–2 demo for FAIL_CLOSED soil trip
 ```
 
@@ -172,7 +173,7 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (188 files / 824 tests)
 ```
 
-GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Camelot: `pnpm demo:camelot` · Radiant: `pnpm demo:radiant` · Jones: `pnpm demo:jones` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
+GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Camelot: `pnpm demo:camelot` · Radiant: `pnpm demo:radiant` · Jones: `pnpm demo:jones` · Matrix: `pnpm demo:matrix` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 
@@ -301,7 +302,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 * **Vitest SSOT**: 🧪 **190 test files | 828 PASS Clean (100% PASS)** on `pnpm test -- --run`
 * **Chaos Matrix**: 🌪️ **255 Severe Failure Cases | 0 Crashes**
 * **Edge Decision Latency**: ⏱️ **SLO &lt; 1.0ms | p50 ~106 μs Shield/TS Gateway | Wasm warm &lt;60 μs | Pure Math: 0.0002 ms (200 ns)**
-* **Worker Bundle**: 📦 **91.2 KiB gzip** measured hot path (`pnpm bundle:measure`) · **369.69 KiB raw** Worker upload (`limitKiB: 150` · `pass: true`)
+* **Worker Bundle**: 📦 **68.9 KiB gzip** measured hot path (`pnpm bundle:measure`) · **276.2 KiB raw** Worker upload (`limitKiB: 150` · `pass: true`)
 
 ---
 
@@ -311,7 +312,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 |-----------|--------|-----------------------------|
 | **M0: Operational Foundation** | ✅ Delivered | WSL / PNPM Monorepo, Cloudflare Edge Worker pipeline, and CI/CD strict typecheck. |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` core invariant locks · **327,675 deep fuzz** (`FOUNDRY_PROFILE=deep`) · 25k gas bounds. |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **190 test files | 828 PASS Clean (100% PASS)**, 91.2 KiB gzip bundle, sub-ms latency. |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **190 test files | 828 PASS Clean (100% PASS)**, 68.9 KiB gzip bundle, sub-ms latency. |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Harness Verified (Kernel v3 / EntryPoint v0.7) | **Opt-In Pillar 1** ZeroDev Kernel v3 AA Adapter (`USE_ZERODEV_AA` default-off) · optional Robinhood Chain / Across (`46630`/`4663`) **Pillar 2 Reference Escort Adapters** into Arbitrum. Wasm Shield + Native Ingress unaffected. |
 | **M4: WASM Engine & IP Moat** | ✅ Delivered | Rust `#![no_std]` Wasm core (`pkg/soil_core.wasm`) — Cloudflare budget `<28kb`, hot-path exec `<60µs` — & `@slivervine/citadel-sdk` shipped. |
 | **M5: TCA Data & Hyperliquid** | ✅ Delivered (evolving) | TCA / grant-audit surfaces & HL Testnet 5-trade provenance — **Live TCA Analytics HUD actively evolving**. |

@@ -71,7 +71,7 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (190 files / 828 tests)
 ```
 
-Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` · `--trip` for Fail-Closed demos
+Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones,matrix}` · `--trip` for Fail-Closed demos
 
 > All verification commands: [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
 
@@ -79,7 +79,7 @@ Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (S
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · **6-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Four major AI frameworks + combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | **12 ANSI scenarios** — GMX · HL · Pendle · p50 ~106µs |
@@ -281,6 +281,8 @@ Each adapter resides in an **isolated module** under `src/adapters/{framework}/`
 pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain · pnpm demo:stabilizer
 pnpm demo:quad              # All four AI frameworks combined → ALLOW
 pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
+pnpm demo:matrix            # 6-protocol cross-venue matrix → nominal PASS
+pnpm demo:matrix -- --trip  # Pendle yield shock / GMX imbalance → universal FAIL_CLOSED
 ```
 
 - **Tests:** [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **190 test files | 828 PASS Clean (100% PASS)**

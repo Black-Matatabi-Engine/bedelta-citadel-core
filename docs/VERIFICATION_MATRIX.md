@@ -63,7 +63,7 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · **6-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -88,6 +88,8 @@ pnpm test       # Full System Regression Suite (190 files / 828 tests)
 | `pnpm demo:camelot` | Camelot V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:radiant` | Radiant Capital HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:jones` | Jones DAO vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:matrix` | Cross-venue 6-protocol circuit breaker (Pendle·GMX·HL·Camelot·Radiant·Jones·Soil) | **6/6 ALLOW** nominal |
+| `pnpm demo:matrix -- --trip` | Pendle yield shock (>150bps) or `--gmx` pool imbalance → Layer-1 soil + R20 sever | **6/6 FAIL_CLOSED** |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -500,7 +502,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 
 | Script | Purpose | Expected |
 |--------|---------|----------|
-| `pnpm bundle:measure` | Worker hot-path size gate | **91.2 KiB gzip** / **369.69 KiB raw** · `limitKiB: 150` · `pass: true` |
+| `pnpm bundle:measure` | Worker hot-path size gate | **68.9 KiB gzip** / **276.2 KiB raw** · `limitKiB: 150` · `pass: true` |
 | `pnpm verify:negative` | Negative soil-trip proofs | Depth breach fail-closed |
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
 | `pnpm demo:gmx` | GMX v2 shadow margin CLI | ALLOW / `--trip` FAIL_CLOSED |
@@ -509,6 +511,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:camelot` | Camelot V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:radiant` | Radiant Capital lending HF CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:jones` | Jones DAO vault guard CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:matrix` | Cross-venue 6-protocol circuit breaker CLI | **6/6 ALLOW** / `--trip` **6/6 FAIL_CLOSED** |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |

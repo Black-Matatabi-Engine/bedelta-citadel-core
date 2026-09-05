@@ -1,10 +1,14 @@
-/** GET /api/grant-audit — fail-soft HTTP 200 + SWR cached telemetry. */
+/** GET /api/grant-audit — fail-soft HTTP 200 + KV precompute / edge fallback. */
 import type { Env } from "../../env";
 import { engineModeForGrantAudit } from "../../middleware/engine-mode-router";
 import { CORS_JSON_HEADERS } from "../../services/config";
-import { buildGrantAuditPayload } from "../../routes/grant-audit-lib/grant-audit-payload";
-import { readGrantAuditPrecomputedPayload } from "../../routes/grant-audit-lib/grant-audit-kv";
-import { buildGrantAuditSwrFallbackPayload } from "../../routes/grant-audit-lib/grant-audit-swr-fallback";
+import { buildGrantAuditEdgePayload } from "../../routes/grant-audit-lib/grant-audit-edge-payload";
+import {
+  GRANT_AUDIT_HISTORY_KEY,
+  GRANT_AUDIT_LATEST_KEY,
+  readGrantAuditKvJson,
+  readGrantAuditPrecomputedPayload,
+} from "../../routes/grant-audit-lib/grant-audit-kv";
 import type { GrantAuditPayload } from "../../routes/grant-audit-lib/grant-audit.types";
 
 const GRANT_AUDIT_RESPONSE_CACHE_TTL_MS = 3_000;
@@ -52,14 +56,24 @@ export async function handleGrantAuditRequest(
       return jsonResponse(payload, 200);
     }
 
-    const payload = await buildGrantAuditPayload(env, request);
+    const kv = env.EXECUTION_LOGS_KV;
+    let latest: unknown = null;
+    let history: unknown = null;
+    if (kv) {
+      [latest, history] = await Promise.all([
+        readGrantAuditKvJson(kv, GRANT_AUDIT_LATEST_KEY),
+        readGrantAuditKvJson(kv, GRANT_AUDIT_HISTORY_KEY),
+      ]);
+    }
+    const message = kv ? undefined : "EXECUTION_LOGS_KV binding missing";
+    const payload = buildGrantAuditEdgePayload(request, message, latest, history);
     grantAuditResponseCache = { at: now, payload };
-    return jsonResponse(payload, 200);
+    return jsonResponse(overlayRequestEngineMode(payload, request), 200);
   } catch (error) {
     const message = error instanceof Error ? error.message : "Grant audit route failed";
-    const fallback = buildGrantAuditSwrFallbackPayload(request, message, env);
+    const fallback = buildGrantAuditEdgePayload(request, message);
     grantAuditResponseCache = { at: now, payload: fallback };
-    return jsonResponse(fallback, 200);
+    return jsonResponse(overlayRequestEngineMode(fallback, request), 200);
   }
 }
 
