@@ -1,5 +1,9 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
+export const EDGE_TARGET_US = 106;
+export const BENCH_BOX_W = 61;
+export const BAR_INNER_WIDTH = 22;
+
 export const R = "\x1b[0m";
 export const BOLD = "\x1b[1m";
 export const GRAY = "\x1b[90m";
@@ -54,15 +58,56 @@ export function formatLatencyLabel(us: number): string {
   return us >= 1000 ? `${(us / 1000).toFixed(2)}ms` : `${us.toFixed(1)}µs`;
 }
 
-export function printBenchmarkRow(label: string, us: number, color: string): void {
-  console.log(`  ${color}${BOLD}${label.padEnd(26)}${R} ${color}${formatLatencyLabel(us)}${R}`);
+function stripAnsi(text: string): string {
+  return text.replace(/\x1b\[[0-9;]*m/g, "");
+}
+
+function padVisible(text: string, width: number): string {
+  const pad = Math.max(0, width - stripAnsi(text).length);
+  return text + " ".repeat(pad);
+}
+
+function benchmarkPct(us: number, e2eUs: number): number {
+  if (e2eUs <= 0) return 100;
+  return Math.min(100, (us / e2eUs) * 100);
+}
+
+function asciiBar(pct: number): string {
+  const filled = Math.max(0, Math.min(BAR_INNER_WIDTH, Math.round((pct / 100) * BAR_INNER_WIDTH)));
+  return `[${"█".repeat(filled)}${" ".repeat(BAR_INNER_WIDTH - filled)}]`;
+}
+
+function formatBenchmarkBarLine(
+  label: string,
+  us: number,
+  pct: number,
+  color: string,
+  opts?: { pass?: boolean; force100?: boolean },
+): string {
+  const pctLabel = opts?.force100 ? "100%" : `${pct.toFixed(1)}%`;
+  const passTag = opts?.pass ? ` ${GUARD_BRIGHT_GREEN}${BOLD}(PASS)${R}` : "";
+  const bar = asciiBar(opts?.force100 ? 100 : pct);
+  return `${color}${BOLD}${label.padEnd(22)}${R} ${bar} ${color}${BOLD}${pctLabel}${R}${passTag} ${GRAY}${formatLatencyLabel(us)}${R}`;
 }
 
 export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
-  console.log(`${BOLD}[BENCHMARK]${R} Runtime: Node.js CLI Harness · live micro-timing`);
-  printBenchmarkRow("Pure Invariant Time", snapshot.pureInvariantUs, GUARD_BRIGHT_GREEN);
-  printBenchmarkRow("Full Matrix Execution", snapshot.fullMatrixUs, CORE_BRIGHT_CYAN);
-  printBenchmarkRow("E2E Harness Overhead", snapshot.e2eHarnessUs, EXEC_BRIGHT_YELLOW);
+  const e2e = snapshot.e2eHarnessUs;
+  const purePct = benchmarkPct(snapshot.pureInvariantUs, e2e);
+  const matrixPct = benchmarkPct(snapshot.fullMatrixUs, e2e);
+  const matrixPass = snapshot.fullMatrixUs <= EDGE_TARGET_US;
+  const title = `${BOLD}[BENCHMARK]${R} Runtime: Node.js CLI Harness ${CORE_BRIGHT_CYAN}${BOLD}(Edge Target: <${EDGE_TARGET_US.toFixed(1)}µs)${R}`;
+  const rows = [
+    formatBenchmarkBarLine("Pure Invariant Time", snapshot.pureInvariantUs, purePct, GUARD_BRIGHT_GREEN),
+    formatBenchmarkBarLine("Full Matrix Execution", snapshot.fullMatrixUs, matrixPct, CORE_BRIGHT_CYAN, { pass: matrixPass }),
+    formatBenchmarkBarLine("E2E Harness Overhead", snapshot.e2eHarnessUs, 100, EXEC_BRIGHT_YELLOW, { force100: true }),
+  ];
+  const innerW = BENCH_BOX_W - 2;
+  console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(BENCH_BOX_W)}┐${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${title}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
+  for (const row of rows) {
+    console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${row}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
+  }
+  console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(BENCH_BOX_W)}┘${R}`);
 }
 
 export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {

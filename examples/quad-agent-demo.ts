@@ -30,6 +30,8 @@ import {
   hrtimeStart,
   hrtimeElapsedUs,
   resolveLatency,
+  printDynamicBenchmarkBreakdown,
+  type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
 
 const NOW_MS = Date.now();
@@ -184,8 +186,15 @@ async function main(): Promise<void> {
   const maxUs = Math.max(...latencies);
   const minUs = Math.min(...latencies);
 
+  const frameworkBenchmark: DemoBenchmarkSnapshot = {
+    pureInvariantUs: minUs,
+    fullMatrixUs: avgUs,
+    e2eHarnessUs: maxUs,
+  };
+  console.log(`\n${BOLD}── Aggregate Framework Benchmark ──${R}`);
+  printDynamicBenchmarkBreakdown(frameworkBenchmark);
   console.log(
-    `${BOLD}Aggregate guard time:${R} min ${formatGuardTime(minUs)} · avg ${formatGuardTime(avgUs)} · max ${formatGuardTime(maxUs)}`,
+    `\n${BOLD}Aggregate guard time:${R} min ${formatGuardTime(minUs)} · avg ${formatGuardTime(avgUs)} · max ${formatGuardTime(maxUs)}`,
   );
 
   const passCount = results.filter((r) => r.ok).length;

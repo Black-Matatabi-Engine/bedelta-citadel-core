@@ -1,6 +1,8 @@
 import { evaluateVariationalFlags } from "../../src/core/risk-engine-core";
 import { checkSoilResistance, type SoilResistanceInput } from "../../src/services/risk-control";
-import { captureDemoBenchmark, type DemoBenchmarkSnapshot } from "./demo-timing";
+import { captureDemoBenchmark, EDGE_TARGET_US, type DemoBenchmarkSnapshot } from "./demo-timing";
+
+export { EDGE_TARGET_US, type DemoBenchmarkSnapshot };
 
 const NOMINAL_VARIATIONAL_PROBE = {
   quotePriceUsd: 3500,
