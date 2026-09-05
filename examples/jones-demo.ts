@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Camelot V3 Demo — Concentrated liquidity depth & dynamic fee pre-flight.
- * Usage: pnpm demo:camelot
- * Trip:  pnpm demo:camelot -- --trip
+ * Jones DAO Demo — Vault share-price slippage & flash-loan sandwich guard.
+ * Usage: pnpm demo:jones
+ * Trip:  pnpm demo:jones -- --trip
  */
 import {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  evaluateCamelotV3SwapGuard,
-} from "../src/adapters/camelot/camelot-v3-adapter";
+  JONES_ARBITRUM_CHAIN_ID,
+  evaluateJonesVaultGuard,
+} from "../src/adapters/jones/jones-vault-adapter";
 import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
@@ -26,56 +26,54 @@ import {
 import { formatLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
-  hudIntent("camelot-demo", "Camelot V3", "V3_SPOT_SWAP", "WETH/USDC · Arbitrum One");
+  hudIntent("jones-demo", "Jones DAO", "REBALANCE", "jGLP vault · Arbitrum One");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateCamelotV3SwapGuard({
-      chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
-      tokenIn: "WETH",
-      tokenOut: "USDC",
-      amountInUsd: 25_000,
-      activeLiquidityUsd: 2_500_000,
-      dynamicFeeBps: 5,
-      tickRangeLiquidityUsd: 200_000,
-      tickSpacing: 60,
-      directionalFeeBps: 2,
-      spotPriceUsd: 3500,
+    evaluateJonesVaultGuard({
+      chainId: JONES_ARBITRUM_CHAIN_ID,
+      vaultId: "jGLP",
+      action: "REBALANCE",
+      amountUsd: 50_000,
+      vaultTvlUsd: 5_000_000,
+      expectedSharePriceUsd: 1.245,
+      quotedSharePriceUsd: 1.246,
+      rebalancePending: false,
       refPriceUsd: 3500,
-      depthUsd: 500_000,
+      spotPriceUsd: 3500,
+      depthUsd: 400_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(
-    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
-  );
+  console.log(`${R}  shareSlippage=${result.shareSlippageBps.toFixed(1)}bps · shareOk=${result.shareOk}`);
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Camelot V3 WETH/USDC spot swap · guard ${formatLatencyLabel(latencyUs)}`, latencyUs);
+  hudDispatched(`Jones vault rebalance · slippage ${result.shareSlippageBps.toFixed(1)}bps · ${formatLatencyLabel(latencyUs)}`, latencyUs);
   return latencyUs;
 }
 
 function runTrip(nowMs: number): number {
-  hudIntent("camelot-demo", "Camelot V3", "DEPLETED_CL_SWAP", "WETH/USDC · toxic utilization");
+  hudIntent("jones-demo", "Jones DAO", "FLASH_SANDWICH", "jGLP · pending rebalance");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateCamelotV3SwapGuard({
-      chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
-      tokenIn: "WETH",
-      tokenOut: "USDC",
-      amountInUsd: 600_000,
-      activeLiquidityUsd: 200_000,
-      dynamicFeeBps: 85,
-      spotPriceUsd: 3500,
+    evaluateJonesVaultGuard({
+      chainId: JONES_ARBITRUM_CHAIN_ID,
+      vaultId: "jGLP",
+      action: "REBALANCE",
+      amountUsd: 50_000,
+      vaultTvlUsd: 5_000_000,
+      expectedSharePriceUsd: 1.245,
+      quotedSharePriceUsd: 1.32,
+      rebalancePending: true,
+      blockPriceDeviationBps: 85,
       refPriceUsd: 3500,
-      depthUsd: 8_000,
+      spotPriceUsd: 3500,
+      depthUsd: 6_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(
-    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
-  );
+  console.log(`${R}  shareSlippage=${result.shareSlippageBps.toFixed(1)}bps · shareOk=${result.shareOk}`);
   hudSoilFuse(false, latencyUs, result.reasons);
-  hudSevered("CAMELOT_V3_LIQUIDITY_DEPLETED");
+  hudSevered("JONES_FLASH_SANDWICH_TRIP");
   hudBlocked();
   if (!result.reasons.includes("SOIL_RESISTANCE_TRIP")) {
     console.error(`${RED}Expected SOIL_RESISTANCE_TRIP in reasons${R}`);
@@ -91,11 +89,11 @@ async function main(): Promise<void> {
   }
   const nowMs = Date.now();
   seedAdapterProbes(nowMs);
-  printBanner("Camelot V3 Concentrated Liquidity Demo");
+  printBanner("Jones DAO Vault Guard Demo");
   printMode(trip);
   console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Camelot guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Jones guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

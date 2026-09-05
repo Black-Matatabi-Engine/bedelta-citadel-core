@@ -21,6 +21,8 @@
     "demo:hl": "tsx examples/hyperliquid-demo.ts",
     "demo:pendle": "tsx examples/pendle-demo.ts",
     "demo:camelot": "tsx examples/camelot-demo.ts",
+    "demo:radiant": "tsx examples/radiant-demo.ts",
+    "demo:jones": "tsx examples/jones-demo.ts",
     "demo:wayfinder": "tsx examples/wayfinder-agent-demo.ts",
     "demo:elizaos": "tsx examples/elizaos-agent-demo.ts",
     "demo:virtuals": "tsx examples/virtuals-agent-demo.ts",

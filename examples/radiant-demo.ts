@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Camelot V3 Demo — Concentrated liquidity depth & dynamic fee pre-flight.
- * Usage: pnpm demo:camelot
- * Trip:  pnpm demo:camelot -- --trip
+ * Radiant Capital Demo — Health Factor & cross-chain liquidation boundary guard.
+ * Usage: pnpm demo:radiant
+ * Trip:  pnpm demo:radiant -- --trip
  */
 import {
-  CAMELOT_V3_ARBITRUM_CHAIN_ID,
-  evaluateCamelotV3SwapGuard,
-} from "../src/adapters/camelot/camelot-v3-adapter";
+  RADIANT_ARBITRUM_CHAIN_ID,
+  evaluateRadiantLendingGuard,
+} from "../src/adapters/radiant/radiant-lending-adapter";
 import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
@@ -26,56 +26,51 @@ import {
 import { formatLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
-  hudIntent("camelot-demo", "Camelot V3", "V3_SPOT_SWAP", "WETH/USDC · Arbitrum One");
+  hudIntent("radiant-demo", "Radiant Capital", "BORROW", "WETH/USDC · Arbitrum One");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateCamelotV3SwapGuard({
-      chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
-      tokenIn: "WETH",
-      tokenOut: "USDC",
-      amountInUsd: 25_000,
-      activeLiquidityUsd: 2_500_000,
-      dynamicFeeBps: 5,
-      tickRangeLiquidityUsd: 200_000,
-      tickSpacing: 60,
-      directionalFeeBps: 2,
-      spotPriceUsd: 3500,
+    evaluateRadiantLendingGuard({
+      chainId: RADIANT_ARBITRUM_CHAIN_ID,
+      market: "WETH/USDC",
+      collateralUsd: 150_000,
+      debtUsd: 80_000,
+      liquidationThreshold: 0.825,
+      projectedHealthFactor: 1.42,
       refPriceUsd: 3500,
+      spotPriceUsd: 3500,
       depthUsd: 500_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(
-    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
-  );
+  console.log(`${R}  healthFactor=${result.healthFactor.toFixed(4)} · hfOk=${result.hfOk}`);
   hudSoilFuse(result.soilOk, latencyUs, result.reasons);
   hudChannelOpen();
-  hudDispatched(`Camelot V3 WETH/USDC spot swap · guard ${formatLatencyLabel(latencyUs)}`, latencyUs);
+  hudDispatched(`Radiant lending guard · HF ${result.healthFactor.toFixed(2)} · ${formatLatencyLabel(latencyUs)}`, latencyUs);
   return latencyUs;
 }
 
 function runTrip(nowMs: number): number {
-  hudIntent("camelot-demo", "Camelot V3", "DEPLETED_CL_SWAP", "WETH/USDC · toxic utilization");
+  hudIntent("radiant-demo", "Radiant Capital", "HF_BREACH", "Cross-chain liquidation boundary");
   const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateCamelotV3SwapGuard({
-      chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
-      tokenIn: "WETH",
-      tokenOut: "USDC",
-      amountInUsd: 600_000,
-      activeLiquidityUsd: 200_000,
-      dynamicFeeBps: 85,
-      spotPriceUsd: 3500,
+    evaluateRadiantLendingGuard({
+      chainId: RADIANT_ARBITRUM_CHAIN_ID,
+      market: "WETH/USDC",
+      collateralUsd: 95_000,
+      debtUsd: 80_000,
+      liquidationThreshold: 0.825,
+      projectedHealthFactor: 1.08,
+      crossChainSourceHf: 1.35,
+      crossChainDestHf: 1.12,
       refPriceUsd: 3500,
+      spotPriceUsd: 3500,
       depthUsd: 8_000,
       nowMs,
     }),
   );
   const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(
-    `${R}  slippageEst=${result.estimatedSlippageBps.toFixed(1)}bps · liquidityOk=${result.liquidityOk}`,
-  );
+  console.log(`${R}  healthFactor=${result.healthFactor.toFixed(4)} · hfOk=${result.hfOk}`);
   hudSoilFuse(false, latencyUs, result.reasons);
-  hudSevered("CAMELOT_V3_LIQUIDITY_DEPLETED");
+  hudSevered("RADIANT_HF_FAIL_CLOSED");
   hudBlocked();
   if (!result.reasons.includes("SOIL_RESISTANCE_TRIP")) {
     console.error(`${RED}Expected SOIL_RESISTANCE_TRIP in reasons${R}`);
@@ -91,11 +86,11 @@ async function main(): Promise<void> {
   }
   const nowMs = Date.now();
   seedAdapterProbes(nowMs);
-  printBanner("Camelot V3 Concentrated Liquidity Demo");
+  printBanner("Radiant Capital Lending Guard Demo");
   printMode(trip);
   console.log(`${R}Latency: process.hrtime.bigint()${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Camelot guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Radiant guard latency: ${formatLatencyLabel(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

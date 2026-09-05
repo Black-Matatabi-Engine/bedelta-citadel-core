@@ -17,7 +17,7 @@
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **186 test files / 820 PASS Clean (100% PASS)**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **188 test files / 824 PASS Clean (100% PASS)**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
@@ -25,7 +25,7 @@
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet GM fill scheduled post-Grant M6. → [§4 GMX](#4-gmx) |
 | **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()`. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Sepolia live stream and One production SQL documented separately. → [§5 Dune](#5-dune-analytics) |
-| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **186 test files | 820 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
+| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **188 test files | 824 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. → [§5 Dune](#5-dune-analytics) |
 | **8** | Commercial Model | **v1.0 = SaaS subscription ($0/$49/$299)**; **10 bps CaaS fee-sharing = V2.0 Expansion**. → [Business Model](#business-model--gtm-strategy) |
@@ -48,7 +48,7 @@
 
 | Criterion | Evidence (CLI / code) |
 |-----------|------------------------|
-| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Emerging Draft policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **186 test files \| 820 PASS Clean (100% PASS)** |
+| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Emerging Draft policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **188 test files \| 824 PASS Clean (100% PASS)** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft |
 | **Product-Market Fit** | GMX v2 +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Core Pillar 3 (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
@@ -124,13 +124,17 @@ pnpm demo:hl -- --trip          # WS stale / depth guard trip → FAIL_CLOSED
 pnpm demo:pendle                # Pendle guarded pool factory → ALLOW
 pnpm demo:camelot               # Camelot V3 concentrated liquidity → ALLOW
 pnpm demo:camelot -- --trip     # Depleted CL / slippage trip → FAIL_CLOSED
+pnpm demo:radiant               # Radiant Capital HF guard → ALLOW
+pnpm demo:radiant -- --trip     # HF < 1.15 / cross-chain boundary → FAIL_CLOSED
+pnpm demo:jones                 # Jones DAO vault rebalance → ALLOW
+pnpm demo:jones -- --trip       # Flash-loan sandwich trip → FAIL_CLOSED
 pnpm demo:stabilizer              # Stabilizer 1:1 swap → ALLOW
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + SOIL_RESISTANCE_TRIP → FAIL_CLOSED + 60s cooldown
 pnpm demo                         # GMX v2 + HL + Pendle Tri-Pillar Vitest matrix (12 scenarios)
 ```
 
 - **Cross-Pass routing:** Stabilizer stablecoin rebalance → GMX v2 shadow-margin leg → Pendle guarded pool intent → Camelot V3 spot liquidity — each hop gated by `checkSoilResistance()` before broadcast
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · [`tests/adapters/camelot-v3-adapter.test.ts`](../../tests/adapters/camelot-v3-adapter.test.ts) · **186 test files | 820 PASS Clean (100% PASS)**
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · [`tests/adapters/camelot-v3-adapter.test.ts`](../../tests/adapters/camelot-v3-adapter.test.ts) · **188 test files | 824 PASS Clean (100% PASS)**
 
 #### Camelot V3 (V1.0 Live · Arbitrum Native Spot Liquidity)
 
@@ -138,9 +142,29 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| **V3 Liquidity Guard** | [`camelot-v3-adapter.ts`](../../src/adapters/camelot/camelot-v3-adapter.ts) | `verifyCamelotPoolLiquidity()` — active CL depth · utilization cap · dynamic fee impact |
+| **V3 Liquidity Guard** | [`camelot-v3-adapter.ts`](../../src/adapters/camelot/camelot-v3-adapter.ts) | `verifyCamelotPoolLiquidity()` · `verifyCamelotTickDepth()` — CL tick depth · directional dynamic fee |
 | **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on depleted depth / cross-venue slippage |
 | **CLI Demo** | `pnpm demo:camelot` | WETH/USDC spot swap guard · `--trip` for FAIL_CLOSED |
+
+#### Radiant Capital (V1.0 Live · Arbitrum Native Lending)
+
+| Layer | Module | Behavior |
+|-------|--------|----------|
+| **HF Guard** | [`radiant-lending-adapter.ts`](../../src/adapters/radiant/radiant-lending-adapter.ts) | `verifyRadiantHealthFactor()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary |
+| **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on depleted collateral depth |
+| **CLI Demo** | `pnpm demo:radiant` | WETH/USDC borrow guard · `--trip` for FAIL_CLOSED |
+
+→ Tests: [`tests/adapters/radiant-lending-adapter.test.ts`](../../tests/adapters/radiant-lending-adapter.test.ts)
+
+#### Jones DAO (V1.0 Live · Arbitrum Vault Strategies)
+
+| Layer | Module | Behavior |
+|-------|--------|----------|
+| **Vault Guard** | [`jones-vault-adapter.ts`](../../src/adapters/jones/jones-vault-adapter.ts) | `verifyJonesVaultSharePrice()` — share slippage cap · flash-loan sandwich trip |
+| **Soil fuse** | `checkSoilResistance()` | 0-Gas fail-closed on toxic vault depth |
+| **CLI Demo** | `pnpm demo:jones` | jGLP rebalance guard · `--trip` for FAIL_CLOSED |
+
+→ Tests: [`tests/adapters/jones-vault-adapter.test.ts`](../../tests/adapters/jones-vault-adapter.test.ts)
 
 #### Four Major AI Agent Frameworks (V1.0 Live · Full Quad Coverage)
 
@@ -160,11 +184,11 @@ pnpm demo:quad              # All four AI frameworks combined → ALLOW
 pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
 ```
 
-- **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · **186 test files | 820 PASS Clean (100% PASS)**
+- **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · **188 test files | 824 PASS Clean (100% PASS)**
 
 #### Supplementary Agent Demos
 
-- **V1.0 delivered:** All five native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 DEX: `pnpm demo:{gmx,hl,pendle,camelot}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED
+- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED
 - **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/)
 
 ---
@@ -241,7 +265,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 
 ## Architectural SSOT & Hardened Metrics
 
-* **Test Suite**: **186 test files | 820 PASS Clean (100% PASS)** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
+* **Test Suite**: **188 test files | 824 PASS Clean (100% PASS)** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
 * **Dual-Demo Architecture**: **`pnpm demo`** — 12 Tri-Pillar ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — 5-step macro cross-venue lifecycle · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/01_TECHNICAL_SPECIFICATION.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
@@ -270,7 +294,7 @@ Full derivations: [Technical Specification §3.1](../architecture/01_TECHNICAL_S
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $0/$49/$299** · **186 test files \| 820 PASS Clean (100% PASS)** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $0/$49/$299** · **188 test files \| 824 PASS Clean (100% PASS)** |
 | **V1.5** | ⏳ Roadmap Spec | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement for multi-agent swarms · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | Institutional **CaaS** (`@slivervine/citadel-sdk`) for AI DEXs and Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks — **explicitly V2.0; not v1.0 SaaS** |
 
@@ -481,7 +505,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | ID | Unlock condition (objective) | Sponsor / track | Status |
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in `/api/grant-audit` | Arbitrum | ✅ Delivered |
-| **M-CLI** | Vitest **186 test files | 820 PASS Clean (100% PASS)** | All | ✅ Delivered |
+| **M-CLI** | Vitest **188 test files | 824 PASS Clean (100% PASS)** | All | ✅ Delivered |
 | **M-RH-Demo** | `46630`/`4663` → `42161` outbound escort OK · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Code-verified · ⏳ video |
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
@@ -521,11 +545,13 @@ pnpm demo:gmx     # Tier 1 — GMX v2 shadow margin (ALLOW)
 pnpm demo:hl      # Tier 1 — Hyperliquid session key (ALLOW)
 pnpm demo:pendle  # Tier 1 — Pendle guarded pool factory (ALLOW)
 pnpm demo:camelot # Tier 1 — Camelot V3 spot liquidity (ALLOW)
+pnpm demo:radiant # Tier 1 — Radiant Capital HF guard (ALLOW)
+pnpm demo:jones   # Tier 1 — Jones DAO vault guard (ALLOW)
 pnpm demo       # Vitest Tri-Pillar matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 5-Step Macro Lifecycle CLI
 pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
-pnpm test       # Full System Regression Suite (186 files / 820 tests)
+pnpm test       # Full System Regression Suite (188 files / 824 tests)
 pnpm run audit:security # 5/0/0 PASS
 cd SliverVineGate && forge test --gas-report && cd ..
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
@@ -553,7 +579,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **186 test files | 820 PASS Clean (100% PASS)** · Forge 60/60 · Cargo Stylus 5/5 · Wasm &lt;28 KiB / &lt;60 µs.
+**Regression bar:** Vitest **188 test files | 824 PASS Clean (100% PASS)** · Forge 60/60 · Cargo Stylus 5/5 · Wasm &lt;28 KiB / &lt;60 µs.
 
 ---
 
