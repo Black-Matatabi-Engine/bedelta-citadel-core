@@ -14,7 +14,8 @@ import {
 } from "./pendle-market-oracle-adapter";
 import { resolvePendlePtRegistryEntry } from "./pendle-pt-registry";
 
-export const PENDLE_POOL_YIELD_DRIFT_MAX_BPS = 300 as const;
+export const PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS = 150 as const;
+export const PENDLE_POOL_YIELD_DRIFT_MAX_BPS = PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS;
 export const PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD = 100_000 as const;
 
 export const PENDLE_POOL_MATURITY_CLIFF = "PENDLE_POOL_MATURITY_CLIFF" as const;

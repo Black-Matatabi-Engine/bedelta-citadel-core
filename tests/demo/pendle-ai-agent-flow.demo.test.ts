@@ -144,7 +144,7 @@ describe("Pendle AI Agent Flow Demo", () => {
 
     const selection = validSelection({ impliedYield: 0.05, oracleYield: 0.095 });
     const verdict = validateAIPoolSelection(selection);
-    demoLine("AGENT", `intent=PENDLE_CREATE_POOL | yieldDrift=${verdict.yieldDriftBps.toFixed(0)}bps ${RED}(>300bps threshold)${R}`);
+    demoLine("AGENT", `intent=PENDLE_CREATE_POOL | yieldDrift=${verdict.yieldDriftBps.toFixed(0)}bps ${RED}(>150bps threshold)${R}`);
 
     const { result, latencyUs } = runPendleSoilGate(selection);
     demoLine("FUSE", `checkSoilResistance() → ${RED}REJECT${R} | latency: ${formatUs(latencyUs)}`);

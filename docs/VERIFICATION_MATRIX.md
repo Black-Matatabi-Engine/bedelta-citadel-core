@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **188 test files | 824 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **190 test files | 828 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,7 +15,7 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **188 test files \| 824 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Vitest baseline** | **190 test files \| 828 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -29,7 +29,8 @@
 | **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle · Camelot V3 · Radiant · Jones DAO standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`camelot-demo.ts`](../examples/camelot-demo.ts) · [`radiant-demo.ts`](../examples/radiant-demo.ts) · [`jones-demo.ts`](../examples/jones-demo.ts) · `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones}` |
 | **Camelot V3 adapter** | `evaluateCamelotV3SwapGuard()` — CL tick depth · directional dynamic fee · soil fuse | [`camelot-v3-adapter.ts`](../src/adapters/camelot/camelot-v3-adapter.ts) · `pnpm demo:camelot` |
 | **Radiant Capital adapter** | `evaluateRadiantLendingGuard()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary | [`radiant-lending-adapter.ts`](../src/adapters/radiant/radiant-lending-adapter.ts) · `pnpm demo:radiant` |
-| **Jones DAO adapter** | `evaluateJonesVaultGuard()` — vault share slippage · flash-loan sandwich trip | [`jones-vault-adapter.ts`](../src/adapters/jones/jones-vault-adapter.ts) · `pnpm demo:jones` |
+| **Hyperliquid L1 session guard** | `evaluateHyperliquidSessionGuard()` — Independent L1 HF Orderbook AppChain · MaxSizePerOrder · rate limit (120/min) · spread > **20 bps** | [`hyperliquid-session-guard.ts`](../src/adapters/hl/hyperliquid-session-guard.ts) · `pnpm demo:hl` |
+| **GMX v2 pool invariants** | `verifyGmxPoolImbalance()` · `verifyGmxCollateralReserve()` — imbalance > **0.35** · reserve < **105%** | [`gmx-v2-invariants.ts`](../src/adapters/gmx/gmx-v2-invariants.ts) · `pnpm demo:gmx` |
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **DuneSQL (Sepolia ingest)** | Event streaming verified on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](./telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **DuneSQL (Arbitrum One prod)** | Queries 0–0b feed + chart; Queries 1–3 reconciliation — production SQL targets **ChainID `42161`** | Same spec |
@@ -38,6 +39,19 @@
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
 **Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
+
+**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
+
+### Tailor-Made Mathematical Invariants (All Six Protocols)
+
+| Protocol | Venue | Physical Boundary | Adapter |
+|----------|-------|-------------------|---------|
+| **GMX v2** | Arbitrum One | \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | `gmx-v2-invariants.ts` |
+| **Pendle** | Arbitrum One | \|Yield_current − Yield_oracle\| > **150 bps** | `pendle-pool-factory-adapter.ts` |
+| **Camelot V3** | Arbitrum One | Active tick depth · slippage/penalty > **0.50%** (**50 bps**) | `camelot-v3-adapter.ts` |
+| **Radiant Capital** | Arbitrum One | Health Factor HF < **1.15** | `radiant-lending-adapter.ts` |
+| **Jones DAO** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `jones-vault-adapter.ts` |
+| **Hyperliquid** | Independent L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 
 > **OpSec:** Internal simulation reports live under `docs/internal/` only — not linked from public grant packs. No private keys in public docs.
 
@@ -62,7 +76,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (188 files / 824 tests)
+pnpm test       # Full System Regression Suite (190 files / 828 tests)
 ```
 
 | Command | Proves | Expected |
@@ -86,7 +100,7 @@ pnpm test       # Full System Regression Suite (188 files / 824 tests)
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **188 test files \| 824 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest regression bar | **190 test files \| 828 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -111,7 +125,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **188 test files \| 824 PASS Clean (100% PASS)** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **190 test files \| 828 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -502,7 +516,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **188 test files \| 824 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest + coverage | **190 test files \| 828 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -546,4 +560,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 188 test files | 824 PASS Clean (100% PASS)*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 190 test files | 828 PASS Clean (100% PASS)*

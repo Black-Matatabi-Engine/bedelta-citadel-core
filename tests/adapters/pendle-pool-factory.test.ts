@@ -60,16 +60,16 @@ describe("pendle-pool-factory-adapter", () => {
     expect(verdict.passed).toBe(true);
     expect(verdict.reasons).toHaveLength(0);
     expect(verdict.daysToMaturity).toBeGreaterThanOrEqual(7);
-    expect(verdict.yieldDriftBps).toBeLessThanOrEqual(300);
+    expect(verdict.yieldDriftBps).toBeLessThanOrEqual(150);
   });
 
-  it("fails when yield drift exceeds 300 bps", () => {
+  it("fails when yield drift exceeds 150 bps", () => {
     const verdict = validateAIPoolSelection(
-      validSelection({ impliedYield: 0.05, oracleYield: 0.09 }),
+      validSelection({ impliedYield: 0.05, oracleYield: 0.067 }),
     );
     expect(verdict.passed).toBe(false);
     expect(verdict.reasons).toContain(PENDLE_POOL_YIELD_DRIFT_BREACH);
-    expect(verdict.yieldDriftBps).toBeGreaterThan(300);
+    expect(verdict.yieldDriftBps).toBeGreaterThan(150);
   });
 
   it("fails on liquidity cliff when maturity is under 7 days", () => {

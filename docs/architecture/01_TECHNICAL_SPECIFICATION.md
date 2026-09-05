@@ -1,6 +1,6 @@
 # SliverVine Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
-> **Document:** Technical Specification & Risk Topology · **Internal engine codename:** Santenmoku · **Vitest SSOT:** **185 test files | 818 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare budget, `<60µs` execution.
+> **Document:** Technical Specification & Risk Topology · **Internal engine codename:** Santenmoku · **Vitest SSOT:** **190 test files | 828 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare budget, `<60µs` execution.
 > **This file SSOT:** R01–R20 invariants · dual-engine topology · KV / MDD · settlement & fee bounds.
 > **Docs index:** [`docs/README.md`](../README.md) · **Risk framework:** [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) · **Standards wiki:** [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Grants:** [`docs/grants/`](../grants/)
 
@@ -22,7 +22,9 @@ This document is **invariant-first** (Yellow Paper style): topology, thresholds,
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One:** primary venue is GMX v2 ETH/USDC GM + Hyperliquid 1× short, with Pillar 3 Wasm Shield as the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with full native multi-protocol coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO), plus **Hyperliquid** — an **Independent L1 High-Frequency Orderbook AppChain** that originated alongside Arbitrum's perp liquidity ecosystem — as the cross-chain session-key hedge leg. Pillar 3 Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+
+**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
 
 ```text
 [ Optional Permissioned Ingress (e.g. Robinhood Chain 46630 / 4663) ]
@@ -88,10 +90,10 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **185 test files \| 818 PASS Clean (100% PASS)** |
+| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **190 test files \| 828 PASS Clean (100% PASS)** |
 | **v1.0 Active Target** | ✅ Mainnet Ignition Delivered | Single blue-chip anchor: **GMX v2 ETH/USDC GM Pool** + Hyperliquid **1× short** hedge · Gate live on **42161** |
 | **v1.0 Partial — HL Orderbook Gap Guard** | ✅ Code-Verified | `evaluateHlOrderbookGapGuard()` in [`hl-orderbook-gap-guard.ts`](../../src/services/risk-control-lib/hl-orderbook-gap-guard.ts) · wired via [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) — gap-window leverage scale-down + 2× depth floor |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **185 test files \| 818 PASS Clean (100% PASS)** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **190 test files \| 828 PASS Clean (100% PASS)** |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -113,7 +115,7 @@ Production-native adapters in [`src/adapters/`](../../src/adapters/) — each fr
 | **Quad-Agent (combined)** | ✅ V1.0 Live | [`quad-agent-demo.ts`](../../examples/quad-agent-demo.ts) | All four AI frameworks | `pnpm demo:quad` | — |
 | **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
 
-**Regression bar:** **185 test files | 818 PASS Clean (100% PASS)** · `pnpm test -- --run`
+**Regression bar:** **190 test files | 828 PASS Clean (100% PASS)** · `pnpm test -- --run`
 
 **PEV (Prevented Exploit Volume) — Dune Analytics Telemetry Metric:**
 
@@ -147,7 +149,7 @@ Agent Cross-Pass Route (Sepolia 421614)
   FAIL_CLOSED (0-Gas)  or  ALLOW → Mainnet-identical bytecode path
 ```
 
-**Verification bar:** **185 test files | 818 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
+**Verification bar:** **190 test files | 828 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
 
 ---
 
@@ -155,12 +157,23 @@ Agent Cross-Pass Route (Sepolia 421614)
 
 **SliverVine Citadel Shield (BeDelta Living Water v1.0 / BeΔ) is a Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum.**
 
-**Primary execution envelope:** **Delta-Neutral GM** on Arbitrum One — GMX v2 **ETH/USDC** GM pool + Hyperliquid **1× short hedge**, guarded by Pillar 3 sub-ms Wasm Shield (`checkSoilResistance()`).
+**Primary execution envelope:** **Delta-Neutral GM** on Arbitrum One — GMX v2 **ETH/USDC** GM pool + Hyperliquid **1× short hedge** (Independent L1 HF Orderbook AppChain · session-key adapter), guarded by Pillar 3 sub-ms Wasm Shield (`checkSoilResistance()`).
+
+### 1.0 Tailor-Made Mathematical Invariants (Protocol Physical Boundaries)
+
+| Protocol | Venue | Physical Boundary Check | Code Module |
+|----------|-------|-------------------------|-------------|
+| **GMX v2** | Arbitrum One | Pool Imbalance Ratio: \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) |
+| **Pendle** | Arbitrum One | Discounted Implied Yield Shock: \|Yield_current − Yield_oracle\| > **150 bps** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
+| **Camelot V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`camelot-v3-adapter.ts`](../../src/adapters/camelot/camelot-v3-adapter.ts) |
+| **Radiant Capital** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`radiant-lending-adapter.ts`](../../src/adapters/radiant/radiant-lending-adapter.ts) |
+| **Jones DAO** | Arbitrum One | Vault NAV Share Price Volatility > **0.30%** single-block NAV deviation (**30 bps**) | [`jones-vault-adapter.ts`](../../src/adapters/jones/jones-vault-adapter.ts) |
+| **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
 
 | Component | Venue | Role |
 |-----------|-------|------|
 | **Yield base (PRIMARY)** | Arbitrum One · GMX v2 ETH/USDC GM | Underweight-side GM LP · builder `uiFeeReceiver` (**+10 bps**) · Citadel pre-execution gate |
-| **Hedge** | Hyperliquid | Session-key **1× short** Emergency Liquidity Sponge · nonce-healed signing |
+| **Hedge** | Hyperliquid (Independent L1 HF Orderbook AppChain) | Session-key **1× short** Emergency Liquidity Sponge · `evaluateHyperliquidSessionGuard()` · nonce-healed signing |
 | **Ingress (optional)** | Robinhood Chain | **Pillar 2 Reference Escort Adapter** — not product identity |
 
 **Robinhood Chain role:** **Pillar 2 Reference Escort Adapter** only — regulated treasuries may escort outbound (`46630`/`4663` → `42161`). Inbound AML is blocked by default. Product identity remains **SliverVine Citadel on Arbitrum**. **Audit:** [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md).
@@ -177,19 +190,19 @@ v1.0 is intentionally restricted to **ETH/USDC** so oracle reliability holds dur
 
 ## 2. Triangle Liquidity Loop & Segregated Tranches
 
-Closed-loop three-venue routing with **Arbitrum One as the primary yield base**. Hyperliquid provides the hedge leg; permissioned ingress (e.g. Robinhood Chain) is optional:
+Closed-loop three-venue routing with **Arbitrum One as the primary yield base**. **Hyperliquid** — Independent L1 High-Frequency Orderbook AppChain (originated alongside Arbitrum's perp liquidity ecosystem) — provides the cross-chain hedge leg; permissioned ingress (e.g. Robinhood Chain) is optional:
 
 ```text
 Arbitrum One (GMX GM Yield Base — PRIMARY · ETH/USDC)
  ↕ 1× Δ-neutral hedge
-Hyperliquid (1× Short Hedge)
+Hyperliquid (Independent L1 HF Orderbook AppChain · 1× Short Hedge)
  ↑ optional permissioned ingress (e.g. Robinhood Chain 46630 / 4663)
 ```
 
 | Leg | Venue | Role |
 |-----|-------|------|
 | **Yield base (PRIMARY)** | Arbitrum One · GMX v2 GM | Underweight-side GM LP · builder `uiFeeReceiver` (**+10 bps**) · Citadel pre-execution gate |
-| **Hedge** | Hyperliquid | Session-key **1× short** Emergency Liquidity Sponge · nonce-healed signing |
+| **Hedge** | Hyperliquid (Independent L1 HF Orderbook AppChain) | Session-key **1× short** Emergency Liquidity Sponge · `evaluateHyperliquidSessionGuard()` · nonce-healed signing |
 | **Ingress (optional example)** | Robinhood Chain | Supported permissioned institutional ingress · outbound-only escort into Arbitrum · **ZeroDev Smart Route Calldata Binding** (reference harness — USDG → GMX `ExchangeRouter`; production baseline = **Arbitrum One Native Ingress**) |
 
 **Control plane:** Cloudflare Edge Worker (`SystemState` SSOT) evaluates sequencer · oracle lag · soil · RPC radar before any unsigned GMX payload or HL hedge dispatch. Routing is unidirectional into `SystemState`; venue adapters never mutate peer books without a gate pass.
@@ -381,7 +394,7 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
-| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **185 test files \| 818 PASS Clean (100% PASS)** |
+| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **190 test files \| 828 PASS Clean (100% PASS)** |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
 | **Camelot DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Camelot API on RPC allowlist (`api.camelot.exchange`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
@@ -439,7 +452,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · **185 test files \| 818 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · **190 test files \| 828 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 #### § AI Guarded Pool Factory Protocol (V1.0)
 
@@ -507,7 +520,7 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 | Engine | Venue | Role |
 |--------|-------|------|
 | **Arbitrum Citadel** (primary) | GMX v2 GM pools, Arbitrum One | Pre-execution gate · underweight-side routing |
-| **Hyperliquid Native** (fallback) | HL L2 perps, session-key signing | Emergency Liquidity Sponge when Citadel flags trip |
+| **Hyperliquid Native** (cross-chain L1) | Independent L1 HF orderbook perps · session-key signing · spread/size/rate-limit guard | Emergency Liquidity Sponge when Citadel flags trip |
 
 Routing policy: venue selected per risk flags; both paths share the same fail-closed envelope. On-chain attestation consume-once: `SliverVineGate.sol` (`verifyAndConsume`).
 
@@ -564,7 +577,7 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
-| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **185 test files \| 818 PASS Clean (100% PASS)** |
+| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **190 test files \| 828 PASS Clean (100% PASS)** |
 | **Camelot DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Camelot **V1.5** | ✅ Stabilizer Live · ⏳ Camelot Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
 

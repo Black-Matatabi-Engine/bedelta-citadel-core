@@ -50,7 +50,7 @@ describe("jones-vault-adapter", () => {
       ...HEALTHY_REBALANCE,
       quotedSharePriceUsd: 1.32,
       rebalancePending: true,
-      blockPriceDeviationBps: 85,
+      blockPriceDeviationBps: 35,
       depthUsd: 6_000,
     });
 

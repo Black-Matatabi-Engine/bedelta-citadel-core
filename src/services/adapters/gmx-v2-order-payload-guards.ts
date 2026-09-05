@@ -12,6 +12,18 @@ import {
   evaluateGmxPriceImpactSoilGate,
   type GmxV2PoolWeights,
 } from "../yield/gmx-v2-price-impact";
+import {
+  verifyGmxCollateralReserve,
+  verifyGmxPoolImbalance,
+} from "../../adapters/gmx/gmx-v2-invariants";
+
+export {
+  GMX_POOL_IMBALANCE_MAX_RATIO,
+  GMX_COLLATERAL_RESERVE_MIN_RATIO,
+  computeGmxPoolImbalanceRatio,
+  verifyGmxPoolImbalance,
+  verifyGmxCollateralReserve,
+} from "../../adapters/gmx/gmx-v2-invariants";
 
 export const GMX_FLOAT_PRECISION = 10n ** 30n;
 export const GMX_PAYLOAD_PRICE_IMPACT_TRIP = "GMX_PAYLOAD_PRICE_IMPACT_TRIP" as const;
@@ -70,6 +82,10 @@ export function assertGmxPayloadFailClosed(input: {
   isLong: boolean;
   pool?: GmxV2PoolWeights;
   executionFee: string;
+  oiLongUsd?: number;
+  oiShortUsd?: number;
+  poolTvlUsd?: number;
+  collateralReserveRatio?: number;
 }): void {
   if (input.skipFailClosedGuards) return;
   let fee = 0n;
@@ -93,6 +109,25 @@ export function assertGmxPayloadFailClosed(input: {
     );
   }
   if (!input.pool) return;
+  const oiLong = input.oiLongUsd ?? input.pool.longTokenUsd;
+  const oiShort = input.oiShortUsd ?? input.pool.shortTokenUsd;
+  const poolTvl = input.poolTvlUsd ?? input.pool.longTokenUsd + input.pool.shortTokenUsd;
+  const imbalance = verifyGmxPoolImbalance({ oiLongUsd: oiLong, oiShortUsd: oiShort, poolTvlUsd: poolTvl });
+  if (!imbalance.ok) {
+    throw new RiskLimitExceeded(
+      imbalance.reasons.join("|"),
+      riskContext("GMX", "GMX_POOL_IMBALANCE_BREACH"),
+    );
+  }
+  if (input.collateralReserveRatio !== undefined) {
+    const reserve = verifyGmxCollateralReserve({ collateralReserveRatio: input.collateralReserveRatio });
+    if (!reserve.ok) {
+      throw new RiskLimitExceeded(
+        reserve.reasons.join("|"),
+        riskContext("GMX", "GMX_COLLATERAL_RESERVE_BREACH"),
+      );
+    }
+  }
   const impact = estimatePreliminaryImpact({
     orderSizeUsd: input.sizeUsd,
     isLong: input.isLong,

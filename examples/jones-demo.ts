@@ -63,7 +63,7 @@ function runTrip(nowMs: number): number {
       expectedSharePriceUsd: 1.245,
       quotedSharePriceUsd: 1.32,
       rebalancePending: true,
-      blockPriceDeviationBps: 85,
+      blockPriceDeviationBps: 35,
       refPriceUsd: 3500,
       spotPriceUsd: 3500,
       depthUsd: 6_000,

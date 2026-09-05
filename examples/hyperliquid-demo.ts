@@ -13,7 +13,7 @@ import {
   createSessionKeyAgent,
   verifySessionKeyValidity,
 } from "../src/adapters/hl/auth";
-import { PGATE_MAX_LATENCY_MS } from "../src/adapters/hl/execution";
+import { evaluateHyperliquidSessionGuard } from "../src/adapters/hl/hyperliquid-session-guard";
 import { evaluateWsSoilResistance } from "../src/adapters/hl/websocket";
 import { ensureSoilWasm } from "../src/sdk";
 import {
@@ -66,35 +66,46 @@ async function runHealthy(nowMs: number): Promise<number> {
     result.signature,
   );
   const valid = verifySessionKeyValidity(TEST_AGENT_ADDRESS, result.expiresAt);
+  const sessionGuard = evaluateHyperliquidSessionGuard({
+    orderSizeUsd: 2_000,
+    spreadBps: 12,
+    requestsInLastMinute: 5,
+    sessionKeyValid: valid,
+  });
   console.log(
-    `${R}  EIP-712 recovered=${recovered.slice(0, 10)}… · session valid=${valid} · agent=${HL_SESSION_KEY_AGENT_NAME}`,
+    `${R}  EIP-712 recovered=${recovered.slice(0, 10)}… · session valid=${valid} · agent=${HL_SESSION_KEY_AGENT_NAME} · guard=${sessionGuard.status}`,
   );
-  hudSoilFuse(true, latencyUs, []);
+  hudSoilFuse(sessionGuard.ok, latencyUs, sessionGuard.reasons);
   hudChannelOpen();
   hudDispatched("Hyperliquid ApproveAgent → L1 dispatch channel", latencyUs);
   return latencyUs;
 }
 
 function runTrip(nowMs: number): number {
-  hudIntent("hl-demo", "Hyperliquid", "WS_STALE_TRIP", "HL L2 book · PGATE fuse");
+  hudIntent("hl-demo", "Hyperliquid", "SPREAD_TRIP", "HL L1 orderbook · >20bps spread");
+  const t0 = hrtimeStart();
+  const sessionGuard = evaluateHyperliquidSessionGuard({
+    orderSizeUsd: 6_000,
+    spreadBps: 28,
+    requestsInLastMinute: 5,
+    sessionKeyValid: true,
+  });
   const health = {
     connected: true,
-    latencyMs: 250,
+    latencyMs: 80,
     lastMessageAt: nowMs,
-    lastPingAt: nowMs - 6_000,
-    stale: true,
-    reconnectAttempts: 1,
+    lastPingAt: nowMs - 1_000,
+    stale: false,
+    reconnectAttempts: 0,
     soilTripped: false,
     tripReasons: [] as string[],
   };
-  const t0 = hrtimeStart();
   const fused = evaluateWsSoilResistance(health, HEALTHY_SOIL);
   const latencyUs = hrtimeElapsedUs(t0);
-  console.log(
-    `${R}  WS latency=${health.latencyMs}ms (>${PGATE_MAX_LATENCY_MS}ms) · stale=${health.stale}`,
-  );
-  hudSoilFuse(false, latencyUs, fused.reasons);
-  hudSevered("WS_LATENCY_STALE");
+  const reasons = [...sessionGuard.reasons, ...(fused.tripped ? fused.reasons : [])];
+  console.log(`${R}  spread=28bps (>20bps) · maxSize breach · session guard=${sessionGuard.status}`);
+  hudSoilFuse(false, latencyUs, reasons.length ? reasons : ["HL_ORDERBOOK_SPREAD_BREACH"]);
+  hudSevered("HL_ORDERBOOK_SPREAD_BREACH");
   hudBlocked();
   return latencyUs;
 }

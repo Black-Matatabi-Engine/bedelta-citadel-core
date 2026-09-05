@@ -54,6 +54,7 @@ function runHealthy(): number {
     isLong: true,
     executionFee: DEFAULT_GMX_EXECUTION_FEE_WEI,
     pool: { longTokenUsd: 5_000_000, shortTokenUsd: 2_500_000 },
+    collateralReserveRatio: 1.08,
   });
   const guardUs = hrtimeElapsedUs(t1);
   const soil = measureSync(() =>
