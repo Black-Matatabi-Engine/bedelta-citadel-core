@@ -2,6 +2,26 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
+## ⚡ 3-Second TL;DR for Judges (ELI5)
+
+**Citadel Shield = the sub-millisecond ESP / anti-lock brake system for autonomous AI agents.**
+
+| | **LLM Brain** | **Citadel Pre-Flight Shield** |
+|---|---------------|-------------------------------|
+| **Speed** | ~2,000ms (slow reasoning, prone to hallucinations) | **14.0µs** (deterministic 0-Gas safety deadlock) |
+| **Job** | Plans trades from natural-language prompts | Validates calldata **before** any signature |
+| **On bad intent** | May route to wrong venue (e.g. Aerodrome) | **FAIL-CLOSED** — severs channel, **$0 Gas** |
+
+```
+[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+   (thinks & plans — may hallucinate)      (airbag deploys — severs signature)         (only if cleared)
+```
+
+**In plain English:** If an AI agent hallucinates or tries to send funds to an unauthorized contract (like **Aerodrome** when only GMX/Pendle/Uniswap are allowed), Citadel **severs the signature channel in 14 microseconds** without spending a single cent of Gas.
+
+**Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+
+---
 [![Vitest](https://img.shields.io/badge/Vitest-834%20PASS%20%28192%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)

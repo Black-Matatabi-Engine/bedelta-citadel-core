@@ -5,6 +5,26 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
+## ⚡ 3 秒 TL;DR 給 Judges（ELI5）
+
+**Citadel Shield = 自主 AI Agent 的亞毫秒級 ESP / 防鎖死煞車系統。**
+
+| | **LLM 大腦** | **Citadel Pre-Flight 護盾** |
+|---|-------------|---------------------------|
+| **速度** | ~2,000ms（慢速推理，易幻覺） | **14.0µs**（確定性 0-Gas 安全死鎖） |
+| **職責** | 從自然語言規劃交易 | 於任何簽名**之前**驗證 calldata |
+| **惡意意圖** | 可能路由至錯誤 venue（如 Aerodrome） | **FAIL-CLOSED** — 切斷通道，**$0 Gas** |
+
+```
+[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+   （思考規劃 — 可能幻覺）                  （氣囊彈出 — 切斷簽名）                      （僅通過後上鏈）
+```
+
+**白話文：** 若 AI agent 幻覺或試圖將資金送往未授權合約（如政策僅允許 GMX/Pendle/Uniswap 卻指向 **Aerodrome**），Citadel 於 **14 微秒**內**切斷簽名通道** — 不花費一分 Gas。
+
+**30 秒驗證：** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+
+---
 [![Vitest](https://img.shields.io/badge/Vitest-836%20PASS%20%28192%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(50bps_aligned)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)

@@ -1,5 +1,21 @@
 # SUBMISSION.md: SliverVine Citadel Shield — Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
+## ⚡ 3-Second TL;DR for Judges (ELI5)
+
+**Citadel Shield = the sub-millisecond ESP / anti-lock brake system for autonomous AI agents.**
+
+| | **LLM Brain** | **Citadel Pre-Flight Shield** |
+|---|---------------|-------------------------------|
+| **Speed** | ~2,000ms (slow reasoning, prone to hallucinations) | **14.0µs** (deterministic 0-Gas safety deadlock) |
+| **On bad intent** | May route to unauthorized venue (e.g. **Aerodrome**) | **FAIL-CLOSED** — severs signature channel, **$0 Gas** |
+
+```
+[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+```
+
+**Plain English:** If an AI agent hallucinates or tries to send funds to an unauthorized contract, Citadel severs the signature channel in **14 microseconds** without spending a single cent of Gas. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+
+---
 | Field | Value |
 |-------|-------|
 | **Official Name** | SliverVine Citadel Shield · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) |

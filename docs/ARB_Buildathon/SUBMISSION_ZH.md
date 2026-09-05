@@ -2,6 +2,22 @@
 
 # SUBMISSION.md：SliverVine Citadel Shield — Arbitrum 上 AI Agent 的預共識意圖防火牆與執行安全原語
 
+## ⚡ 3 秒 TL;DR 給 Judges（ELI5）
+
+**Citadel Shield = 自主 AI Agent 的亞毫秒級 ESP / 防鎖死煞車系統。**
+
+| | **LLM 大腦** | **Citadel Pre-Flight 護盾** |
+|---|-------------|---------------------------|
+| **速度** | ~2,000ms（慢速推理，易幻覺） | **14.0µs**（確定性 0-Gas 安全死鎖） |
+| **惡意意圖** | 可能路由至未授權 venue（如 **Aerodrome**） | **FAIL-CLOSED** — 切斷簽名通道，**$0 Gas** |
+
+```
+[LLM Reasoning: 1,000ms – 5,000ms]  →  [Citadel Pre-Execution Shield: 14.0µs]  →  [Arbitrum Chain]
+```
+
+**白話文：** 若 AI agent 幻覺或試圖將資金送往未授權合約，Citadel 於 **14 微秒**內切斷簽名通道，不花費一分 Gas。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+
+---
 | 欄位 | 值 |
 |-------|-------|
 | **正式名稱** | SliverVine Citadel Shield · SliverVine Protocol（BeDelta Living Water v1.0 / BeΔ） |
