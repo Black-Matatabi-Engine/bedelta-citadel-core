@@ -25,8 +25,8 @@ import {
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import {
-  DEMO_LATENCY_LEGEND,
-  formatHarnessLatencyLabel,
+  formatExecutionLatency,
+  formatGuardTime,
   hrtimeStart,
   hrtimeElapsedUs,
   resolveLatency,
@@ -145,7 +145,7 @@ function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
   const color = trip ? (r.ok ? "\x1b[33;1m" : "\x1b[32;1m") : r.ok ? "\x1b[32;1m" : "\x1b[31;1m";
   const mark = trip ? (r.ok ? "⚠" : "✓") : r.ok ? "✓" : "✗";
   console.log(
-    `${color}  ${mark} ${r.framework}${R} → ${r.status} · ${CYAN}${formatHarnessLatencyLabel(r.latencyUs)}${R}`,
+    `${color}  ${mark} ${r.framework}${R} → ${r.status} · ${CYAN}${formatExecutionLatency(r.latencyUs)}${R}`,
   );
   if (!r.ok && r.detail) {
     console.log(`${GRAY}    ${r.detail}${R}`);
@@ -170,8 +170,7 @@ async function main(): Promise<void> {
   printBanner("Quad-Agent Framework Demo");
   printMode(trip);
 
-  console.log(`${BOLD}Citadel Pre-Execution Risk Gateway — Four Major AI Agent Frameworks${R}`);
-  console.log(`${GRAY}${DEMO_LATENCY_LEGEND}${R}\n`);
+  console.log(`${BOLD}Citadel Pre-Execution Risk Gateway — Four Major AI Agent Frameworks${R}\n`);
 
   const results: FrameworkResult[] = [];
   for (const run of [runWayfinder, runElizaOS, runVirtuals, runLangChain]) {
@@ -187,7 +186,7 @@ async function main(): Promise<void> {
   const minUs = Math.min(...latencies);
 
   console.log(
-    `${BOLD}Aggregate latency:${R} min ${CYAN}${formatHarnessLatencyLabel(minUs)}${R} · avg ${CYAN}${formatHarnessLatencyLabel(avgUs)}${R} · max ${CYAN}${formatHarnessLatencyLabel(maxUs)}${R}`,
+    `${BOLD}Aggregate guard time:${R} min ${CYAN}${formatGuardTime(minUs)}${R} · avg ${CYAN}${formatGuardTime(avgUs)}${R} · max ${CYAN}${formatGuardTime(maxUs)}${R}`,
   );
 
   const passCount = results.filter((r) => r.ok).length;

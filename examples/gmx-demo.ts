@@ -33,7 +33,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
+import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
 
 const ETH_GM = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const TOXIC_POOL = { longTokenUsd: 3_000_000, shortTokenUsd: 1_000_000 };
@@ -124,9 +124,8 @@ async function main(): Promise<void> {
   seedAdapterProbes(Date.now());
   printBanner("GMX v2 Shadow Margin Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip() : runHealthy();
-  console.log(`\n${R}GMX guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}GMX guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
   if (trip) process.exit(0);
 }

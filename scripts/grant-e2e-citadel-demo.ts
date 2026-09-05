@@ -66,7 +66,7 @@ import { formatHlPerpPrice } from "../src/adapters/hl/execution-wire";
 import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedge";
 import { loadEnvProduction, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
-import { formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
+import { formatGuardTime, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -329,7 +329,7 @@ function step1CitadelPreExec(): {
   if (verdict.reasons.length) demoLog(`Reasons: ${verdict.reasons.join(" | ") || "(none)"}`);
   demoLog(`Gate: ${verdict.verifyingContract} · domain=${verdict.domainName}`);
   demoLog(
-    `Full Node Script E2E RTT (wrapper + serialization + HUD): ${formatHarnessLatencyLabel(nodeE2eRttUs)}`,
+    `Full Node Script E2E RTT (wrapper + serialization + HUD): ${formatGuardTime(nodeE2eRttUs)}`,
   );
 
   if (!verdict.allowedToSign || !verdict.deadmanOk) {

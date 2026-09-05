@@ -2,7 +2,7 @@
  * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
-import { formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
+import { formatExecutionLatency, formatGuardTime, printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
@@ -52,6 +52,7 @@ export function printBanner(subtitle: string): void {
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${padBanner(inner)}${R}${CYAN}│${R}`);
   console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
+  printBenchmarkBanner();
 }
 
 export function printMode(trip: boolean): void {
@@ -95,7 +96,7 @@ export function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[])
   const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
   hudLine(
     "FUSE",
-    `checkSoilResistance() -> ${verdict} | ${formatHarnessLatencyLabel(latencyUs)}`,
+    `checkSoilResistance() -> ${verdict} | ${formatExecutionLatency(latencyUs)}`,
     pass ? GREEN : YELLOW,
   );
 }
@@ -113,10 +114,12 @@ export function hudChannelOpen(): void {
 }
 
 export function hudDispatched(target: string, latencyUs: number): void {
-  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatHarnessLatencyLabel(latencyUs)}`, GREEN);
+  hudLine("DISPATCH", `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatGuardTime(latencyUs)}`, GREEN);
 }
 
 export const COOLDOWN_MS = 60_000;
+
+export { printBenchmarkBanner } from "../lib/demo-timing";
 
 export function isCooldownError(message: string): boolean {
   return message.includes("MANDATORY_COOLDOWN_ACTIVE");

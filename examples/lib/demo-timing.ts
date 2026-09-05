@@ -1,7 +1,13 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
 export const EDGE_WASM_P50_US = 106;
-export const DEMO_LATENCY_LEGEND = "Node.js test harness wall-clock vs Edge WASM Core (~106µs p50)";
+
+export const DEMO_BENCHMARK_BANNER =
+  "[BENCHMARK] Runtime: Node.js CLI Harness | Core Vector Engine: ~106µs (Edge WASM Target)";
+
+export function printBenchmarkBanner(): void {
+  console.log(DEMO_BENCHMARK_BANNER);
+}
 
 export function hrtimeStart(): bigint {
   return process.hrtime.bigint();
@@ -21,9 +27,14 @@ export function formatLatencyLabel(us: number): string {
   return us >= 1000 ? `${(us / 1000).toFixed(2)}ms` : `${us.toFixed(1)}µs`;
 }
 
-/** Distinguish Node.js harness wall-clock from production Edge WASM p50. */
-export function formatHarnessLatencyLabel(harnessUs: number): string {
-  return `Harness: ${formatLatencyLabel(harnessUs)} (Edge WASM Core: ~${EDGE_WASM_P50_US}µs)`;
+/** Per-line soil fuse / execution telemetry (no Edge target suffix). */
+export function formatExecutionLatency(us: number): string {
+  return `Execution Latency: ${formatLatencyLabel(us)}`;
+}
+
+/** Per-line guard / dispatch / summary telemetry (no Edge target suffix). */
+export function formatGuardTime(us: number): string {
+  return `Guard Time: ${formatLatencyLabel(us)}`;
 }
 
 export async function measureAsync<T>(

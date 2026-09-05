@@ -37,7 +37,7 @@ import {
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
-import { DEMO_LATENCY_LEGEND, hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
+import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 
 async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
@@ -161,7 +161,6 @@ async function main(): Promise<void> {
 
   printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
 
   if (stabilizer) {
     const swap: StabilizerSwapInput = trip

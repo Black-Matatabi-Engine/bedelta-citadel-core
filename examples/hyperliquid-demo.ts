@@ -30,7 +30,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart, measureAsync } from "./lib/demo-timing";
+import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureAsync } from "./lib/demo-timing";
 import {
   TEST_AGENT_ADDRESS,
   TEST_MASTER_ADDRESS,
@@ -120,9 +120,8 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Hyperliquid Session Key Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : await runHealthy(nowMs);
-  console.log(`\n${R}HL guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}HL guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

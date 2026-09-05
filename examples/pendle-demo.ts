@@ -30,7 +30,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
+import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
 
 const HEALTHY_SOIL = {
   symbol: "ETH",
@@ -122,9 +122,8 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Pendle Institutional Shield Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Pendle guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Pendle guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

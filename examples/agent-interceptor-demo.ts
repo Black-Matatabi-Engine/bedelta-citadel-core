@@ -7,7 +7,7 @@
  * Rogue: pnpm tsx examples/agent-interceptor-demo.ts --trip
  */
 import { assertCitadelRiskGate, type CitadelRiskGateInput } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate";
-import { formatHarnessLatencyLabel } from "./lib/demo-timing";
+import { formatExecutionLatency, formatGuardTime, printBenchmarkBanner } from "./lib/demo-timing";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { __resetArbitrumGasGuardForTests } from "../src/services/risk/arbitrum-gas-guard";
 import {
@@ -86,6 +86,7 @@ function printBanner(): void {
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${padBanner(BANNER_INNER)}${R}${CYAN}│${R}`);
   console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
+  printBenchmarkBanner();
 }
 
 function printMode(trip: boolean): void {
@@ -136,7 +137,7 @@ function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void 
   const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
   hudLine(
     "FUSE",
-    `checkSoilResistance() -> ${verdict} | ${formatHarnessLatencyLabel(latencyUs)}`,
+    `checkSoilResistance() -> ${verdict} | ${formatExecutionLatency(latencyUs)}`,
     pass ? GREEN : YELLOW,
   );
 }
@@ -168,7 +169,7 @@ function hudChannelOpen(): void {
 function hudDispatched(target: string, latencyUs: number): void {
   hudLine(
     "DISPATCH",
-    `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatHarnessLatencyLabel(latencyUs)}`,
+    `UserOp Dispatch: ${GREEN}ALLOWED${R} | target: ${target} | ${formatGuardTime(latencyUs)}`,
     GREEN,
   );
 }
@@ -209,7 +210,7 @@ export async function virtualsAgentExecutionHook(userOpDraft: AgentUserOpDraft) 
   }
 
   if (!hudEnabled) {
-    console.log(`[Citadel] Soil Check PASS | ${formatHarnessLatencyLabel(measuredUs)}`);
+    console.log(`[Citadel] Soil Check PASS | ${formatExecutionLatency(measuredUs)}`);
   }
 
   const gate = assertCitadelRiskGate(soil);

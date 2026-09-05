@@ -23,7 +23,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
+import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
   hudIntent("camelot-demo", "Camelot V3", "V3_SPOT_SWAP", "WETH/USDC · Arbitrum One");
@@ -93,9 +93,8 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Camelot V3 Concentrated Liquidity Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Camelot guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Camelot guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 

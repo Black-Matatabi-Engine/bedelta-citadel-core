@@ -23,7 +23,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
-import { DEMO_LATENCY_LEGEND, formatHarnessLatencyLabel, measureSync, resolveLatency } from "./lib/demo-timing";
+import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
   hudIntent("radiant-demo", "Radiant Capital", "BORROW", "WETH/USDC · Arbitrum One");
@@ -88,9 +88,8 @@ async function main(): Promise<void> {
   seedAdapterProbes(nowMs);
   printBanner("Radiant Capital Lending Guard Demo");
   printMode(trip);
-  console.log(`${R}${DEMO_LATENCY_LEGEND}${R}\n`);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Radiant guard latency: ${formatHarnessLatencyLabel(latencyUs)}${R}\n`);
+  console.log(`\n${R}Radiant guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
 }
 
