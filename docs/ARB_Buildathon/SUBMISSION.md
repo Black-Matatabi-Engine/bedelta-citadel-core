@@ -197,8 +197,10 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain · pnpm demo:stabilizer
 pnpm demo:quad              # All four AI frameworks combined → ALLOW
 pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
-pnpm demo:matrix            # 6-protocol cross-venue matrix → nominal PASS
-pnpm demo:matrix -- --trip  # Layer-1 soil trip + R20 sever → universal FAIL_CLOSED
+pnpm demo:matrix                    # Full 6-protocol matrix (--loop=all)
+pnpm demo:matrix -- --loop=perp     # Pendle → GMX → HL perp stack
+pnpm demo:matrix -- --loop=spot     # Camelot → Radiant → Jones spot loop
+pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 ```
 
 - **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · **190 test files | 828 PASS Clean (100% PASS)**

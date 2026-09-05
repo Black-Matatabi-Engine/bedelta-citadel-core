@@ -1,8 +1,12 @@
 #!/usr/bin/env tsx
 /**
- * Cross-Venue Matrix Demo — 6-protocol unified circuit breaker (Pendle · GMX · HL · Camelot · Radiant · Jones).
- * Usage: pnpm demo:matrix
- * Trip:  pnpm demo:matrix -- --trip  (default: Pendle yield shock; pass --gmx for pool imbalance)
+ * Cross-Venue Matrix Demo — flexible capital loops across 6 protocols.
+ * Usage:
+ *   pnpm demo:matrix                      # --loop=all (default)
+ *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL perp stack
+ *   pnpm demo:matrix -- --loop=spot       # Camelot → Radiant → Jones spot loop
+ *   pnpm demo:matrix -- --healthy-only    # nominal PASS (no R20 sever)
+ * Trip:  pnpm demo:matrix -- --trip --gmx  # GMX pool imbalance trip
  */
 import {
   CAMELOT_V3_ARBITRUM_CHAIN_ID,
@@ -44,12 +48,18 @@ import {
 import { formatLatencyLabel, hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
+type MatrixLoop = "perp" | "spot" | "all";
+type VenueKey = "pendle" | "gmx" | "hl" | "camelot" | "radiant" | "jones" | "soil";
 
 interface VenueRow {
   venue: string;
   status: VenueStatus;
   detail: string;
 }
+
+const PERP_KEYS: VenueKey[] = ["pendle", "gmx", "hl", "soil"];
+const SPOT_KEYS: VenueKey[] = ["camelot", "radiant", "jones", "soil"];
+const ALL_KEYS: VenueKey[] = ["pendle", "gmx", "hl", "camelot", "radiant", "jones", "soil"];
 
 const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
@@ -59,6 +69,12 @@ const HEALTHY_SOIL: SoilResistanceInput = {
   depthUsd: 500_000,
   disableThresholdJitter: true,
 };
+
+function parseLoop(argv: string[]): MatrixLoop {
+  const raw = argv.find((a) => a.startsWith("--loop="))?.split("=")[1]?.toLowerCase();
+  if (raw === "perp" || raw === "spot") return raw;
+  return "all";
+}
 
 function pendleSelection(nowMs: number, trip: boolean) {
   return {
@@ -74,12 +90,7 @@ function pendleSelection(nowMs: number, trip: boolean) {
 
 function soilForStep(nowMs: number, trip: boolean, gmxTrip: boolean): SoilResistanceInput {
   if (trip && gmxTrip) {
-    return {
-      ...HEALTHY_SOIL,
-      at: new Date(nowMs),
-      depthUsd: 1,
-      hlPerp: 4200,
-    };
+    return { ...HEALTHY_SOIL, at: new Date(nowMs), depthUsd: 1, hlPerp: 4200 };
   }
   const selection = pendleSelection(nowMs, trip);
   return {
@@ -96,69 +107,107 @@ function gateStatus(state: SystemState, innerOk: boolean): VenueStatus {
   return innerOk ? "ALLOW" : "FAIL_CLOSED";
 }
 
-function evaluateAllVenues(nowMs: number, trip: boolean, gmxTrip: boolean, state: SystemState): VenueRow[] {
-  const soil = soilForStep(nowMs, trip, gmxTrip);
-  const pendle = validateAIPoolSelection(pendleSelection(nowMs, trip && !gmxTrip));
-  const gmx = verifyGmxPoolImbalance({
-    oiLongUsd: gmxTrip ? 4_500_000 : 3_000_000,
-    oiShortUsd: gmxTrip ? 500_000 : 2_500_000,
-    poolTvlUsd: 5_500_000,
-  });
-  const hl = evaluateHyperliquidSessionGuard({
-    orderSizeUsd: 2_000,
-    spreadBps: trip ? 25 : 10,
-    sessionKeyValid: !isR20Locked(state),
-    requestsInLastMinute: 5,
-  });
-  const camelot = evaluateCamelotV3SwapGuard({
-    chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
-    tokenIn: "WETH",
-    tokenOut: "USDC",
-    amountInUsd: 25_000,
-    activeLiquidityUsd: 2_500_000,
-    dynamicFeeBps: 5,
-    tickRangeLiquidityUsd: 200_000,
-    spotPriceUsd: 3500,
-    refPriceUsd: 3500,
-    depthUsd: 500_000,
-    nowMs,
-  });
-  const radiant = evaluateRadiantLendingGuard({
-    chainId: RADIANT_ARBITRUM_CHAIN_ID,
-    market: "WETH/USDC",
-    collateralUsd: 150_000,
-    debtUsd: 80_000,
-    liquidationThreshold: 0.825,
-    projectedHealthFactor: trip ? 1.05 : 1.42,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: 500_000,
-    nowMs,
-  });
-  const jones = evaluateJonesVaultGuard({
-    chainId: JONES_ARBITRUM_CHAIN_ID,
-    vaultId: "jGLP",
-    action: "REBALANCE",
-    amountUsd: 50_000,
-    vaultTvlUsd: 5_000_000,
-    expectedSharePriceUsd: 1.245,
-    quotedSharePriceUsd: trip ? 1.252 : 1.246,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: 400_000,
-    nowMs,
-  });
-  const soilProbe = checkSoilResistance(soil);
+function evaluateVenue(
+  key: VenueKey,
+  nowMs: number,
+  trip: boolean,
+  gmxTrip: boolean,
+  state: SystemState,
+  soil: SoilResistanceInput,
+  soilProbe: ReturnType<typeof checkSoilResistance>,
+): VenueRow | null {
+  switch (key) {
+    case "pendle": {
+      const r = validateAIPoolSelection(pendleSelection(nowMs, trip && !gmxTrip));
+      return { venue: "Pendle", status: gateStatus(state, r.passed), detail: r.passed ? "yield farming clear" : "yield shock trip" };
+    }
+    case "gmx": {
+      const r = verifyGmxPoolImbalance({
+        oiLongUsd: gmxTrip ? 4_500_000 : 3_000_000,
+        oiShortUsd: gmxTrip ? 500_000 : 2_500_000,
+        poolTvlUsd: 5_500_000,
+      });
+      return { venue: "GMX v2", status: gateStatus(state, r.ok), detail: r.ok ? "shadow margin ok" : "pool imbalance trip" };
+    }
+    case "hl": {
+      const r = evaluateHyperliquidSessionGuard({
+        orderSizeUsd: 2_000,
+        spreadBps: trip ? 25 : 10,
+        sessionKeyValid: !isR20Locked(state),
+        requestsInLastMinute: 5,
+      });
+      return { venue: "Hyperliquid", status: gateStatus(state, r.ok), detail: r.status };
+    }
+    case "camelot": {
+      const r = evaluateCamelotV3SwapGuard({
+        chainId: CAMELOT_V3_ARBITRUM_CHAIN_ID,
+        tokenIn: "WETH",
+        tokenOut: "USDC",
+        amountInUsd: 25_000,
+        activeLiquidityUsd: 2_500_000,
+        dynamicFeeBps: 5,
+        tickRangeLiquidityUsd: 200_000,
+        spotPriceUsd: 3500,
+        refPriceUsd: 3500,
+        depthUsd: 500_000,
+        nowMs,
+      });
+      return { venue: "Camelot V3", status: gateStatus(state, r.ok), detail: r.status };
+    }
+    case "radiant": {
+      const r = evaluateRadiantLendingGuard({
+        chainId: RADIANT_ARBITRUM_CHAIN_ID,
+        market: "WETH/USDC",
+        collateralUsd: 150_000,
+        debtUsd: 80_000,
+        liquidationThreshold: 0.825,
+        projectedHealthFactor: trip ? 1.05 : 1.42,
+        refPriceUsd: 3500,
+        spotPriceUsd: 3500,
+        depthUsd: 500_000,
+        nowMs,
+      });
+      return { venue: "Radiant", status: gateStatus(state, r.ok), detail: r.status };
+    }
+    case "jones": {
+      const r = evaluateJonesVaultGuard({
+        chainId: JONES_ARBITRUM_CHAIN_ID,
+        vaultId: "jGLP",
+        action: "REBALANCE",
+        amountUsd: 50_000,
+        vaultTvlUsd: 5_000_000,
+        expectedSharePriceUsd: 1.245,
+        quotedSharePriceUsd: trip ? 1.252 : 1.246,
+        refPriceUsd: 3500,
+        spotPriceUsd: 3500,
+        depthUsd: 400_000,
+        nowMs,
+      });
+      return { venue: "Jones DAO", status: gateStatus(state, r.ok), detail: r.status };
+    }
+    case "soil":
+      return {
+        venue: "Soil Fuse",
+        status: gateStatus(state, !soilProbe.tripped),
+        detail: soilProbe.tripped ? soilProbe.reasons.join("|") : "nominal",
+      };
+    default:
+      return null;
+  }
+}
 
-  return [
-    { venue: "Pendle", status: gateStatus(state, pendle.passed), detail: pendle.passed ? "yield shock clear" : "yield shock trip" },
-    { venue: "GMX v2", status: gateStatus(state, gmx.ok), detail: gmx.ok ? "pool balanced" : "imbalance trip" },
-    { venue: "Hyperliquid", status: gateStatus(state, hl.ok), detail: hl.status },
-    { venue: "Camelot V3", status: gateStatus(state, camelot.ok), detail: camelot.status },
-    { venue: "Radiant", status: gateStatus(state, radiant.ok), detail: radiant.status },
-    { venue: "Jones DAO", status: gateStatus(state, jones.ok), detail: jones.status },
-    { venue: "Soil Fuse", status: gateStatus(state, !soilProbe.tripped), detail: soilProbe.tripped ? soilProbe.reasons.join("|") : "nominal" },
-  ];
+function evaluateLoop(
+  keys: VenueKey[],
+  nowMs: number,
+  trip: boolean,
+  gmxTrip: boolean,
+  state: SystemState,
+): VenueRow[] {
+  const soil = soilForStep(nowMs, trip, gmxTrip);
+  const soilProbe = checkSoilResistance(soil);
+  return keys
+    .map((k) => evaluateVenue(k, nowMs, trip, gmxTrip, state, soil, soilProbe))
+    .filter((r): r is VenueRow => r != null);
 }
 
 function printMatrix(title: string, rows: VenueRow[]): void {
@@ -169,46 +218,96 @@ function printMatrix(title: string, rows: VenueRow[]): void {
   }
 }
 
-function main(): void {
-  const trip = !process.argv.includes("--healthy-only");
-  const gmxTrip = process.argv.includes("--gmx");
-  const nowMs = Date.now();
-  printBanner("Cross-Venue Matrix · 6-Protocol Circuit Breaker");
-  seedAdapterProbes(nowMs);
+function resetState(): void {
   __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
+}
 
+function runCircuitBreaker(
+  label: string,
+  keys: VenueKey[],
+  nowMs: number,
+  gmxTrip: boolean,
+  t0: bigint,
+): boolean {
+  printMatrix(`${label} · Step 1 — Nominal pre-flight (PASS)`, evaluateLoop(keys, nowMs, false, false, readActiveSystemState()));
+
+  const tripLabel = gmxTrip ? "GMX pool imbalance >0.35" : "Pendle yield shock >150bps";
+  console.log(`\n${RED}${label} · Step 2 — Inject anomaly: ${tripLabel}${R}`);
+  const soilTrip = checkSoilResistance(soilForStep(nowMs, true, gmxTrip));
+  console.log(`  Layer-1 soil tripped=${soilTrip.tripped} · reasons=${soilTrip.reasons.join("|") || "none"}`);
+
+  console.log(`\n${RED}${label} · Step 3 — severSigningChannel() · R20 physical deadlock${R}`);
+  severSigningChannel();
+  const locked = readActiveSystemState();
+  console.log(`  signingChannelOpen=${locked.signingChannelOpen} · hardlock=${locked.hardlock} · cri=${locked.currentCri}`);
+
+  const finalRows = evaluateLoop(keys, nowMs, true, gmxTrip, locked);
+  printMatrix(`${label} · Step 4 — FAIL_CLOSED (zero-gas severance)`, finalRows);
+
+  const ok = finalRows.every((r) => r.status === "FAIL_CLOSED");
+  console.log(
+    ok
+      ? `${GREEN}${label} TRIP OK — ${finalRows.length}/${finalRows.length} FAIL_CLOSED · ${formatLatencyLabel(hrtimeElapsedUs(t0))}${R}`
+      : `${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`,
+  );
+  return ok;
+}
+
+function main(): void {
+  const argv = process.argv.slice(2);
+  const loop = parseLoop(argv);
+  const healthyOnly = argv.includes("--healthy-only");
+  const trip = !healthyOnly;
+  const gmxTrip = argv.includes("--gmx");
+  const nowMs = Date.now();
   const t0 = hrtimeStart();
-  printMatrix("Step 1 — Nominal multi-venue pre-flight (PASS)", evaluateAllVenues(nowMs, false, false, readActiveSystemState()));
 
-  if (!trip) {
+  const loopTitle =
+    loop === "perp"
+      ? "Delta-Neutral Perp Stack (Pendle → GMX → HL)"
+      : loop === "spot"
+        ? "Spot & Lending Vault Loop (Camelot → Radiant → Jones)"
+        : "Full 6-Protocol Cross-Venue Matrix";
+  printBanner(`Cross-Venue Matrix · ${loopTitle}`);
+  seedAdapterProbes(nowMs);
+  resetState();
+
+  if (healthyOnly || !trip) {
+    const keys = loop === "perp" ? PERP_KEYS : loop === "spot" ? SPOT_KEYS : ALL_KEYS;
+    if (loop === "all") {
+      printMatrix("Loop A — Perp Stack pre-flight", evaluateLoop(PERP_KEYS, nowMs, false, false, readActiveSystemState()));
+      printMatrix("Loop B — Spot Vault pre-flight", evaluateLoop(SPOT_KEYS, nowMs, false, false, readActiveSystemState()));
+    } else {
+      printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, false, false, readActiveSystemState()));
+    }
     console.log(`\n${GREEN}Nominal matrix PASS · ${formatLatencyLabel(hrtimeElapsedUs(t0))}${R}`);
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
 
-  const tripLabel = gmxTrip ? "GMX pool imbalance >0.35" : "Pendle yield shock >150bps";
-  console.log(`\n${RED}Step 2 — Inject anomaly: ${tripLabel}${R}`);
-  const toxicSoil = soilForStep(nowMs, true, gmxTrip);
-  const soilTrip = checkSoilResistance(toxicSoil);
-  console.log(`  Layer-1 soil tripped=${soilTrip.tripped} · reasons=${soilTrip.reasons.join("|") || "none"}`);
+  let allOk = true;
+  if (loop === "perp" || loop === "all") {
+    if (loop === "all") resetState();
+    allOk = runCircuitBreaker(loop === "all" ? "Loop A · Perp Stack" : "Perp Stack", PERP_KEYS, nowMs, gmxTrip, t0) && allOk;
+  }
+  if (loop === "spot" || loop === "all") {
+    if (loop === "all") resetState();
+    allOk = runCircuitBreaker(loop === "all" ? "Loop B · Spot Vault" : "Spot Vault", SPOT_KEYS, nowMs, gmxTrip, t0) && allOk;
+  }
+  if (loop === "all") {
+    resetState();
+    printMatrix("Combined · Step 1 — Full 6-protocol nominal", evaluateLoop(ALL_KEYS, nowMs, false, false, readActiveSystemState()));
+    allOk = runCircuitBreaker("Combined · 6-Protocol", ALL_KEYS, nowMs, gmxTrip, t0) && allOk;
+  }
 
-  console.log(`\n${RED}Step 3 — severSigningChannel() · R20 physical deadlock${R}`);
-  severSigningChannel();
-  const locked = readActiveSystemState();
-  console.log(`  signingChannelOpen=${locked.signingChannelOpen} · hardlock=${locked.hardlock} · cri=${locked.currentCri}`);
-
-  const finalRows = evaluateAllVenues(nowMs, true, gmxTrip, locked);
-  printMatrix("Step 4 — Global FAIL_CLOSED (zero-gas severance)", finalRows);
-
-  const allClosed = finalRows.every((r) => r.status === "FAIL_CLOSED");
   const elapsed = formatLatencyLabel(hrtimeElapsedUs(t0));
   console.log(
-    allClosed
-      ? `\n${GREEN}MATRIX TRIP OK — all venues FAIL_CLOSED · ${elapsed}${R}`
-      : `\n${RED}MATRIX INCOMPLETE — expected universal FAIL_CLOSED${R}`,
+    allOk
+      ? `\n${GREEN}MATRIX COMPLETE — all loops FAIL_CLOSED · ${elapsed}${R}`
+      : `\n${RED}MATRIX INCOMPLETE — see loop output above · ${elapsed}${R}`,
   );
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
-  if (!allClosed) process.exitCode = 1;
+  if (!allOk) process.exitCode = 1;
 }
 
 main();

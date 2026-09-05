@@ -88,8 +88,11 @@ pnpm test       # Full System Regression Suite (190 files / 828 tests)
 | `pnpm demo:camelot` | Camelot V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:radiant` | Radiant Capital HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:jones` | Jones DAO vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix` | Cross-venue 6-protocol circuit breaker (Pendle·GMX·HL·Camelot·Radiant·Jones·Soil) | **6/6 ALLOW** nominal |
-| `pnpm demo:matrix -- --trip` | Pendle yield shock (>150bps) or `--gmx` pool imbalance → Layer-1 soil + R20 sever | **6/6 FAIL_CLOSED** |
+| `pnpm demo:matrix` | Full 6-protocol cross-venue matrix (`--loop=all`) | **6/6 ALLOW** nominal · **6/6 FAIL_CLOSED** trip |
+| `pnpm demo:matrix -- --loop=perp` | Delta-neutral perp stack (Pendle → GMX → HL) | **3/3 + Soil** |
+| `pnpm demo:matrix -- --loop=spot` | Spot & lending vault loop (Camelot → Radiant → Jones) | **3/3 + Soil** |
+| `pnpm demo:matrix -- --healthy-only` | Nominal pre-flight only (no R20 sever) | **ALLOW** |
+| `pnpm demo:matrix -- --trip --gmx` | GMX pool imbalance (>0.35) trip variant | **FAIL_CLOSED** |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -511,7 +514,9 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:camelot` | Camelot V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:radiant` | Radiant Capital lending HF CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:jones` | Jones DAO vault guard CLI | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix` | Cross-venue 6-protocol circuit breaker CLI | **6/6 ALLOW** / `--trip` **6/6 FAIL_CLOSED** |
+| `pnpm demo:matrix` | Cross-venue 6-protocol circuit breaker CLI (`--loop=all`) | **6/6 ALLOW** / trip **6/6 FAIL_CLOSED** |
+| `pnpm demo:matrix -- --loop=perp` | Perp stack loop (Pendle → GMX → HL) | **4/4 FAIL_CLOSED** trip |
+| `pnpm demo:matrix -- --loop=spot` | Spot vault loop (Camelot → Radiant → Jones) | **4/4 FAIL_CLOSED** trip |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |

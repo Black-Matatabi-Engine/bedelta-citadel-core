@@ -160,8 +160,10 @@ pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
 pnpm demo:camelot  # Camelot V3 concentrated liquidity · dynamic fee guard
 pnpm demo:radiant  # Radiant Capital HF & cross-chain liquidation guard
 pnpm demo:jones    # Jones DAO vault share-price & sandwich guard
-pnpm demo:matrix   # Cross-venue 6-protocol circuit breaker (Pendle·GMX·HL·Camelot·Radiant·Jones)
-# Append -- --trip on any Tier 1–2 demo for FAIL_CLOSED soil trip
+pnpm demo:matrix              # Full 6-protocol matrix (--loop=all, default)
+pnpm demo:matrix -- --loop=perp   # Pendle → GMX → HL perp stack
+pnpm demo:matrix -- --loop=spot   # Camelot → Radiant → Jones spot loop
+# Append -- --healthy-only for nominal PASS; default runs R20 trip + severance
 ```
 
 ### Path 1: Instant Monorepo Verification (Recommended — 3 Seconds)
