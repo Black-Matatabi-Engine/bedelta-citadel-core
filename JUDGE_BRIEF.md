@@ -9,7 +9,7 @@
 | **Live Dune Telemetry Portal** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV operational on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Headless Audit Endpoint** | [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
-| **Tests** | `pnpm test` → **180 test files | 803 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Tests** | `pnpm test` → **181 test files | 806 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · `pnpm demo:wayfinder` (Wayfinder route interception) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
 > **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.
@@ -18,7 +18,7 @@
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **180 test files / 803 PASS Clean**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **181 test files / 806 PASS Clean**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
@@ -26,7 +26,7 @@
 | **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Mainnet GM fill scheduled for post-Grant M6. |
 | **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()`. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Sepolia live stream and One production SQL are documented as separate deployment surfaces. |
-| **5** | Agent Integration Roadmap | **v1.0 ships executable Reference Harness** (`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`). Official npm packages (`@elizaos/plugin-citadel-guard` · `wayfinder_citadel_shield`) are **V1.1 Open PR Spec** — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR; not v1.0 official plugins. |
+| **5** | Agent Integration Roadmap | **v1.0 ships:** executable Reference Harness (`examples/adapters/` · `withCitadelShield` · `pnpm demo:agent`) **plus Wayfinder V1.0 Live Native Integration** ([`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder`). Official npm packages (`@elizaos/plugin-citadel-guard`) are **V1.1 Open PR Spec** — see [V1.1 Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · `feature/v1.1-agent-frameworks-spec` PR; not v1.0 official plugins. |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) is **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
 | **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
 | **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**; **10 bps CaaS protocol fee-sharing = V2.0 Expansion**. → [Commercial Model](#commercial-model-saas-vs-caas) |
@@ -53,8 +53,10 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 ```bash
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (180 files / 803 tests)
+pnpm test       # Full System Regression Suite (181 files / 806 tests)
 ```
+
+Wayfinder native integration: `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip)
 
 Optional AI interceptor: `pnpm demo:agent` · `pnpm demo:agent --trip` (FAIL_CLOSED)
 
@@ -140,12 +142,21 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 → [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) · `scripts/emit-sepolia-telemetry-events.ts`
 
+### Wayfinder (V1.0 Live · Arbitrum Native AI Agent Engine)
+
+**Citadel is the native pre-execution risk firewall for the Wayfinder Agent Engine on Arbitrum One (`42161`).**
+
+- **Native adapter SSOT:** [`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` wires `checkSoilResistance()` (Pillar 3 soil fuse) + `verifyAgentIntent()` (8-dimension validation) before on-chain route dispatch
+- **0-Gas fail-closed:** toxic soil trips and session-key violations sever the EIP-712 signing channel pre-broadcast — no Sequencer gas on blocked paths
+- **Demo:** `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip Interception)
+- **Tests:** [`tests/adapters/wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts)
+
 ### AI Agent Ecosystem Runtimes (Virtuals / ElizaOS / LangChain TS & Python)
 
-**v1.0: executable Reference Harness · V1.1: official npm spec PR (`@elizaos/plugin-citadel-guard`)**
+**v1.0: Wayfinder native adapter + executable Reference Harness · V1.1: official npm spec PR (`@elizaos/plugin-citadel-guard`)**
 
-- **v1.0 delivered:** `withCitadelShield` decorator · `examples/adapters/` · `pnpm demo:agent` — reproducible CLI verification
-- **V1.1 Open PR Spec:** [V1.1 Agent Frameworks Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · ElizaOS `@elizaos/plugin-citadel-guard` · Wayfinder `wayfinder_citadel_shield` — **not v1.0 official npm releases**
+- **v1.0 delivered:** Wayfinder **`wayfinderCitadelShieldHook`** ([`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts)) · `withCitadelShield` decorator · `examples/adapters/` · `pnpm demo:agent` · `pnpm demo:wayfinder` — reproducible CLI verification
+- **V1.1 Open PR Spec:** [V1.1 Agent Frameworks Roadmap (feature branch)](https://github.com/SilverVineLabs/bedelta-living-water/blob/feature/v1.1-agent-frameworks-spec/docs/V1.1_AGENT_FRAMEWORKS_ROADMAP.md) · ElizaOS `@elizaos/plugin-citadel-guard` — **not v1.0 official npm releases**
 
 **Zero-touch integration for agent swarms (TS decorator + Python REST):**
 
@@ -217,7 +228,7 @@ Grant allocation directly fuels **V2.0 R&D**:
 - **Pendle** — Institutional Safety Sentinel (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants); protocol-tax-free · SaaS Request Credits
 - **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
 - **Commercial** — v1.0 SaaS tiers ($0/$49/$299); 10 bps CaaS protocol fee = V2.0 Expansion
-- **Agent SDK** — v1.0 Reference Harness (`withCitadelShield`); official npm plugins ship in V1.1 Open PR Spec
+- **Agent SDK** — v1.0 Wayfinder native adapter (`wayfinder-shield.ts`) + Reference Harness (`withCitadelShield`); official ElizaOS npm plugin ships in V1.1 Open PR Spec
 - **Stylus** — V2.0 roadmap probe; live gateway = immutable Solidity Gate on Arbitrum One
 - **Monte Carlo** — 87.39% toxic flow blocked in 10,000-run simulation; nominal modeled capital, not live TVL
 
