@@ -46,8 +46,18 @@
 
 | Version | Pricing model | Notes |
 |---------|---------------|-------|
-| **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$0 / $49 / $299** Edge API tiers · free public Dune dashboard |
+| **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$0 / $49 / $299** Edge API tiers · Institutional **10M intents/mo** 硬上限 · 免費公開 Dune dashboard |
 | **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | 執行前風險檢查 **10 bps protocol authorization fee** · 與 v1.0 GMX +10 bps `uiFeeReceiver` 分離 |
+
+#### v1.0 SaaS 分層規格
+
+| 層級 | 價格 | 每月意圖上限 | 權益 |
+|------|------|-------------|------|
+| **Developer** | $0 | Request Credits 計量 | 公開 Dune dashboard · 社群存取 |
+| **Pro** | $49 | Request Credits 計量 | 完整 Edge API · 標準 `checkSoilResistance()` 門控 |
+| **Institutional** | **$299** | **10M intents / month**（硬上限） | Dedicated Tenant Key Isolation · Custom Thresholds · RPC Honeypot integration · Priority Discord Support（**best-effort basis**） |
+
+> **商業邊界：** Institutional 層級硬上限 **10M intents/month** — 無 unlimited 計量。v1.0 SaaS **不提供 24/7 SLA 或 SLA 支援承諾**；Priority Discord 僅 **best-effort**。於公布上限下，Cloudflare Edge 目標 **>98% gross margin**。
 
 ---
 
@@ -366,7 +376,7 @@ Grant allocation directly fuels **V2.0 R&D**:
 - **GMX v2** — dry-run / Vitest verified pre-flight guards; mainnet GM pool fill scheduled post-Grant M6
 - **Pendle** — Institutional Safety Sentinel (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants); protocol-tax-free · SaaS Request Credits
 - **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
-- **Commercial** — v1.0 SaaS tiers ($0/$49/$299); 10 bps CaaS protocol fee = V2.0 Expansion
+- **Commercial** — v1.0 SaaS tiers ($0/$49/$299)；Institutional **10M intents/mo** 硬上限 · best-effort Discord 支援（無 SLA）；10 bps CaaS = V2.0 Expansion
 - **Agent SDK** — **V1.0 Live Native Integrations** for Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer (`src/adapters/`) · `withCitadelShield` decorator · `pnpm demo:quad` · **Milestone 1 (Weeks 2–3 post-grant):** upstream PRs to `@elizaos/plugin-citadel` + `@virtuals/plugin-citadel`
 - **Stylus** — V2.0 dual-execution Rust coprocessor (`check_soil_resistance_stylus` · `pnpm build:stylus`)；**9/9 PASS（50bps 對齊）**；planned EIP-1967 upgradeable proxy deploy — live gateway = immutable Solidity Gate on Arbitrum One
 - **Auto severance** — `FLAGS_*` bitmask trips invoke `severSigningChannel()` inside `risk-engine-core` / `soil-resistance` without external orchestration; **Variational RFQ** invariants (**Bits 12–13**: `FLAG_VARIATIONAL_STALE_QUOTE` · `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED`) integrated in `evaluateVariationalFlags()` and bound to `FLAGS_AUTO_SEVER_MASK`

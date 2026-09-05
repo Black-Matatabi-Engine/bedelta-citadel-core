@@ -251,7 +251,7 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 
 ### Legal & Regulatory Positioning
 
-> **DISCLAIMER**: SliverVine Protocol provides software-based risk analytics, monitoring, policy enforcement, and execution-safety tooling only. It does NOT provide asset custody, underwriting, indemnity, reimbursement, profit guarantees, or any form of insurance-like coverage. All risk decisions are algorithmic and based on user-defined policy parameters and protocol-aware market signals. SLA commitments apply strictly to system availability, sub-millisecond latency, logging integrity, and observability uptime. Fees charged are software access, API, and computational SLA routing fees, creating no obligation to compensate financial losses.
+> **DISCLAIMER**: SliverVine Protocol provides software-based risk analytics, monitoring, policy enforcement, and execution-safety tooling only. It does NOT provide asset custody, underwriting, indemnity, reimbursement, profit guarantees, uptime SLAs, or any form of insurance-like coverage. All risk decisions are algorithmic and based on user-defined policy parameters and protocol-aware market signals. Fees charged are software access and API metering fees only, creating no obligation to compensate financial losses.
 
 ---
 
@@ -488,7 +488,14 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfront) and adopts an **Infra-First, Multi-Tiered Monetization Engine**:
 
 1. **Cloudflare-Style SaaS Subscription (v1.0 Primary — $0 / $49 / $299)**:
- * Edge API tiered access for institutions and agent swarms — **not** the V2.0 CaaS protocol fee rail.
+ * **Developer ($0)** and **Pro ($49)**: Edge API tiered access for institutions and agent swarms, metered via Request Credits — **not** the V2.0 CaaS protocol fee rail.
+ * **Institutional ($299/month)**: **10M intents / month** hard cap · Dedicated Tenant Key Isolation · Custom Thresholds · RPC Honeypot integration · Priority Discord Support (**best-effort basis**). **No unlimited intents · no 24/7 SLA or SLA-backed support commitments.**
+
+| Tier | Price | Monthly intent cap | Entitlements |
+|------|-------|-------------------|--------------|
+| **Developer** | $0 | Metered Request Credits | Public Dune dashboard · community access |
+| **Pro** | $49 | Metered Request Credits | Full Edge API · standard `checkSoilResistance()` gates |
+| **Institutional** | **$299** | **10M intents / month** (hard cap) | Dedicated Tenant Key Isolation · Custom Thresholds · RPC Honeypot integration · Priority Discord Support (**best-effort basis**) |
 2. **Pay-per-Intent Micro-Attestation Fee (Adjunct)**:
  * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway (`@slivervine/citadel-sdk`).
  * Charged $0.01 – $0.05 per signed attestation, deducting micro-fees automatically without requiring credit card friction.
