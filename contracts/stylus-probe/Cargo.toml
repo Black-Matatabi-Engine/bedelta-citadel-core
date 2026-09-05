@@ -2,6 +2,7 @@
 name = "slivervine-soil-probe"
 version = "0.1.0"
 edition = "2021"
+license = "BUSL-1.1"
 description = "On-chain fixed-point soil resistance coprocessor for Arbitrum Stylus verification"
 
 [dependencies]

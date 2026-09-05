@@ -1,5 +1,5 @@
 /**
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
  * M4 Wasm soil core — memory alignment, <28KiB binary, <60µs exec.
  */
 import { readFileSync } from "node:fs";

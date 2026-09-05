@@ -1,5 +1,5 @@
 /**
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
  * Stylus/Wasm integration — native WebAssembly bindings for soil_core.wasm.
  */
 import { readFileSync } from "node:fs";

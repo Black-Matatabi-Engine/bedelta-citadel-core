@@ -18,7 +18,7 @@ use stylus_sdk::alloy_primitives::U256;
 use stylus_sdk::prelude::*;
 
 const MAX_SPREAD_BPS: u64 = 50;
-const MAX_SLIPPAGE_BPS: u64 = 25;
+const MAX_SLIPPAGE_BPS: u64 = 50;
 const MIN_DEPTH_USD: u64 = 10_000;
 const SAFETY_THRESHOLD: u64 = 10_000;
 const SPREAD_WEIGHT: u128 = 100;

@@ -1,5 +1,5 @@
 /**
- * SPDX-License-Identifier: Apache-2.0
+ * SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
  * Copyright 2026 SilverVine Labs
  */
 import { describe, expect, it } from "vitest";

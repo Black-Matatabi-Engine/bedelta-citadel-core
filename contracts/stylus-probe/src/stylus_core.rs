@@ -1,4 +1,5 @@
 //! Soil resistance evaluator — parity core for Stylus / Wasm dual-execution.
+//! SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
 
 const FLAG_IMBALANCE: u64 = 1 << 1;
 const FLAG_COLLATERAL: u64 = 1 << 2;
@@ -9,7 +10,7 @@ const FLAG_NAV: u64 = 1 << 6;
 const FLAG_DEPEG: u64 = 1 << 11;
 
 const MAX_SPREAD_BPS: f64 = 50.0;
-const MAX_SLIPPAGE_BPS: f64 = 25.0;
+const MAX_SLIPPAGE_BPS: f64 = 50.0;
 const MIN_DEPTH_USD: f64 = 10_000.0;
 const MAX_YIELD_SHOCK_BPS: f64 = 150.0;
 const MAX_IMBALANCE: f64 = 0.35;

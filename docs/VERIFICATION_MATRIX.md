@@ -18,6 +18,7 @@
 | **Vitest baseline** | **192 test files \| 834 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **Verified commit** | `main` @ **`1acbc24`** · Worker bundle **69.28 KiB gzip** (`pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../tests/core/risk-severance.test.ts) |
+| **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) |
 | **Sliding-window pending OI** | 30s GMX skew/notional accumulator — split-payload defense | [`pending-exposure-window.ts`](../src/core/pending-exposure-window.ts) |
 | **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `pnpm build:stylus` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · EIP-1967 proxy path in [EIP Wiki](./architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
@@ -34,7 +35,7 @@
 | **Camelot V3 adapter** | `evaluateCamelotV3SwapGuard()` — CL tick depth · directional dynamic fee · soil fuse | [`camelot-v3-adapter.ts`](../src/adapters/camelot/camelot-v3-adapter.ts) · `pnpm demo:camelot` |
 | **Radiant Capital adapter** | `evaluateRadiantLendingGuard()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary | [`radiant-lending-adapter.ts`](../src/adapters/radiant/radiant-lending-adapter.ts) · `pnpm demo:radiant` |
 | **Hyperliquid L1 session guard** | `evaluateHyperliquidSessionGuard()` — Independent L1 HF Orderbook AppChain · MaxSizePerOrder · rate limit (120/min) · spread > **20 bps** | [`hyperliquid-session-guard.ts`](../src/adapters/hl/hyperliquid-session-guard.ts) · `pnpm demo:hl` |
-| **Variational Omni RFQ adapter** | `validateVariationalRFQIntent()` — quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) | [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
+| **Variational Omni RFQ adapter** | `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` — quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bits 12–13** in core bitmask · `FLAGS_AUTO_SEVER_MASK` | [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) · [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 | **GMX v2 pool invariants** | `verifyGmxPoolImbalance()` · `verifyGmxCollateralReserve()` — imbalance > **0.35** · reserve < **105%** | [`gmx-v2-invariants.ts`](../src/adapters/gmx/gmx-v2-invariants.ts) · `pnpm demo:gmx` |
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **DuneSQL (Sepolia ingest)** | Event streaming verified on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](./telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
@@ -57,7 +58,7 @@
 | **Radiant Capital** | Arbitrum One | Health Factor HF < **1.15** | `radiant-lending-adapter.ts` |
 | **Jones DAO** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `jones-vault-adapter.ts` |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
-| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) | `variational-rfq-adapter.ts` |
+| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
 > **OpSec:** Internal simulation reports live under `docs/internal/` only — not linked from public grant packs. No private keys in public docs.
 
