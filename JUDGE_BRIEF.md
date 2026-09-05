@@ -56,7 +56,7 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (182 files / 809 tests)
 ```
 
-Wayfinder native integration: `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip) · `pnpm demo:wayfinder -- --stabilizer` (Sepolia Stabilizer swap)
+Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · `--trip` for Fail-Closed demos
 
 Optional AI interceptor: `pnpm demo:agent` · `pnpm demo:agent --trip` (FAIL_CLOSED)
 
@@ -151,16 +151,39 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 - **Demo:** `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip) · `pnpm demo:wayfinder -- --stabilizer` (Sepolia Stabilizer 1:1 stablecoin swap)
 - **Tests:** [`tests/adapters/wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts)
 
-### Stabilizer Protocol (V1.0 Live · Sepolia Testnet Guard)
+### Stabilizer Protocol (V1.0 Live · Universal Sepolia Testnet Sandbox)
 
-**Citadel is the pre-execution Zero-Slippage Capacity & De-peg Liquidation Firewall for Stabilizer Protocol on Sepolia / Arbitrum.**
+**Stabilizer on Arbitrum Sepolia (`421614`) is the Universal Testnet Sandbox & Cross-Pass Interoperability Layer for AI Agents.** Citadel provides **0-Gas Pre-Execution Fail-Closed Protection** for agent testnet arbitrage and rebalancing across:
 
-- **Adapter SSOT:** [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) — `evaluateStabilizerSwapGuard()` · `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `verifyZeroSlippageCapacity()`
-- **Liquidation invariants:** 15% reserve-ratio floor · absolute reserve floor · Constant-Sum 1:1 zero-slippage capacity guard
-- **USDZ peg protection:** fail-closed + 60s LLM mandatory cooldown on >50bps USDZ/collateral de-peg · signature channel severed
-- **Pre-flight:** `checkSoilResistance()` sub-ms 0-Gas fail-closed on reserve depletion / soil trip
-- **Demo:** `pnpm demo:wayfinder -- --stabilizer` · `pnpm demo:wayfinder -- --stabilizer --trip`
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — ALLOW · reserve liquidation `SOIL_RESISTANCE_TRIP` · USDZ de-peg cooldown
+| Leg | Sepolia integration | Citadel gate |
+|-----|---------------------|--------------|
+| **Stabilizer** | 1:1 zero-slippage USDZ / USDC / USDT / USDS swaps | [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` |
+| **GMX v2** | Sepolia shadow-margin pre-flight · GM pool intent guards | `gmx-v2-order-payload-guards.ts` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](./tests/demo/gmx-v2-agent-flow.demo.test.ts) |
+| **Pendle** | Testnet Guarded Pool Factory · oracle TTL fuse | [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](./tests/demo/pendle-ai-agent-flow.demo.test.ts) |
+
+**DX advantage:** Developers and auditors execute against **live Sepolia contracts** without mainnet gas or capital friction — while running the **identical `checkSoilResistance()` bytecode and risk gates** targeted for Arbitrum One (`42161`) deployment.
+
+- **Liquidation invariants:** 15% reserve-ratio floor · Constant-Sum 1:1 capacity · USDZ/collateral >50bps de-peg guard · 60s LLM mandatory cooldown
+- **Demo:** `pnpm demo:stabilizer` · `pnpm demo:stabilizer -- --trip` · `pnpm demo:wayfinder -- --stabilizer`
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **182 test files | 809 PASS Clean**
+
+**Cross-Pass testnet routing (Stabilizer → GMX v2 → Pendle):**
+
+```text
+[ AI Agent · Sepolia 421614 Universal Sandbox ]
+         │
+         ▼  Stabilizer: 1:1 zero-slippage stablecoin rebalance
+         ▼  checkSoilResistance()  (identical gate · p50 ~106µs)
+         ▼  GMX v2: Sepolia shadow-margin / price-impact pre-flight
+         ▼  checkSoilResistance()  (gmxPriceImpact · depth fuse)
+         ▼  Pendle: Testnet Guarded Pool Factory validateAIPoolSelection()
+         ▼  checkSoilResistance()  (pendleOracle · pendlePoolFactory)
+         │
+   ┌─────┴─────┐
+   ▼           ▼
+FAIL_CLOSED  ALLOW → identical Mainnet bytecode path
+(0-Gas)      (pre-broadcast clearance)
+```
 
 **AI Agent execution flow (Wayfinder / Virtuals):**
 

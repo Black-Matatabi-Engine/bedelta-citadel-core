@@ -104,15 +104,26 @@ pnpm demo:wayfinder -- --stabilizer --trip      # Depleted pool / reserve floor 
                     [ On-Chain Execution · Arbitrum 42161 ]
 ```
 
-#### Stabilizer Protocol (V1.0 Live · Sepolia Testnet Guard)
+#### Stabilizer Protocol (V1.0 Live · Universal Sepolia Testnet Sandbox)
 
-Citadel is the **pre-execution Zero-Slippage Capacity & De-peg Liquidation Firewall** for Stabilizer Protocol on **Arbitrum Sepolia (`421614`)** — Wayfinder-routed 1:1 swaps across USDZ / USDC / USDT / USDS:
+**Stabilizer on Arbitrum Sepolia (`421614`) is the Universal Testnet Sandbox & Cross-Pass Interoperability Layer for AI Agents.** Citadel enforces **0-Gas Pre-Execution Fail-Closed Protection** across testnet arbitrage and rebalancing legs:
 
-- **Adapter SSOT:** [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) — `evaluateStabilizerSwapGuard()` · `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `verifyZeroSlippageCapacity()`
-- **Liquidation invariants:** 15% reserve-ratio floor · absolute reserve floor · Constant-Sum 1:1 capacity guard
-- **USDZ peg protection:** >50bps de-peg → fail-closed · 60s LLM mandatory cooldown · `STABILIZER_SIGNATURE_CHANNEL_SEVERED`
-- **Pre-flight:** `checkSoilResistance()` 0-Gas fail-closed on reserve depletion / soil trip
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts)
+| Leg | Role on Sepolia | SSOT |
+|-----|-----------------|------|
+| **Stabilizer** | 1:1 zero-slippage USDZ / USDC / USDT / USDS routing | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) |
+| **GMX v2** | Sepolia shadow-margin · price-impact pre-flight | `gmx-v2-order-payload-guards.ts` · `gmx-v2-agent-flow.demo.test.ts` |
+| **Pendle** | Testnet Guarded Pool Factory · 60s TTL oracle fuse | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · `pendle-ai-agent-flow.demo.test.ts` |
+
+**DX advantage:** Demo and audit execution runs on **live Sepolia contracts** without mainnet gas or capital friction — using the **same `checkSoilResistance()` bytecode and risk gates** as Arbitrum One (`42161`).
+
+```bash
+pnpm demo:stabilizer              # Stabilizer 1:1 swap → ALLOW
+pnpm demo:stabilizer -- --trip    # USDZ de-peg + SOIL_RESISTANCE_TRIP → FAIL_CLOSED + 60s cooldown
+pnpm demo                         # GMX v2 + Pendle Tri-Pillar (Sepolia-compatible harness)
+```
+
+- **Cross-Pass routing:** Stabilizer stablecoin rebalance → GMX v2 shadow-margin leg → Pendle guarded pool intent — each hop gated by `checkSoilResistance()` before broadcast
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · **182 test files | 809 PASS Clean**
 
 #### Reference Interceptor Harness — Virtuals Protocol & ElizaOS Agent Swarms
 
@@ -249,7 +260,7 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 | **Dune** | **PEV** + `RiskTripBlocked` telemetry | Indexes off-chain blocked attacks; Sepolia live · One SQL spec | `DUNE_DASHBOARD_SPECIFICATION.md` |
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `gmx-v2-order-payload.ts` |
 | **Wayfinder** | Native pre-execution risk firewall on **42161** | `wayfinderCitadelShieldHook` · soil fuse + 8-dimension intent gate · 0-Gas fail-closed | `wayfinder-shield.ts` · `pnpm demo:wayfinder` |
-| **Stabilizer** | Sepolia testnet 1:1 stablecoin swap guard on **421614** | Zero-slippage capacity · 15% reserve ratio · USDZ de-peg cooldown · soil fuse | `stabilizer-adapter.ts` · `pnpm demo:wayfinder -- --stabilizer` |
+| **Stabilizer** | Universal Sepolia sandbox & cross-pass layer on **421614** | Stabilizer → GMX v2 → Pendle routing · identical `checkSoilResistance()` gates | `stabilizer-adapter.ts` · `pnpm demo:stabilizer` |
 | **Virtuals / ElizaOS** | Agent pre-consensus firewall | `withCitadelShield` 1-line SDK · Reference harness | `decorator.ts` · `agent-interceptor-demo.ts` |
 | **Robinhood** | Pillar 2 compliance escort | Outbound-only `46630/4663 → 42161` · inbound AML BLOCK | `across-ingress-bridge.ts` |
 

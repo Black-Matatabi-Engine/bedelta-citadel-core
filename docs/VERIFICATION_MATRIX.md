@@ -17,7 +17,7 @@
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **Vitest baseline** | **182 test files \| 809 PASS Clean** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
-| **Stabilizer Sepolia adapter** | Pre-execution zero-slippage capacity & de-peg liquidation firewall on **421614** | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ peg guard · soil fuse | `stabilizer-adapter.ts` · `pnpm demo:wayfinder -- --stabilizer` |
+| **Stabilizer Sepolia adapter** | Universal Cross-DEX Testnet Sandbox on **421614** — 1:1 capacity · de-peg severance · cross-pass routing | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ >50bps peg guard · 60s LLM cooldown | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:stabilizer` |
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
@@ -52,8 +52,10 @@ pnpm test       # Full System Regression Suite (182 files / 809 tests)
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:wayfinder -- --trip` | 0-Gas Fail-Closed soil trip | `FAIL_CLOSED` · 0-Gas intercept |
-| `pnpm demo:wayfinder -- --stabilizer` | Sepolia Stabilizer 1:1 stablecoin swap | `ALLOW` · zero-slippage clearance |
-| `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
+| `pnpm demo:wayfinder -- --stabilizer` | Sepolia Stabilizer 1:1 stablecoin swap (Wayfinder harness) | `ALLOW` · zero-slippage clearance |
+| `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach (Wayfinder harness) | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
+| `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
+| `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm test` | Full Vitest regression bar | **182 test files \| 809 PASS Clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
@@ -291,31 +293,55 @@ pnpm exec vitest run tests/adapters/wayfinder-shield.test.ts
 
 ---
 
-### 2. Stabilizer Protocol Adapter (V1.0 Live · Sepolia Testnet)
+### 2. Stabilizer Protocol Adapter (V1.0 Live · Universal Sepolia Cross-DEX Testnet Sandbox)
 
-**Citadel role:** Pre-execution Zero-Slippage Capacity & De-peg Liquidation Firewall for Stabilizer Protocol on Sepolia / Arbitrum.
+**Citadel role:** **Universal Testnet Sandbox & Cross-Pass Interoperability Layer** for AI agents on Arbitrum Sepolia (`421614`). Pre-execution **0-Gas Fail-Closed Protection** across Stabilizer (1:1 zero-slippage stablecoin swap) · GMX v2 (Sepolia shadow margin) · Pendle (Testnet Guarded Pool Factory) — **identical `checkSoilResistance()` bytecode and risk gates** as Arbitrum One (`42161`).
 
 **Command:**
 
 ```bash
+pnpm demo:stabilizer
+pnpm demo:stabilizer -- --trip
 pnpm demo:wayfinder -- --stabilizer
-pnpm demo:wayfinder -- --stabilizer --trip
 pnpm exec vitest run tests/adapters/stabilizer-adapter.test.ts
+pnpm exec vitest run tests/demo/gmx-v2-agent-flow.demo.test.ts tests/demo/pendle-ai-agent-flow.demo.test.ts
 ```
 
 | Scope | Detail |
 |-------|--------|
 | Adapter SSOT | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) |
 | Assets | USDZ / USDC / USDT / USDS — Constant-Sum 1:1 zero-slippage pairs |
-| Invariants | 15% reserve-ratio floor · absolute reserve floor · zero-slippage capacity · USDZ/collateral >50bps de-peg guard |
-| Integrates | `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `checkSoilResistance()` |
+| Cross-pass legs | Stabilizer → GMX v2 (`gmx-v2-order-payload-guards.ts`) → Pendle (`pendle-pool-factory-adapter.ts`) |
+| Integrates | `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `verifyZeroSlippageCapacity()` · `checkSoilResistance()` |
 | Chain | Arbitrum Sepolia (`421614`) |
+
+#### Stabilizer Sepolia Testnet Verification Vectors
+
+| Vector | Invariant / surface | Verify command | Expected |
+|--------|---------------------|----------------|----------|
+| **1:1 Constant-Sum Capacity Validation** | Swap amount ≤ zero-slippage pool capacity · Constant-Sum 1:1 invariant | `pnpm demo:stabilizer` · `stabilizer-adapter.test.ts` (ALLOW scenario) | `status: ALLOW` · `allowedToSign: true` |
+| **USDZ De-peg (>50bps) Severance & 60s LLM Cooldown** | `verifyStabilizerPegDrift()` trips on >50bps USDZ/collateral drift · signature channel severed · 60s mandatory cooldown on retry | `pnpm demo:stabilizer -- --trip` · `stabilizer-adapter.test.ts` (de-peg scenario) | First call: `FAIL_CLOSED` · retry within 60s: `MANDATORY_COOLDOWN_ACTIVE` |
+| **Cross-DEX Liquidity Routing (Stabilizer → GMX v2 → Pendle)** | Each hop gated by `checkSoilResistance()` before broadcast · identical Mainnet bytecode path | `pnpm demo` (Tri-Pillar) · `pnpm demo:stabilizer` + GMX/Pendle demo tests | Per-leg ALLOW or FAIL_CLOSED · no cross-leg bypass |
 
 | Test scenario | File | Expected |
 |---------------|------|----------|
 | Normal 1:1 swap within zero-slippage capacity | [`stabilizer-adapter.test.ts`](../tests/adapters/stabilizer-adapter.test.ts) | `status: ALLOW` |
 | Liquidation / reserve floor depletion | same | `SOIL_RESISTANCE_TRIP` · `FAIL_CLOSED` · 0-Gas |
-| USDZ de-peg trigger | same | `FAIL_CLOSED` then `MANDATORY_COOLDOWN_ACTIVE` · signature channel severed |
+| USDZ de-peg trigger + 60s cooldown | same | `FAIL_CLOSED` then `MANDATORY_COOLDOWN_ACTIVE` · signature channel severed |
+
+**Cross-Pass routing diagram:**
+
+```text
+[ AI Agent · Sepolia 421614 ]
+         │
+         ▼  Stabilizer: 1:1 zero-slippage rebalance → checkSoilResistance()
+         ▼  GMX v2: shadow-margin / price-impact pre-flight → checkSoilResistance()
+         ▼  Pendle: Guarded Pool Factory / oracle TTL → checkSoilResistance()
+         │
+   ┌─────┴─────┐
+   ▼           ▼
+FAIL_CLOSED  ALLOW (identical Mainnet bytecode · 0-Gas on block)
+```
 
 ---
 
@@ -380,7 +406,8 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:wayfinder -- --stabilizer` | Stabilizer Sepolia 1:1 stablecoin swap | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
+| `pnpm demo:wayfinder -- --stabilizer` | Stabilizer via Wayfinder harness | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:agent` | AI agent interceptor harness | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm test` | Full Vitest + coverage | **182 test files \| 809 PASS Clean** |
 | `pnpm test:watch` | Interactive Vitest | — |
