@@ -82,8 +82,13 @@ function formatTripAlert(reasons: string[]): string {
   return `SOIL_RESISTANCE_TRIP: ${primary.replace(/=/g, " ")}`;
 }
 
+const FUSE_TAG = "\x1b[96;1m";
+const DISPATCH_TAG = "\x1b[92;1m";
+
 function hudLine(tag: string, body: string, color: string): void {
-  console.log(`${color}${BOLD}[${tag}]${R}    ${body}`);
+  const tagColor =
+    tag === "FUSE" ? FUSE_TAG : tag === "DISPATCH" ? DISPATCH_TAG : color;
+  console.log(`  ${tagColor}${BOLD}[${tag}]${R}  ${body}`);
 }
 
 export function hudIntent(agentId: string, framework: string, intent: string, venue: string): void {

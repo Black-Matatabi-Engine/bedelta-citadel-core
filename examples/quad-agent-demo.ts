@@ -145,7 +145,7 @@ function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
   const color = trip ? (r.ok ? "\x1b[33;1m" : "\x1b[32;1m") : r.ok ? "\x1b[32;1m" : "\x1b[31;1m";
   const mark = trip ? (r.ok ? "⚠" : "✓") : r.ok ? "✓" : "✗";
   console.log(
-    `${color}  ${mark} ${r.framework}${R} → ${r.status} · ${CYAN}${formatExecutionLatency(r.latencyUs)}${R}`,
+    `${color}  ${mark} ${r.framework}${R} → ${r.status} · ${formatExecutionLatency(r.latencyUs)}`,
   );
   if (!r.ok && r.detail) {
     console.log(`${GRAY}    ${r.detail}${R}`);
@@ -161,7 +161,6 @@ function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
 }
 
 const GRAY = "\x1b[90m";
-const CYAN = "\x1b[36;1m";
 const BOLD = "\x1b[1m";
 
 async function main(): Promise<void> {
@@ -186,7 +185,7 @@ async function main(): Promise<void> {
   const minUs = Math.min(...latencies);
 
   console.log(
-    `${BOLD}Aggregate guard time:${R} min ${CYAN}${formatGuardTime(minUs)}${R} · avg ${CYAN}${formatGuardTime(avgUs)}${R} · max ${CYAN}${formatGuardTime(maxUs)}${R}`,
+    `${BOLD}Aggregate guard time:${R} min ${formatGuardTime(minUs)} · avg ${formatGuardTime(avgUs)} · max ${formatGuardTime(maxUs)}`,
   );
 
   const passCount = results.filter((r) => r.ok).length;

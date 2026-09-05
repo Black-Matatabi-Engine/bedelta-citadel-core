@@ -50,6 +50,7 @@ import {
   RED,
   R,
   YELLOW,
+  BOLD,
   printBanner,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
@@ -58,6 +59,8 @@ import {
   formatGuardTime,
   hrtimeElapsedUs,
   hrtimeStart,
+  CORE_BRIGHT_CYAN,
+  GUARD_BRIGHT_GREEN,
 } from "./lib/demo-timing";
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
@@ -350,13 +353,14 @@ function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
   const fuseVerdict = r.ok ? "PASS" : "REJECT";
   const severed = (r.flags & FLAGS_SEVERED) !== 0 ? " | R20_SEVERED" : "";
   console.log(
-    `  ${fuseColor}[FUSE] evaluateVariationalFlags() -> ${fuseVerdict} | bitmask=${formatVariationalFlagMask(r.flags)}${severed} | ${formatGuardTime(us)}${R}`,
+    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}evaluateVariationalFlags() -> ${fuseVerdict} | bitmask=${formatVariationalFlagMask(r.flags)}${severed} | ${formatGuardTime(us)}`,
   );
   const color = r.ok ? GREEN : RED;
+  const dispatchTag = r.ok ? GUARD_BRIGHT_GREEN : RED;
   const label = r.ok ? "ALLOWED" : (r.reason ?? "FAIL_CLOSED");
   const tail = r.ok ? (r.detail ?? "OLP depth ok") : (r.detail ?? "trip");
   console.log(
-    `  ${color}[DISPATCH] ${label} | target: Variational Omni RFQ -> ${tail} | ${formatGuardTime(us)}${R}`,
+    `  ${dispatchTag}${BOLD}[DISPATCH]${R} ${color}${label} | target: Variational Omni RFQ -> ${tail} | ${formatGuardTime(us)}${R}`,
   );
 }
 
