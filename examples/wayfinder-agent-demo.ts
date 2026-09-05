@@ -102,11 +102,19 @@ async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Prom
     `Arbitrum Sepolia ${STABILIZER_SEPOLIA_CHAIN_ID} · Stabilizer ${swap.fromAsset}→${swap.toAsset}`,
   );
 
-  const stabilizer = evaluateStabilizerSwapGuard(swap);
+  const stabilizer = evaluateStabilizerSwapGuard({ ...swap, agentId });
+
+  if (stabilizer.status === "MANDATORY_COOLDOWN_ACTIVE") {
+    hudBackoff(agentId, 60);
+    printBackoffResult();
+    console.error(`${RED}${stabilizer.reasons.join("; ")}${R}`);
+    process.exit(1);
+  }
+
   hudSoilFuse(stabilizer.soilOk, stabilizer.latencyUs ?? 0, stabilizer.reasons);
 
   if (!stabilizer.ok) {
-    hudSevered("SOIL_FUSE_TRIP");
+    hudSevered(stabilizer.signatureChannelSevered ? "USDZ_DEPEG_SEVERED" : "SOIL_FUSE_TRIP");
     hudBlocked();
     printResult(false);
     console.error(`${RED}${stabilizer.reasons.join("; ")}${R}`);
@@ -159,10 +167,10 @@ async function main(): Promise<void> {
           chainId: STABILIZER_SEPOLIA_CHAIN_ID,
           fromAsset: "USDZ",
           toAsset: "USDC",
-          amountUsd: 6_000_000,
+          amountUsd: 4_950_000,
           poolReserveUsd: 5_000_000,
           poolCapacityUsd: 5_000_000,
-          reserveFloorUsd: 100_000,
+          agentId: "wayfinder-stabilizer-demo",
           at: now,
         }
       : {
@@ -172,6 +180,9 @@ async function main(): Promise<void> {
           amountUsd: 50_000,
           poolReserveUsd: 5_000_000,
           poolCapacityUsd: 1_000_000,
+          usdzMarkUsd: 1,
+          collateralMarkUsd: 1,
+          agentId: "wayfinder-stabilizer-demo",
           at: now,
         };
     await runStabilizerDemo(swap, trip);

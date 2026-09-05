@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **182 test files | 808 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **182 test files | 809 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,9 +15,9 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **182 test files \| 808 PASS Clean** | `pnpm test -- --run` |
+| **Vitest baseline** | **182 test files \| 809 PASS Clean** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
-| **Stabilizer Sepolia adapter** | `evaluateStabilizerSwapGuard()` — 1:1 USDZ/USDC/USDT/USDS zero-slippage guard | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:wayfinder -- --stabilizer` |
+| **Stabilizer Sepolia adapter** | Pre-execution zero-slippage capacity & de-peg liquidation firewall on **421614** | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ peg guard · soil fuse | `stabilizer-adapter.ts` · `pnpm demo:wayfinder -- --stabilizer` |
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
@@ -43,7 +43,7 @@
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (182 files / 808 tests)
+pnpm test       # Full System Regression Suite (182 files / 809 tests)
 ```
 
 | Command | Proves | Expected |
@@ -54,7 +54,7 @@ pnpm test       # Full System Regression Suite (182 files / 808 tests)
 | `pnpm demo:wayfinder -- --trip` | 0-Gas Fail-Closed soil trip | `FAIL_CLOSED` · 0-Gas intercept |
 | `pnpm demo:wayfinder -- --stabilizer` | Sepolia Stabilizer 1:1 stablecoin swap | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
-| `pnpm test` | Full Vitest regression bar | **182 test files \| 808 PASS Clean** |
+| `pnpm test` | Full Vitest regression bar | **182 test files \| 809 PASS Clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -79,7 +79,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **182 test files \| 808 PASS Clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **182 test files \| 809 PASS Clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -293,6 +293,8 @@ pnpm exec vitest run tests/adapters/wayfinder-shield.test.ts
 
 ### 2. Stabilizer Protocol Adapter (V1.0 Live · Sepolia Testnet)
 
+**Citadel role:** Pre-execution Zero-Slippage Capacity & De-peg Liquidation Firewall for Stabilizer Protocol on Sepolia / Arbitrum.
+
 **Command:**
 
 ```bash
@@ -304,14 +306,16 @@ pnpm exec vitest run tests/adapters/stabilizer-adapter.test.ts
 | Scope | Detail |
 |-------|--------|
 | Adapter SSOT | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) |
-| Assets | USDZ / USDC / USDT / USDS — 1:1 zero-slippage swap pairs |
-| Integrates | `verifyStabilizerPoolCapacity()` + `checkSoilResistance()` pre-flight |
+| Assets | USDZ / USDC / USDT / USDS — Constant-Sum 1:1 zero-slippage pairs |
+| Invariants | 15% reserve-ratio floor · absolute reserve floor · zero-slippage capacity · USDZ/collateral >50bps de-peg guard |
+| Integrates | `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `checkSoilResistance()` |
 | Chain | Arbitrum Sepolia (`421614`) |
 
 | Test scenario | File | Expected |
 |---------------|------|----------|
-| Normal 1:1 zero-slippage swap | [`stabilizer-adapter.test.ts`](../tests/adapters/stabilizer-adapter.test.ts) | `status: ALLOW` |
-| Reserve floor breach / depleted capacity | same | `SOIL_RESISTANCE_TRIP` · `FAIL_CLOSED` · 0-Gas |
+| Normal 1:1 swap within zero-slippage capacity | [`stabilizer-adapter.test.ts`](../tests/adapters/stabilizer-adapter.test.ts) | `status: ALLOW` |
+| Liquidation / reserve floor depletion | same | `SOIL_RESISTANCE_TRIP` · `FAIL_CLOSED` · 0-Gas |
+| USDZ de-peg trigger | same | `FAIL_CLOSED` then `MANDATORY_COOLDOWN_ACTIVE` · signature channel severed |
 
 ---
 
@@ -378,7 +382,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:wayfinder -- --stabilizer` | Stabilizer Sepolia 1:1 stablecoin swap | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:agent` | AI agent interceptor harness | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **182 test files \| 808 PASS Clean** |
+| `pnpm test` | Full Vitest + coverage | **182 test files \| 809 PASS Clean** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -422,4 +426,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 182 test files | 808 PASS Clean*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 182 test files | 809 PASS Clean*

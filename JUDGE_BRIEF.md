@@ -9,7 +9,7 @@
 | **Live Dune Telemetry Portal** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV operational on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Headless Audit Endpoint** | [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
-| **Tests** | `pnpm test` → **182 test files | 808 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · `pnpm demo:wayfinder` (Wayfinder route interception) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Tests** | `pnpm test` → **182 test files | 809 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · `pnpm demo:wayfinder` (Wayfinder route interception) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
 > **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.
@@ -18,7 +18,7 @@
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **182 test files / 808 PASS Clean**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **182 test files / 809 PASS Clean**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
@@ -53,7 +53,7 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 ```bash
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (182 files / 808 tests)
+pnpm test       # Full System Regression Suite (182 files / 809 tests)
 ```
 
 Wayfinder native integration: `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip) · `pnpm demo:wayfinder -- --stabilizer` (Sepolia Stabilizer swap)
@@ -153,12 +153,14 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 ### Stabilizer Protocol (V1.0 Live · Sepolia Testnet Guard)
 
-**Citadel soil shield protects Wayfinder-routed 1:1 zero-slippage stablecoin swaps on Arbitrum Sepolia (`421614`).**
+**Citadel is the pre-execution Zero-Slippage Capacity & De-peg Liquidation Firewall for Stabilizer Protocol on Sepolia / Arbitrum.**
 
-- **Adapter SSOT:** [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) — `evaluateStabilizerSwapGuard()` · `verifyStabilizerPoolCapacity()` for USDZ / USDC / USDT / USDS pools
-- **Pre-flight:** `checkSoilResistance()` sub-ms 0-Gas fail-closed on reserve-floor breach or depleted zero-slippage capacity
+- **Adapter SSOT:** [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) — `evaluateStabilizerSwapGuard()` · `verifyStabilizerPoolCapacity()` · `verifyStabilizerPegDrift()` · `verifyZeroSlippageCapacity()`
+- **Liquidation invariants:** 15% reserve-ratio floor · absolute reserve floor · Constant-Sum 1:1 zero-slippage capacity guard
+- **USDZ peg protection:** fail-closed + 60s LLM mandatory cooldown on >50bps USDZ/collateral de-peg · signature channel severed
+- **Pre-flight:** `checkSoilResistance()` sub-ms 0-Gas fail-closed on reserve depletion / soil trip
 - **Demo:** `pnpm demo:wayfinder -- --stabilizer` · `pnpm demo:wayfinder -- --stabilizer --trip`
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts)
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — ALLOW · reserve liquidation `SOIL_RESISTANCE_TRIP` · USDZ de-peg cooldown
 
 **AI Agent execution flow (Wayfinder / Virtuals):**
 
