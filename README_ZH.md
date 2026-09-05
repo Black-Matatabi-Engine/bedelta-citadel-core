@@ -9,24 +9,24 @@
 
 **大腦皮層 vs. 小腦 — Citadel Shield 是自主 AI Agent 的非自主反射弧。**
 
-| | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
-|---|-------------------------|---------------------------|
-| **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
-| **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
-| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
-| **On threat** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination) 之 AI 意圖幻覺) | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+| | **大腦皮層（LLM 推理與 Agent 迴圈）** | **Citadel 反射弧（小腦）** |
+|---|-------------------------------------|---------------------------|
+| **技術棧** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` 反射核心 |
+| **延遲量級** | **~1.0s–10.0s**（1,000ms–10,000ms · DeepSeek-R1 CoT 與 Tool Calls） | **14.0µs–106.0µs**（0.014ms–0.106ms） |
+| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** 物理死鎖 |
+| **威脅時** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination) 之 AI 意圖幻覺) | **<14.0µs** 反射 — 切斷 EIP-712 通道 |
 
 ### 神經形態工作流
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -169,13 +169,7 @@ Citadel 為 Sepolia (`421614`) 上 Stabilizer Protocol 的**執行前零滑點�
 | **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` |
 | **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` |
 
-```bash
-pnpm demo:wayfinder    # Wayfinder route interception
-pnpm demo:elizaos      # ElizaOS Action handler guard
-pnpm demo:virtuals     # Virtuals GAME worker guard
-pnpm demo:langchain    # LangChain CitadelRiskGuardTool
-pnpm demo:quad         # All four AI frameworks (combined)
-```
+→ **旗艦：** `pnpm demo:quad` · **細粒度框架 demo：** [`docs/DEMO_GUIDE_ZH.md`](./docs/DEMO_GUIDE_ZH.md#tier-2--agent-框架)
 
 → Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) — **192 test files | 836 PASS Clean (100% PASS)**
 
@@ -194,14 +188,14 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 ### 神經形態反射架構
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -214,7 +208,7 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 | 維度 | 一般 RPC Gateway | Citadel Shield（小腦） |
 |------|-----------------|----------------------|
 | **認知角色** | 傳輸中繼（無反射） | **非自主安全反射**（簽名前死鎖） |
-| **延遲** | 50–300ms+ RTT | **~14.0µs** 純 invariant · **~106µs** 完整 matrix（Edge `<106µs`） |
+| **延遲** | 50–300ms+ RTT（傳輸層） | **14.0µs–106.0µs**（0.014ms–0.106ms）vs LLM **~1.0s–10.0s** 推理迴圈 |
 | **確定性** | N/A | **100% 確定性** bitmask 評估 |
 | **幻覺時** | 轉發不透明 calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
 | **Demo 證明** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
@@ -236,33 +230,14 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 
 ## ⚡ 30 秒快速審計（最快 Judge 驗證）
 
-### 3-Tier Demo Suite（CLI SSOT）
-
-所有獨立 demo 透過 `process.hrtime.bigint()` 量測延遲（µs 精度）— 無硬編碼計時輸出。
-
-| Tier | Commands | Scope |
-|------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
-| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
-| **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
+### 旗艦 Demo
 
 ```bash
-pnpm demo:gmx      # GMX v2 shadow margin · cross-venue slippage · position cap
-pnpm demo:hl       # Hyperliquid session key auth · orderbook depth guard
-pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
-pnpm demo:uniswap  # Uniswap V3 concentrated liquidity · dynamic fee guard
-pnpm demo:aave  # Aave V3 HF & cross-chain liquidation guard
-pnpm demo:morpho    # Morpho Blue vault share-price & sandwich guard
-pnpm demo:variational  # Variational Omni RFQ stale quote & OLP depth guard
-pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
-pnpm demo:matrix -- --loop=perp   # Pendle → GMX → dual perp hedge (HL + Variational)
-pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
-pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
-pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
-pnpm demo:matrix -- --loop=spot   # Uniswap V3 → Aave V3 → Morpho Blue spot loop
-# Append -- --healthy-only for nominal PASS; default runs R20 trip + severance
+pnpm demo:matrix   # Full 7-Protocol Cross-Venue Matrix
+pnpm demo:quad     # Full 4 AI Agent Frameworks Pre-Flight Shield
 ```
+
+→ **細粒度協議與框架 demo：** [`docs/DEMO_GUIDE_ZH.md`](./docs/DEMO_GUIDE_ZH.md)
 
 ### Path 1：即時 Monorepo 驗證（建議 — 3 秒）
 
@@ -272,8 +247,6 @@ pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (192 files / 836 tests)
 ```
-
-GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Uniswap V3: `pnpm demo:uniswap` · Aave V3: `pnpm demo:aave` · Morpho Blue: `pnpm demo:morpho` · Matrix: `pnpm demo:matrix` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 

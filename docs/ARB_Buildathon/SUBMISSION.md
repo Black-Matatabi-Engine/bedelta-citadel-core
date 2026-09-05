@@ -4,24 +4,24 @@
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
-| | **Cerebrum (LLM Agent)** | **Cerebellum (Citadel Shield)** |
-|---|--------------------------|----------------------------------|
-| **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
-| **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
-| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
+|---|-------------------------------------------|-------------------------------------|
+| **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (0.014ms–0.106ms) |
+| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** reflex — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -286,14 +286,14 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans; Citadel **Cerebellum** executes involuntary safety reflexes before EIP-712 signing.
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -304,7 +304,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Role** | Transport relay | Involuntary safety reflex |
-| **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** full matrix |
+| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** (0.014ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
 | **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **<14.0µs** |
 

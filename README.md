@@ -6,24 +6,24 @@
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
-| | **Cerebrum (LLM Agent)** | **Cerebellum (Citadel Shield)** |
-|---|--------------------------|----------------------------------|
-| **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
-| **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
-| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
+|---|-------------------------------------------|-------------------------------------|
+| **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (0.014ms–0.106ms) |
+| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
+| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** reflex — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -166,13 +166,7 @@ Citadel is the **pre-execution Zero-Slippage Capacity & De-peg Liquidation Firew
 | **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` |
 | **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` |
 
-```bash
-pnpm demo:wayfinder    # Wayfinder route interception
-pnpm demo:elizaos      # ElizaOS Action handler guard
-pnpm demo:virtuals     # Virtuals GAME worker guard
-pnpm demo:langchain    # LangChain CitadelRiskGuardTool
-pnpm demo:quad         # All four AI frameworks (combined)
-```
+→ **Flagship:** `pnpm demo:quad` · **Granular framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md#tier-2--agent-frameworks)
 
 → Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
 
@@ -189,14 +183,14 @@ Citadel Shield is the **Cerebellum & Reflex Arc** of the agent stack — not a p
 ### Neuromorphic Reflex Architecture
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -209,7 +203,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** of the agent stack — not a p
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Cognitive role** | Transport relay (no reflex) | **Involuntary safety reflex** (pre-signature deadlock) |
-| **Latency** | 50–300ms+ RTT | **~14.0µs** pure invariant · **~106µs** full matrix (Edge `<106µs`) |
+| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** (0.014ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
 | **Determinism** | N/A | **100% deterministic** bitmask evaluation |
 | **On hallucination** | Forwards opaque calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
 | **Demo proof** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
@@ -229,33 +223,14 @@ Citadel Shield is the **Cerebellum & Reflex Arc** of the agent stack — not a p
 
 ## ⚡ 30-Second Express Audit (Fastest Judge Verification)
 
-### 3-Tier Demo Suite (CLI SSOT)
-
-All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
-
-| Tier | Commands | Scope |
-|------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
-| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
-| **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
+### Flagship Demos
 
 ```bash
-pnpm demo:gmx      # GMX v2 shadow margin · cross-venue slippage · position cap
-pnpm demo:hl       # Hyperliquid session key auth · orderbook depth guard
-pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
-pnpm demo:uniswap  # Uniswap V3 concentrated liquidity · dynamic fee guard
-pnpm demo:aave  # Aave V3 HF & cross-chain liquidation guard
-pnpm demo:morpho    # Morpho Blue vault share-price & sandwich guard
-pnpm demo:variational  # Variational Omni RFQ stale quote & OLP depth guard
-pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
-pnpm demo:matrix -- --loop=perp   # Pendle → GMX → dual perp hedge (HL + Variational)
-pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
-pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
-pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
-pnpm demo:matrix -- --loop=spot   # Uniswap V3 → Aave V3 → Morpho Blue spot loop
-# Append -- --healthy-only for nominal PASS; default runs R20 trip + severance
+pnpm demo:matrix   # Full 7-Protocol Cross-Venue Matrix
+pnpm demo:quad     # Full 4 AI Agent Frameworks Pre-Flight Shield
 ```
+
+→ **Granular protocol & framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
 ### Path 1: Instant Monorepo Verification (Recommended — 3 Seconds)
 
@@ -265,8 +240,6 @@ pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (192 files / 834 tests)
 ```
-
-GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Uniswap V3: `pnpm demo:uniswap` · Aave V3: `pnpm demo:aave` · Morpho Blue: `pnpm demo:morpho` · Matrix: `pnpm demo:matrix` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 

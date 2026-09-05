@@ -4,20 +4,22 @@
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
-| | **Cerebrum (LLM Agent)** | **Cerebellum (Citadel Shield)** |
-|---|--------------------------|----------------------------------|
-| **Speed** | ~1,000ms–5,000ms (slow CoT · non-deterministic) | **14.0µs–106µs** (100% deterministic · 0-Gas) |
-| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** reflex deadlock — severs EIP-712 channel |
+| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
+|---|-------------------------------------------|-------------------------------------|
+| **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (0.014ms–0.106ms) |
+| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** reflex — severs EIP-712 channel |
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -117,14 +119,14 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans; Citadel **Cerebellum** executes involuntary safety reflexes before EIP-712 signing.
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -135,7 +137,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Role** | Transport relay | Involuntary safety reflex |
-| **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** matrix (Edge `<106µs`) |
+| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** (0.014ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
 | **On hallucination** | Forwards calldata | **FAIL-CLOSED** · **0-Gas** · `severSigningChannel()` |
 | **Demo** | — | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
 

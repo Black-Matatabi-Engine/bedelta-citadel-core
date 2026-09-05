@@ -6,24 +6,24 @@
 
 **大腦皮層 vs. 小腦 — Citadel Shield 是自主 AI Agent 的非自主反射弧。**
 
-| | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
-|---|-------------------------|---------------------------|
-| **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
-| **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
-| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
-| **威脅時** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 Base / Aerodrome 之 AI 意圖幻覺) | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+| | **大腦皮層（LLM 推理與 Agent 迴圈）** | **Citadel 反射弧（小腦）** |
+|---|-------------------------------------|---------------------------|
+| **技術棧** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` 反射核心 |
+| **延遲量級** | **~1.0s–10.0s**（1,000ms–10,000ms · DeepSeek-R1 CoT 與 Tool Calls） | **14.0µs–106.0µs**（0.014ms–0.106ms） |
+| **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** 物理死鎖 |
+| **威脅時** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 Base / Aerodrome 之 AI 意圖幻覺) | **<14.0µs** 反射 — 切斷 EIP-712 通道 |
 
 ### 神經形態工作流
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -288,14 +288,14 @@ SliverVine 將 risk management 從「naive blocking」轉為 **Intent-Aware Navi
 Citadel Shield 是 **小腦與反射弧** — LLM **大腦皮層**負責規劃；Citadel **小腦**於 EIP-712 簽名前執行非自主安全反射。
 
 ```
-┌──────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning (~1000ms - 5000ms)  │  <-- Deep CoT / Non-Deterministic
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+└────────────────────────────────────────────────────────────────┘
                          │ (Intent Payload)
                          ▼
-┌──────────────────────────────────────────────┐
-│ [Cerebellum] Citadel Shield (⚡ 14.0µs)       │  <-- Involuntary Reflex Arc / Fail-Closed
-└──────────────────────────────────────────────┘
+┌────────────────────────────────────────────────────────────────┐
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+└────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
@@ -306,7 +306,7 @@ Citadel Shield 是 **小腦與反射弧** — LLM **大腦皮層**負責規劃�
 | 維度 | 一般 RPC Gateway | Citadel Shield（小腦） |
 |------|-----------------|----------------------|
 | **角色** | 傳輸中繼 | 非自主安全反射 |
-| **延遲** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** 完整 matrix |
+| **延遲** | 50–300ms+ RTT（傳輸層） | **14.0µs–106.0µs**（0.014ms–0.106ms）vs LLM **~1.0s–10.0s** 推理迴圈 |
 | **幻覺時** | 轉發 calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
 | **AI 安全** | 無防護 | 越權跨鏈 venue（如 Base / **Aerodrome**）於 **<14.0µs** 切斷 |
 
