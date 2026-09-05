@@ -6,7 +6,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **185 test files | 818 PASS Clean** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **185 test files | 818 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **5/5** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,7 +15,7 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **185 test files \| 818 PASS Clean** | `pnpm test -- --run` |
+| **Vitest baseline** | **185 test files \| 818 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -65,7 +65,7 @@ pnpm test       # Full System Regression Suite (185 files / 818 tests)
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **185 test files \| 818 PASS Clean** |
+| `pnpm test` | Full Vitest regression bar | **185 test files \| 818 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -90,7 +90,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **185 test files \| 818 PASS Clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **185 test files \| 818 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -416,21 +416,14 @@ pnpm exec vitest run tests/adapters/langchain-tool.test.ts
 
 ---
 
-### 6. AI Agent Interceptor Harness (Legacy Reference)
+### 6. Supplementary Agent Demos (Optional)
 
-**Command:**
-
-```bash
-pnpm demo:agent
-# or: npx tsx examples/agent-interceptor-demo.ts
-pnpm demo:agent --trip   # FAIL_CLOSED path
-```
+**Command:** `pnpm demo:agent` · legacy scripts in [`examples/adapters/`](../../examples/adapters/)
 
 | Scope | Detail |
 |-------|--------|
-| Package | `@slivervine/citadel-sdk` (`withCitadelShield`) |
-| Validates | Sub-ms Wasm soil pre-validation against rogue LLM intent generation, prompt injection, and unauthorized session calls |
-| Adapters | [`examples/adapters/`](../../examples/adapters/) (TS + Python) · [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) |
+| Primary SSOT | **V1.0 Live Native Integrations** in [`src/adapters/`](../../src/adapters/) — use `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` |
+| Supplementary | [`agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) · [`examples/adapters/`](../../examples/adapters/) (TS + Python evaluator scripts) |
 
 ---
 
@@ -482,7 +475,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **185 test files \| 818 PASS Clean** |
+| `pnpm test` | Full Vitest + coverage | **185 test files \| 818 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -526,4 +519,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 185 test files | 818 PASS Clean*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 185 test files | 818 PASS Clean (100% PASS)*

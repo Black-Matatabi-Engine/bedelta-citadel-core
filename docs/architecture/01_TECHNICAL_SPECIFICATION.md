@@ -1,6 +1,6 @@
 # SliverVine Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
-> **Document:** Technical Specification & Risk Topology · **Internal engine codename:** Santenmoku · **Vitest SSOT:** **185 test files | 818 PASS Clean** · Security-tier `5/0/0 PASS` · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare budget, `<60µs` execution.
+> **Document:** Technical Specification & Risk Topology · **Internal engine codename:** Santenmoku · **Vitest SSOT:** **185 test files | 818 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare budget, `<60µs` execution.
 > **This file SSOT:** R01–R20 invariants · dual-engine topology · KV / MDD · settlement & fee bounds.
 > **Docs index:** [`docs/README.md`](../README.md) · **Risk framework:** [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) · **Standards wiki:** [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Grants:** [`docs/grants/`](../grants/)
 
@@ -88,10 +88,10 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **185 test files \| 818 PASS Clean** |
+| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **185 test files \| 818 PASS Clean (100% PASS)** |
 | **v1.0 Active Target** | ✅ Mainnet Ignition Delivered | Single blue-chip anchor: **GMX v2 ETH/USDC GM Pool** + Hyperliquid **1× short** hedge · Gate live on **42161** |
 | **v1.0 Partial — HL Orderbook Gap Guard** | ✅ Code-Verified | `evaluateHlOrderbookGapGuard()` in [`hl-orderbook-gap-guard.ts`](../../src/services/risk-control-lib/hl-orderbook-gap-guard.ts) · wired via [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) — gap-window leverage scale-down + 2× depth floor |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **185 test files \| 818 PASS Clean** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **185 test files \| 818 PASS Clean (100% PASS)** |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -99,20 +99,21 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 **Demo:** `pnpm demo` — 12 Tri-Pillar ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — 5-step grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge → R20 Panic Flash).
 
-### 0.3 Agent Ecosystem Adapters (V1.5 Roadmap)
+### 0.3 Agent Ecosystem Adapters (V1.0 Live · Native Integrations)
 
-Reference adapters in [`examples/adapters/`](../../examples/adapters/) — evaluator-reproducible **modular integration specs**; not v1.0 production fee-capture paths or partnership attestations.
+Production-native adapters in [`src/adapters/`](../../src/adapters/) — each framework has an **isolated module**, dedicated CLI demo, and Vitest suite. All validate agent intent, session key bounds, and `checkSoilResistance()` before transaction dispatch.
 
-> *"These framework adapters provide modular integration specifications for pre-execution risk checks via `@slivervine/citadel-sdk` and REST APIs. In v1.0, active fee-capture and liquidity routing are strictly bound to Arbitrum One GMX v2 GM + HL delta-neutral execution; multi-platform agent fee routing is targeted for V2.0 CaaS monetization."*
+| Framework | Status | Module SSOT | Entry point | CLI | Test |
+|-----------|--------|-----------|-------------|-----|------|
+| **Wayfinder** | ✅ V1.0 Live | [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) | `wayfinderCitadelShieldHook` | `pnpm demo:wayfinder` | [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) |
+| **ElizaOS** | ✅ V1.0 Live | [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:elizaos` | [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) |
+| **Virtuals (GAME)** | ✅ V1.0 Live | [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` | [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) |
+| **LangChain / LangGraph** | ✅ V1.0 Live | [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` | [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) |
+| **Stabilizer Protocol** | ✅ V1.0 Live | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` | [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) |
+| **Quad-Agent (combined)** | ✅ V1.0 Live | [`quad-agent-demo.ts`](../../examples/quad-agent-demo.ts) | All four AI frameworks | `pnpm demo:quad` | — |
+| **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
 
-| Framework | Status | Spec | Implementation | CLI |
-|-----------|--------|------|----------------|-----|
-| **ElizaOS** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec | TS-compliant `Plugin` / `Action` interface — `citadelShieldPlugin` + `citadelSoilGuardAction` wrapping `checkSoilResistance()` | [`elizaos-action-adapter.ts`](../../examples/adapters/elizaos-action-adapter.ts) | `pnpm tsx examples/adapters/elizaos-action-adapter.ts [--trip]` |
-| **Virtuals GAME** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec | TS-compliant `FunctionDefinition` custom worker action — `citadelSoilGuardFunction` wrapping `withCitadelShield()` | [`virtuals-game-adapter.ts`](../../examples/adapters/virtuals-game-adapter.ts) | `pnpm tsx examples/adapters/virtuals-game-adapter.ts [--trip]` |
-| **LangChain (TypeScript)** | Reference harness (evaluator demo) | `@langchain/core/tools` `DynamicTool`-compatible spec — `citadelSoilGuardTool` + JSON schema (no runtime dependency) | [`langchain-agent-adapter.ts`](../../examples/adapters/langchain-agent-adapter.ts) | `pnpm tsx examples/adapters/langchain-agent-adapter.ts [--trip]` |
-| **LangChain (Python)** | Reference harness (evaluator demo) | `langchain_core.tools.BaseTool` — `SlivervinePreExecutionGuardTool` (`slivervine_pre_execution_guard`) via Citadel REST `POST /api/hedge/evaluate` | [`langchain-agent-adapter.py`](../../examples/adapters/langchain-agent-adapter.py) | `python examples/adapters/langchain-agent-adapter.py [--trip]` |
-| **Wayfinder** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec | TS-compliant `@slivervine/citadel-sdk` decorator — `withCitadelShield()` / `verifyAgentIntent()` pre-broadcast hook | [`wayfinder-agent-adapter.ts`](../../examples/adapters/wayfinder-agent-adapter.ts) | `pnpm tsx examples/adapters/wayfinder-agent-adapter.ts [--trip]` |
-| **CrewAI / AutoGen** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec | Python `BaseTool` / Citadel REST Client — `SlivervineCrewAIGuardTool` + AutoGen `citadel_soil_guard` bindings | [`crewai-autogen-adapter.py`](../../examples/adapters/crewai-autogen-adapter.py) | `python examples/adapters/crewai-autogen-adapter.py [--trip]` |
+**Regression bar:** **185 test files | 818 PASS Clean (100% PASS)** · `pnpm test -- --run`
 
 **PEV (Prevented Exploit Volume) — Dune Analytics Telemetry Metric:**
 
@@ -146,7 +147,7 @@ Agent Cross-Pass Route (Sepolia 421614)
   FAIL_CLOSED (0-Gas)  or  ALLOW → Mainnet-identical bytecode path
 ```
 
-**Verification bar:** **185 test files | 818 PASS Clean** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
+**Verification bar:** **185 test files | 818 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
 
 ---
 
@@ -380,7 +381,7 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
-| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **185 test files \| 818 PASS Clean** |
+| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **185 test files \| 818 PASS Clean (100% PASS)** |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
 | **Camelot DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Camelot API on RPC allowlist (`api.camelot.exchange`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
@@ -438,7 +439,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · **185 test files \| 818 PASS Clean** · coexists with Shield **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · **185 test files \| 818 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 #### § AI Guarded Pool Factory Protocol (V1.0)
 
@@ -563,8 +564,8 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
-| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **185 test files \| 818 PASS Clean** |
-| **Camelot DEX & Stabilizer** | Zero-slippage stablecoin routing and `GRAIL` liquidity depth for delta-neutral rebalance legs — reduces `FRICTION_BUFFER_APY` drag | **V1.5** | ⏳ Roadmap Spec |
+| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **185 test files \| 818 PASS Clean (100% PASS)** |
+| **Camelot DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Camelot **V1.5** | ✅ Stabilizer Live · ⏳ Camelot Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
 
 See [§2.5 Strategic Blue-Chip Ecosystem & Settlement Roadmap](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) for integration anchors.
@@ -688,10 +689,11 @@ allowedToSign =
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
 | **Third-party dApps** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withCitadelShield` | Apache-2.0 · sub-ms soil gate |
-| **ElizaOS** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — [`elizaos-action-adapter.ts`](../../examples/adapters/elizaos-action-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) | `checkSoilResistance()` · `withCitadelShield()` |
-| **Virtuals GAME** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — [`virtuals-game-adapter.ts`](../../examples/adapters/virtuals-game-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) | `checkSoilResistance()` · `withCitadelShield()` |
-| **LangChain** | Reference harness (evaluator demo) — [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) · [`examples/adapters/`](../../examples/adapters/) | `checkSoilResistance()` · `withCitadelShield()` |
-| **Wayfinder (Arbitrum-native)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `@slivervine/citadel-sdk` · `withCitadelShield()` / `verifyAgentIntent()` · [`wayfinder-agent-adapter.ts`](../../examples/adapters/wayfinder-agent-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) | Sub-ms soil gate · ERC-7579 session clip |
+| **ElizaOS** | ✅ V1.0 Live Native Integration — [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `evaluateElizaCitadelAction()` · `checkSoilResistance()` |
+| **Virtuals GAME** | ✅ V1.0 Live Native Integration — [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `evaluateVirtualsGameTask()` · `checkSoilResistance()` |
+| **LangChain** | ✅ V1.0 Live Native Integration — [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `CitadelRiskGuardTool` · `checkSoilResistance()` |
+| **Wayfinder** | ✅ V1.0 Live Native Integration — [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `wayfinderCitadelShieldHook` · `verifyAgentIntent()` |
+| **Stabilizer** | ✅ V1.0 Live Native Integration — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia--universal-testnet-sandbox--cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
 | **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · [`crewai-autogen-adapter.py`](../../examples/adapters/crewai-autogen-adapter.py) · [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) | `checkSoilResistance()` · Pillar 2 AML escort boundary |
 | **Institutional vaults** | ZeroDev Kernel + Citadel Worker BUSL payload path | ERC-7579 session + 106µs Shield |
 | **Grant audit / Dune / PEV** | `GET /api/grant-audit` · **PEV (Prevented Exploit Volume)** · [Dune dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · production DuneSQL feed + chart ([`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md)) | Pillar 2 ingress · Pillar 3 intercepts · 10 bps builder revenue |
@@ -799,7 +801,7 @@ Evaluator-facing comparison of SliverVine Protocol versus legacy execution, agen
 
 ### 6.9 Strategic Blue-Chip Ecosystem & Settlement Integrations (V1.0 Core + V1.5 / V2.0)
 
-> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** is **v1.0 Live Core Pillar 3** (pre-execution firewall only — not a fee path). Camelot, Stabilizer, and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) and [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20).
+> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Camelot and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) and [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20).
 
 | Venue | Integration surface | Reflex hook | Horizon |
 |-------|-------------------|-------------|---------|
