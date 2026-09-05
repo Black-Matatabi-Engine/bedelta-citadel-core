@@ -1,5 +1,5 @@
 //! SliverVine M4 — `#![no_std]` soil resistance + session clip/TTL core.
-//! SPDX-License-Identifier: Apache-2.0
+//! SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
 //! Layout: 8×f64 little-endian input @ host buffer (see TS `encodeWasmSoilInput`).
 #![no_std]
 
