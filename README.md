@@ -260,19 +260,30 @@ Derivations & R01–R20 bounds: [Technical Specification §3.1](./docs/architect
 
 **Risk spectrum (88% / 12%):** Formal mathematical definition — [Risk Mitigation & Disclaimer Framework §0.1](./docs/architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
 
+## 💳 Commercial Model — SaaS Tier Matrix (v1.0)
+
+| Tier | Monthly | Annual (billed yearly) | RPS | Intents / mo | Entitlements |
+|------|---------|------------------------|-----|--------------|--------------|
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B anti-Sybil entry barrier · Edge soil fuse |
+| **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM closed kernel · R17 daily loss prevention |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | Priority hot-path allocation · R20 auto-severance · tenant isolation |
+| **Enterprise Dedicated** | **$1,999+** | Custom contract | **1,000+** | Custom | Dedicated Cloudflare Edge nodes · custom Rust/WASM risk modules · private MEV routing |
+
+> **$10/mo minimum** — no $0 tier or free API keys. Gateway responses expose `X-Citadel-Tier` and `X-Citadel-RPS-Limit`. **V1.1 Roadmap:** full API Key KV intent metering.
+
 ## 🛣️ Post-Buildathon B2B Commercialization & PMF Roadmap (Post-9/14)
 
 SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction Hackathon Verification with Long-Term Commercial Sustainability:
 
 - **Stage 1: Buildathon Verification Phase (Active Now — Pre-9/14)**
-  - **100% Free Public Telemetry**: Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)) — live **`IntentAttested`** + **`RiskTripBlocked`** streams from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`; **PEV** (`SUM(blocked_intent_notional_usd)`) fully operational on-chain · spec: [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
+  - **Public Dune Telemetry Dashboard** (read-only, no API key): Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)) — live **`IntentAttested`** + **`RiskTripBlocked`** streams from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`; **PEV** (`SUM(blocked_intent_notional_usd)`) fully operational on-chain · spec: [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
   - **Arbitrum One Mainnet Ignition Gate**: Non-custodial `SliverVineGate` on ChainID `42161` at `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) *(Bootstrap Ignition Keys `0x1111…`/`0x2222…`; production multisig rotation via native governance)*.
   - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
   - **Reference Interceptor Harness**: [`examples/agent-interceptor-demo.ts`](./examples/agent-interceptor-demo.ts) — Reference Interceptor Harness & Adapter for Virtuals Protocol and ElizaOS agent swarms (evaluator-reproducible; not a production partnership attestation).
   - **Zero-Touch SDK**: [`withCitadelShield`](./src/sdk/decorator.ts) — one-line decorator wrapping agent execution hooks with inline `checkSoilResistance()` pre-broadcast severance (`import { withCitadelShield } from '@slivervine/citadel-sdk'`).
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
   - **V2.0 CaaS rail (Design Spec):** `@slivervine/citadel-sdk` + **10 bps protocol authorization fee** on pre-execution risk checks. Live v1.0 builder lane remains GMX **+10 bps `uiFeeReceiver`**.
 
 ---

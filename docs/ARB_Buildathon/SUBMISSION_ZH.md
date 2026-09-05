@@ -31,7 +31,7 @@
 | **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **192 test files | 836 PASS Clean（100% PASS）** → [四大 AI Agent 框架](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate（`0xb174…`）**為 0-Gas Pre-Execution Off-Chain Severance 而設計**。Citadel Risk Gates 於 Edge **在 mempool 提交之前**中止受損 payload 簽名，維持 **L2 state space cleanliness**。→ [鏈上驗證 — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **7** | Dune Analytics | **即時事件遙測於 Sepolia Testnet 持續串流**；**Arbitrum One（42161）SQL Query Indexers 已完整預編譯以供生產事件擷取**。→ [§5 Dune](#5-dune-analytics) |
-| **8** | Commercial Model | **v1.0 = SaaS subscription（$0/$49/$299）**；**10 bps CaaS fee-sharing = V2.0 Expansion**。→ [商業模式](#business-model--gtm-strategy) |
+| **8** | Commercial Model | **v1.0 = SaaS（$10 / $99 / $299 / $1,999+）** · 年付折扣 · 嚴格 RPS 上限；**10 bps CaaS = V2.0 Expansion**。→ [商業模式](#business-model--gtm-strategy) |
 
 ---
 
@@ -287,7 +287,7 @@ Grant allocation 直接推動 **V2.0 R&D Roadmap**：
 2. **Multi-RPC Quorum Consensus Verification** — 於 Wasm evaluation 前防護 RPC eclipse spoofing。
 3. **Decentralized PEV（Prevented Exploit Volume）Intelligence Feed** — 即時 Dune telemetry 接入 decentralized agent alert networks。
 
-**V1.0 production scope：** Mainnet Gate 上 Ephemeral Ignition Signers（`0x1111…`/`0x2222…`）· GMX v2 dry-run/Vitest pre-flight guards（mainnet GM fill post-M6）· **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations**（Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer）· Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299（10 bps CaaS = V2.0）· Stylus V2.0 dual-execution coprocessor（`pnpm build:stylus`；EIP-1967 upgradeable proxy path；**9/9（50bps）**）· **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked（10,000-run simulation；nominal modeled capital）· **dual-branch strategy**（`main` 生產基線 + feature branch 上游插件整合）。
+**V1.0 production scope：** Mainnet Gate 上 Ephemeral Ignition Signers（`0x1111…`/`0x2222…`）· GMX v2 dry-run/Vitest pre-flight guards（mainnet GM fill post-M6）· **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations**（Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer）· Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS **$10/$99/$299/$1,999+**（10 bps CaaS = V2.0）· Stylus V2.0 dual-execution coprocessor（`pnpm build:stylus`；EIP-1967 upgradeable proxy path；**9/9（50bps）**）· **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked（10,000-run simulation；nominal modeled capital）· **dual-branch strategy**（`main` 生產基線 + feature branch 上游插件整合）。
 
 ---
 
@@ -322,7 +322,7 @@ $$
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer（[`src/adapters/`](../../src/adapters/)）· [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $0/$49/$299** · **192 test files \| 836 PASS Clean（100% PASS）** · **dual-branch strategy** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer（[`src/adapters/`](../../src/adapters/)）· [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) Draft policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **Cloudflare SaaS $10/$99/$299/$1,999+** · **192 test files \| 836 PASS Clean（100% PASS）** · **dual-branch strategy** |
 | **V1.5** | ⏳ Roadmap Spec | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) fleet enforcement for multi-agent swarms · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit（`severSigningChannel()` sub-100µs） |
 | **V2.0** | ⏳ Design Spec | Institutional **CaaS**（`@slivervine/citadel-sdk`）for AI DEXs and Orbit L3s · **10 bps protocol authorization fee** on pre-execution risk checks — **explicitly V2.0；not v1.0 SaaS** |
 
@@ -376,7 +376,7 @@ V1.0 交付 **兩項互补 Pendle integrations** — institutional safety layer�
 * **5 Pool Invariants：** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist（`eETH` / `ETH` / `USDC`）· supported intent taxonomy
 * Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](../../tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts)
 
-> **DX & Pricing：** 透過 **Pendle AI Guarded Pool Factory** 的 AI Agent pool creation 與 parameter validation 為 **100% free from protocol tax**，透過 Citadel 的 **Cloudflare-style SaaS Request Credits**（$0 / $49 / $299 tiers）無縫計量。
+> **DX & Pricing：** 透過 **Pendle AI Guarded Pool Factory** 的 AI Agent pool creation 與 parameter validation 為 **100% free from protocol tax**，透過 Citadel **SaaS Request Credits** 計量（Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**）。
 
 * **Integration（P0/P1 Code-Verified）**:
   * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
@@ -485,19 +485,21 @@ Hyperliquid — 與 Arbitrum 永續流動性生態系並行的**獨立 L1 高頻
 
 ## Business Model & GTM Strategy
 
-> **Pricing model boundary：** **v1.0 uses Cloudflare-style SaaS subscription（$0 / $49 / $299）**；**10 bps CaaS protocol fee-sharing is explicitly designated V2.0 Expansion** — do not conflate with v1.0 SaaS or GMX +10 bps `uiFeeReceiver`。
+> **Pricing model boundary：** **v1.0 uses Cloudflare-style SaaS subscription（$10 / $99 / $299 / $1,999+）** with **annual billing discount** and **strict RPS caps**；**10 bps CaaS protocol fee-sharing is explicitly designated V2.0 Expansion** — do not conflate with v1.0 SaaS or GMX +10 bps `uiFeeReceiver`。
 
 SliverVine 拒絕不切實際的 B2B sales models（如向 DAOs 收取 $8k/mo upfront），採用 **Infra-First, Multi-Tiered Monetization Engine**：
 
-1. **Cloudflare-Style SaaS Subscription（v1.0 Primary — $0 / $49 / $299）**:
- * **Developer（$0）** 與 **Pro（$49）**：Edge API 分層存取，透過 Request Credits 計量 — **非** V2.0 CaaS protocol fee rail。
- * **Institutional（$299/month）**：**10M intents / month** 硬上限 · Dedicated Tenant Key Isolation · Custom Thresholds · RPC Honeypot integration · Priority Discord Support（**best-effort basis**）。**無 unlimited intents · 無 24/7 SLA 或 SLA 支援承諾。**
+1. **Cloudflare-Style SaaS Subscription（v1.0 Primary — $10 / $99 / $299 / $1,999+）**:
+ * **$10/月最低入門** — 無 $0 層級或免費 API Key。Edge gateway 需付費 API Key。
+ * Gateway 回應包含 `X-Citadel-Tier`（`starter` | `pro` | `business` | `enterprise`）與 `X-Citadel-RPS-Limit`（`5` | `50` | `200` | `1000`）。
+ * **V1.1 路線圖：** 完整 API Key KV 意圖計量（按帳單週期）。
 
-| 層級 | 價格 | 每月意圖上限 | 權益 |
-|------|------|-------------|------|
-| **Developer** | $0 | Request Credits 計量 | 公開 Dune dashboard · 社群存取 |
-| **Pro** | $49 | Request Credits 計量 | 完整 Edge API · 標準 `checkSoilResistance()` 門控 |
-| **Institutional** | **$299** | **10M intents / month**（硬上限） | Dedicated Tenant Key Isolation · Custom Thresholds · RPC Honeypot integration · Priority Discord Support（**best-effort basis**） |
+| 層級 | 月費 | 年付（按年計費） | RPS | 意圖/月 | 權益 |
+|------|------|-----------------|-----|---------|------|
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B 反 Sybil 入門門檻 · Edge soil fuse |
+| **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM 閉源核心 · R17 日損熔斷 |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | 優先熱路徑分配 · R20 自動切斷 · 租戶隔離 |
+| **Enterprise Dedicated** | **$1,999+** | 客製合約 | **1,000+** | 客製 | 專用 Cloudflare Edge 節點 · 客製 Rust/WASM 風控模組 · 私有 MEV 路由 |
 2. **Pay-per-Intent Micro-Attestation Fee（Adjunct）**:
  * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway（`@slivervine/citadel-sdk`）。
  * Charged $0.01 – $0.05 per signed attestation, deducting micro-fees automatically without requiring credit card friction.
@@ -515,12 +517,12 @@ SliverVine 拒絕不切實際的 B2B sales models（如向 DAOs 收取 $8k/mo up
 SliverVine Protocol 執行嚴格的 two-stage strategy，平衡 Zero-Friction Hackathon Verification 與 Long-Term Commercial Sustainability：
 
 - **Stage 1: Buildathon Verification Phase（Active Now — Pre-9/14）**
-  - **100% Free Public Telemetry**：Open-access Dune Live Telemetry Dashboard（[https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)）供 judges 與 developers zero-friction auditing。
+  - **公開 Dune 遙測儀表板**（唯讀、無 API Key）：開放 Dune Live Telemetry Dashboard（[https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)）供 judges 與 developers 審計 — 與付費 Edge API 分層分離。
   - **Sepolia Safety Gate**：Full EIP-712 session key validation 與 0-Gas Fail-Closed protection 於 Arbitrum Sepolia（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）驗證。
 
 - **Stage 2: B2B Monetization & Risk API Launch（Post-9/14）**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator（powered by on-chain telemetry & Dune Analytics visualization）**：透過 B2B API 將 SliverVine 專有 sub-ms risk calculation algorithms 與 shadow margin telemetry 商業化 — **not** Dune platform data resale。[Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) 仍為 **free public visualization dashboard**；paid tiers（$199/mo Pro to $1,999/mo Enterprise）gate programmatic access to Citadel-computed liquidation risk、margin health 與 bad-debt savings metrics for vault managers and AI Agent swarms（Wayfinder, Virtuals, M2M Treasury Funds）。
-  - **V2.0 CaaS rail（Design Spec — not v1.0）：** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks。**v1.0 operates on SaaS（$0/$49/$299）**；v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane（not the V2.0 CaaS fee）。
+  - **SliverVine Citadel Risk API & Bad Debt Calculator（powered by on-chain telemetry & Dune Analytics visualization）**：透過 B2B API 將 SliverVine 專有 sub-ms risk calculation algorithms 與 shadow margin telemetry 商業化 — **not** Dune platform data resale。[Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) 仍為**公開唯讀視覺化儀表板**；付費 Edge API 分層（**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**）gate programmatic access to Citadel-computed liquidation risk、margin health 與 bad-debt savings metrics for vault managers and AI Agent swarms（Wayfinder, Virtuals, M2M Treasury Funds）。
+  - **V2.0 CaaS rail（Design Spec — not v1.0）：** `@slivervine/citadel-sdk` modular Wasm SDK + **10 bps protocol authorization fee** on pre-execution risk checks。**v1.0 operates on SaaS（$10/$99/$299/$1,999+）**；v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane（not the V2.0 CaaS fee）。
 
 ---
 

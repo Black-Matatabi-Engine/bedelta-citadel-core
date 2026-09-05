@@ -1,9 +1,5 @@
 import type { Env } from "../env";
-import { applyGrantAuditHeaders } from "./middleware/og-preview";
-import {
-  applyEngineModeResponseHeaders,
-  parseEngineModeHeader,
-} from "../middleware/engine-mode-router";
+import { applyPublicApiResponseHeaders } from "../middleware/citadel-tier-headers";
 import { hardlockResponse } from "./hardlock-response";
 import { HardlockError } from "../services/risk-control";
 import {
@@ -34,16 +30,16 @@ export async function routeRequest(
     const url = new URL(request.url);
 
     if (isExecutionLogsPath(url.pathname) && request.method === "GET") {
-      return applyEngineModeResponseHeaders(
-        applyGrantAuditHeaders(await handleExecutionLogsRequest(env, request)),
-        parseEngineModeHeader(request),
+      return applyPublicApiResponseHeaders(
+        await handleExecutionLogsRequest(env, request),
+        request,
       );
     }
 
     if (isGrantAuditApiPath(url.pathname) && request.method === "GET") {
-      return applyEngineModeResponseHeaders(
-        applyGrantAuditHeaders(await handleGrantAuditRequest(env, request)),
-        parseEngineModeHeader(request),
+      return applyPublicApiResponseHeaders(
+        await handleGrantAuditRequest(env, request),
+        request,
       );
     }
 
@@ -51,31 +47,31 @@ export async function routeRequest(
       (url.pathname === "/api" || url.pathname === "/api/health") &&
       request.method === "GET"
     ) {
-      return applyGrantAuditHeaders(handleSystemStatusRequest(env));
+      return applyPublicApiResponseHeaders(handleSystemStatusRequest(env), request);
     }
 
     if (url.pathname === "/api/data" && request.method === "GET") {
-      return applyGrantAuditHeaders(await handleDataRequestLean(env, ctx));
+      return applyPublicApiResponseHeaders(await handleDataRequestLean(env, ctx), request);
     }
 
     if (url.pathname === "/api/telemetry/health" && request.method === "GET") {
-      return applyGrantAuditHeaders(handleTelemetryHealthRequestLean());
+      return applyPublicApiResponseHeaders(handleTelemetryHealthRequestLean(), request);
     }
 
     if (url.pathname === "/api/badge/health" && request.method === "GET") {
-      return applyGrantAuditHeaders(handleBadgeHealthRequestLean());
+      return applyPublicApiResponseHeaders(handleBadgeHealthRequestLean(), request);
     }
 
     if (url.pathname === "/api/badge/proofs" && request.method === "GET") {
-      return applyGrantAuditHeaders(handleBadgeProofsRequestLean());
+      return applyPublicApiResponseHeaders(handleBadgeProofsRequestLean(), request);
     }
 
     if (url.pathname === "/api/telemetry/analytics" && request.method === "GET") {
-      return applyGrantAuditHeaders(handleTelemetryAnalyticsRequestLean());
+      return applyPublicApiResponseHeaders(handleTelemetryAnalyticsRequestLean(), request);
     }
 
     if (url.pathname === "/api/yield/triangle" && request.method === "GET") {
-      return applyGrantAuditHeaders(handleYieldTriangleRequestLean(request));
+      return applyPublicApiResponseHeaders(handleYieldTriangleRequestLean(request), request);
     }
 
     if (request.method === "OPTIONS") {
@@ -85,7 +81,7 @@ export async function routeRequest(
           "Access-Control-Allow-Origin": "*",
           "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
           "Access-Control-Allow-Headers":
-            "Content-Type, X-Santenmoku-Canary, X-Runtime-Integrity, x-engine-mode",
+            "Content-Type, X-Santenmoku-Canary, X-Runtime-Integrity, x-engine-mode, X-Citadel-API-Key",
         },
       });
     }
@@ -93,14 +89,15 @@ export async function routeRequest(
     return new Response("Not Found", { status: 404 });
   } catch (error) {
     if (error instanceof HardlockError) {
-      return applyGrantAuditHeaders(hardlockResponse(error));
+      return applyPublicApiResponseHeaders(hardlockResponse(error), request);
     }
     console.error("[routeRequest] unhandled error", error);
-    return applyGrantAuditHeaders(
+    return applyPublicApiResponseHeaders(
       new Response(JSON.stringify({ success: false, error: "Internal server error" }), {
         status: 500,
         headers: { "Content-Type": "application/json" },
       }),
+      request,
     );
   }
 }

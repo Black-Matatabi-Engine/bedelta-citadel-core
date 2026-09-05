@@ -1,9 +1,6 @@
 import type { Env } from "./env";
 import { routeRequest } from "./api/routes-lean";
-import {
-  applyEngineModeResponseHeaders,
-  parseEngineModeHeader,
-} from "./middleware/engine-mode-router";
+import { applyPublicApiResponseHeaders } from "./middleware/citadel-tier-headers";
 import { CORS_JSON_HEADERS } from "./services/config";
 import { severSigningChannel } from "./services/session-key-adapter-lib/session-key-gates";
 import { configureTelegramAlert } from "./services/telemetry/telegram-alert";
@@ -82,9 +79,9 @@ export async function handleWorkerFetch(
       return await handleExecutionLogsRequest(env, request);
     }
     if (request.method === "GET" && isGrantAuditApiPath(url.pathname)) {
-      return applyEngineModeResponseHeaders(
+      return applyPublicApiResponseHeaders(
         await handleGrantAuditRequest(env, request),
-        parseEngineModeHeader(request),
+        request,
       );
     }
   } catch (error) {

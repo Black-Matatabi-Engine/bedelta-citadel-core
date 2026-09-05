@@ -265,19 +265,30 @@ $$
 
 **Risk spectrum (88% / 12%)：** 正式數學定義 — [Risk Mitigation & Disclaimer Framework §0.1](./docs/architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · **80/20 Pareto**（微結構損失集中）鎖定 Pillar 3 內急性 20% 尾部。
 
+## 💳 商業模式 — SaaS 分層矩陣（v1.0）
+
+| 層級 | 月費 | 年付（按年計費） | RPS | 意圖/月 | 權益 |
+|------|------|-----------------|-----|---------|------|
+| **Starter Shield** | **$10** | **$96/yr** | **5** | **100k** | B2B 反 Sybil 入門門檻 · Edge soil fuse |
+| **Pro Guard** | **$99** | **$950/yr** | **50** | **5M** | WASM 閉源核心 · R17 日損熔斷 |
+| **Business Citadel** | **$299** | **$2,870/yr** | **200** | **20M** | 優先熱路徑分配 · R20 自動切斷 · 租戶隔離 |
+| **Enterprise Dedicated** | **$1,999+** | 客製合約 | **1,000+** | 客製 | 專用 Cloudflare Edge 節點 · 客製 Rust/WASM 風控模組 · 私有 MEV 路由 |
+
+> **$10/月最低入門** — 無 $0 層級或免費 API Key。Gateway 回應附帶 `X-Citadel-Tier` 與 `X-Citadel-RPS-Limit`。**V1.1 路線圖：** 完整 API Key KV 意圖計量。
+
 ## 🛣️ Buildathon 後 B2B 商業化與 PMF 路線圖（9/14 後）
 
 SliverVine Protocol 採嚴格兩階段策略，平衡零摩擦 Hackathon 驗證與長期商業永續：
 
 - **Stage 1: Buildathon Verification Phase（現行 — 9/14 前）**
-  - **100% Free Public Telemetry**：開放 Dune Live Telemetry Dashboard（[https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)）— Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` 即時 **`IntentAttested`** + **`RiskTripBlocked`** 串流；**PEV**（`SUM(blocked_intent_notional_usd)`）於鏈上完全運作 · spec: [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)。
+  - **公開 Dune 遙測儀表板**（唯讀、無 API Key）：開放 Dune Live Telemetry Dashboard（[https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)）— Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` 即時 **`IntentAttested`** + **`RiskTripBlocked`** 串流；**PEV**（`SUM(blocked_intent_notional_usd)`）於鏈上完全運作 · spec: [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)。
   - **Arbitrum One Mainnet Ignition Gate**：ChainID `42161` 上非託管 `SliverVineGate` 位於 `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) *（Bootstrap Ignition Keys `0x1111…`/`0x2222…`；生產多簽輪替透過原生治理）*。
   - **Sepolia Safety Gate**：Arbitrum Sepolia（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）上完整 EIP-712 session key 驗證與 0-Gas Fail-Closed 保護已驗證。
   - **Reference Interceptor Harness**：[`examples/agent-interceptor-demo.ts`](./examples/agent-interceptor-demo.ts) — Virtuals Protocol 與 ElizaOS agent swarm 的參考攔截器與 Adapter（評審可重現；非生產合作背書）。
   - **Zero-Touch SDK**：[`withCitadelShield`](./src/sdk/decorator.ts) — 一行 decorator 包裝 agent 執行 hook，內嵌 `checkSoilResistance()` 廣播前切斷（`import { withCitadelShield } from '@slivervine/citadel-sdk'`）。
 
 - **Stage 2: B2B Monetization & Risk API Launch（9/14 後）**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator（由鏈上遙測與 Dune Analytics 視覺化驅動）**：透過 B2B API 變現 SliverVine 專有亞毫秒風險演算法與 shadow margin 遙測 — **非** Dune 平台資料轉售。[Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) 維持**免費公開視覺化儀表板**；付費層（$199/mo Pro 至 $1,999/mo Enterprise）門控 Citadel 計算之清算風險、保證金健康與壞帳節省指標，供 vault manager 與 AI Agent swarm（Wayfinder、Virtuals、M2M Treasury Funds）使用。
+  - **SliverVine Citadel Risk API & Bad Debt Calculator（由鏈上遙測與 Dune Analytics 視覺化驅動）**：透過 B2B API 變現 SliverVine 專有亞毫秒風險演算法與 shadow margin 遙測 — **非** Dune 平台資料轉售。[Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) 維持**公開唯讀視覺化儀表板**；付費 Edge API 分層（**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**）門控 Citadel 計算之清算風險、保證金健康與壞帳節省指標，供 vault manager 與 AI Agent swarm（Wayfinder、Virtuals、M2M Treasury Funds）使用。
   - **V2.0 CaaS rail (Design Spec)：** `@slivervine/citadel-sdk` + 執行前風險檢查 **10 bps protocol authorization fee**。Live v1.0 builder lane 維持 GMX **+10 bps `uiFeeReceiver`**。
 
 ---
