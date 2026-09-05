@@ -2,6 +2,7 @@
  * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
+import { hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
@@ -169,9 +170,9 @@ export function runSoilCheckHud(
   meta: { agentId: string; framework: string; intent: string; venue?: string },
 ): SoilHudRun {
   hudIntent(meta.agentId, meta.framework, meta.intent, meta.venue ?? "GMX v2 ETH/USDC GM");
-  const t0 = performance.now();
+  const t0 = hrtimeStart();
   const result = checkSoilResistance(soil);
-  const measuredUs = (performance.now() - t0) * 1000;
+  const measuredUs = hrtimeElapsedUs(t0);
   const pass = result.ok;
   hudSoilFuse(pass, measuredUs, result.reasons);
   return { result, measuredUs, pass };

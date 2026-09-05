@@ -66,6 +66,7 @@ import { formatHlPerpPrice } from "../src/adapters/hl/execution-wire";
 import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedge";
 import { loadEnvProduction, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
+import { hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -284,7 +285,7 @@ function step1CitadelPreExec(): {
     `Soil core: tripped=${core.output.tripped} wasmUsed=${core.wasmUsed}`,
   );
 
-  const nodeT0 = performance.now();
+  const nodeT0 = hrtimeStart();
   const verdict = verifyAgentIntent({
     intentDigest: DEMO_DIGEST,
     sessionKey: {
@@ -317,7 +318,7 @@ function step1CitadelPreExec(): {
     preset: "production",
     nowMs,
   });
-  const nodeE2eRttUs = (performance.now() - nodeT0) * 1000;
+  const nodeE2eRttUs = hrtimeElapsedUs(nodeT0);
 
   demoLog(
     `Intent: allowedToSign=${verdict.allowedToSign} soilOk=${verdict.soilOk} sessionOk=${verdict.sessionOk} deadmanOk=${verdict.deadmanOk} wasmUsed=${verdict.wasmUsed}`,
@@ -581,6 +582,7 @@ function step5R20PanicFlash(): {
     demoLog(entry.message);
   }
 
+  const t0 = hrtimeStart();
   const plan = buildFlashUnwindPlan({
     openOrders: [{ asset: HL_ETH_PERP_ASSET_INDEX, oid: 42_001, coin: "ETH" }],
     positions: [
@@ -594,9 +596,7 @@ function step5R20PanicFlash(): {
       },
     ],
   });
-
-  const t0 = performance.now();
-  const elapsedMs = performance.now() - t0;
+  const elapsedMs = hrtimeElapsedUs(t0) / 1000;
   const withinBudget = elapsedMs < FLASH_UNWIND_BUDGET_MS;
 
   demoLog(

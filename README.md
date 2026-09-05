@@ -106,6 +106,24 @@ pnpm demo:quad         # All four AI frameworks (combined)
 
 ## ⚡ 30-Second Express Audit (Fastest Judge Verification)
 
+### 3-Tier Demo Suite (CLI SSOT)
+
+All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
+
+| Tier | Commands | Scope |
+|------|----------|-------|
+| **Tier 1 — Core DEX** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` | GMX v2 shadow margin · Hyperliquid session key · Pendle PT/YT sentinel |
+| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
+| **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
+
+```bash
+pnpm demo:gmx      # GMX v2 shadow margin · cross-venue slippage · position cap
+pnpm demo:hl       # Hyperliquid session key auth · orderbook depth guard
+pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
+# Append -- --trip on any Tier 1–2 demo for FAIL_CLOSED soil trip
+```
+
 ### Path 1: Instant Monorepo Verification (Recommended — 3 Seconds)
 
 ```bash
@@ -115,9 +133,7 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (185 files / 818 tests)
 ```
 
-Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
-
-Optional: `pnpm demo:agent` (ALLOW) · `pnpm demo:agent --trip` (FAIL_CLOSED)
+GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 
@@ -264,7 +280,9 @@ cd SliverVineGate && forge test && cd ..
 pnpm audit:fast && pnpm audit:security
 
 # Zone C — Outside Three Pillars
-pnpm demo:agent
+pnpm demo:gmx
+pnpm demo:hl
+pnpm demo:pendle
 pnpm demo:wayfinder
 pnpm demo:wayfinder -- --trip
 pnpm tsx scripts/generate-survival-report.ts

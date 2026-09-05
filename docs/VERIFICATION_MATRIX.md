@@ -25,7 +25,8 @@
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · `pnpm demo:agent` |
+| **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../examples/agent-interceptor-demo.ts) |
+| **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · `pnpm demo:{gmx,hl,pendle}` |
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **DuneSQL (Sepolia ingest)** | Event streaming verified on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](./telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **DuneSQL (Arbitrum One prod)** | Queries 0–0b feed + chart; Queries 1–3 reconciliation — production SQL targets **ChainID `42161`** | Same spec |
@@ -41,6 +42,17 @@
 
 ## Zone A — 30-Second Express Verification (Fast Track)
 
+### 3-Tier Demo Suite (CLI SSOT)
+
+| Tier | Commands | Scope |
+|------|----------|-------|
+| **Tier 1 — Core DEX** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` | GMX v2 shadow margin · HL session key · Pendle PT/YT sentinel |
+| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
+| **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
+
+All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
+
 ### Path 1: Instant Monorepo (Recommended — ~3 Seconds)
 
 ```bash
@@ -53,6 +65,9 @@ pnpm test       # Full System Regression Suite (185 files / 818 tests)
 | Command | Proves | Expected |
 |---------|--------|----------|
 | `pnpm demo` | Tri-Pillar micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
+| `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -418,7 +433,7 @@ pnpm exec vitest run tests/adapters/langchain-tool.test.ts
 
 ### 6. Supplementary Agent Demos (Optional)
 
-**Command:** `pnpm demo:agent` · legacy scripts in [`examples/adapters/`](../../examples/adapters/)
+**Command:** `tsx examples/agent-interceptor-demo.ts` · legacy scripts in [`examples/adapters/`](../../examples/adapters/)
 
 | Scope | Detail |
 |-------|--------|
@@ -451,7 +466,7 @@ pnpm tsx scripts/generate-survival-report.ts
 | Sidecar health | [`docker/README.md`](../docker/README.md) | `curl -sS http://localhost:8080/health \| jq .` |
 | Live grant audit | Network required | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
 | 5-TX testnet proof | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet anchor in `verified_5tx_results.json` |
-| Demo pipeline | `pnpm demo` · `pnpm demo:e2e` | 12-scenario matrix · 5-step ANSI HUD |
+| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
 
 **Sidecar build:**
 
@@ -468,6 +483,9 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm bundle:measure` | Worker hot-path size gate | **91.2 KiB gzip** / **369.69 KiB raw** · `limitKiB: 150` · `pass: true` |
 | `pnpm verify:negative` | Negative soil-trip proofs | Depth breach fail-closed |
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
+| `pnpm demo:gmx` | GMX v2 shadow margin CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:hl` | Hyperliquid session key CLI | ALLOW / `--trip` FAIL_CLOSED |
+| `pnpm demo:pendle` | Pendle guarded pool factory CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |

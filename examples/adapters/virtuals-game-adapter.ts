@@ -27,6 +27,7 @@ import {
   seedAdapterProbes,
   TOXIC_SOIL,
 } from "./citadel-ansi-hud";
+import { hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
 
 export interface VirtualsGameWorkerPayload {
   symbol: string;
@@ -99,17 +100,17 @@ export const citadelSoilGuardFunction: {
 
     if (showHud) hudIntent(agentId, "Virtuals GAME", intent, "GMX v2 ETH/USDC GM");
 
-    const t0 = performance.now();
+    const t0 = hrtimeStart();
     try {
       const result = await shieldedExecute({ ...soil, agentId });
-      const latencyUs = (performance.now() - t0) * 1000;
+      const latencyUs = hrtimeElapsedUs(t0);
       if (showHud) {
         hudChannelOpen();
         hudDispatched("Virtuals GAME Worker → GMX v2 GM", latencyUs);
       }
       return { ...result, latencyUs };
     } catch (err) {
-      const latencyUs = (performance.now() - t0) * 1000;
+      const latencyUs = hrtimeElapsedUs(t0);
       const message = err instanceof Error ? err.message : "Citadel Shield trip";
       if (showHud) {
         if (isCooldownError(message)) {

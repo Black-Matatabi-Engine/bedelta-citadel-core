@@ -117,9 +117,15 @@ pnpm demo:wayfinder -- --stabilizer --trip      # Depleted pool / reserve floor 
 **DX advantage:** Demo and audit execution runs on **live Sepolia contracts** without mainnet gas or capital friction — using the **same `checkSoilResistance()` bytecode and risk gates** as Arbitrum One (`42161`).
 
 ```bash
+pnpm demo:gmx                   # GMX v2 shadow margin · cross-venue slippage → ALLOW
+pnpm demo:gmx -- --trip         # Toxic price-impact soil trip → FAIL_CLOSED
+pnpm demo:hl                    # Hyperliquid session key auth → ALLOW
+pnpm demo:hl -- --trip          # WS stale / depth guard trip → FAIL_CLOSED
+pnpm demo:pendle                # Pendle guarded pool factory → ALLOW
+pnpm demo:pendle -- --trip      # Yield-drift breach → FAIL_CLOSED
 pnpm demo:stabilizer              # Stabilizer 1:1 swap → ALLOW
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + SOIL_RESISTANCE_TRIP → FAIL_CLOSED + 60s cooldown
-pnpm demo                         # GMX v2 + Pendle Tri-Pillar (Sepolia-compatible harness)
+pnpm demo                         # GMX v2 + HL + Pendle Tri-Pillar Vitest matrix (12 scenarios)
 ```
 
 - **Cross-Pass routing:** Stabilizer stablecoin rebalance → GMX v2 shadow-margin leg → Pendle guarded pool intent — each hop gated by `checkSoilResistance()` before broadcast
@@ -147,8 +153,8 @@ pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
 
 #### Supplementary Agent Demos
 
-- **V1.0 delivered:** All five native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · standalone CLIs `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED
-- **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/) · `pnpm demo:agent`
+- **V1.0 delivered:** All five native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 DEX: `pnpm demo:{gmx,hl,pendle}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED
+- **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/)
 
 ---
 
@@ -500,9 +506,12 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ```bash
 pnpm install
-pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
-pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm demo:wayfinder              # Wayfinder route interception (ALLOW)
+pnpm demo:gmx     # Tier 1 — GMX v2 shadow margin (ALLOW)
+pnpm demo:hl      # Tier 1 — Hyperliquid session key (ALLOW)
+pnpm demo:pendle  # Tier 1 — Pendle guarded pool factory (ALLOW)
+pnpm demo       # Vitest Tri-Pillar matrix (12 scenarios)
+pnpm demo:e2e   # Tier 3 — 5-Step Macro Lifecycle CLI
+pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
 pnpm test       # Full System Regression Suite (185 files / 818 tests)
 pnpm run audit:security # 5/0/0 PASS

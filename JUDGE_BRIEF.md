@@ -9,7 +9,7 @@
 | **Live Dune Telemetry Portal** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV operational on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Headless Audit Endpoint** | [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
-| **Tests** | `pnpm test` → **185 test files | 818 PASS Clean (100% PASS)** · `pnpm demo` · `pnpm demo:e2e` · `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:stabilizer` · `pnpm demo:quad` · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Tests** | `pnpm test` → **185 test files | 818 PASS Clean (100% PASS)** · **3-Tier Demo Suite** (`demo:gmx` · `demo:hl` · `demo:pendle` · `demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `demo:{stabilizer,e2e}`) · `pnpm demo` (12 Tri-Pillar) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
 > **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.
@@ -56,11 +56,20 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (185 files / 818 tests)
 ```
 
-Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · `--trip` for Fail-Closed demos
-
-Optional AI interceptor: `pnpm demo:agent` · `pnpm demo:agent --trip` (FAIL_CLOSED)
+Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 DEX: `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `--trip` for Fail-Closed demos
 
 > All verification commands: [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
+
+### 3-Tier Demo Suite (CLI SSOT)
+
+| Tier | Commands | Scope |
+|------|----------|-------|
+| **Tier 1 — Core DEX** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` | GMX v2 shadow margin · HL session key · Pendle PT/YT sentinel |
+| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Four major AI frameworks + combined quad run |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
+| **Vitest matrix** | `pnpm demo` | **12 ANSI scenarios** — GMX · HL · Pendle · p50 ~106µs |
+
+All standalone CLIs use `process.hrtime.bigint()` latency measurement (µs precision).
 
 ### Dual-Demo Architecture (Tri-Pillar Showcase)
 
@@ -239,7 +248,7 @@ import { withCitadelShield } from "@slivervine/citadel-sdk";
 const execute = withCitadelShield(async (intent) => agent.swap(intent));
 ```
 
-Supplementary evaluator demos: `pnpm demo:agent` ([`examples/agent-interceptor-demo.ts`](./examples/agent-interceptor-demo.ts)) · legacy TS/Python reference scripts in [`examples/adapters/`](./examples/adapters/)
+Supplementary evaluator harness: [`examples/agent-interceptor-demo.ts`](./examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python reference scripts in [`examples/adapters/`](./examples/adapters/)
 
 ---
 

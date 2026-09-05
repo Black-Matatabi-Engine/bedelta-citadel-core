@@ -24,6 +24,7 @@ import {
   seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
+import { measureAsync, resolveLatency } from "./lib/demo-timing";
 
 const AGENT_ID = "langchain-demo";
 
@@ -38,20 +39,23 @@ async function main(): Promise<void> {
   const intent = trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT";
   hudIntent(AGENT_ID, "LangChain", intent, "LangGraph state node · GMX v2 ETH/USDC GM");
 
-  const result = await CitadelRiskGuardTool.invoke({
-    ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: now,
-    agentId: AGENT_ID,
-    chainId: 42161,
-    intent,
-    nowMs: now.getTime(),
-    sessionKey: {
-      agentAddress: "0xcccccccccccccccccccccccccccccccccccccccc",
-      maxOrderClipUsd: 30,
-      expiresAtMs: now.getTime() + 86_400_000,
-      approvedAtMs: now.getTime() - 1_000,
-    },
-  });
+  const { value: result, latencyUs: measuredUs } = await measureAsync(() =>
+    CitadelRiskGuardTool.invoke({
+      ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
+      at: now,
+      agentId: AGENT_ID,
+      chainId: 42161,
+      intent,
+      nowMs: now.getTime(),
+      sessionKey: {
+        agentAddress: "0xcccccccccccccccccccccccccccccccccccccccc",
+        maxOrderClipUsd: 30,
+        expiresAtMs: now.getTime() + 86_400_000,
+        approvedAtMs: now.getTime() - 1_000,
+      },
+    }),
+  );
+  const latencyUs = resolveLatency(measuredUs, result.latencyUs);
 
   if (result.status === "MANDATORY_COOLDOWN_ACTIVE") {
     hudBackoff(AGENT_ID, 60);
@@ -60,11 +64,11 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  hudSoilFuse(result.success, result.latencyUs ?? 0, result.reasons);
+  hudSoilFuse(result.success, latencyUs, result.reasons);
 
   if (result.success && result.status === "ALLOW") {
     hudChannelOpen();
-    hudDispatched("LangChain CitadelRiskGuardTool → GMX v2 GM", result.latencyUs ?? 0);
+    hudDispatched("LangChain CitadelRiskGuardTool → GMX v2 GM", latencyUs);
     printResult(true);
     return;
   }

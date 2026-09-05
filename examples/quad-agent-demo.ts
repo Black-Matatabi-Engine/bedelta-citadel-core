@@ -24,6 +24,12 @@ import {
   seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
+import {
+  formatLatencyLabel,
+  hrtimeStart,
+  hrtimeElapsedUs,
+  resolveLatency,
+} from "./lib/demo-timing";
 
 const NOW_MS = Date.now();
 const SESSION = {
@@ -41,28 +47,10 @@ type FrameworkResult = {
   detail?: string;
 };
 
-function hrtimeUs(): bigint {
-  return process.hrtime.bigint();
-}
-
-function elapsedUs(start: bigint): number {
-  const us = Number(process.hrtime.bigint() - start) / 1000;
-  return us > 0 ? us : 0.1;
-}
-
-function resolveLatency(measuredUs: number, reportedUs?: number): number {
-  const reported = reportedUs && reportedUs > 0 ? reportedUs : 0;
-  return Math.max(measuredUs, reported, 0.1);
-}
-
-function formatLatencyLabel(us: number): string {
-  return us >= 1000 ? `${(us / 1000).toFixed(2)}ms` : `${us.toFixed(1)}µs`;
-}
-
 async function runWayfinder(trip: boolean): Promise<FrameworkResult> {
   const agentId = "quad-wayfinder";
   hudIntent(agentId, "Wayfinder", trip ? "TOXIC_ROUTE" : "DELTA_NEUTRAL_GM_DEPOSIT", "Arbitrum 42161");
-  const t0 = hrtimeUs();
+  const t0 = hrtimeStart();
   const result = await wayfinderCitadelShieldHook.execute({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
     at: new Date(NOW_MS),
@@ -71,7 +59,7 @@ async function runWayfinder(trip: boolean): Promise<FrameworkResult> {
     nowMs: NOW_MS,
     sessionKey: SESSION,
   });
-  const latencyUs = resolveLatency(elapsedUs(t0), result.latencyUs);
+  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
     framework: "Wayfinder Agent Engine",
     status: result.status,
@@ -84,7 +72,7 @@ async function runWayfinder(trip: boolean): Promise<FrameworkResult> {
 async function runElizaOS(trip: boolean): Promise<FrameworkResult> {
   const agentId = "quad-elizaos";
   hudIntent(agentId, "ElizaOS", trip ? "TOXIC_ACTION" : "CITADEL_SOIL_GUARD", "GMX v2 ETH/USDC GM");
-  const t0 = hrtimeUs();
+  const t0 = hrtimeStart();
   const result = await evaluateElizaCitadelAction(
     { agentId },
     {
@@ -95,7 +83,7 @@ async function runElizaOS(trip: boolean): Promise<FrameworkResult> {
       sessionKey: SESSION,
     },
   );
-  const latencyUs = resolveLatency(elapsedUs(t0), result.latencyUs);
+  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
     framework: "ElizaOS Framework",
     status: result.status,
@@ -108,7 +96,7 @@ async function runElizaOS(trip: boolean): Promise<FrameworkResult> {
 async function runVirtuals(trip: boolean): Promise<FrameworkResult> {
   const agentId = "quad-virtuals";
   hudIntent(agentId, "Virtuals GAME", trip ? "TOXIC_TASK" : "GAME_TRADE_INTENT", "GMX v2 ETH/USDC GM");
-  const t0 = hrtimeUs();
+  const t0 = hrtimeStart();
   const result = await evaluateVirtualsGameTask({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
     at: new Date(NOW_MS),
@@ -119,7 +107,7 @@ async function runVirtuals(trip: boolean): Promise<FrameworkResult> {
     nowMs: NOW_MS,
     sessionKey: SESSION,
   });
-  const latencyUs = resolveLatency(elapsedUs(t0), result.latencyUs);
+  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
     framework: "Virtuals Protocol (GAME)",
     status: result.status,
@@ -132,7 +120,7 @@ async function runVirtuals(trip: boolean): Promise<FrameworkResult> {
 async function runLangChain(trip: boolean): Promise<FrameworkResult> {
   const agentId = "quad-langchain";
   hudIntent(agentId, "LangChain", trip ? "TOXIC_TOOL_CALL" : "TRADE_INTENT", "LangGraph state node");
-  const t0 = hrtimeUs();
+  const t0 = hrtimeStart();
   const result = await CitadelRiskGuardTool.invoke({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
     at: new Date(NOW_MS),
@@ -142,7 +130,7 @@ async function runLangChain(trip: boolean): Promise<FrameworkResult> {
     nowMs: NOW_MS,
     sessionKey: SESSION,
   });
-  const latencyUs = resolveLatency(elapsedUs(t0), result.latencyUs);
+  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
     framework: "LangChain / LangGraph",
     status: result.status,

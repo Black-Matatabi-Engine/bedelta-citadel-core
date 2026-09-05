@@ -28,6 +28,7 @@ import {
   seedAdapterProbes,
   TOXIC_SOIL,
 } from "./citadel-ansi-hud";
+import { hrtimeElapsedUs, hrtimeStart } from "../lib/demo-timing";
 
 export interface WayfinderAgentIntentPayload {
   symbol: string;
@@ -98,9 +99,9 @@ export const wayfinderCitadelShieldHook = {
 
     if (showHud) hudIntent(agentId, "Wayfinder", intent, `Arbitrum ${chainId} · GMX v2 ETH/USDC GM`);
 
-    const t0 = performance.now();
+    const t0 = hrtimeStart();
     const soilProbe = checkSoilResistance(soil);
-    if (showHud) hudSoilFuse(soilProbe.ok, (performance.now() - t0) * 1000, soilProbe.reasons);
+    if (showHud) hudSoilFuse(soilProbe.ok, hrtimeElapsedUs(t0), soilProbe.reasons);
 
     const intentVerdict = verifyAgentIntent({
       preset: "test",
@@ -121,14 +122,14 @@ export const wayfinderCitadelShieldHook = {
 
     try {
       const result = await shieldedExecute({ ...soil, agentId });
-      const latencyUs = (performance.now() - t0) * 1000;
+      const latencyUs = hrtimeElapsedUs(t0);
       if (showHud) {
         hudChannelOpen();
         hudDispatched(`Wayfinder Agent Engine → Arbitrum ${chainId}`, latencyUs);
       }
       return { ...result, latencyUs, allowedToSign: intentVerdict.allowedToSign };
     } catch (err) {
-      const latencyUs = (performance.now() - t0) * 1000;
+      const latencyUs = hrtimeElapsedUs(t0);
       const message = err instanceof Error ? err.message : "Citadel Shield trip";
       if (showHud) {
         if (isCooldownError(message)) {

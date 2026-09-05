@@ -37,6 +37,7 @@ import {
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
+import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 
 async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
@@ -45,7 +46,7 @@ async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Pr
 
   hudIntent(agentId, "Wayfinder", intent, `Arbitrum ${chainId} · GMX v2 ETH/USDC GM`);
 
-  const t0 = performance.now();
+  const t0 = hrtimeStart();
   const soilProbe = checkSoilResistance({
     symbol: payload.symbol,
     hlSpot: payload.hlSpot,
@@ -54,7 +55,7 @@ async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Pr
     depthUsd: payload.depthUsd,
     at: payload.at,
   });
-  hudSoilFuse(soilProbe.ok, (performance.now() - t0) * 1000, soilProbe.reasons);
+  hudSoilFuse(soilProbe.ok, hrtimeElapsedUs(t0), soilProbe.reasons);
 
   const result = await wayfinderCitadelShieldHook.execute(payload);
 

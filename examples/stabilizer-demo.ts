@@ -26,6 +26,7 @@ import {
   RED,
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
+import { measureSync, resolveLatency } from "./lib/demo-timing";
 
 const AGENT_ID = "stabilizer-demo";
 
@@ -76,14 +77,15 @@ async function runDemo(trip: boolean): Promise<void> {
     `Arbitrum Sepolia ${STABILIZER_SEPOLIA_CHAIN_ID} · ${swap.fromAsset}→${swap.toAsset} · 1:1 zero-slippage`,
   );
 
-  const result = evaluateStabilizerSwapGuard(swap);
-  hudSoilFuse(result.soilOk, result.latencyUs ?? 0, result.reasons);
+  const { value: result, latencyUs: measuredUs } = measureSync(() => evaluateStabilizerSwapGuard(swap));
+  const latencyUs = resolveLatency(measuredUs, result.latencyUs);
+  hudSoilFuse(result.soilOk, latencyUs, result.reasons);
 
   if (result.ok && result.status === "ALLOW") {
     hudChannelOpen();
     hudDispatched(
       `Stabilizer Guard → ${swap.fromAsset}/${swap.toAsset} · Sepolia ${STABILIZER_SEPOLIA_CHAIN_ID}`,
-      result.latencyUs ?? 0,
+      latencyUs,
     );
     printResult(true);
     return;
