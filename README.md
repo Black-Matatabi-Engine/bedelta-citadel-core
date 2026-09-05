@@ -2,7 +2,7 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
-[![Vitest](https://img.shields.io/badge/Vitest-806%20PASS%20%28181%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-815%20PASS%20%28184%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-5%2F5_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -75,9 +75,27 @@ Citadel is the **pre-execution Zero-Slippage Capacity & De-peg Liquidation Firew
 
 → Tests: [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts)
 
+### Four Major AI Agent Frameworks (V1.0 Live · Full Quad Coverage)
+
+**World's First Pre-Execution Risk Gateway natively supporting ALL Four Major AI Agent Frameworks (Wayfinder, ElizaOS, Virtuals, LangChain).**
+
+| Framework | Adapter SSOT | Citadel gate |
+|-----------|--------------|--------------|
+| **Wayfinder** | [`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) | `wayfinderCitadelShieldHook` · soil fuse + 8-dimension intent |
+| **ElizaOS** | [`elizaos-shield.ts`](./src/adapters/elizaos/elizaos-shield.ts) | `evaluateElizaCitadelAction()` · Action handler pre-broadcast guard |
+| **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` · GAME Worker task validation |
+| **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` · StructuredTool + state-node intercept |
+
+```bash
+pnpm demo:quad              # All four frameworks → ALLOW
+pnpm demo:quad -- --trip    # Toxic soil / hallucination → FAIL_CLOSED
+```
+
+→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`virtuals-game-adapter.test.ts`](./tests/adapters/virtuals-game-adapter.test.ts) · [`langchain-citadel-tool.test.ts`](./tests/adapters/langchain-citadel-tool.test.ts) · Demo: [`examples/quad-agent-demo.ts`](./examples/quad-agent-demo.ts)
+
 **Triangle loop:** [Technical Specification §2](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#2-triangle-liquidity-loop--segregated-tranches) · **Arbitrum execution premium:** +15–30 bps vs bridged routes *(design estimate)*.
 
-> **SSOT lock (Buildathon):** v1.0 Delivered (Sepolia + Arbitrum One verified) · Vitest **182 test files | 809 PASS Clean** · deep fuzz **327,675** via `pnpm audit:nightly` · Tier-0 Docker [`Dockerfile`](./Dockerfile) · docs hub [`docs/README.md`](./docs/README.md) · **Judge quick brief:** [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
+> **SSOT lock (Buildathon):** v1.0 Delivered (Sepolia + Arbitrum One verified) · Vitest **184 test files | 815 PASS Clean** · deep fuzz **327,675** via `pnpm audit:nightly` · Tier-0 Docker [`Dockerfile`](./Dockerfile) · docs hub [`docs/README.md`](./docs/README.md) · **Judge quick brief:** [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
 
 ---
 
@@ -89,10 +107,10 @@ Citadel is the **pre-execution Zero-Slippage Capacity & De-peg Liquidation Firew
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (182 files / 809 tests)
+pnpm test       # Full System Regression Suite (184 files / 815 tests)
 ```
 
-Wayfinder: `pnpm demo:wayfinder` (Normal Route Interception) · `pnpm demo:wayfinder -- --trip` (0-Gas Fail-Closed Soil Trip) · `pnpm demo:wayfinder -- --stabilizer` (Sepolia Stabilizer swap)
+Wayfinder: `pnpm demo:wayfinder` · Stabilizer: `pnpm demo:stabilizer` · **Quad-Agent:** `pnpm demo:quad` (Wayfinder + ElizaOS + Virtuals + LangChain)
 
 Optional: `pnpm demo:agent` (ALLOW) · `pnpm demo:agent --trip` (FAIL_CLOSED)
 
@@ -104,7 +122,7 @@ Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 ```
 
-Zero-dependency container execution — no host Node/pnpm install. Runs the isolated 5-step `demo:e2e` dry-run and Tier-1 ANSI HUD demo. Full regression: `docker run --rm slivervine-citadel pnpm test` (**182 test files | 809 PASS Clean**). Sidecar express audit → [`docker/README.md`](./docker/README.md).
+Zero-dependency container execution — no host Node/pnpm install. Runs the isolated 5-step `demo:e2e` dry-run and Tier-1 ANSI HUD demo. Full regression: `docker run --rm slivervine-citadel pnpm test` (**184 test files | 815 PASS Clean**). Sidecar express audit → [`docker/README.md`](./docker/README.md).
 
 **Representative `demo:e2e` terminal highlights** (GitHub `diff` syntax — green `+` PASS, red `-` alerts, yellow `!` fee injection):
 
@@ -129,7 +147,7 @@ Zero-dependency container execution — no host Node/pnpm install. Runs the isol
 Canonical interactive demo commands for judges:
 
 1. **Path 1 (recommended):** `pnpm install && pnpm demo && pnpm demo:e2e` — Tri-Pillar micro matrix (12 scenarios) + 5-step macro lifecycle.
-2. `pnpm test` verifies **182 test files | 809 PASS Clean**.
+2. `pnpm test` verifies **184 test files | 815 PASS Clean**.
 3. **Path 2:** `docker build -t slivervine-citadel . && docker run --rm slivervine-citadel` — isolated E2E, no host toolchain drift.
 4. `grant-advanced-resilience-benchmark.ts` shows the sub-ms Wasm Shield latency path.
 
@@ -205,7 +223,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 * **Runtime Bytecode**: 📦 **8,716 Bytes (8.71 KiB)** — Zero External Dependencies (`Assembly-optimized`)
 
 ### 2. Off-Chain Pre-Execution Radar (TypeScript / V8 Runtime)
-* **Vitest SSOT**: 🧪 **182 test files | 809 PASS Clean** on `pnpm test -- --run`
+* **Vitest SSOT**: 🧪 **184 test files | 815 PASS Clean** on `pnpm test -- --run`
 * **Chaos Matrix**: 🌪️ **255 Severe Failure Cases | 0 Crashes**
 * **Edge Decision Latency**: ⏱️ **SLO &lt; 1.0ms | p50 ~106 μs Shield/TS Gateway | Wasm warm &lt;60 μs | Pure Math: 0.0002 ms (200 ns)**
 * **Worker Bundle**: 📦 **91.2 KiB gzip** measured hot path (`pnpm bundle:measure`) · **369.69 KiB raw** Worker upload (`limitKiB: 150` · `pass: true`)
@@ -218,7 +236,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 |-----------|--------|-----------------------------|
 | **M0: Operational Foundation** | ✅ Delivered | WSL / PNPM Monorepo, Cloudflare Edge Worker pipeline, and CI/CD strict typecheck. |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` core invariant locks · **327,675 deep fuzz** (`FOUNDRY_PROFILE=deep`) · 25k gas bounds. |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **182 test files | 809 PASS Clean**, 91.2 KiB gzip bundle, sub-ms latency. |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **184 test files | 815 PASS Clean**, 91.2 KiB gzip bundle, sub-ms latency. |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Harness Verified (Kernel v3 / EntryPoint v0.7) | **Opt-In Pillar 1** ZeroDev Kernel v3 AA Adapter (`USE_ZERODEV_AA` default-off) · optional Robinhood Chain / Across (`46630`/`4663`) **Pillar 2 Reference Escort Adapters** into Arbitrum. Wasm Shield + Native Ingress unaffected. |
 | **M4: WASM Engine & IP Moat** | ✅ Delivered | Rust `#![no_std]` Wasm core (`pkg/soil_core.wasm`) — Cloudflare budget `<28kb`, hot-path exec `<60µs` — & `@slivervine/citadel-sdk` shipped. |
 | **M5: TCA Data & Hyperliquid** | ✅ Delivered (evolving) | TCA / grant-audit surfaces & HL Testnet 5-trade provenance — **Live TCA Analytics HUD actively evolving**. |

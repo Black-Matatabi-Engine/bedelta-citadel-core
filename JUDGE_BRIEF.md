@@ -9,7 +9,7 @@
 | **Live Dune Telemetry Portal** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV operational on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Headless Audit Endpoint** | [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
-| **Tests** | `pnpm test` → **182 test files | 809 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · `pnpm demo:wayfinder` (Wayfinder route interception) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Tests** | `pnpm test` → **184 test files | 815 PASS Clean** · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · `pnpm demo:wayfinder` · `pnpm demo:quad` (Four Major AI Agent Frameworks) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
 > **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.
@@ -18,7 +18,7 @@
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **182 test files / 809 PASS Clean**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **184 test files / 815 PASS Clean**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
@@ -53,7 +53,7 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 ```bash
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (182 files / 809 tests)
+pnpm test       # Full System Regression Suite (184 files / 815 tests)
 ```
 
 Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · `--trip` for Fail-Closed demos
@@ -165,7 +165,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 - **Liquidation invariants:** 15% reserve-ratio floor · Constant-Sum 1:1 capacity · USDZ/collateral >50bps de-peg guard · 60s LLM mandatory cooldown
 - **Demo:** `pnpm demo:stabilizer` · `pnpm demo:stabilizer -- --trip` · `pnpm demo:wayfinder -- --stabilizer`
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **182 test files | 809 PASS Clean**
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **184 test files | 815 PASS Clean**
 
 **Cross-Pass testnet routing (Stabilizer → GMX v2 → Pendle):**
 
@@ -207,7 +207,27 @@ FAIL_CLOSED  ALLOW → identical Mainnet bytecode path
                     [ On-Chain Execution · Arbitrum 42161 ]
 ```
 
-### AI Agent Ecosystem Runtimes (Virtuals / ElizaOS / LangChain TS & Python)
+### Four Major AI Agent Frameworks (V1.0 Live · Full Quad Coverage)
+
+**World's First Pre-Execution Risk Gateway natively supporting ALL Four Major AI Agent Frameworks (Wayfinder, ElizaOS, Virtuals, LangChain).**
+
+| Framework | Adapter SSOT | Entry point | Demo |
+|-----------|--------------|-------------|------|
+| **Wayfinder** | [`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) | `wayfinderCitadelShieldHook` | `pnpm demo:wayfinder` |
+| **ElizaOS** | [`elizaos-shield.ts`](./src/adapters/elizaos/elizaos-shield.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:quad` |
+| **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:quad` |
+| **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:quad` |
+
+Each adapter validates agent intent, session key bounds, and `checkSoilResistance()` before transaction dispatch — returning `ALLOW` or `FAIL_CLOSED` (0-Gas).
+
+```bash
+pnpm demo:quad              # All four frameworks → ALLOW
+pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
+```
+
+- **Tests:** [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`virtuals-game-adapter.test.ts`](./tests/adapters/virtuals-game-adapter.test.ts) · [`langchain-citadel-tool.test.ts`](./tests/adapters/langchain-citadel-tool.test.ts) — **184 test files | 815 PASS Clean**
+
+### AI Agent Ecosystem Runtimes (Legacy Reference Harness)
 
 **v1.0: Wayfinder native adapter + executable Reference Harness · V1.1: official npm spec PR (`@elizaos/plugin-citadel-guard`)**
 

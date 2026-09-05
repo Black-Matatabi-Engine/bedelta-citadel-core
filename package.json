@@ -21,6 +21,7 @@
     "demo:agent": "tsx examples/agent-interceptor-demo.ts",
     "demo:wayfinder": "tsx examples/wayfinder-agent-demo.ts",
     "demo:stabilizer": "tsx examples/stabilizer-demo.ts",
+    "demo:quad": "tsx examples/quad-agent-demo.ts",
     "demo:data": "tsx scripts/generate-demo-data.ts",
     "telemetry:96h": "tsx scripts/live-96h-telemetry-daemon.ts",
     "build:wasm": "cargo build --manifest-path src/wasm/Cargo.toml --release --target wasm32-unknown-unknown && mkdir -p pkg && cp src/wasm/target/wasm32-unknown-unknown/release/soil_core.wasm pkg/soil_core.wasm",
