@@ -16,6 +16,7 @@ Publicly, Citadel markets its **Full Arbitrum Native Multi-Protocol Coverage** f
 - **Radiant Capital** (Omnichain Lending & Health Factor Safety)
 - **Jones DAO** (Leveraged Vaults & Anti-Sandwich Protection)
 - **Hyperliquid** (Independent Cross-Chain L1 Orderbook)
+- **Variational** (Arbitrum One Omni RFQ — optional Loop 1 perp hedge target)
 
 Internally, Citadel maintains a **modular, protocol-agnostic vector risk engine (`src/core/risk-engine-core.ts`)**. This engine is mathematically designed to plug into **any AMM, CDP, or Stablecoin Minting Protocol** via standard `SoilResistanceInput` vector masks without modifying core code.
 
@@ -30,8 +31,9 @@ Citadel classifies all AI Agent chain interactions into four discrete **Capital 
 │ PUBLIC & GRANT FACING LOOPS (Primary Focus for Arbitrum Buildathon)          │
 ├─────────────────────────────────────────────────────────────────────────────┤
 │ Loop 1: Δ-Neutral Perp Stack Loop                                           │
-│ ➔ Venues: Pendle + GMX v2 + Hyperliquid                                     │
-│ ➔ Mechanism: Pendle PT yield locking + GMX GM Shadow Margin + HL L1 Hedge    │
+│ ➔ Venues: Pendle + GMX v2 + Hyperliquid (+ optional Variational Omni RFQ)   │
+│ ➔ Mechanism: Pendle PT yield locking + GMX GM Shadow Margin + HL L1 /       │
+│   Variational RFQ OLP hedge (`--hedge=hyperliquid|variational|both`)        │
 │                                                                             │
 │ Loop 2: Spot & Lending Vault Loop                                           │
 │ ➔ Venues: Camelot V3 + Radiant Capital + Jones DAO                          │
@@ -92,6 +94,7 @@ To ensure zero leak into public Grant materials while maintaining test integrity
 ### Demo Ergonomics (`pnpm demo:matrix`)
 
 - Default CLI command runs **Loop 1 + Loop 2** (Pure Arbitrum Mainnet Natives).
-- `--loop=perp` runs Loop 1.
+- `--loop=perp` runs Loop 1 (default `--hedge=both`: Hyperliquid + Variational).
+- `--loop=perp --hedge=variational` isolates Variational Omni RFQ OLP pre-flight (`validateVariationalRFQIntent`).
 - `--loop=spot` runs Loop 2.
 - Loop 3 remains strictly isolated under `pnpm demo:stabilizer` for Sepolia testing.

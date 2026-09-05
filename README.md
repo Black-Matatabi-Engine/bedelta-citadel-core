@@ -2,7 +2,7 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
-[![Vitest](https://img.shields.io/badge/Vitest-831%20PASS%20%28191%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-834%20PASS%20%28192%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -17,7 +17,7 @@
 
 > **⚡ Pre-Consensus Intent Firewall:** Sub-ms intent clearing at **p50 ~106 μs** — toxic payloads are severed **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools (0-Gas fail-closed).
 >
-> *Sub-ms End-to-End Shield Path (Pure-Math Kernel: 200 ns / 0.0002 ms) · < 1.0ms SLO Session Key verification · **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).*
+> *Sub-ms End-to-End Shield Path (Pure-Math Kernel: 200 ns / 0.0002 ms) · < 1.0ms SLO Session Key verification · **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.*
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution that conforms to venue constraints without breaking invariants. **Δ (Delta)** is the mathematical symbol for **market delta-neutrality** — neutralizing directional exposure through the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive that binds both.
 
@@ -142,11 +142,11 @@ pnpm demo:stabilizer   # Stabilizer Sepolia 1:1 swap guard
 pnpm demo:quad         # All four AI frameworks (combined)
 ```
 
-→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **190 test files | 828 PASS Clean (100% PASS)**
+→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
 
 **Triangle loop:** [Technical Specification §2](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#2-triangle-liquidity-loop--segregated-tranches) · **Arbitrum execution premium:** +15–30 bps vs bridged routes *(design estimate)*.
 
-> **SSOT lock (Buildathon):** v1.0 Delivered (Sepolia + Arbitrum One verified) · Vitest **190 test files | 828 PASS Clean (100% PASS)** · deep fuzz **327,675** via `pnpm audit:nightly` · Tier-0 Docker [`Dockerfile`](./Dockerfile) · docs hub [`docs/README.md`](./docs/README.md) · **Judge quick brief:** [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
+> **SSOT lock (Buildathon):** v1.0 Delivered (Sepolia + Arbitrum One verified) · Vitest **192 test files | 834 PASS Clean (100% PASS)** · deep fuzz **327,675** via `pnpm audit:nightly` · Tier-0 Docker [`Dockerfile`](./Dockerfile) · docs hub [`docs/README.md`](./docs/README.md) · **Judge quick brief:** [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
 
 ---
 
@@ -158,7 +158,7 @@ All standalone demos measure latency via `process.hrtime.bigint()` (µs precisio
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · **6-protocol cross-venue matrix** |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:camelot` · `pnpm demo:radiant` · `pnpm demo:jones` · `pnpm demo:matrix` | GMX · HL · Pendle · Camelot V3 · Radiant · Jones DAO · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -170,8 +170,11 @@ pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
 pnpm demo:camelot  # Camelot V3 concentrated liquidity · dynamic fee guard
 pnpm demo:radiant  # Radiant Capital HF & cross-chain liquidation guard
 pnpm demo:jones    # Jones DAO vault share-price & sandwich guard
-pnpm demo:matrix              # Full 6-protocol matrix (--loop=all, default)
-pnpm demo:matrix -- --loop=perp   # Pendle → GMX → HL perp stack
+pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
+pnpm demo:matrix -- --loop=perp   # Pendle → GMX → dual perp hedge (HL + Variational)
+pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
+pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
+pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
 pnpm demo:matrix -- --loop=spot   # Camelot → Radiant → Jones spot loop
 # Append -- --healthy-only for nominal PASS; default runs R20 trip + severance
 ```
@@ -182,7 +185,7 @@ pnpm demo:matrix -- --loop=spot   # Camelot → Radiant → Jones spot loop
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (188 files / 824 tests)
+pnpm test       # Full System Regression Suite (192 files / 834 tests)
 ```
 
 GMX: `pnpm demo:gmx` · HL: `pnpm demo:hl` · Pendle: `pnpm demo:pendle` · Camelot: `pnpm demo:camelot` · Radiant: `pnpm demo:radiant` · Jones: `pnpm demo:jones` · Matrix: `pnpm demo:matrix` · Wayfinder: `pnpm demo:wayfinder` · ElizaOS: `pnpm demo:elizaos` · Virtuals: `pnpm demo:virtuals` · LangChain: `pnpm demo:langchain` · Stabilizer: `pnpm demo:stabilizer` · Quad: `pnpm demo:quad`
@@ -195,7 +198,7 @@ Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 ```
 
-Zero-dependency container execution — no host Node/pnpm install. Runs the isolated 5-step `demo:e2e` dry-run and Tier-1 ANSI HUD demo. Full regression: `docker run --rm slivervine-citadel pnpm test` (**190 test files | 828 PASS Clean (100% PASS)**). Sidecar express audit → [`docker/README.md`](./docker/README.md).
+Zero-dependency container execution — no host Node/pnpm install. Runs the isolated 5-step `demo:e2e` dry-run and Tier-1 ANSI HUD demo. Full regression: `docker run --rm slivervine-citadel pnpm test` (**192 test files | 834 PASS Clean (100% PASS)**). Sidecar express audit → [`docker/README.md`](./docker/README.md).
 
 **Representative `demo:e2e` terminal highlights** (GitHub `diff` syntax — green `+` PASS, red `-` alerts, yellow `!` fee injection):
 
@@ -220,7 +223,7 @@ Zero-dependency container execution — no host Node/pnpm install. Runs the isol
 Canonical interactive demo commands for judges:
 
 1. **Path 1 (recommended):** `pnpm install && pnpm demo && pnpm demo:e2e` — Tri-Pillar micro matrix (12 scenarios) + 5-step macro lifecycle.
-2. `pnpm test` verifies **190 test files | 828 PASS Clean (100% PASS)**.
+2. `pnpm test` verifies **192 test files | 834 PASS Clean (100% PASS)**.
 3. **Path 2:** `docker build -t slivervine-citadel . && docker run --rm slivervine-citadel` — isolated E2E, no host toolchain drift.
 4. `grant-advanced-resilience-benchmark.ts` shows the sub-ms Wasm Shield latency path.
 
@@ -289,7 +292,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 
 ### Tailor-Made Mathematical Invariants (Protocol Physical Boundaries)
 
-**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
+**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.
 
 | Protocol | Venue | Physical Boundary Check | Code Module |
 |----------|-------|-------------------------|-------------|
@@ -299,6 +302,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 | **Radiant Capital** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`radiant-lending-adapter.ts`](./src/adapters/radiant/radiant-lending-adapter.ts) |
 | **Jones DAO** | Arbitrum One | Vault NAV Share Price Volatility > **0.30%** single-block NAV deviation / Sandwich trip (**30 bps**) | [`jones-vault-adapter.ts`](./src/adapters/jones/jones-vault-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](./src/adapters/hl/hyperliquid-session-guard.ts) |
+| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) | [`variational-rfq-adapter.ts`](./src/adapters/variational-rfq-adapter.ts) |
 
 > **Hyperliquid positioning:** Independent L1 High-Frequency Orderbook AppChain that originated alongside Arbitrum's perp liquidity ecosystem — cross-venue Δ-neutral hedge leg via session-key adapter, not Arbitrum-native execution.
 
@@ -311,10 +315,10 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 * **Runtime Bytecode**: 📦 **8,716 Bytes (8.71 KiB)** — Zero External Dependencies (`Assembly-optimized`)
 
 ### 2. Off-Chain Pre-Execution Radar (TypeScript / V8 Runtime)
-* **Vitest SSOT**: 🧪 **190 test files | 828 PASS Clean (100% PASS)** on `pnpm test -- --run`
+* **Vitest SSOT**: 🧪 **192 test files | 834 PASS Clean (100% PASS)** on `pnpm test -- --run`
 * **Chaos Matrix**: 🌪️ **255 Severe Failure Cases | 0 Crashes**
 * **Edge Decision Latency**: ⏱️ **SLO &lt; 1.0ms | p50 ~106 μs Shield/TS Gateway | Wasm warm &lt;60 μs | Pure Math: 0.0002 ms (200 ns)**
-* **Worker Bundle**: 📦 **68.9 KiB gzip** measured hot path (`pnpm bundle:measure`) · **276.2 KiB raw** Worker upload (`limitKiB: 150` · `pass: true`)
+* **Worker Bundle**: 📦 **69.28 KiB gzip** measured hot path (`pnpm bundle:measure`) · **276.2 KiB raw** Worker upload (`limitKiB: 150` · `pass: true`)
 
 ---
 
@@ -324,7 +328,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 |-----------|--------|-----------------------------|
 | **M0: Operational Foundation** | ✅ Delivered | WSL / PNPM Monorepo, Cloudflare Edge Worker pipeline, and CI/CD strict typecheck. |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` core invariant locks · **327,675 deep fuzz** (`FOUNDRY_PROFILE=deep`) · 25k gas bounds. |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **190 test files | 828 PASS Clean (100% PASS)**, 68.9 KiB gzip bundle, sub-ms latency. |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` engine, **192 test files | 834 PASS Clean (100% PASS)**, 69.28 KiB gzip bundle, sub-ms latency. |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Harness Verified (Kernel v3 / EntryPoint v0.7) | **Opt-In Pillar 1** ZeroDev Kernel v3 AA Adapter (`USE_ZERODEV_AA` default-off) · optional Robinhood Chain / Across (`46630`/`4663`) **Pillar 2 Reference Escort Adapters** into Arbitrum. Wasm Shield + Native Ingress unaffected. |
 | **M4: WASM Engine & IP Moat** | ✅ Delivered | Rust `#![no_std]` Wasm core (`pkg/soil_core.wasm`) — Cloudflare budget `<28kb`, hot-path exec `<60µs` — & `@slivervine/citadel-sdk` shipped. |
 | **M5: TCA Data & Hyperliquid** | ✅ Delivered (evolving) | TCA / grant-audit surfaces & HL Testnet 5-trade provenance — **Live TCA Analytics HUD actively evolving**. |
