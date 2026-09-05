@@ -3,11 +3,13 @@
  * Cross-Venue Matrix Demo — flexible capital loops across 6 protocols.
  * Usage:
  *   pnpm demo:matrix                      # --loop=all (default)
- *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL perp stack
+ *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL + Variational (both hedges)
+ *   pnpm demo:matrix -- --loop=perp --hedge=variational
+ *   pnpm demo:matrix -- --loop=perp --hedge=hyperliquid
  *   pnpm demo:matrix -- --loop=spot       # Camelot → Radiant → Jones spot loop
- *   pnpm demo:matrix -- --loop=spot --radiant  # Spot loop: Radiant HF trip (default: Jones NAV)
- *   pnpm demo:matrix -- --healthy-only    # nominal PASS (no R20 sever)
- * Trip:  pnpm demo:matrix -- --trip --gmx  # GMX pool imbalance trip
+ *   pnpm demo:matrix -- --loop=spot --radiant
+ *   pnpm demo:matrix -- --healthy-only
+ * Trip:  pnpm demo:matrix -- --trip --gmx
  */
 import {
   CAMELOT_V3_ARBITRUM_CHAIN_ID,
@@ -28,6 +30,10 @@ import {
   RADIANT_ARBITRUM_CHAIN_ID,
   evaluateRadiantLendingGuard,
 } from "../src/adapters/radiant/radiant-lending-adapter";
+import {
+  validateVariationalRFQIntent,
+  type VariationalRFQPayload,
+} from "../src/adapters/variational-rfq-adapter";
 import {
   __setSystemStateForTests,
   buildSystemState,
@@ -54,8 +60,10 @@ import {
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
-type VenueKey = "pendle" | "gmx" | "hl" | "camelot" | "radiant" | "jones" | "soil";
+type PerpHedge = "hyperliquid" | "variational" | "both";
+type PerpAnomaly = "pendle" | "gmx" | "variational";
 type SpotAnomaly = "jones" | "radiant";
+type VenueKey = "pendle" | "gmx" | "hl" | "variational" | "camelot" | "radiant" | "jones" | "soil";
 
 interface VenueRow {
   venue: string;
@@ -67,6 +75,7 @@ interface TripContext {
   active: boolean;
   perpPendle: boolean;
   perpGmx: boolean;
+  perpVariational: boolean;
   spotJones: boolean;
   spotRadiant: boolean;
 }
@@ -77,9 +86,13 @@ interface LoopEvalResult {
   soilLatencyUs: number;
 }
 
-const PERP_KEYS: VenueKey[] = ["pendle", "gmx", "hl", "soil"];
+interface PrintMatrixOpts {
+  nowMs: number;
+  ctx: TripContext;
+  hedge: PerpHedge;
+}
+
 const SPOT_KEYS: VenueKey[] = ["camelot", "radiant", "jones", "soil"];
-const ALL_KEYS: VenueKey[] = ["pendle", "gmx", "hl", "camelot", "radiant", "jones", "soil"];
 
 const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
@@ -96,19 +109,65 @@ function parseLoop(argv: string[]): MatrixLoop {
   return "all";
 }
 
+function parseHedge(argv: string[]): PerpHedge {
+  const raw = argv.find((a) => a.startsWith("--hedge="))?.split("=")[1]?.toLowerCase();
+  if (raw === "hyperliquid" || raw === "hl") return "hyperliquid";
+  if (raw === "variational") return "variational";
+  return "both";
+}
+
 function parseSpotAnomaly(argv: string[]): SpotAnomaly {
   return argv.includes("--radiant") ? "radiant" : "jones";
 }
 
-function buildTripContext(loop: MatrixLoop, trip: boolean, gmxTrip: boolean, spotAnomaly: SpotAnomaly): TripContext {
+function parsePerpAnomaly(argv: string[], gmxTrip: boolean, hedge: PerpHedge): PerpAnomaly {
+  if (gmxTrip) return "gmx";
+  if (hedge === "variational") return "variational";
+  return "pendle";
+}
+
+function perpKeysForHedge(hedge: PerpHedge): VenueKey[] {
+  const base: VenueKey[] = ["pendle", "gmx"];
+  if (hedge === "hyperliquid") return [...base, "hl", "soil"];
+  if (hedge === "variational") return [...base, "variational", "soil"];
+  return [...base, "hl", "variational", "soil"];
+}
+
+function allKeysForHedge(hedge: PerpHedge): VenueKey[] {
+  const perp = perpKeysForHedge(hedge).filter((k) => k !== "soil");
+  const spot = SPOT_KEYS.filter((k) => k !== "soil");
+  return [...perp, ...spot, "soil"];
+}
+
+function buildTripContext(
+  loop: MatrixLoop,
+  trip: boolean,
+  gmxTrip: boolean,
+  spotAnomaly: SpotAnomaly,
+  perpAnomaly: PerpAnomaly,
+): TripContext {
   const perpActive = trip && loop !== "spot";
   const spotActive = trip && loop !== "perp";
   return {
     active: trip,
-    perpPendle: perpActive && !gmxTrip,
-    perpGmx: perpActive && gmxTrip,
+    perpPendle: perpActive && perpAnomaly === "pendle",
+    perpGmx: perpActive && perpAnomaly === "gmx",
+    perpVariational: perpActive && perpAnomaly === "variational",
     spotJones: spotActive && spotAnomaly === "jones",
     spotRadiant: spotActive && spotAnomaly === "radiant",
+  };
+}
+
+function variationalPayload(nowMs: number, trip: boolean): VariationalRFQPayload {
+  return {
+    symbol: "LONG_TAIL_PERP",
+    quotePriceUsd: trip ? 3520 : 3500,
+    oracleMarkUsd: 3500,
+    quoteTimestampMs: trip ? nowMs - 800 : nowMs - 100,
+    nowMs,
+    tradeSizeUsd: trip ? 50_000 : 5_000,
+    olpDepthUsd: 100_000,
+    longTailAsset: true,
   };
 }
 
@@ -172,6 +231,15 @@ function evaluateVenue(
         requestsInLastMinute: 5,
       });
       return { venue: "Hyperliquid", status: gateStatus(state, r.ok), detail: r.status };
+    }
+    case "variational": {
+      const r = validateVariationalRFQIntent(variationalPayload(nowMs, ctx.perpVariational));
+      const detail = !r.ok
+        ? r.reason ?? "variational guard trip"
+        : ctx.active && isR20Locked(state)
+          ? "FAIL_CLOSED: R20_DEADLOCK"
+          : r.detail ?? "OLP depth ok";
+      return { venue: "Variational RFQ", status: gateStatus(state, r.ok), detail };
     }
     case "camelot": {
       const r = evaluateCamelotV3SwapGuard({
@@ -271,7 +339,19 @@ function evaluateLoop(
   return { rows, soilProbe, soilLatencyUs };
 }
 
-function printMatrix(title: string, result: LoopEvalResult): void {
+function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
+  const t0 = hrtimeStart();
+  const r = validateVariationalRFQIntent(variationalPayload(nowMs, ctx.perpVariational));
+  const us = hrtimeElapsedUs(t0);
+  const color = r.ok ? GREEN : RED;
+  const label = r.ok ? "ALLOWED" : (r.reason ?? "FAIL_CLOSED");
+  const tail = r.ok ? (r.detail ?? "OLP depth ok") : (r.detail ?? "trip");
+  console.log(
+    `  ${color}[DISPATCH] ${label} | target: Variational Omni RFQ -> ${tail} | ${formatGuardTime(us)}${R}`,
+  );
+}
+
+function printMatrix(title: string, result: LoopEvalResult, opts?: PrintMatrixOpts): void {
   console.log(`\n${YELLOW}${title}${R}`);
   const soilLabel = result.soilProbe.tripped ? "REJECT" : "PASS";
   console.log(
@@ -281,19 +361,29 @@ function printMatrix(title: string, result: LoopEvalResult): void {
     const color = row.status === "ALLOW" ? GREEN : RED;
     console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)} ${row.detail}${R}`);
   }
+  if (opts && (opts.hedge === "variational" || opts.hedge === "both")) {
+    printVariationalDispatch(opts.nowMs, opts.ctx);
+  }
 }
 
 function resetState(): void {
   __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
 }
 
-function anomalyLabel(loop: MatrixLoop, gmxTrip: boolean, spotAnomaly: SpotAnomaly): string {
+function anomalyLabel(
+  loop: MatrixLoop,
+  gmxTrip: boolean,
+  spotAnomaly: SpotAnomaly,
+  perpAnomaly: PerpAnomaly,
+): string {
   if (loop === "spot") {
     return spotAnomaly === "radiant"
       ? "Radiant projected HF < 1.15"
       : "Jones NAV deviation > 30bps";
   }
-  return gmxTrip ? "GMX pool imbalance >0.35" : "Pendle yield shock >150bps";
+  if (perpAnomaly === "gmx") return "GMX pool imbalance >0.35";
+  if (perpAnomaly === "variational") return "Variational stale quote / OLP depth breach";
+  return "Pendle yield shock >150bps";
 }
 
 function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
@@ -329,72 +419,108 @@ function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
   console.log(`  Jones vault guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
 }
 
+function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
+  if (perpAnomaly === "variational") {
+    const r = validateVariationalRFQIntent(variationalPayload(nowMs, true));
+    console.log(`  Variational RFQ ok=${r.ok} · ${r.reason ?? r.detail ?? "pass"}`);
+    return;
+  }
+  const ctx: TripContext = {
+    active: true,
+    perpPendle: perpAnomaly === "pendle",
+    perpGmx: perpAnomaly === "gmx",
+    perpVariational: false,
+    spotJones: false,
+    spotRadiant: false,
+  };
+  const soilTrip = checkSoilResistance(soilForStep(nowMs, ctx));
+  console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
+}
+
+function tripSuccess(rows: VenueRow[], hedge: PerpHedge, loop: MatrixLoop): boolean {
+  if (loop !== "spot" && hedge === "variational") {
+    const v = rows.find((r) => r.venue === "Variational RFQ");
+    return v?.status === "FAIL_CLOSED";
+  }
+  return rows.every((r) => r.status === "FAIL_CLOSED");
+}
+
 function runCircuitBreaker(
   label: string,
   keys: VenueKey[],
   loop: MatrixLoop,
+  hedge: PerpHedge,
   nowMs: number,
   gmxTrip: boolean,
   spotAnomaly: SpotAnomaly,
+  perpAnomaly: PerpAnomaly,
   t0: bigint,
 ): boolean {
-  const nominalCtx = buildTripContext(loop, false, false, spotAnomaly);
-  printMatrix(`${label} · Step 1 — Nominal pre-flight (PASS)`, evaluateLoop(keys, nowMs, nominalCtx, readActiveSystemState()));
+  const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge });
+  const nominalCtx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
+  printMatrix(`${label} · Step 1 — Nominal pre-flight (PASS)`, evaluateLoop(keys, nowMs, nominalCtx, readActiveSystemState()), printOpts(nominalCtx));
 
-  const tripCtx = buildTripContext(loop, true, gmxTrip, spotAnomaly);
-  const tripLabel = anomalyLabel(loop, gmxTrip, spotAnomaly);
-  console.log(`\n${RED}${label} · Step 2 — Inject anomaly: ${tripLabel}${R}`);
-  if (loop === "spot") {
-    injectSpotAnomaly(nowMs, spotAnomaly);
-  } else {
-    const soilTrip = checkSoilResistance(soilForStep(nowMs, tripCtx));
-    console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
-  }
+  const tripCtx = buildTripContext(loop, true, gmxTrip, spotAnomaly, perpAnomaly);
+  console.log(`\n${RED}${label} · Step 2 — Inject anomaly: ${anomalyLabel(loop, gmxTrip, spotAnomaly, perpAnomaly)}${R}`);
+  if (loop === "spot") injectSpotAnomaly(nowMs, spotAnomaly);
+  else injectPerpAnomaly(nowMs, perpAnomaly);
 
   console.log(`\n${RED}${label} · Step 3 — R20 auto-severance (core-integrated)${R}`);
   const locked = readActiveSystemState();
   console.log(`  signingChannelOpen=${locked.signingChannelOpen} · hardlock=${locked.hardlock} · cri=${locked.currentCri}`);
 
   const finalResult = evaluateLoop(keys, nowMs, tripCtx, locked);
-  printMatrix(`${label} · Step 4 — FAIL_CLOSED (zero-gas severance)`, finalResult);
+  printMatrix(`${label} · Step 4 — FAIL_CLOSED (zero-gas severance)`, finalResult, printOpts(tripCtx));
 
-  const ok = finalResult.rows.every((r) => r.status === "FAIL_CLOSED");
+  const ok = tripSuccess(finalResult.rows, hedge, loop);
   console.log(
     ok
-      ? `${GREEN}${label} TRIP OK — ${finalResult.rows.length}/${finalResult.rows.length} FAIL_CLOSED · ${formatGuardTime(hrtimeElapsedUs(t0))}${R}`
+      ? `${GREEN}${label} TRIP OK — ${finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length}/${finalResult.rows.length} FAIL_CLOSED · ${formatGuardTime(hrtimeElapsedUs(t0))}${R}`
       : `${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`,
   );
   return ok;
 }
 
+function perpLoopTitle(hedge: PerpHedge): string {
+  if (hedge === "variational") return "Delta-Neutral Perp Stack (Pendle → GMX → Variational Omni RFQ)";
+  if (hedge === "hyperliquid") return "Delta-Neutral Perp Stack (Pendle → GMX → Hyperliquid L1)";
+  return "Delta-Neutral Perp Stack (Pendle → GMX → HL + Variational)";
+}
+
 function main(): void {
   const argv = process.argv.slice(2);
   const loop = parseLoop(argv);
+  const hedge = parseHedge(argv);
   const spotAnomaly = parseSpotAnomaly(argv);
   const healthyOnly = argv.includes("--healthy-only");
   const trip = !healthyOnly;
   const gmxTrip = argv.includes("--gmx");
+  const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
+  const perpKeys = perpKeysForHedge(hedge);
+  const allKeys = allKeysForHedge(hedge);
   const nowMs = Date.now();
   const t0 = hrtimeStart();
 
   const loopTitle =
     loop === "perp"
-      ? "Delta-Neutral Perp Stack (Pendle → GMX → HL)"
+      ? perpLoopTitle(hedge)
       : loop === "spot"
         ? "Spot & Lending Vault Loop (Camelot → Radiant → Jones)"
-        : "Full 6-Protocol Cross-Venue Matrix";
+        : "Full Cross-Venue Matrix (Dual Perp Hedge)";
   printBanner(`Cross-Venue Matrix · ${loopTitle}`);
   seedAdapterProbes(nowMs);
   resetState();
 
+  const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge });
+
   if (healthyOnly || !trip) {
-    const keys = loop === "perp" ? PERP_KEYS : loop === "spot" ? SPOT_KEYS : ALL_KEYS;
-    const ctx = buildTripContext(loop, false, false, spotAnomaly);
+    const keys = loop === "perp" ? perpKeys : loop === "spot" ? SPOT_KEYS : allKeys;
+    const ctx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
     if (loop === "all") {
-      printMatrix("Loop A — Perp Stack pre-flight", evaluateLoop(PERP_KEYS, nowMs, ctx, readActiveSystemState()));
-      printMatrix("Loop B — Spot Vault pre-flight", evaluateLoop(SPOT_KEYS, nowMs, ctx, readActiveSystemState()));
+      printMatrix("Loop A — Perp Stack pre-flight", evaluateLoop(perpKeys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
+      printMatrix("Loop B — Spot Vault pre-flight", evaluateLoop(SPOT_KEYS, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
     } else {
-      printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, ctx, readActiveSystemState()));
+      printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
     }
     console.log(`\n${GREEN}Nominal matrix PASS · ${formatGuardTime(hrtimeElapsedUs(t0))}${R}`);
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
@@ -404,17 +530,17 @@ function main(): void {
   let allOk = true;
   if (loop === "perp" || loop === "all") {
     if (loop === "all") resetState();
-    allOk = runCircuitBreaker(loop === "all" ? "Loop A · Perp Stack" : "Perp Stack", PERP_KEYS, "perp", nowMs, gmxTrip, spotAnomaly, t0) && allOk;
+    allOk = runCircuitBreaker(loop === "all" ? "Loop A · Perp Stack" : "Perp Stack", perpKeys, "perp", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
   }
   if (loop === "spot" || loop === "all") {
     if (loop === "all") resetState();
-    allOk = runCircuitBreaker(loop === "all" ? "Loop B · Spot Vault" : "Spot Vault", SPOT_KEYS, "spot", nowMs, gmxTrip, spotAnomaly, t0) && allOk;
+    allOk = runCircuitBreaker(loop === "all" ? "Loop B · Spot Vault" : "Spot Vault", SPOT_KEYS, "spot", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
   }
   if (loop === "all") {
     resetState();
-    const ctx = buildTripContext("all", false, false, spotAnomaly);
-    printMatrix("Combined · Step 1 — Full 6-protocol nominal", evaluateLoop(ALL_KEYS, nowMs, ctx, readActiveSystemState()));
-    allOk = runCircuitBreaker("Combined · 6-Protocol", ALL_KEYS, "all", nowMs, gmxTrip, spotAnomaly, t0) && allOk;
+    const ctx = buildTripContext("all", false, false, spotAnomaly, perpAnomaly);
+    printMatrix("Combined · Step 1 — Full protocol nominal", evaluateLoop(allKeys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
+    allOk = runCircuitBreaker("Combined · Full Matrix", allKeys, "all", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
   }
 
   const elapsed = formatGuardTime(hrtimeElapsedUs(t0));
