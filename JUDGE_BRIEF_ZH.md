@@ -365,14 +365,14 @@ FAIL_CLOSED  ALLOW → identical Mainnet bytecode path
 | **ElizaOS** | [`elizaos-citadel-plugin.ts`](./src/adapters/elizaos/elizaos-citadel-plugin.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:elizaos` |
 | **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` |
 | **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` |
-| **Stabilizer** | [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
 
 Each adapter resides in an **isolated module** under `src/adapters/{framework}/` with a dedicated CLI demo and Vitest suite.
 
 ```bash
-pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain · pnpm demo:stabilizer
+pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain
 pnpm demo:quad              # All four AI frameworks combined → ALLOW
 pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
+pnpm demo:variational       # Variational Omni RFQ stale quote & OLP depth guard
 pnpm demo:matrix                    # Full 7-protocol matrix (--loop=all)
 pnpm demo:matrix -- --loop=perp     # Pendle → GMX → dual perp hedge (HL + Variational)
 pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
@@ -386,7 +386,7 @@ pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 
 ### SDK Decorator & Supplementary Demos
 
-All five **V1.0 Live Native Integrations** above use `checkSoilResistance()` + `verifyAgentIntent()` via isolated `src/adapters/` modules. The `withCitadelShield` decorator ([`src/sdk/decorator.ts`](./src/sdk/decorator.ts)) provides zero-touch wrapping for custom agent hooks:
+All four **V1.0 Live Native Integrations** above use `checkSoilResistance()` + `verifyAgentIntent()` via isolated `src/adapters/` modules. The `withCitadelShield` decorator ([`src/sdk/decorator.ts`](./src/sdk/decorator.ts)) provides zero-touch wrapping for custom agent hooks:
 
 ```ts
 import { withCitadelShield } from "@slivervine/citadel-sdk";

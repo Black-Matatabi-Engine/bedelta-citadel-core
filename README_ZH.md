@@ -14,7 +14,7 @@
 | **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
 | **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
 | **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
-| **On threat** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 Base / Aerodrome 之 AI 意圖幻覺) | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+| **On threat** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination) 之 AI 意圖幻覺) | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
 
 ### 神經形態工作流
 
@@ -168,18 +168,16 @@ Citadel 為 Sepolia (`421614`) 上 Stabilizer Protocol 的**執行前零滑點�
 | **ElizaOS** | [`elizaos-citadel-plugin.ts`](./src/adapters/elizaos/elizaos-citadel-plugin.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:elizaos` |
 | **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` |
 | **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` |
-| **Stabilizer** | [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
 
 ```bash
 pnpm demo:wayfinder    # Wayfinder route interception
 pnpm demo:elizaos      # ElizaOS Action handler guard
 pnpm demo:virtuals     # Virtuals GAME worker guard
 pnpm demo:langchain    # LangChain CitadelRiskGuardTool
-pnpm demo:stabilizer   # Stabilizer Sepolia 1:1 swap guard
 pnpm demo:quad         # All four AI frameworks (combined)
 ```
 
-→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 836 PASS Clean (100% PASS)**
+→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) — **192 test files | 836 PASS Clean (100% PASS)**
 
 **Triangle loop:** [Technical Specification §2](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#2-triangle-liquidity-loop--segregated-tranches) · **Arbitrum execution premium:** 較橋接路由 +15–30 bps *（設計估算）*。
 
@@ -221,6 +219,8 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 | **幻覺時** | 轉發不透明 calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
 | **Demo 證明** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
 
+<a id="fail-closed-walkthrough---cerebrum-hallucination"></a>
+
 ### Fail-Closed 演練 — 大腦皮層幻覺
 
 **情境：** LLM **大腦皮層**發生**跨鏈意圖幻覺** — 將 swap 路由至 **Aerodrome**（合法的 Base 原生協議），而政策僅授權 Arbitrum One 的 **7-protocol matrix**（GMX v2 / Pendle / Uniswap V3 / Aave / Morpho / Hyperliquid / Variational）。
@@ -242,7 +242,7 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -254,6 +254,7 @@ pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
 pnpm demo:uniswap  # Uniswap V3 concentrated liquidity · dynamic fee guard
 pnpm demo:aave  # Aave V3 HF & cross-chain liquidation guard
 pnpm demo:morpho    # Morpho Blue vault share-price & sandwich guard
+pnpm demo:variational  # Variational Omni RFQ stale quote & OLP depth guard
 pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
 pnpm demo:matrix -- --loop=perp   # Pendle → GMX → dual perp hedge (HL + Variational)
 pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
@@ -407,7 +408,7 @@ SliverVine Protocol 在嚴格數學不變量與零信任執行前斷言下工程
 | **Aave V3** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`aave-v3-adapter.ts`](./src/adapters/aave/aave-v3-adapter.ts) |
 | **Morpho Blue** | Arbitrum One | Oracle staleness > **1h** or price deviation > **0.30% / Sandwich trip (**30 bps**) | [`morpho-blue-adapter.ts`](./src/adapters/morpho/morpho-blue-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](./src/adapters/hl/hyperliquid-session-guard.ts) |
-| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bits 12–13** | [`variational-rfq-adapter.ts`](./src/adapters/variational/variational-rfq-adapter.ts) |
+| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bits 12–13** | [`variational-rfq-adapter.ts`](./src/adapters/variational-rfq-adapter.ts) · `pnpm demo:variational` |
 
 > **Hyperliquid 定位：** 與 Arbitrum 永續流動性生態同源的獨立 L1 高頻訂單簿 AppChain — 透過 session-key adapter 跨場所 Δ-neutral 對沖腿，非 Arbitrum 原生執行。
 

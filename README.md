@@ -11,7 +11,7 @@
 | **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
 | **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** physical deadlock — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -165,18 +165,16 @@ Citadel is the **pre-execution Zero-Slippage Capacity & De-peg Liquidation Firew
 | **ElizaOS** | [`elizaos-citadel-plugin.ts`](./src/adapters/elizaos/elizaos-citadel-plugin.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:elizaos` |
 | **Virtuals (GAME)** | [`virtuals-game-adapter.ts`](./src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` |
 | **LangChain / LangGraph** | [`langchain-citadel-tool.ts`](./src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` |
-| **Stabilizer** | [`stabilizer-adapter.ts`](./src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
 
 ```bash
 pnpm demo:wayfinder    # Wayfinder route interception
 pnpm demo:elizaos      # ElizaOS Action handler guard
 pnpm demo:virtuals     # Virtuals GAME worker guard
 pnpm demo:langchain    # LangChain CitadelRiskGuardTool
-pnpm demo:stabilizer   # Stabilizer Sepolia 1:1 swap guard
 pnpm demo:quad         # All four AI frameworks (combined)
 ```
 
-→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
+→ Tests: [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
 
 **Triangle loop:** [Technical Specification §2](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#2-triangle-liquidity-loop--segregated-tranches) · **Arbitrum execution premium:** +15–30 bps vs bridged routes *(design estimate)*.
 
@@ -237,7 +235,7 @@ All standalone demos measure latency via `process.hrtime.bigint()` (µs precisio
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -249,6 +247,7 @@ pnpm demo:pendle   # Pendle PT/YT sentinel · guarded pool factory
 pnpm demo:uniswap  # Uniswap V3 concentrated liquidity · dynamic fee guard
 pnpm demo:aave  # Aave V3 HF & cross-chain liquidation guard
 pnpm demo:morpho    # Morpho Blue vault share-price & sandwich guard
+pnpm demo:variational  # Variational Omni RFQ stale quote & OLP depth guard
 pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
 pnpm demo:matrix -- --loop=perp   # Pendle → GMX → dual perp hedge (HL + Variational)
 pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
@@ -402,7 +401,7 @@ SliverVine Protocol is engineered under strict mathematical invariants and zero-
 | **Aave V3** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`aave-v3-adapter.ts`](./src/adapters/aave/aave-v3-adapter.ts) |
 | **Morpho Blue** | Arbitrum One | Oracle staleness > **1h** or price deviation > **0.30% / Sandwich trip (**30 bps**) | [`morpho-blue-adapter.ts`](./src/adapters/morpho/morpho-blue-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](./src/adapters/hl/hyperliquid-session-guard.ts) |
-| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) | [`variational-rfq-adapter.ts`](./src/adapters/variational-rfq-adapter.ts) |
+| **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) | [`variational-rfq-adapter.ts`](./src/adapters/variational-rfq-adapter.ts) · `pnpm demo:variational` |
 
 > **Hyperliquid positioning:** Independent L1 High-Frequency Orderbook AppChain that originated alongside Arbitrum's perp liquidity ecosystem — cross-venue Δ-neutral hedge leg via session-key adapter, not Arbitrum-native execution.
 
