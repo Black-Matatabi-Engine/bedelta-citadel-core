@@ -1,7 +1,9 @@
-//! SliverVine M4 — `#![no_std]` soil resistance + session clip/TTL core.
+//! SliverVine M4 — `#![no_std]` soil resistance + session clip/TTL + protocol bitmask kernel.
 //! SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
 //! Layout: 8×f64 little-endian input @ host buffer (see TS `encodeWasmSoilInput`).
 #![no_std]
+
+mod protocol_flags;
 
 #[panic_handler]
 fn panic(_: &core::panic::PanicInfo) -> ! {
