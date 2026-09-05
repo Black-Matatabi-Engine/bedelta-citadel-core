@@ -1,5 +1,7 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
+export const EDGE_WASM_P50_US = 106;
+
 export function hrtimeStart(): bigint {
   return process.hrtime.bigint();
 }
@@ -16,6 +18,11 @@ export function resolveLatency(measuredUs: number, reportedUs?: number): number 
 
 export function formatLatencyLabel(us: number): string {
   return us >= 1000 ? `${(us / 1000).toFixed(2)}ms` : `${us.toFixed(1)}µs`;
+}
+
+/** Distinguish Node.js harness wall-clock from production Edge WASM p50. */
+export function formatHarnessLatencyLabel(harnessUs: number): string {
+  return `Harness: ${formatLatencyLabel(harnessUs)} (Edge WASM Core: ~${EDGE_WASM_P50_US}µs)`;
 }
 
 export async function measureAsync<T>(

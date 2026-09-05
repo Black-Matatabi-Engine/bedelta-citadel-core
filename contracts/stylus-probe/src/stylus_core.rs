@@ -1,5 +1,4 @@
-//! `#![no_std]` soil resistance evaluator — parity core for Stylus / Wasm dual-execution.
-#![no_std]
+//! Soil resistance evaluator — parity core for Stylus / Wasm dual-execution.
 
 const FLAG_IMBALANCE: u64 = 1 << 1;
 const FLAG_COLLATERAL: u64 = 1 << 2;

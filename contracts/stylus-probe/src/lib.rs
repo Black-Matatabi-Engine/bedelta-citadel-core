@@ -1,8 +1,14 @@
+#![no_std]
+#![allow(unexpected_cfgs)]
+
 //! SliverVineSoilCoprocessor — on-chain fixed-point soil resistance coprocessor.
 //! SPDX-License-Identifier: BUSL-1.1
 
 #![cfg_attr(not(any(test, feature = "export-abi")), no_main)]
+#[macro_use]
 extern crate alloc;
+
+use alloc::vec::Vec;
 
 mod stylus_core;
 
