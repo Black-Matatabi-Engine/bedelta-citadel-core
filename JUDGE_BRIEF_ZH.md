@@ -1,4 +1,7 @@
-# JUDGE_BRIEF.md — SliverVine Citadel Shield (1-Page Buildathon Brief)
+> **中文參考譯本 · 英文原文為 Grant SSOT**  
+> English SSOT: [JUDGE_BRIEF.md](./JUDGE_BRIEF.md)
+
+# JUDGE_BRIEF.md — SliverVine Citadel Shield（1 頁 Buildathon 簡報）
 
 | Field | Value |
 |-------|-------|
@@ -10,49 +13,51 @@
 | **Headless Audit Endpoint** | [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Repo** | [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) |
 | **Verified Commit** | `main` @ **`1acbc24`** (`bedelta-citadel-core`) |
-| **Worker Bundle** | **69.28 KiB gzip** (`pnpm bundle:measure` · `pass: true` · &lt;70 KiB) |
-| **Tests** | `pnpm test` → **192 test files | 834 PASS Clean (100% PASS)** · **3-Tier Demo Suite** (`demo:{gmx,hl,pendle,camelot,radiant,jones}` · `demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `demo:{stabilizer,e2e}`) · `pnpm demo` (12 Tri-Pillar) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Worker Bundle** | **69.32 KiB gzip** (`pnpm bundle:measure` · `pass: true` · &lt;70 KiB) |
+| **Tests** | `pnpm test` → **192 test files | 836 PASS Clean (100% PASS)** · **3-Tier Demo Suite** (`demo:{gmx,hl,pendle,camelot,radiant,jones}` · `demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `demo:{stabilizer,e2e}`) · `pnpm demo` (12 Tri-Pillar) · full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Stylus Probe** | **9/9 PASS（50bps 對齊）** · `pnpm build:stylus` |
+| **Branch Policy** | `main`（Grant Public SSOT）vs `feat/wasm-opsec-kernel-experiment`（Closed WASM Kernel） |
 | **Deep docs** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
-> **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.
+> **Headless Infrastructure Protocol:** 核心互動為 API/SDK 原生（`@slivervine/citadel-sdk`）與 CLI HUD。
 
 ---
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **192 test files / 834 PASS Clean (100% PASS)**.
+> SliverVine Citadel Shield v1.0 生產範圍權威聲明。**Baseline:** `main` — **192 test files / 836 PASS Clean (100% PASS)**。
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
-| **1** | Ephemeral Ignition Signers | Arbitrum One Gate `0xb174118b…` employs **`0x1111…` / `0x2222…` Ephemeral Verification Signers** for public auditability without exposing production HSM infrastructure. Gate shape = consume-once EIP-712; production rotation via native governance to multisig. |
-| **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight severance** before live GM pool capital deployment. Mainnet GM fill scheduled for post-Grant M6. |
-| **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered via Citadel SaaS Request Credits. → [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
-| **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion** (Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)). Sepolia live stream and One production SQL are documented as separate deployment surfaces. |
-| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals (GAME) · LangChain · Stabilizer ([`src/adapters/`](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage)) · standalone CLIs `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · **192 test files | 834 PASS Clean (100% PASS)** |
-| **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) is **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness** — hot path burns no on-chain gas. → [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
-| **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled** for production event ingest. → [Dune Analytics](#dune-analytics) |
-| **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**; **10 bps CaaS protocol fee-sharing = V2.0 Expansion**. → [Commercial Model](#commercial-model-saas-vs-caas) |
+| **1** | Ephemeral Ignition Signers | Arbitrum One Gate `0xb174118b…` 採用 **`0x1111…` / `0x2222…` Ephemeral Verification Signers** 供公開可審計性，不暴露生產 HSM 基礎設施。Gate 形狀 = consume-once EIP-712；生產輪替透過原生治理至多簽。 |
+| **2** | GMX v2 Pre-Flight Guards | GMX v2 執行防護透過 **Vitest CLI + dry-run pipelines** 驗證（`pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`）— 於 live GM pool 資本部署前 **0-Gas pre-flight severance**。主網 GM fill 排程於 Grant 後 M6。 |
+| **3** | Pendle Core Pillar 3 | **V1.0 雙交付物：** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse。AI pool 建立/驗證 **免協議稅**；透過 Citadel SaaS Request Credits 計量。→ [§3 Pendle](#pendle-finance-v10-live--core-pillar-3) |
+| **4** | Telemetry Infrastructure | **Live Event Telemetry 於 Sepolia Testnet 活躍串流**；**Arbitrum One (42161) SQL Query Indexers 已完整預編譯供生產事件攝取**（Queries 0–3 · [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md)）。Sepolia live stream 與 One production SQL 記載為獨立部署面。 |
+| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals (GAME) · LangChain · Stabilizer ([`src/adapters/`](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage)) · 獨立 CLI `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · **192 test files | 836 PASS Clean (100% PASS)** |
+| **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate（`0xb174…`）**工程化為 0-Gas Pre-Execution Off-Chain Severance**。Citadel Risk Gates 於 Edge **mempool 提交前**中止受損 payload 簽名，維持 **L2 state space cleanliness** — 熱路徑不消耗鏈上 gas。→ [Deployment Architecture](#deployment-architecture-arbitrum-one-0-gas-off-chain-severance) |
+| **7** | Dune Analytics | **Live Event Telemetry 於 Sepolia Testnet 活躍串流**；**Arbitrum One (42161) SQL Query Indexers 已完整預編譯**供生產事件攝取。→ [Dune Analytics](#dune-analytics) |
+| **8** | Commercial Model | **v1.0 = Cloudflare-style SaaS subscription ($0 / $49 / $299)**；**10 bps CaaS protocol fee-sharing = V2.0 Expansion**。→ [Commercial Model](#commercial-model-saas-vs-caas) |
 
 ### Deployment Architecture (Arbitrum One 0-Gas Off-Chain Severance)
 
-> **Arbitrum One Gate (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) is intentionally engineered for 0-Gas Pre-Execution Off-Chain Severance.** Citadel Risk Gates (`checkSoilResistance()` · `severSigningChannel()`) halt compromised payload signatures on Cloudflare Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — tripped paths consume no Sequencer gas; on-chain Gate anchors consume-once EIP-712 attestations only for cleared intents.
+> **Arbitrum One Gate（`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`）刻意工程化為 0-Gas Pre-Execution Off-Chain Severance。** Citadel Risk Gates（`checkSoilResistance()` · `severSigningChannel()`）於 Cloudflare Edge **mempool 提交前**中止受損 payload 簽名，維持 **Arbitrum L2 state space cleanliness** — 觸發路徑不消耗 Sequencer gas；鏈上 Gate 僅為已清算意圖錨定 consume-once EIP-712 attestation。
 
 ### Commercial Model (SaaS vs CaaS)
 
 | Version | Pricing model | Notes |
 |---------|---------------|-------|
 | **v1.0 (current)** | **Cloudflare-style SaaS subscription** | **$0 / $49 / $299** Edge API tiers · free public Dune dashboard |
-| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | **10 bps protocol authorization fee** on pre-execution risk checks · separate from v1.0 GMX +10 bps `uiFeeReceiver` |
+| **V2.0 (roadmap)** | **CaaS protocol fee-sharing** | 執行前風險檢查 **10 bps protocol authorization fee** · 與 v1.0 GMX +10 bps `uiFeeReceiver` 分離 |
 
 ---
 
 ## 30-Second Identity
 
-SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execution safety primitive**: sub-ms intent clearing on Cloudflare Edge (`checkSoilResistance()`, p50 ~106µs · **`pkg/soil_core.wasm` — independent of AA**) **plus** an immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. ZeroDev Kernel v3 is an **opt-in Pillar 1 AA delivery layer** (`USE_ZERODEV_AA` default-off) — not the source of sub-ms latency. Toxic AI Agent UserOps are severed **before** Sequencer queues — **0-Gas** on blocked paths.
+SliverVine **不是** Wasm 滑點計算器。它是**共識前執行安全原語**：Cloudflare Edge 亞毫秒意圖清算（`checkSoilResistance()`，p50 ~106µs · **`pkg/soil_core.wasm` — 獨立於 AA**）**加上** Arbitrum One 上不可變 **EIP-712 consume-once `SliverVineGate`**。ZeroDev Kernel v3 為**可選 Pillar 1 AA 交付層**（`USE_ZERODEV_AA` 預設關閉）— 非亞毫秒延遲來源。有毒 AI Agent UserOp 於 Sequencer 佇列**之前**切斷 — 阻斷路徑 **0-Gas**。
 
-**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Camelot V3, Radiant Capital, JonesDAO, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.
+**主要執行邊界：** 完整 Arbitrum 原生多協議覆蓋（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。
 
-**Hyperliquid** is an **Independent L1 High-Frequency Orderbook AppChain** that originated alongside Arbitrum's perp liquidity ecosystem — session-key hedge adapter, not Arbitrum-native execution.
+**Hyperliquid** 為與 Arbitrum 永續流動性生態同源的**獨立 L1 高頻訂單簿 AppChain** — session-key 對沖 adapter，非 Arbitrum 原生執行。
 
 ### Tailor-Made Mathematical Invariants
 
@@ -71,7 +76,7 @@ SliverVine is **not** a Wasm slippage calculator. It is a **pre-consensus execut
 ```bash
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (192 files / 834 tests)
+pnpm test       # Full System Regression Suite (192 files / 836 tests)
 ```
 
 Wayfinder native integration: `pnpm demo:wayfinder` · `pnpm demo:stabilizer` (Sepolia Cross-Pass Sandbox) · Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,camelot,radiant,jones,matrix}` · `--trip` for Fail-Closed demos
@@ -109,7 +114,7 @@ Demo files: [`tests/demo/`](./tests/demo/) (`gmx-v2-agent-flow` · `hyperliquid-
 | **Unidirectional state flow** | Edge soil fuse → signing channel → Gate attestation (Foundry 62/62) |
 | **Composable primitive** | `@slivervine/citadel-sdk` · `withCitadelShield` decorator · Reference harness |
 
-A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with on-chain invariants and fail-closed pre-consensus clearing.
+*工具*事後報告風險。*協議原語*以鏈上不變量與 fail-closed 共識前清算**綁定執行**。
 
 ---
 
@@ -117,24 +122,24 @@ A *tool* reports risk post-hoc. A *protocol primitive* **binds execution** with 
 
 ### Offchain Labs Core / Arbitrum Foundation
 
-**Lean execution · 0-Gas pre-broadcast severance · mainnet gate `0xb174…`:**
+**精簡執行 · 0-Gas 廣播前切斷 · 主網 gate `0xb174…`：**
 
-- Sub-ms Edge `checkSoilResistance()` (p50 ~106µs) — no on-chain hot-path bloat
-- Toxic intents severed **before** Sequencer queues → **0-Gas** on blocked paths
-- Live **Arbitrum One** consume-once `SliverVineGate` at `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
-- **0-Gas off-chain severance:** Gate is **designed for off-chain severance** — Risk Gates intercept signatures at the Edge and trip **before mempool submission**, preserving L2 state space cleanliness
+- Sub-ms Edge `checkSoilResistance()`（p50 ~106µs）— 無鏈上熱路徑膨脹
+- 有毒意圖於 Sequencer 佇列**之前**切斷 → 阻斷路徑 **0-Gas**
+- Live **Arbitrum One** consume-once `SliverVineGate` 位於 `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
+- **0-Gas off-chain severance：** Gate **設計為鏈下切斷** — Risk Gates 於 Edge 攔截簽名並於 mempool 提交**前**觸發，維持 L2 state space cleanliness
 
 ### GMX Protocol
 
 **+10 bps builder lane & depth/slippage fuse · Dry-run verification (0-Gas pre-flight):**
 
-- Qualified GM payloads route `uiFeeReceiver` builder fee
-- Pre-execution soil fuse (cross-venue slippage + depth) before DataStore broadcast
-- **Vitest CLI + dry-run pipelines verified** — `pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`; **0-Gas pre-flight protection** before live GM pool capital deployment (mainnet fill is a post-Grant milestone, not an untested v1.0 gap)
+- 合格 GM payload 路由 `uiFeeReceiver` builder fee
+- DataStore 廣播前執行 soil fuse（cross-venue slippage + depth）
+- **Vitest CLI + dry-run pipelines 已驗證** — `pnpm demo` · `tests/demo/gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`；live GM pool 資本部署前 **0-Gas pre-flight protection**（主網 fill 為 Grant 後里程碑，非未測試 v1.0 缺口）
 
 ### Pendle Finance (V1.0 Live · Core Pillar 3)
 
-V1.0 ships **two complementary Pendle integrations** — institutional safety layer, not a yield product:
+V1.0 交付**兩項互補 Pendle 整合** — 機構安全層，非收益產品：
 
 **1. Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard
 
@@ -142,7 +147,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 - **Registry hydration** ([`pendle-pt-registry.ts`](./src/adapters/pendle/pendle-pt-registry.ts)): `hydrateFromOracle` overrides `impliedYield`, `ptPriceInAsset`, `liquidityConstant`, `expirySec`
 - **Soil fuse wiring**: `pendleOracle` + `pendleCrossGuard` → `checkSoilResistance()` · expiry **<7d** + yield jitter **>200 bps** → fail-closed
 - **Shadow margin cross-check** vs GMX maintenance before risk-increasing intents ([`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts))
-- Protects PT/YT capital from liquidation blackholes — **not a competing yield product** · coexists with Shield **p50 ~106µs**
+- 保護 PT/YT 資本免於清算黑洞 — **非競爭性收益產品** · 與 Shield **p50 ~106µs** 共存
 
 **2. Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()`
 
@@ -151,13 +156,13 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 - **5 Pool Invariants:** maturity ≥7d · yield drift ≤300bps · $100K min initial liquidity · underlying asset whitelist (`eETH` / `ETH` / `USDC`) · supported intent taxonomy
 - Demo: [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](./tests/demo/pendle-ai-agent-flow.demo.test.ts) · [`tests/adapters/pendle-pool-factory.test.ts`](./tests/adapters/pendle-pool-factory.test.ts)
 
-> **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**, metered seamlessly via Citadel's **Cloudflare-style SaaS Request Credits** ($0 / $49 / $299 tiers).
+> **DX & Pricing:** 透過 **Pendle AI Guarded Pool Factory** 的 AI Agent pool 建立與參數驗證 **100% 免協議稅**，透過 Citadel **Cloudflare-style SaaS Request Credits**（$0 / $49 / $299 tiers）無縫計量。
 
 → [`pendle-gmx-cross-guard.ts`](./src/guards/pendle-gmx-cross-guard.ts) · [`pendle-market-oracle-adapter.ts`](./src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts)
 
 ### Camelot V3 (V1.0 Live · Arbitrum Native Spot Liquidity)
 
-Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 spot swaps on **Arbitrum One (`42161`)**:
+Citadel 為 **Arbitrum One (`42161`)** 上 Camelot V3 現貨交換的**執行前集中流動性防火牆**：
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
@@ -191,19 +196,19 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 
 **Live dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
-**Telemetry infrastructure:** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
+**Telemetry infrastructure:** **Live Event Telemetry 於 Sepolia Testnet 活躍串流**；**Arbitrum One (42161) SQL Query Indexers 已完整預編譯供生產事件攝取**。
 
 **Structured on-chain events & PEV (Prevented Exploit Volume) metric:**
 
-- Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — **`IntentAttested`** (live EIP-712 attestations) + **`RiskTripBlocked`** (pre-broadcast fail-closed severance) indexed in real time
-- **PEV** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs; **fully operational on-chain** via Sepolia Gate
+- Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — **`IntentAttested`**（live EIP-712 attestations）+ **`RiskTripBlocked`**（pre-broadcast fail-closed severance）即時索引
+- **PEV** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs；透過 Sepolia Gate **於鏈上完全運作**
 - Production SQL spec + daily reconciliation panels target Arbitrum One `42161`
 
 → [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) · `scripts/emit-sepolia-telemetry-events.ts`
 
 ### Wayfinder (V1.0 Live · Arbitrum Native AI Agent Engine)
 
-**Citadel is the native pre-execution risk firewall for the Wayfinder Agent Engine on Arbitrum One (`42161`).**
+**Citadel 為 Arbitrum One (`42161`) 上 Wayfinder Agent Engine 的原生執行前風險防火牆。**
 
 - **Native adapter SSOT:** [`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` wires `checkSoilResistance()` (Pillar 3 soil fuse) + `verifyAgentIntent()` (8-dimension validation) before on-chain route dispatch
 - **0-Gas fail-closed:** toxic soil trips and session-key violations sever the EIP-712 signing channel pre-broadcast — no Sequencer gas on blocked paths
@@ -212,7 +217,7 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 
 ### Stabilizer Protocol (V1.0 Live · Universal Sepolia Testnet Sandbox)
 
-**Stabilizer on Arbitrum Sepolia (`421614`) is the Universal Testnet Sandbox & Cross-Pass Interoperability Layer for AI Agents.** Citadel provides **0-Gas Pre-Execution Fail-Closed Protection** for agent testnet arbitrage and rebalancing across:
+**Arbitrum Sepolia (`421614`) 上 Stabilizer 為 AI Agent 的 Universal Testnet Sandbox 與 Cross-Pass 互操作層。** Citadel 為 agent testnet 套利與再平衡提供 **0-Gas Pre-Execution Fail-Closed Protection**：
 
 | Leg | Sepolia integration | Citadel gate |
 |-----|---------------------|--------------|
@@ -220,11 +225,11 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Camelot V3 
 | **GMX v2** | Sepolia shadow-margin pre-flight · GM pool intent guards | `gmx-v2-order-payload-guards.ts` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](./tests/demo/gmx-v2-agent-flow.demo.test.ts) |
 | **Pendle** | Testnet Guarded Pool Factory · oracle TTL fuse | [`pendle-pool-factory-adapter.ts`](./src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`tests/demo/pendle-ai-agent-flow.demo.test.ts`](./tests/demo/pendle-ai-agent-flow.demo.test.ts) |
 
-**DX advantage:** Developers and auditors execute against **live Sepolia contracts** without mainnet gas or capital friction — while running the **identical `checkSoilResistance()` bytecode and risk gates** targeted for Arbitrum One (`42161`) deployment.
+**DX advantage:** 開發者與審計者於**即時 Sepolia 合約**上執行，無主網 gas 或資本摩擦 — 同時執行針對 Arbitrum One (`42161`) 部署的**相同 `checkSoilResistance()` bytecode 與 risk gates**。
 
 - **Liquidation invariants:** 15% reserve-ratio floor · Constant-Sum 1:1 capacity · USDZ/collateral >50bps de-peg guard · 60s LLM mandatory cooldown
 - **Demo:** `pnpm demo:stabilizer` · `pnpm demo:stabilizer -- --trip` · `pnpm demo:wayfinder -- --stabilizer`
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 836 PASS Clean (100% PASS)**
 
 **Cross-Pass testnet routing (Stabilizer → GMX v2 → Pendle):**
 
@@ -268,7 +273,7 @@ FAIL_CLOSED  ALLOW → identical Mainnet bytecode path
 
 ### Four Major AI Agent Frameworks (V1.0 Live · Full Quad Coverage)
 
-**World's First Pre-Execution Risk Gateway natively supporting ALL Four Major AI Agent Frameworks (Wayfinder, ElizaOS, Virtuals, LangChain).**
+**全球首個原生支援全部四大 AI Agent 框架（Wayfinder、ElizaOS、Virtuals、LangChain）的執行前風險閘道。**
 
 | Framework | Adapter SSOT | Entry point | Demo |
 |-----------|--------------|-------------|------|
@@ -293,7 +298,7 @@ pnpm demo:matrix -- --loop=spot     # Camelot → Radiant → Jones spot loop
 pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 ```
 
-- **Tests:** [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 834 PASS Clean (100% PASS)**
+- **Tests:** [`wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](./tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](./tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](./tests/adapters/langchain-tool.test.ts) · [`stabilizer-adapter.test.ts`](./tests/adapters/stabilizer-adapter.test.ts) — **192 test files | 836 PASS Clean (100% PASS)**
 
 ### SDK Decorator & Supplementary Demos
 
@@ -363,10 +368,11 @@ Grant allocation directly fuels **V2.0 R&D**:
 - **Dune** — Sepolia live event stream; Arbitrum One (`42161`) SQL schemas pre-compiled for production ingest
 - **Commercial** — v1.0 SaaS tiers ($0/$49/$299); 10 bps CaaS protocol fee = V2.0 Expansion
 - **Agent SDK** — **V1.0 Live Native Integrations** for Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer (`src/adapters/`) · `withCitadelShield` decorator · `pnpm demo:quad` · **Milestone 1 (Weeks 2–3 post-grant):** upstream PRs to `@elizaos/plugin-citadel` + `@virtuals/plugin-citadel`
-- **Stylus** — V2.0 dual-execution Rust coprocessor (`check_soil_resistance_stylus` · `pnpm build:stylus`); planned EIP-1967 upgradeable proxy deploy — live gateway = immutable Solidity Gate on Arbitrum One
+- **Stylus** — V2.0 dual-execution Rust coprocessor (`check_soil_resistance_stylus` · `pnpm build:stylus`)；**9/9 PASS（50bps 對齊）**；planned EIP-1967 upgradeable proxy deploy — live gateway = immutable Solidity Gate on Arbitrum One
 - **Auto severance** — `FLAGS_*` bitmask trips invoke `severSigningChannel()` inside `risk-engine-core` / `soil-resistance` without external orchestration; **Variational RFQ** invariants (**Bits 12–13**: `FLAG_VARIATIONAL_STALE_QUOTE` · `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED`) integrated in `evaluateVariationalFlags()` and bound to `FLAGS_AUTO_SEVER_MASK`
 - **Sliding-window OI** — 30s pending GMX skew accumulator blocks split-payload imbalance poisoning
 - **Monte Carlo** — 87.39% toxic flow blocked in 10,000-run simulation; nominal modeled capital, not live TVL
+- **Dual-branch** — `main`（Grant Public SSOT）vs `feat/wasm-opsec-kernel-experiment`（Closed WASM Kernel 實驗分支）
 
 ---
 

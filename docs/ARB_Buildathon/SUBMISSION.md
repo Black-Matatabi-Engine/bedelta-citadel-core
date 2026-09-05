@@ -517,6 +517,8 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ## Post-Hackathon Expansion Roadmap
 
+* **Milestone 1 (Weeks 2–3 post-grant approval): Native Upstream Plugin PRs**
+ * Submit official native plugin Pull Requests (PRs) to **ElizaOS** (`@elizaos/plugin-citadel`) and **Virtuals GAME** (`@virtuals/plugin-citadel`) monorepos, transitioning from the current zero-overhead SDK Wrapper decorator (`withCitadelShield`) to official upstream integration.
 * **Phase 1: Milestone Dune & PoV (Day 7 – 30)**
  * Deploy live Dune Analytics dashboards and onboarding 3 design partners (AI Agent creators on Virtuals/ElizaOS and GMX Vault Managers) for $0-fee Proof-of-Value testing.
 * **Phase 2: Milestone Prediction (Design Spec / Post-Hackathon Roadmap)**
@@ -536,6 +538,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **M6-Mainnet** | Arbitrum One Gate ignition on `42161` · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Tx `0x54c153…b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | Arbitrum · Grant | ✅ Delivered |
+| **M1-Native-PR** | **Milestone 1 (Weeks 2–3 post-grant):** Official upstream PRs to ElizaOS (`@elizaos/plugin-citadel`) + Virtuals GAME (`@virtuals/plugin-citadel`) — graduate from `withCitadelShield` SDK wrapper to native monorepo plugins | ElizaOS · Virtuals | ⏳ Post-grant Weeks 2–3 |
 
 ---
 
