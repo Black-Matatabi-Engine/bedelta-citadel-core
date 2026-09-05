@@ -9,7 +9,7 @@
 | **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
 | **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | May emit dangerous calldata (e.g. **Aerodrome**) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** physical deadlock — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -29,7 +29,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues dangerous calldata, Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | Field | Value |
@@ -306,9 +306,9 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 | **Role** | Transport relay | Involuntary safety reflex |
 | **Latency** | 50–300ms+ RTT | **~14.0µs** invariant · **~106µs** full matrix |
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
-| **AI safety** | Unprotected | Unsupported venue (e.g. **Aerodrome**) severed in **<14.0µs** |
+| **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **<14.0µs** |
 
-**Fail-Closed walkthrough:** Cerebrum hallucinates Aerodrome swap while policy allowlists GMX/Pendle/Uniswap on Arbitrum → Cerebellum reflex deadlock → signature severed pre-broadcast → reproduce via `pnpm demo:quad -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **<14.0µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:quad -- --trip`.
 
 ### Legal & Regulatory Positioning
 

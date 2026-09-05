@@ -10,7 +10,7 @@
 | | **大腦皮層（LLM Agent）** | **小腦（Citadel Shield）** |
 |---|-------------------------|---------------------------|
 | **速度** | ~1,000ms–5,000ms（慢速 CoT · 非確定性） | **14.0µs–106µs**（100% 確定性 · 0-Gas） |
-| **威脅時** | 幻覺 / prompt injection（如 **Aerodrome**） | **<14.0µs** 反射死鎖 — 切斷 EIP-712 通道 |
+| **威脅時** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 Base / Aerodrome 之 AI 意圖幻覺) | **<14.0µs** 反射死鎖 — 切斷 EIP-712 通道 |
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -28,7 +28,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**核心敘事：** 若 LLM 大腦皮層產出危險 calldata，Citadel 小腦於 **<14.0µs** 觸發物理死鎖 — **$0 Gas**。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**核心敘事：** 若 LLM 大腦皮層產出越權 calldata（例如跨鏈意圖漂移至 Base / Aerodrome），Citadel 小腦於 **<14.0µs** 觸發物理死鎖 — 於任何跨鏈或未審核執行發生前切斷 EIP-712 — **$0 Gas**。→ `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | Field | Value |
@@ -146,11 +146,13 @@ Citadel Shield 是 **小腦與反射弧** — LLM **大腦皮層**負責規劃�
 
 ### Fail-Closed 演練 — 大腦皮層幻覺
 
-**情境：** 大腦皮層幻覺 **Aerodrome**，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**。
+**情境：** 大腦皮層發生**跨鏈意圖幻覺** — 路由至 **Aerodrome**（合法 Base 原生協議），政策僅授權 Arbitrum One **7-protocol matrix**。
 
-1. 大腦皮層產出不支援 venue calldata（`~2,000ms` CoT）。
-2. 小腦反射 → **<14.0µs** 內 **FAIL-CLOSED**。
-3. `severSigningChannel()` — **0-Gas**，無廣播。
+> **釐清：** Aerodrome 為**越權/超出範圍**，非惡意協議。Arbitrum 授權 agent 產出跨鏈 calldata（Base / Aerodrome）時，**<14.0µs** 物理死鎖切斷 EIP-712 — 於任何跨鏈或未審核執行發生前。
+
+1. 大腦皮層產出越權跨鏈 calldata（`~2,000ms` CoT）。
+2. 小腦反射 → chain + venue bitmask → **<14.0µs** **FAIL-CLOSED**。
+3. `severSigningChannel()` — **0-Gas**，無跨鏈廣播。
 4. 重現：`pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ## Judge Quickstart Instructions

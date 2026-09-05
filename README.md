@@ -11,7 +11,7 @@
 | **Models** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` reflex kernel |
 | **Speed** | ~1,000ms–5,000ms (slow Chain-of-Thought) | **14.0µs–106µs** (sub-ms involuntary reflex) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | May emit dangerous calldata (e.g. **Aerodrome**) | **<14.0µs** physical deadlock — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** physical deadlock — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -31,7 +31,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues dangerous calldata, Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before execution — **$0 Gas**.
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**.
 
 **Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
@@ -218,11 +218,13 @@ Citadel Shield is the **Cerebellum & Reflex Arc** of the agent stack — not a p
 
 ### Fail-Closed Walkthrough — Cerebrum Hallucination
 
-**Scenario:** The LLM **Cerebrum** hallucinates a swap route to **Aerodrome** while policy only allowlists **GMX v2 / Pendle / Uniswap V3** on Arbitrum One.
+**Scenario:** The LLM **Cerebrum** drifts into a **cross-chain intent hallucination** — routing a swap to **Aerodrome** (a legitimate Base-native protocol) while policy strictly authorizes only Arbitrum One's **7-protocol matrix** (GMX v2 / Pendle / Uniswap V3 / Aave / Morpho / Hyperliquid / Variational).
 
-1. **Cerebrum emits calldata** targeting an unsupported venue (`~2,000ms` Chain-of-Thought).
-2. **Cerebellum reflex** parses venue bitmask — Aerodrome not in allowlist → **FAIL-CLOSED** in **<14.0µs**.
-3. **`severSigningChannel()`** triggers physical deadlock — **0-Gas**, no Sequencer queue entry.
+> **Clarification:** Aerodrome is not malicious — it is **out-of-scope**. When an Arbitrum-authorized agent emits cross-chain calldata (Base / Aerodrome) due to LLM intent drift, Citadel's Cerebellum triggers a **<14.0µs** physical deadlock, severing the EIP-712 channel **before** any cross-chain or unvetted execution can occur.
+
+1. **Cerebrum emits out-of-scope cross-chain calldata** (`~2,000ms` Chain-of-Thought).
+2. **Cerebellum reflex** parses chain + venue bitmask — Base/Aerodrome outside Arbitrum allowlist → **FAIL-CLOSED** in **<14.0µs**.
+3. **`severSigningChannel()`** triggers physical deadlock — **0-Gas**, no cross-chain bridge or Sequencer queue entry.
 4. **Judge reproduction:** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ---

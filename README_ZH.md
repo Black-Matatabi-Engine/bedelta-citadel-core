@@ -14,7 +14,7 @@
 | **模型** | DeepSeek-R1 · GPT-4 · Claude | Wasm `checkSoilResistance()` 反射核心 |
 | **速度** | ~1,000ms–5,000ms（慢速 Chain-of-Thought） | **14.0µs–106µs**（亞毫秒非自主反射） |
 | **特性** | 非確定性 · 易幻覺 | **100% 確定性** · **0-Gas FAIL-CLOSED** |
-| **威脅時** | 可能產出危險 calldata（如 **Aerodrome**） | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
+| **On threat** | 可能輸出越權/跨鏈 Calldata (例如: 跨鏈至 Base / Aerodrome 之 AI 意圖幻覺) | **<14.0µs** 物理死鎖 — 切斷 EIP-712 通道 |
 
 ### 神經形態工作流
 
@@ -34,7 +34,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**核心敘事：** 若 LLM 大腦皮層因幻覺或 prompt injection 產出危險 calldata，Citadel 小腦於 **<14.0µs** 觸發即時物理死鎖，於執行前切斷 EIP-712 通道 — **$0 Gas**。
+**核心敘事：** 若 LLM 大腦皮層因幻覺或 prompt injection 產出越權 calldata（例如跨鏈意圖漂移至 Base / Aerodrome），Citadel 小腦於 **<14.0µs** 觸發即時物理死鎖，於任何跨鏈或未審核執行發生前切斷 EIP-712 通道 — **$0 Gas**。
 
 **30 秒驗證：** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
@@ -223,11 +223,13 @@ Citadel Shield 是 agent 堆疊的**小腦與反射弧** — 非被動 JSON-RPC 
 
 ### Fail-Closed 演練 — 大腦皮層幻覺
 
-**情境：** LLM **大腦皮層**幻覺出 **Aerodrome** 路由，政策僅 allowlist **GMX v2 / Pendle / Uniswap V3**（Arbitrum One）。
+**情境：** LLM **大腦皮層**發生**跨鏈意圖幻覺** — 將 swap 路由至 **Aerodrome**（合法的 Base 原生協議），而政策僅授權 Arbitrum One 的 **7-protocol matrix**（GMX v2 / Pendle / Uniswap V3 / Aave / Morpho / Hyperliquid / Variational）。
 
-1. **大腦皮層產出 calldata** 指向不支援 venue（`~2,000ms` Chain-of-Thought）。
-2. **小腦反射**解析 venue bitmask — Aerodrome 不在 allowlist → **<14.0µs** 內 **FAIL-CLOSED**。
-3. **`severSigningChannel()`** 觸發物理死鎖 — **0-Gas**，無 Sequencer 佇列進入。
+> **釐清：** Aerodrome 並非惡意協議 — 而是**越權/超出範圍**。當 Arbitrum 授權 agent 因 LLM 意圖漂移產出跨鏈 calldata（Base / Aerodrome）時，Citadel 小腦於 **<14.0µs** 觸發物理死鎖，於任何跨鏈或未審核執行發生前切斷 EIP-712 通道。
+
+1. **大腦皮層產出越權跨鏈 calldata**（`~2,000ms` Chain-of-Thought）。
+2. **小腦反射**解析 chain + venue bitmask — Base/Aerodrome 不在 Arbitrum allowlist → **<14.0µs** 內 **FAIL-CLOSED**。
+3. **`severSigningChannel()`** 觸發物理死鎖 — **0-Gas**，無跨鏈橋接或 Sequencer 佇列進入。
 4. **Judge 重現：** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ---

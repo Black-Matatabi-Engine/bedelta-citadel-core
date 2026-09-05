@@ -7,7 +7,7 @@
 | | **Cerebrum (LLM Agent)** | **Cerebellum (Citadel Shield)** |
 |---|--------------------------|----------------------------------|
 | **Speed** | ~1,000ms–5,000ms (slow CoT · non-deterministic) | **14.0µs–106µs** (100% deterministic · 0-Gas) |
-| **On threat** | Hallucination / prompt injection (e.g. **Aerodrome**) | **<14.0µs** reflex deadlock — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<14.0µs** reflex deadlock — severs EIP-712 channel |
 
 ```
 ┌──────────────────────────────────────────────┐
@@ -25,7 +25,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum issues dangerous calldata, Citadel's Cerebellum triggers physical deadlock in **<14.0µs** — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**Core narrative:** If the LLM Cerebrum issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers physical deadlock in **<14.0µs** — severing EIP-712 before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 | Field | Value |
@@ -141,11 +141,13 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 
 ### Fail-Closed Walkthrough — Cerebrum Hallucination
 
-**Scenario:** Cerebrum hallucinates **Aerodrome** while policy allowlists **GMX v2 / Pendle / Uniswap V3** only.
+**Scenario:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**.
 
-1. Cerebrum emits unsupported-venue calldata (`~2,000ms` CoT).
-2. Cerebellum reflex → **FAIL-CLOSED** in **<14.0µs**.
-3. `severSigningChannel()` — **0-Gas**, no broadcast.
+> **Clarification:** Aerodrome is **out-of-scope**, not malicious. Cross-chain calldata (Base / Aerodrome) from an Arbitrum-authorized agent triggers **<14.0µs** physical deadlock — EIP-712 severed **before** any cross-chain or unvetted execution.
+
+1. Cerebrum emits out-of-scope cross-chain calldata (`~2,000ms` CoT).
+2. Cerebellum reflex → chain + venue bitmask → **FAIL-CLOSED** in **<14.0µs**.
+3. `severSigningChannel()` — **0-Gas**, no cross-chain broadcast.
 4. Reproduce: `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
 
 ## Judge Quickstart Instructions
