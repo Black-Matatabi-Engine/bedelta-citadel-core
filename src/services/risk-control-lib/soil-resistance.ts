@@ -3,6 +3,7 @@
  * Copyright (c) 2026 SilverVine Labs. All Rights Reserved.
  */
 
+import { applySoilTripSeverance } from "../../core/risk-severance";
 import { emitRiskLog, formatTripReasons, isoNow } from "./logging";
 import {
   isAllowedTelemetrySymbol,
@@ -149,6 +150,7 @@ export function checkSoilResistance(
   applySoilRiskCaps(input, result, slippageFuse);
 
   if (tripped) {
+    applySoilTripSeverance(true);
     const reasons = result.reasons;
     if (isAllowedTelemetrySymbol(symbol)) {
       recordTelemetrySoilTrip();

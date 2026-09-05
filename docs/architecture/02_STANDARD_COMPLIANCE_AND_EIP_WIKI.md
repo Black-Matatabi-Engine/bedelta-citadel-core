@@ -118,11 +118,24 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 
 | Layer | Alignment | Status |
 |-------|-----------|--------|
-| **Stylus Soil Coprocessor** | **`SliverVineSoilCoprocessor`** — u128 fixed-point score · quadratic spread/slippage penalty · fail-closed `depth_usd ≥ 10_000` · `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` · parity with Edge soil fuse | ✅ **Code-Verified Coprocessor** (`contracts/stylus-probe/src/lib.rs` · Stylus SDK **0.10.7** · `cargo test` **5/5 PASS** · Wasm Sandbox Vitest Passed · on-chain Sepolia deploy **pending tooling lock**) |
+| **Stylus Soil Coprocessor** | **`SliverVineSoilCoprocessor`** — u128 fixed-point score · `check_soil_resistance_stylus(flags, risk_vector)` · quadratic spread/slippage penalty · fail-closed `depth_usd ≥ 10_000` · `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` · parity with Edge soil fuse | ✅ **Code-Verified Coprocessor** (`contracts/stylus-probe/src/lib.rs` · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** · `pnpm build:stylus` · Wasm Sandbox Vitest Passed · on-chain Sepolia deploy **pending tooling lock** · **EIP-1967 proxy path documented**) |
 | **Elara protocol ingress** | Protocol-level ingress filtering drops non-compliant Robinhood Chain / blacklisted senders before GM payload construction — complements `IngressSafetySwitch` | ⏳ V1.0 Design Spec |
 | **ArbOS gas / base-fee sensor** | Tri-Sensor **BaseFee Velocity** channel remains the congestion throttle for dispatch SLO | ✅ v1.0 Delivered (Sepolia verified) (`arbitrum-gas-guard.ts`) |
 
 **Design rule:** Edge (Cloudflare) remains the pre-broadcast SSOT; Stylus coprocessor + Elara are the on-chain reinforcement plane — never a weaker substitute for fail-closed Edge gates.
+
+### EIP-1967 Upgradeable Proxy — Zero Lock-In Stylus Path
+
+V2.0 on-chain Stylus rollout targets the standard **[EIP-1967](https://eips.ethereum.org/EIPS/eip-1967) Transparent Upgradeable Proxy** pattern:
+
+| Slot | Purpose |
+|------|---------|
+| `0x360894a13ba1a3210667c828492db98dca3e2076cc3735a920a3ca505d382bbc` | Implementation — `SliverVineSoilCoprocessor` / `check_soil_resistance_stylus` logic |
+| `0xb53127684a568b3173ae13b9f8a6016e243e63b6e8ee1178d6a717850b5d6103` | Admin — multisig-governed upgrades; **no bytecode lock-in** |
+
+The immutable **Solidity `SliverVineGate`** on Arbitrum One (`0xb174…`) remains the live attestation plane; Stylus is an additive coprocessor reinforcement layer deployable behind EIP-1967 without restricting future math upgrades.
+
+**Dual-execution SSOT:** [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) exports `check_soil_resistance_stylus(flags: u64, risk_vector: [f64; 6]) -> bool` — bitmask + six-lane vector parity with Edge `evaluate*Flags()` / `checkSoilResistance()`. Build: `pnpm build:stylus`.
 
 ---
 

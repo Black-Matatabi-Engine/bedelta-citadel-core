@@ -2,8 +2,8 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)** · SilverVine Labs
 
-[![Vitest](https://img.shields.io/badge/Vitest-828%20PASS%20%28190%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
-[![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-5%2F5_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
+[![Vitest](https://img.shields.io/badge/Vitest-831%20PASS%20%28191%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
 [![Benchmark Latency](https://img.shields.io/badge/Benchmark-p50_106%CE%BCs_E2E_Shield_(Kernel_200ns)-blueviolet?logo=speedtest)](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats)
@@ -24,13 +24,23 @@
 **Protocol:** SliverVine · **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com` · **B2B:** `hello@silvervinelabs.com`  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)  
 
-> **On-chain vs off-chain SSOT:** The **live Arbitrum One gateway** (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`, chainId **42161**) is the immutable **Solidity EIP-712 `SliverVineGate`** — [Mainnet Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6). **Arbitrum Stylus** ([`contracts/stylus-probe/`](./contracts/stylus-probe/)) is part of the **V2.0 Rust/Wasm off-chain Edge roadmap** (local probe only; **not** deployed on mainnet). Production hot-path soil fuse runs on Cloudflare Edge via `pkg/soil_core.wasm` (`checkSoilResistance()` p50 ~106µs).
+> **On-chain vs off-chain SSOT:** The **live Arbitrum One gateway** (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`, chainId **42161**) is the immutable **Solidity EIP-712 `SliverVineGate`** — [Mainnet Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6). **Arbitrum Stylus** ([`contracts/stylus-probe/`](./contracts/stylus-probe/)) is the **V2.0 dual-execution Rust coprocessor** (`check_soil_resistance_stylus` in `stylus_core.rs`; `pnpm build:stylus`) — local probe only; **not** deployed on mainnet. Planned on-chain rollout uses **EIP-1967 upgradeable proxy** (zero lock-in; multisig-governed implementation slot). Production hot-path soil fuse runs on Cloudflare Edge via `pkg/soil_core.wasm` (`checkSoilResistance()` p50 ~106µs).
 **Live Dune Telemetry Portal:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **PEV tracking fully operational** on-chain via Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`) · **Headless Audit Endpoint:** [`https://bedeltawater.slivervine.xyz/api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) · **Arbitrum One Gate** `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6)  
 
 > **Headless Infrastructure Protocol:** Core interaction is API/SDK Native (`@slivervine/citadel-sdk`) & CLI HUD.  
 **Package:** [`@slivervine/citadel-sdk`](./src/sdk/README.md) (Apache-2.0) · **Judge entry:** [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) · [Verification Matrix](./docs/VERIFICATION_MATRIX.md) · [Technical Specification](./docs/architecture/01_TECHNICAL_SPECIFICATION.md)
 
 **Core product:** **SliverVine Citadel Shield** is a **Pre-Consensus Intent Firewall & Execution Safety Primitive** for AI Agents on Arbitrum — not a standalone Wasm risk check. Off-chain Edge reflex (`checkSoilResistance()`) + on-chain **EIP-712 consume-once `SliverVineGate`** form a protocol-grade execution safety layer — [§1 Product Identity](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#1-core-product-identity) · [Three Pillars pipeline](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#0-unified-institutional-pre-execution-pipeline).
+
+### Core Architectural Hardening (V1.0 · Automated Severance + Split-Payload Defense)
+
+| Layer | Module | Behavior |
+|-------|--------|----------|
+| **Auto R20 severance** | [`risk-severance.ts`](./src/core/risk-severance.ts) · [`risk-engine-core.ts`](./src/core/risk-engine-core.ts) | Any `FLAGS_*` trip (`IMBALANCE`, `NAV`, `YIELD_SHOCK`, `DEPEG`, etc.) calls `severSigningChannel()` inside core state flow — no demo-script orchestration |
+| **Sliding-window OI** | [`pending-exposure-window.ts`](./src/core/pending-exposure-window.ts) | 30s accumulator for pending GMX skew/notional — neutralizes sub-threshold split-payload poisoning |
+| **Stylus coprocessor** | [`stylus_core.rs`](./contracts/stylus-probe/src/stylus_core.rs) | `#![no_std]` `check_soil_resistance_stylus(flags, risk_vector)` — dual-execution parity with Edge; `pnpm build:stylus` |
+
+→ EIP-1967 upgradeable proxy pattern (zero lock-in): [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor)
 
 **Primary venue:** Arbitrum One (`42161`) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · **Cross-chain hedge:** Hyperliquid — **Independent L1 High-Frequency Orderbook AppChain** (originated alongside Arbitrum's perp liquidity ecosystem; session-key adapter, not Arbitrum-native) · **Moat:** Pillar 3 Wasm Shield `checkSoilResistance()` p50 ~106 μs — [§3 Defense Matrix](./docs/architecture/01_TECHNICAL_SPECIFICATION.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 
@@ -93,7 +103,7 @@ Citadel is the **native pre-execution risk firewall** for the Wayfinder Agent En
 | Layer | Module | Behavior |
 |-------|--------|----------|
 | **Native Shield Hook** | [`wayfinder-shield.ts`](./src/adapters/wayfinder/wayfinder-shield.ts) | `wayfinderCitadelShieldHook` — `checkSoilResistance()` soil fuse + `verifyAgentIntent()` 8-dimension gate |
-| **0-Gas Fail-Closed** | Pre-broadcast severance | Soil trip / session-key violation → `FAIL_CLOSED` before mempool ingress |
+| **0-Gas Fail-Closed** | Pre-broadcast severance | Soil trip / bitmask trip (`FLAGS_*`) / session-key violation → `severSigningChannel()` **automatically** inside core state flow — no external orchestration |
 | **CLI Demo** | `pnpm demo:wayfinder` | Normal route interception · `--trip` for 0-Gas toxic soil demo |
 
 → Tests: [`tests/adapters/wayfinder-shield.test.ts`](./tests/adapters/wayfinder-shield.test.ts) · Demo: [`examples/wayfinder-agent-demo.ts`](./examples/wayfinder-agent-demo.ts)

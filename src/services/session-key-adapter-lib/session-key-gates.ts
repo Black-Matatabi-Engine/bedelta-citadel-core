@@ -1,7 +1,7 @@
 import {
   R20_LOCKED,
   isR20Locked,
-  updateSystemState,
+  severSigningChannel,
   type SystemState,
 } from "../../core/state";
 import { vineWrapProtection } from "../../core/risk";
@@ -33,16 +33,7 @@ export function resolveR20Locked(state: SystemState): boolean {
 }
 
 /** Immediately sever the Session Key signing channel (physical hardlock). */
-export function severSigningChannel(): SystemState {
-  return updateSystemState({
-    patch: {
-      signingChannelOpen: false,
-      hardlock: true,
-      currentCri: 0,
-      hudState: "BLOCKED",
-    },
-  });
-}
+export { severSigningChannel };
 
 function interceptAndSever(reasons: string[]): never {
   severSigningChannel();

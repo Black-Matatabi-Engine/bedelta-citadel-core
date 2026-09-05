@@ -28,9 +28,18 @@ export function verifyGmxPoolImbalance(input: {
   oiLongUsd: number;
   oiShortUsd: number;
   poolTvlUsd: number;
+  skewDeltaUsd?: number;
+  notionalUsd?: number;
+  nowMs?: number;
 }): { ok: boolean; imbalanceRatio: number; reasons: string[] } {
   const imbalanceRatio = computeGmxPoolImbalanceRatio(input);
-  const flags = evaluateGmxFlags(packProtocolLane(0, input.oiLongUsd, input.oiShortUsd, input.poolTvlUsd, 0, GMX_VEC));
+  const flags = evaluateGmxFlags(
+    packProtocolLane(0, input.oiLongUsd, input.oiShortUsd, input.poolTvlUsd, 0, GMX_VEC),
+    0,
+    input.skewDeltaUsd !== undefined
+      ? { skewDeltaUsd: input.skewDeltaUsd, notionalUsd: input.notionalUsd, nowMs: input.nowMs }
+      : undefined,
+  );
   const reasons: string[] = [];
   if (flags & FLAGS_IMBALANCE_TRIP) {
     reasons.push(`GMX_POOL_IMBALANCE_BREACH:ratio=${imbalanceRatio.toFixed(4)}>${GMX_POOL_IMBALANCE_MAX_RATIO}`);

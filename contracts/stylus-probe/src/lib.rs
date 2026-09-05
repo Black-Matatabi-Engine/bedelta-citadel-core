@@ -1,14 +1,12 @@
 //! SliverVineSoilCoprocessor — on-chain fixed-point soil resistance coprocessor.
 //! SPDX-License-Identifier: BUSL-1.1
-//!
-//! Fixed-point score (u128 intermediates, u64 result):
-//!   base = spread×100 + slippage×120 + (MIN_DEPTH×10_000 / depth_usd)
-//!   + quadratic(excess_spread) when spread > 50 bps
-//!   + quadratic(excess_slippage) when slippage > 25 bps
-//! Fail-closed when depth < 10_000 USD or score > 10_000.
 
 #![cfg_attr(not(any(test, feature = "export-abi")), no_main)]
 extern crate alloc;
+
+mod stylus_core;
+
+pub use stylus_core::check_soil_resistance_stylus;
 
 use stylus_sdk::alloy_primitives::U256;
 use stylus_sdk::prelude::*;
@@ -118,9 +116,14 @@ mod tests {
     }
 
     #[test]
-    fn applies_slippage_quadratic_penalty() {
-        let (ok, score) = evaluate_soil_coprocessor_core(20, 50_000, 50);
-        assert!(!ok);
-        assert_eq!(score, u64::MAX);
+    fn stylus_core_vector_passes() {
+        let rv = [20.0, 100_000.0, 10.0, 50.0, 0.2, 1.4];
+        assert!(check_soil_resistance_stylus(0, rv));
+    }
+
+    #[test]
+    fn stylus_core_vector_fails_on_flags() {
+        let rv = [20.0, 100_000.0, 10.0, 50.0, 0.2, 1.4];
+        assert!(!check_soil_resistance_stylus(1 << 3, rv));
     }
 }

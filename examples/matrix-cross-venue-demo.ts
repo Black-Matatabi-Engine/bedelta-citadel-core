@@ -36,7 +36,6 @@ import {
 } from "../src/core/state";
 import { ensureSoilWasm } from "../src/sdk";
 import { checkSoilResistance, type SoilResistanceInput } from "../src/services/risk-control";
-import { severSigningChannel } from "../src/services/session-key-adapter-lib/session-key-gates";
 import {
   GREEN,
   RED,
@@ -236,8 +235,7 @@ function runCircuitBreaker(
   const soilTrip = checkSoilResistance(soilForStep(nowMs, true, gmxTrip));
   console.log(`  Layer-1 soil tripped=${soilTrip.tripped} · reasons=${soilTrip.reasons.join("|") || "none"}`);
 
-  console.log(`\n${RED}${label} · Step 3 — severSigningChannel() · R20 physical deadlock${R}`);
-  severSigningChannel();
+  console.log(`\n${RED}${label} · Step 3 — R20 auto-severance (core-integrated)${R}`);
   const locked = readActiveSystemState();
   console.log(`  signingChannelOpen=${locked.signingChannelOpen} · hardlock=${locked.hardlock} · cri=${locked.currentCri}`);
 

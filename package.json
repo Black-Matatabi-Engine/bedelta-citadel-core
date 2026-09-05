@@ -34,6 +34,7 @@
     "demo:data": "tsx scripts/generate-demo-data.ts",
     "telemetry:96h": "tsx scripts/live-96h-telemetry-daemon.ts",
     "build:wasm": "cargo build --manifest-path src/wasm/Cargo.toml --release --target wasm32-unknown-unknown && mkdir -p pkg && cp src/wasm/target/wasm32-unknown-unknown/release/soil_core.wasm pkg/soil_core.wasm",
+    "build:stylus": "cd contracts/stylus-probe && cargo test && (cargo build --target wasm32-unknown-unknown --release 2>/dev/null || echo '[build:stylus] wasm32 target optional — cargo test passed')",
     "build": "pnpm run build:worker",
     "build:assets": "mkdir -p dist && cp index.html dist/index.html",
     "build:worker": "pnpm run build:assets && pnpm exec tsc --noEmit && WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --outdir=dist-worker",

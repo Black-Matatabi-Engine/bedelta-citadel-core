@@ -37,6 +37,12 @@ export interface SystemState {
   isStale: boolean;
   /** Lifetime vault liquidation events (0 → VERIFIED_ZERO_LIQUIDATION) */
   liquidationEventCount: number;
+  /** Sliding-window pending OI skew accumulator (split-payload defense) */
+  pendingOiSkewUsd?: number;
+  /** Sliding-window pending notional accumulator */
+  pendingNotionalUsd?: number;
+  /** Pending exposure window expiry (epoch ms) */
+  pendingWindowExpiresAtMs?: number;
   /** Session key trade vs observer mode */
   sessionKeyMode: SessionKeyRuntimeMode;
   /** Last session-key status tag (expired / revoked) */

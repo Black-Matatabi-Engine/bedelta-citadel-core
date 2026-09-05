@@ -13,6 +13,14 @@ import {
   type SystemState,
 } from "../services/systemState";
 import { isHedgeActive, isR20Locked } from "./risk";
+import {
+  readStateOverride,
+  writeStateOverride,
+  type CoreSystemState,
+} from "./state-store";
+
+export type { CoreSystemState } from "./state-store";
+export { severSigningChannel } from "./state-store";
 
 export type { SystemState, HudState } from "../services/systemState";
 export {
@@ -27,20 +35,15 @@ export { isR20Locked, isHedgeActive } from "./risk";
 /** Internal R20 / physical deadlock signal used by tactical logs */
 export const R20_LOCKED = "R20_LOCKED" as const;
 
-export interface CoreSystemState extends SystemState {
-  isHedgeActive: boolean;
-}
-
 export interface UpdateSystemStateInput {
   patch?: Partial<SystemState>;
   soil?: SoilResistanceInput;
 }
 
-let activeStateOverride: CoreSystemState | null = null;
-
 /** Read the active system snapshot (overrideable in tests). */
 export function readActiveSystemState(): CoreSystemState {
-  if (activeStateOverride) return activeStateOverride;
+  const override = readStateOverride();
+  if (override) return override;
   const base = buildSystemState();
   return enrichSystemStateVectorEquilibrium(
     { ...base, isHedgeActive: false },
@@ -102,23 +105,24 @@ export function updateSystemState(input: UpdateSystemStateInput = {}): CoreSyste
     ? checkSoilResistance(input.soil).tripped
     : undefined;
 
-  activeStateOverride = enrichSystemStateVectorEquilibrium(
+  const enriched = enrichSystemStateVectorEquilibrium(
     { ...next, isHedgeActive: hedgeActive },
     { soilTripped, isHedgeActive: hedgeActive },
   );
-  return activeStateOverride;
+  writeStateOverride(enriched);
+  return enriched;
 }
 
 /** @internal Test hook — reset with `null` after each test. */
 export function __setSystemStateForTests(state: CoreSystemState | SystemState | null): void {
   if (state === null) {
-    activeStateOverride = null;
+    writeStateOverride(null);
     return;
   }
-  activeStateOverride = {
+  writeStateOverride({
     ...state,
     isHedgeActive: (state as CoreSystemState).isHedgeActive ?? false,
-  };
+  });
 }
 
 /** Resolve the tactical state label for logging when hedges are blocked. */

@@ -278,7 +278,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299 (10 bps CaaS = V2.0) · Stylus V2.0 roadmap probe; live gateway = Solidity Gate · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
+**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards (mainnet GM fill post-M6) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Dune Sepolia live stream + 42161 SQL pre-compiled · v1.0 SaaS $0/$49/$299 (10 bps CaaS = V2.0) · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---
 
@@ -426,7 +426,7 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 |--------|------|------|
 | **Gatehouse (Auth)** | **Opt-In Pillar 1** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · `USE_ZERODEV_AA` default-off | `zerodev-aa-*` · Gate attestation · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 | **Pillar 2: Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort · Robinhood / Across (`46630`/`4663` → `42161`) as **Pillar 2 Reference Escort Adapters** | `src/adapters/across-ingress-bridge.ts` · `contracts/IngressSafetySwitch.sol` |
-| **Shield (CORE MOAT)** | Sub-ms Wasm pre-execution armor · p50 ~106 μs · fail-closed before mempool · **independent of ZeroDev** | `checkSoilResistance()` · `soil_core.wasm` · Stylus `SliverVineSoilCoprocessor` |
+| **Shield (CORE MOAT)** | Sub-ms Wasm pre-execution armor · p50 ~106 μs · fail-closed before mempool · **auto `severSigningChannel()` on bitmask trips** · **independent of ZeroDev** | `checkSoilResistance()` · `soil_core.wasm` · Stylus `SliverVineSoilCoprocessor` · `check_soil_resistance_stylus` |
 
 ### Competitive Positioning — Four-Dimensional ASCII Matrices (SliverVine Protocol)
 
@@ -552,7 +552,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [`SliverVineGate/src/SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) |
 | `SliverVineRiskOracle` | EIP-712 offline risk report · `STATUS_SHUTDOWN` flush | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` | [`contracts/SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) |
 | `IngressSafetySwitch` | Pillar 2 compliance filter | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` | [`contracts/IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) |
-| `SliverVineSoilCoprocessor` (Stylus) | On-chain HF math coprocessor | **Code-Verified** (Cargo 5/5 · Wasm Vitest passed) | [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) |
+| `SliverVineSoilCoprocessor` (Stylus) | On-chain HF math coprocessor · `check_soil_resistance_stylus` dual-execution | **Code-Verified** (Cargo 9/9 · `pnpm build:stylus` · EIP-1967 proxy path) | [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) |
 
 ---
 
@@ -598,7 +598,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **190 test files | 828 PASS Clean (100% PASS)** · Forge 60/60 · Cargo Stylus 5/5 · Wasm &lt;28 KiB / &lt;60 µs.
+**Regression bar:** Vitest **191 test files | 831 PASS Clean (100% PASS)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **69.28 KiB gzip** (`pnpm bundle:measure` · pass &lt;70 KiB) · Wasm &lt;28 KiB / &lt;60 µs.
 
 ---
 
