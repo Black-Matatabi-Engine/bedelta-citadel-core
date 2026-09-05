@@ -1,9 +1,16 @@
 #!/usr/bin/env tsx
 /**
- * Wayfinder Route Interception Demo — Citadel Shield on Arbitrum.
+ * Wayfinder Route Interception Demo — Citadel Shield on Arbitrum & Stabilizer Sepolia.
  * Usage: pnpm demo:wayfinder
  * Trip:  pnpm demo:wayfinder -- --trip
+ * Stabilizer: pnpm demo:wayfinder -- --stabilizer
+ * Stabilizer trip: pnpm demo:wayfinder -- --stabilizer --trip
  */
+import {
+  evaluateStabilizerSwapGuard,
+  STABILIZER_SEPOLIA_CHAIN_ID,
+  type StabilizerSwapInput,
+} from "../src/adapters/stabilizer/stabilizer-adapter";
 import {
   wayfinderCitadelShieldHook,
   type WayfinderRouteIntent,
@@ -17,7 +24,6 @@ import {
   hudIntent,
   hudSevered,
   hudSoilFuse,
-  isCooldownError,
   parseBackoffRemainingSec,
   parseShieldTripReasons,
   printBackoffDivider,
@@ -32,7 +38,7 @@ import {
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
 
-async function runDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
+async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
   const chainId = payload.chainId ?? 42161;
   const intent = payload.intent ?? "WAYFINDER_ONCHAIN_INTENT";
@@ -85,18 +91,98 @@ async function runDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<vo
   }
 }
 
+async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Promise<void> {
+  const agentId = "wayfinder-stabilizer-demo";
+  const intent = trip ? "STABILIZER_DEPLETED_CAPACITY_SWAP" : "STABILIZER_ZERO_SLIPPAGE_SWAP";
+
+  hudIntent(
+    agentId,
+    "Wayfinder",
+    intent,
+    `Arbitrum Sepolia ${STABILIZER_SEPOLIA_CHAIN_ID} · Stabilizer ${swap.fromAsset}→${swap.toAsset}`,
+  );
+
+  const stabilizer = evaluateStabilizerSwapGuard(swap);
+  hudSoilFuse(stabilizer.soilOk, stabilizer.latencyUs ?? 0, stabilizer.reasons);
+
+  if (!stabilizer.ok) {
+    hudSevered("SOIL_FUSE_TRIP");
+    hudBlocked();
+    printResult(false);
+    console.error(`${RED}${stabilizer.reasons.join("; ")}${R}`);
+    process.exit(1);
+  }
+
+  const wayfinderPayload: WayfinderRouteIntent = {
+    symbol: `${swap.fromAsset}/${swap.toAsset}`,
+    hlSpot: 1,
+    hlPerp: 1,
+    dydxPerp: 1,
+    depthUsd: swap.poolReserveUsd,
+    at: swap.at,
+    agentId,
+    chainId: STABILIZER_SEPOLIA_CHAIN_ID,
+    intent,
+    nowMs: swap.at?.getTime(),
+  };
+
+  const shield = await wayfinderCitadelShieldHook.execute(wayfinderPayload);
+  if (shield.success && shield.status === "ALLOW") {
+    hudChannelOpen();
+    hudDispatched(
+      `Wayfinder → Stabilizer 1:1 ${swap.fromAsset}/${swap.toAsset} · Sepolia ${STABILIZER_SEPOLIA_CHAIN_ID}`,
+      shield.latencyUs ?? stabilizer.latencyUs ?? 0,
+    );
+    printResult(true);
+    return;
+  }
+
+  hudSevered("STABILIZER_OR_SHIELD_FAIL");
+  hudBlocked();
+  printResult(false);
+  console.error(`${RED}${shield.reasons?.join("; ")}${R}`);
+  process.exit(1);
+}
+
 async function main(): Promise<void> {
   const trip = process.argv.includes("--trip");
-  seedAdapterProbes();
+  const stabilizer = process.argv.includes("--stabilizer");
+  const now = new Date();
+  seedAdapterProbes(now.getTime());
 
-  printBanner("Wayfinder Agent Demo");
+  printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
   printMode(trip);
 
-  const payload: WayfinderRouteIntent = trip
-    ? { ...TOXIC_SOIL, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
-    : { ...HEALTHY_SOIL, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
+  if (stabilizer) {
+    const swap: StabilizerSwapInput = trip
+      ? {
+          chainId: STABILIZER_SEPOLIA_CHAIN_ID,
+          fromAsset: "USDZ",
+          toAsset: "USDC",
+          amountUsd: 6_000_000,
+          poolReserveUsd: 5_000_000,
+          poolCapacityUsd: 5_000_000,
+          reserveFloorUsd: 100_000,
+          at: now,
+        }
+      : {
+          chainId: STABILIZER_SEPOLIA_CHAIN_ID,
+          fromAsset: "USDZ",
+          toAsset: "USDC",
+          amountUsd: 50_000,
+          poolReserveUsd: 5_000_000,
+          poolCapacityUsd: 1_000_000,
+          at: now,
+        };
+    await runStabilizerDemo(swap, trip);
+    return;
+  }
 
-  await runDemo(payload, trip);
+  const payload: WayfinderRouteIntent = trip
+    ? { ...TOXIC_SOIL, at: now, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
+    : { ...HEALTHY_SOIL, at: now, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
+
+  await runArbitrumDemo(payload, trip);
 }
 
 main().catch((err) => {
