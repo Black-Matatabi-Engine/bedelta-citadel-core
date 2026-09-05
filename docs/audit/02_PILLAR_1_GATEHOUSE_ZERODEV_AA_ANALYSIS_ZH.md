@@ -9,7 +9,7 @@
 | **分類** | Grant / 機構配置者 · AA 架構基準 |
 | **分支基線** | `v1.0_push_BDLW` |
 | **實體** | SilverVine Labs · SliverVine Protocol（BeDelta Living Water v1.0 / BeΔ） |
-| **基線** | **Vitest SSOT：** **192 個測試檔案 \| 836 PASS Clean（100% PASS）** · Worker **69.32 KiB gzip** · Shield **p50 ~106 µs**（TS Gateway 路徑）· Wasm 暖啟動 **&lt;60 µs** |
+| **基線** | **Vitest SSOT：** **192 個測試檔案 \| 836 PASS Clean（100% PASS）** · Worker **69.32 KiB gzip** · Shield **p50 ~106 µs**（TS Gateway 路徑）· Wasm 暖啟動 **&lt;60 µs** · **7 原生協議**（含 Variational **Bits 12–13**）· **4 AI 框架** |
 | **關聯 SSOT** | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) · [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) §2.4 · [風險光譜 §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 > **邊界：** ZeroDev Kernel v3 為**可選支柱一帳戶抽象層**（`USE_ZERODEV_AA` 預設關閉）。**支柱三 Edge Wasm Shield**（`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`）與**支柱二 Arbitrum 原生入場** **100% 獨立運作** — ZeroDev 故障永不影響亞毫秒播前防護或橋接 `lostUsd ≡ 0` 會計。

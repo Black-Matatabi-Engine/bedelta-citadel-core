@@ -108,7 +108,7 @@ Fail-Closed 為**預執行邊界上的營運風險斷簽** — 類比斷路器�
 | **投資建議** | DDIP **非**投資、財務或稅務建議。無買賣或持有任何資產之推薦。 |
 | **監管狀態** | SliverVine Protocol **不**宣稱銀行牌照、MiCA CASP 授權、SEC/CFTC 登記或 **SOC 2 Type II** 鑑證。§5 框架映射僅為**架構對齊敘述**。 |
 | **證券定性** | SilverVine Labs **不**就任何 SliverVine Protocol 互動於任何管轄區是否構成證券作出聲明。 |
-| **前瞻性陳述** | 標記 **⏳ Roadmap Spec** 的路線圖項目為設計目標 — 非交付或績效承諾。含 **⏳ V1.5 Roadmap Spec：Variational Omni RFQ 原生對沖 PoC**（`variational-rfq-adapter.ts` · `evaluateVariationalFlags()` · Bits 12–13 `FLAG_VARIATIONAL_STALE_QUOTE` / `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED`）— 隔離式 adapter stub，尚未接線至 v1.0 生產熱路徑。 |
+| **前瞻性陳述** | 標記 **⏳ Roadmap Spec** 的路線圖項目為設計目標 — 非交付或績效承諾。**Variational Omni RFQ** 已於 v1.0 整合至核心 bitmask（`evaluateVariationalFlags()` · **Bits 12–13** · `FLAGS_AUTO_SEVER_MASK`）。 |
 | **第三方場所** | GMX、Hyperliquid、ZeroDev、Across、Robinhood Chain、Arbitrum 為**獨立第三方**。SliverVine Protocol 不對其正常運行、治理或償付能力負責。 |
 | **即時審計端點** | `GET /api/grant-audit` 反映**正常測試準則下的營運遙測** — 非對所有未來狀態的即時保證。 |
 
@@ -166,7 +166,7 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) 為包裹 Arbitrum One �
 | Pillar 1 — ZeroDev Gatehouse AA | — | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 | Pillar 3 — Edge Shield Wasm 核心 | — | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 | Yellow Paper / R01–R20 | §2.2 | [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) |
-| **⏳ V1.5 Variational PoC** | R.5 · 風控框架 §V1.5 | [`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md) · `variational-rfq-adapter.ts` |
+| **Variational Omni RFQ（v1.0 Live）** | R.5 · 風控框架 | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · `evaluateVariationalFlags()` · Bits 12–13 |
 
 ---
 
@@ -627,7 +627,7 @@ pnpm test -- --run # 192 test files | 836 PASS Clean (100% PASS)
 
 > **配置者說明：** 8.2–11.8% 帶為 **HUD 揭露用動態目標區間**，非保證回報。績效結晶仍受 Hurdle Gate 摩擦緩衝與規劃中 Aave + 1.5% 績效門檻（Invariant #24）閘門。*（僅門檻率探測 — 非收益堆疊產品軌道）*。
 
-> **⏳ V1.5 Roadmap Spec：** **Variational Omni RFQ 原生對沖 PoC**（`variational-rfq-adapter.ts` · `evaluateVariationalFlags()` · quote stale **>500ms** 或 oracle drift **>30 bps** · OLP 深度利用率 **>15%** · Bits 12–13）為隔離式設計目標，補強 Arbitrum 同鏈 RFQ OLP 對沖腿 — **非** v1.0 生產承諾。詳見 [`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)。
+> **Variational Omni RFQ（v1.0 Live）：** **第七原生協議** — `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` · quote stale **>500ms** 或 oracle drift **>30 bps** · OLP 深度利用率 **>15%** · **Bits 12–13** 綁定 `FLAGS_AUTO_SEVER_MASK` · `pnpm demo:matrix -- --loop=perp --hedge=variational`。
 
 ### 5.7 三道防線與配置者 FAQ
 

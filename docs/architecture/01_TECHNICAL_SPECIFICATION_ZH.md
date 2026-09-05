@@ -2,7 +2,7 @@
 
 # SliverVine Citadel Shield：Arbitrum 上 AI Agent 的預共識意圖防火牆與執行安全原語
 
-> **文檔：** 技術規格與風險拓撲 · **內部引擎代號：** Santenmoku · **Vitest SSOT：** **192 個測試檔案 | 836 PASS Clean（100% PASS）** · Security-tier `5/0/0 PASS` · 防禦矩陣 `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare 預算、`<60µs` 執行 · Worker bundle **69.32 KiB gzip**
+> **文檔：** 技術規格與風險拓撲 · **內部引擎代號：** Santenmoku · **Vitest SSOT：** **192 個測試檔案 | 836 PASS Clean（100% PASS）** · Security-tier `5/0/0 PASS` · 防禦矩陣 `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core `<28kb` Cloudflare 預算、`<60µs` 執行 · Worker bundle **69.32 KiB gzip** · Stylus **9/9 PASS（50 bps 對齊）** · **7 原生協議**（含 Variational **Bits 12–13**）· **4 AI 框架**
 > **本文件 SSOT：** R01–R20 不變量 · 雙引擎拓撲 · KV / MDD · 結算與費用邊界
 > **文檔索引：** [`docs/README.md`](../README.md) · **風險框架：** [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) · **標準 Wiki：** [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Grants：** [`docs/grants/`](../grants/)
 
@@ -161,7 +161,7 @@ Agent Cross-Pass Route (Sepolia 421614)
 
 **SliverVine Citadel Shield（BeDelta Living Water v1.0 / BeΔ）為 Arbitrum 上 AI Agent 的預共識意圖防火牆與執行安全原語。**
 
-**主要執行包絡：** Arbitrum One 上 **Delta-Neutral GM** — GMX v2 **ETH/USDC** GM pool + Hyperliquid **1× short hedge**（Independent L1 HF Orderbook AppChain · session-key adapter），由支柱三 sub-ms Wasm Shield（`checkSoilResistance()`）守護。
+**主要執行包絡：** Arbitrum One **全原生多協議覆蓋**（GMX v2、Pendle、Camelot V3、Radiant Capital、JonesDAO、**Variational Omni RFQ**）+ 跨鏈高頻訂單簿防禦（Hyperliquid L1 Session Key Adapter）+ 可選 Arbitrum 原生 RFQ OLP 對沖。Delta-Neutral GM 核心仍為 GMX v2 **ETH/USDC** + HL **1× short**，由支柱三 sub-ms Wasm Shield 守護。
 
 ### 1.0 量身訂製數學不變量（協議物理邊界）
 
@@ -173,6 +173,7 @@ Agent Cross-Pass Route (Sepolia 421614)
 | **Radiant Capital** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`radiant-lending-adapter.ts`](../../src/adapters/radiant/radiant-lending-adapter.ts) |
 | **Jones DAO** | Arbitrum One | Vault NAV Share Price Volatility > **0.30%** single-block NAV deviation (**30 bps**) | [`jones-vault-adapter.ts`](../../src/adapters/jones/jones-vault-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
+| **Variational Omni RFQ** | Arbitrum One | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth **>15%** · **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · `FLAGS_AUTO_SEVER_MASK` | [`evaluateVariationalFlags()`](../../src/core/risk-engine-core.ts) · [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) |
 
 | Component | Venue | Role |
 |-----------|-------|------|
@@ -394,14 +395,14 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 ### 2.5 戰略藍籌生態與結算路線圖（V1.0 Core + V1.5 / V2.0）
 
-> **範圍誠實性：** v1.0 active 執行與費用捕捉仍為 Arbitrum One 上 **GMX v2 ETH/USDC GM + Hyperliquid 1× short**（§2 三角）。**Pendle Institutional Shield** 為 **v1.0 Live 核心支柱三** 預執行防火牆（非費用捕捉路徑）。**Stabilizer Sepolia Cross-Pass Sandbox** 於 `421614` **v1.0 Live**。Camelot 與 Variational 為模組化 grant 後結算擴展。
+> **範圍誠實性：** v1.0 active 執行與費用捕捉仍為 Arbitrum One 上 **GMX v2 ETH/USDC GM + Hyperliquid 1× short**（§2 三角）。**Pendle Institutional Shield** 與 **Variational Omni RFQ**（核心 bitmask **Bits 12–13**）為 **v1.0 Live** 預執行防火牆。**Stabilizer Sepolia Cross-Pass Sandbox** 於 `421614` **v1.0 Live**。Camelot 為模組化 grant 後結算擴展。
 
 | 夥伴 / 場所 | 策略角色 | Citadel 整合 | 時間範圍 | 狀態 |
 |-----------------|----------------|---------------------|---------|--------|
 | **Pendle Finance**（Yield & Rate Hedging） | yield-tokenization 市場中 AI agent 的 PT/YT 安全哨兵 — **非收益競品** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **192 個測試檔案 \| 836 PASS Clean（100% PASS）** |
 | **Stabilizer**（Sepolia Cross-Pass Sandbox） | AI agent 穩定幣再平衡通用 testnet sandbox · `421614` 上 cross-pass 路由至 GMX v2 + Pendle | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
 | **Camelot DEX**（Native Liquidity） | Arbitrum 原生 `GRAIL` 流動性深度以降低 delta-neutral 再平衡摩擦 | Camelot API on RPC allowlist (`api.camelot.exchange`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
-| **Variational**（Next-Gen Perps & Cross-Venue Alternative） | 進階去中心化永續與跨鏈 margin 路由的未來整合 — Hyperliquid 對沖腿的可擴展補充/替代 | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
+| **Variational Omni RFQ** | Arbitrum 同鏈 RFQ OLP 對沖腿 — Hyperliquid 對沖的補充/替代 | `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` · quote stale / drift / OLP depth · **Bits 12–13** · `FLAGS_AUTO_SEVER_MASK` | **V1.0** | ✅ Live · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
 ```text
 v1.0 Active Triangle (42161)
@@ -410,7 +411,7 @@ v1.0 Active Triangle (42161)
          ├──► V1.0: Pendle Institutional Shield (Pillar 3 · sync oracle · soil fuse)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
          └──► V1.5+: Camelot zero-slippage settle
-         └──► V2.0: Variational native perp hedge (HL complement/alternative)
+         └──► V1.0 Live: Variational Omni RFQ hedge (HL complement/alternative · Bits 12–13)
 ```
 
 ---
@@ -583,7 +584,7 @@ Gate 不得假設三角跨場所 instant atomicity；庫存會計在各自窗口
 |-----------|-----------------|---------|--------|
 | **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **192 個測試檔案 \| 836 PASS Clean（100% PASS）** |
 | **Camelot DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Camelot **V1.5** | ✅ Stabilizer Live · ⏳ Camelot Roadmap Spec |
-| **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
+| **Variational Omni RFQ** | Same-chain RFQ OLP hedge · quote stale **>500ms** / drift **>30 bps** / OLP **>15%** · core bitmask **Bits 12–13** | **V1.0** | ✅ Live · `evaluateVariationalFlags()` |
 
 整合錨點見 [§2.5 戰略藍籌生態與結算路線圖](#25-戰略-blue-chip-生態與結算路線圖v10-core--v15--v20)。
 
@@ -825,7 +826,7 @@ allowedToSign =
 | **Pendle Finance** | PT/YT registry + sync oracle + cross-guard · soil-wired | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` · `PENDLE_ORACLE_STALE` · `evaluatePendleGmxCrossGuard()` · maturity &lt;7d + jitter &gt;200 bps fail-closed | **V1.0** |
 | **Camelot DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Camelot pool depth · RPC allowlist `api.camelot.exchange` | **V1.5** |
 | **Stabilizer** | Sepolia universal sandbox · zero-slippage stablecoin cross-pass routing | `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as Mainnet | **V1.0** | ✅ Live · Sepolia `421614` |
-| **Variational** | Next-gen decentralized perps · cross-venue margin routing (HL complement) | `checkSoilResistance()` on Variational orderbook depth · session-key clip (R06/R07) | **V2.0** |
+| **Variational Omni RFQ** | Arbitrum 同鏈 RFQ OLP 對沖 · session-key clip (R06/R07) | `evaluateVariationalFlags()` · `validateVariationalRFQIntent()` · **Bits 12–13** | **V1.0** |
 
 ---
 

@@ -2,7 +2,7 @@
 
 # 標準合規與 ERC/EIP Wiki
 
-> **文檔：** SliverVine Citadel Shield — 標準合規與 ERC/EIP 參考 Wiki · **Vitest SSOT：** **192 個測試檔案 | 836 PASS Clean（100% PASS）**
+> **文檔：** SliverVine Citadel Shield — 標準合規與 ERC/EIP 參考 Wiki · **Vitest SSOT：** **192 個測試檔案 | 836 PASS Clean（100% PASS）** · **7 原生協議** · **4 AI 框架** · Worker **69.32 KiB gzip**
 > **導覽：** [`docs/README.md`](../README.md) · [`01_TECHNICAL_SPECIFICATION.md`](./01_TECHNICAL_SPECIFICATION.md) · **本文件** — 標準合規與 ERC/EIP Wiki
 > **父規格：** [`01_TECHNICAL_SPECIFICATION.md`](./01_TECHNICAL_SPECIFICATION.md) — R01–R20 不變量 · 雙引擎拓撲 · 結算與費用邊界
 
