@@ -394,7 +394,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 ## Architectural SSOT & Hardened Metrics
 
 * **Test Suite**: **194 test files | 845 PASS Clean (100% PASS)** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
-* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Tri-Pillar ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — 5-step macro cross-venue lifecycle · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
+* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Tri-Pillar ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
 * **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification--arbitrum-one-42161) · [Sepolia](#on-chain-verification--arbitrum-sepolia-421614).
@@ -695,7 +695,7 @@ pnpm demo:uniswap # Tier 1 — Uniswap V3 spot liquidity (ALLOW)
 pnpm demo:aave # Tier 1 — Aave V3 HF guard (ALLOW)
 pnpm demo:morpho   # Tier 1 — Morpho Blue vault guard (ALLOW)
 pnpm demo       # Vitest Tri-Pillar matrix (12 scenarios)
-pnpm demo:e2e   # Tier 3 — 5-Step Macro Lifecycle CLI
+pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
 pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
@@ -712,7 +712,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 | `hyperliquid-agent-flow.demo.test.ts` | Hyperliquid | Valid session key · WS stale/latency fuse · GateLockout · 1,000× benchmark |
 | `pendle-ai-agent-flow.demo.test.ts` | Pendle | AI pool PASS · yield-drift reject · stale oracle · 1,000× benchmark |
 
-**Grant E2E macro demo highlights** (`pnpm demo:e2e` — GitHub `diff` syntax):
+**Grant E2E macro demo highlights** (`pnpm demo:e2e` — default **4-step Happy Path**; GitHub `diff` syntax):
 
 ```diff
 + ── Step 1: Citadel Pre-Execution Check ──
@@ -721,8 +721,16 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Outbound: lostUsd=0 · RESULT: Escort PASS · lostUsd ≡ 0
 - Inbound AML block: AML_INBOUND_TO_ROBINHOOD_BLOCKED
 ! GMX Payload: uiFeeReceiver (+10 bps) injected
++ Step 4: Margin Anchor · $100 HL margin backs $1,200 notional short · Δnet ≡ 0
++ RESULT: E2E OK (4/4)
+```
+
+**Optional `--unwind` (Step 5 Citadel Shield exercise):**
+
+```diff
 - ALERT: SOIL_TRIPPED — toxic depth fuse
 - [CRITICAL] PHYSICAL_DEADLOCK_TRIGGERED: EIP-712 Signature Pipe Severed
++ Treasury State: Protocol Treasury retains +$2.40 (uiFeeReceiver share)
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 

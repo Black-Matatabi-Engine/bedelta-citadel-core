@@ -28,7 +28,7 @@ pnpm demo:quad -- --trip      # Quad-framework toxic soil / hallucination trip
 |------|----------|-------|
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · 5-step macro lifecycle |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
 
 ---
@@ -80,7 +80,9 @@ Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.
 pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
 pnpm demo:wayfinder -- --stabilizer   # Stabilizer harness via Wayfinder adapter
-pnpm demo:e2e                     # 5-step macro lifecycle ANSI HUD
+pnpm demo:e2e                     # 4-step Happy Path macro lifecycle ANSI HUD
+pnpm demo:e2e -- --unwind         # Optional Step 5 Citadel Shield R20 unwind (5/5)
+pnpm demo:e2e -- --trip           # Step 1 soil-trip stress intercept
 ```
 
 ---
@@ -90,7 +92,7 @@ pnpm demo:e2e                     # 5-step macro lifecycle ANSI HUD
 ```bash
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
-pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
+pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
 ```
 

@@ -19,6 +19,7 @@ import {
   DEMO_ETH_MID,
   DEMO_TOKEN,
   DEMO_VAULT_CAPITAL_USD,
+  GMX_BUILDER_FEE_USD,
   FINAL_VAULT_USD,
   GMX_ETH_LONG_EXPOSURE_USD,
   HL_HEDGE_ETH_SIZE,
@@ -71,6 +72,9 @@ export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep
   );
   e2eLog(
     `HL Margin Funding: ${fmtE2eUsd(HL_MARGIN_USD)} ${DEMO_TOKEN} via Arbitrum → Hyperliquid L1 Bridge (0-Gas Paymaster sponsored)`,
+  );
+  e2eLog(
+    `Margin Anchor: ${fmtE2eUsd(HL_MARGIN_USD)} HL margin backs ${fmtE2eUsd(HL_HEDGE_SHORT_USD)} notional short (12x leverage) · Δnet ≡ 0`,
   );
   const limitPx = formatHlPerpPrice(DEMO_ETH_MID * 0.99, HL_ETH_SZ_DECIMALS);
   const wirePlan = buildSessionAgentMarketOrderWire({
@@ -179,6 +183,9 @@ export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
   e2eLog(`Flash unwind: cancel=${plan.cancelCount} reduceOnlyCloses=${plan.closeActions.length} budget=<${FLASH_UNWIND_BUDGET_MS}ms elapsed=${elapsedMs.toFixed(3)}ms ${withinBudget ? "PASS" : "SLOW"}`);
   e2eLog("INTERCEPT: Panic Flash armed — EIP-712 signature pipe severed (no live broadcast in demo)");
   e2eLog(`Panic Flash Unwind: 100% Position Closed | User Principal Returned: ${fmtE2eUsd(FINAL_VAULT_USD)} ${DEMO_TOKEN}`);
+  e2eLog(
+    `Treasury State: Protocol Treasury retains +${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD (uiFeeReceiver share) · User principal ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} fully secured`,
+  );
   if (!isR20Locked(blocked) || severTarget !== "R20") throw new Error("STEP5_R20_DEADLOCK_FAILED");
   e2eLog("RESULT: 🟢 Step 5 R20 Deadlock PASS — EIP-712 Signing Channel Severed · 0-Gas Intercepted");
   return { r20Locked: true, severTarget, cancelCount: plan.cancelCount, closeCount: plan.closeActions.length, withinBudget };

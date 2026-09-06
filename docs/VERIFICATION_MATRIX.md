@@ -75,7 +75,7 @@
 |------|----------|-------|
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
@@ -85,7 +85,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 ```bash
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
-pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
+pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
 ```
 
@@ -107,7 +107,9 @@ pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean 
 | `pnpm demo:matrix -- --loop=spot` | Spot & lending vault loop (Uniswap V3 → Aave V3 → Morpho Blue) | **3/3 + Soil** |
 | `pnpm demo:matrix -- --healthy-only` | Nominal pre-flight only (no R20 sever) | **ALLOW** |
 | `pnpm demo:matrix -- --trip --gmx` | GMX pool imbalance (>0.35) trip variant | **FAIL_CLOSED** |
-| `pnpm demo:e2e` | 5-step Citadel ANSI HUD dry-run | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
+| `pnpm demo:e2e -- --unwind` | Optional Step 5 Citadel Shield R20 unwind exercise | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 | `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
 | `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:virtuals` | Virtuals GAME worker task guard | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -131,8 +133,24 @@ pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean 
 + Step 2: Escort PASS · lostUsd ≡ 0
 - AML_INBOUND_TO_ROBINHOOD_BLOCKED (inbound 42161→46630)
 ! Step 3: uiFeeReceiver (+10 bps)
-- Step 5: SOIL_TRIPPED · PHYSICAL_DEADLOCK_TRIGGERED
-+ RESULT: E2E OK (5/5)
++ Step 4: Margin Anchor · Δnet ≡ 0
++ RESULT: E2E OK (4/4)
+```
+
+**Optional modes:**
+
+```diff
++ pnpm demo:e2e -- --unwind   # Step 5 Citadel Shield R20 unwind · RESULT: E2E OK (5/5)
++ pnpm demo:e2e -- --trip     # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
+```
+
+**Legacy stress diff** (`--unwind` only — Step 5 soil exercise):
+
+```diff
+- ALERT: SOIL_TRIPPED — toxic depth fuse
+- [CRITICAL] PHYSICAL_DEADLOCK_TRIGGERED: EIP-712 Signature Pipe Severed
++ Treasury State: Protocol Treasury retains +$2.40 (uiFeeReceiver share)
++ Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
 ### Path 2: Isolated Docker (Zero Host Node/pnpm)
@@ -143,7 +161,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
+| Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
 | `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **194 test files \| 845 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
@@ -181,9 +199,11 @@ pnpm demo:e2e
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo:e2e` | 5-step cross-venue agent hedge & circuit breaker | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e` | 4-step cross-venue agent hedge Happy Path (SSOT) | `RESULT: E2E OK (4/4)` |
+| `pnpm demo:e2e -- --unwind` | Optional Step 5 R20 panic flash unwind | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 
-Steps: Intent + Deadman → Robinhood escort → GMX underweight rebalance → HL session hedge → R20 panic flash unwind.
+Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight rebalance → HL session hedge. Optional `--unwind` adds Step 5 Citadel Shield R20 exercise; `--trip` stress-tests Step 1 Gatehouse intercept.
 
 ---
 
@@ -505,7 +525,7 @@ pnpm tsx scripts/generate-survival-report.ts
 | Sidecar health | [`docker/README.md`](../docker/README.md) | `curl -sS http://localhost:8080/health \| jq .` |
 | Live grant audit | Network required | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
 | 5-TX testnet proof | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet anchor in `verified_5tx_results.json` |
-| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · 5-step ANSI HUD |
+| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · **4-step Happy Path** ANSI HUD (`--unwind` · `--trip` optional) |
 
 **Sidecar build:**
 
@@ -533,7 +553,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational RFQ OLP / stale-quote guard | `ALLOW` / `--trip` **FAIL_CLOSED** |
 | `pnpm demo:matrix -- --loop=perp --hedge=both` | Dual hedge (HL + Variational, default) | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:matrix -- --loop=spot` | Spot vault loop (Uniswap V3 → Aave V3 → Morpho Blue) | **4/4 FAIL_CLOSED** trip |
-| `pnpm demo:e2e` | 5-step macro lifecycle ANSI HUD | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e` | 4-step Happy Path macro lifecycle ANSI HUD | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:virtuals` | Virtuals GAME worker guard | ALLOW / `--trip` FAIL_CLOSED |

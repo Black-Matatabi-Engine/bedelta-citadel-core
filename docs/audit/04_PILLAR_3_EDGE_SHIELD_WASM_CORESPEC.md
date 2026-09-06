@@ -208,7 +208,7 @@ L1 lock: `SliverVineGate.sol` consume-once attestation.
 # Full Vitest bar
 pnpm test -- --run
 
-# 5-step grant E2E — Step 1 Wasm p50 + Gatehouse + Deadman HUD
+# 4-step Happy Path grant E2E — Step 1 Wasm p50 + Gatehouse + Deadman HUD (--unwind · --trip optional)
 pnpm run demo:e2e
 
 # Targeted soil / Wasm suites

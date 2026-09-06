@@ -75,7 +75,7 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| Open House / Buildathon | Live HUD · Gate · Sepolia proof · **194 test files | 845 PASS Clean (100% PASS)** · 5-step E2E (`pnpm run demo:e2e`) | ✅ Submitted |
+| Open House / Buildathon | Live HUD · Gate · Sepolia proof · **194 test files | 845 PASS Clean (100% PASS)** · **4-step Happy Path** E2E (`pnpm run demo:e2e`; `--unwind` · `--trip` optional) | ✅ Submitted |
 | Security Grant pack | Cold audit pack · R01–R20 + Slither/Echidna narrative | ⏳ Planned |
 | Institutional AA | Kernel v3 Session Key — [ZeroDev Comparative Analysis](../../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) · [Technical Specification §2.4](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-1--opt-in-zerodev-account-abstraction-integration-summary) | ✅ Delivered in v1.0 |
 
@@ -115,7 +115,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 pnpm install
 pnpm test # 194 test files | 845 PASS Clean (100% PASS)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS
-pnpm run demo:e2e # 5-step Citadel E2E (dry-run)
+pnpm run demo:e2e # 4-step Happy Path Citadel E2E (dry-run; --unwind · --trip optional)
 cd SliverVineGate && forge test && cd ..
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 ```

@@ -30,7 +30,7 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 **ZeroDev AA v1.0 active scope (Opt-In Pillar 1):** Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579) · ⑤ Execution — Sepolia dry-run verified (`pnpm test:zerodev`). Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar 3 Wasm Shield and Pillar 2 Arbitrum Native Ingress operate **100% independently** of ZeroDev.
 
-**Demo:** `pnpm demo` — 12 Tri-Pillar ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — 5-step grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge → R20 Panic Flash).
+**Demo:** `pnpm demo` — 12 Tri-Pillar ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
 
 ### 0.3 Agent Ecosystem Adapters (V1.0 Live · Native Integrations)
 
