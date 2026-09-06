@@ -1,5 +1,9 @@
 /** E2E grant demo ANSI HUD — step blocks, RESULT lines, capital balance sheet. */
-import { AML_INBOUND_TO_ROBINHOOD_BLOCKED } from "../../src/sdk";
+import {
+  AML_INBOUND_TO_ROBINHOOD_BLOCKED,
+  ARBITRUM_ONE_CHAIN_ID,
+  ROBINHOOD_TESTNET_CHAIN_ID,
+} from "../../src/sdk";
 import {
   DEMO_TOKEN,
   GMX_BUILDER_FEE_BPS,
@@ -17,7 +21,17 @@ const YELLOW = "\x1b[33m";
 const ORANGE = "\x1b[38;5;208m";
 const CYAN = "\x1b[36m";
 const BRIGHT_CYAN = "\x1b[96m";
+const BOLD = "\x1b[1m";
+const BRIGHT_MAGENTA = "\x1b[95m";
+const BOLD_CYAN = "\x1b[1m\x1b[36m";
+const BOLD_GREEN = "\x1b[1m\x1b[32m";
+const BOLD_RED = "\x1b[1m\x1b[31m";
 const useColor = process.env.NO_COLOR !== "1";
+
+const ROBINHOOD_CHAIN_LABEL = `ROBINHOOD (Chain ${ROBINHOOD_TESTNET_CHAIN_ID})`;
+const ARBITRUM_CHAIN_LABEL = `ARBITRUM ONE (Chain ${ARBITRUM_ONE_CHAIN_ID})`;
+const STEP2_OUTBOUND_ARROW = "═══( Across Fast Intent )═══►";
+const STEP2_INBOUND_ARROW = "───( Reversal Blocked )───x";
 
 const CITADEL_BANNER = [
   "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
@@ -51,6 +65,42 @@ function highlight(line: string): string {
 
 export function e2eLog(line: string): void {
   console.log(highlight(line));
+}
+
+function e2eLogColored(line: string): void {
+  console.log(useColor ? line : stripAnsi(line));
+}
+
+function stripAnsi(line: string): string {
+  return line.replace(/\x1b\[[0-9;]*m/g, "");
+}
+
+function paintRobinhoodChain(): string {
+  return useColor ? `${BOLD}${BRIGHT_MAGENTA}${ROBINHOOD_CHAIN_LABEL}${RESET}` : ROBINHOOD_CHAIN_LABEL;
+}
+
+function paintArbitrumChain(): string {
+  return useColor ? `${BOLD_CYAN}${ARBITRUM_CHAIN_LABEL}${RESET}` : ARBITRUM_CHAIN_LABEL;
+}
+
+function paintStep2OutboundArrow(): string {
+  return useColor ? `${BOLD_GREEN}${STEP2_OUTBOUND_ARROW}${RESET}` : STEP2_OUTBOUND_ARROW;
+}
+
+function paintStep2InboundArrow(): string {
+  return useColor ? `${BOLD_RED}${STEP2_INBOUND_ARROW}${RESET}` : STEP2_INBOUND_ARROW;
+}
+
+export function logE2eStep2OutboundEscortLine(): void {
+  e2eLogColored(
+    `[ OUTBOUND ESCORT ]   ${paintRobinhoodChain()} ${paintStep2OutboundArrow()} ${paintArbitrumChain()}`,
+  );
+}
+
+export function logE2eStep2InboundAmlBlockLine(): void {
+  e2eLogColored(
+    `[ INBOUND AML BLOCK ] ${paintArbitrumChain()} ${paintStep2InboundArrow()} ${paintRobinhoodChain()}`,
+  );
 }
 
 export function fmtE2eUsd(amount: number, decimals = 2): string {

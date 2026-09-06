@@ -39,7 +39,13 @@ import {
   sha16,
 } from "./e2e-demo-constants";
 import type { E2eStep1Result, E2eStep2Result, E2eStep3Result } from "./e2e-demo-types";
-import { e2eLog, fmtE2eUsd, logE2eStep } from "./e2e-hud-renderer";
+import {
+  e2eLog,
+  fmtE2eUsd,
+  logE2eStep,
+  logE2eStep2InboundAmlBlockLine,
+  logE2eStep2OutboundEscortLine,
+} from "./e2e-hud-renderer";
 import { formatWasmP50BandStatus, sampleWasmSoilLatencyUs } from "./e2e-wasm-bench";
 import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 
@@ -130,7 +136,7 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
     nowMs: demoNowMs + 90_000,
     settledAtMs: demoNowMs + 60_000,
   });
-  e2eLog("[ OUTBOUND ESCORT ]   Robinhood (46630) ──( Across Fast Intent )──► Arbitrum (42161)");
+  logE2eStep2OutboundEscortLine();
   e2eLog("└─ Status: SETTLED  │  lostUsd ≡ 0 Verified  │  0-Gas Paymaster: ACTIVE  [ ALLOWED ]");
   const inbound = assertUnidirectionalBridge({
     sourceChainId: ARBITRUM_ONE_CHAIN_ID,
@@ -140,7 +146,7 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
     initiatedAtMs: demoNowMs,
     nowMs: demoNowMs,
   });
-  e2eLog("[ INBOUND AML BLOCK ] Arbitrum (42161) ──( Reversal Blocked )──x Robinhood (46630)");
+  logE2eStep2InboundAmlBlockLine();
   e2eLog(`└─ Reason: ${AML_INBOUND_TO_ROBINHOOD_BLOCKED}  │  RWA Protection: ENFORCED [ REJECTED ]`);
   if (!outbound.ok) throw new Error(`STEP2_OUTBOUND_BLOCKED: ${outbound.reasons.join(",")}`);
   if (inbound.ok || inbound.capitalLabel !== AML_INBOUND_TO_ROBINHOOD_BLOCKED) {
