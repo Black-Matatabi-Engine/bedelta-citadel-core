@@ -28,7 +28,7 @@ export const GMX_BUILDER_FEE_USD = LEDGER.builderRebateEarnedUsd;
 export const HL_HEDGE_SHORT_USD = LEDGER.hlHedgeShortUsd;
 export const HL_HEDGE_ETH_SIZE = LEDGER.hlHedgeEthSize;
 export const HL_MARGIN_USD = LEDGER.hlMarginUsd;
-export const FINAL_VAULT_USD = LEDGER.finalVaultBalanceUsd;
+export const FINAL_VAULT_USD = LEDGER.finalUserVaultBalanceUsd;
 export const DELTA_NET_ETH = LEDGER.deltaNetEthFormatted;
 
 /** @deprecated use GMX_ETH_LONG_EXPOSURE_USD */

@@ -7,10 +7,10 @@
       "ok": true,
       "wasmUsed": true,
       "deadmanOk": true,
-      "wasmHotPathUs": 9.96,
-      "wasmP50Us": 10.68,
+      "wasmHotPathUs": 6.64,
+      "wasmP50Us": 6.84,
       "wasmP50BandStatus": "FAST_LOCAL",
-      "nodeE2eRttUs": 5168.12
+      "nodeE2eRttUs": 3486.95
     },
     "2_robinhoodUnidirectionalEscort": {
       "ok": true,
@@ -25,7 +25,7 @@
       "underweightSide": "short",
       "uiFeeBps": 10,
       "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
-      "payloadRef": "sha256:40aab75c8c426eb6"
+      "payloadRef": "sha256:81362a20383f79ee"
     },
     "4_hlSessionKeyHedge": {
       "ok": true,
@@ -38,7 +38,7 @@
   },
   "capitalInvariant": {
     "initialUsd": 2500,
-    "finalUsd": 2502.4,
+    "finalUsd": 2500,
     "principalUsd": 2500,
     "lostUsd": 0,
     "token": "USDC",
@@ -47,7 +47,9 @@
     "gmxLongExposureUsd": 1200,
     "hlShortExposureUsd": 1200,
     "builderFeeUsd": 2.4,
+    "protocolTreasuryRebateUsd": 2.4,
+    "protocolTreasuryReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
     "deltaNetEth": "0.0000"
   },
-  "timestamp": "2026-09-06T16:23:05.379Z"
+  "timestamp": "2026-09-06T16:39:23.198Z"
 }

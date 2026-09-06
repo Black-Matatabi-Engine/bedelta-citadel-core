@@ -15,12 +15,12 @@ const MOCK_CORE: Omit<E2ePipelineResult, "pipelineSteps" | "s5"> = {
 };
 
 describe("e2e financial accounting", () => {
-  it("lostUsd === 0 when final balance includes GMX builder rebate revenue", () => {
+  it("credits GMX uiFee to protocol treasury while user principal stays $2,500", () => {
     const ledger = computeE2eFinancialLedger();
     expect(ledger.builderRebateEarnedUsd).toBe(2.4);
-    expect(ledger.finalVaultBalanceUsd).toBe(2502.4);
+    expect(ledger.finalUserVaultBalanceUsd).toBe(2500);
     expect(ledger.lostUsd).toBe(0);
-    expect(Math.max(0, ledger.initialCapitalUsd - ledger.finalVaultBalanceUsd)).toBe(0);
+    expect(Math.max(0, ledger.initialCapitalUsd - ledger.finalUserVaultBalanceUsd)).toBe(0);
   });
 
   it("deltaNetEth === 0 between GMX GM long exposure and Hyperliquid short hedge", () => {
@@ -42,6 +42,8 @@ describe("e2e financial accounting", () => {
     expect(payload.steps["5_r20PanicFlash"]).toBeUndefined();
     expect(payload.capitalInvariant).toEqual(expected);
     expect(payload.steps["3_gmxGmPoolDeposit"].gmDepositUsd).toBe(ledger.gmxDepositUsd);
+    expect(payload.capitalInvariant.finalUsd).toBe(2500);
+    expect(payload.capitalInvariant.protocolTreasuryRebateUsd).toBe(2.4);
     expect(payload.capitalInvariant.lostUsd).toBe(0);
   });
 

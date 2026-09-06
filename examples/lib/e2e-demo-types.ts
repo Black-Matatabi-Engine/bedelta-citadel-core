@@ -105,6 +105,8 @@ export interface E2eProofPayload {
     gmxLongExposureUsd: number;
     hlShortExposureUsd: number;
     builderFeeUsd: number;
+    protocolTreasuryRebateUsd: number;
+    protocolTreasuryReceiver: string;
     deltaNetEth: string;
   };
   timestamp: string;

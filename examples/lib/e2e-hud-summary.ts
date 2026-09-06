@@ -1,11 +1,5 @@
 /** E2E summary HUD — aligned pipeline table and capital balance sheet. */
-import {
-  DEMO_TOKEN,
-  E2E_LOST_USD_INVARIANT,
-  E2E_SUMMARY_DIVIDER,
-  GMX_BUILDER_FEE_BPS,
-  TOTAL_VAULT_CAPITAL_USD,
-} from "./e2e-demo-constants";
+import { DEMO_TOKEN, E2E_LOST_USD_INVARIANT, E2E_SUMMARY_DIVIDER } from "./e2e-demo-constants";
 import { computeE2eFinancialLedger } from "./e2e-financial-accounting";
 import type { E2eProofPayload } from "./e2e-demo-types";
 import { e2eLog, fmtE2eUsd } from "./e2e-hud-renderer";
@@ -54,21 +48,21 @@ export function printE2eSummaryHud(
     fmtSummaryRow(
       "Step 2: Pillar 2 Compliance Ingress Escort",
       s2.ok,
-      `Robinhood -> Arbitrum (${fmtE2eUsd(TOTAL_VAULT_CAPITAL_USD)} ${DEMO_TOKEN}) · ${E2E_LOST_USD_INVARIANT}`,
+      `Robinhood -> Arbitrum · ${E2E_LOST_USD_INVARIANT}`,
     ),
   );
   e2eLog(
     fmtSummaryRow(
       "Step 3: GMX v2 GM Pool Liquidity Provision",
       s3.ok,
-      `${fmtE2eUsd(ledger.gmxDepositUsd)} GM · +${s3.uiFeeBps} bps (${fmtE2eUsd(ledger.builderRebateEarnedUsd)})`,
+      `${fmtE2eUsd(ledger.gmxDepositUsd)} GM · Treasury +${fmtE2eUsd(ledger.builderRebateEarnedUsd)}`,
     ),
   );
   e2eLog(
     fmtSummaryRow(
       "Step 4: Hyperliquid Delta-Neutral Hedge",
       s4.ok,
-      `${ledger.hlHedgeEthSize} ETH Short (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD) · ${E2E_LOST_USD_INVARIANT}`,
+      `${ledger.hlHedgeEthSize} ETH Short · HL margin ${fmtE2eUsd(ledger.hlMarginUsd)}`,
     ),
   );
   if (total === 5 && s5) {
@@ -82,14 +76,16 @@ export function printE2eSummaryHud(
   }
   e2eLog("");
   e2eLog("[ CAPITAL INVARIANT BALANCE SHEET ]");
-  e2eLog(`• Initial Ingress Capital:  ${fmtE2eUsd(cap.initialUsd)} ${cap.token}`);
-  e2eLog(`• Deployed Allocation:       GMX GM ${fmtE2eUsd(cap.gmxGmDepositUsd)} + HL Margin ${fmtE2eUsd(cap.hlMarginUsd)}`);
-  e2eLog(`• Delta Neutral Exposure:    GMX Long +${fmtE2eUsd(cap.gmxLongExposureUsd)} | HL Short -${fmtE2eUsd(cap.hlShortExposureUsd)}`);
-  e2eLog(`• Net Builder Rebate Earned: +${fmtE2eUsd(cap.builderFeeUsd)} USD (+${GMX_BUILDER_FEE_BPS} bps GMX Fee Share)`);
+  e2eLog(`• Initial Ingress Capital:  ${fmtE2eUsd(cap.initialUsd)} ${cap.token} (Arbitrum One Vault)`);
   e2eLog(
-    `• Final Vault Balance:      ${fmtE2eUsd(cap.finalUsd)} ${cap.token} (Principal ${fmtE2eUsd(cap.principalUsd)} + ${fmtE2eUsd(cap.builderFeeUsd)} Rebate)`,
+    `• Capital Split Routing:    GMX GM Pool ${fmtE2eUsd(cap.gmxGmDepositUsd)} ║ HL L1 Margin ${fmtE2eUsd(cap.hlMarginUsd)}`,
   );
-  e2eLog(`• Invariant Verification:   ${E2E_LOST_USD_INVARIANT} · Δnet ≡ ${cap.deltaNetEth} ETH [ VERIFIED ]`);
+  e2eLog(
+    `• Delta Neutral Exposure:    GMX Long +${fmtE2eUsd(cap.gmxLongExposureUsd)} ║ HL Short -${fmtE2eUsd(cap.hlShortExposureUsd)}`,
+  );
+  e2eLog(`• Protocol Treasury Revenue: +${fmtE2eUsd(cap.protocolTreasuryRebateUsd)} USD (uiFeeReceiver GMX Share)`);
+  e2eLog(`• Final User Principal:     ${fmtE2eUsd(cap.finalUsd)} ${cap.token} (100% Principal Guarded)`);
+  e2eLog(`• Invariant Verification:   ${E2E_LOST_USD_INVARIANT} · Δnet ≡ ${cap.deltaNetEth} ETH  [ VERIFIED ]`);
   e2eLog("");
   e2eLog(`💾 Execution Proof JSON persisted to: ${proofRelPath}`);
   e2eLog(`Timestamp: ${payload.timestamp}`);

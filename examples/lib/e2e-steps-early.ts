@@ -36,8 +36,10 @@ import {
   GMX_ETH_LONG_EXPOSURE_USD,
   GMX_GM_DEPOSITED_USD,
   E2E_LOST_USD_INVARIANT,
+  HL_MARGIN_USD,
   sha16,
 } from "./e2e-demo-constants";
+import { E2E_PROTOCOL_TREASURY_RECEIVER_SHORT } from "./e2e-financial-accounting";
 import type { E2eStep1Result, E2eStep2Result, E2eStep3Result } from "./e2e-demo-types";
 import {
   e2eLog,
@@ -138,6 +140,9 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
   });
   logE2eStep2OutboundEscortLine();
   e2eLog(`└─ Status: SETTLED  │  ${E2E_LOST_USD_INVARIANT} Verified  │  0-Gas Paymaster: ACTIVE  [ ALLOWED ]`);
+  e2eLog(
+    `Capital Routing: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} settled on Arbitrum One → GMX GM ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} + HL Margin Gateway ${fmtE2eUsd(HL_MARGIN_USD)} (bridged to Hyperliquid L1)`,
+  );
   const inbound = assertUnidirectionalBridge({
     sourceChainId: ARBITRUM_ONE_CHAIN_ID,
     destChainId: ROBINHOOD_TESTNET_CHAIN_ID,
@@ -164,7 +169,7 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
   );
   e2eLog(`GMX GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC)`);
   e2eLog(
-    `UI Fee Rebate: +${GMX_BUILDER_FEE_BPS} bps (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD) injected via uiFeeReceiver`,
+    `Protocol Treasury Share: +${GMX_BUILDER_FEE_BPS} bps (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD) → uiFeeReceiver ${E2E_PROTOCOL_TREASURY_RECEIVER_SHORT} (not user principal)`,
   );
   const pool = { longTokenUsd: 5_200_000, shortTokenUsd: 4_800_000 };
   const balancer = evaluateGmxBalancerQualification({
@@ -186,7 +191,7 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
   e2eLog(`Payload: GM deposit ref=sha256:${sha16(payload)} uiFeeReceiver=${uiFeeReceiver} (+${GMX_UI_FEE_BPS} bps)`);
   if (uiFeeReceiver !== GMX_DEFAULT_UI_FEE_RECEIVER) throw new Error("STEP3_UI_FEE_RECEIVER_MISMATCH");
   e2eLog(
-    `RESULT: 🟢 Step 3 GMX v2 GM Deposit PASS — ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} USDC Deployed · +${GMX_BUILDER_FEE_BPS} bps Builder Fee (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD)`,
+    `RESULT: 🟢 Step 3 GMX v2 GM Deposit PASS — ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} USDC Deployed · +${GMX_BUILDER_FEE_BPS} bps Protocol Treasury (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD)`,
   );
   return {
     uiFeeReceiver,

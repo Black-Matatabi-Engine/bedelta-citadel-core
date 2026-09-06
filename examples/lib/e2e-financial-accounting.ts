@@ -8,11 +8,15 @@ import {
   TOTAL_VAULT_CAPITAL_USD,
 } from "./e2e-demo-constants";
 
+export const E2E_PROTOCOL_TREASURY_RECEIVER = "0xc9BddABD80982d2201376195DD9B85fb7951546f";
+export const E2E_PROTOCOL_TREASURY_RECEIVER_SHORT = "0xc9Bdd...546f";
+
 export interface E2eFinancialLedger {
   initialCapitalUsd: number;
   gmxDepositUsd: number;
   gmxEffectiveLongUsd: number;
   builderRebateEarnedUsd: number;
+  protocolTreasuryReceiver: string;
   hlHedgeShortUsd: number;
   hlMarginUsd: number;
   gmxLongEth: number;
@@ -20,6 +24,8 @@ export interface E2eFinancialLedger {
   deltaNetEth: number;
   deltaNetEthFormatted: string;
   hlHedgeEthSize: string;
+  finalUserVaultBalanceUsd: number;
+  /** @deprecated use finalUserVaultBalanceUsd */
   finalVaultBalanceUsd: number;
   lostUsd: number;
   token: string;
@@ -37,6 +43,8 @@ export interface E2eCapitalInvariant {
   gmxLongExposureUsd: number;
   hlShortExposureUsd: number;
   builderFeeUsd: number;
+  protocolTreasuryRebateUsd: number;
+  protocolTreasuryReceiver: string;
   deltaNetEth: string;
 }
 
@@ -50,14 +58,15 @@ export function computeE2eFinancialLedger(ethPriceUsd = DEMO_ETH_MID): E2eFinanc
   const gmxLongEth = gmxEffectiveLongUsd / ethPriceUsd;
   const hlShortEth = hlHedgeShortUsd / ethPriceUsd;
   const deltaNetEth = gmxLongEth - hlShortEth;
-  const finalVaultBalanceUsd = initialCapitalUsd + builderRebateEarnedUsd;
-  const lostUsd = Math.max(0, initialCapitalUsd - finalVaultBalanceUsd);
+  const finalUserVaultBalanceUsd = initialCapitalUsd;
+  const lostUsd = Math.max(0, initialCapitalUsd - finalUserVaultBalanceUsd);
 
   return {
     initialCapitalUsd,
     gmxDepositUsd,
     gmxEffectiveLongUsd,
     builderRebateEarnedUsd,
+    protocolTreasuryReceiver: E2E_PROTOCOL_TREASURY_RECEIVER,
     hlHedgeShortUsd,
     hlMarginUsd,
     gmxLongEth,
@@ -65,7 +74,8 @@ export function computeE2eFinancialLedger(ethPriceUsd = DEMO_ETH_MID): E2eFinanc
     deltaNetEth,
     deltaNetEthFormatted: deltaNetEth.toFixed(4),
     hlHedgeEthSize: hlShortEth.toFixed(4),
-    finalVaultBalanceUsd,
+    finalUserVaultBalanceUsd,
+    finalVaultBalanceUsd: finalUserVaultBalanceUsd,
     lostUsd,
     token: DEMO_TOKEN,
     gmxBuilderFeeBps: GMX_BUILDER_FEE_BPS,
@@ -76,7 +86,7 @@ export function buildE2eCapitalInvariant(ethPriceUsd = DEMO_ETH_MID): E2eCapital
   const ledger = computeE2eFinancialLedger(ethPriceUsd);
   return {
     initialUsd: ledger.initialCapitalUsd,
-    finalUsd: ledger.finalVaultBalanceUsd,
+    finalUsd: ledger.finalUserVaultBalanceUsd,
     principalUsd: ledger.initialCapitalUsd,
     lostUsd: ledger.lostUsd,
     token: ledger.token,
@@ -85,6 +95,8 @@ export function buildE2eCapitalInvariant(ethPriceUsd = DEMO_ETH_MID): E2eCapital
     gmxLongExposureUsd: ledger.gmxEffectiveLongUsd,
     hlShortExposureUsd: ledger.hlHedgeShortUsd,
     builderFeeUsd: ledger.builderRebateEarnedUsd,
+    protocolTreasuryRebateUsd: ledger.builderRebateEarnedUsd,
+    protocolTreasuryReceiver: ledger.protocolTreasuryReceiver,
     deltaNetEth: ledger.deltaNetEthFormatted,
   };
 }
@@ -92,6 +104,11 @@ export function buildE2eCapitalInvariant(ethPriceUsd = DEMO_ETH_MID): E2eCapital
 export function assertE2eFinancialInvariants(ledger: E2eFinancialLedger): void {
   if (ledger.lostUsd !== 0) {
     throw new Error(`E2E lostUsd invariant failed: expected 0, got ${ledger.lostUsd}`);
+  }
+  if (ledger.finalUserVaultBalanceUsd !== ledger.initialCapitalUsd) {
+    throw new Error(
+      `E2E principal invariant failed: expected ${ledger.initialCapitalUsd}, got ${ledger.finalUserVaultBalanceUsd}`,
+    );
   }
   if (Math.abs(ledger.deltaNetEth) > 1e-12) {
     throw new Error(`E2E deltaNetEth invariant failed: expected 0, got ${ledger.deltaNetEth}`);
