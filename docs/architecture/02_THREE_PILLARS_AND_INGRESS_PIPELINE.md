@@ -1,6 +1,6 @@
 # Three Pillars & Institutional Ingress Pipeline
 
-> **Document:** Pillar 1 Gatehouse (ZeroDev AA) · Pillar 2 Compliance Ingress · Pillar 3 Shield routing · agent adapters · **Vitest SSOT:** **193 test files \| 840 PASS Clean (100% PASS)** · **Wasm Core:** `<28kb` · **p50 ~106 µs**
+> **Document:** Pillar 1 Gatehouse (ZeroDev AA) · Pillar 2 Compliance Ingress · Pillar 3 Shield routing · agent adapters · **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · **Wasm Core:** `<28kb` · **p50 ~106 µs**
 > **Topology SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md)
 
 ### 0.1 Bytecode Predicate Verification (v1.0) & ERC-7715 (⏳ Post-Grant Design Spec)
@@ -21,10 +21,10 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **193 test files \| 840 PASS Clean (100% PASS)** |
+| **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **194 test files \| 845 PASS Clean (100% PASS)** |
 | **v1.0 Active Target** | ✅ Mainnet Ignition Delivered | Single blue-chip anchor: **GMX v2 ETH/USDC GM Pool** + Hyperliquid **1× short** hedge · Gate live on **42161** |
 | **v1.0 Partial — HL Orderbook Gap Guard** | ✅ Code-Verified | `evaluateHlOrderbookGapGuard()` in [`hl-orderbook-gap-guard.ts`](../../src/services/risk-control-lib/hl-orderbook-gap-guard.ts) · wired via [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) — gap-window leverage scale-down + 2× depth floor |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **193 test files \| 840 PASS Clean (100% PASS)** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **194 test files \| 845 PASS Clean (100% PASS)** |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -43,10 +43,11 @@ Production-native adapters in [`src/adapters/`](../../src/adapters/) — each fr
 | **Virtuals (GAME)** | ✅ V1.0 Live | [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` | [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) |
 | **LangChain / LangGraph** | ✅ V1.0 Live | [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` | [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) |
 | **Stabilizer Protocol** | ✅ V1.0 Live | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` | [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) |
+| **USD.ai** | ✅ V1.0 Live | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `evaluateUsdAiCollateralGuard()` | `pnpm demo:usdai` | [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) |
 | **Quad-Agent (combined)** | ✅ V1.0 Live | [`quad-agent-demo.ts`](../../examples/quad-agent-demo.ts) | All four AI frameworks | `pnpm demo:quad` | — |
 | **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
 
-**Regression bar:** **193 test files | 840 PASS Clean (100% PASS)** · `pnpm test -- --run`
+**Regression bar:** **194 test files | 845 PASS Clean (100% PASS)** · `pnpm test -- --run`
 
 **PEV (Prevented Exploit Volume) — Dune Analytics Telemetry Metric:**
 
@@ -80,7 +81,7 @@ Agent Cross-Pass Route (Sepolia 421614)
   FAIL_CLOSED (0-Gas)  or  ALLOW → Mainnet-identical bytecode path
 ```
 
-**Verification bar:** **193 test files | 840 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
+**Verification bar:** **194 test files | 845 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
 
 ### 2.3 ZeroDev Smart Route Calldata Binding (Pillar 2 Reference Harness — Demo Spec)
 
@@ -210,7 +211,8 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
-| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **193 test files \| 840 PASS Clean (100% PASS)** |
+| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **194 test files \| 845 PASS Clean (100% PASS)** |
+| **USD.ai** (AI-Compute RWA Yield Collateral) | Yield-bearing sUSDai collateral tier for AI agent treasury — GPU oracle · peg drift · NAV vs mark · depth fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `evaluateUsdAiCollateralGuard()` · `usdai` → `collectExternalSoilFlags()` · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Core Pillar 3 · `pnpm demo:usdai` |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
 | **Uniswap V3 DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Uniswap V3 API on RPC allowlist (`api.uniswap.org`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
@@ -220,6 +222,7 @@ v1.0 Active Triangle (42161)
   GMX v2 GM Yield ──1× Δ-neutral──► Hyperliquid Short
          │
          ├──► V1.0: Pendle Institutional Shield (Pillar 3 · sync oracle · soil fuse)
+         ├──► V1.0: USD.ai AI-Compute Yield Collateral (Pillar 3 · `USD_AI_DEPEG_ORACLE_TRIP`)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
          └──► V1.5+: Uniswap V3 zero-slippage settle
          └──► V2.0: Variational native perp hedge (HL complement/alternative)

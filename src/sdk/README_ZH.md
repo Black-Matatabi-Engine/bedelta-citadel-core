@@ -6,7 +6,7 @@
 **授權：** Apache-2.0 · 見 [`LICENSE`](./LICENSE) · **實體：** SilverVine Labs · **協議品牌：** SliverVine  
 **EIP-712 網域：** `SliverVineCitadel` · **Gate 錨點：** `SLIVERVINE_GATE_ADDRESS`
 
-> **Vitest SSOT：** **193 個測試檔案 | 840 PASS Clean (100% PASS)** · 安全層級 `5/0/0 PASS` · Wasm `<28kb` / `<60µs`。
+> **Vitest SSOT：** **193 個測試檔案 | 845 PASS Clean (100% PASS)** · 安全層級 `5/0/0 PASS` · Wasm `<28kb` / `<60µs`。
 
 > **「行為通過不等於 Web3 安全。」**  
 > `@slivervine/citadel-sdk` 目前執行**無狀態證明信封驗證**（EIP-712 結構檢查：摘要匹配、過期時間、`verifyingContract`、網域 `SliverVineCitadel`、簽名 hex 格式），以及在任何 UserOp 進入 mempool **之前**的 `<28kb` Wasm 土壤評估。  

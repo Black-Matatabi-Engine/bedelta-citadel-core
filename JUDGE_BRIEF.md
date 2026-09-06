@@ -2,7 +2,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **193 test files | 840 PASS Clean (100% PASS)** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · Shield **p50 ~106µs**
+> **SSOT Lock:** **194 test files | 845 PASS Clean (100% PASS)** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · Shield **p50 ~106µs**
 
 ---
 
@@ -37,7 +37,7 @@
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest** | **193 test files \| 840 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Worker bundle** | **70.16 KiB gzip** · 281.25 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate |
@@ -61,6 +61,7 @@ SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc 
 | **Uniswap V3** | Arbitrum One | Slippage > **50 bps** | `pnpm demo:uniswap` |
 | **Aave V3** | Arbitrum One | HF < **1.15** | `pnpm demo:aave` |
 | **Morpho Blue** | Arbitrum One | NAV deviation > **30 bps** | `pnpm demo:morpho` |
+| **USD.ai** | Arbitrum One | sUSDai peg · oracle lag · depth fuse | `pnpm demo:usdai` — **AI-Compute Yield Collateral · Citadel Soil Fuse** |
 | **Hyperliquid** | L1 HF Orderbook | Spread > **20 bps** · rate limits | `pnpm demo:hl` |
 | **Variational** | Arbitrum One RFQ | Stale **>500ms** · drift **>30 bps** | `pnpm demo:matrix -- --loop=perp` |
 
@@ -79,7 +80,7 @@ $$
 ## Judge Quickstart (60s Verification)
 
 ```bash
-pnpm test -- --run          # 193 test files | 840 PASS Clean (100% PASS)
+pnpm test -- --run          # 194 test files | 845 PASS Clean (100% PASS)
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 pnpm demo                   # Primary showcase (12 Tri-Pillar scenarios)

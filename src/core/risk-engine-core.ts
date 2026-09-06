@@ -7,6 +7,8 @@ import {
   FLAG_UNISWAP_SLIPPAGE_EXCEEDED,
   FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
   FLAG_VARIATIONAL_STALE_QUOTE,
+  FLAG_USDAI_ORACLE_STALE,
+  FLAG_USDAI_PEG_DRIFT,
   FLAGS_CLEAR,
   FLAGS_COLLATERAL_TRIP,
   FLAGS_DEPEG_TRIP,
@@ -31,6 +33,9 @@ import {
   VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
+  USDAI_NAV_DEVIATION_MAX_BPS,
+  USDAI_ORACLE_MAX_AGE_MS,
+  USDAI_PEG_DRIFT_MAX_BPS,
 } from "./risk-engine-limits";
 import { applyAutoSeveranceOnFlags } from "./risk-severance";
 import { isPendingGmxSkewTripped, recordPendingGmxSkew } from "./pending-exposure-window";
@@ -169,6 +174,20 @@ export function evaluateVariationalFlags(input: VariationalFlagInput): number {
   if (input.longTailAsset !== false && depth > 0 && input.tradeSizeUsd / depth > VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION) {
     f |= FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED;
   }
+  return applyAutoSeveranceOnFlags(f);
+}
+
+export interface UsdaiFlagInput {
+  oracleAgeMs: number;
+  pegDriftBps: number;
+  navDeviationBps: number;
+}
+
+export function evaluateUsdAiFlags(input: UsdaiFlagInput): number {
+  let f = FLAGS_CLEAR;
+  if (input.oracleAgeMs > USDAI_ORACLE_MAX_AGE_MS) f |= FLAG_USDAI_ORACLE_STALE;
+  if (input.pegDriftBps > USDAI_PEG_DRIFT_MAX_BPS) f |= FLAG_USDAI_PEG_DRIFT;
+  if (input.navDeviationBps > USDAI_NAV_DEVIATION_MAX_BPS) f |= FLAG_USDAI_PEG_DRIFT;
   return applyAutoSeveranceOnFlags(f);
 }
 

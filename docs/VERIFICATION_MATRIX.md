@@ -8,7 +8,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **193 test files | 840 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -17,7 +17,7 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **Verified commit** | `main` @ **`1acbc24`** · Worker bundle **70.16 KiB gzip** (`pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../tests/core/risk-severance.test.ts) |
 | **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) |
@@ -33,7 +33,7 @@
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../examples/agent-interceptor-demo.ts) |
-| **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle · Uniswap V3 · Aave V3 · Morpho Blue standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`uniswap-demo.ts`](../examples/uniswap-demo.ts) · [`aave-demo.ts`](../examples/aave-demo.ts) · [`morpho-demo.ts`](../examples/morpho-demo.ts) · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` |
+| **Core DEX demos (Tier 1)** | GMX v2 · Hyperliquid · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai standalone CLIs | [`gmx-demo.ts`](../examples/gmx-demo.ts) · [`hyperliquid-demo.ts`](../examples/hyperliquid-demo.ts) · [`pendle-demo.ts`](../examples/pendle-demo.ts) · [`uniswap-demo.ts`](../examples/uniswap-demo.ts) · [`aave-demo.ts`](../examples/aave-demo.ts) · [`morpho-demo.ts`](../examples/morpho-demo.ts) · [`usdai-demo.ts`](../examples/usdai-demo.ts) · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,usdai}` |
 | **Uniswap V3 adapter** | `evaluateUniswapV3SwapGuard()` — CL tick depth · directional dynamic fee · soil fuse | [`uniswap-v3-adapter.ts`](../src/adapters/uniswap/uniswap-v3-adapter.ts) · `pnpm demo:uniswap` |
 | **Aave V3 adapter** | `evaluateAaveV3Guard()` — HF &lt; 1.15 fail-closed · cross-chain liquidation boundary | [`aave-v3-adapter.ts`](../src/adapters/aave/aave-v3-adapter.ts) · `pnpm demo:aave` |
 | **Hyperliquid L1 session guard** | `evaluateHyperliquidSessionGuard()` — Independent L1 HF Orderbook AppChain · MaxSizePerOrder · rate limit (120/min) · spread > **20 bps** | [`hyperliquid-session-guard.ts`](../src/adapters/hl/hyperliquid-session-guard.ts) · `pnpm demo:hl` |
@@ -59,6 +59,7 @@
 | **Uniswap V3** | Arbitrum One | Active tick depth · slippage/penalty > **0.50%** (**50 bps**) | `uniswap-v3-adapter.ts` |
 | **Aave V3** | Arbitrum One | Health Factor HF < **1.15** | `aave-v3-adapter.ts` |
 | **Morpho Blue** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `morpho-blue-adapter.ts` |
+| **USD.ai** | Arbitrum One | sUSDai peg drift > **30 bps** · GPU oracle age > **2h** · depth < **$100k** | `usdai-adapter.ts` · `USD_AI_DEPEG_ORACLE_TRIP` |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | MaxSizePerOrder · Rate Limit (120/min) · Spread > **20 bps** | `hyperliquid-session-guard.ts` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bit 12** stale quote · **Bit 13** OLP depth · `FLAGS_AUTO_SEVER_MASK` | `evaluateVariationalFlags()` · `variational-rfq-adapter.ts` |
 
@@ -72,7 +73,7 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · **7-protocol cross-venue matrix** |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · 5-step macro lifecycle |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -85,7 +86,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
 ```
 
 | Command | Proves | Expected |
@@ -97,6 +98,7 @@ pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean 
 | `pnpm demo:uniswap` | Uniswap V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:aave` | Aave V3 HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:morpho` | Morpho Blue vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
+| `pnpm demo:usdai` | USD.ai AI-compute yield collateral guard (`evaluateUsdAiCollateralGuard`) | `ALLOW` / `--trip` FAIL_CLOSED · [`usdai-adapter.test.ts`](../tests/adapters/usdai-adapter.test.ts) **5/5** |
 | `pnpm demo:matrix` | Full 7-protocol cross-venue matrix (`--loop=all`) | **7/7 ALLOW** nominal · **7/7 FAIL_CLOSED** trip |
 | `pnpm demo:matrix -- --loop=perp` | Delta-neutral perp stack (Pendle → GMX → HL + Variational) | **3/3 + Soil** |
 | `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational Omni RFQ hedge leg · stale quote trip | `ALLOW` / `--trip` **FAIL_CLOSED** (`VARIATIONAL_STALE_QUOTE_BREACH`) |
@@ -117,7 +119,7 @@ pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean 
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **193 test files \| 840 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest regression bar | **194 test files \| 845 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -142,7 +144,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **193 test files \| 840 PASS Clean (100% PASS)** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **194 test files \| 845 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -538,7 +540,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **193 test files \| 840 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest + coverage | **194 test files \| 845 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -582,4 +584,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 193 test files | 840 PASS Clean (100% PASS)*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 194 test files | 845 PASS Clean (100% PASS)*

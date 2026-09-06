@@ -1,7 +1,7 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
 > **Flagship demos** (README hero): `pnpm demo:matrix` · `pnpm demo:quad`  
-> **Vitest SSOT:** **193 test files | 840 PASS Clean (100% PASS)** on `pnpm test -- --run`.  
+> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
 ---
@@ -91,7 +91,7 @@ pnpm demo:e2e                     # 5-step macro lifecycle ANSI HUD
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

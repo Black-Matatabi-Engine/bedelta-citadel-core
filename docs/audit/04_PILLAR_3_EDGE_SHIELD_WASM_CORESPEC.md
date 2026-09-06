@@ -21,7 +21,7 @@
 
 | Gate | Status |
 |------|--------|
-| **Vitest — full regression** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Vitest — full regression** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **`checkSoilResistance()` warm p50** | **&lt; 1 ms** full-path budget (`soil-resistance-latency.test.ts`) |
 | **Wasm hot-path (`soil_core_eval`)** | **&lt; 60 µs** warm budget (`WASM_EXEC_BUDGET_US`) |
 | **Shield/TS Gateway p50** | **~106 µs** (production Edge target · demo empirical sampling) |
@@ -149,7 +149,7 @@ pnpm exec vitest run tests/adapters/pendle-pt-registry.test.ts
 pnpm exec vitest run tests/risk-control/pendle-soil-guard.test.ts
 ```
 
-**Regression bar:** **193 test files \| 840 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
+**Regression bar:** **194 test files \| 845 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 ---
 

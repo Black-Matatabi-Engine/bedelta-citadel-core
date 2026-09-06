@@ -2,7 +2,7 @@
 
 > **Product:** **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
-> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **193 test files \| 840 PASS Clean (100% PASS)**  
+> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)**  
 > **Architecture index:** [`README.md`](./README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **This file**
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
@@ -13,7 +13,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **193 test files \| 840 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · warm exec **< 60 µs** · Edge p50 ~106 µs |
 | **Worker bundle** | **70.16 KiB gzip** hot-path (`pnpm bundle:measure` · `pass: true`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
@@ -114,7 +114,7 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 | **Size budget** | **< 28 KiB** artifact · **70.16 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
 | **Latency** | Warm exec **< 60 µs** · Edge shield p50 **~106 µs** (`checkSoilResistance()`) |
 | **Parity** | Bitmask + six-lane risk vector semantics mirrored by Stylus `check_soil_resistance_stylus()` |
-| **Verification** | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · `tests/risk-control/*` · Vitest **193 test files \| 840 PASS Clean (100% PASS)** |
+| **Verification** | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · `tests/risk-control/*` · Vitest **194 test files \| 845 PASS Clean (100% PASS)** |
 
 Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain reinforcement — never a weaker substitute for fail-closed Edge gates.
 

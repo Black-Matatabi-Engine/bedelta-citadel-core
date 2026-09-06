@@ -63,7 +63,7 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **193 test files \| 840 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **70.16 KiB gzip** · **281.25 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
@@ -112,6 +112,7 @@
 | **Uniswap V3** | Arbitrum One | Tick depth · slippage/penalty > **50 bps** | `uniswap-v3-adapter.ts` · `pnpm demo:uniswap` |
 | **Aave V3** | Arbitrum One | Health Factor HF < **1.15** | `aave-v3-adapter.ts` · `pnpm demo:aave` |
 | **Morpho Blue** | Arbitrum One | NAV deviation > **30 bps** | `morpho-blue-adapter.ts` · `pnpm demo:morpho` |
+| **USD.ai** | Arbitrum One | sUSDai peg drift > **30 bps** · oracle age > **2h** · depth < **$100k** | `usdai-adapter.ts` · `pnpm demo:usdai` — **AI-Compute Yield Collateral · Guarded by Citadel Soil Fuse** |
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · 120/min · spread > **20 bps** | `hyperliquid-session-guard.ts` · `pnpm demo:hl` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** · drift **>30 bps** · OLP **>15%** | `variational-rfq-adapter.ts` · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
@@ -183,7 +184,7 @@ pnpm demo:quad     # Full 4 AI Agent Frameworks Pre-Flight Shield
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
 ```
 
 ### Path 2: Isolated Docker
@@ -200,7 +201,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **193 test files \| 840 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
+| **Vitest SSOT** | **194 test files \| 845 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **70.16 KiB gzip** · **281.25 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
@@ -215,7 +216,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-----------|--------|-----------|
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **840 PASS** · **70.16 KiB gzip** |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **845 PASS** · **70.16 KiB gzip** |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |

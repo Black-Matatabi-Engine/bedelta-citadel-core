@@ -23,7 +23,7 @@
 
 | Gate | Status |
 |------|--------|
-| **Vitest — full regression** | **193 test files \| 840 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest — full regression** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Vitest — Robinhood Across Bridge** | **6/6 PASS** |
 | **Unidirectional Escort (46630/4663 → 42161)** | **ALLOWED** |
 | **AML Inbound Block (42161 → 46630/4663)** | **BLOCKED** |
@@ -97,7 +97,7 @@ pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 
 **Module:** `src/adapters/across-ingress-bridge.ts`  
 **Test file:** `tests/adapters/across-ingress-bridge.test.ts`  
-**Full regression bar:** **193 test files \| 840 PASS Clean (100% PASS)** · `pnpm test -- --run`
+**Full regression bar:** **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run`
 
 ### 2.2 Unidirectional Escort Routing Matrix
 
@@ -171,7 +171,7 @@ The bridge state machine in `evaluateAcrossBridgeTransfer()` enforces:
 ## CLI Reproduction
 
 ```bash
-# Full Vitest suite (193 test files | 840 PASS Clean (100% PASS))
+# Full Vitest suite (194 test files | 845 PASS Clean (100% PASS))
 pnpm test -- --run
 
 # Targeted Robinhood Chain bridge gate

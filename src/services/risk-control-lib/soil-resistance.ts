@@ -19,6 +19,7 @@ import { isRpcRadarSequencerHealthy } from "../adapters/rpc-radar";
 import { isSequencerSafe } from "../risk/sequencer-guard";
 import { isArbitrumGasGuardBlocked } from "../risk/arbitrum-gas-guard";
 import { isSoftConfirmationSafe } from "../risk/soft-confirmation-guard";
+import { evaluateUsdAiSoilGate } from "../../adapters/usdai/usdai-adapter";
 import { evaluatePendlePoolFactorySoilGate } from "../../adapters/pendle/pendle-pool-factory-adapter";
 import { evaluatePendleCrossGuardSoilGate, evaluatePendleOracleSoilGateFromRegistry } from "../../guards/pendle-gmx-cross-guard";
 import { evaluateCrossSpreadSoilGate } from "../yield/cross-spread-cache";
@@ -90,6 +91,10 @@ function collectExternalSoilFlags(
   if (input.pendlePoolFactory) {
     const poolGate = evaluatePendlePoolFactorySoilGate(input.pendlePoolFactory);
     if (poolGate.triggered) appendSoilExternalReasons(scratch, poolGate.reasons);
+  }
+  if (input.usdai) {
+    const usdaiGate = evaluateUsdAiSoilGate(input.usdai);
+    if (usdaiGate.triggered) appendSoilExternalReasons(scratch, usdaiGate.reasons);
   }
   const hlOrderbookGap = evaluateHlOrderbookGapGuard({
     symbol,

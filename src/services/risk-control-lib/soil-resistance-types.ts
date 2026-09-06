@@ -4,6 +4,7 @@
  * Soil resistance types + depth/slippage constants.
  */
 
+import type { UsdaiSoilInput } from "../../adapters/usdai/usdai-adapter";
 import type {
   PendleCrossGuardSoilInput,
   PendleOracleSoilInput,
@@ -58,6 +59,8 @@ export interface SoilResistanceInput {
   pendleOracle?: PendleOracleSoilInput;
   /** Pendle AI pool-factory pre-flight — PENDLE_CREATE_POOL / PENDLE_ADD_LIQUIDITY */
   pendlePoolFactory?: PendlePoolFactorySoilInput;
+  /** USD.ai GPU RWA yield collateral — oracle · peg · depth probe */
+  usdai?: UsdaiSoilInput;
   /** Disable dynamic ±2–5 bps threshold jitter (tests / replay) */
   disableThresholdJitter?: boolean;
 }

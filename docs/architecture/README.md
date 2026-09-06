@@ -1,6 +1,6 @@
 # Architecture Specification Index
 
-> **Vitest SSOT:** **193 test files | 840 PASS Clean (100% PASS)** · **Wasm:** `p50 ~106 µs` · `<28kb` budget · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
+> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** · **Wasm:** `p50 ~106 µs` · `<28kb` budget · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
 
 | # | Document | Scope |
 |---|----------|-------|
