@@ -1,0 +1,44 @@
+{
+  "event": "GRANT_E2E_CITADEL_DEMO",
+  "mode": "dry-run",
+  "pipelineSteps": 5,
+  "steps": {
+    "1_verifyAgentIntent": {
+      "ok": true,
+      "wasmUsed": true,
+      "deadmanOk": true,
+      "wasmHotPathUs": 6.86,
+      "wasmP50Us": 7.11,
+      "wasmP50BandStatus": "FAST_LOCAL",
+      "nodeE2eRttUs": 4152.8
+    },
+    "2_robinhoodUnidirectionalEscort": {
+      "ok": true,
+      "outboundOk": true,
+      "inboundBlocked": true,
+      "capitalLabel": "AML_INBOUND_TO_ROBINHOOD_BLOCKED"
+    },
+    "3_gmxUnderweightRebalance": {
+      "ok": true,
+      "underweightSide": "short",
+      "uiFeeBps": 10,
+      "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
+      "payloadRef": "sha256:59891fd72ffb8a84"
+    },
+    "4_hlSessionKeyHedge": {
+      "ok": true,
+      "dryRun": true,
+      "notionalUsd": 100,
+      "oid": null,
+      "detail": "SIMULATED_SESSION_KEY_HEDGE"
+    },
+    "5_r20PanicFlash": {
+      "ok": true,
+      "severTarget": "R20",
+      "cancelCount": 1,
+      "closeCount": 1,
+      "withinBudget": true
+    }
+  },
+  "timestamp": "2026-09-06T15:16:19.490Z"
+}

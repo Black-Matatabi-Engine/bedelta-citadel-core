@@ -16,6 +16,9 @@
  */
 
 import { createHash } from "node:crypto";
+import { mkdirSync, writeFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
 import {
   AML_INBOUND_TO_ROBINHOOD_BLOCKED,
   ARBITRUM_ONE_CHAIN_ID,
@@ -77,6 +80,8 @@ const DEMO_DIGEST =
   "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const DEMO_ETH_MID = 3_500;
 const DEMO_SIZE_USD = 100;
+const E2E_PROOF_PATH = join(dirname(fileURLToPath(import.meta.url)), "../docs/logging/last_e2e_run.json");
+const E2E_SUMMARY_W = 63;
 
 type DemoMode = "dry-run" | "live";
 
@@ -133,6 +138,8 @@ function highlightDemoLine(line: string): string {
   out = out.replace(/\[ ACTIVE \]/g, `${GREEN}[ ACTIVE ]${RESET}`);
   out = out.replace(/\[ PASSED \]/g, `${GREEN}[ PASSED ]${RESET}`);
   out = out.replace(/Step 1 Pre-Execution PASS/g, `${GREEN}Step 1 Pre-Execution PASS${RESET}`);
+  out = out.replace(/Step 3 GMX v2 Rebalance PASS/g, `${GREEN}Step 3 GMX v2 Rebalance PASS${RESET}`);
+  out = out.replace(/Step 5 R20 Deadlock PASS/g, `${GREEN}Step 5 R20 Deadlock PASS${RESET}`);
   out = out.replace(/\[ ALLOWED \]/g, `${GREEN}[ ALLOWED ]${RESET}`);
   out = out.replace(/\[ REJECTED \]/g, `${RED_BOLD}[ REJECTED ]${RESET}`);
   out = out.replace(/SETTLED/g, `${GREEN}SETTLED${RESET}`);
@@ -247,8 +254,7 @@ function step1CitadelPreExec(demoNowMs: number): {
       "[Pillar 3: Citadel Shield] checkSoilResistance() sub-ms Wasm Intent Clearing",
     ],
   );
-  const wasmOk = ensureSoilWasm();
-  void wasmOk;
+  ensureSoilWasm();
   const nowMs = demoNowMs;
   const soilInput = {
     hlSpot: DEMO_ETH_MID,
@@ -440,6 +446,10 @@ function step3GmxUnderweightRebalance(): {
     throw new Error("STEP3_BALANCER_NOT_QUALIFIED");
   }
 
+  demoLog(
+    "RESULT: 🟢 Step 3 GMX v2 Rebalance PASS — +10 bps Builder Fee Injected · Skew Balanced",
+  );
+
   return {
     uiFeeReceiver,
     uiFeeBps: GMX_UI_FEE_BPS,
@@ -628,6 +638,10 @@ function step5R20PanicFlash(demoAt: Date): {
     throw new Error("STEP5_R20_DEADLOCK_FAILED");
   }
 
+  demoLog(
+    "RESULT: 🟢 Step 5 R20 Deadlock PASS — EIP-712 Signing Channel Severed · 0-Gas Intercepted",
+  );
+
   return {
     r20Locked: true,
     severTarget,
@@ -635,6 +649,99 @@ function step5R20PanicFlash(demoAt: Date): {
     closeCount: plan.closeActions.length,
     withinBudget,
   };
+}
+
+function buildE2eProofPayload(
+  mode: DemoMode,
+  s1: ReturnType<typeof step1CitadelPreExec>,
+  s2: ReturnType<typeof step2RobinhoodEscort>,
+  s3: ReturnType<typeof step3GmxUnderweightRebalance>,
+  s4: Awaited<ReturnType<typeof step4HlSessionHedge>>,
+  s5: ReturnType<typeof step5R20PanicFlash>,
+) {
+  return {
+    event: "GRANT_E2E_CITADEL_DEMO",
+    mode,
+    pipelineSteps: 5,
+    steps: {
+      "1_verifyAgentIntent": {
+        ok: s1.ok,
+        wasmUsed: s1.wasmUsed,
+        deadmanOk: s1.deadmanOk,
+        wasmHotPathUs: Number(s1.wasmHotPathUs.toFixed(2)),
+        wasmP50Us: Number(s1.wasmP50Us.toFixed(2)),
+        wasmP50BandStatus: formatWasmP50BandStatus(s1.wasmP50Us),
+        nodeE2eRttUs: Number(s1.nodeE2eRttUs.toFixed(2)),
+      },
+      "2_robinhoodUnidirectionalEscort": {
+        ok: s2.outboundOk && s2.inboundBlocked,
+        outboundOk: s2.outboundOk,
+        inboundBlocked: s2.inboundBlocked,
+        capitalLabel: s2.capitalLabel,
+      },
+      "3_gmxUnderweightRebalance": {
+        ok: true,
+        underweightSide: s3.underweightSide,
+        uiFeeBps: s3.uiFeeBps,
+        uiFeeReceiver: s3.uiFeeReceiver,
+        payloadRef: s3.payloadRef,
+      },
+      "4_hlSessionKeyHedge": {
+        ok: s4.ok,
+        dryRun: s4.dryRun,
+        notionalUsd: s4.notionalUsd,
+        oid: s4.oid,
+        detail: s4.detail,
+      },
+      "5_r20PanicFlash": {
+        ok: s5.r20Locked,
+        severTarget: s5.severTarget,
+        cancelCount: s5.cancelCount,
+        closeCount: s5.closeCount,
+        withinBudget: s5.withinBudget,
+      },
+    },
+    timestamp: new Date().toISOString(),
+  };
+}
+
+function saveE2eProof(payload: ReturnType<typeof buildE2eProofPayload>): string {
+  mkdirSync(dirname(E2E_PROOF_PATH), { recursive: true });
+  writeFileSync(E2E_PROOF_PATH, `${JSON.stringify(payload, null, 2)}\n`, "utf8");
+  return E2E_PROOF_PATH;
+}
+
+function summaryRow(label: string): string {
+  return `║ ${label.padEnd(E2E_SUMMARY_W - 2, " ")} ║`;
+}
+
+function printE2eSummaryHud(
+  payload: ReturnType<typeof buildE2eProofPayload>,
+  proofRelPath: string,
+  allOk: boolean,
+): void {
+  const s1 = payload.steps["1_verifyAgentIntent"];
+  const s2 = payload.steps["2_robinhoodUnidirectionalEscort"];
+  const s3 = payload.steps["3_gmxUnderweightRebalance"];
+  const s4 = payload.steps["4_hlSessionKeyHedge"];
+  const s5 = payload.steps["5_r20PanicFlash"];
+  const tick = (ok: boolean) => (ok ? "✅ PASS" : "❌ FAIL");
+  const bar = "═".repeat(E2E_SUMMARY_W);
+
+  demoLog(`╔${bar}╗`);
+  demoLog(summaryRow("GRANT E2E CITADEL — EXECUTION PROOF SUMMARY"));
+  demoLog(`╠${bar}╣`);
+  demoLog(summaryRow(`Mode: ${payload.mode.toUpperCase()}  │  Steps: ${payload.pipelineSteps}/5`));
+  demoLog(summaryRow(`Step 1  Pre-Execution      ${tick(s1.ok && s1.deadmanOk)}  wasm ${s1.wasmHotPathUs}µs p50 ${s1.wasmP50Us}µs`));
+  demoLog(summaryRow(`Step 2  Pillar 2 Ingress    ${tick(s2.ok)}  lostUsd ≡ 0  AML blocked`));
+  demoLog(summaryRow(`Step 3  GMX Rebalance       ${tick(s3.ok)}  +${s3.uiFeeBps}bps  ${s3.underweightSide} underweight`));
+  demoLog(summaryRow(`Step 4  HL Session Hedge    ${tick(s4.ok)}  ${s4.detail}  $${s4.notionalUsd}`));
+  demoLog(summaryRow(`Step 5  R20 Panic Flash     ${tick(s5.ok && s5.withinBudget)}  sever=${s5.severTarget}  cancel=${s5.cancelCount}`));
+  demoLog(`╠${bar}╣`);
+  demoLog(summaryRow(`Proof saved → ${proofRelPath}`));
+  demoLog(summaryRow(`Timestamp: ${payload.timestamp}`));
+  demoLog(summaryRow(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`));
+  demoLog(`╚${bar}╝`);
 }
 
 wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
@@ -659,56 +766,9 @@ wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
 
   demoLog("");
   demoLog("═══ E2E SUMMARY ═══");
-  console.log(
-    JSON.stringify(
-      {
-        event: "GRANT_E2E_CITADEL_DEMO",
-        mode,
-        pipelineSteps: 5,
-        steps: {
-          "1_verifyAgentIntent": {
-            ok: s1.ok,
-            wasmUsed: s1.wasmUsed,
-            deadmanOk: s1.deadmanOk,
-            wasmHotPathUs: Number(s1.wasmHotPathUs.toFixed(2)),
-            wasmP50Us: Number(s1.wasmP50Us.toFixed(2)),
-            wasmP50BandStatus: formatWasmP50BandStatus(s1.wasmP50Us),
-            nodeE2eRttUs: Number(s1.nodeE2eRttUs.toFixed(2)),
-          },
-          "2_robinhoodUnidirectionalEscort": {
-            ok: s2.outboundOk && s2.inboundBlocked,
-            outboundOk: s2.outboundOk,
-            inboundBlocked: s2.inboundBlocked,
-            capitalLabel: s2.capitalLabel,
-          },
-          "3_gmxUnderweightRebalance": {
-            ok: true,
-            underweightSide: s3.underweightSide,
-            uiFeeBps: s3.uiFeeBps,
-            uiFeeReceiver: s3.uiFeeReceiver,
-            payloadRef: s3.payloadRef,
-          },
-          "4_hlSessionKeyHedge": {
-            ok: s4.ok,
-            dryRun: s4.dryRun,
-            notionalUsd: s4.notionalUsd,
-            oid: s4.oid,
-            detail: s4.detail,
-          },
-          "5_r20PanicFlash": {
-            ok: s5.r20Locked,
-            severTarget: s5.severTarget,
-            cancelCount: s5.cancelCount,
-            closeCount: s5.closeCount,
-            withinBudget: s5.withinBudget,
-          },
-        },
-        timestamp: new Date().toISOString(),
-      },
-      null,
-      2,
-    ),
-  );
+  const proof = buildE2eProofPayload(mode, s1, s2, s3, s4, s5);
+  saveE2eProof(proof);
+  const proofRelPath = "docs/logging/last_e2e_run.json";
 
   const allOk =
     s1.ok &&
@@ -718,7 +778,7 @@ wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
     s4.ok &&
     s5.r20Locked &&
     s5.withinBudget;
-  demoLog(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`);
+  printE2eSummaryHud(proof, proofRelPath, allOk);
   if (!allOk) {
     process.exitCode = 1;
     return;
