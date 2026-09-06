@@ -74,6 +74,25 @@ Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.
 
 ---
 
+## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+
+Production hedging uses **two wallets on two venues**. Wallet B holds Arbitrum/GMX exposure; Wallet A executes Hyperliquid shorts via session keys. The engine [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts) sizes shorts from **live GMX ETH delta** until **Δ_net ≡ 0**.
+
+| Lane | Wallet | Venue | What it does |
+|------|--------|-------|--------------|
+| **Wallet A — Hyperliquid Short Lane** | Default `0xef0752…960d` | Hyperliquid L1 Perps | Perp margin · EIP-712 session keys · 1× short hedge IOC |
+| **Wallet B — Arbitrum Vault / GMX GM Lane** | Default `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One | **$2,500** user vault · **$2,400** GMX GM deposit · **$100** HL margin gateway · +$2.40 treasury rebate (not principal) |
+
+**`pnpm demo:e2e`** renders this **cross-wallet orchestration as one unified terminal HUD** — judges see the full 4-step Happy Path (and optional `--unwind` / `--trip`) without switching between Arbitrum and Hyperliquid CLIs. Same capital invariant SSOT as [`src/core/capital-invariant-ledger.ts`](../src/core/capital-invariant-ledger.ts).
+
+```bash
+pnpm demo:e2e                     # 4-step Happy Path — multi-wallet narrative in one HUD
+pnpm demo:e2e -- --unwind         # + Step 5 Citadel Shield R20 unwind
+pnpm demo:e2e -- --trip           # Step 1 soil-trip fail-closed intercept
+```
+
+---
+
 ## Tier 3 — Sandbox & E2E
 
 ```bash

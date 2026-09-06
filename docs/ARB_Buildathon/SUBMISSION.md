@@ -416,6 +416,27 @@ $$
 
 Full derivations: [Technical Specification §3.1](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary) · [Verification Matrix](../VERIFICATION_MATRIX.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md).
 
+### Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+
+SliverVine's **production delta-neutral envelope** is not a single-wallet abstraction. Two specialized wallets cooperate across venues; the **cross-wallet hedge SSOT** ([`gmx-cross-wallet-hedge.ts`](../../src/services/gmx-cross-wallet-hedge.ts)) matches **GMX ETH long delta (Wallet B)** to **Hyperliquid ETH perp shorts (Wallet A)** until **Δ_net ≡ 0**.
+
+| Lane | Default address | Venue | Responsibilities |
+|------|-----------------|-------|------------------|
+| **Wallet A — Hyperliquid Short Lane** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid L1 | Perp margin · scoped **session keys** · 1× short IOC execution · cron via `runScheduledGmxHedgeCron` |
+| **Wallet B — Arbitrum Vault / GMX GM Lane** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | Arbitrum One | **$2,500** ingress vault · **$2,400** GMX v2 GM LP · **$100** HL margin routing · **+10 bps `uiFeeReceiver`** treasury rebate (separate from user principal) |
+
+**Capital flow (Grant Happy Path narrative):**
+
+```
+User $2,500 USDC ──► Wallet B (Arbitrum)
+                         ├─ $2,400 ──► GMX v2 ETH/USDC GM Pool (long leg)
+                         ├─  +$2.40 ──► Protocol Treasury (uiFeeReceiver · not principal)
+                         └─  $100  ──► HL L1 margin bridge
+Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
+```
+
+**Judge demo:** `pnpm demo:e2e` simulates the full **multi-wallet lifecycle in one ANSI HUD** (Gatehouse → Robinhood escort → GMX deposit → HL hedge). Optional `--unwind` adds Step 5 R20 exercise; `--trip` stress-tests Step 1 soil intercept. Proof JSON: `docs/logging/last_e2e_run.json`.
+
 **Latency SSOT:** **p50 ~106 µs** Edge `checkSoilResistance()` · Wasm **<28kb Cloudflare budget, <60µs execution** · M2M reflex `src/core/agent-citadel-guard.ts` &lt;12 µs. Full spec: [`README.md`](../architecture/README.md).
 
 ### Version Roadmap SSOT (V1.0 / V1.5 / V2.0)

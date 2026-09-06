@@ -101,6 +101,26 @@
 
 ---
 
+## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+
+Production delta-neutral execution splits **venue-specific custody** across two wallets. The cross-wallet hedge engine ([`gmx-cross-wallet-hedge.ts`](./src/services/gmx-cross-wallet-hedge.ts) · [`scheduled-gmx-hedge-cron.ts`](./src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-cron.ts)) reads **live GMX GM delta on Wallet B** and sizes **Hyperliquid session-key shorts on Wallet A** until **Δ_net ≡ 0**.
+
+| Lane | Wallet | Venue | Role |
+|------|--------|-------|------|
+| **Wallet A — Hyperliquid Short Lane** | `0xef0752…960d` (default master) | Hyperliquid L1 Perps | Perp margin · EIP-712 **session keys** · 1× ETH short hedge execution · `executeGmxCrossWalletHedge` |
+| **Wallet B — Arbitrum Vault / GMX GM Lane** | `0xc9Bdd…546f` (default · also `uiFeeReceiver`) | Arbitrum One GMX v2 | User capital ingress · **$2,500** vault narrative · **$2,400** → ETH/USDC GM pool · **$100** → HL margin gateway |
+
+**Grant E2E capital routing (Happy Path SSOT):** Robinhood/Arbitrum escort settles **$2,500 USDC** → **$2,400** GMX GM LP deposit (+10 bps builder fee to Protocol Treasury on Wallet B) → **$100** HL L1 margin bridge → Wallet A opens the matching short. User principal remains **$2,500** (`lostUsd ≡ $0`).
+
+**`pnpm demo:e2e`** presents this **multi-wallet orchestration in a single unified terminal HUD** (Steps 1–4 Happy Path · optional `--unwind` / `--trip`) — same invariant math as production [`computeCapitalInvariantLedger()`](./src/core/capital-invariant-ledger.ts), without requiring judges to watch two separate CLIs.
+
+```bash
+pnpm demo:e2e              # 4-step cross-wallet Happy Path HUD
+pnpm demo:e2e -- --unwind  # + Step 5 Citadel Shield R20 exercise
+```
+
+---
+
 ## 🎯 7-Protocol Execution Matrix
 
 **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
