@@ -1,12 +1,22 @@
 /** E2E pipeline step theme — SSOT for roadmap colors and step title inheritance. */
 import { BLUE, BOLD, BOLD_RED, BRIGHT_CYAN, BRIGHT_MAGENTA, YELLOW } from "./e2e-hud-ansi";
 
-export const E2E_PIPELINE_STEPS = [
-  { step: 1, label: "Intent+Deadman", color: BRIGHT_CYAN },
-  { step: 2, label: "Robinhood Escort", color: BRIGHT_MAGENTA },
+export const E2E_EXECUTION_PIPELINE_STEPS = [
+  { step: 1, label: "Intent Clearing", color: BRIGHT_CYAN },
+  { step: 2, label: "Compliance Escort", color: BRIGHT_MAGENTA },
   { step: 3, label: "GMX GM Deposit", color: `${BOLD}${YELLOW}` },
   { step: 4, label: "HL Session Hedge", color: BLUE },
-  { step: 5, label: "R20 Panic Flash", color: BOLD_RED },
+] as const;
+
+export const E2E_R20_SHIELD = {
+  prefix: "🛡️ R20",
+  label: "Physical Deadlock & Panic Flash (Always-On Cross-Step Circuit Breaker)",
+  color: BOLD_RED,
+} as const;
+
+export const E2E_PIPELINE_STEPS = [
+  ...E2E_EXECUTION_PIPELINE_STEPS,
+  { step: 5, label: "Citadel Shield Exercise", color: BOLD_RED },
 ] as const;
 
 export function e2eStepThemeColor(step: number): string {

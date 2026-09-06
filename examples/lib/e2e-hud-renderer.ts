@@ -152,7 +152,7 @@ export function printE2eSummaryHud(
   e2eLog(`• Step 2: Pillar 2 Compliance Ingress Escort      [ ${mark(s2.ok)} ]  Robinhood -> Arbitrum (${fmtE2eUsd(TOTAL_VAULT_CAPITAL_USD)} ${DEMO_TOKEN})`);
   e2eLog(`• Step 3: GMX v2 GM Pool Liquidity Provision      [ ${mark(s3.ok)} ]  ${fmtE2eUsd(ledger.gmxDepositUsd)} GM · +${s3.uiFeeBps} bps (${fmtE2eUsd(ledger.builderRebateEarnedUsd)})`);
   e2eLog(`• Step 4: Hyperliquid Delta-Neutral Hedge         [ ${mark(s4.ok)} ]  ${ledger.hlHedgeEthSize} ETH Short (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD)`);
-  e2eLog(`• Step 5: R20 Physical Deadlock Panic Flash       [ ${mark(s5.ok && s5.withinBudget)} ]  Channel Severed · 0-Gas Intercepted`);
+  e2eLog(`• Step 5: Citadel Shield Exercise — R20 Unwind          [ ${mark(s5.ok && s5.withinBudget)} ]  Channel Severed · 0-Gas Intercepted`);
   e2eLog("");
   e2eLog("[ CAPITAL INVARIANT BALANCE SHEET ]");
   e2eLog(`• Initial Ingress Capital:  ${fmtE2eUsd(cap.initialUsd)} ${cap.token}`);

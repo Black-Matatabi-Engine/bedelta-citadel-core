@@ -11,7 +11,7 @@ import {
   useColor,
   wrap,
 } from "./e2e-hud-ansi";
-import { E2E_PIPELINE_STEPS } from "./e2e-hud-step-theme";
+import { E2E_EXECUTION_PIPELINE_STEPS, E2E_R20_SHIELD } from "./e2e-hud-step-theme";
 
 const BANNER_FRAME = [
   "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
@@ -24,14 +24,19 @@ function paintBannerSubtitle(): string {
   return `${CYAN}  │  Sepolia Gate · p50 ~106µs · ${RESET}${BOLD_GREEN}Δnet ≡ 0${RESET}${CYAN} · ${RESET}${BOLD_GREEN}lostUsd ≡ 0${RESET}${CYAN}            │${RESET}`;
 }
 
-function paintPipelineRoadmap(): string {
+function paintExecutionPipelineRoadmap(): string {
   const arrow = wrap(BRIGHT_GREEN, "➔");
-  return E2E_PIPELINE_STEPS
+  return E2E_EXECUTION_PIPELINE_STEPS
     .map((node, index) => {
       const badge = wrap(node.color, `[${node.step}] ${node.label}`);
       return index === 0 ? badge : `${arrow} ${badge}`;
     })
     .join(" ");
+}
+
+function paintR20ShieldLine(): string {
+  const shield = `${E2E_R20_SHIELD.prefix} ${E2E_R20_SHIELD.label}`;
+  return useColor ? `Shield:   ${wrap(E2E_R20_SHIELD.color, shield)}` : `Shield:   ${shield}`;
 }
 
 export function paintE2eBanner(): void {
@@ -53,5 +58,6 @@ export function logE2eHeaderClock(livingWater: boolean): void {
 }
 
 export function logE2ePipelineRoadmap(): void {
-  e2eLogColored(`Pipeline: ${paintPipelineRoadmap()}`);
+  e2eLogColored(`Pipeline: ${paintExecutionPipelineRoadmap()}`);
+  e2eLogColored(paintR20ShieldLine());
 }
