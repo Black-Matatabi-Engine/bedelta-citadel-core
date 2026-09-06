@@ -1,35 +1,22 @@
 /** E2E top banner, execution mode, clock, and pipeline roadmap ANSI HUD. */
 import type { E2eDemoMode } from "./e2e-demo-constants";
 import {
-  BLUE,
-  BOLD,
   BOLD_CYAN,
   BOLD_GREEN,
-  BOLD_RED,
   BOLD_YELLOW,
-  BRIGHT_CYAN,
   BRIGHT_GREEN,
-  BRIGHT_MAGENTA,
   CYAN,
   RESET,
-  YELLOW,
   e2eLogColored,
   useColor,
   wrap,
 } from "./e2e-hud-ansi";
+import { E2E_PIPELINE_STEPS } from "./e2e-hud-step-theme";
 
 const BANNER_FRAME = [
   "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
   "  │  BeΔ Living Water v1.0 · 5-Step Grant E2E Demo                  │",
   "  └────────────────────────────────────────────────────────────────┘",
-] as const;
-
-const PIPELINE_BADGES = [
-  { label: "Intent+Deadman", color: BRIGHT_CYAN },
-  { label: "Robinhood Escort", color: BRIGHT_MAGENTA },
-  { label: "GMX GM Deposit", color: `${BOLD}${YELLOW}` },
-  { label: "HL Session Hedge", color: BLUE },
-  { label: "R20 Panic Flash", color: BOLD_RED },
 ] as const;
 
 function paintBannerSubtitle(): string {
@@ -39,9 +26,9 @@ function paintBannerSubtitle(): string {
 
 function paintPipelineRoadmap(): string {
   const arrow = wrap(BRIGHT_GREEN, "➔");
-  return PIPELINE_BADGES
+  return E2E_PIPELINE_STEPS
     .map((node, index) => {
-      const badge = wrap(node.color, node.label);
+      const badge = wrap(node.color, `[${node.step}] ${node.label}`);
       return index === 0 ? badge : `${arrow} ${badge}`;
     })
     .join(" ");

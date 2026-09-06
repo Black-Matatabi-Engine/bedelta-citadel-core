@@ -50,7 +50,7 @@ import { formatWasmP50BandStatus, sampleWasmSoilLatencyUs } from "./e2e-wasm-ben
 import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 
 export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
-  logE2eStep(1, "Citadel Pre-Execution — Gatehouse + Wasm Soil + Deadman Switch", [
+  logE2eStep(1, "Citadel Pre-Execution Gatehouse & Sub-ms Wasm Shield", [
     "[Pillar 1: Gatehouse] ZeroDev Kernel v3 AA Session Keys · 0-Gas Paymaster",
     "[Pillar 3: Citadel Shield] checkSoilResistance() sub-ms Wasm Intent Clearing",
   ]);

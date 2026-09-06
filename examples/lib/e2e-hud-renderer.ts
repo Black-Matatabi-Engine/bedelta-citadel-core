@@ -28,7 +28,9 @@ import {
   YELLOW,
   e2eLogColored,
   useColor,
+  wrap,
 } from "./e2e-hud-ansi";
+import { e2eStepThemeColor } from "./e2e-hud-step-theme";
 
 export {
   logE2eHeaderClock,
@@ -102,8 +104,8 @@ export function fmtE2eUsd(amount: number, decimals = 2): string {
 }
 
 export function logE2eStep(n: number, title: string, architecture: string | string[]): void {
-  e2eLog("");
-  e2eLog(`── Step ${n}: ${title} ──`);
+  e2eLogColored("");
+  e2eLogColored(wrap(e2eStepThemeColor(n), `── Step ${n}: ${title} ──`));
   for (const line of Array.isArray(architecture) ? architecture : [architecture]) {
     e2eLog(`    Architecture: ${line}`);
   }

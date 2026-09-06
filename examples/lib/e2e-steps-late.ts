@@ -38,6 +38,7 @@ import {
   logE2eStep,
   printHlEnvMissingNotice,
 } from "./e2e-hud-renderer";
+import { formatE2eSoilTripReasons } from "./e2e-hud-step-theme";
 import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 
 const HL_LIVE_SESSION_READY = "[HL_LIVE: SECURE_SESSION_KEY_DETECTED — READY FOR EXCHANGE BROADCAST]";
@@ -137,7 +138,9 @@ export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
     at: demoAt,
   });
   if (toxicSoil.tripped) {
-    e2eLog(`ALERT: SOIL_TRIPPED — ${toxicSoil.reasons.length ? toxicSoil.reasons.join(" · ") : "depth/slippage fuse"}`);
+    e2eLog(
+      `ALERT: SOIL_TRIPPED — ${toxicSoil.reasons.length ? formatE2eSoilTripReasons(toxicSoil.reasons) : "depth/slippage fuse"}`,
+    );
   } else {
     e2eLog("Simulated risk: soil clear (no trip)");
   }
