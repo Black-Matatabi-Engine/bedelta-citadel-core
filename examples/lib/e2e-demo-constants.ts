@@ -1,7 +1,8 @@
-/** Shared E2E demo constants — vault capital, delta-neutral math, proof path. */
+/** Shared E2E demo constants — base inputs; derived values from e2e-financial-accounting. */
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import { computeE2eFinancialLedger } from "./e2e-financial-accounting";
 
 export type E2eDemoMode = "dry-run" | "live";
 
@@ -14,16 +15,20 @@ export const DEMO_ETH_MID = 3_465;
 export const DEMO_TOKEN = "USDC";
 
 export const TOTAL_VAULT_CAPITAL_USD = 2_500;
-export const DEMO_VAULT_CAPITAL_USD = TOTAL_VAULT_CAPITAL_USD;
 export const GMX_GM_DEPOSITED_USD = 2_400;
-export const GMX_ETH_LONG_EXPOSURE_USD = 1_200;
 export const GMX_BUILDER_FEE_BPS = 10;
-export const GMX_BUILDER_FEE_USD = 2.4;
-export const HL_HEDGE_SHORT_USD = 1_200;
-export const HL_HEDGE_ETH_SIZE = "0.3463";
-export const HL_MARGIN_USD = TOTAL_VAULT_CAPITAL_USD - GMX_GM_DEPOSITED_USD;
-export const FINAL_VAULT_USD = TOTAL_VAULT_CAPITAL_USD + GMX_BUILDER_FEE_USD;
-export const DELTA_NET_ETH = "0.0000";
+export const GMX_GM_ETH_LEG_SHARE = 0.5;
+
+const LEDGER = computeE2eFinancialLedger(DEMO_ETH_MID);
+
+export const DEMO_VAULT_CAPITAL_USD = TOTAL_VAULT_CAPITAL_USD;
+export const GMX_ETH_LONG_EXPOSURE_USD = LEDGER.gmxEffectiveLongUsd;
+export const GMX_BUILDER_FEE_USD = LEDGER.builderRebateEarnedUsd;
+export const HL_HEDGE_SHORT_USD = LEDGER.hlHedgeShortUsd;
+export const HL_HEDGE_ETH_SIZE = LEDGER.hlHedgeEthSize;
+export const HL_MARGIN_USD = LEDGER.hlMarginUsd;
+export const FINAL_VAULT_USD = LEDGER.finalVaultBalanceUsd;
+export const DELTA_NET_ETH = LEDGER.deltaNetEthFormatted;
 
 /** @deprecated use GMX_ETH_LONG_EXPOSURE_USD */
 export const DEMO_SIZE_USD = GMX_ETH_LONG_EXPOSURE_USD;
