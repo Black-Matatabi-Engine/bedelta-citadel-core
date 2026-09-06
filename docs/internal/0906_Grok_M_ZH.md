@@ -35,14 +35,15 @@
 | 測試基線 | 192/834 | **194/845** |
 | Worker Bundle | 70.16 KiB gzip | **70.88 KiB gzip** |
 | 架構文件 | 單一 `01_TECHNICAL_SPECIFICATION.md` | **五檔模組化**（01–05 + README + redirect） |
-| 協議面 | 六協議 + `demo:matrix` | **七協議 + USD.ai** |
+| 協議面 | 六協議 + `demo:matrix` | **七協議 · USD.ai Array-ified · `demo:matrix` 7-venue spot loop** |
 | 公開文件 SSOT | 部分同步 | **全量同步**（無過時 CaaS 費、無孤兒 Halmos 引用） |
 
 ### 殘餘 nit（會進個人評語）— 閉環狀態
 
 | Nit（09-05 → 09-06） | 09-06 狀態 |
 |----------------------|------------|
-| `withCitadelShield` 零測試 | **維持閉環** |
+| `withCitadelShield` 零測試 | **已閉環** · `tests/sdk/decorator.test.ts` 單元覆蓋 |
+| USD.ai 獨立 adapter、未進 matrix / bitmask | **已閉環** · `PROTO_USDAI` TypedArray lane · bits 18–19 · `demo:matrix` 第 7 venue · LaTeX 方程入 `03_DEFENSE_MATRIX` |
 | 主網 receipt 只有 Gate，無 PolicyGuard | **未閉環** |
 | Dune 事件流 Sepolia live；One 是 SQL spec | **部分閉環** · 42161 仍無業務事件 ingest |
 | Decorator 不是官方 Virtuals/ElizaOS plugin | **未閉環** · V1.1 Open PR Spec |
@@ -321,11 +322,12 @@ pnpm tsx examples/agent-interceptor-demo.ts --trip
 |---|------------|-------|
 | 1 | 架構文件單一巨檔 | **閉環** · 五檔模組化 |
 | 2 | 公開文件 SSOT 不一致（CaaS / Halmos） | **閉環** |
-| 3 | 主網業務事件尚未被 Dune 索引 | **未閉環** |
-| 4 | 密鑰衛生 vs 脚注 | 敘事 **閉環**；鏈上 **未閉環** |
-| 5 | 官方 plugin | **未閉環**（V1.1 spec 更清楚） |
-| 6 | 無真實 GMX v2 increase 經 Gate 上 One | **未閉環** |
-| 7 | 雙片 | **未閉環** |
+| 3 | USD.ai 未 Array-ify / 未進 matrix | **閉環** · `PROTO_USDAI` + 7-venue loop + 方程 SSOT |
+| 4 | 主網業務事件尚未被 Dune 索引 | **未閉環** |
+| 5 | 密鑰衛生 vs 脚注 | 敘事 **閉環**；鏈上 **未閉環** |
+| 6 | 官方 plugin | **未閉環**（V1.1 spec 更清楚） |
+| 7 | 無真實 GMX v2 increase 經 Gate 上 One | **未閉環** |
+| 8 | 雙片 | **未閉環** |
 
 **仍然不要再加協議。** 剩餘最高邊際分（排序）：
 

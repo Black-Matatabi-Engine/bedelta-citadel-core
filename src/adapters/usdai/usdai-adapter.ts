@@ -3,7 +3,7 @@
  * Decoupled GPU RWA oracle freshness · sUSDai peg · liquidity depth · soil fuse.
  */
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
-import { evaluateUsdAiFlags } from "../../core/risk-engine-core";
+import { resolveUsdAiProtocolMask } from "./usdai-protocol-lane";
 import {
   USDAI_ARBITRUM_CHAIN_ID,
   USDAI_MIN_LIQUIDITY_DEPTH_USD,
@@ -21,6 +21,7 @@ export {
   USDAI_PEG_DRIFT_MAX_BPS,
   USD_AI_DEPEG_ORACLE_TRIP,
 } from "./usdai-constants";
+export { packUsdAiProtocolLane, resolveUsdAiProtocolMask, formatUsdAiFlagMask } from "./usdai-protocol-lane";
 
 export interface UsdaiSoilInput {
   oracleTimestampMs: number;
@@ -72,8 +73,9 @@ export function verifyUsdAiOracle(input: UsdaiSoilInput): UsdaiOracleCheckResult
   const oracleAgeMs = Math.max(0, input.nowMs - input.oracleTimestampMs);
   const pegDriftBps = computeUsdAiPegDriftBps(input.susdaiPriceUsd);
   const navDeviationBps = computeUsdAiNavDeviationBps(input.navUsd, input.gpuMarkUsd);
+  const mask = resolveUsdAiProtocolMask(input);
 
-  if (evaluateUsdAiFlags({ oracleAgeMs, pegDriftBps, navDeviationBps }) !== 0) {
+  if (mask !== 0) {
     if (oracleAgeMs > USDAI_ORACLE_MAX_AGE_MS) {
       reasons.push(`USDAI_ORACLE_STALE:ageMs=${oracleAgeMs}>${USDAI_ORACLE_MAX_AGE_MS}`);
     }

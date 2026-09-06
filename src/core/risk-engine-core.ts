@@ -35,6 +35,7 @@ import {
   VARIATIONAL_QUOTE_MAX_AGE_MS,
   USDAI_NAV_DEVIATION_MAX_BPS,
   USDAI_ORACLE_MAX_AGE_MS,
+  USDAI_DEPEG_VELOCITY_MAX_BPS_PER_SEC,
   USDAI_PEG_DRIFT_MAX_BPS,
 } from "./risk-engine-limits";
 import { applyAutoSeveranceOnFlags } from "./risk-severance";
@@ -60,9 +61,11 @@ export {
   FLAGS_DEPEG_TRIP,
   FLAG_VARIATIONAL_STALE_QUOTE,
   FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_USDAI_ORACLE_STALE,
+  FLAG_USDAI_PEG_DRIFT,
 } from "./risk-flags";
 
-export const PROTO_VECT_LEN = 24;
+export const PROTO_VECT_LEN = 28;
 export const PROTO_SLOT = 4;
 export const PROTO_GMX = 0;
 export const PROTO_PENDLE = 4;
@@ -70,6 +73,7 @@ export const PROTO_UNISWAP = 8;
 export const PROTO_AAVE = 12;
 export const PROTO_MORPHO = 16;
 export const PROTO_HL = 20;
+export const PROTO_USDAI = 24;
 
 export {
   GMX_IMBALANCE_MAX,
@@ -84,6 +88,10 @@ export {
   VARIATIONAL_QUOTE_MAX_AGE_MS,
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
   VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
+  USDAI_ORACLE_MAX_AGE_MS,
+  USDAI_PEG_DRIFT_MAX_BPS,
+  USDAI_NAV_DEVIATION_MAX_BPS,
+  USDAI_DEPEG_VELOCITY_MAX_BPS_PER_SEC,
 } from "./risk-engine-limits";
 
 export interface VariationalFlagInput {
@@ -181,6 +189,7 @@ export interface UsdaiFlagInput {
   oracleAgeMs: number;
   pegDriftBps: number;
   navDeviationBps: number;
+  pegVelocityBpsPerSec?: number;
 }
 
 export function evaluateUsdAiFlags(input: UsdaiFlagInput): number {
@@ -188,7 +197,36 @@ export function evaluateUsdAiFlags(input: UsdaiFlagInput): number {
   if (input.oracleAgeMs > USDAI_ORACLE_MAX_AGE_MS) f |= FLAG_USDAI_ORACLE_STALE;
   if (input.pegDriftBps > USDAI_PEG_DRIFT_MAX_BPS) f |= FLAG_USDAI_PEG_DRIFT;
   if (input.navDeviationBps > USDAI_NAV_DEVIATION_MAX_BPS) f |= FLAG_USDAI_PEG_DRIFT;
+  if (
+    input.pegVelocityBpsPerSec !== undefined &&
+    input.pegVelocityBpsPerSec > USDAI_DEPEG_VELOCITY_MAX_BPS_PER_SEC
+  ) {
+    f |= FLAG_USDAI_PEG_DRIFT;
+  }
   return applyAutoSeveranceOnFlags(f);
+}
+
+/** Lane: [sUSDai, prev sUSDai, NAV USD, GPU mark USD] · oracle age via `oracleTimestampMs`. */
+export function evaluateUsdAiFlagsFromLane(
+  vec: Float64Array,
+  nowMs: number,
+  oracleTimestampMs: number,
+  slot = PROTO_USDAI,
+  sampleDtMs = 1000,
+): number {
+  const susdai = vec[slot];
+  const prevSusdai = vec[slot + 1];
+  const navUsd = vec[slot + 2];
+  const gpuMark = vec[slot + 3];
+  const oracleAgeMs = Math.max(0, nowMs - oracleTimestampMs);
+  const pegDriftBps = Math.abs(susdai - 1) * 10_000;
+  let pegVelocityBpsPerSec = 0;
+  if (prevSusdai > 0 && sampleDtMs > 0) {
+    pegVelocityBpsPerSec = (Math.abs(susdai - prevSusdai) / sampleDtMs) * 10_000 * 1000;
+  }
+  const navDeviationBps =
+    gpuMark > 0 ? (Math.abs(navUsd - gpuMark) / gpuMark) * 10_000 : Number.POSITIVE_INFINITY;
+  return evaluateUsdAiFlags({ oracleAgeMs, pegDriftBps, navDeviationBps, pegVelocityBpsPerSec });
 }
 
 export function evaluateGatewayRules(input: GatewayRulesInput): GatewayRulesResult {

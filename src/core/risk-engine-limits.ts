@@ -15,3 +15,5 @@ export const VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION = 0.15;
 export const USDAI_ORACLE_MAX_AGE_MS = 7_200_000;
 export const USDAI_PEG_DRIFT_MAX_BPS = 30;
 export const USDAI_NAV_DEVIATION_MAX_BPS = 50;
+/** De-peg velocity fuse θ_depeg — bps per second on |P_sUSDai − 1|. */
+export const USDAI_DEPEG_VELOCITY_MAX_BPS_PER_SEC = 15;

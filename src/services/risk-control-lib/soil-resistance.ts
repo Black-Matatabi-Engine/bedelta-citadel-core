@@ -19,6 +19,7 @@ import { isRpcRadarSequencerHealthy } from "../adapters/rpc-radar";
 import { isSequencerSafe } from "../risk/sequencer-guard";
 import { isArbitrumGasGuardBlocked } from "../risk/arbitrum-gas-guard";
 import { isSoftConfirmationSafe } from "../risk/soft-confirmation-guard";
+import { resolveUsdAiProtocolMask } from "../../adapters/usdai/usdai-protocol-lane";
 import { evaluateUsdAiSoilGate } from "../../adapters/usdai/usdai-adapter";
 import { evaluatePendlePoolFactorySoilGate } from "../../adapters/pendle/pendle-pool-factory-adapter";
 import { evaluatePendleCrossGuardSoilGate, evaluatePendleOracleSoilGateFromRegistry } from "../../guards/pendle-gmx-cross-guard";
@@ -93,6 +94,7 @@ function collectExternalSoilFlags(
     if (poolGate.triggered) appendSoilExternalReasons(scratch, poolGate.reasons);
   }
   if (input.usdai) {
+    scratch.protocolMask |= resolveUsdAiProtocolMask(input.usdai);
     const usdaiGate = evaluateUsdAiSoilGate(input.usdai);
     if (usdaiGate.triggered) appendSoilExternalReasons(scratch, usdaiGate.reasons);
   }
@@ -124,7 +126,7 @@ export function checkSoilResistance(
   const scratch = createSoilReasonScratch(metrics.tripFlags);
   collectExternalSoilFlags(input, minDepthUsd, scratch);
 
-  const tripped = scratch.flags !== 0 || scratch.external !== null;
+  const tripped = scratch.flags !== 0 || scratch.protocolMask !== 0 || scratch.external !== null;
   const crossVenueSlippage = Number.isFinite(metrics.crossVenueSlippage)
     ? metrics.crossVenueSlippage
     : -1;

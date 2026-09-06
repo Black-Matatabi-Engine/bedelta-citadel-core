@@ -31,6 +31,8 @@ const REASON_SOFT_CONFIRM_FALLBACK = "SOFT_CONFIRMATION_DRIFT_UNSAFE";
 
 export interface SoilReasonScratch {
   flags: number;
+  /** Protocol bitmask OR lane — bits 18–19 USD.ai · variational · morpho SSOT. */
+  protocolMask: number;
   /** Lazily allocated — null until a composite sub-gate trips. */
   external: string[] | null;
 }
@@ -43,7 +45,7 @@ export interface SoilReasonMaterializeCtx {
 }
 
 export function createSoilReasonScratch(flags = 0): SoilReasonScratch {
-  return { flags, external: null };
+  return { flags, protocolMask: 0, external: null };
 }
 
 export function appendSoilExternalReasons(

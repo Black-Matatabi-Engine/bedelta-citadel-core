@@ -31,6 +31,8 @@ export {
   FLAGS_DEPEG_TRIP,
   FLAG_VARIATIONAL_STALE_QUOTE,
   FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_USDAI_ORACLE_STALE,
+  FLAG_USDAI_PEG_DRIFT,
   PROTO_VECT_LEN,
   PROTO_SLOT,
   PROTO_GMX,
@@ -39,6 +41,7 @@ export {
   PROTO_AAVE,
   PROTO_MORPHO,
   PROTO_HL,
+  PROTO_USDAI,
   packProtocolLane,
   evaluateGmxFlags,
   evaluatePendleFlags,
@@ -48,12 +51,14 @@ export {
   evaluateHlSessionFlags,
   evaluateDepegFlags,
   evaluateVariationalFlags,
+  evaluateUsdAiFlags,
+  evaluateUsdAiFlagsFromLane,
   checkSoilResistance,
   evaluateGatewayRules,
   assertCitadelRiskGate,
   evaluateGlobalRiskPolicy,
 } from "./risk-engine-core";
 
-export type { VariationalFlagInput } from "./risk-engine-core";
+export type { VariationalFlagInput, UsdaiFlagInput } from "./risk-engine-core";
 
 export { isGatewayNominalFastPath } from "./risk-engine-core";

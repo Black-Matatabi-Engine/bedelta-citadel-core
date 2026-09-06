@@ -58,6 +58,25 @@ $$
 
 **Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **194 test files \| 845 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
+#### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar 3)
+
+| Layer | Module | Hot-path behavior |
+|-------|--------|-------------------|
+| **Collateral Guard** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `evaluateUsdAiCollateralGuard()` — decoupled GPU oracle · sUSDai peg · NAV vs mark · depth fuse |
+| **TypedArray lane** | [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | `PROTO_USDAI` slot · `evaluateUsdAiFlagsFromLane()` · bits **18–19** |
+| **Soil Fuse** | [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | `usdai` → `collectExternalSoilFlags()` · `protocolMask \|=` · `USD_AI_DEPEG_ORACLE_TRIP` |
+| **Matrix CLI** | `pnpm demo:matrix -- --loop=spot` | 7th venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` ANSI board |
+
+**Formal de-peg / oracle deviation (SSOT):**
+
+$$
+\Delta P_{\mathrm{USDai}} = \left| P_{\mathrm{sUSDai}} - 1.00 \right|,\quad \frac{d P_{\mathrm{USDai}}}{dt} > \theta_{\mathrm{depeg}} \implies \mathtt{FLAGS\_USDAI\_PEG\_DRIFT}
+$$
+
+$$
+\mathrm{age}_{\mathrm{oracle}} > 7{,}200{,}000\,\mathrm{ms} \implies \mathtt{FLAG\_USDAI\_ORACLE\_STALE}
+$$
+
 #### § AI Guarded Pool Factory Protocol (V1.0)
 
 Autonomous AI agents may propose Pendle pool creation or liquidity-add intents (`PENDLE_CREATE_POOL` · `PENDLE_ADD_LIQUIDITY`). Before mempool broadcast, `validateAIPoolSelection()` enforces four synchronous safety invariants on the hot path:

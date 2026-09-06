@@ -6,8 +6,9 @@
  *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL + Variational (both hedges)
  *   pnpm demo:matrix -- --loop=perp --hedge=variational
  *   pnpm demo:matrix -- --loop=perp --hedge=hyperliquid
- *   pnpm demo:matrix -- --loop=spot       # Uniswap V3 → Aave V3 → Morpho Blue spot loop
+ *   pnpm demo:matrix -- --loop=spot       # Uniswap V3 → Aave V3 → Morpho Blue → USD.ai
  *   pnpm demo:matrix -- --loop=spot --aave
+ *   pnpm demo:matrix -- --loop=spot --usdai
  *   pnpm demo:matrix -- --healthy-only
  * Trip:  pnpm demo:matrix -- --trip --gmx
  */
@@ -30,6 +31,13 @@ import {
   UNISWAP_V3_ARBITRUM_CHAIN_ID,
   evaluateUniswapV3SwapGuard,
 } from "../src/adapters/uniswap/uniswap-v3-adapter";
+import {
+  evaluateUsdAiCollateralGuard,
+  formatUsdAiFlagMask,
+  resolveUsdAiProtocolMask,
+  USDAI_ARBITRUM_CHAIN_ID,
+} from "../src/adapters/usdai/usdai-adapter";
+import type { UsdaiSoilInput } from "../src/adapters/usdai/usdai-adapter";
 import {
   formatVariationalFlagMask,
   validateVariationalRFQIntent,
@@ -68,8 +76,8 @@ type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
 type PerpHedge = "hyperliquid" | "variational" | "both";
 type PerpAnomaly = "pendle" | "gmx" | "variational";
-type SpotAnomaly = "morpho" | "aave";
-type VenueKey = "pendle" | "gmx" | "hl" | "variational" | "uniswap" | "aave" | "morpho" | "soil";
+type SpotAnomaly = "morpho" | "aave" | "usdai";
+type VenueKey = "pendle" | "gmx" | "hl" | "variational" | "uniswap" | "aave" | "morpho" | "usdai" | "soil";
 
 interface VenueRow {
   venue: string;
@@ -84,6 +92,7 @@ interface TripContext {
   perpVariational: boolean;
   spotMorpho: boolean;
   spotAave: boolean;
+  spotUsdai: boolean;
 }
 
 interface LoopEvalResult {
@@ -98,7 +107,7 @@ interface PrintMatrixOpts {
   hedge: PerpHedge;
 }
 
-const SPOT_KEYS: VenueKey[] = ["uniswap", "aave", "morpho", "soil"];
+const SPOT_KEYS: VenueKey[] = ["uniswap", "aave", "morpho", "usdai", "soil"];
 
 const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
@@ -123,6 +132,7 @@ function parseHedge(argv: string[]): PerpHedge {
 }
 
 function parseSpotAnomaly(argv: string[]): SpotAnomaly {
+  if (argv.includes("--usdai")) return "usdai";
   return argv.includes("--aave") ? "aave" : "morpho";
 }
 
@@ -161,6 +171,7 @@ function buildTripContext(
     perpVariational: perpActive && perpAnomaly === "variational",
     spotMorpho: spotActive && spotAnomaly === "morpho",
     spotAave: spotActive && spotAnomaly === "aave",
+    spotUsdai: spotActive && spotAnomaly === "usdai",
   };
 }
 
@@ -189,6 +200,18 @@ function pendleSelection(nowMs: number, trip: boolean) {
   };
 }
 
+function usdaiSoilInput(nowMs: number, trip: boolean): UsdaiSoilInput {
+  return {
+    oracleTimestampMs: trip ? nowMs - 9_000_000 : nowMs - 300_000,
+    nowMs,
+    susdaiPriceUsd: trip ? 0.992 : 1,
+    navUsd: trip ? 95_000 : 102_500,
+    gpuMarkUsd: 102_500,
+    liquidityDepthUsd: trip ? 120_000 : 2_500_000,
+    amountUsd: trip ? 50_000 : 25_000,
+  };
+}
+
 function soilForStep(nowMs: number, ctx: TripContext): SoilResistanceInput {
   if (ctx.perpGmx) {
     return { ...HEALTHY_SOIL, at: new Date(nowMs), depthUsd: 1, hlPerp: 4200 };
@@ -199,6 +222,14 @@ function soilForStep(nowMs: number, ctx: TripContext): SoilResistanceInput {
       ...HEALTHY_SOIL,
       at: new Date(nowMs),
       pendlePoolFactory: { selection, marketKeyOrAddress: PENDLE_PT_MARKET_PT_EETH, useOracle: false },
+    };
+  }
+  if (ctx.spotUsdai) {
+    return {
+      ...HEALTHY_SOIL,
+      at: new Date(nowMs),
+      symbol: "sUSDai",
+      usdai: usdaiSoilInput(nowMs, true),
     };
   }
   return { ...HEALTHY_SOIL, at: new Date(nowMs) };
@@ -315,6 +346,23 @@ function evaluateVenue(
             : `oracle age ${r.oracleAgeMs}ms nominal`;
       return { venue: "Morpho Blue", status: gateStatus(state, r.ok), detail };
     }
+    case "usdai": {
+      const soil = usdaiSoilInput(nowMs, ctx.spotUsdai);
+      const r = evaluateUsdAiCollateralGuard({
+        chainId: USDAI_ARBITRUM_CHAIN_ID,
+        collateralSymbol: "sUSDai",
+        ...soil,
+        at: new Date(nowMs),
+      });
+      const detail = !r.ok && ctx.spotUsdai
+        ? "FAIL_CLOSED: USD_AI_DEPEG_ORACLE_TRIP"
+        : !r.ok
+          ? r.reasons.join("|") || "yield collateral trip"
+          : ctx.active && isR20Locked(state)
+            ? "FAIL_CLOSED: R20_DEADLOCK"
+            : `oracleOk=${r.oracleOk} depthOk=${r.depthOk}`;
+      return { venue: "USD.ai", status: gateStatus(state, r.ok), detail };
+    }
     case "soil":
       return {
         venue: "Soil Fuse",
@@ -367,6 +415,18 @@ function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
   printGuardTimeBlock(us);
 }
 
+function printUsdAiFuseBoard(nowMs: number, ctx: TripContext): void {
+  const soil = usdaiSoilInput(nowMs, ctx.spotUsdai);
+  const mask = resolveUsdAiProtocolMask(soil);
+  const tripped = mask !== 0 || ctx.spotUsdai;
+  const fuseColor = tripped ? RED : GREEN;
+  const verdict = tripped ? "TRIPPED" : "OK";
+  console.log(
+    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}USD.ai Yield Collateral Fuse: ${verdict}${R}`,
+  );
+  console.log(`      bitmask=${formatUsdAiFlagMask(mask)}`);
+}
+
 function printMatrix(title: string, result: LoopEvalResult, opts?: PrintMatrixOpts): void {
   console.log(`\n${YELLOW}${title}${R}`);
   const soilLabel = result.soilProbe.tripped ? "REJECT" : "PASS";
@@ -375,6 +435,9 @@ function printMatrix(title: string, result: LoopEvalResult, opts?: PrintMatrixOp
   for (const row of result.rows) {
     const color = row.status === "ALLOW" ? GREEN : RED;
     console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)} ${row.detail}${R}`);
+  }
+  if (opts && result.rows.some((r) => r.venue === "USD.ai")) {
+    printUsdAiFuseBoard(opts.nowMs, opts.ctx);
   }
   if (opts && (opts.hedge === "variational" || opts.hedge === "both")) {
     printVariationalDispatch(opts.nowMs, opts.ctx);
@@ -392,9 +455,9 @@ function anomalyLabel(
   perpAnomaly: PerpAnomaly,
 ): string {
   if (loop === "spot") {
-    return spotAnomaly === "aave"
-      ? "Aave V3 projected HF < 1.15"
-      : "Morpho Blue oracle stale / deviation > 30bps";
+    if (spotAnomaly === "aave") return "Aave V3 projected HF < 1.15";
+    if (spotAnomaly === "usdai") return "USD.ai sUSDai de-peg / oracle lag > 2h";
+    return "Morpho Blue oracle stale / deviation > 30bps";
   }
   if (perpAnomaly === "gmx") return "GMX pool imbalance >0.35";
   if (perpAnomaly === "variational") return "Variational stale quote / OLP depth breach";
@@ -402,6 +465,16 @@ function anomalyLabel(
 }
 
 function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
+  if (spotAnomaly === "usdai") {
+    const r = evaluateUsdAiCollateralGuard({
+      chainId: USDAI_ARBITRUM_CHAIN_ID,
+      collateralSymbol: "sUSDai",
+      ...usdaiSoilInput(nowMs, true),
+      at: new Date(nowMs),
+    });
+    console.log(`  USD.ai guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
+    return;
+  }
   if (spotAnomaly === "aave") {
     const r = evaluateAaveV3Guard({
       chainId: AAVE_ARBITRUM_CHAIN_ID,
@@ -448,6 +521,7 @@ function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
     perpVariational: false,
     spotMorpho: false,
     spotAave: false,
+    spotUsdai: false,
   };
   const soilTrip = checkSoilResistance(soilForStep(nowMs, ctx));
   console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
@@ -524,8 +598,8 @@ function main(): void {
     loop === "perp"
       ? perpLoopTitle(hedge)
       : loop === "spot"
-        ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue)"
-        : "Full Cross-Venue Matrix (Dual Perp Hedge)";
+        ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue → USD.ai)"
+        : "Full Cross-Venue Matrix (Dual Perp Hedge + 7-Venue Spot)";
   seedAdapterProbes(nowMs);
   resetState();
 

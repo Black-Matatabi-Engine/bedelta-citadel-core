@@ -6,6 +6,13 @@ import {
   USD_AI_DEPEG_ORACLE_TRIP,
   verifyUsdAiOracle,
 } from "../../src/adapters/usdai/usdai-adapter";
+import {
+  evaluateUsdAiFlagsFromLane,
+  packProtocolLane,
+  PROTO_USDAI,
+  PROTO_VECT_LEN,
+  FLAG_USDAI_PEG_DRIFT,
+} from "../../src/core/risk-engine-core";
 import { checkSoilResistance } from "../../src/services/risk-control";
 import { SAFE_TRADING_TIME } from "../helpers/system-time";
 
@@ -106,5 +113,12 @@ describe("usdai-adapter", () => {
       liquidityDepthUsd: 5_000,
     });
     expect(oracle.ok).toBe(true);
+  });
+
+  it("evaluateUsdAiFlagsFromLane trips peg drift via TypedArray PROTO_USDAI slot", () => {
+    const vec = new Float64Array(PROTO_VECT_LEN);
+    packProtocolLane(PROTO_USDAI, 0.992, 1, 100_000, 100_000, vec);
+    const flags = evaluateUsdAiFlagsFromLane(vec, NOW_MS, NOW_MS - 120_000);
+    expect(flags & FLAG_USDAI_PEG_DRIFT).not.toBe(0);
   });
 });
