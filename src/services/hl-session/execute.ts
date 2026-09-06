@@ -10,6 +10,7 @@ import { checkSessionKeyValidity } from "./validity";
 import { resolveHyperliquidDryRun, type HyperliquidAdapterConfig } from "./config";
 import { assertSoilResistanceForOrder } from "./soil";
 import { deterministicCancelId, deterministicFillId } from "./dry-run";
+import { isSessionKeyStubAllowed } from "../session-key-adapter-lib/session-key-stub-guard";
 import type {
   CancelOrderInput,
   ExecuteOrderInput,
@@ -65,6 +66,18 @@ export async function executeOrder(
       rejected: false,
       ...(sessionKeyWarning ? { sessionKeyWarning } : {}),
       ...(usedIocFallback ? { usedIocFallback: true, reason: slFallback.reason } : {}),
+    };
+  }
+
+  if (!isSessionKeyStubAllowed()) {
+    return {
+      success: false,
+      dryRun: false,
+      fillId: null,
+      signatureHash: null,
+      rejected: true,
+      reason:
+        "SESSION_KEY_STUB_BLOCKED — route live HL orders through executeHlSessionKeyOrder",
     };
   }
 

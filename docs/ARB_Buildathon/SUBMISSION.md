@@ -54,7 +54,7 @@
 | **Buildathon** | Arbitrum Open House Singapore Online Buildathon |
 | **Live Gate (Sepolia)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **196+ test files \| 863+ PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
@@ -418,7 +418,7 @@ Full derivations: [Technical Specification §3.1](../architecture/03_DEFENSE_MAT
 
 ### Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
 
-SliverVine's **production delta-neutral envelope** is not a single-wallet abstraction. Two specialized wallets cooperate across venues; the **cross-wallet hedge SSOT** ([`gmx-cross-wallet-hedge.ts`](../../src/services/gmx-cross-wallet-hedge.ts)) matches **GMX ETH long delta (Wallet B)** to **Hyperliquid ETH perp shorts (Wallet A)** until **Δ_net ≡ 0**.
+SliverVine's **production delta-neutral envelope** is not a single-wallet abstraction. Two specialized wallets cooperate across venues with **zero key coupling**; the **cross-wallet hedge SSOT** ([`gmx-cross-wallet-hedge.ts`](../../src/services/gmx-cross-wallet-hedge.ts)) matches **GMX ETH long delta (Wallet B)** to **Hyperliquid ETH perp shorts (Wallet A)** until **Δ_net ≡ 0**. Live Worker logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]`. HL session-key execution is **exclusively** via `executeHlSessionKeyOrder` (legacy stubs blocked when `IS_MAINNET=true`).
 
 | Lane | Default address | Venue | Responsibilities |
 |------|-----------------|-------|------------------|

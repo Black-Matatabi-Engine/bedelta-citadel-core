@@ -64,11 +64,11 @@ function runHlLiveSandboxFallback(): E2eStep4Result {
 export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep4Result> {
   logE2eStep(
     4,
-    "Hyperliquid 1x Short Session Key Delta-Neutral Hedge",
-    "Hyperliquid 1x Short Session Key — cross-venue Δnet ≡ 0 proof vs GMX GM long leg",
+    "[Wallet A] Hyperliquid 1x Short Session Key Delta-Neutral Hedge",
+    "[Wallet A — Hyperliquid L1 Perps] Session Key short — cross-venue Δnet ≡ 0 vs [Wallet B] GMX GM long",
   );
   e2eLog(
-    `Hedge Requirement: Match GMX ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} Long │ Target: Hyperliquid L1 Perps`,
+    `[Wallet A] Hedge Requirement: Match [Wallet B] GMX ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} Long │ Target: Hyperliquid L1 Perps`,
   );
   e2eLog(
     `HL Margin Funding: ${fmtE2eUsd(HL_MARGIN_USD)} ${DEMO_TOKEN} via Arbitrum → Hyperliquid L1 Bridge (0-Gas Paymaster sponsored)`,
@@ -117,7 +117,7 @@ export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep
   }
   e2eLogHlSession(HL_LIVE_SESSION_READY, "live");
   const walletA = process.env.HYPERLIQUID_MAINNET_USER_ADDRESS?.trim();
-  e2eLog(`LIVE hedge: walletA=${walletA ? mask(walletA) : "(default)"}`);
+  e2eLog(`[Wallet A] LIVE hedge: walletA=${walletA ? mask(walletA) : "(default)"}`);
   const result = await runGmxCrossWalletEthHedge({ sessionPk, walletA, dryRun: false });
   e2eLog(`Hedge: ok=${result.ok} eth=${result.orderEthSize.toFixed(6)} usd=$${result.orderUsd.toFixed(2)} oid=${result.exchangeOid ?? "n/a"}`);
   if (result.reason) e2eLog(`Reason: ${result.reason}`);

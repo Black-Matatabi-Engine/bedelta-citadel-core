@@ -4,6 +4,7 @@ import {
   type SessionKeyEip712Stub,
   type SessionKeyOrderPayload,
 } from "./session-key-types";
+import { assertSessionKeyStubAllowed } from "./session-key-stub-guard";
 
 /** Build Hyperliquid Session Key EIP-712 stub (no ethers — Workers-safe). */
 export function buildSessionKeyEip712Stub(
@@ -48,10 +49,14 @@ export function buildSessionKeyEip712Stub(
   };
 }
 
-/** Deterministic stub signature hash — replace with external signer in production. */
+/**
+ * @deprecated Test/sandbox only — production HL orders must use `executeHlSessionKeyOrder`.
+ * Blocked when `IS_MAINNET=true` (see `session-key-stub-guard.ts`).
+ */
 export async function stubSignSessionKeyPayload(
   eip712: SessionKeyEip712Stub,
 ): Promise<string> {
+  assertSessionKeyStubAllowed();
   const digest = await crypto.subtle.digest(
     "SHA-256",
     new TextEncoder().encode(JSON.stringify(eip712)),

@@ -1,7 +1,7 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
 > **Flagship demos** (README hero): `pnpm demo:matrix` · `pnpm demo:quad`  
-> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** on `pnpm test -- --run`.  
+> **Vitest SSOT:** **196+ test files | 863+ PASS Clean (100% PASS)** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
 ---
@@ -76,7 +76,7 @@ Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.
 
 ## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
 
-Production hedging uses **two wallets on two venues**. Wallet B holds Arbitrum/GMX exposure; Wallet A executes Hyperliquid shorts via session keys. The engine [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts) sizes shorts from **live GMX ETH delta** until **Δ_net ≡ 0**.
+Production hedging uses **two wallets on two venues**. Wallet B holds Arbitrum/GMX exposure; Wallet A executes Hyperliquid shorts via session keys. The engine [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts) sizes shorts from **live GMX ETH delta** until **Δ_net ≡ 0**. Worker/cron logs emit `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` for auditability.
 
 | Lane | Wallet | Venue | What it does |
 |------|--------|-------|--------------|

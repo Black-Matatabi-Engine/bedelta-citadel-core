@@ -164,10 +164,10 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
 export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
   logE2eStep(
     3,
-    "GMX v2 GM Pool Liquidity Provision & Builder Fee Rebase",
-    `GMX v2 GM Pool LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
+    "[Wallet B] GMX v2 GM Pool Liquidity Provision & Builder Fee Rebase",
+    `[Wallet B — Arbitrum GMX GM Vault] LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
   );
-  e2eLog(`GMX GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC)`);
+  e2eLog(`[Wallet B] Arbitrum GMX GM Vault — GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC)`);
   e2eLog(
     `Protocol Treasury Share: +${GMX_BUILDER_FEE_BPS} bps (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD) → uiFeeReceiver ${E2E_PROTOCOL_TREASURY_RECEIVER_SHORT} (not user principal)`,
   );
@@ -191,7 +191,7 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
   e2eLog(`Payload: GM deposit ref=sha256:${sha16(payload)} uiFeeReceiver=${uiFeeReceiver} (+${GMX_UI_FEE_BPS} bps)`);
   if (uiFeeReceiver !== GMX_DEFAULT_UI_FEE_RECEIVER) throw new Error("STEP3_UI_FEE_RECEIVER_MISMATCH");
   e2eLog(
-    `RESULT: 🟢 Step 3 GMX v2 GM Deposit PASS — ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} USDC Deployed · +${GMX_BUILDER_FEE_BPS} bps Protocol Treasury (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD)`,
+    `RESULT: 🟢 [Wallet B] Step 3 GMX v2 GM Deposit PASS — ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} USDC Deployed · +${GMX_BUILDER_FEE_BPS} bps Protocol Treasury (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD)`,
   );
   return {
     uiFeeReceiver,

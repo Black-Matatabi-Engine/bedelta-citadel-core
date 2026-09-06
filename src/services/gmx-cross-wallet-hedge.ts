@@ -23,6 +23,7 @@ import {
   buildLiveHedgeSoilInput,
   HEDGE_SOIL_L2_TRIP,
 } from "./gmx-cross-wallet-hedge-lib/build-hedge-soil-input";
+import { emitDualWalletHedgeTelemetry } from "./gmx-cross-wallet-hedge-lib/dual-wallet-structured-log";
 
 export { HEDGE_SOIL_L2_TRIP };
 
@@ -84,6 +85,14 @@ export async function runGmxCrossWalletEthHedge(input: {
   const walletB = (input.walletB ?? GMX_WALLET_B_DEFAULT).trim();
   const delta = await fetchGmxEthDeltaForWallet(walletB, { fetchFn: input.fetchFn });
   const existingShort = await fetchWalletAEthShortSize(walletA, input.fetchFn);
+  emitDualWalletHedgeTelemetry({
+    walletA,
+    walletB,
+    ethDeltaSize: delta.ethDeltaSize,
+    gmLiquidityUsd: delta.gmLiquidityUsd,
+    existingShortEth: existingShort,
+    unwind: input.unwind,
+  });
   const uncovered = delta.ethDeltaSize - existingShort;
   const orderEthSize = input.unwind ? Math.max(0, -uncovered) : Math.max(0, uncovered);
   const reduceOnly = input.unwind === true;

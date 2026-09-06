@@ -13,6 +13,7 @@ import {
   buildSessionKeyEip712Stub,
   stubSignSessionKeyPayload,
 } from "./session-key-eip712";
+import { assertSessionKeyStubAllowed } from "./session-key-stub-guard";
 import {
   DefenseMatrixError,
   type SessionKeyOrderPayload,
@@ -21,7 +22,7 @@ import {
 } from "./session-key-types";
 
 /**
- * Sign and execute (stub) a Hyperliquid Session Key order.
+ * @deprecated Sign and execute (stub) — use `executeHlSessionKeyOrder` for live HL trading.
  * Physical gates run first; any trip severs the signing channel immediately.
  */
 export async function signAndExecuteOrder(
@@ -63,6 +64,8 @@ export async function signAndExecuteOrder(
         errorReason: null,
       };
     }
+
+    assertSessionKeyStubAllowed();
 
     const signatureHash = await stubSignSessionKeyPayload(eip712);
 

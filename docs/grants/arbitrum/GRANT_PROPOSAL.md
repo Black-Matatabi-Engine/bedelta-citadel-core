@@ -6,7 +6,16 @@
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 **Live DApp:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 
-> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)** · Gate **`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`** (Mainnet + Sepolia CREATE2 same-address)
+> **Vitest SSOT:** **196+ test files | 863+ PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)** · Gate **`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`** (Mainnet + Sepolia CREATE2 same-address)
+
+### Dual-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+
+| Lane | Default | Venue | SSOT |
+|------|---------|-------|------|
+| **Wallet A — Hyperliquid Short** | `0xef0752…960d` | HL L1 Perps | Session-key 1× ETH short · `executeHlSessionKeyOrder` only (legacy stubs blocked on `IS_MAINNET`) |
+| **Wallet B — Arbitrum GMX Vault** | `0xc9Bdd…546f` | Arbitrum One | GMX GM LP + `uiFeeReceiver` treasury · live delta read for cross-wallet hedge |
+
+**Zero key coupling** — Wallet B telemetry (`[WALLET_B_GMX_STATE]`) sizes Wallet A shorts (`[WALLET_A_HL_STATE]`) until `[CROSS_VENUE_MATCH] Δ_net ≡ 0`. See [`gmx-cross-wallet-hedge.ts`](../../../src/services/gmx-cross-wallet-hedge.ts).
 
 **Audience:** Arbitrum ecosystem / Open House / future Security Grant · **Arbitrum Foundation H1 2026** (Agentic Commerce · ArbOS 61 Elara).
 **Not this pack:** GMX `uiFeeReceiver` economics → [`../gmx/`](../gmx/).

@@ -63,7 +63,7 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **196+ test files \| 863+ PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
@@ -224,7 +224,7 @@ pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (194 test files | 845 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (196+ test files | 863+ PASS Clean (100% PASS))
 ```
 
 ### Path 2: Isolated Docker
@@ -241,7 +241,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **194 test files \| 845 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
+| **Vitest SSOT** | **196+ test files \| 863+ PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |

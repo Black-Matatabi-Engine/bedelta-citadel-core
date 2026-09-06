@@ -44,7 +44,8 @@ function highlight(line: string): string {
   for (const kw of ["PHYSICAL_DEADLOCK_TRIGGERED", "SOIL_TRIPPED", AML_INBOUND_TO_ROBINHOOD_BLOCKED, "[ ALERT ]"]) {
     out = out.split(kw).join(`${RED_BOLD}${kw}${RESET}`);
   }
-  out = out.replace(/uiFeeReceiver/gi, `${YELLOW}uiFeeReceiver${RESET}`);
+  out = out.replace(/\[Wallet A\]/g, `${BRIGHT_CYAN}[Wallet A]${RESET}`);
+  out = out.replace(/\[Wallet B\]/g, `${BRIGHT_MAGENTA}[Wallet B]${RESET}`);
   out = out.replace(/\+\s*10\s*bps/gi, `${YELLOW}+10 bps${RESET}`);
   out = out.replace(/0-Gas Sponsored|0-Gas Verified/g, `${YELLOW}$&${RESET}`);
   out = out.replace(/\[ ACTIVE \]|\[ PASSED \]|\[ ALLOWED \]|\[ VERIFIED \]/g, `${GREEN}$&${RESET}`);
@@ -121,6 +122,6 @@ export function printHlEnvMissingNotice(): void {
 export function emitStep4PassResult(): void {
   const ledger = computeE2eFinancialLedger();
   e2eLog(
-    `RESULT: 🟢 Step 4 Hyperliquid Hedge PASS — ${ledger.hlHedgeEthSize} ETH (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD) Short Active · Δnet ≡ ${ledger.deltaNetEthFormatted} ETH · lostUsd ≡ $0.00`,
+    `RESULT: 🟢 [Wallet A] Step 4 Hyperliquid Hedge PASS — ${ledger.hlHedgeEthSize} ETH (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD) Short Active · Δnet ≡ ${ledger.deltaNetEthFormatted} ETH vs [Wallet B] GMX long · lostUsd ≡ $0.00`,
   );
 }
