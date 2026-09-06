@@ -7,7 +7,7 @@
 | **Classification** | Grant / Institutional Allocator · AA Architecture Benchmark |
 | **Branch baseline** | `v1.0_push_BDLW` |
 | **Entity** | SilverVine Labs · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) |
-| **Baseline** | **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · Wasm **70.16 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway path) · Wasm warm **&lt;60 µs** |
+| **Baseline** | **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · Wasm **70.88 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway path) · Wasm warm **&lt;60 µs** |
 | **Related SSOT** | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) · [`README.md`](../architecture/README.md) §2.4 · [Risk Spectrum §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 > **Boundary:** ZeroDev Kernel v3 is an **Opt-In Pillar 1 Account Abstraction Layer** (`USE_ZERODEV_AA` default-off). **Pillar 3 Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`) and **Pillar 2 Arbitrum Native Ingress** function **100% independently** — ZeroDev failure never impairs sub-ms pre-broadcast protection or bridge `lostUsd ≡ 0` accounting.
@@ -101,7 +101,7 @@ Consumer stacks often simulate transactions **after** UserOp construction. Slive
 |--------|-------------|------|
 | **Shield latency (p50)** | **~106 µs** — Shield/TS Gateway path | Edge `checkSoilResistance()` · `pkg/soil_core.wasm` |
 | **Wasm warm execution** | **&lt;60 µs** | `pkg/soil_core.wasm` hot path (**&lt; 28 KiB** artifact) |
-| **Worker bundle (measured)** | **70.16 KiB gzip** | `pnpm bundle:measure` · `pass: true` · limit 150 KiB |
+| **Worker bundle (measured)** | **70.88 KiB gzip** | `pnpm bundle:measure` · `pass: true` · limit 150 KiB |
 | **Slippage fuse** | **0.5%** (`MAX_SLIPPAGE`) | `soil-resistance-types.ts` |
 | **Depth floor** | **$100,000** (`MIN_DEPTH_USD`) | soil matrix |
 | **Trip behavior** | `TRIP_SOIL_RESISTANCE` · no broadcast | `zerodev-aa-gate.test.ts` |
@@ -201,7 +201,7 @@ Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
 | 3 | Session R07 $5k cap | `pnpm exec vitest run tests/services/session-key-gates.test.ts` | Severance on breach |
 | 4 | 30s heartbeat expiry | `pnpm exec vitest run tests/services/nonce-auto-healing.test.ts` | Lock on expiry |
 | 5 | Bridge honest accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 · lostUsd ≡ 0** |
-| 6 | Wasm bundle budget | `pnpm bundle:measure` | **70.16 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** |
+| 6 | Wasm bundle budget | `pnpm bundle:measure` | **70.88 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** |
 | 7 | Live audit | `GET /api/grant-audit` | Guard states exposed |
 
 ---

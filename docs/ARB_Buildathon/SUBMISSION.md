@@ -57,7 +57,7 @@
 | **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
-| **Worker bundle (hot-path)** | **70.16 KiB gzip** · **281.25 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Worker bundle (hot-path)** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Live Event Telemetry actively streams on Sepolia Testnet** (`0xb174…`); **Arbitrum One (`42161`) SQL Query Indexers fully pre-compiled for production event ingestion** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`1acbc24`** (`bedelta-citadel-core`) |
 
@@ -287,7 +287,7 @@ pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 
 #### Supplementary Agent Demos
 
-- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED · Worker bundle **70.16 KiB gzip** (`pnpm bundle:measure`)
+- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED · Worker bundle **70.88 KiB gzip** (`pnpm bundle:measure`)
 - **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/)
 
 ---
@@ -422,7 +422,7 @@ Full derivations: [Technical Specification §3.1](../architecture/03_DEFENSE_MAT
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **70.16 KiB gzip** · **194 test files \| 845 PASS Clean (100% PASS)** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **70.88 KiB gzip** · **194 test files \| 845 PASS Clean (100% PASS)** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -726,7 +726,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **194 test files | 845 PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **70.16 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
+**Regression bar:** Vitest **194 test files | 845 PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **70.88 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
 
 ---
 

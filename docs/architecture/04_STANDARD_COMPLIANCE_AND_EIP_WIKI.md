@@ -15,7 +15,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 |--------|-------|
 | **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · warm exec **< 60 µs** · Edge p50 ~106 µs |
-| **Worker bundle** | **70.16 KiB gzip** hot-path (`pnpm bundle:measure` · `pass: true`) |
+| **Worker bundle** | **70.88 KiB gzip** hot-path (`pnpm bundle:measure` · `pass: true`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Stylus coprocessor** | `SliverVineSoilCoprocessor` · [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** |
 
@@ -111,7 +111,7 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 | Field | Citadel binding |
 |-------|-----------------|
 | **Artifact** | `pkg/soil_core.wasm` — `#![no_std]` Rust compiled for Cloudflare Workers |
-| **Size budget** | **< 28 KiB** artifact · **70.16 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
+| **Size budget** | **< 28 KiB** artifact · **70.88 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
 | **Latency** | Warm exec **< 60 µs** · Edge shield p50 **~106 µs** (`checkSoilResistance()`) |
 | **Parity** | Bitmask + six-lane risk vector semantics mirrored by Stylus `check_soil_resistance_stylus()` |
 | **Verification** | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · `tests/risk-control/*` · Vitest **194 test files \| 845 PASS Clean (100% PASS)** |

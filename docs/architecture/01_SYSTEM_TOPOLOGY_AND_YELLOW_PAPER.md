@@ -17,7 +17,7 @@
 | **Mainnet Ignition Tx** | `42161` | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **SliverVineRiskOracle (Sepolia)** | `421614` | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
 | **IngressSafetySwitch (Sepolia)** | `421614` | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` |
-| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · Worker bundle **70.16 KiB gzip** · p50 ~106 µs |
+| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · Worker bundle **70.88 KiB gzip** · p50 ~106 µs |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 

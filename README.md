@@ -66,7 +66,7 @@
 | **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
-| **Worker bundle** | **70.16 KiB gzip** · **281.25 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate `0xb174118b…` |
@@ -203,7 +203,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-------|--------|
 | **Vitest SSOT** | **194 test files \| 845 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
-| **Worker bundle** | **70.16 KiB gzip** · **281.25 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
+| **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
 | **Foundry Gate** | **60/60** unit tests · **327,675** deep fuzz (`pnpm audit:nightly`) · **95.51%** line coverage |
 | **Deep fuzz (standard)** | **5,120** = 5×1,024 (`forge test`) |
@@ -216,7 +216,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-----------|--------|-----------|
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **845 PASS** · **70.16 KiB gzip** |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **845 PASS** · **70.88 KiB gzip** |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |

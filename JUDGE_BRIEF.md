@@ -39,7 +39,7 @@
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Vitest** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
-| **Worker bundle** | **70.16 KiB gzip** · 281.25 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
+| **Worker bundle** | **70.88 KiB gzip** · 284.56 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`README.md`](./docs/architecture/README.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |

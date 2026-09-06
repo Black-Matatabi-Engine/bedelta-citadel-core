@@ -10,7 +10,7 @@
 | **Product** | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive |
 | **Identity** | **SliverVine Citadel Shield** on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ) — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum |
 | **Audience** | Arbitrum Foundation · ZeroDev Grant Committee · Institutional allocators · Fund-of-funds diligence |
-| **Baseline** | **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · **Security Matrix:** **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Wasm hot-path **70.16 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
+| **Baseline** | **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · **Security Matrix:** **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Wasm hot-path **70.88 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Spec SSOT** | [`../architecture/README.md`](../architecture/README.md) |
 | **Risk Framework SSOT** | [`../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
@@ -142,7 +142,7 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | Metric | Locked value | Verifier |
 |--------|--------------|----------|
 | **Vitest regression** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
-| **Wasm hot-path bundle** | **70.16 KiB gzip** (281.25 KiB raw · `pnpm bundle:measure`) | Worker hot-path · limit 150 KiB |
+| **Wasm hot-path bundle** | **70.88 KiB gzip** (284.56 KiB raw · `pnpm bundle:measure`) | Worker hot-path · limit 150 KiB |
 | **Wasm Soil Core** | `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** | `pnpm build:wasm` · `tests/services/wasm-feasibility-lib/*` |
 | **Shield decision latency** | **p50 ~106 µs** (`checkSoilResistance()` / TS Gateway) | Resilience / soil benchmark harness |
 | **Bridge invariants** | **6/6 PASS** | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` |
@@ -152,7 +152,7 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | **V1.0 capacity anchor** | **$100,000** Alpha Vault / design notional | `MIN_DEPTH_USD` · `ORDER_SIZE_MAX_USD` · Survival `NOTIONAL_USD` |
 
 **Single regression phrase (all DDIP prose):**
-`194 test files | 845 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm **70.16 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** · Shield **p50 ~106 µs**.
+`194 test files | 845 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm **70.88 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** · Shield **p50 ~106 µs**.
 
 ### 1.3 Document Map for Deep Diligence
 
