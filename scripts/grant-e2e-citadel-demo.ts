@@ -8,7 +8,14 @@
  *   pnpm demo:e2e --livingwater
  */
 import { E2E_PROOF_REL_PATH, parseE2eMode } from "../examples/lib/e2e-demo-constants";
-import { e2eLog, paintE2eBanner, printE2eSummaryHud } from "../examples/lib/e2e-hud-renderer";
+import {
+  e2eLog,
+  logE2eHeaderClock,
+  logE2eHeaderMode,
+  logE2ePipelineRoadmap,
+  paintE2eBanner,
+  printE2eSummaryHud,
+} from "../examples/lib/e2e-hud-renderer";
 import {
   buildE2eProofPayload,
   evaluateE2ePipelineOk,
@@ -22,9 +29,9 @@ wrapDemoExecution(async ({ nowMs, at }) => {
   const mode = parseE2eMode(process.argv.slice(2));
   e2eLog("");
   paintE2eBanner();
-  e2eLog(`Mode: ${mode === "live" ? "LIVE" : "DRY_RUN"}  (default dry-run; pass --hedge-live to enable)`);
-  e2eLog(`Clock: ${IS_LIVINGWATER_MODE ? "LIVING_WATER (Date.now)" : "JUDGE_SAFE (HKT 14:00 mock)"}`);
-  e2eLog("Pipeline: Intent+Deadman → Robinhood Escort → GMX underweight → HL Session hedge → R20 Panic Flash");
+  logE2eHeaderMode(mode);
+  logE2eHeaderClock(IS_LIVINGWATER_MODE);
+  logE2ePipelineRoadmap();
   if (!IS_LIVINGWATER_MODE) resetProbes(nowMs);
 
   const steps = await runE2ePipeline(mode, nowMs, at);

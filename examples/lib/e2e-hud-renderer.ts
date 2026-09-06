@@ -12,33 +12,35 @@ import {
 } from "./e2e-demo-constants";
 import { computeE2eFinancialLedger } from "./e2e-financial-accounting";
 import type { E2eProofPayload } from "./e2e-demo-types";
+import {
+  BOLD,
+  BOLD_CYAN,
+  BOLD_GREEN,
+  BOLD_RED,
+  BRIGHT_CYAN,
+  BRIGHT_GREEN,
+  BRIGHT_MAGENTA,
+  CYAN,
+  GREEN,
+  ORANGE,
+  RED_BOLD,
+  RESET,
+  YELLOW,
+  e2eLogColored,
+  useColor,
+} from "./e2e-hud-ansi";
 
-const RESET = "\x1b[0m";
-const GREEN = "\x1b[32m";
-const BRIGHT_GREEN = "\x1b[92m";
-const RED_BOLD = "\x1b[1m\x1b[31m";
-const YELLOW = "\x1b[33m";
-const ORANGE = "\x1b[38;5;208m";
-const CYAN = "\x1b[36m";
-const BRIGHT_CYAN = "\x1b[96m";
-const BOLD = "\x1b[1m";
-const BRIGHT_MAGENTA = "\x1b[95m";
-const BOLD_CYAN = "\x1b[1m\x1b[36m";
-const BOLD_GREEN = "\x1b[1m\x1b[32m";
-const BOLD_RED = "\x1b[1m\x1b[31m";
-const useColor = process.env.NO_COLOR !== "1";
+export {
+  logE2eHeaderClock,
+  logE2eHeaderMode,
+  logE2ePipelineRoadmap,
+  paintE2eBanner,
+} from "./e2e-hud-header";
 
 const ROBINHOOD_CHAIN_LABEL = `ROBINHOOD (Chain ${ROBINHOOD_TESTNET_CHAIN_ID})`;
 const ARBITRUM_CHAIN_LABEL = `ARBITRUM ONE (Chain ${ARBITRUM_ONE_CHAIN_ID})`;
 const STEP2_OUTBOUND_ARROW = "═══( Across Fast Intent )═══►";
 const STEP2_INBOUND_ARROW = "───( Reversal Blocked )───x";
-
-const CITADEL_BANNER = [
-  "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
-  "  │  BeΔ Living Water v1.0 · 5-Step Grant E2E Demo                  │",
-  "  │  Sepolia Gate · p50 ~106µs · Δnet ≡ 0 · lostUsd ≡ 0            │",
-  "  └────────────────────────────────────────────────────────────────┘",
-] as const;
 
 function highlight(line: string): string {
   if (!useColor) return line;
@@ -57,7 +59,7 @@ function highlight(line: string): string {
   out = out.replace(/\b(IN_BAND|FAST_LOCAL|SETTLED)\b/g, `${GREEN}$&${RESET}`);
   out = out.replace(/\bOUT_OF_BAND\b/g, `${RED_BOLD}OUT_OF_BAND${RESET}`);
   out = out.replace(/\d+\.?\d*\s*µs/g, (m) => `${CYAN}${m.trim()}${RESET}`);
-  out = out.replace(/Δnet\s*≡\s*0|lostUsd\s*≡\s*0/g, `${BRIGHT_CYAN}$&${RESET}`);
+  out = out.replace(/Δnet\s*≡\s*0|lostUsd\s*≡\s*0/g, `${BOLD_GREEN}$&${RESET}`);
   out = out.replace(/\bPASS\b/g, `${GREEN}PASS${RESET}`);
   out = out.replace(/E2E OK \(5\/5\)/g, `${GREEN}E2E OK (5/5)${RESET}`);
   return out;
@@ -65,14 +67,6 @@ function highlight(line: string): string {
 
 export function e2eLog(line: string): void {
   console.log(highlight(line));
-}
-
-function e2eLogColored(line: string): void {
-  console.log(useColor ? line : stripAnsi(line));
-}
-
-function stripAnsi(line: string): string {
-  return line.replace(/\x1b\[[0-9;]*m/g, "");
 }
 
 function paintRobinhoodChain(): string {
@@ -105,12 +99,6 @@ export function logE2eStep2InboundAmlBlockLine(): void {
 
 export function fmtE2eUsd(amount: number, decimals = 2): string {
   return `$${amount.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
-}
-
-export function paintE2eBanner(): void {
-  for (const line of CITADEL_BANNER) {
-    console.log(useColor ? `${CYAN}${line}${RESET}` : line);
-  }
 }
 
 export function logE2eStep(n: number, title: string, architecture: string | string[]): void {
