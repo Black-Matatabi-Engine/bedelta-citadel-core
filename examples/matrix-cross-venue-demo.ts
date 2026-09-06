@@ -11,6 +11,7 @@
  *   pnpm demo:matrix -- --loop=spot --usdai
  *   pnpm demo:matrix -- --healthy-only
  * Trip:  pnpm demo:matrix -- --trip --gmx
+ * Live:  pnpm demo:matrix -- --livingwater
  */
 import {
   AAVE_ARBITRUM_CHAIN_ID,
@@ -54,6 +55,7 @@ import {
 import { ensureSoilWasm } from "../src/sdk";
 import { checkSoilResistance, type SoilResistanceInput } from "../src/services/risk-control";
 import {
+  CYAN,
   GREEN,
   RED,
   R,
@@ -581,7 +583,7 @@ function perpLoopTitle(hedge: PerpHedge): string {
 }
 
 function main(): void {
-  wrapDemoExecution(({ nowMs }) => {
+  wrapDemoExecution(({ nowMs, livingwater }) => {
   const argv = process.argv.slice(2);
   const loop = parseLoop(argv);
   const hedge = parseHedge(argv);
@@ -601,6 +603,10 @@ function main(): void {
         ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue → USD.ai)"
         : "Full Cross-Venue Matrix (Dual Perp Hedge + 7-Venue Spot)";
   resetState();
+
+  if (livingwater) {
+    console.log(`${CYAN}Matrix clock: LIVING_WATER · nowMs=${nowMs}${R}`);
+  }
 
   const benchCtx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
   const benchKeys = loop === "perp" ? perpKeys : loop === "spot" ? SPOT_KEYS : allKeys;

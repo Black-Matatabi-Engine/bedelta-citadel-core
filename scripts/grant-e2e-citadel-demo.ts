@@ -11,7 +11,8 @@
  * Usage:
  *   pnpm demo:e2e   # dry-run (default)
  *   pnpm demo:e2e --dry-run
- *   pnpm demo:e2e --live                      # live HL hedge when session env present
+ *   pnpm demo:e2e --hedge-live                # live HL hedge when session env present
+ *   pnpm demo:e2e --livingwater                 # architect private live debug (real clock + Pino)
  */
 
 import { createHash } from "node:crypto";
@@ -67,7 +68,7 @@ import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedg
 import { loadEnvProduction, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
-import { wrapDemoExecution } from "../examples/lib/demo-harness";
+import { IS_LIVINGWATER_MODE, wrapDemoExecution } from "../examples/lib/demo-harness";
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -168,7 +169,7 @@ function resolveHlSessionPrivateKey(): string | undefined {
 
 
 function parseMode(argv: string[]): DemoMode {
-  if (argv.includes("--live") && !argv.includes("--dry-run")) return "live";
+  if (argv.includes("--hedge-live") && !argv.includes("--dry-run")) return "live";
   return "dry-run";
 }
 
@@ -602,12 +603,15 @@ wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
   const mode = parseMode(process.argv.slice(2));
   demoLog("");
   paintBanner();
-  demoLog(`Mode: ${mode === "live" ? "LIVE" : "DRY_RUN"}  (default dry-run; pass --live to enable)`);
+  demoLog(`Mode: ${mode === "live" ? "LIVE" : "DRY_RUN"}  (default dry-run; pass --hedge-live to enable)`);
+  demoLog(
+    `Clock: ${IS_LIVINGWATER_MODE ? "LIVING_WATER (Date.now)" : "JUDGE_SAFE (HKT 14:00 mock)"}`,
+  );
   demoLog(
     "Pipeline: Intent+Deadman → Robinhood Escort → GMX underweight → HL Session hedge → R20 Panic Flash",
   );
 
-  resetProbes(demoNowMs);
+  if (!IS_LIVINGWATER_MODE) resetProbes(demoNowMs);
 
   const s1 = step1CitadelPreExec(demoNowMs);
   const s2 = step2RobinhoodEscort(demoNowMs);

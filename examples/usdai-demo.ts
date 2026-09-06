@@ -3,6 +3,7 @@
  * USD.ai Yield Collateral Demo — GPU RWA oracle · peg · depth pre-flight.
  * Usage: pnpm demo:usdai
  * Trip:  pnpm demo:usdai -- --trip
+ * Live:  pnpm demo:usdai -- --livingwater
  */
 import {
   evaluateUsdAiCollateralGuard,

@@ -7,17 +7,24 @@ import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/so
 import { seedSafeArbitrumProbes } from "../../tests/helpers/arbitrum-probe-seed";
 import { ensureSoilWasm } from "../../src/sdk/soil-wasm";
 import {
-  getDemoSafeTimestamp,
   handleDemoExit,
-  muteLibraryConsole,
+  initDemoEnvironmentClock,
+  IS_LIVINGWATER_MODE,
 } from "./demo-utils";
 
-export { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./demo-utils";
+export {
+  getDemoSafeTimestamp,
+  handleDemoExit,
+  initDemoEnvironmentClock,
+  IS_LIVINGWATER_MODE,
+  muteLibraryConsole,
+} from "./demo-utils";
 
 export interface DemoEnvironment {
   nowMs: number;
   at: Date;
   restoreConsole: () => void;
+  livingwater: boolean;
 }
 
 export interface DemoRunResult {
@@ -95,11 +102,12 @@ export function seedDemoNetworkProbes(nowMs: number): void {
 }
 
 export function initDemoEnvironment(): DemoEnvironment {
-  const restoreConsole = muteLibraryConsole();
-  injectDemoEnvFallbacks();
-  const { nowMs, at } = getDemoSafeTimestamp();
-  seedDemoNetworkProbes(nowMs);
-  return { nowMs, at, restoreConsole };
+  const { nowMs, at, restoreConsole } = initDemoEnvironmentClock();
+  if (!IS_LIVINGWATER_MODE) {
+    injectDemoEnvFallbacks();
+    seedDemoNetworkProbes(nowMs);
+  }
+  return { nowMs, at, restoreConsole, livingwater: IS_LIVINGWATER_MODE };
 }
 
 export function wrapDemoExecution(

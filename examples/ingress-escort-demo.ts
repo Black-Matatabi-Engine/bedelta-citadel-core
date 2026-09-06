@@ -3,6 +3,7 @@
  * Pillar 2 — Unidirectional Compliance Escort (Across / Robinhood reference adapter).
  * Usage: pnpm demo:escort
  * Trip:  pnpm demo:escort -- --trip  (Across timeout >3600s · 0-Gas fail-closed · lostUsd ≡ 0)
+ * Live:  pnpm demo:escort -- --livingwater
  */
 import {
   AML_INBOUND_TO_ROBINHOOD_BLOCKED,
@@ -29,7 +30,7 @@ import {
   printEscortBanner,
   printEscortResult,
 } from "./lib/escort-demo-hud";
-import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
+import { IS_LIVINGWATER_MODE, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, measureSync } from "./lib/demo-timing";
 
 const WALLET = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -38,16 +39,20 @@ const HL_L1_CHAIN_ID = 999_001;
 const T0 = 1_700_000_000_000;
 const ESCORT_USD = 2_500;
 
-function captureEscortBenchmark() {
+function resolveEscortT0(nowMs: number): number {
+  return IS_LIVINGWATER_MODE ? nowMs - 180_000 : T0;
+}
+
+function captureEscortBenchmark(t0: number) {
   const dir = { sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID, destChainId: ARBITRUM_ONE_CHAIN_ID };
-  const xfer = { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: T0 };
+  const xfer = { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: t0 };
   return captureDemoBenchmark({
     pureInvariant: () => validateAcrossBridgeDirection(dir),
-    fullMatrix: () => evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 90_000 }),
+    fullMatrix: () => evaluateAcrossBridgeTransfer(xfer, { nowMs: t0 + 90_000 }),
     e2eHarness: () => {
       validateAcrossBridgeDirection(dir);
-      evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 90_000 });
-      evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 180_000, settledAtMs: T0 + 150_000 });
+      evaluateAcrossBridgeTransfer(xfer, { nowMs: t0 + 90_000 });
+      evaluateAcrossBridgeTransfer(xfer, { nowMs: t0 + 180_000, settledAtMs: t0 + 150_000 });
     },
   });
 }
@@ -72,7 +77,7 @@ function assertLostUsdZero(state: ReturnType<typeof evaluateAcrossBridgeTransfer
   }
 }
 
-function runRouteA(trip: boolean): number {
+function runRouteA(trip: boolean, t0: number): number {
   hudRoute("A", ROBINHOOD_TESTNET_CHAIN_ID, ARBITRUM_ONE_CHAIN_ID, "GMX / Pendle escort");
   const { value: dir } = measureSync(() =>
     validateAcrossBridgeDirection({
@@ -84,8 +89,8 @@ function runRouteA(trip: boolean): number {
   if (trip) {
     const { value: state, latencyUs } = measureSync(() =>
       evaluateAcrossBridgeTransfer(
-        { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: T0 },
-        { nowMs: T0 + DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS + 5_000 },
+        { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: t0 },
+        { nowMs: t0 + DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS + 5_000 },
       ),
     );
     printEval(state);
@@ -96,16 +101,16 @@ function runRouteA(trip: boolean): number {
   }
   const { value: inflight } = measureSync(() =>
     evaluateAcrossBridgeTransfer(
-      { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: T0 },
-      { nowMs: T0 + 90_000 },
+      { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: t0 },
+      { nowMs: t0 + 90_000 },
     ),
   );
   printEval(inflight);
   assertLostUsdZero(inflight);
   const { value: settled, latencyUs } = measureSync(() =>
     evaluateAcrossBridgeTransfer(
-      { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: T0 },
-      { nowMs: T0 + 180_000, settledAtMs: T0 + 150_000 },
+      { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: t0 },
+      { nowMs: t0 + 180_000, settledAtMs: t0 + 150_000 },
     ),
   );
   printEval(settled);
@@ -143,11 +148,12 @@ function runRouteC(): void {
   }
 }
 
-wrapDemoExecution(() => {
+wrapDemoExecution(({ nowMs }) => {
+  const t0 = resolveEscortT0(nowMs);
   const trip = isDemoTripArgv();
-  printEscortBanner(captureEscortBenchmark());
+  printEscortBanner(captureEscortBenchmark(t0));
   printMode(trip);
-  const latencyUs = runRouteA(trip);
+  const latencyUs = runRouteA(trip, t0);
   if (!trip) {
     runRouteB();
     runRouteC();
