@@ -8,7 +8,7 @@
 | **實體** | SilverVine Labs（Sil-） |
 | **賽事** | Arbitrum Open House Singapore Online Buildathon |
 | **分支 / HEAD** | `V1.0_b4_Buildaton_Submisson` · `1a178f4` |
-| **測試 SSOT** | **180 test files \| 803 PASS Clean**（`pnpm test -- --run`） |
+| **測試 SSOT** | **193 test files \| 840 PASS Clean (100% PASS)**（`pnpm test -- --run`） |
 | **評審面板** | 20 人（10 男 / 10 女）· 與 [`V0.9_VS_V1.0_ZH.md`](./V0.9_VS_V1.0_ZH.md) 同班 |
 | **官方 Rubric** | Smart Contract Quality 25% · Product-Market Fit 25% · Innovation and Creativity 25% · Real Problem Solving 25% |
 | **審計基線 A** | V1.0 敘事鎖定後全團 ≈ **7.7 / 10**（[`V0.9_VS_V1.0_ZH.md`](./V0.9_VS_V1.0_ZH.md)） |
@@ -43,7 +43,7 @@
 |---------------------|--------------|------------------------|--------------------|-----------|
 | **Smart Contract Quality** | 7.35 | **7.72** (+0.37) | **8.45** (+1.10) | `SliverVineGate.sol` + `SliverVineAgentPolicyGuard.sol` · Halmos · Sepolia `0xb174…` · *主網 Tx 待貼* |
 | **Product-Market Fit** | 6.85 | **7.95** (+1.10) | **8.05** (+1.20) | GMX +10 bps · ZeroDev AA · **Virtuals/ElizaOS harness** |
-| **Innovation and Creativity** | 7.55 | **7.88** (+0.33) | **7.92** (+0.37) | p50 ~106µs Wasm · ERC-8196 Draft · Agent 小腦 Citadel |
+| **Innovation and Creativity** | 7.55 | **7.88** (+0.33) | **7.92** (+0.37) | p50 ~106µs Wasm · ERC-8196 (Final) · Agent 小腦 Citadel |
 | **Real Problem Solving** | 7.15 | **7.58** (+0.43) | **8.12** (+0.97) | 0-Gas pre-broadcast · `lostUsd ≡ 0` · Dune 可驗事件 |
 | **加權總分** | **7.20** | **7.78** | **8.24** | — |
 
@@ -139,7 +139,7 @@ CONFIRM_MAINNET_IGNITION=YES BROADCAST=1 PRIVATE_KEY=0x… \
   --rpc-url https://arb1.arbitrum.io/rpc --broadcast --verify
 ```
 
-**部署物：** `SliverVineGate`（consume-once EIP-712）+ `SliverVineAgentPolicyGuard`（ERC-8196 Draft）· **無代理 · 非託管 · 無 ETH 保管**。
+**部署物：** `SliverVineGate`（consume-once EIP-712）+ `SliverVineAgentPolicyGuard`（ERC-8196 (Final))· **無代理 · 非託管 · 無 ETH 保管**。
 
 ### 4.2 對四維 Rubric 的邊際影響
 
@@ -248,7 +248,7 @@ CONFIRM_MAINNET_IGNITION=YES BROADCAST=1 PRIVATE_KEY=0x… \
 
 | # | 動作 | 命令 / URL | 驗證標準 |
 |---|------|------------|----------|
-| 1 | 全測試綠燈 | `pnpm test -- --run` | 終端凍結：**180 passed · 803 passed** |
+| 1 | 全測試綠燈 | `pnpm test -- --run` | 終端凍結：**193 passed · 840 passed** |
 | 2 | Agent 正常路徑 | `pnpm tsx examples/agent-interceptor-demo.ts` | `USEROP_DISPATCHED` · `signingChannelOpen: true` |
 | 3 | Agent 惡意路徑 | `pnpm tsx examples/agent-interceptor-demo.ts --trip` | `SIGNING_CHANNEL_SEVERED` · exit 1 |
 | 4 | Sepolia 事件讀取 | `pnpm tsx scripts/emit-sepolia-telemetry-events.ts` | `[Q1] indexed events` ≥ 0 |

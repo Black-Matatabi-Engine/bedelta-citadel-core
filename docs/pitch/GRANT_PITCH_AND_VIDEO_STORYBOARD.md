@@ -9,10 +9,10 @@
 | **Entity** | SilverVine Labs |
 | **Protocol** | SliverVine Protocol / SliverVine Citadel |
 | **Identity** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum. |
-| **Baseline** | Vitest **180 test files | 803 PASS Clean** · Wasm **p50 ~106 µs** · chaos **255/255** |
+| **Baseline** | Vitest **193 test files | 840 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
 | **Live proof** | [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit` · [Dune telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
-| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Emerging Draft Sub-ms Policy Gate) — **not a finalized standard** |
-| **Related SSOT** | [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) · [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) · [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
+| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | ERC-8196 (Final) Sub-ms Policy Gate |
+| **Related SSOT** | [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) · [`README.md`](../architecture/README.md) · [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
 
 > **HackQuest form mapping:** **SECTION A** = Pitch Video (180s). **SECTION B** = Demo Video (120s). Do not merge the two files. Do not guarantee APY. Do not claim Stylus is mainnet-deployed. Monte Carlo `$9.88M` is **10,000-run nominal simulated LP protection**, not live TVL.
 
@@ -62,7 +62,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 | **0:30–0:40** | Three Pillars schematic | *"0-Gas Citadel: soil trips **before** Bundler gas. No broadcast, no fee, no sandwich surface."* | Pillar 3 Shield |
 | **0:40–0:52** | Rust `#![no_std]` · `pkg/soil_core.wasm` size badge | *"Rust `#![no_std]` Wasm on Cloudflare Edge. `checkSoilResistance()` — p50 ~106 microseconds."* | `<28kb` · warm `&lt;60µs` |
 | **0:52–1:04** | Arbiscan Sepolia · Gate address | *"EIP-712 consume-once Gate `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1`. Replay is `Replayed()`."* | `SliverVineGate.sol` |
-| **1:04–1:15** | Halmos `check_*` file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Formal consume-once lemmas in-repo. Policy alignment: [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Emerging Draft Sub-ms Policy Gate) — not a finalized standard."* | `HalmosGateInvariant.t.sol` |
+| **1:04–1:15** | Foundry invariant file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Foundry Invariant & Fuzzing Verification (327,675 Property Fuzz runs). Consume-once lemmas in-repo. Policy alignment: ERC-8196 (Final) Sub-ms Policy Gate."* | `SliverVineGate/test/SliverVineGate.invariant.t.sol` |
 
 ### A.3 `75s–120s` — 14-Dimension Score Boost & Sponsor Synergies
 
@@ -70,7 +70,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 |------|--------|----------------|--------|
 | **1:15–1:30** | Score strip: V0.9 **5.2** → V1.0 **7.7** (internal 20-judge panel) | *"Same 14 audit dimensions. Leaving the yield-vault rain for an Agent Citadel is the score jump — not a louder APY."* | Internal 14-dim comparison (do not flash OpSec filenames) |
 | **1:30–1:45** | GMX payload JSON · `uiFeeReceiver` · **+10 bps** | *"GMX v2 builder lane: `uiFeeReceiver` plus ten basis points on every qualified GM payload."* | `gmx-v2-order-payload.ts` · `GMX_UI_FEE_BPS` |
-| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | `across-ingress-bridge.ts` · `IngressSafetySwitch.sol` |
+| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Unit-Verified Vitest **6/6** |
 
 ### A.4 `120s–150s` — Quant Monte Carlo + Pendle Institutional Shield (V1.0 Live)
 
@@ -85,7 +85,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 |------|--------|----------------|--------|
 | **2:30–2:45** | M1–M6 checklist: Sepolia ✅ · CLI ✅ · RH demo ✅ · GMX fee ✅ · Dune spec ✅ · Mainnet ⏳ | *"Milestones are CLI-verifiable. Mainnet is M6 — we do not pretend it is done."* | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **2:45–2:55** | Dune 3-query spec card · `GET /api/grant-audit` | *"Dune: three-query production spec plus grant-audit KV reconciliation."* | [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **2:55–3:00** | End card · URL · SSOT string | **180 test files \| 803 PASS Clean** | `pnpm test -- --run` |
+| **2:55–3:00** | End card · URL · SSOT string | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 
 **SECTION A forbidden lines:** APY guarantee · 99.82% · “already saved LPs $9.88M” · Stylus mainnet · Hyperliquid as the Arbitrum deployment proof · inbound Robinhood as a product.
 
@@ -135,7 +135,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVe
 
 | Time | Action | On-screen proof |
 |------|--------|-----------------|
-| **1:48–2:00** | Terminal: `pnpm test -- --run` (pre-recorded full run acceptable if timestamped; freeze on summary). | Exact string: **180 test files \| 803 PASS Clean** superimposed if the CLI summary is `Test Files 180 passed` / `Tests 803 passed` |
+| **1:48–2:00** | Terminal: `pnpm test -- --run` (pre-recorded full run acceptable if timestamped; freeze on summary). | Exact string: **193 test files \| 840 PASS Clean (100% PASS)** superimposed if the CLI summary is `Test Files 193 passed` / `Tests 840 passed` |
 
 **SECTION B forbidden cuts:** stock APY charts, unrun Halmos CLI claiming “proved,” synthetic Dune Query 0 labels presented as decoded Gate events without caption.
 
@@ -145,9 +145,9 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVe
 
 | Metric | Lock |
 |--------|------|
-| Vitest | **180 test files \| 803 PASS Clean** |
+| Vitest | **193 test files \| 840 PASS Clean (100% PASS)** |
 | ZeroDev gate | **4/4** · `tests/adapters/zerodev-aa-gate.test.ts` |
-| Across / Robinhood escort | **5/5** · `tests/adapters/across-ingress-bridge.test.ts` |
+| Across / Robinhood escort | **6/6** · `tests/adapters/across-ingress-bridge.test.ts` |
 | Chaos | **255/255** · `capitalLossUsd: 0` |
 | Wasm | p50 ~106 µs · `<28kb` budget |
 | Gate | Sepolia `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1` |
@@ -169,7 +169,7 @@ Start CLI map: [`docs/VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md).
 | [`docs/README.md`](../README.md) | Grant reviewer navigation |
 | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon pack |
 | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | Allocator diligence |
-| [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Option C stress + 60 invariants |
+| [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Option C stress + 60 invariants |
 
 **Prepared by:** SilverVine Labs · HackQuest dual-video SSOT  
 **Last updated:** 2026-09-02 · Branch: `V1.0_b4_Buildaton_Submisson`

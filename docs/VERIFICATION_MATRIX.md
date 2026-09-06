@@ -1,4 +1,6 @@
-# SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) — Verification Matrix (Buildathon / Grant Evaluators)
+# SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
+
+## Verification Matrix (Buildathon / Grant Evaluators)
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
 > **Pitch SSOT:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum.
@@ -6,7 +8,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **192 test files | 834 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **193 test files | 840 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
@@ -15,12 +17,12 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **192 test files \| 834 PASS Clean (100% PASS)** | `pnpm test -- --run` |
-| **Verified commit** | `main` @ **`1acbc24`** · Worker bundle **69.28 KiB gzip** (`pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
+| **Vitest baseline** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Verified commit** | `main` @ **`1acbc24`** · Worker bundle **70.16 KiB gzip** (`pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../tests/core/risk-severance.test.ts) |
 | **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) |
 | **Sliding-window pending OI** | 30s GMX skew/notional accumulator — split-payload defense | [`pending-exposure-window.ts`](../src/core/pending-exposure-window.ts) |
-| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `pnpm build:stylus` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · EIP-1967 proxy path in [EIP Wiki](./architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
+| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `pnpm build:stylus` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · EIP-1967 proxy path in [EIP Wiki](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -40,11 +42,11 @@
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **DuneSQL (Sepolia ingest)** | Event streaming verified on Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](./telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **DuneSQL (Arbitrum One prod)** | Queries 0–0b feed + chart; Queries 1–3 reconciliation — production SQL targets **ChainID `42161`** | Same spec |
-| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Emerging Draft (Virtuals Protocol) — **not finalized** | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
+| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Final (Ethereum Standard · Virtuals Protocol co-author) | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
-**Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/01_TECHNICAL_SPECIFICATION.md#31-microsecond-moats).
+**Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary).
 
 **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.
 
@@ -83,7 +85,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (192 files / 834 tests)
+pnpm test       # Full System Regression Suite (193 test files | 840 PASS Clean (100% PASS))
 ```
 
 | Command | Proves | Expected |
@@ -115,7 +117,7 @@ pnpm test       # Full System Regression Suite (192 files / 834 tests)
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **192 test files \| 834 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest regression bar | **193 test files \| 840 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -140,7 +142,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 5-step Citadel **`demo:e2e`** inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **192 test files \| 834 PASS Clean (100% PASS)** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **193 test files \| 840 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -223,7 +225,7 @@ pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 
 | Metric | Expected |
 |--------|----------|
-| Test cases | **5/5 PASS** |
+| Test cases | **6/6 PASS** |
 | Escort invariant | `lostUsd ≡ 0` |
 | AML isolation | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` — unidirectional 42161→46630 outbound only |
 
@@ -515,7 +517,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 
 | Script | Purpose | Expected |
 |--------|---------|----------|
-| `pnpm bundle:measure` | Worker hot-path size gate | **69.28 KiB gzip** / **276.2 KiB raw** · `limitKiB: 150` · `pass: true` |
+| `pnpm bundle:measure` | Worker hot-path size gate | **70.16 KiB gzip** / **281.25 KiB raw** · `limitKiB: 150` · `pass: true` |
 | `pnpm verify:negative` | Negative soil-trip proofs | Depth breach fail-closed |
 | `pnpm demo` | Tri-Pillar micro E2E demo matrix (`tests/demo/`) | **12/12 PASS** |
 | `pnpm demo:gmx` | GMX v2 shadow margin CLI | ALLOW / `--trip` FAIL_CLOSED |
@@ -536,7 +538,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **192 test files \| 834 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest + coverage | **193 test files \| 840 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -573,11 +575,11 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 |----------|------|
 | [`README.md`](../README.md) | Repo entry · express verification summary |
 | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Buildathon main submission |
-| [`architecture/01_TECHNICAL_SPECIFICATION.md`](./architecture/01_TECHNICAL_SPECIFICATION.md) | Yellow Paper |
-| [`architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk spectrum · simulation harnesses |
+| [`architecture/README.md`](./architecture/README.md) | Architecture index (5-file Yellow Paper) |
+| [`architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk spectrum · simulation harnesses |
 | [`../docker/README.md`](../docker/README.md) | Sidecar testlist |
 | [`../JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | 1-page judge entry |
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 192 test files | 834 PASS Clean (100% PASS)*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 193 test files | 840 PASS Clean (100% PASS)*

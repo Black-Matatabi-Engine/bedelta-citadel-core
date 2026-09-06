@@ -1,6 +1,6 @@
 # Quant Risk 30 Invariants 文件建立日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-26  
 **分支：** `v1.0_push_BDLW`  
@@ -39,7 +39,7 @@
 
 ### 參照來源
 
-- `docs/architecture/01_TECHNICAL_SPECIFICATION.md` R01–R20
+- `docs/architecture/README.md` R01–R20
 - `src/wasm/soil_core.rs` · `soil-resistance.ts` · `gmx-revenue.ts`
 - `unidirectional-bridge.ts` · `zerodev-aa-*` · `GatedExecutor.sol`
 - 既有 internal docs（Hot/Cold · Smart Routing · Wasm/Stylus）

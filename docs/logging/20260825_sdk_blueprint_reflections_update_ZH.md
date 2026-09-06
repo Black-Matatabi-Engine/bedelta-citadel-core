@@ -1,6 +1,6 @@
 # SDK Blueprint 架構不變量更新日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-25  
 **分支：** `v1.0_push_BDLW`  
@@ -26,8 +26,8 @@
 
 ## 錨點對照
 
-- 三角迴路：`docs/architecture/01_TECHNICAL_SPECIFICATION.md` §2
-- EIP-7562 wiki：`docs/architecture/01_TECHNICAL_SPECIFICATION.md` §4.0
+- 三角迴路：`docs/architecture/README.md` §2
+- EIP-7562 wiki：`docs/architecture/README.md` §4.0
 - Nonce healing：`src/services/session-key-adapter-lib/nonce-auto-healing.ts`
 - UI fee SSOT：`src/config/gmx-revenue.ts` · `GMX_UI_FEE_BPS = 10`
 

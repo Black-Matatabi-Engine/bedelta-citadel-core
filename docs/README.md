@@ -6,7 +6,7 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **180 test files | 803 PASS Clean** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **193 test files | 840 PASS Clean (100% PASS)** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (5-step macro) · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
 
@@ -25,8 +25,8 @@
 | # | Document | Role |
 |---|----------|------|
 | 1 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **CLI Tier 0–5 Verification Entry** — reproducible PASS bars for evaluators |
-| 2 | [`architecture/01_TECHNICAL_SPECIFICATION.md`](./architecture/01_TECHNICAL_SPECIFICATION.md) | **Yellow Paper** — R01–R20 Risk Matrix · Three Pillars · Arbitrum-centric topology |
-| 2b | [`architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | **ERC/EIP Standards Wiki** — compliance posture · ArbOS/Stylus · RPC/WSS |
+| 2 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
+| 2b | [`architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | **ERC/EIP Standards Wiki** — compliance posture · ArbOS/Stylus · RPC/WSS |
 | 3 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
 | 4 | [`audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | **ZeroDev AA vs. Pre-execution Wasm Risk Substrate** — Kernel v3 institutional differentiation |
 | 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · 10 bps builder + referral rebate model |
@@ -37,8 +37,8 @@
 
 | Audience | Document | Role |
 |----------|----------|------|
-| **Risk mitigation & disclaimer framework** | [`architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Fail-closed boundaries · **88% / 12% risk spectrum** · **80/20 Pareto** · force majeure · AI attack vectors · 60 invariants · V1.0 vs V1.5/V2.0 roadmap |
-| **Compliance Ingress Firewall (Pillar 2)** | [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Venue-agnostic unidirectional AML escort · Robinhood Chain as inaugural reference adapter · 5/5 tests |
+| **Risk mitigation & disclaimer framework** | [`architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Fail-closed boundaries · **88% / 12% risk spectrum** · **80/20 Pareto** · force majeure · AI attack vectors · 60 invariants · V1.0 vs V1.5/V2.0 roadmap |
+| **Compliance Ingress Firewall (Pillar 2)** | [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Venue-agnostic unidirectional AML escort · Robinhood Chain as inaugural reference adapter · 6/6 tests |
 | **Edge Shield Wasm Core (Pillar 3)** | [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | `checkSoilResistance()` · p50 ~106µs · Tri-Sensor · R01–R20 defense matrix |
 | **Security audit snapshot** | [`audit/05_PRINCIPAL_AUDIT_REPORT.md`](./audit/05_PRINCIPAL_AUDIT_REPORT.md) | Principal review · Gate / survival matrix |
 | **Grant submissions** | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Buildathon main submission pack |

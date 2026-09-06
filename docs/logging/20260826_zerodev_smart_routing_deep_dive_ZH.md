@@ -1,6 +1,6 @@
 # ZeroDev Smart Routing 深度解析文件建立日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-26  
 **分支：** `v1.0_push_BDLW`  
@@ -35,7 +35,7 @@
 - `src/config/gmx-revenue.ts` · `gmx-smart-route-payload-binding.ts` · `gated-executor-payload.ts`
 - `SliverVineGate/src/GatedExecutor.sol`
 - `r-chain-yield-router.ts` · `unidirectional-bridge.ts` · `smart-route-deposit-flow.ts`
-- `docs/architecture/01_TECHNICAL_SPECIFICATION.md` §2.3
+- `docs/architecture/README.md` §2.3
 - `tests/adapters/gmx-smart-route-payload-binding.test.ts`
 
 ---

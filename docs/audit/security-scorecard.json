@@ -1,51 +1,36 @@
 {
   "schema": "silvervine.security-scorecard.v4",
   "protocol": "SliverVine / BeΔLivingWater",
-  "tier": "fast",
-  "generatedAt": "2026-09-01T09:45:21.289Z",
+  "tier": "nightly",
+  "generatedAt": "2026-09-06T03:10:41.282Z",
   "narrative": "behavioral_pass_does_not_imply_web3_security",
   "overallVerdict": "PASS",
   "gates": [
     {
-      "id": "tsc",
-      "label": "TypeScript typecheck",
+      "id": "echidna",
+      "label": "Echidna property fuzz",
       "verdict": "PASS",
       "exitCode": 0,
-      "elapsedMs": 13472,
-      "detail": "exit 0"
+      "elapsedMs": 1275,
+      "detail": "Unique instructions: 883 | Unique codehashes: 2 | Corpus size: 4 | Seed: 7722676919801120269 | Total calls: 2016 |  |  | WARNING: Slither was explicitly disabled. Echidna uses Slither (https://github.com/crytic/slither) to perform source analysis, which makes fuzzing more effective. You should enable it."
     },
     {
-      "id": "vitest-security",
-      "label": "Vitest security slice",
+      "id": "forge-deep-fuzz",
+      "label": "Foundry deep fuzz",
       "verdict": "PASS",
       "exitCode": 0,
-      "elapsedMs": 4981,
-      "detail": "RUN  v3.2.7 /home/lhsum/dev_slivervinelabs/bedelta-citadel-core |  |  ✓ |unit| tests/security/security-audit.test.ts (4 tests) 83ms |  |  Test Files  1 passed (1) |       Tests  4 passed (4) |    Start at  17:44:53 |    Duration  3.48s (transform 1.72s, setup 1.35s, collect 1.26s, tests 83ms, environment 0ms, prepare 224ms)"
-    },
-    {
-      "id": "solhint",
-      "label": "Solhint SliverVineGate/src",
-      "verdict": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 1678,
-      "detail": "exit 0"
-    },
-    {
-      "id": "gitleaks",
-      "label": "Gitleaks secret scan",
-      "verdict": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 22591,
-      "detail": "○ |     │╲ |     │ ○ |     ○ ░ |     ░    gitleaks |  | 5:45PM INF scan completed in 22.5s | 5:45PM INF no leaks found"
+      "elapsedMs": 71444,
+      "detail": "[PASS] testFuzz_AcceptanceRegionIsExact(uint64,uint32,uint8,uint16,uint256,uint32) (runs: 65535, μ: 30176, ~: 30347) | [PASS] testFuzz_ArbitraryKeyCannotReachQuorum(uint256,uint256) (runs: 65535, μ: 45516, ~: 45366) | [PASS] testFuzz_EveryFieldIsSigned(uint8,uint256) (runs: 65535, μ: 39899, ~: 39916) | [PASS] testFuzz_NeverConsumableTwice(uint256,uint16) (runs: 65535, μ: 77437, ~: 77327) | [PASS] testFuzz_OnlySubjectMayConsume(address,uint256) (runs: 65535, μ: 28119, ~: 28119) | Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 68.53s (341.71s CPU time) |  | Ran 1 test suite in 68.5"
     }
   ],
   "summary": {
-    "pass": 4,
+    "pass": 2,
     "fail": 0,
     "skipped": 0
   },
   "reports": {
-    "securityScorecard": "docs/audit/security-scorecard.json"
+    "securityScorecard": "docs/audit/security-scorecard.json",
+    "staticAnalysisReport": "docs/audit/static-analysis-report.json"
   },
-  "zeroKeyCommand": "pnpm run audit:fast"
+  "zeroKeyCommand": "pnpm run audit:nightly"
 }

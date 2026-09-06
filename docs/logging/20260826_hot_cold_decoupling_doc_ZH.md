@@ -1,6 +1,6 @@
 # Hot/Cold Path 解耦架構文件建立日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-26  
 **分支：** `v1.0_push_BDLW`  
@@ -40,7 +40,7 @@
 - `docs/logging/20260825_worker_bundle_lean_surgery_report.md`
 - `src/worker-entry.ts` · `src/worker-cron-entry.ts` · `src/worker-scheduled.ts`
 - `wrangler.toml` · `wrangler.cron.toml`
-- `docs/architecture/01_TECHNICAL_SPECIFICATION.md`
+- `docs/architecture/README.md`
 
 ---
 

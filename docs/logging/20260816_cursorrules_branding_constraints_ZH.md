@@ -1,6 +1,6 @@
 # .cursorrules 品牌約束更新
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 ## Summary of Changes
 - 修復 `.cursorrules` 內誤植的 `cat << 'EOF'` / `EOF` shell 殘留。

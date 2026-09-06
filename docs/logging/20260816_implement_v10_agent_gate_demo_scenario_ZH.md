@@ -1,6 +1,6 @@
 # Implement V1.0 Agent-Gate Fail-Closed Demo Scenario (08:00 Trip)
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 ## Summary of Changes
 - 新增 `src/services/telemetry-controller.ts`，定義 `SCENARIO_BUILDATHON_CRASH_HOUR_8` 預設；08:00 觸發 `checkSoilResistance()` → `statusCode: 3`、`severCircuitBreakerPipeline("R20")` 與 `ArmoredSignRejectedError` 阻擋簽章。

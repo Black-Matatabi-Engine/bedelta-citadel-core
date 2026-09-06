@@ -4,7 +4,7 @@
 **Entity:** SilverVine Labs · **Product:** SliverVine Citadel Shield · **Protocol:** SliverVine Protocol
 **Audience:** Principal / security reviewers · GMX Builders · Arbitrum diligence
 **Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
-**Yellow Paper SSOT:** [`../architecture/01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md)
+**Yellow Paper SSOT:** [`../architecture/README.md`](../architecture/README.md)
 
 > **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure via the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine Citadel Shield** is the pre-consensus execution safety primitive that binds both.
 
@@ -16,18 +16,20 @@
 
 | Metric | Locked value | Artifact / verifier |
 |--------|--------------|---------------------|
-| **Vitest Baseline** | **180 test files \| 803 PASS Clean** | `pnpm test` · security-tier Vitest in [`static-analysis-report.json`](./static-analysis-report.json) |
-| **Wasm Core Budget** | **`<28kb` Cloudflare budget, `<60µs` execution (`<150µs` P99 tail)** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · [`soil_core.rs`](../../src/wasm/soil_core.rs) · `WASM_BUDGET_BYTES` in [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) |
+| **Vitest Baseline** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` · security-tier Vitest in [`static-analysis-report.json`](./static-analysis-report.json) |
+| **Wasm Core Budget** | **`<28kb` Cloudflare budget, `<60µs` execution (`<150µs` P99 tail)** · **70.16 KiB gzip** Worker hot-path (`pkg/soil_core.wasm` **< 28 KiB**) | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · [`soil_core.rs`](../../src/wasm/soil_core.rs) · `WASM_BUDGET_BYTES` in [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) · `pnpm bundle:measure` |
 | **Active Guards** | **`agent-citadel-guard` (Configurable Dynamic Slippage Deadman)** + R01–R20 matrix **17 Active \| 2 Refactored \| 1 Deprecated** | `src/core/agent-citadel-guard.ts` |
 | **Revenue Integration** | GMX v2 **`uiFeeReceiver` (+10 bps protocol yield accrual)** + up to **25%** referral rebate | `GMX_UI_FEE_BPS` · `gmx-v2-order-payload.ts` |
 | **Security Matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** | `pnpm run audit:security` → [`static-analysis-report.json`](./static-analysis-report.json) `summary.pass=5` |
 | **Fuzzing Baseline** | **327,675 Property Fuzz Executions** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep` · 5×65,535) · standard `forge test` = **5,120** (5×1,024) | Forge property suite · Gate unit **60 Passed** |
 | **Decision latency** | p50 ~106 µs (`checkSoilResistance()` / Shield hot path) | Resilience / soil benchmark harness |
+| **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (Mainnet + Sepolia CREATE2 same-address) | [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | `DeployArbitrumOneGate.s.sol` |
 | **Chaos matrix** | **255 / 255** toxic scenarios blocked · `failClosedRate: 100.00%` · `capitalLossUsd: 0` | [`chaos-blackswan-metrics.json`](./chaos-blackswan-metrics.json) |
-| **Risk spectrum (modeled)** | **88%** pre-broadcast interception mesh · **12%** insurmountable systemic residuals (`88% + 12% = 100%`) | [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
+| **Risk spectrum (modeled)** | **88%** pre-broadcast interception mesh · **12%** insurmountable systemic residuals (`88% + 12% = 100%`) | [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 **Single regression phrase (all audit prose):**
-`180 test files | 803 PASS Clean` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail).
+`193 test files | 840 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail) · **70.16 KiB gzip** · Gate `0xb174118b…` · p50 ~106 µs.
 
 ### Three Pillars — Independent Audit Specs
 
@@ -44,7 +46,7 @@
 | Horizon | Status | Asset / clearing bound |
 |---------|--------|------------------------|
 | **v1.0 Delivered (Sepolia verified)** | ✅ Code-Verified | Strictly **ETH/USDC GM Pool** — eliminates oracle de-peg and FX slippage when escorting treasuries via **Pillar 2 Reference Escort Adapters** (Robinhood Chain `46630` → Arbitrum One `42161`) · Mainnet deployment ties to **M6 Grant distribution** |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **180 test files \| 803 PASS Clean** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **193 test files \| 840 PASS Clean (100% PASS)** |
 | **V1.0 Isomorphic Extension** | ⏳ Planned | **BTC/USDC GM Pool** — config-driven market address mapping; **zero** bytecode / Wasm rewrite |
 | **V1.0 Treasury Routing** | ⏳ Planned | Native **USDG Robinhood Chain Treasury routing** (**Pillar 2 Reference Escort Adapters**) — USDG clearing remains on Robinhood Chain (`46630`) via unidirectional bridge |
 
@@ -91,7 +93,7 @@
 | Probe | Expected posture | SSOT |
 |-------|------------------|------|
 | `uiFeeReceiver` injection | Every unsigned increase / decrease / deposit carries **+10 bps** accrual + optional referral rebate | `GMX_UI_FEE_BPS` · `gmx-v2-order-payload.ts` |
-| L1 consume-once | `SliverVineGate.sol` `verifyAndConsume` — replay-safe, gas-bounded | Forge 60/60 · Slither / Aderyn in 5/0/0 |
+| L1 consume-once | `SliverVineGate.sol` `verifyAndConsume` on `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — replay-safe, gas-bounded · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | Forge 60/60 · Slither / Aderyn in 5/0/0 |
 | Public JSON leakage | `/api/grant-audit` redacts signing material and proprietary encode paths | Grant-audit route surface |
 
 **Verdict:** Yield is protocol-native GMX UI fee path (no custody); L1 attestation is consume-once.
@@ -118,9 +120,10 @@
 | Item | Spec |
 |------|------|
 | Source | [`soil_core.rs`](../../src/wasm/soil_core.rs) (`#![no_std]`, Apache-2.0 SPDX) |
-| Artifact | `pkg/soil_core.wasm` |
+| Artifact | `pkg/soil_core.wasm` (**< 28 KiB**) |
+| Worker bundle | **70.16 KiB gzip** (`pnpm bundle:measure` · `pass: true` · limit 150 KiB) |
 | Cloudflare budget | **`<28kb`** (`WASM_BUDGET_BYTES = 28 * 1024`) |
-| Hot-path exec | **`<60µs`** warm; **`<150µs` P99 tail** |
+| Hot-path exec | **`<60µs`** warm; **`<150µs` P99 tail** · Shield p50 **~106 µs** |
 | Entry | `soil_core_eval` — 8×f64 LE input → trip flags (cross-venue / depth / insufficient) + Dynamic Account Risk Ceiling (V0.8 Baseline: Equity-Weighted SL; V1.0 Mainnet: Dynamic Adaptive Engine) |
 | Session helper | `session_core_ok` — clip + TTL breach → 0 |
 | TS wire | `src/sdk/soil-wasm.ts` (production); TS sim fallback for dev |
@@ -181,7 +184,7 @@ Cohort contrast matrix (infra vs app): see grant audit matrix generator narrativ
 ## Verification (Principal — 60s)
 
 ```bash
-pnpm install && pnpm test -- --run # 180 test files | 803 PASS Clean
+pnpm install && pnpm test -- --run # 193 test files | 840 PASS Clean (100% PASS)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 pnpm run audit:fast # fast tier scorecard → security-scorecard.json
 cd SliverVineGate && forge test && cd ..
@@ -194,8 +197,8 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .
 
 | Document | Purpose |
 |----------|---------|
-| [`../architecture/01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) | Yellow Paper — R01–R20 · §0.1 scope · §0.4 bytecode predicates |
-| [`../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · force majeure · AI attack vectors |
+| [`../architecture/README.md`](../architecture/README.md) | Yellow Paper — R01–R20 · §0.1 scope · §0.4 bytecode predicates |
+| [`../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · force majeure · AI attack vectors |
 | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 — AML escort · inbound block · bridge accounting |
 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 — Wasm soil core · `checkSoilResistance()` · latency moats |

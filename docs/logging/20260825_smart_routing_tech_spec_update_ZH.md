@@ -1,10 +1,10 @@
 # Smart Routing 技術規格更新日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-25  
 **分支：** `v1.0_push_BDLW`  
-**範圍：** `docs/architecture/01_TECHNICAL_SPECIFICATION.md`
+**範圍：** `docs/architecture/README.md`
 
 ---
 

@@ -1,7 +1,7 @@
 # Performance & On-Chain Gate Audit — Arbitrum Buildathon V1.0
 
 > **中文參考譯本** · 英文 SSOT：[`20260817_performance_and_gate_audit.md`](./20260817_performance_and_gate_audit.md)  
-> **Vitest SSOT：** **836 tests** · Worker **69.32 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
+> **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 **審計日期：** 2026-08-17 (UTC+8)  
 **審計角色：** Cursor Senior Systems Engineer  

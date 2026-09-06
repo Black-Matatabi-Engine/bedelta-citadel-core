@@ -1,6 +1,6 @@
 # TECHNICAL_SPECIFICATION ZeroDev v4 章節更新日誌
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **日期：** 2026-08-26  
 **分支：** `v1.0_push_BDLW`  
@@ -13,7 +13,7 @@
 
 | 檔案 | 動作 | 說明 |
 |------|------|------|
-| `docs/architecture/01_TECHNICAL_SPECIFICATION.md` | **更新** | 新增 §2.4（繁中）· 擴充 §4.0 ERC-4337 / EIP-7562 · Related Documents |
+| `docs/architecture/README.md` | **更新** | 新增 §2.4（繁中）· 擴充 §4.0 ERC-4337 / EIP-7562 · Related Documents |
 | `docs/logging/20260826_tech_spec_zerodev_v4_update.md` | **新增** | 本建立日誌 |
 
 ---

@@ -1,7 +1,7 @@
 # DuneSQL 生產同步 — 即時遙測 Feed 與圖表（2026-09-02）
 
 > **中文參考譯本** · 英文 SSOT：[`20260902_dune_sql_production_sync.md`](./20260902_dune_sql_production_sync.md)  
-> **Vitest SSOT：** **836 tests** · Worker **69.32 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
+> **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 | 欄位 | 值 |
 | ----- | ----- |
@@ -22,7 +22,7 @@
 - `docs/ARB_Buildathon/SUBMISSION.md`
 - `docs/VERIFICATION_MATRIX.md`
 - `docs/sdk/CITADEL_SDK_BLUEPRINT.md`
-- `docs/architecture/01_TECHNICAL_SPECIFICATION.md`
+- `docs/architecture/README.md`
 
 ## Brand SSOT
 

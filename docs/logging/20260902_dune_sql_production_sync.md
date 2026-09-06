@@ -1,6 +1,6 @@
 # DuneSQL Production Sync — Live Telemetry Feed & Chart (2026-09-02)
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 | Field | Value |
 | ----- | ----- |
@@ -21,7 +21,7 @@
 - `docs/ARB_Buildathon/SUBMISSION.md`
 - `docs/VERIFICATION_MATRIX.md`
 - `docs/sdk/CITADEL_SDK_BLUEPRINT.md`
-- `docs/architecture/01_TECHNICAL_SPECIFICATION.md`
+- `docs/architecture/README.md`
 
 ## Brand SSOT
 

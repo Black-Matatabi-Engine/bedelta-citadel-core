@@ -8,7 +8,7 @@
 | **Entity** | SilverVine Labs |
 | **Protocol** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine |
 | **Scope** | Pre-Consensus Intent Firewall · `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 Defense Matrix · Tri-Sensor telemetry |
-| **Spec SSOT** | [`docs/architecture/01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) |
+| **Spec SSOT** | [`docs/architecture/README.md`](../architecture/README.md) |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 
 > **Product identity:** **[Pillar 3: Shield]** is the **core technical moat** of SliverVine Protocol — the **Pre-Consensus Intent Firewall & GMX/HL Execution Safety Primitive**. Pillars 1 (Gatehouse) and 2 (optional ingress adapters) route capital and permissions; **Pillar 3 decides whether any broadcast may proceed** at sub-ms latency.
@@ -21,14 +21,14 @@
 
 | Gate | Status |
 |------|--------|
-| **Vitest — full regression** | **180 test files \| 803 PASS Clean** (branch live) |
+| **Vitest — full regression** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **`checkSoilResistance()` warm p50** | **&lt; 1 ms** full-path budget (`soil-resistance-latency.test.ts`) |
 | **Wasm hot-path (`soil_core_eval`)** | **&lt; 60 µs** warm budget (`WASM_EXEC_BUDGET_US`) |
 | **Shield/TS Gateway p50** | **~106 µs** (production Edge target · demo empirical sampling) |
-| **Wasm bundle** | **&lt; 28 KiB** Cloudflare budget (`pkg/soil_core.wasm`) |
-| **Defense Matrix** | **17 Active \| 2 Refactored \| 1 Deprecated** |
+| **Wasm bundle** | **&lt; 28 KiB** Cloudflare budget (`pkg/soil_core.wasm`) · Worker hot-path **70.16 KiB gzip** (`pnpm bundle:measure`) |
+| **Defense Matrix** | **17 Active \| 2 Refactored \| 1 Deprecated** (R05 SpoofBuster deprecated) |
 | **Fail-closed posture** | `signingChannelOpen: false` on any soil / oracle / sequencer trip |
-| **Interceptor mesh coverage** | **88%** pre-broadcast · **12%** systemic residual (Fail-Closed) — [Risk Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
+| **Interceptor mesh coverage** | **88%** pre-broadcast · **12%** systemic residual (Fail-Closed) — [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 ---
 
@@ -88,7 +88,8 @@ $$
 | Property | Spec | Evidence |
 |----------|------|----------|
 | **Artifact** | `pkg/soil_core.wasm` | Rust `#![no_std]` · portable `soil_core_eval` |
-| **Memory budget** | **&lt; 28 KiB** | Cloudflare Edge deployment constraint |
+| **Memory budget** | **&lt; 28 KiB** (`pkg/soil_core.wasm`) | Cloudflare Edge deployment constraint |
+| **Worker bundle** | **70.16 KiB gzip** | `pnpm bundle:measure` · limit 150 KiB · `pass: true` |
 | **Warm execution** | **&lt; 60 µs** | `WASM_EXEC_BUDGET_US` · `tests/services/wasm-feasibility-lib/soil-core-sim.test.ts` |
 | **Wire / loader** | `src/sdk/soil-wasm.ts` | `initSoilWasm()` · `evaluateSoilCore()` |
 | **TS sim fallback** | `runWasmSoilCoreSim()` | Dev / Vitest when Wasm not loaded |
@@ -148,13 +149,13 @@ pnpm exec vitest run tests/adapters/pendle-pt-registry.test.ts
 pnpm exec vitest run tests/risk-control/pendle-soil-guard.test.ts
 ```
 
-**Regression bar:** **180 test files \| 803 PASS Clean** · coexists with Shield **p50 ~106µs** budget.
+**Regression bar:** **193 test files \| 840 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 ---
 
 ## Defense Matrix (R01–R20)
 
-**Status:** **17 Active | 2 Refactored | 1 Deprecated**
+**Status:** **17 Active | 2 Refactored | 1 Deprecated** (R05 SpoofBuster deprecated)
 
 Core invariants: Edge / Session / Saga (`src/services/`, `src/core/`, `src/adapters/`).
 L1 lock: `SliverVineGate.sol` consume-once attestation.
@@ -222,9 +223,11 @@ pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
 
 | Path | Role |
 |------|------|
+| [`docs/architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
+| [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Principal audit · SSOT metric lock |
 | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 Gatehouse · ZeroDev Kernel v3 |
 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 optional ingress adapters |
-| [`docs/architecture/01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) | Cross-pillar topology · settlement · fee bounds |
+| [`docs/architecture/README.md`](../architecture/README.md) | Cross-pillar topology · settlement · fee bounds |
 | [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | Soil fuse SSOT |
 | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | Wasm soil core artifact |
 | [`tests/services/soil-resistance-latency.test.ts`](../../tests/services/soil-resistance-latency.test.ts) | Full-path p50 budget |

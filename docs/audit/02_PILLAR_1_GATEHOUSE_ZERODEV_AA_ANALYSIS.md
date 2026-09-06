@@ -7,8 +7,8 @@
 | **Classification** | Grant / Institutional Allocator · AA Architecture Benchmark |
 | **Branch baseline** | `v1.0_push_BDLW` |
 | **Entity** | SilverVine Labs · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) |
-| **Baseline** | **Vitest SSOT:** **180 test files | 803 PASS Clean** · Wasm **91.2 KiB gzip** · Shield **p50 ~106 µs** (TS Gateway path) · Wasm warm **&lt;60 µs** |
-| **Related SSOT** | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) · [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) §2.4 · [Risk Spectrum §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
+| **Baseline** | **Vitest SSOT:** **193 test files \| 840 PASS Clean (100% PASS)** · Wasm **70.16 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway path) · Wasm warm **&lt;60 µs** |
+| **Related SSOT** | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) · [`README.md`](../architecture/README.md) §2.4 · [Risk Spectrum §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 > **Boundary:** ZeroDev Kernel v3 is an **Opt-In Pillar 1 Account Abstraction Layer** (`USE_ZERODEV_AA` default-off). **Pillar 3 Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`) and **Pillar 2 Arbitrum Native Ingress** function **100% independently** — ZeroDev failure never impairs sub-ms pre-broadcast protection or bridge `lostUsd ≡ 0` accounting.
 
@@ -64,7 +64,7 @@ These patterns are appropriate for **retail conversion funnels**. They are **ins
 | **Intent binding** | Optional calldata hashing | **`payloadHash()`** → `SliverVineGate.sol` consume-once attestation |
 | **Bridge in-flight** | Often booked as live NAV | **`IN_FLIGHT_BRIDGE_CAPITAL`** · **Pending-Capital Recognition Invariant (`lostUsd ≡ 0`)** · no naked GM/HL until `SETTLED` |
 | **Emergency response** | Admin pause · multisig | **Automated** R17 daily severance · R20 physical deadlock · `rootProtection()` |
-| **Regression proof** | Vendor QA / audit snapshots | **180 test files | 803 PASS Clean** · `zerodev-aa-gate.test.ts` **4/4** · chaos matrix **255/255** |
+| **Regression proof** | Vendor QA / audit snapshots | **193 test files \| 840 PASS Clean (100% PASS)** · `zerodev-aa-gate.test.ts` **4/4** · chaos matrix **255/255** |
 
 > **Pillar 1 alignment note:** **[Pillar 1: The Gatehouse (Auth)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes** — `sessionOk` / `allowedToSign` gates are demonstrated in `pnpm run demo:e2e` (secure dry-run); full Kernel v3 harness regression is under `pnpm test:zerodev` (`tests/adapters/zerodev-aa-dryrun-harness.test.ts`).
 
@@ -100,8 +100,8 @@ Consumer stacks often simulate transactions **after** UserOp construction. Slive
 | Metric | Locked value | SSOT |
 |--------|-------------|------|
 | **Shield latency (p50)** | **~106 µs** — Shield/TS Gateway path | Edge `checkSoilResistance()` · `pkg/soil_core.wasm` |
-| **Wasm warm execution** | **&lt;60 µs** | `pkg/soil_core.wasm` hot path |
-| **Worker bundle (measured)** | **91.2 KiB gzip** | `pnpm bundle:measure` |
+| **Wasm warm execution** | **&lt;60 µs** | `pkg/soil_core.wasm` hot path (**&lt; 28 KiB** artifact) |
+| **Worker bundle (measured)** | **70.16 KiB gzip** | `pnpm bundle:measure` · `pass: true` · limit 150 KiB |
 | **Slippage fuse** | **0.5%** (`MAX_SLIPPAGE`) | `soil-resistance-types.ts` |
 | **Depth floor** | **$100,000** (`MIN_DEPTH_USD`) | soil matrix |
 | **Trip behavior** | `TRIP_SOIL_RESISTANCE` · no broadcast | `zerodev-aa-gate.test.ts` |
@@ -130,7 +130,7 @@ Consumer bridge UX often treats in-flight tokens as deployable balance. SliverVi
 
 **Invariant:** Pending bridge liquidity is **never mis-booked as principal loss** — eliminating phantom NAV inflation during Robinhood escort. When AA is opted in, ZeroDev orchestrates the UserOp; SliverVine Protocol's **`evaluateAcrossBridgeTransfer()`** state machine governs deployability regardless of AA path.
 
-**Test anchor:** `tests/adapters/across-ingress-bridge.test.ts` · **5/5 PASS**
+**Test anchor:** `tests/adapters/across-ingress-bridge.test.ts` · **6/6 PASS**
 
 ---
 
@@ -195,13 +195,13 @@ Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
 
 | # | Claim | Command / artifact | Expected |
 |---|-------|-------------------|----------|
-| 1 | Full regression | `pnpm test -- --run` | **180 test files | 803 PASS Clean** |
+| 1 | Full regression | `pnpm test -- --run` | **193 test files \| 840 PASS Clean (100% PASS)** |
 | 2 | ZeroDev AA gate fail-closed | `pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts` | **4/4 PASS** |
 | 2b | Pillar 1 Gatehouse dry-run harness | `pnpm test:zerodev` | Kernel v3 session scopes · EIP-712 dry-run PASS |
 | 3 | Session R07 $5k cap | `pnpm exec vitest run tests/services/session-key-gates.test.ts` | Severance on breach |
 | 4 | 30s heartbeat expiry | `pnpm exec vitest run tests/services/nonce-auto-healing.test.ts` | Lock on expiry |
-| 5 | Bridge honest accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **5/5 · lostUsd ≡ 0** |
-| 6 | Wasm bundle budget | `pnpm bundle:measure` | **91.2 KiB gzip** |
+| 5 | Bridge honest accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 · lostUsd ≡ 0** |
+| 6 | Wasm bundle budget | `pnpm bundle:measure` | **70.16 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** |
 | 7 | Live audit | `GET /api/grant-audit` | Guard states exposed |
 
 ---
@@ -218,11 +218,12 @@ Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
 
 | Document | Purpose |
 |----------|---------|
+| [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Principal audit · SSOT metric lock |
 | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | Full DDIP · Risk & Disclaimer · Basel mapping |
-| [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) §2.4 | Opt-In ZeroDev Kernel v3/v4 · Wasm Shield decoupled (§2.4.1) |
+| [`README.md`](../architecture/README.md) §2.4 | Opt-In ZeroDev Kernel v3/v4 · Wasm Shield decoupled (§2.4.1) |
 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Three Pillars · AML firewall |
 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 Wasm Shield · R01–R20 |
-| [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · fail-closed boundaries · 60 invariants · real yield vs. toxic inflation |
+| [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · fail-closed boundaries · 60 invariants · real yield vs. toxic inflation |
 
 ---
 

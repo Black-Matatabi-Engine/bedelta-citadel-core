@@ -10,10 +10,10 @@
 | **Product** | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive |
 | **Identity** | **SliverVine Citadel Shield** on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ) — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum |
 | **Audience** | Arbitrum Foundation · ZeroDev Grant Committee · Institutional allocators · Fund-of-funds diligence |
-| **Baseline** | **Vitest SSOT:** **180 test files \| 803 PASS Clean** · Wasm hot-path **91.2 KiB gzip** · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
+| **Baseline** | **Vitest SSOT:** **193 test files \| 840 PASS Clean (100% PASS)** · **Security Matrix:** **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Wasm hot-path **70.16 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
-| **Spec SSOT** | [`../architecture/01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) |
-| **Risk Framework SSOT** | [`../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
+| **Spec SSOT** | [`../architecture/README.md`](../architecture/README.md) |
+| **Risk Framework SSOT** | [`../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 
 > **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure via the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine Citadel Shield** is the pre-consensus execution safety primitive that binds both.
 
@@ -35,7 +35,7 @@ This memorandum provides a **transparent, code-verified audit trail** for the Ar
 
 SliverVine models the **100% Total On-Chain Risk Surface** as a closed partition: **88%** pre-broadcast hazards intercepted at **p50 ~106 µs** via Wasm Soil Core (MEV, depth spikes **>10 bps**, oracle lag, session abuse, prompt-injection calldata, AML ingress) · **12%** insurmountable systemic residuals (sequencer halts **>600 s**, 0-day venue exploits, RPC disconnections) where Citadel applies **Fail-Closed** posture (`signingChannelOpen: false`). The **80/20 Pareto rule** (orthogonal microstructure statistic) states that **~80%** of acute toxic loss stems from **~20%** of microsecond depth/slippage anomalies — targeted directly by Pillar 3.
 
-> **Formal SSOT:** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee)
+> **Formal SSOT:** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee)
 
 ### R.1 Protocol Classification — Sophisticated Smart-Contract Infrastructure
 
@@ -78,7 +78,7 @@ SliverVine Protocol **does not** market "zero risk," "guaranteed yield," or "cap
 | **Basis drift (GM vs HL)** | Dual-leg delta tracking · Citadel Safety Buffer · Survival Benchmark 3σ replay | Persistent funding/basis divergence · venue-specific insolvency |
 | **Oracle staleness** | `ORACLE_LAG_DEADLOCK` (>30s) · fail-closed severance | Oracle manipulation · feed outage beyond modeled thresholds |
 | **Sequencer / ArbOS desync** | 600s recovery grace · no naked opens during desync | Extended L2 outage · reordering/MEV beyond PGATE budget |
-| **Smart-contract risk** | Immutable Wasm · L1 consume-once gate · **180 test files \| 803 PASS Clean** + chaos matrix | Unknown vulnerabilities · upgrade/key compromise · third-party venue bugs |
+| **Smart-contract risk** | Immutable Wasm · L1 consume-once gate · **193 test files \| 840 PASS Clean (100% PASS)** + chaos matrix | Unknown vulnerabilities · upgrade/key compromise · third-party venue bugs |
 | **Market / liquidity** | `MIN_DEPTH_USD` · 0.5% slippage fuse · TWAP path slicing | Gap windows · depth evaporation · black-swan tail beyond stress replay |
 | **Yield variability** | Dynamic Target Range **8.2% ~ 11.8%** (non-guaranteed HUD band) · **0.5% Hurdle Gate** | Negative funding · fee compression · emission-independent return shortfall |
 
@@ -119,7 +119,7 @@ Institutional allocators and sophisticated users interacting with SliverVine Pro
 3. **Do not rely on DDIP, HUD APY bands, or grant-audit telemetry** as substitutes for independent due diligence, legal review, and risk budgeting.
 4. **Recognize that Fail-Closed severance may delay or prevent execution** — potentially missing intended market opportunities (opportunity cost is a real economic risk).
 
-**Verification SSOT:** `pnpm test -- --run` · `GET /api/grant-audit` · [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §0 (disclaimers · force majeure · AI risks) · §2.5–§2.6 (economic sustainability · real yield) · §4 (ingress timing) · §6 (Basel mapping).
+**Verification SSOT:** `pnpm test -- --run` · `GET /api/grant-audit` · [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §0 (disclaimers · force majeure · AI risks) · §2.5–§2.6 (economic sustainability · real yield) · §4 (ingress timing) · §6 (Basel mapping).
 
 ---
 
@@ -132,38 +132,44 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | Pillar | Posture | Primary evidence |
 |--------|---------|------------------|
 | **Pillar 3 — SliverVine Citadel Shield** | Fail-closed before broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 matrix · [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
-| **Capital accounting** | `lostUsd ≡ 0` on pending bridge liquidity | `src/adapters/across-ingress-bridge.ts` · 5/5 Vitest |
+| **Capital accounting** | `lostUsd ≡ 0` on pending bridge liquidity | `src/adapters/across-ingress-bridge.ts` · 6/6 Vitest |
 | **Pillar 1 — Gatehouse** | **Opt-In** scoped keys · notional cap · gas ledger | ZeroDev AA gate (`USE_ZERODEV_AA` default-off) · `session-key-gates.ts` · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **Stress & simulation** | 30D Survival Benchmark + **180 test files \| 803 PASS Clean** regression | `generate-survival-report.ts` · `pnpm test -- --run` |
+| **Stress & simulation** | 30D Survival Benchmark + **193 test files \| 840 PASS Clean (100% PASS)** regression | `generate-survival-report.ts` · `pnpm test -- --run` |
 | **Pillar 2 — Compliance Ingress Firewall** | Outbound-only escort · AML inbound block · Robinhood Chain as inaugural reference adapter | `IngressSafetySwitch.sol` · [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 
 ### 1.2 Locked SSOT Metrics (Evaluator Copy-Paste)
 
 | Metric | Locked value | Verifier |
 |--------|--------------|----------|
-| **Vitest regression** | **180 test files \| 803 PASS Clean** | `pnpm test -- --run` |
-| **Bridge invariants** | **5/5 PASS** | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` |
+| **Vitest regression** | **193 test files \| 840 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Wasm hot-path bundle** | **70.16 KiB gzip** (281.25 KiB raw · `pnpm bundle:measure`) | Worker hot-path · limit 150 KiB |
+| **Wasm Soil Core** | `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** | `pnpm build:wasm` · `tests/services/wasm-feasibility-lib/*` |
+| **Shield decision latency** | **p50 ~106 µs** (`checkSoilResistance()` / TS Gateway) | Resilience / soil benchmark harness |
+| **Bridge invariants** | **6/6 PASS** | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` |
 | **ZeroDev AA gate** | **4/4 PASS** | `pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts` |
 | **Chaos matrix** | **255/255 blocked · `capitalLossUsd: 0`** | [`chaos-blackswan-metrics.json`](./chaos-blackswan-metrics.json) |
-| **Security matrix** | **3-Tier: 5/0/0 PASS** | `pnpm audit:security` → [`static-analysis-report.json`](./static-analysis-report.json) |
+| **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** | `pnpm audit:security` → [`static-analysis-report.json`](./static-analysis-report.json) |
 | **V1.0 capacity anchor** | **$100,000** Alpha Vault / design notional | `MIN_DEPTH_USD` · `ORDER_SIZE_MAX_USD` · Survival `NOTIONAL_USD` |
+
+**Single regression phrase (all DDIP prose):**
+`193 test files | 840 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm **70.16 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** · Shield **p50 ~106 µs**.
 
 ### 1.3 Document Map for Deep Diligence
 
 | Topic | DDIP section | Extended SSOT |
 |-------|-------------|---------------|
 | **Risk & Disclaimer** | [§ Risk & Disclaimer](#risk--disclaimer) | This document · non-custodial · residual risk table |
-| Simulation & chaos harness | §3 | This document · [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §4 |
-| Arbitrum Native vs Robinhood escort | §4 | This document · [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §5 |
-| Regulatory & institutional compliance | §5 | This document · [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6 |
-| ArbOS Elara · Dynamic Target Range | §5.6 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6.5 · [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
-| Real yield vs. toxic inflation | §2.6 (Risk Framework SSOT) | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §2.6 |
-| 60 architectural invariants | §5.1–§5.2 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §3 |
+| Simulation & chaos harness | §3 | This document · [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §4 |
+| Arbitrum Native vs Robinhood escort | §4 | This document · [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §5 |
+| Regulatory & institutional compliance | §5 | This document · [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6 |
+| ArbOS Elara · Dynamic Target Range | §5.6 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6.5 · [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
+| Real yield vs. toxic inflation | §2.6 (Risk Framework SSOT) | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §2.6 |
+| 60 architectural invariants | §5.1–§5.2 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §3 |
 | Robinhood reference adapter audit | §2.3 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 | Principal security interrogations | §2 | [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) |
 | Pillar 1 — ZeroDev Gatehouse AA | — | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 | Pillar 3 — Edge Shield Wasm core | — | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
-| Yellow Paper / R01–R20 | §2.2 | [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) |
+| Yellow Paper / R01–R20 | §2.2 | [`README.md`](../architecture/README.md) |
 
 ---
 
@@ -223,8 +229,8 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 **Evaluator command pack:**
 
 ```bash
-pnpm test -- --run # 180 test files | 803 PASS Clean
-pnpm audit:security # 3-Tier matrix
+pnpm test -- --run # 193 test files | 840 PASS Clean (100% PASS)
+pnpm audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
 ```
@@ -353,7 +359,7 @@ When heartbeat expires, `auditSessionKeyHeartbeat()` sets `revocationLocked: tru
 |---------|---------|-------|
 | **ZeroDev AA Dry-Run** | `pnpm test:zerodev` | Kernel v3 EP 0.7 UserOp draft · `auditSessionKeyConstraints()` · Risk Oracle Gate |
 | **HL panic sandbox** | `pnpm tsx scripts/dry-run-sandbox.ts` | In-memory HL testnet stress → EIP-712 pipeline · **no network** |
-| **Grant E2E** | `pnpm demo:pipeline` (default dry-run) | Full Citadel pipeline · `--live` opt-in only |
+| **Grant E2E** | `pnpm demo:e2e` (default dry-run) | Full Citadel pipeline · `--live` opt-in only |
 | **5-TX anchor** | `pnpm verify:5tx` | HL testnet SHA-256 execution proof · $1K / $100K / $1M tiers |
 | **Negative proofs** | `pnpm verify:negative` | Depth breach → soil trip confirmed |
 
@@ -379,10 +385,10 @@ When heartbeat expires, `auditSessionKeyHeartbeat()` sets `revocationLocked: tru
 
 | Harness | Command | Expected |
 |---------|---------|----------|
-| **Full Vitest** | `pnpm test -- --run` | **180 test files \| 803 PASS Clean** |
+| **Full Vitest** | `pnpm test -- --run` | **193 test files \| 840 PASS Clean (100% PASS)** |
 | **Grant risk sim (v1.0 suite)** | `pnpm test:grant-v09-sim` | AA / risk sim PASS |
 | **Wasm feasibility** | `pnpm test:wasm-feasibility` | Soil Wasm sim PASS |
-| **Security matrix** | `pnpm audit:security` | **3-Tier 5/0/0 PASS** |
+| **Security matrix** | `pnpm audit:security` | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** |
 | **Property fuzz (Forge)** | `pnpm audit:nightly` | Gate + attestation properties |
 
 ---
@@ -410,14 +416,14 @@ V1.0 exposes two **capital ingress modes** that converge on the same Citadel pre
 | **HL withdrawal window** | **~15 min** (both paths) | Same after hedge leg live |
 | **Recommended use** | Existing Arb USDC / GM positions | Robinhood USDG earn + institutional compliance escort |
 
-**Quant anchor:** **$100,000** is the code-verified convergence of `MIN_DEPTH_USD`, `ORDER_SIZE_MAX_USD`, Survival Benchmark `NOTIONAL_USD`, and `01_TECHNICAL_SPECIFICATION.md` §3.6 Alpha Vault Cap.
+**Quant anchor:** **$100,000** is the code-verified convergence of `MIN_DEPTH_USD`, `ORDER_SIZE_MAX_USD`, Survival Benchmark `NOTIONAL_USD`, and `README.md` §3.6 Alpha Vault Cap.
 
 **Code SSOT:**
 
 | Path | Module | Test |
 |------|--------|------|
 | Arbitrum native sizing | `trade-pipeline-order-sizing.ts` · `soil-resistance-types.ts` | `tests/risk-control/*` |
-| Robinhood escort | `src/adapters/across-ingress-bridge.ts` | `tests/adapters/across-ingress-bridge.test.ts` (**5/5**) |
+| Robinhood escort | `src/adapters/across-ingress-bridge.ts` | `tests/adapters/across-ingress-bridge.test.ts` (**6/6**) |
 | On-chain AML firewall | `IngressSafetySwitch.sol` | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 
 ### 4.2 Execution Timing — Instant vs. In-Flight State Machine
@@ -463,7 +469,7 @@ evaluateAcrossBridgeTransfer() ← validateAcrossBridgeDirection() — outbound-
 | `BRIDGE_TIMEOUT_FAIL_CLOSED` | No | No | **0** |
 | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | No | No | **0** |
 
-> **Allocator invariant:** Bridge delay **cannot** open unhedged delta. In-flight capital is labeled, not deployed, until `SETTLED` — verified in Vitest 5/5.
+> **Allocator invariant:** Bridge delay **cannot** open unhedged delta. In-flight capital is labeled, not deployed, until `SETTLED` — verified in Vitest 6/6.
 
 ### 4.3 Capacity Envelope Under Shared Defenses
 
@@ -541,7 +547,7 @@ Portfolio tail ≤ $100k Alpha Cap + stress replay ← §4 + Survival Benchmark
 | Soil-trip rejected order | **No** — fail-closed pre-execution | **0** |
 | Bounded execution slippage | **Yes** — capped by order-aware Max SL | ≤ fuse budget |
 
-**SSOT:** `evaluateAcrossBridgeTransfer()` · `computeOrderAwareMaxSlUsd()` · Vitest **180 test files | 803 PASS Clean**.
+**SSOT:** `evaluateAcrossBridgeTransfer()` · `computeOrderAwareMaxSlUsd()` · Vitest **193 test files | 840 PASS Clean (100% PASS)**.
 
 ### 5.3 0-Proxy Immutable Infrastructure (SOC 2–Aligned)
 
@@ -561,7 +567,7 @@ Portfolio tail ≤ $100k Alpha Cap + stress replay ← §4 + Survival Benchmark
 ```text
 Layer 1 — Wasm Soil Core (#![no_std], <28kb) → hot-path fuse, no runtime injection
 Layer 2 — SliverVineGate.sol (consume-once) → L1 attestation digest lock
-Layer 3 — Negative proofs + 180 test files | 803 PASS Clean regression → silent fuse widening impossible
+Layer 3 — Negative proofs + 193 test files | 840 PASS Clean (100% PASS) regression → silent fuse widening impossible
 ```
 
 > **SOC 2 note:** Controls are **mapped** to AICPA Trust Services Criteria for transparency — SliverVine Protocol does **not** claim SOC 2 Type II certification. See also §2.1 for full TSC table.
@@ -577,7 +583,7 @@ MiCA (Markets in Crypto-Assets Regulation) emphasizes **operational resilience, 
 | **Conflicts / contamination prevention** | **Outbound-only** escort · inbound reverse path blocked | `validateAcrossBridgeDirection()` |
 | **AML inbound isolation** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | `src/adapters/across-ingress-bridge.ts` |
 | **On-chain invariant enforcement** | **`IngressSafetySwitch.sol`** address-level oracle flush + blacklist · inbound AML at **`src/adapters/across-ingress-bridge.ts`** | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
-| **Honest pending-asset labeling** | `IN_FLIGHT_BRIDGE_CAPITAL` · **`lostUsd ≡ 0`** | Vitest **5/5** |
+| **Honest pending-asset labeling** | `IN_FLIGHT_BRIDGE_CAPITAL` · **`lostUsd ≡ 0`** | Vitest **6/6** |
 
 ```text
 [ Robinhood USDG ] ──outbound-only──► [ Arbitrum Citadel Vault ]
@@ -590,18 +596,18 @@ MiCA (Markets in Crypto-Assets Regulation) emphasizes **operational resilience, 
 **Evaluator verification:**
 
 ```bash
-pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts # 5/5 — AML + in-flight
-pnpm test -- --run # 180 test files | 803 PASS Clean
+pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts # 6/6 — AML + in-flight + clock skew
+pnpm test -- --run # 193 test files | 840 PASS Clean (100% PASS)
 ```
 
 ### 5.6 ArbOS Elara Compliance Alignment & Dynamic Target Range
 
-> **V1.0 Design Spec.** SliverVine Protocol's **Pillar 2 Compliance Ingress Firewall** natively aligns with the **ArbOS Elara upgrade** — Arbitrum's protocol-level ingress filtering plane — documenting **transaction-ordering awareness** as a reinforcement layer alongside Edge fail-closed gates. See [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor).
+> **V1.0 Design Spec.** SliverVine Protocol's **Pillar 2 Compliance Ingress Firewall** natively aligns with the **ArbOS Elara upgrade** — Arbitrum's protocol-level ingress filtering plane — documenting **transaction-ordering awareness** as a reinforcement layer alongside Edge fail-closed gates. See [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor).
 
 | Compliance plane | Function | UI / code anchor |
 |------------------|----------|------------------|
 | **Edge SSOT (pre-broadcast)** | Soil matrix · signing channel severance · UserOp gate | `checkSoilResistance()` · `zerodev-aa-gate.ts` |
-| **Pillar 2 Compliance Ingress Firewall + ArbOS Elara** | Venue-agnostic outbound escort · inbound AML block · Robinhood / Across as **Pillar 2 Reference Escort Adapters** · Elara drops non-compliant / blacklisted senders before GM payload construction | [`02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/02_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` · `src/adapters/across-ingress-bridge.ts` |
+| **Pillar 2 Compliance Ingress Firewall + ArbOS Elara** | Venue-agnostic outbound escort · inbound AML block · Robinhood / Across as **Pillar 2 Reference Escort Adapters** · Elara drops non-compliant / blacklisted senders before GM payload construction | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` · `src/adapters/across-ingress-bridge.ts` |
 | **Sequencer / ordering sensor** | ArbOS base-fee velocity · sequencer grace — no naked opens during desync | `arbitrum-gas-guard.ts` · `sequencer-guard.ts` |
 | **Multi-tranche demo HUD** | Tranche A native vault vs Tranche B bridge state machine | `SmartRoutingDepositCard` · `deposit-tranche-config.ts` |
 | **Reactive HUD alerts** | Institutional trip copy for allocators | `compliance-trip-alerts.ts` · `LivingWaterShieldCard` · `AMLShieldCard` |
@@ -618,7 +624,7 @@ pnpm test -- --run # 180 test files | 803 PASS Clean
 
 | Parameter | Value | SSOT |
 |-----------|-------|------|
-| **Dynamic Target Range** | **8.2% ~ 11.8% APY** (non-guaranteed display band) | `App.tsx` · [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6.5 |
+| **Dynamic Target Range** | **8.2% ~ 11.8% APY** (non-guaranteed display band) | `App.tsx` · [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §6.5 |
 | **Hurdle Gate friction buffer** | **+0.5%** (`FRICTION_BUFFER_APY = 0.005`) | `rebalance-rules.ts` |
 | **Rebalance predicate** | Deploy only when excess yield exceeds friction buffer | `resolveCapitalAllocation()` · `passesDeltaNeutralHurdle()` |
 
@@ -630,11 +636,11 @@ pnpm test -- --run # 180 test files | 803 PASS Clean
 |------|----------|------------|
 | **First** | Business operations | Yield hurdle · buffer engine (5–10%) · rebalance rules |
 | **Second** | Risk & compliance | Fail-closed soil · PGATE · AML firewall · bridge accounting |
-| **Third** | Independent assurance | **180 test files \| 803 PASS Clean** · Survival Benchmark (§3) · chaos matrix · DDIP |
+| **Third** | Independent assurance | **193 test files \| 840 PASS Clean (100% PASS)** · Survival Benchmark (§3) · chaos matrix · DDIP |
 
 | Question | Answer | Verify |
 |----------|--------|--------|
-| Can bridge delay cause naked delta? | **No** — `IN_FLIGHT` capital cannot deploy | Bridge tests 5/5 |
+| Can bridge delay cause naked delta? | **No** — `IN_FLIGHT` capital cannot deploy | Bridge tests 6/6 |
 | Can session keys withdraw user funds? | **No** — `ORDER_EXECUTE` scope only | `session-key-gates.ts` |
 | Is SOC 2 / MiCA certified? | **Not claimed** — architectural alignment only | §5.3 · §5.4 |
 | What is max vault size at launch? | **$100,000** V1.0 Alpha Cap | §4.1 · Tech Spec §3.6 |
@@ -690,17 +696,17 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 
 | # | Check | Command / surface | Pass |
 |---|-------|-------------------|------|
-| 1 | Full regression | `pnpm test -- --run` | **180 test files \| 803 PASS Clean** |
-| 2 | Bridge accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | 5/5 |
+| 1 | Full regression | `pnpm test -- --run` | **193 test files \| 840 PASS Clean (100% PASS)** |
+| 2 | Bridge accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | 6/6 |
 | 3 | ZeroDev gate | `pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts` | 4/4 |
-| 4 | Security matrix | `pnpm audit:security` | 5/0/0 |
+| 4 | Security matrix | `pnpm audit:security` | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** |
 | 5 | Live audit | `GET /api/grant-audit` | `lostUsd: 0` |
 | 6 | Survival report | `pnpm tsx scripts/generate-survival-report.ts` | Artifact generated (§3.1) |
 | 7 | Chaos matrix | `tests/scripts/chaos-blackswan-stress.test.ts` | 255/255 · `capitalLossUsd: 0` |
 | 8 | Session R07 cap | `tests/services/session-key-gates.test.ts` | `SESSION_CAP>5000` severed |
 | 9 | Negative proofs | `pnpm verify:negative` | Soil trips confirmed |
-| 10 | Ingress path comparison | §4.1 table · `across-ingress-bridge.test.ts` | 5/5 · state machine verified |
-| 11 | Regulatory mapping | §5.1–§5.4 · `pnpm test -- --run` | Basel/ES/MiCA tables · **180 test files \| 803 PASS Clean** |
+| 10 | Ingress path comparison | §4.1 table · `across-ingress-bridge.test.ts` | 6/6 · state machine verified |
+| 11 | Regulatory mapping | §5.1–§5.4 · `pnpm test -- --run` | Basel/ES/MiCA tables · **193 test files \| 840 PASS Clean (100% PASS)** |
 
 ---
 
@@ -708,8 +714,8 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 
 | Document | Purpose |
 |----------|---------|
-| [`01_TECHNICAL_SPECIFICATION.md`](../architecture/01_TECHNICAL_SPECIFICATION.md) | Yellow Paper — R01–R20 · formal risk equations |
-| [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · 60 invariants · stress harness · Basel mapping |
+| [`README.md`](../architecture/README.md) | Yellow Paper — R01–R20 · formal risk equations |
+| [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · 60 invariants · stress harness · Basel mapping |
 | [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Four diagnostic interrogations · Three Pillars mapping |
 | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 — AML escort · inbound block · bridge accounting |
@@ -720,4 +726,4 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 ---
 
 **Prepared by:** SilverVine Labs Risk & Compliance Documentation
-**Last updated:** 2026-09-04 · Branch baseline: `V1.0_b4_Buildaton_Submisson` · **Risk & Disclaimer** · Three Pillars · BeΔ philosophy
+**Last updated:** 2026-09-06 · Branch baseline: `V1.0_b4_Buildaton_Submisson` · **Risk & Disclaimer** · Three Pillars · BeΔ philosophy

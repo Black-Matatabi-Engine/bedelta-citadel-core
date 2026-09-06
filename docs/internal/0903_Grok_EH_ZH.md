@@ -7,7 +7,7 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 | `V1.0_b4_Buildaton_Submisson` |
 | 主網 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **42161** |
-| 測試 SSOT | 180 files / 803 PASS |
+| 測試 SSOT | 193 test files | 840 PASS Clean (100% PASS) |
 | 面板 | 10 真實產業人格 + 20 多樣化評審（10 男 / 10 女） |
 | **全團算術平均** | **8.14 / 10** |
 | **主席加權敘事帶** | **8.2–8.3**（未進 9.0） |
@@ -147,7 +147,7 @@
 ### 9. Arbitrum Foundation Grant Lead（生態長期價值、README 透明、One 證明）
 
 - **說服：** **這就是他們要的 One 證明。** Agent 安全是 2026 敘事；lean Gate 不與 Nitro 搶執行預算；測試密度高。
-- **Nit：** README 徽章連到 **另一個 slug**；Stylus badge 易被讀成已上 Stylus。長期價值問句：CaaS 10bps 是 V2.0 路線圖，不要寫進「已收費」。
+- **Nit：** README 徽章連到 **另一個 slug**；Stylus badge 易被讀成已上 Stylus。長期價值問句：V2.0 CaaS 是路線圖（預執行風險檢查 · SDK 授權），不要寫進「已收費」。
 - **分數驅動：** SC 8.70（本面板合約最高檔）。
 
 ### 10. HackQuest Chief Auditor（可重現、零 404、零誤導）

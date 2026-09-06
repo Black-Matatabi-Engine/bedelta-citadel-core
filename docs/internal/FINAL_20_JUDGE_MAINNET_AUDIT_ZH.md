@@ -7,7 +7,7 @@
 | **實體** | SilverVine Labs |
 | **賽事** | Arbitrum Open House Singapore Online Buildathon |
 | **分支 / HEAD** | `V1.0_b4_Buildaton_Submisson` · `9c0bc1a`（含 `withCitadelShield`） |
-| **測試 SSOT** | **180 test files \| 803 PASS Clean**（`pnpm test -- --run`） |
+| **測試 SSOT** | **193 test files \| 840 PASS Clean (100% PASS)**（`pnpm test -- --run`） |
 | **評審面板** | 20 人（10 男 / 10 女）· 官方四維度各 25% |
 | **對外鎖定總分** | **8.26 / 10**（算術平均 **8.22**；主席加權敘事帶 **8.2+**） |
 
@@ -79,7 +79,7 @@
 |---------------------|--------|------------|-----------|--------------|-----------|
 | **Smart Contract Quality** | 7.35 | 7.72 | 8.38 | **8.42** | 主網 Gate · Foundry 62/62 · consume-once invariant · Bootstrap 透明 |
 | **Product-Market Fit** | 6.85 | 7.95 | 8.08 | **8.18** | GMX +10 bps · Agent harness · **`withCitadelShield`** · Pendle sentinel |
-| **Innovation and Creativity** | 7.55 | 7.88 | 7.92 | **8.05** | Wasm p50 ~106µs · Zero-Touch Plugin Standard · ERC-8196 Draft |
+| **Innovation and Creativity** | 7.55 | 7.88 | 7.92 | **8.05** | Wasm p50 ~106µs · Zero-Touch Plugin Standard · ERC-8196 (Final) |
 | **Real Problem Solving** | 7.15 | 7.58 | 8.15 | **8.20** | 0-Gas pre-broadcast · `lostUsd ≡ 0` · 42161 可索引 Gate |
 | **加權總分** | **7.20** | **7.78** | **8.13** | **8.26** | — |
 

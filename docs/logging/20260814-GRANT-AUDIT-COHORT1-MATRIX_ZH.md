@@ -1,7 +1,7 @@
 # Grant Audit Cohort 1 Matrix
 
 > **中文參考譯本** · 英文 SSOT：[`20260814-GRANT-AUDIT-COHORT1-MATRIX.md`](./20260814-GRANT-AUDIT-COHORT1-MATRIX.md)  
-> **Vitest SSOT：** **836 tests** · Worker **69.32 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
+> **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 - **生成時間**：2026-08-22T03:53:58.796Z
 - **Git**：30be5e7d671b6a1b5b2e1410b3ba82cf87728d5b

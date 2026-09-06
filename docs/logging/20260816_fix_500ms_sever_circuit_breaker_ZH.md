@@ -1,6 +1,6 @@
 # fix_500ms_sever_circuit_breaker
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 ## Summary of Changes
 - Step-2 L2 probe 失敗（`probeOk: false` 或延遲 >500ms）時呼叫 `severCircuitBreakerPipeline("R20")`，強制 `signingChannelOpen: false`

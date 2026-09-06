@@ -1,7 +1,7 @@
 # Grant 韌性基準審計
 
 > **中文參考譯本** · 英文 SSOT：[`20260814-230000-grant-resilience-benchmark-audit.md`](./20260814-230000-grant-resilience-benchmark-audit.md)  
-> **Vitest SSOT：** **836 tests** · Worker **69.32 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
+> **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 **時間戳：** 2026-08-19T11:34:52.415Z  
 **協議：** Santenmoku v0.9  

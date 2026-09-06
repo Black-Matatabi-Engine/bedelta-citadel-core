@@ -1,70 +1,29 @@
 {
   "schema": "silvervine.static-analysis.v3",
-  "generatedAt": "2026-08-24T08:40:03.603Z",
+  "generatedAt": "2026-09-06T03:10:41.282Z",
   "narrative": "behavioral_pass_does_not_imply_web3_security",
-  "tier": "security",
+  "tier": "nightly",
   "tools": {
-    "vitest": {
-      "id": "vitest",
-      "label": "Full Vitest suite",
+    "echidna": {
+      "id": "echidna",
+      "label": "Echidna property fuzz",
       "verdict": "PASS",
       "exitCode": 0,
-      "elapsedMs": 32641,
-      "detail": "[SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate | [SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate |  | stderr | tests/services/aa-adapter/risk-oracle-gate.test.ts > risk-oracle-gate > blocks UserOp when statusCode === 3 even if flush flag is false | [SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate |  | stderr | tests/v09/grant-v09-risk.test.ts > v0.9 grant risk simulation (OpSec state assertions) > F1+F3 gas spike scenario trips statusCode 3 before settlement | [SliverVineRiskOracle] ErrorTriggere",
-      "counterexamples": [
-        "✓ sessionOrderFillSync — waitForNewFill > throws OnChainFillFailedError after max attempts  506ms",
-        "stdout | tests/adapters/hl/execution-transport.test.ts > hl/execution — HTTP transport > handles HTTP error responses",
-        "stderr | tests/defense-matrix.test.ts > Defense Matrix — R20 Physical Deadlock Execution > vineWrapProtection criHardlock throws HardlockError (403 deadlock)"
-      ]
+      "elapsedMs": 1275,
+      "detail": "Unique instructions: 883 | Unique codehashes: 2 | Corpus size: 4 | Seed: 7722676919801120269 | Total calls: 2016 |  |  | WARNING: Slither was explicitly disabled. Echidna uses Slither (https://github.com/crytic/slither) to perform source analysis, which makes fuzzing more effective. You should enable it."
     },
-    "forge": {
-      "id": "forge",
-      "label": "Forge unit + invariants",
+    "forge-deep-fuzz": {
+      "id": "forge-deep-fuzz",
+      "label": "Foundry deep fuzz",
       "verdict": "PASS",
       "exitCode": 0,
-      "elapsedMs": 3530,
-      "detail": "|-------------+----------------+-------+---------+----------| | | GateHandler | warp           | 5390  | 0       | 0        | | ╰-------------+----------------+-------+---------+----------╯ |  | [PASS] test_HandlerCanSucceed() (gas: 122069) | Suite result: ok. 4 passed; 0 failed; 0 skipped; finished in 2.84s (8.20s CPU time) |  | Ran 4 test suites in 2.85s (8.85s CPU time): 60 tests passed, 0 failed, 0 skipped (60 total tests)"
-    },
-    "slither": {
-      "id": "slither",
-      "label": "Slither SliverVineGate",
-      "verdict": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 4978,
-      "detail": "'forge clean' running (wd: /home/lhsum/dev/bedelta-citadel-core/SliverVineGate) | 'forge config --json' running | 'forge build --build-info --deny never --skip ./test/** ./script/** --force' running (wd: /home/lhsum/dev/bedelta-citadel-core/SliverVineGate) |  | . analyzed (3 contracts with 96 detectors), 0 result(s) found | INFO:Slither:/home/lhsum/dev/bedelta-citadel-core/docs/audit/slither.json exists already, the overwrite is prevented"
-    },
-    "aderyn": {
-      "id": "aderyn",
-      "label": "Aderyn SliverVineGate",
-      "verdict": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 2659,
-      "detail": "Detectors run, processing found issues | Found issues processed. Printing report | Report printed to report.md |  |  | thread 'main' (35632) panicked at /home/lhsum/.cargo/registry/src/index.crates.io-1949cf8c6b5b557f/aderyn-0.1.9/src/lib.rs:122:86: | called `Result::unwrap()` on an `Err` value: Error(\"unexpected character 'a' while parsing major version number\") | note: run with `RUST_BACKTRACE=1` environment variable to display a backtrace"
-    },
-    "pnpm-audit": {
-      "id": "pnpm-audit",
-      "label": "pnpm audit --prod",
-      "verdict": "PASS",
-      "exitCode": 0,
-      "elapsedMs": 3273,
-      "detail": "No known vulnerabilities found"
+      "elapsedMs": 71444,
+      "detail": "[PASS] testFuzz_AcceptanceRegionIsExact(uint64,uint32,uint8,uint16,uint256,uint32) (runs: 65535, μ: 30176, ~: 30347) | [PASS] testFuzz_ArbitraryKeyCannotReachQuorum(uint256,uint256) (runs: 65535, μ: 45516, ~: 45366) | [PASS] testFuzz_EveryFieldIsSigned(uint8,uint256) (runs: 65535, μ: 39899, ~: 39916) | [PASS] testFuzz_NeverConsumableTwice(uint256,uint16) (runs: 65535, μ: 77437, ~: 77327) | [PASS] testFuzz_OnlySubjectMayConsume(address,uint256) (runs: 65535, μ: 28119, ~: 28119) | Suite result: ok. 5 passed; 0 failed; 0 skipped; finished in 68.53s (341.71s CPU time) |  | Ran 1 test suite in 68.5"
     }
   },
-  "exploratoryFindings": {
-    "vitest": {
-      "exitCode": 0,
-      "verdict": "PASS",
-      "exploratory": false,
-      "counterexamples": [
-        "✓ sessionOrderFillSync — waitForNewFill > throws OnChainFillFailedError after max attempts  506ms",
-        "stdout | tests/adapters/hl/execution-transport.test.ts > hl/execution — HTTP transport > handles HTTP error responses",
-        "stderr | tests/defense-matrix.test.ts > Defense Matrix — R20 Physical Deadlock Execution > vineWrapProtection criHardlock throws HardlockError (403 deadlock)"
-      ],
-      "detail": "[SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate | [SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate |  | stderr | tests/services/aa-adapter/risk-oracle-gate.test.ts > risk-oracle-gate > blocks UserOp when statusCode === 3 even if flush flag is false | [SliverVineRiskOracle] ErrorTriggered code=SLO_TIMEOUT actor=zerodev-userop-gate |  | stderr | tests/v09/grant-v09-risk.test.ts > v0.9 grant risk simulation (OpSec state assertions) > F1+F3 gas spike scenario trips statusCode 3 before settlement | [SliverVineRiskOracle] ErrorTriggere"
-    }
-  },
+  "exploratoryFindings": {},
   "summary": {
-    "pass": 5,
+    "pass": 2,
     "fail": 0,
     "skipped": 0
   },

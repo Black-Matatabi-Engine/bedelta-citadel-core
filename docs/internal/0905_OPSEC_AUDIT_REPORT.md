@@ -6,7 +6,7 @@
 | **Visibility** | Internal Core Team Only (DO NOT expose in Public Grant Submissions) |
 | **Repository** | `bedelta-citadel-core` |
 | **Audit Baseline** | `main` @ `f2a79c6` (Phase 2 spec pass) · code verified @ `f2a79c6` |
-| **Test / Bundle SSOT** | **192 test files / 836 PASS** · **69.35 KiB gzip** (`pass: true`) |
+| **Test / Bundle SSOT** | **193 test files | 840 PASS Clean (100% PASS)** · **70.16 KiB gzip** (`pass: true`) |
 | **Auditor Role** | Principal Security Auditor & Lead Architect |
 | **Scope** | Full codebase read-only scan |
 | **Date** | 2026-09-05 |
@@ -29,7 +29,7 @@ SliverVine Citadel Shield's **legal layer** (BUSL-1.1 + competing-use restrictio
 | Source closure | 3/10 | `risk-engine-core.ts`, bitmasks, adapter logic fully plaintext |
 | Adversarial trap efficacy | 5/10 | Honeypots depend on config unlock; competitors can grep and bypass |
 | WASM closed kernel | 4/10 | `soil_core.wasm` covers narrow subset; Rust source is Apache-2.0 |
-| Integration / test moat | 8/10 | 192 files / 836 tests + 7-protocol matrix |
+| Integration / test moat | 8/10 | 193 test files | 840 PASS Clean (100% PASS) + 7-protocol matrix |
 
 ---
 
@@ -283,7 +283,7 @@ Adapter → evaluateGatewayRules / checkSoilResistance
 
 ## 7. Conclusion
 
-`bedelta-citadel-core` is a **strong engineering baseline** (836 tests, 7 protocols, 69.35 KiB Worker) but **moderate anti-fork posture** — relying on BUSL and integration depth rather than a closed mathematical kernel. WASM strategy should target:
+`bedelta-citadel-core` is a **strong engineering baseline** (840 passed tests, 7 protocols, 70.16 KiB Worker) but **moderate anti-fork posture** — relying on BUSL and integration depth rather than a closed mathematical kernel. WASM strategy should target:
 
 - **Closed:** bitmask invariants, soil math, Max SL, pending OI, gateway poison
 - **Open:** adapters, RPC, agent SDK, demo CLI

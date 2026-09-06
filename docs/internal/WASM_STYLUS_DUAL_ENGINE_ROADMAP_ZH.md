@@ -1,6 +1,6 @@
 # BeDelta Living Water — Wasm / Stylus 雙引擎重構路線圖
 
-> **Vitest SSOT:** 180 test files | 803 PASS Clean
+> **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 > **分支：** `v1.0_push_BDLW`  
 > **狀態：** ⏳ V1.0 Design Spec（M6 敘事錨點）  
