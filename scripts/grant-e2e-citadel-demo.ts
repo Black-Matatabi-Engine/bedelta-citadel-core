@@ -67,6 +67,9 @@ import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedg
 import { loadEnvProduction, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
+import { getDemoSafeTimestamp, muteLibraryConsole } from "../examples/lib/demo-utils";
+
+const _unmuteDemoConsole = muteLibraryConsole();
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -165,26 +168,6 @@ function resolveHlSessionPrivateKey(): string | undefined {
   );
 }
 
-/** Suppress raw JSON telemetry during Step 5 — demo shows human alerts only. */
-function withDemoLogSuppressed<T>(fn: () => T): T {
-  const origLog = console.log;
-  const origWarn = console.warn;
-  const wrap =
-    (orig: typeof console.log) =>
-    (...args: unknown[]) => {
-      const line = args.map(String).join(" ");
-      if (line.startsWith("{") && line.includes("SOIL_RESISTANCE_TRIP")) return;
-      orig.apply(console, args);
-    };
-  console.log = wrap(origLog);
-  console.warn = wrap(origWarn);
-  try {
-    return fn();
-  } finally {
-    console.log = origLog;
-    console.warn = origWarn;
-  }
-}
 
 function parseMode(argv: string[]): DemoMode {
   if (argv.includes("--live") && !argv.includes("--dry-run")) return "live";
@@ -239,7 +222,7 @@ function formatWasmP50BandStatus(p50Us: number): string {
   return "OUT_OF_BAND";
 }
 
-function step1CitadelPreExec(): {
+function step1CitadelPreExec(demoNowMs: number): {
   ok: boolean;
   wasmUsed: boolean;
   wasmHotPathUs: number;
@@ -260,7 +243,7 @@ function step1CitadelPreExec(): {
     `Wasm: ready=${isSoilWasmReady()} loaded=${wasmOk} budget=<${WASM_BUDGET_BYTES}B / <${WASM_EXEC_BUDGET_US}µs`,
   );
 
-  const nowMs = Date.now();
+  const nowMs = demoNowMs;
   const soilInput = {
     hlSpot: DEMO_ETH_MID,
     hlPerp: DEMO_ETH_MID,
@@ -346,7 +329,7 @@ function step1CitadelPreExec(): {
   };
 }
 
-function step2RobinhoodEscort(): {
+function step2RobinhoodEscort(demoNowMs: number): {
   outboundOk: boolean;
   inboundBlocked: boolean;
   capitalLabel: string;
@@ -356,7 +339,7 @@ function step2RobinhoodEscort(): {
     "Reference Ingress Adapter — Robinhood 46630 → 42161 Escort & AML Block",
     "[Optional Pillar 2 Reference Ingress Adapter (e.g., Robinhood Chain / Across)] Integration reference only — not core product identity · unidirectional escort accounting with lostUsd ≡ 0",
   );
-  const nowMs = Date.now();
+  const nowMs = demoNowMs;
 
   const outbound = assertUnidirectionalBridge({
     sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
@@ -409,7 +392,7 @@ function step3GmxUnderweightRebalance(): {
     `GMX v2 Underweight Rebalance & UI Fee Rebase (+${GMX_UI_FEE_BPS} bps uiFeeReceiver builder lane)`,
   );
 
-  const pool = { longTokenUsd: 8_000_000, shortTokenUsd: 2_000_000 };
+  const pool = { longTokenUsd: 5_200_000, shortTokenUsd: 4_800_000 };
   const isLong = false; // short side underweight → short order qualifies
   const balancer = evaluateGmxBalancerQualification({
     orderSizeUsd: DEMO_SIZE_USD,
@@ -535,7 +518,7 @@ async function step4HlSessionHedge(mode: DemoMode): Promise<{
   };
 }
 
-function step5R20PanicFlash(): {
+function step5R20PanicFlash(demoAt: Date): {
   r20Locked: boolean;
   severTarget: string | null;
   cancelCount: number;
@@ -550,17 +533,15 @@ function step5R20PanicFlash(): {
 
   __resetCircuitBreakerSeverForTests();
 
-  const toxicSoil = withDemoLogSuppressed(() =>
-    checkSoilResistance({
-      symbol: "ETH-PERP",
-      hlSpot: DEMO_ETH_MID,
-      hlPerp: DEMO_ETH_MID * 1.02,
-      dydxPerp: DEMO_ETH_MID,
-      depthUsd: 100,
-      isTestnet: false,
-      at: new Date(),
-    }),
-  );
+  const toxicSoil = checkSoilResistance({
+    symbol: "ETH-PERP",
+    hlSpot: DEMO_ETH_MID,
+    hlPerp: DEMO_ETH_MID * 1.02,
+    dydxPerp: DEMO_ETH_MID,
+    depthUsd: 100,
+    isTestnet: false,
+    at: demoAt,
+  });
 
   if (toxicSoil.tripped) {
     const reasonSummary =
@@ -620,7 +601,9 @@ function step5R20PanicFlash(): {
 }
 
 async function main(): Promise<void> {
+  try {
   const mode = parseMode(process.argv.slice(2));
+  const { nowMs: demoNowMs, at: demoAt } = getDemoSafeTimestamp();
   demoLog("");
   paintBanner();
   demoLog(`Mode: ${mode === "live" ? "LIVE" : "DRY_RUN"}  (default dry-run; pass --live to enable)`);
@@ -628,13 +611,13 @@ async function main(): Promise<void> {
     "Pipeline: Intent+Deadman → Robinhood Escort → GMX underweight → HL Session hedge → R20 Panic Flash",
   );
 
-  resetProbes(Date.now());
+  resetProbes(demoNowMs);
 
-  const s1 = step1CitadelPreExec();
-  const s2 = step2RobinhoodEscort();
+  const s1 = step1CitadelPreExec(demoNowMs);
+  const s2 = step2RobinhoodEscort(demoNowMs);
   const s3 = step3GmxUnderweightRebalance();
   const s4 = await step4HlSessionHedge(mode);
-  const s5 = step5R20PanicFlash();
+  const s5 = step5R20PanicFlash(demoAt);
 
   demoLog("");
   demoLog("═══ E2E SUMMARY ═══");
@@ -699,6 +682,9 @@ async function main(): Promise<void> {
     s5.withinBudget;
   demoLog(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`);
   process.exitCode = allOk ? 0 : 1;
+  } finally {
+    _unmuteDemoConsole();
+  }
 }
 
 main().catch((err) => {

@@ -26,10 +26,10 @@ import {
 } from "./adapters/citadel-ansi-hud";
 import {
   captureDemoBenchmark,
-  muteLibraryConsole,
   printEscortBanner,
   printEscortResult,
 } from "./lib/escort-demo-hud";
+import { handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 import { formatGuardTime, measureSync } from "./lib/demo-timing";
 
 const WALLET = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -156,6 +156,7 @@ async function main(): Promise<void> {
     }
     console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
     printEscortResult(trip);
+    if (trip) handleDemoExit(true, BRIDGE_TIMEOUT_FAIL_CLOSED);
   } finally {
     restore();
   }

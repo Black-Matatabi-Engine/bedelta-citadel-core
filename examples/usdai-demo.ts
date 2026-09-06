@@ -25,6 +25,7 @@ import {
   seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
+import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 
 const HEALTHY_BASE = {
   chainId: USDAI_ARBITRUM_CHAIN_ID,
@@ -81,18 +82,24 @@ function runTrip(nowMs: number): number {
 }
 
 async function main(): Promise<void> {
+  const restore = muteLibraryConsole();
+  try {
   const trip = process.argv.includes("--trip");
   if (!ensureSoilWasm()) {
     console.error(`${RED}soil_core.wasm unavailable${R}`);
     process.exit(1);
   }
-  const nowMs = Date.now();
+  const { nowMs } = getDemoSafeTimestamp();
   seedAdapterProbes(nowMs);
   printBanner("USD.ai Yield Collateral Guard Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
   console.log(`\n${R}USD.ai guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
+  if (trip) handleDemoExit(true, USD_AI_DEPEG_ORACLE_TRIP);
+  } finally {
+    restore();
+  }
 }
 
 main().catch((err) => {

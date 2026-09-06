@@ -18,22 +18,6 @@ import {
 const BOX_W = 63;
 const BAR_W = 22;
 
-export function muteLibraryConsole(): () => void {
-  const warn = console.warn;
-  const log = console.log;
-  const dropJson = (fn: typeof console.warn) => (...args: unknown[]) => {
-    const msg = args.map((a) => (typeof a === "string" ? a : JSON.stringify(a))).join(" ");
-    if (msg.includes('"level"') && msg.includes('"module"')) return;
-    fn(...args);
-  };
-  console.warn = dropJson(warn);
-  console.log = dropJson(log);
-  return () => {
-    console.warn = warn;
-    console.log = log;
-  };
-}
-
 function escortBar(pct: number, forceFull = false): string {
   const p = forceFull ? 100 : Math.min(100, Math.max(0, pct));
   const filled = Math.round((p / 100) * BAR_W);

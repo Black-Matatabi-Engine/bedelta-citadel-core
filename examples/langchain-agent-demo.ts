@@ -25,13 +25,16 @@ import {
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { measureAsync, resolveLatency } from "./lib/demo-timing";
+import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 
 const AGENT_ID = "langchain-demo";
 
 async function main(): Promise<void> {
+  const restore = muteLibraryConsole();
+  try {
   const trip = process.argv.includes("--trip");
-  const now = new Date();
-  seedAdapterProbes(now.getTime());
+  const { nowMs, at } = getDemoSafeTimestamp();
+  seedAdapterProbes(nowMs);
 
   printBanner("LangChain / LangGraph Demo");
   printMode(trip);
@@ -42,16 +45,16 @@ async function main(): Promise<void> {
   const { value: result, latencyUs: measuredUs } = await measureAsync(() =>
     CitadelRiskGuardTool.invoke({
       ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-      at: now,
+      at,
       agentId: AGENT_ID,
       chainId: 42161,
       intent,
-      nowMs: now.getTime(),
+      nowMs,
       sessionKey: {
         agentAddress: "0xcccccccccccccccccccccccccccccccccccccccc",
         maxOrderClipUsd: 30,
-        expiresAtMs: now.getTime() + 86_400_000,
-        approvedAtMs: now.getTime() - 1_000,
+        expiresAtMs: nowMs + 86_400_000,
+        approvedAtMs: nowMs - 1_000,
       },
     }),
   );
@@ -82,18 +85,22 @@ async function main(): Promise<void> {
     printBackoffDivider();
     const retry = await CitadelRiskGuardTool.invoke({
       ...TOXIC_SOIL,
-      at: now,
+      at,
       agentId: AGENT_ID,
       chainId: 42161,
-      nowMs: now.getTime(),
+      nowMs,
     });
     if (retry.status === "MANDATORY_COOLDOWN_ACTIVE") {
       hudBackoff(AGENT_ID, 60);
       printBackoffResult();
       process.exit(1);
     }
+    handleDemoExit(true, "SOIL_FUSE_TRIP");
   } else {
     process.exit(1);
+  }
+  } finally {
+    restore();
   }
 }
 

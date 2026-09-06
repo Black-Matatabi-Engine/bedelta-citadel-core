@@ -38,6 +38,7 @@ import {
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
+import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 
 async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
@@ -87,6 +88,7 @@ async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Pr
       printBackoffResult();
       process.exit(1);
     }
+    handleDemoExit(true, "SOIL_FUSE_TRIP");
   } else {
     process.exit(1);
   }
@@ -119,6 +121,7 @@ async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Prom
     hudBlocked();
     printResult(false);
     console.error(`${RED}${stabilizer.reasons.join("; ")}${R}`);
+    if (trip) handleDemoExit(true, stabilizer.reasons[0] ?? "STABILIZER_TRIP");
     process.exit(1);
   }
 
@@ -154,10 +157,12 @@ async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Prom
 }
 
 async function main(): Promise<void> {
+  const restore = muteLibraryConsole();
+  try {
   const trip = process.argv.includes("--trip");
   const stabilizer = process.argv.includes("--stabilizer");
-  const now = new Date();
-  seedAdapterProbes(now.getTime());
+  const { nowMs, at } = getDemoSafeTimestamp();
+  seedAdapterProbes(nowMs);
 
   printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
   printMode(trip);
@@ -172,7 +177,7 @@ async function main(): Promise<void> {
           poolReserveUsd: 5_000_000,
           poolCapacityUsd: 5_000_000,
           agentId: "wayfinder-stabilizer-demo",
-          at: now,
+          at,
         }
       : {
           chainId: STABILIZER_SEPOLIA_CHAIN_ID,
@@ -184,17 +189,20 @@ async function main(): Promise<void> {
           usdzMarkUsd: 1,
           collateralMarkUsd: 1,
           agentId: "wayfinder-stabilizer-demo",
-          at: now,
+          at,
         };
     await runStabilizerDemo(swap, trip);
     return;
   }
 
   const payload: WayfinderRouteIntent = trip
-    ? { ...TOXIC_SOIL, at: now, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
-    : { ...HEALTHY_SOIL, at: now, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
+    ? { ...TOXIC_SOIL, at, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
+    : { ...HEALTHY_SOIL, at, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
 
   await runArbitrumDemo(payload, trip);
+  } finally {
+    restore();
+  }
 }
 
 main().catch((err) => {

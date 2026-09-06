@@ -71,6 +71,7 @@ import {
   printGuardTimeBlock,
 } from "./lib/demo-timing";
 import { captureSoilBenchmark } from "./lib/demo-benchmark";
+import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
@@ -581,6 +582,8 @@ function perpLoopTitle(hedge: PerpHedge): string {
 }
 
 function main(): void {
+  const restore = muteLibraryConsole();
+  try {
   const argv = process.argv.slice(2);
   const loop = parseLoop(argv);
   const hedge = parseHedge(argv);
@@ -591,7 +594,7 @@ function main(): void {
   const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
   const perpKeys = perpKeysForHedge(hedge);
   const allKeys = allKeysForHedge(hedge);
-  const nowMs = Date.now();
+  const nowMs = getDemoSafeTimestamp().nowMs;
   const t0 = hrtimeStart();
 
   const loopTitle =
@@ -653,7 +656,14 @@ function main(): void {
     printGuardTimeBlock(elapsedUs, "  ");
   }
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
-  if (!allOk) process.exitCode = 1;
+  if (!allOk) {
+    process.exitCode = 1;
+  } else if (trip) {
+    handleDemoExit(true, "CROSS_VENUE_FAIL_CLOSED");
+  }
+  } finally {
+    restore();
+  }
 }
 
 main();

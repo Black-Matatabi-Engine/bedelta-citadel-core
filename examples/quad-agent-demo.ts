@@ -34,13 +34,11 @@ import {
   printIntentLayerBanner,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
+import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
 
-const NOW_MS = Date.now();
-const SESSION = {
+const SESSION_BASE = {
   agentAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   maxOrderClipUsd: 30,
-  expiresAtMs: NOW_MS + 86_400_000,
-  approvedAtMs: NOW_MS - 1_000,
 };
 
 type FrameworkResult = {
@@ -51,17 +49,17 @@ type FrameworkResult = {
   detail?: string;
 };
 
-async function runWayfinder(trip: boolean): Promise<FrameworkResult> {
+async function runWayfinder(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
   const agentId = "quad-wayfinder";
   hudIntent(agentId, "Wayfinder", trip ? "TOXIC_ROUTE" : "DELTA_NEUTRAL_GM_DEPOSIT", "Arbitrum 42161");
   const t0 = hrtimeStart();
   const result = await wayfinderCitadelShieldHook.execute({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(NOW_MS),
+    at: new Date(nowMs),
     agentId,
     chainId: 42161,
-    nowMs: NOW_MS,
-    sessionKey: SESSION,
+    nowMs: nowMs,
+    sessionKey: session,
   });
   const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
@@ -73,18 +71,18 @@ async function runWayfinder(trip: boolean): Promise<FrameworkResult> {
   };
 }
 
-async function runElizaOS(trip: boolean): Promise<FrameworkResult> {
+async function runElizaOS(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
   const agentId = "quad-elizaos";
   hudIntent(agentId, "ElizaOS", trip ? "TOXIC_ACTION" : "CITADEL_SOIL_GUARD", "GMX v2 ETH/USDC GM");
   const t0 = hrtimeStart();
   const result = await evaluateElizaCitadelAction(
     { agentId },
     {
-      soil: { ...(trip ? TOXIC_SOIL : HEALTHY_SOIL), at: new Date(NOW_MS) },
+      soil: { ...(trip ? TOXIC_SOIL : HEALTHY_SOIL), at: new Date(nowMs) },
       intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-      nowMs: NOW_MS,
+      nowMs,
       chainId: 42161,
-      sessionKey: SESSION,
+      sessionKey: session,
     },
   );
   const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
@@ -97,19 +95,19 @@ async function runElizaOS(trip: boolean): Promise<FrameworkResult> {
   };
 }
 
-async function runVirtuals(trip: boolean): Promise<FrameworkResult> {
+async function runVirtuals(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
   const agentId = "quad-virtuals";
   hudIntent(agentId, "Virtuals GAME", trip ? "TOXIC_TASK" : "GAME_TRADE_INTENT", "GMX v2 ETH/USDC GM");
   const t0 = hrtimeStart();
   const result = await evaluateVirtualsGameTask({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(NOW_MS),
+    at: new Date(nowMs),
     agentId,
     chainId: 42161,
     taskId: "game-quad-001",
     intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-    nowMs: NOW_MS,
-    sessionKey: SESSION,
+    nowMs,
+    sessionKey: session,
   });
   const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
@@ -121,18 +119,18 @@ async function runVirtuals(trip: boolean): Promise<FrameworkResult> {
   };
 }
 
-async function runLangChain(trip: boolean): Promise<FrameworkResult> {
+async function runLangChain(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
   const agentId = "quad-langchain";
   hudIntent(agentId, "LangChain", trip ? "TOXIC_TOOL_CALL" : "TRADE_INTENT", "LangGraph state node");
   const t0 = hrtimeStart();
   const result = await CitadelRiskGuardTool.invoke({
     ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(NOW_MS),
+    at: new Date(nowMs),
     agentId,
     chainId: 42161,
     intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-    nowMs: NOW_MS,
-    sessionKey: SESSION,
+    nowMs,
+    sessionKey: session,
   });
   const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
   return {
@@ -167,8 +165,12 @@ const GRAY = "\x1b[90m";
 const BOLD = "\x1b[1m";
 
 async function main(): Promise<void> {
+  const restore = muteLibraryConsole();
+  try {
   const trip = process.argv.includes("--trip");
-  seedAdapterProbes(NOW_MS);
+  const { nowMs } = getDemoSafeTimestamp();
+  const session = { ...SESSION_BASE, expiresAtMs: nowMs + 86_400_000, approvedAtMs: nowMs - 1_000 };
+  seedAdapterProbes(nowMs);
   printBanner("Quad-Agent Framework Demo");
   printIntentLayerBanner();
   printMode(trip);
@@ -177,7 +179,7 @@ async function main(): Promise<void> {
 
   const results: FrameworkResult[] = [];
   for (const run of [runWayfinder, runElizaOS, runVirtuals, runLangChain]) {
-    results.push(await run(trip));
+    results.push(await run(trip, nowMs, session));
   }
 
   console.log(`${BOLD}── Per-Framework Benchmark ──${R}\n`);
@@ -209,13 +211,16 @@ async function main(): Promise<void> {
   console.log();
   if (allOk) {
     printResult(!trip);
-    if (trip) process.exit(0);
+    if (trip) handleDemoExit(true, "SOIL_FUSE_TRIP");
     return;
   }
 
   printResult(false);
   console.error(`${RED}Quad demo: ${passCount}/4 ${trip ? "unexpected ALLOW" : "FAIL_CLOSED"}${R}`);
   process.exit(1);
+  } finally {
+    restore();
+  }
 }
 
 main().catch((err) => {
