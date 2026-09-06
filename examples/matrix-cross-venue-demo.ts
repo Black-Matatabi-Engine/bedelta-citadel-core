@@ -60,7 +60,6 @@ import {
   YELLOW,
   BOLD,
   printBanner,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import {
   hrtimeElapsedUs,
@@ -71,7 +70,7 @@ import {
   printGuardTimeBlock,
 } from "./lib/demo-timing";
 import { captureSoilBenchmark } from "./lib/demo-benchmark";
-import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 
 type VenueStatus = "ALLOW" | "FAIL_CLOSED";
 type MatrixLoop = "perp" | "spot" | "all";
@@ -582,8 +581,7 @@ function perpLoopTitle(hedge: PerpHedge): string {
 }
 
 function main(): void {
-  const restore = muteLibraryConsole();
-  try {
+  wrapDemoExecution(({ nowMs }) => {
   const argv = process.argv.slice(2);
   const loop = parseLoop(argv);
   const hedge = parseHedge(argv);
@@ -594,7 +592,6 @@ function main(): void {
   const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
   const perpKeys = perpKeysForHedge(hedge);
   const allKeys = allKeysForHedge(hedge);
-  const nowMs = getDemoSafeTimestamp().nowMs;
   const t0 = hrtimeStart();
 
   const loopTitle =
@@ -603,7 +600,6 @@ function main(): void {
       : loop === "spot"
         ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue → USD.ai)"
         : "Full Cross-Venue Matrix (Dual Perp Hedge + 7-Venue Spot)";
-  seedAdapterProbes(nowMs);
   resetState();
 
   const benchCtx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
@@ -656,14 +652,9 @@ function main(): void {
     printGuardTimeBlock(elapsedUs, "  ");
   }
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
-  if (!allOk) {
-    process.exitCode = 1;
-  } else if (trip) {
-    handleDemoExit(true, "CROSS_VENUE_FAIL_CLOSED");
-  }
-  } finally {
-    restore();
-  }
+  if (!allOk) process.exitCode = 1;
+  else if (trip) return { tripped: true, reason: "CROSS_VENUE_FAIL_CLOSED" };
+  });
 }
 
 main();

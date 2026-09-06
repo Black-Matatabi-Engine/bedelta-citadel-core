@@ -21,20 +21,15 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { measureAsync, resolveLatency } from "./lib/demo-timing";
-import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, withDemoSoil, wrapDemoExecution } from "./lib/demo-harness";
 
 const AGENT_ID = "elizaos-demo";
 
-async function main(): Promise<void> {
-  const restore = muteLibraryConsole();
-  try {
-  const trip = process.argv.includes("--trip");
-  const { nowMs, at } = getDemoSafeTimestamp();
-  seedAdapterProbes(nowMs);
+wrapDemoExecution(async ({ nowMs, at }) => {
+  const trip = isDemoTripArgv();
 
   printBanner("ElizaOS Framework Demo");
   printMode(trip);
@@ -46,7 +41,7 @@ async function main(): Promise<void> {
     evaluateElizaCitadelAction(
       { agentId: AGENT_ID },
       {
-        soil: { ...(trip ? TOXIC_SOIL : HEALTHY_SOIL), at },
+        soil: withDemoSoil(trip ? TOXIC_SOIL : HEALTHY_SOIL, at),
         intent,
         nowMs,
         chainId: 42161,
@@ -93,16 +88,9 @@ async function main(): Promise<void> {
       printBackoffResult();
       process.exit(1);
     }
-    handleDemoExit(true, "SOIL_FUSE_TRIP");
+    return { tripped: true, reason: "SOIL_FUSE_TRIP" };
   } else {
     process.exit(1);
   }
-  } finally {
-    restore();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
 });
+

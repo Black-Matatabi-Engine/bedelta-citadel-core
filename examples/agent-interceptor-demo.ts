@@ -9,6 +9,7 @@
 import { assertCitadelRiskGate, type CitadelRiskGateInput } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate";
 import { printBenchmarkBanner, printExecutionLatencyBlock, printGuardTimeBlock, formatExecutionLatency } from "./lib/demo-timing";
 import { captureSoilBenchmark } from "./lib/demo-benchmark";
+import { isDemoTripArgv, withDemoSoil, wrapDemoExecution } from "./lib/demo-harness";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { __resetArbitrumGasGuardForTests } from "../src/services/risk/arbitrum-gas-guard";
 import {
@@ -240,10 +241,10 @@ export async function virtualsAgentExecutionHook(userOpDraft: AgentUserOpDraft) 
   return { ...gate, signingChannelOpen, soilLatencyUs: measuredUs };
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
+wrapDemoExecution(async ({ nowMs, at }) => {
+  const trip = isDemoTripArgv();
   hudEnabled = true;
-  seedDemoProbes(Date.now());
+  seedDemoProbes(nowMs);
   printBanner();
   printMode(trip);
 
@@ -252,13 +253,13 @@ async function main(): Promise<void> {
         agentId: "rogue-eliza-0xdead",
         framework: "ElizaOS",
         intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN",
-        soil: TOXIC,
+        soil: withDemoSoil(TOXIC, at),
       }
     : {
         agentId: "virtuals-agent-0xbeef",
         framework: "Virtuals",
         intent: "DELTA_NEUTRAL_GM_DEPOSIT",
-        soil: HEALTHY,
+        soil: withDemoSoil(HEALTHY, at),
       };
 
   try {
@@ -266,18 +267,8 @@ async function main(): Promise<void> {
     printResult(true);
   } catch (err) {
     printResult(false);
-    if (err instanceof Error) {
-      console.error(`${RED}${err.message}${R}`);
-    }
-    process.exit(1);
+    if (err instanceof Error) console.error(`${RED}${err.message}${R}`);
+    if (trip) return { tripped: true, reason: "SOIL_FUSE_TRIP" };
+    throw err;
   }
-}
-
-const isMain = process.argv[1]?.includes("agent-interceptor-demo");
-if (isMain) {
-  main().catch((err) => {
-    console.error(`${RED}=== LIFECYCLE COMPLETE: FAIL_CLOSED ===${R}`);
-    console.error(err instanceof Error ? err.message : err);
-    process.exit(1);
-  });
-}
+});

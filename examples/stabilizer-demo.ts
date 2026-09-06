@@ -24,9 +24,9 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import { measureSync, resolveLatency } from "./lib/demo-timing";
+import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 
 const AGENT_ID = "stabilizer-demo";
 
@@ -61,10 +61,8 @@ function buildSwap(trip: boolean, now: Date): StabilizerSwapInput {
   };
 }
 
-async function runDemo(trip: boolean): Promise<void> {
-  const now = new Date();
-  seedAdapterProbes(now.getTime());
-  const swap = buildSwap(trip, now);
+async function runDemo(trip: boolean, nowMs: number, at: Date): Promise<{ tripped?: boolean; reason?: string } | void> {
+  const swap = buildSwap(trip, at);
   const intent = trip ? "STABILIZER_USDZ_DEPEG_INTERCEPT" : "STABILIZER_ZERO_SLIPPAGE_SWAP";
 
   printBanner("Stabilizer Protocol · Sepolia Testnet");
@@ -115,16 +113,10 @@ async function runDemo(trip: boolean): Promise<void> {
       printBackoffResult();
       console.error(`${RED}${retry.reasons.join("; ")}${R}`);
     }
+    return { tripped: true, reason: result.reasons[0] ?? "STABILIZER_TRIP" };
   }
 
   process.exit(1);
 }
 
-async function main(): Promise<void> {
-  await runDemo(process.argv.includes("--trip"));
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
-});
+wrapDemoExecution(async ({ nowMs, at }) => runDemo(isDemoTripArgv(), nowMs, at));

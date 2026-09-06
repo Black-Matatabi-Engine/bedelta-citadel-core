@@ -15,7 +15,6 @@ import {
 } from "../src/adapters/pendle/pendle-pool-factory-adapter";
 import { PENDLE_PT_MARKET_PT_EETH } from "../src/adapters/pendle/pendle-pt-registry";
 import { checkSoilResistance } from "../src/services/risk-control";
-import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
   hudChannelOpen,
@@ -28,8 +27,8 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
+import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
 
 const HEALTHY_SOIL = {
@@ -111,23 +110,14 @@ function runTrip(nowMs: number): number {
   return latencyUs;
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  if (!ensureSoilWasm()) {
-    console.error(`${RED}soil_core.wasm unavailable${R}`);
-    process.exit(1);
-  }
+wrapDemoExecution(async ({ nowMs }) => {
+  const trip = isDemoTripArgv();
+  ensureDemoWasmSoft();
   __resetPendleMarketOracleForTests();
-  const nowMs = Date.now();
-  seedAdapterProbes(nowMs);
   printBanner("Pendle Institutional Shield Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
   console.log(`\n${R}Pendle guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  if (trip) return { tripped: true, reason: "PENDLE_POOL_YIELD_DRIFT_BREACH" };
 });

@@ -21,20 +21,15 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { measureAsync, resolveLatency } from "./lib/demo-timing";
-import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, withDemoSoil, wrapDemoExecution } from "./lib/demo-harness";
 
 const AGENT_ID = "virtuals-demo";
 
-async function main(): Promise<void> {
-  const restore = muteLibraryConsole();
-  try {
-  const trip = process.argv.includes("--trip");
-  const { nowMs, at } = getDemoSafeTimestamp();
-  seedAdapterProbes(nowMs);
+wrapDemoExecution(async ({ nowMs, at }) => {
+  const trip = isDemoTripArgv();
 
   printBanner("Virtuals GAME Framework Demo");
   printMode(trip);
@@ -44,8 +39,7 @@ async function main(): Promise<void> {
 
   const { value: result, latencyUs: measuredUs } = await measureAsync(() =>
     evaluateVirtualsGameTask({
-      ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-      at,
+      ...withDemoSoil(trip ? TOXIC_SOIL : HEALTHY_SOIL, at),
       agentId: AGENT_ID,
       chainId: 42161,
       taskId: "game-demo-001",
@@ -96,16 +90,9 @@ async function main(): Promise<void> {
       printBackoffResult();
       process.exit(1);
     }
-    handleDemoExit(true, "SOIL_FUSE_TRIP");
+    return { tripped: true, reason: "SOIL_FUSE_TRIP" };
   } else {
     process.exit(1);
   }
-  } finally {
-    restore();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
 });
+

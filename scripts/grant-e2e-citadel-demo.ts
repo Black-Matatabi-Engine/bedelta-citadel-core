@@ -67,9 +67,7 @@ import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedg
 import { loadEnvProduction, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
-import { getDemoSafeTimestamp, muteLibraryConsole } from "../examples/lib/demo-utils";
-
-const _unmuteDemoConsole = muteLibraryConsole();
+import { wrapDemoExecution } from "../examples/lib/demo-harness";
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -600,10 +598,8 @@ function step5R20PanicFlash(demoAt: Date): {
   };
 }
 
-async function main(): Promise<void> {
-  try {
+wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
   const mode = parseMode(process.argv.slice(2));
-  const { nowMs: demoNowMs, at: demoAt } = getDemoSafeTimestamp();
   demoLog("");
   paintBanner();
   demoLog(`Mode: ${mode === "live" ? "LIVE" : "DRY_RUN"}  (default dry-run; pass --live to enable)`);
@@ -681,13 +677,6 @@ async function main(): Promise<void> {
     s5.r20Locked &&
     s5.withinBudget;
   demoLog(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`);
-  process.exitCode = allOk ? 0 : 1;
-  } finally {
-    _unmuteDemoConsole();
-  }
-}
-
-main().catch((err) => {
-  console.error("[demo:e2e] fatal:", err instanceof Error ? err.message : err);
-  process.exit(1);
+  if (!allOk) process.exitCode = 1;
 });
+

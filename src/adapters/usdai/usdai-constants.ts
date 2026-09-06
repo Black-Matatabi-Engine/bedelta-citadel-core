@@ -5,3 +5,13 @@ export const USDAI_PEG_DRIFT_MAX_BPS = 30 as const;
 export const USDAI_NAV_DEVIATION_MAX_BPS = 50 as const;
 export const USDAI_MIN_LIQUIDITY_DEPTH_USD = 100_000 as const;
 export const USD_AI_DEPEG_ORACLE_TRIP = "USD_AI_DEPEG_ORACLE_TRIP" as const;
+
+export interface UsdaiSoilInput {
+  oracleTimestampMs: number;
+  nowMs: number;
+  susdaiPriceUsd: number;
+  navUsd: number;
+  gpuMarkUsd: number;
+  liquidityDepthUsd: number;
+  amountUsd?: number;
+}

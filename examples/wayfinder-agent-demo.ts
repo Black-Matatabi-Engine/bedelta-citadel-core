@@ -33,12 +33,11 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
-import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, withDemoSoil, wrapDemoExecution } from "./lib/demo-harness";
 
 async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
@@ -88,7 +87,7 @@ async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Pr
       printBackoffResult();
       process.exit(1);
     }
-    handleDemoExit(true, "SOIL_FUSE_TRIP");
+    throw new Error("SOIL_FUSE_TRIP");
   } else {
     process.exit(1);
   }
@@ -121,7 +120,7 @@ async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Prom
     hudBlocked();
     printResult(false);
     console.error(`${RED}${stabilizer.reasons.join("; ")}${R}`);
-    if (trip) handleDemoExit(true, stabilizer.reasons[0] ?? "STABILIZER_TRIP");
+    if (trip) throw new Error(stabilizer.reasons[0] ?? "STABILIZER_TRIP");
     process.exit(1);
   }
 
@@ -156,13 +155,9 @@ async function runStabilizerDemo(swap: StabilizerSwapInput, trip: boolean): Prom
   process.exit(1);
 }
 
-async function main(): Promise<void> {
-  const restore = muteLibraryConsole();
-  try {
-  const trip = process.argv.includes("--trip");
+wrapDemoExecution(async ({ nowMs, at }) => {
+  const trip = isDemoTripArgv();
   const stabilizer = process.argv.includes("--stabilizer");
-  const { nowMs, at } = getDemoSafeTimestamp();
-  seedAdapterProbes(nowMs);
 
   printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
   printMode(trip);
@@ -196,16 +191,8 @@ async function main(): Promise<void> {
   }
 
   const payload: WayfinderRouteIntent = trip
-    ? { ...TOXIC_SOIL, at, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
-    : { ...HEALTHY_SOIL, at, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
+    ? { ...withDemoSoil(TOXIC_SOIL, at), nowMs, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
+    : { ...withDemoSoil(HEALTHY_SOIL, at), nowMs, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
 
   await runArbitrumDemo(payload, trip);
-  } finally {
-    restore();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
 });

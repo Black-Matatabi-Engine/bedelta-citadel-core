@@ -11,6 +11,7 @@ import {
   USDAI_ORACLE_MAX_AGE_MS,
   USDAI_PEG_DRIFT_MAX_BPS,
   USD_AI_DEPEG_ORACLE_TRIP,
+  type UsdaiSoilInput,
 } from "./usdai-constants";
 
 export {
@@ -20,18 +21,9 @@ export {
   USDAI_ORACLE_MAX_AGE_MS,
   USDAI_PEG_DRIFT_MAX_BPS,
   USD_AI_DEPEG_ORACLE_TRIP,
+  type UsdaiSoilInput,
 } from "./usdai-constants";
 export { packUsdAiProtocolLane, resolveUsdAiProtocolMask, formatUsdAiFlagMask } from "./usdai-protocol-lane";
-
-export interface UsdaiSoilInput {
-  oracleTimestampMs: number;
-  nowMs: number;
-  susdaiPriceUsd: number;
-  navUsd: number;
-  gpuMarkUsd: number;
-  liquidityDepthUsd: number;
-  amountUsd?: number;
-}
 
 export interface UsdaiCollateralInput extends UsdaiSoilInput {
   chainId: number;

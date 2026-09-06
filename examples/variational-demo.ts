@@ -4,7 +4,6 @@
  * Usage: pnpm demo:variational
  * Trip:  pnpm demo:variational -- --trip
  */
-import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
   hudChannelOpen,
@@ -17,8 +16,8 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
+import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, measureSync } from "./lib/demo-timing";
 import { validateVariationalRFQIntent } from "../src/adapters/variational-rfq-adapter";
 
@@ -67,22 +66,13 @@ function runTrip(nowMs: number): number {
   return latencyUs;
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  if (!ensureSoilWasm()) {
-    console.error(`${RED}soil_core.wasm unavailable${R}`);
-    process.exit(1);
-  }
-  const nowMs = Date.now();
-  seedAdapterProbes(nowMs);
+wrapDemoExecution(({ nowMs }) => {
+  const trip = isDemoTripArgv();
+  ensureDemoWasmSoft();
   printBanner("Variational Omni RFQ Guard Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
   console.log(`\n${R}Variational guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  if (trip) return { tripped: true, reason: "VARIATIONAL_STALE_QUOTE_BREACH" };
 });

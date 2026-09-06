@@ -9,14 +9,19 @@ import {
   PROTO_USDAI,
   PROTO_VECT_LEN,
 } from "../../core/risk-engine-core";
-import type { UsdaiSoilInput } from "./usdai-adapter";
+import type { UsdaiSoilInput } from "./usdai-constants";
 
-const USDAI_VEC = new Float64Array(PROTO_VECT_LEN);
+let usdaiVec: Float64Array | undefined;
+function getUsdAiVec(out?: Float64Array): Float64Array {
+  if (out) return out;
+  if (!usdaiVec) usdaiVec = new Float64Array(PROTO_VECT_LEN);
+  return usdaiVec;
+}
 
 export function packUsdAiProtocolLane(
   input: UsdaiSoilInput,
   prevSusdaiPriceUsd = input.susdaiPriceUsd,
-  out: Float64Array = USDAI_VEC,
+  out: Float64Array = getUsdAiVec(),
 ): Float64Array {
   return packProtocolLane(
     PROTO_USDAI,
@@ -30,7 +35,7 @@ export function packUsdAiProtocolLane(
 
 export function resolveUsdAiProtocolMask(input: UsdaiSoilInput): number {
   packUsdAiProtocolLane(input);
-  return evaluateUsdAiFlagsFromLane(USDAI_VEC, input.nowMs, input.oracleTimestampMs);
+  return evaluateUsdAiFlagsFromLane(getUsdAiVec(), input.nowMs, input.oracleTimestampMs);
 }
 
 export function formatUsdAiFlagMask(flags: number): string {

@@ -29,7 +29,7 @@ import {
   printEscortBanner,
   printEscortResult,
 } from "./lib/escort-demo-hud";
-import { handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, measureSync } from "./lib/demo-timing";
 
 const WALLET = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -143,26 +143,16 @@ function runRouteC(): void {
   }
 }
 
-async function main(): Promise<void> {
-  const restore = muteLibraryConsole();
-  try {
-    const trip = process.argv.includes("--trip");
-    printEscortBanner(captureEscortBenchmark());
-    printMode(trip);
-    const latencyUs = runRouteA(trip);
-    if (!trip) {
-      runRouteB();
-      runRouteC();
-    }
-    console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
-    printEscortResult(trip);
-    if (trip) handleDemoExit(true, BRIDGE_TIMEOUT_FAIL_CLOSED);
-  } finally {
-    restore();
+wrapDemoExecution(() => {
+  const trip = isDemoTripArgv();
+  printEscortBanner(captureEscortBenchmark());
+  printMode(trip);
+  const latencyUs = runRouteA(trip);
+  if (!trip) {
+    runRouteB();
+    runRouteC();
   }
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
+  printEscortResult(trip);
+  if (trip) return { tripped: true, reason: BRIDGE_TIMEOUT_FAIL_CLOSED };
 });

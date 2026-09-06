@@ -21,7 +21,6 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
   TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import {
@@ -34,7 +33,7 @@ import {
   printIntentLayerBanner,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
-import { getDemoSafeTimestamp, handleDemoExit, muteLibraryConsole } from "./lib/demo-utils";
+import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 
 const SESSION_BASE = {
   agentAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
@@ -164,13 +163,9 @@ function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
 const GRAY = "\x1b[90m";
 const BOLD = "\x1b[1m";
 
-async function main(): Promise<void> {
-  const restore = muteLibraryConsole();
-  try {
-  const trip = process.argv.includes("--trip");
-  const { nowMs } = getDemoSafeTimestamp();
+wrapDemoExecution(async ({ nowMs }) => {
+  const trip = isDemoTripArgv();
   const session = { ...SESSION_BASE, expiresAtMs: nowMs + 86_400_000, approvedAtMs: nowMs - 1_000 };
-  seedAdapterProbes(nowMs);
   printBanner("Quad-Agent Framework Demo");
   printIntentLayerBanner();
   printMode(trip);
@@ -211,19 +206,11 @@ async function main(): Promise<void> {
   console.log();
   if (allOk) {
     printResult(!trip);
-    if (trip) handleDemoExit(true, "SOIL_FUSE_TRIP");
+    if (trip) return { tripped: true, reason: "SOIL_FUSE_TRIP" };
     return;
   }
 
   printResult(false);
   console.error(`${RED}Quad demo: ${passCount}/4 ${trip ? "unexpected ALLOW" : "FAIL_CLOSED"}${R}`);
-  process.exit(1);
-  } finally {
-    restore();
-  }
-}
-
-main().catch((err) => {
-  console.error(err);
   process.exit(1);
 });

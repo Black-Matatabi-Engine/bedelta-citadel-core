@@ -8,7 +8,6 @@ import {
   MORPHO_ARBITRUM_CHAIN_ID,
   evaluateMorphoBlueGuard,
 } from "../src/adapters/morpho/morpho-blue-adapter";
-import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
   hudChannelOpen,
@@ -21,8 +20,8 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
+import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
 
 function runHealthy(nowMs: number): number {
@@ -80,22 +79,13 @@ function runTrip(nowMs: number): number {
   return latencyUs;
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  if (!ensureSoilWasm()) {
-    console.error(`${RED}soil_core.wasm unavailable${R}`);
-    process.exit(1);
-  }
-  const nowMs = Date.now();
-  seedAdapterProbes(nowMs);
+wrapDemoExecution(({ nowMs }) => {
+  const trip = isDemoTripArgv();
+  ensureDemoWasmSoft();
   printBanner("Morpho Blue Oracle Guard Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
   console.log(`\n${R}Morpho guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  if (trip) return { tripped: true, reason: "MORPHO_ORACLE_STALE" };
 });

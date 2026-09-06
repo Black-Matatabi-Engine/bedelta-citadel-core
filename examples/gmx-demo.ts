@@ -4,7 +4,6 @@
  * Usage: pnpm demo:gmx
  * Trip:  pnpm demo:gmx -- --trip
  */
-import { ensureSoilWasm } from "../src/sdk";
 import {
   assertGmxPayloadFailClosed,
   GMX_PAYLOAD_PRICE_IMPACT_TRIP,
@@ -31,14 +30,14 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
+import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 
 const ETH_GM = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const TOXIC_POOL = { longTokenUsd: 3_000_000, shortTokenUsd: 1_000_000 };
 
-function runHealthy(): number {
+function runHealthy(at: Date): number {
   hudIntent("gmx-demo", "GMX v2", "MarketIncrease", "ETH/USD GM · Arbitrum One");
   const { value: payload, latencyUs: buildUs } = measureSync(() =>
     buildGmxV2UnsignedOrderPayload({
@@ -65,6 +64,7 @@ function runHealthy(): number {
       dydxPerp: 3500,
       depthUsd: 200_000,
       disableThresholdJitter: true,
+      at,
     }),
   );
   const totalUs = buildUs + guardUs + soil.latencyUs;
@@ -75,7 +75,7 @@ function runHealthy(): number {
   return totalUs;
 }
 
-function runTrip(): number {
+function runTrip(at: Date): number {
   hudIntent("gmx-demo", "GMX v2", "TOXIC_PRICE_IMPACT", "ETH/USD GM · skewed pool");
   const impact = estimatePreliminaryImpact({
     orderSizeUsd: 2_000_000,
@@ -92,6 +92,7 @@ function runTrip(): number {
     depthUsd: 200_000,
     disableThresholdJitter: true,
     gmxPriceImpact: gmxPriceImpactForSoil(impact),
+    at,
   });
   const latencyUs = hrtimeElapsedUs(t0);
   console.log(`${R}  Price-impact penalty=${impact.priceImpactPenaltyBps.toFixed(1)}bps · gate triggered=${gate.triggered}`);
@@ -115,22 +116,13 @@ function runTrip(): number {
   return latencyUs;
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  if (!ensureSoilWasm()) {
-    console.error(`${RED}soil_core.wasm unavailable${R}`);
-    process.exit(1);
-  }
-  seedAdapterProbes(Date.now());
+wrapDemoExecution(({ at }) => {
+  const trip = isDemoTripArgv();
+  ensureDemoWasmSoft();
   printBanner("GMX v2 Shadow Margin Demo");
   printMode(trip);
-  const latencyUs = trip ? runTrip() : runHealthy();
+  const latencyUs = trip ? runTrip(at) : runHealthy(at);
   console.log(`\n${R}GMX guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
-  if (trip) process.exit(0);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  if (trip) return { tripped: true, reason: GMX_PAYLOAD_PRICE_IMPACT_TRIP };
 });

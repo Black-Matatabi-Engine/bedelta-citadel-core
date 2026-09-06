@@ -15,7 +15,6 @@ import {
 } from "../src/adapters/hl/auth";
 import { evaluateHyperliquidSessionGuard } from "../src/adapters/hl/hyperliquid-session-guard";
 import { evaluateWsSoilResistance } from "../src/adapters/hl/websocket";
-import { ensureSoilWasm } from "../src/sdk";
 import {
   hudBlocked,
   hudChannelOpen,
@@ -28,8 +27,8 @@ import {
   printResult,
   R,
   RED,
-  seedAdapterProbes,
 } from "./adapters/citadel-ansi-hud";
+import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureAsync } from "./lib/demo-timing";
 import {
   TEST_AGENT_ADDRESS,
@@ -110,22 +109,13 @@ function runTrip(nowMs: number): number {
   return latencyUs;
 }
 
-async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  if (!ensureSoilWasm()) {
-    console.error(`${RED}soil_core.wasm unavailable${R}`);
-    process.exit(1);
-  }
-  const nowMs = Date.now();
-  seedAdapterProbes(nowMs);
+wrapDemoExecution(async ({ nowMs }) => {
+  const trip = isDemoTripArgv();
+  ensureDemoWasmSoft();
   printBanner("Hyperliquid Session Key Demo");
   printMode(trip);
   const latencyUs = trip ? runTrip(nowMs) : await runHealthy(nowMs);
   console.log(`\n${R}HL guard · ${formatGuardTime(latencyUs)}${R}\n`);
   printResult(!trip);
-}
-
-main().catch((err) => {
-  console.error(err);
-  process.exit(1);
+  if (trip) return { tripped: true, reason: "HL_ORDERBOOK_SPREAD_BREACH" };
 });
