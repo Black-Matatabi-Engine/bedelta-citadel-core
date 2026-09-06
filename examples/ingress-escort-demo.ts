@@ -9,7 +9,6 @@ import {
   ARBITRUM_ONE_CHAIN_ID,
   BRIDGE_TIMEOUT_FAIL_CLOSED,
   DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS,
-  IN_FLIGHT_BRIDGE_CAPITAL,
   ROBINHOOD_TESTNET_CHAIN_ID,
   evaluateAcrossBridgeTransfer,
   validateAcrossBridgeDirection,
@@ -23,10 +22,14 @@ import {
   R,
   hudBlocked,
   hudSevered,
-  printBanner,
   printMode,
-  printResult,
 } from "./adapters/citadel-ansi-hud";
+import {
+  captureDemoBenchmark,
+  muteLibraryConsole,
+  printEscortBanner,
+  printEscortResult,
+} from "./lib/escort-demo-hud";
 import { formatGuardTime, measureSync } from "./lib/demo-timing";
 
 const WALLET = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -35,12 +38,26 @@ const HL_L1_CHAIN_ID = 999_001;
 const T0 = 1_700_000_000_000;
 const ESCORT_USD = 2_500;
 
+function captureEscortBenchmark() {
+  const dir = { sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID, destChainId: ARBITRUM_ONE_CHAIN_ID };
+  const xfer = { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: T0 };
+  return captureDemoBenchmark({
+    pureInvariant: () => validateAcrossBridgeDirection(dir),
+    fullMatrix: () => evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 90_000 }),
+    e2eHarness: () => {
+      validateAcrossBridgeDirection(dir);
+      evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 90_000 });
+      evaluateAcrossBridgeTransfer(xfer, { nowMs: T0 + 180_000, settledAtMs: T0 + 150_000 });
+    },
+  });
+}
+
 function hudRoute(id: string, src: number, dst: number, label: string): void {
   console.log(`\n${BOLD}━━ Route ${id}: ${label} ━━${R}`);
   console.log(`  ${GRAY}chain ${src} → ${dst}${R}`);
 }
 
-function printEval(capitalLabel: string, state: ReturnType<typeof evaluateAcrossBridgeTransfer>): void {
+function printEval(state: ReturnType<typeof evaluateAcrossBridgeTransfer>): void {
   const ok = state.ok ? GREEN : RED;
   console.log(
     `${R}  capitalLabel=${ok}${state.capitalLabel}${R} · deployable=${state.deployable} · inFlight=$${state.inFlightUsd} · settled=$${state.settledUsd} · ${BOLD}lostUsd=$${state.lostUsd}${R}`,
@@ -71,7 +88,7 @@ function runRouteA(trip: boolean): number {
         { nowMs: T0 + DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS + 5_000 },
       ),
     );
-    printEval(BRIDGE_TIMEOUT_FAIL_CLOSED, state);
+    printEval(state);
     assertLostUsdZero(state);
     hudSevered(BRIDGE_TIMEOUT_FAIL_CLOSED);
     hudBlocked();
@@ -83,7 +100,7 @@ function runRouteA(trip: boolean): number {
       { nowMs: T0 + 90_000 },
     ),
   );
-  printEval(IN_FLIGHT_BRIDGE_CAPITAL, inflight);
+  printEval(inflight);
   assertLostUsdZero(inflight);
   const { value: settled, latencyUs } = measureSync(() =>
     evaluateAcrossBridgeTransfer(
@@ -91,7 +108,7 @@ function runRouteA(trip: boolean): number {
       { nowMs: T0 + 180_000, settledAtMs: T0 + 150_000 },
     ),
   );
-  printEval("SETTLED", settled);
+  printEval(settled);
   assertLostUsdZero(settled);
   console.log(`  ${GREEN}deployable NAV unlocked → GMX / Pendle pre-flight${R}`);
   return latencyUs;
@@ -127,16 +144,21 @@ function runRouteC(): void {
 }
 
 async function main(): Promise<void> {
-  const trip = process.argv.includes("--trip");
-  printBanner("Pillar 2 Compliance Escort · Multi-Route HUD");
-  printMode(trip);
-  const latencyUs = runRouteA(trip);
-  if (!trip) {
-    runRouteB();
-    runRouteC();
+  const restore = muteLibraryConsole();
+  try {
+    const trip = process.argv.includes("--trip");
+    printEscortBanner(captureEscortBenchmark());
+    printMode(trip);
+    const latencyUs = runRouteA(trip);
+    if (!trip) {
+      runRouteB();
+      runRouteC();
+    }
+    console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
+    printEscortResult(trip);
+  } finally {
+    restore();
   }
-  console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
-  printResult(!trip);
 }
 
 main().catch((err) => {
