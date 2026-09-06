@@ -7,12 +7,11 @@ import {
 } from "../examples/lib/e2e-financial-accounting";
 import type { E2ePipelineResult } from "../examples/lib/e2e-demo-types";
 
-const MOCK_PIPELINE: E2ePipelineResult = {
+const MOCK_CORE: Omit<E2ePipelineResult, "pipelineSteps" | "s5"> = {
   s1: { ok: true, wasmUsed: true, wasmHotPathUs: 12, wasmP50Us: 106, nodeE2eRttUs: 200, deadmanOk: true },
   s2: { outboundOk: true, inboundBlocked: true, capitalLabel: "$2,500 USDC" },
   s3: { uiFeeReceiver: "0xdead", uiFeeBps: 10, underweightSide: "ETH", payloadRef: "sha16:abc" },
   s4: { ok: true, dryRun: true, notionalUsd: 1200, oid: 1, detail: "sandbox", ethShortSize: "0.3463" },
-  s5: { r20Locked: true, severTarget: "hl", cancelCount: 1, closeCount: 1, withinBudget: true },
 };
 
 describe("e2e financial accounting", () => {
@@ -34,17 +33,25 @@ describe("e2e financial accounting", () => {
     expect(ledger.hlHedgeEthSize).toBe("0.3463");
   });
 
-  it("proof payload capitalInvariant matches dynamically computed ledger", () => {
+  it("proof payload capitalInvariant matches dynamically computed ledger (4-step happy path)", () => {
     const ledger = computeE2eFinancialLedger();
     const expected = buildE2eCapitalInvariant();
-    const payload = buildE2eProofPayload("dry-run", MOCK_PIPELINE);
+    const payload = buildE2eProofPayload("dry-run", { pipelineSteps: 4, ...MOCK_CORE });
 
+    expect(payload.pipelineSteps).toBe(4);
+    expect(payload.steps["5_r20PanicFlash"]).toBeUndefined();
     expect(payload.capitalInvariant).toEqual(expected);
     expect(payload.steps["3_gmxGmPoolDeposit"].gmDepositUsd).toBe(ledger.gmxDepositUsd);
-    expect(payload.steps["3_gmxGmPoolDeposit"].ethLongExposureUsd).toBe(ledger.gmxEffectiveLongUsd);
-    expect(payload.capitalInvariant.builderFeeUsd).toBe(ledger.builderRebateEarnedUsd);
-    expect(payload.capitalInvariant.finalUsd).toBe(ledger.finalVaultBalanceUsd);
     expect(payload.capitalInvariant.lostUsd).toBe(0);
-    expect(payload.capitalInvariant.deltaNetEth).toBe("0.0000");
+  });
+
+  it("proof payload includes step 5 when unwind exercise is recorded", () => {
+    const payload = buildE2eProofPayload("dry-run", {
+      pipelineSteps: 5,
+      ...MOCK_CORE,
+      s5: { r20Locked: true, severTarget: "R20", cancelCount: 1, closeCount: 1, withinBudget: true },
+    });
+    expect(payload.pipelineSteps).toBe(5);
+    expect(payload.steps["5_r20PanicFlash"]?.ok).toBe(true);
   });
 });

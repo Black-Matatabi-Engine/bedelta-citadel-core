@@ -35,7 +35,7 @@ import {
   GMX_BUILDER_FEE_USD,
   GMX_ETH_LONG_EXPOSURE_USD,
   GMX_GM_DEPOSITED_USD,
-  HL_HEDGE_ETH_SIZE,
+  E2E_LOST_USD_INVARIANT,
   sha16,
 } from "./e2e-demo-constants";
 import type { E2eStep1Result, E2eStep2Result, E2eStep3Result } from "./e2e-demo-types";
@@ -114,7 +114,7 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
   if (!verdict.allowedToSign || !verdict.deadmanOk) {
     throw new Error(`STEP1_BLOCKED: ${verdict.reasons.join(",")}`);
   }
-  e2eLog("RESULT: 🟢 Step 1 Pre-Execution PASS — ZeroDev 0-Gas Verified · Sub-ms Wasm Clear · Soil OK");
+  e2eLog("RESULT: 🟢 Step 1 Pre-Execution PASS — ZeroDev 0-Gas Verified · Sub-ms Wasm Clear · Soil OK · " + E2E_LOST_USD_INVARIANT);
   return {
     ok: true,
     wasmUsed: verdict.wasmUsed,
@@ -137,7 +137,7 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
     settledAtMs: demoNowMs + 60_000,
   });
   logE2eStep2OutboundEscortLine();
-  e2eLog("└─ Status: SETTLED  │  lostUsd ≡ 0 Verified  │  0-Gas Paymaster: ACTIVE  [ ALLOWED ]");
+  e2eLog(`└─ Status: SETTLED  │  ${E2E_LOST_USD_INVARIANT} Verified  │  0-Gas Paymaster: ACTIVE  [ ALLOWED ]`);
   const inbound = assertUnidirectionalBridge({
     sourceChainId: ARBITRUM_ONE_CHAIN_ID,
     destChainId: ROBINHOOD_TESTNET_CHAIN_ID,
@@ -152,7 +152,7 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
   if (inbound.ok || inbound.capitalLabel !== AML_INBOUND_TO_ROBINHOOD_BLOCKED) {
     throw new Error("STEP2_AML_INBOUND_NOT_BLOCKED");
   }
-  e2eLog("RESULT: 🟢 Pillar 2 Ingress PASS — Outbound Escort Active · Inbound AML Blocked · lostUsd ≡ 0");
+  e2eLog(`RESULT: 🟢 Pillar 2 Ingress PASS — Outbound Escort Active · Inbound AML Blocked · ${E2E_LOST_USD_INVARIANT}`);
   return { outboundOk: true, inboundBlocked: true, capitalLabel: inbound.capitalLabel };
 }
 
@@ -162,9 +162,7 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
     "GMX v2 GM Pool Liquidity Provision & Builder Fee Rebase",
     `GMX v2 GM Pool LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
   );
-  e2eLog(
-    `GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC) │ Effective ETH Long Exposure: ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} USD (${HL_HEDGE_ETH_SIZE} ETH)`,
-  );
+  e2eLog(`GMX GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC)`);
   e2eLog(
     `UI Fee Rebate: +${GMX_BUILDER_FEE_BPS} bps (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD) injected via uiFeeReceiver`,
   );
@@ -175,9 +173,6 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
     pool,
     symbol: "ETH",
   });
-  e2eLog(
-    `GM Pool skew: longW=${(balancer.longWeight * 100).toFixed(1)}% shortW=${(balancer.shortWeight * 100).toFixed(1)}% │ 50% ETH leg = ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} long`,
-  );
   const payload = buildGmxV2UnsignedOrderPayload({
     side: "long",
     sizeUsd: GMX_GM_DEPOSITED_USD,

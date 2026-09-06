@@ -18,6 +18,7 @@ export const TOTAL_VAULT_CAPITAL_USD = 2_500;
 export const GMX_GM_DEPOSITED_USD = 2_400;
 export const GMX_BUILDER_FEE_BPS = 10;
 export const GMX_GM_ETH_LEG_SHARE = 0.5;
+export const E2E_LOST_USD_INVARIANT = "lostUsd ≡ $0.00";
 
 const LEDGER = computeE2eFinancialLedger(DEMO_ETH_MID);
 
@@ -46,6 +47,12 @@ export function parseE2eMode(argv: string[]): E2eDemoMode {
   if (argv.includes("--hedge-live") && !argv.includes("--dry-run")) return "live";
   return "dry-run";
 }
+
+export function parseE2eUnwind(argv: readonly string[] = process.argv): boolean {
+  return argv.includes("--unwind");
+}
+
+export const IS_E2E_UNWIND_MODE = parseE2eUnwind();
 
 export function sha16(payload: unknown): string {
   return createHash("sha256").update(JSON.stringify(payload)).digest("hex").slice(0, 16);

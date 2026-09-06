@@ -41,11 +41,12 @@ export interface E2eStep5Result {
 }
 
 export interface E2ePipelineResult {
+  pipelineSteps: 4 | 5;
   s1: E2eStep1Result;
   s2: E2eStep2Result;
   s3: E2eStep3Result;
   s4: E2eStep4Result;
-  s5: E2eStep5Result;
+  s5?: E2eStep5Result;
 }
 
 export interface E2eProofPayload {
@@ -85,7 +86,7 @@ export interface E2eProofPayload {
       oid: number | null;
       detail: string;
     };
-    "5_r20PanicFlash": {
+    "5_r20PanicFlash"?: {
       ok: boolean;
       severTarget: string | null;
       cancelCount: number;

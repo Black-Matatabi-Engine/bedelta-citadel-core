@@ -1,5 +1,6 @@
 /** E2E top banner, execution mode, clock, and pipeline roadmap ANSI HUD. */
 import type { E2eDemoMode } from "./e2e-demo-constants";
+import { E2E_LOST_USD_INVARIANT } from "./e2e-demo-constants";
 import {
   BOLD_CYAN,
   BOLD_GREEN,
@@ -15,13 +16,16 @@ import { E2E_EXECUTION_PIPELINE_STEPS, E2E_R20_SHIELD } from "./e2e-hud-step-the
 
 const BANNER_FRAME = [
   "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
-  "  │  BeΔ Living Water v1.0 · 5-Step Grant E2E Demo                  │",
+  "  │  BeΔ Living Water v1.0 · Grant E2E Demo · 4-Step Delta-Neutral   │",
   "  └────────────────────────────────────────────────────────────────┘",
 ] as const;
 
+const BANNER_GATE_LABEL = "Arbitrum Sepolia / Robinhood Gate";
+
 function paintBannerSubtitle(): string {
-  if (!useColor) return "  │  Sepolia Gate · p50 ~106µs · Δnet ≡ 0 · lostUsd ≡ 0            │";
-  return `${CYAN}  │  Sepolia Gate · p50 ~106µs · ${RESET}${BOLD_GREEN}Δnet ≡ 0${RESET}${CYAN} · ${RESET}${BOLD_GREEN}lostUsd ≡ 0${RESET}${CYAN}            │${RESET}`;
+  const plain = `  │  ${BANNER_GATE_LABEL} · p50 ~106µs · Δnet ≡ 0 · ${E2E_LOST_USD_INVARIANT}   │`;
+  if (!useColor) return plain;
+  return `${CYAN}  │  ${BANNER_GATE_LABEL} · p50 ~106µs · ${RESET}${BOLD_GREEN}Δnet ≡ 0${RESET}${CYAN} · ${RESET}${BOLD_GREEN}${E2E_LOST_USD_INVARIANT}${RESET}${CYAN}   │${RESET}`;
 }
 
 function paintExecutionPipelineRoadmap(): string {
@@ -35,7 +39,7 @@ function paintExecutionPipelineRoadmap(): string {
 }
 
 function paintR20ShieldLine(): string {
-  const shield = `${E2E_R20_SHIELD.prefix} ${E2E_R20_SHIELD.label}`;
+  const shield = E2E_R20_SHIELD.label;
   return useColor ? `Shield:   ${wrap(E2E_R20_SHIELD.color, shield)}` : `Shield:   ${shield}`;
 }
 

@@ -7,12 +7,12 @@ import { formatWasmP50BandStatus } from "./e2e-wasm-bench";
 import type { E2ePipelineResult, E2eProofPayload } from "./e2e-demo-types";
 
 export function buildE2eProofPayload(mode: E2eDemoMode, steps: E2ePipelineResult): E2eProofPayload {
-  const { s1, s2, s3, s4, s5 } = steps;
+  const { s1, s2, s3, s4, s5, pipelineSteps } = steps;
   const ledger = computeE2eFinancialLedger();
-  return {
+  const payload: E2eProofPayload = {
     event: "GRANT_E2E_CITADEL_DEMO",
     mode,
-    pipelineSteps: 5,
+    pipelineSteps,
     steps: {
       "1_verifyAgentIntent": {
         ok: s1.ok,
@@ -46,17 +46,20 @@ export function buildE2eProofPayload(mode: E2eDemoMode, steps: E2ePipelineResult
         oid: s4.oid,
         detail: s4.detail,
       },
-      "5_r20PanicFlash": {
-        ok: s5.r20Locked,
-        severTarget: s5.severTarget,
-        cancelCount: s5.cancelCount,
-        closeCount: s5.closeCount,
-        withinBudget: s5.withinBudget,
-      },
     },
     capitalInvariant: buildE2eCapitalInvariant(),
     timestamp: new Date().toISOString(),
   };
+  if (pipelineSteps === 5 && s5) {
+    payload.steps["5_r20PanicFlash"] = {
+      ok: s5.r20Locked,
+      severTarget: s5.severTarget,
+      cancelCount: s5.cancelCount,
+      closeCount: s5.closeCount,
+      withinBudget: s5.withinBudget,
+    };
+  }
+  return payload;
 }
 
 export function saveE2eProof(payload: E2eProofPayload): string {
@@ -66,14 +69,10 @@ export function saveE2eProof(payload: E2eProofPayload): string {
 }
 
 export function evaluateE2ePipelineOk(steps: E2ePipelineResult): boolean {
-  const { s1, s2, s4, s5 } = steps;
-  return Boolean(
-    s1.ok &&
-      s1.deadmanOk &&
-      s2.outboundOk &&
-      s2.inboundBlocked &&
-      s4.ok &&
-      s5.r20Locked &&
-      s5.withinBudget,
+  const { s1, s2, s4, s5, pipelineSteps } = steps;
+  const coreOk = Boolean(
+    s1.ok && s1.deadmanOk && s2.outboundOk && s2.inboundBlocked && s4.ok,
   );
+  if (pipelineSteps === 4) return coreOk;
+  return coreOk && Boolean(s5?.r20Locked && s5?.withinBudget);
 }

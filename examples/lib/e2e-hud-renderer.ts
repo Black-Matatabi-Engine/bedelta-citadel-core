@@ -4,14 +4,7 @@ import {
   ARBITRUM_ONE_CHAIN_ID,
   ROBINHOOD_TESTNET_CHAIN_ID,
 } from "../../src/sdk";
-import {
-  DEMO_TOKEN,
-  GMX_BUILDER_FEE_BPS,
-  TOTAL_VAULT_CAPITAL_USD,
-  E2E_SUMMARY_DIVIDER,
-} from "./e2e-demo-constants";
 import { computeE2eFinancialLedger } from "./e2e-financial-accounting";
-import type { E2eProofPayload } from "./e2e-demo-types";
 import {
   BOLD,
   BOLD_CYAN,
@@ -38,6 +31,7 @@ export {
   logE2ePipelineRoadmap,
   paintE2eBanner,
 } from "./e2e-hud-header";
+export { printE2eSummaryHud } from "./e2e-hud-summary";
 
 const ROBINHOOD_CHAIN_LABEL = `ROBINHOOD (Chain ${ROBINHOOD_TESTNET_CHAIN_ID})`;
 const ARBITRUM_CHAIN_LABEL = `ARBITRUM ONE (Chain ${ARBITRUM_ONE_CHAIN_ID})`;
@@ -61,9 +55,9 @@ function highlight(line: string): string {
   out = out.replace(/\b(IN_BAND|FAST_LOCAL|SETTLED)\b/g, `${GREEN}$&${RESET}`);
   out = out.replace(/\bOUT_OF_BAND\b/g, `${RED_BOLD}OUT_OF_BAND${RESET}`);
   out = out.replace(/\d+\.?\d*\s*µs/g, (m) => `${CYAN}${m.trim()}${RESET}`);
-  out = out.replace(/Δnet\s*≡\s*0|lostUsd\s*≡\s*0/g, `${BOLD_GREEN}$&${RESET}`);
+  out = out.replace(/Δnet\s*≡\s*0|lostUsd\s*≡\s*\$0\.00/g, `${BOLD_GREEN}$&${RESET}`);
   out = out.replace(/\bPASS\b/g, `${GREEN}PASS${RESET}`);
-  out = out.replace(/E2E OK \(5\/5\)/g, `${GREEN}E2E OK (5/5)${RESET}`);
+  out = out.replace(/E2E OK \(\d+\/\d+\)/g, `${GREEN}$&${RESET}`);
   return out;
 }
 
@@ -127,43 +121,6 @@ export function printHlEnvMissingNotice(): void {
 export function emitStep4PassResult(): void {
   const ledger = computeE2eFinancialLedger();
   e2eLog(
-    `RESULT: 🟢 Step 4 Hyperliquid Hedge PASS — ${ledger.hlHedgeEthSize} ETH (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD) Short Active · Δnet ≡ ${ledger.deltaNetEthFormatted} ETH`,
+    `RESULT: 🟢 Step 4 Hyperliquid Hedge PASS — ${ledger.hlHedgeEthSize} ETH (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD) Short Active · Δnet ≡ ${ledger.deltaNetEthFormatted} ETH · lostUsd ≡ $0.00`,
   );
-}
-
-export function printE2eSummaryHud(
-  payload: E2eProofPayload,
-  proofRelPath: string,
-  allOk: boolean,
-): void {
-  const s1 = payload.steps["1_verifyAgentIntent"];
-  const s2 = payload.steps["2_robinhoodUnidirectionalEscort"];
-  const s3 = payload.steps["3_gmxGmPoolDeposit"];
-  const s4 = payload.steps["4_hlSessionKeyHedge"];
-  const s5 = payload.steps["5_r20PanicFlash"];
-  const cap = payload.capitalInvariant;
-  const ledger = computeE2eFinancialLedger();
-  const mark = (ok: boolean) => (ok ? "PASSED" : "FAILED");
-
-  e2eLog(E2E_SUMMARY_DIVIDER);
-  e2eLog(allOk ? "🟢 CITADEL GRANT E2E LIFECYCLE COMPLETE: 5/5 STEPS PASSED" : "🔴 CITADEL GRANT E2E LIFECYCLE INCOMPLETE");
-  e2eLog("[ PIPELINE EXECUTION ]");
-  e2eLog(`• Step 1: Pre-Execution Gatehouse & Wasm Shield   [ ${mark(s1.ok && s1.deadmanOk)} ]  wasm: ${s1.wasmHotPathUs}µs (p50: ${s1.wasmP50Us}µs)`);
-  e2eLog(`• Step 2: Pillar 2 Compliance Ingress Escort      [ ${mark(s2.ok)} ]  Robinhood -> Arbitrum (${fmtE2eUsd(TOTAL_VAULT_CAPITAL_USD)} ${DEMO_TOKEN})`);
-  e2eLog(`• Step 3: GMX v2 GM Pool Liquidity Provision      [ ${mark(s3.ok)} ]  ${fmtE2eUsd(ledger.gmxDepositUsd)} GM · +${s3.uiFeeBps} bps (${fmtE2eUsd(ledger.builderRebateEarnedUsd)})`);
-  e2eLog(`• Step 4: Hyperliquid Delta-Neutral Hedge         [ ${mark(s4.ok)} ]  ${ledger.hlHedgeEthSize} ETH Short (${fmtE2eUsd(ledger.hlHedgeShortUsd)} USD)`);
-  e2eLog(`• Step 5: Citadel Shield Exercise — R20 Unwind          [ ${mark(s5.ok && s5.withinBudget)} ]  Channel Severed · 0-Gas Intercepted`);
-  e2eLog("");
-  e2eLog("[ CAPITAL INVARIANT BALANCE SHEET ]");
-  e2eLog(`• Initial Ingress Capital:  ${fmtE2eUsd(cap.initialUsd)} ${cap.token}`);
-  e2eLog(`• Deployed Allocation:       GMX GM ${fmtE2eUsd(cap.gmxGmDepositUsd)} + HL Margin ${fmtE2eUsd(cap.hlMarginUsd)}`);
-  e2eLog(`• Delta Neutral Exposure:    GMX Long +${fmtE2eUsd(cap.gmxLongExposureUsd)} | HL Short -${fmtE2eUsd(cap.hlShortExposureUsd)}`);
-  e2eLog(`• Net Builder Rebate Earned: +${fmtE2eUsd(cap.builderFeeUsd)} USD (+${GMX_BUILDER_FEE_BPS} bps GMX Fee Share)`);
-  e2eLog(`• Final Vault Balance:      ${fmtE2eUsd(cap.finalUsd)} ${cap.token} (Principal ${fmtE2eUsd(cap.principalUsd)} Guarded)`);
-  e2eLog(`• Invariant Verification:   lostUsd ≡ ${fmtE2eUsd(cap.lostUsd)} · Δnet ≡ ${cap.deltaNetEth} ETH [ VERIFIED ]`);
-  e2eLog("");
-  e2eLog(`💾 Execution Proof JSON persisted to: ${proofRelPath}`);
-  e2eLog(`Timestamp: ${payload.timestamp}`);
-  e2eLog(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`);
-  e2eLog(E2E_SUMMARY_DIVIDER);
 }

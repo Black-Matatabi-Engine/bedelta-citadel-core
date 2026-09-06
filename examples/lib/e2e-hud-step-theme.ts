@@ -9,8 +9,7 @@ export const E2E_EXECUTION_PIPELINE_STEPS = [
 ] as const;
 
 export const E2E_R20_SHIELD = {
-  prefix: "🛡️ R20",
-  label: "Physical Deadlock & Panic Flash (Always-On Cross-Step Circuit Breaker)",
+  label: "R20 Physical Deadlock & Panic Flash (Always-On Circuit Breaker)",
   color: BOLD_RED,
 } as const;
 

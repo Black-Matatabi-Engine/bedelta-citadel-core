@@ -7,8 +7,9 @@
  *   pnpm demo:e2e --hedge-live
  *   pnpm demo:e2e --livingwater
  *   pnpm demo:e2e --trip
+ *   pnpm demo:e2e --unwind
  */
-import { E2E_PROOF_REL_PATH, parseE2eMode } from "../examples/lib/e2e-demo-constants";
+import { E2E_PROOF_REL_PATH, IS_E2E_UNWIND_MODE, parseE2eMode } from "../examples/lib/e2e-demo-constants";
 import {
   e2eLog,
   logE2eHeaderClock,
@@ -40,7 +41,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     return { tripped: true, reason: "FAIL_CLOSED" };
   }
 
-  const steps = await runE2ePipeline(mode, nowMs, at);
+  const steps = await runE2ePipeline(mode, nowMs, at, { includeUnwind: IS_E2E_UNWIND_MODE });
   e2eLog("");
   const proof = buildE2eProofPayload(mode, steps);
   saveE2eProof(proof);
