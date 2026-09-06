@@ -25,12 +25,17 @@ describe("hl-auto-hedge", () => {
     expect(computeAutoHedgeSizeUsd(802.43, 199.8)).toBeCloseTo(189.81, 1);
   });
 
+  it("computeAutoHedgeSizeUsd citadel-grant mode anchors to $1,200 SSOT ledger", () => {
+    expect(computeAutoHedgeSizeUsd(2400, 100, 3465, { citadelGrantMode: true })).toBe(1200);
+  });
+
   it("runHlAutoHedgeForGmxGm executes session-key short in dry-run", async () => {
     __setGmxGmTelemetryCacheForTests({
       userAddress: WALLET_B,
       symbol: "ETH",
       marketToken: GMX_ETH_USD_MARKET_TOKEN,
       gmBalance: 489.716,
+      gmTotalSupply: 489.716,
       gmLiquidityUsd: 802.43,
       dataStorePoolAmount: 1n,
       source: "datastore",

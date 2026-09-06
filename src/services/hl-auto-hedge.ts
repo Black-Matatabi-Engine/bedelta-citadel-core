@@ -9,17 +9,17 @@ import { buildSystemState } from "../core/state";
 import type { IntentLeg } from "../core/intent-ledger";
 import { getGmxGmBalanceCache } from "./adapters/gmx-v2-gm-balance";
 import { getHlWalletTelemetryCache, type HlWalletTelemetrySnapshot } from "./hl-wallet-telemetry";
+import { computeAutoHedgeSizeUsd } from "./hl-auto-hedge-size";
 import {
   HL_AUTO_HEDGE_COOLDOWN_MS,
   HL_AUTO_HEDGE_ETH_MID_FALLBACK_USD,
   HL_AUTO_HEDGE_MASTER_WALLET_A,
-  HL_AUTO_HEDGE_MAX_NOTIONAL_USD,
-  HL_AUTO_HEDGE_MIN_MARGIN_USD,
-  HL_AUTO_HEDGE_MIN_NOTIONAL_USD,
   HL_ETH_PERP_ASSET_INDEX,
   HL_ETH_SZ_DECIMALS,
   __readHlAutoHedgeStatusRef,
 } from "./hl-auto-hedge-status";
+
+export { computeAutoHedgeSizeUsd, type ComputeAutoHedgeSizeUsdOptions } from "./hl-auto-hedge-size";
 
 export {
   HL_AUTO_HEDGE_MIN_MARGIN_USD,
@@ -68,21 +68,6 @@ export function resolveHypeMidUsd(_hl: HlWalletTelemetrySnapshot | null): number
   return HL_AUTO_HEDGE_ETH_MID_FALLBACK_USD;
 }
 
-export function computeAutoHedgeSizeUsd(
-  gmLiquidityUsd: number,
-  hlMarginUsd: number,
-  _ethMidUsd = HL_AUTO_HEDGE_ETH_MID_FALLBACK_USD,
-): number {
-  if (gmLiquidityUsd <= 0 || hlMarginUsd < HL_AUTO_HEDGE_MIN_MARGIN_USD) return 0;
-  const targetUsd = Math.min(gmLiquidityUsd * 0.25, HL_AUTO_HEDGE_MAX_NOTIONAL_USD);
-  const riskCap = Math.min(gmLiquidityUsd * 0.95, hlMarginUsd * 0.95);
-  const bounded = Math.min(
-    Math.max(targetUsd, HL_AUTO_HEDGE_MIN_NOTIONAL_USD),
-    HL_AUTO_HEDGE_MAX_NOTIONAL_USD,
-  );
-  return Math.min(bounded, riskCap);
-}
-
 function resolveHedgeRiskBalanceUsd(gmUsd: number, marginUsd: number, sizeUsd: number): number {
   const slFloor = (sizeUsd - 100) / 0.01;
   return Math.max(gmUsd + marginUsd, slFloor, sizeUsd);
@@ -92,9 +77,15 @@ function pickHedgeSymbol(): "ETH" {
   return "ETH";
 }
 
+function resolveCitadelGrantMode(
+  opts: { citadelGrantMode?: boolean },
+): boolean {
+  return opts.citadelGrantMode === true || process.env.CITADEL_GRANT_MODE === "true";
+}
+
 export async function runHlAutoHedgeForGmxGm(
   env: HlAutoHedgeEnv,
-  opts: { dryRun?: boolean; fetchFn?: typeof fetch; force?: boolean } = {},
+  opts: { dryRun?: boolean; fetchFn?: typeof fetch; force?: boolean; citadelGrantMode?: boolean } = {},
 ): Promise<HlAutoHedgeResult> {
   const hedgeStatus = __readHlAutoHedgeStatusRef();
   const sessionPk = env.SRV_200_MAINNET_SESSION_PK?.trim() || "";
@@ -119,7 +110,8 @@ export async function runHlAutoHedgeForGmxGm(
   const gmUsd = gm?.gmLiquidityUsd ?? 0;
   const marginUsd = hl?.perpsMarginUsd ?? 0;
   const ethMid = resolveHypeMidUsd(hl);
-  const sizeUsd = computeAutoHedgeSizeUsd(gmUsd, marginUsd, ethMid);
+  const citadelGrantMode = resolveCitadelGrantMode(opts);
+  const sizeUsd = computeAutoHedgeSizeUsd(gmUsd, marginUsd, ethMid, { citadelGrantMode });
 
   if (sizeUsd <= 0) {
     const reason = "HEDGE_SIZE_ZERO";

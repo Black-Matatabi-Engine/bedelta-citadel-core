@@ -1,7 +1,14 @@
-/** Shared E2E demo constants — base inputs; derived values from e2e-financial-accounting. */
+/** Shared E2E demo constants — base inputs; derived from src/core capital invariant SSOT. */
 import { createHash } from "node:crypto";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
+import {
+  CAPITAL_DEFAULT_ETH_PRICE_USD,
+  CAPITAL_DEFAULT_GMX_DEPOSIT_USD,
+  CAPITAL_DEFAULT_TOTAL_VAULT_USD,
+  CAPITAL_GM_ETH_LEG_SHARE,
+} from "../../src/config/capital-invariant-defaults";
+import { GMX_UI_FEE_BPS } from "../../src/config/gmx-revenue";
 import { computeE2eFinancialLedger } from "./e2e-financial-accounting";
 
 export type E2eDemoMode = "dry-run" | "live";
@@ -11,13 +18,13 @@ export const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 export const DEMO_WALLET = "0xcccccccccccccccccccccccccccccccccccccccc";
 export const DEMO_DIGEST =
   "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-export const DEMO_ETH_MID = 3_465;
+export const DEMO_ETH_MID = CAPITAL_DEFAULT_ETH_PRICE_USD;
 export const DEMO_TOKEN = "USDC";
 
-export const TOTAL_VAULT_CAPITAL_USD = 2_500;
-export const GMX_GM_DEPOSITED_USD = 2_400;
-export const GMX_BUILDER_FEE_BPS = 10;
-export const GMX_GM_ETH_LEG_SHARE = 0.5;
+export const TOTAL_VAULT_CAPITAL_USD = CAPITAL_DEFAULT_TOTAL_VAULT_USD;
+export const GMX_GM_DEPOSITED_USD = CAPITAL_DEFAULT_GMX_DEPOSIT_USD;
+export const GMX_BUILDER_FEE_BPS = GMX_UI_FEE_BPS;
+export const GMX_GM_ETH_LEG_SHARE = CAPITAL_GM_ETH_LEG_SHARE;
 export const E2E_LOST_USD_INVARIANT = "lostUsd ≡ $0.00";
 
 const LEDGER = computeE2eFinancialLedger(DEMO_ETH_MID);
