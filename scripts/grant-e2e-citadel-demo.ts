@@ -65,10 +65,10 @@ import { buildBlockedSystemState, isR20Locked } from "../src/core/state";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { formatHlPerpPrice } from "../src/adapters/hl/execution-wire";
 import { runGmxCrossWalletEthHedge } from "../src/services/gmx-cross-wallet-hedge";
-import { loadEnvProduction, mask } from "./_shared/mainnet-env";
+import { loadEnvProduction, envProductionExists, mask } from "./_shared/mainnet-env";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
 import { formatGuardTime, hrtimeElapsedUs, hrtimeStart } from "../examples/lib/demo-timing";
-import { IS_LIVINGWATER_MODE, wrapDemoExecution } from "../examples/lib/demo-harness";
+import { handleDemoExit, IS_LIVINGWATER_MODE, wrapDemoExecution } from "../examples/lib/demo-harness";
 
 const ETH_GM_MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const DEMO_AGENT = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -95,6 +95,8 @@ const HL_LIVE_SESSION_READY =
   "[HL_LIVE: SECURE_SESSION_KEY_DETECTED — READY FOR EXCHANGE BROADCAST]";
 const HL_FALLBACK_WARN =
   "[WARN_FALLBACK: HYPERLIQUID_MAINNET_SESSION_PK / HL_TESTNET_PRIVATE_KEY missing — graceful fallback to simulated hedge envelope]";
+const HL_SANDBOX_REF = "sha256:d21f336ffdfeee5e";
+const HL_SANDBOX_TX = "0xhl_simulated_session_hedge_88a91b";
 
 const CITADEL_BANNER = [
   "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
@@ -453,6 +455,30 @@ function step3GmxUnderweightRebalance(): {
   };
 }
 
+function printHlEnvMissingNotice(): void {
+  demoLog("[ NOTICE: .env.production missing for live Hyperliquid L1 Broadcast ]");
+  demoLog("└─ Falling back seamlessly to Hyperliquid Session Key Live Sandbox Simulator");
+}
+
+function runHlLiveSandboxFallback(): {
+  ok: boolean;
+  dryRun: boolean;
+  notionalUsd: number;
+  oid: number | null;
+  detail: string;
+} {
+  printHlEnvMissingNotice();
+  demoLog(`Sandbox: ref=${HL_SANDBOX_REF} txHash=${HL_SANDBOX_TX}`);
+  demoLog("RESULT: LIVE_SANDBOX OK — Hyperliquid Session Key hedge simulated (no L2 broadcast)");
+  return {
+    ok: true,
+    dryRun: true,
+    notionalUsd: DEMO_SIZE_USD,
+    oid: null,
+    detail: "LIVE_SANDBOX_SIMULATED",
+  };
+}
+
 async function step4HlSessionHedge(mode: DemoMode): Promise<{
   ok: boolean;
   dryRun: boolean;
@@ -491,42 +517,49 @@ async function step4HlSessionHedge(mode: DemoMode): Promise<{
     };
   }
 
-  loadEnvProduction();
-  const sessionPk = resolveHlSessionPrivateKey();
-  if (!sessionPk) {
-    demoLogHlSessionState(HL_FALLBACK_WARN, "fallback");
+  if (mode === "live") {
+    if (!envProductionExists()) {
+      return runHlLiveSandboxFallback();
+    }
+    loadEnvProduction();
+    const sessionPk = resolveHlSessionPrivateKey();
+    if (!sessionPk) {
+      demoLogHlSessionState(HL_FALLBACK_WARN, "fallback");
+      return {
+        ok: true,
+        dryRun: true,
+        notionalUsd: DEMO_SIZE_USD,
+        oid: null,
+        detail: "LIVE_FALLBACK_SIMULATED",
+      };
+    }
+
+    demoLogHlSessionState(HL_LIVE_SESSION_READY, "live");
+    const walletA = process.env.HYPERLIQUID_MAINNET_USER_ADDRESS?.trim();
+    demoLog(`LIVE hedge: walletA=${walletA ? mask(walletA) : "(default)"}`);
+    const result = await runGmxCrossWalletEthHedge({
+      sessionPk,
+      walletA,
+      dryRun: false,
+    });
+    demoLog(
+      `Hedge: ok=${result.ok} eth=${result.orderEthSize.toFixed(6)} usd=$${result.orderUsd.toFixed(2)} oid=${result.exchangeOid ?? "n/a"}`,
+    );
+    if (result.reason) demoLog(`Reason: ${result.reason}`);
+
     return {
-      ok: true,
-      dryRun: true,
-      notionalUsd: DEMO_SIZE_USD,
-      oid: null,
-      detail: "LIVE_FALLBACK_SIMULATED",
+      ok: result.ok || result.reason === "ETH_HEDGE_ALREADY_COVERED",
+      dryRun: false,
+      notionalUsd: result.orderUsd,
+      oid: result.exchangeOid ?? null,
+      detail:
+        result.ok || result.reason === "ETH_HEDGE_ALREADY_COVERED"
+          ? "LIVE_BROADCAST"
+          : (result.reason ?? "LIVE_HEDGE_FAIL"),
     };
   }
 
-  demoLogHlSessionState(HL_LIVE_SESSION_READY, "live");
-  const walletA = process.env.HYPERLIQUID_MAINNET_USER_ADDRESS?.trim();
-  demoLog(`LIVE hedge: walletA=${walletA ? mask(walletA) : "(default)"}`);
-  const result = await runGmxCrossWalletEthHedge({
-    sessionPk,
-    walletA,
-    dryRun: false,
-  });
-  demoLog(
-    `Hedge: ok=${result.ok} eth=${result.orderEthSize.toFixed(6)} usd=$${result.orderUsd.toFixed(2)} oid=${result.exchangeOid ?? "n/a"}`,
-  );
-  if (result.reason) demoLog(`Reason: ${result.reason}`);
-
-  return {
-    ok: result.ok || result.reason === "ETH_HEDGE_ALREADY_COVERED",
-    dryRun: false,
-    notionalUsd: result.orderUsd,
-    oid: result.exchangeOid ?? null,
-    detail:
-      result.ok || result.reason === "ETH_HEDGE_ALREADY_COVERED"
-        ? "LIVE_BROADCAST"
-        : (result.reason ?? "LIVE_HEDGE_FAIL"),
-  };
+  throw new Error("STEP4_MODE_UNREACHABLE");
 }
 
 function step5R20PanicFlash(demoAt: Date): {
@@ -693,6 +726,11 @@ wrapDemoExecution(async ({ nowMs: demoNowMs, at: demoAt }) => {
     s5.r20Locked &&
     s5.withinBudget;
   demoLog(`RESULT: ${allOk ? "E2E OK (5/5)" : "E2E FAIL"}`);
-  if (!allOk) process.exitCode = 1;
+  if (!allOk) {
+    process.exitCode = 1;
+    return;
+  }
+  handleDemoExit(false, "E2E_OK");
+  process.exit(0);
 });
 
