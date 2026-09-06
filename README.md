@@ -79,7 +79,7 @@
 | Alignment | SliverVine role | SSOT |
 |-----------|-----------------|------|
 | **Agentic Commerce** | Pre-consensus execution safety primitive for AI agent swarms & machine-payment rails (x402-ready) | `checkSoilResistance()` · `SliverVineGate.sol` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) |
-| **Robinhood Chain (`46630`/`4663`)** | Pillar 2 RWA ingress — outbound-only USDG escort → Arbitrum One · **`lostUsd ≡ 0`** · inbound AML block | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) **6/6** (`pnpm test`) · [`src/adapters/across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) · [`03_PILLAR_2` audit](./docs/audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **Robinhood Chain (`46630`/`4663`)** | Pillar 2 RWA ingress — outbound-only USDG escort → Arbitrum One · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** — [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) · [`03_PILLAR_2` audit](./docs/audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 | **ArbOS 61 Elara** | Protocol ingress filtering reinforces Edge fail-closed — never a weaker substitute for pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification. Production multisig rotation via native governance.
@@ -117,6 +117,25 @@
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** · drift **>30 bps** · OLP **>15%** | `variational-rfq-adapter.ts` · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
 **Quad-Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:quad` · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
+
+### Pillar 2 Escort — Traditional Bridge vs SilverVine Compliance Escort
+
+```text
+Traditional Bridge                SilverVine Pillar 2 Escort
+(any ↔ any · loss opaque)         (46630/4663 → 42161 only · lostUsd ≡ 0)
+ Source ═══════► Dest              RH Chain ──escort──► Arbitrum GMX/Pendle
+       ◄═══════                         ▲ inbound AML BLOCKED
+ timeout → stuck capital
+```
+
+| | Traditional | SilverVine Escort |
+|---|-------------|-----------------|
+| Direction | Bidirectional | **Unidirectional outbound** |
+| Timeout | Manual recovery | **`BRIDGE_TIMEOUT_FAIL_CLOSED`** (>3600s) |
+| Accounting | Opaque pending | `IN_FLIGHT` → `SETTLED` |
+| Loss | Social / insurance | **`lostUsd ≡ 0`** |
+
+**Interactive demo:** `pnpm demo:escort` · timeout trip: `pnpm demo:escort -- --trip` · → [`02_THREE_PILLARS`](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#22-traditional-bridge-vs-silvervine-pillar-2-compliance-escort)
 
 Full adapter tables, Stabilizer Sepolia sandbox, and architectural hardening (R20 auto-severance · sliding-window OI · Stylus coprocessor) → [`docs/architecture/README.md`](./docs/architecture/README.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
 
@@ -174,6 +193,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 ```bash
 pnpm demo:matrix   # Full 7-Protocol Cross-Venue Matrix
 pnpm demo:quad     # Full 4 AI Agent Frameworks Pre-Flight Shield
+pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 ```
 
 → **Granular protocol & framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)

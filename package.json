@@ -24,6 +24,7 @@
     "demo:aave": "tsx examples/aave-demo.ts",
     "demo:morpho": "tsx examples/morpho-demo.ts",
     "demo:usdai": "tsx examples/usdai-demo.ts",
+    "demo:escort": "tsx examples/ingress-escort-demo.ts",
     "demo:variational": "tsx examples/variational-demo.ts",
     "demo:matrix": "tsx examples/matrix-cross-venue-demo.ts",
     "demo:wayfinder": "tsx examples/wayfinder-agent-demo.ts",

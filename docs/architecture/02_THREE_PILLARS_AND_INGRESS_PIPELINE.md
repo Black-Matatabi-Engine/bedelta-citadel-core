@@ -83,6 +83,35 @@ Agent Cross-Pass Route (Sepolia 421614)
 
 **Verification bar:** **194 test files | 845 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
 
+### 2.2 Traditional Bridge vs SilverVine Pillar 2 Compliance Escort
+
+```text
+Traditional Omnichain Bridge (bidirectional · loss opaque)
+┌──────────────┐   relayer / LP / messaging   ┌──────────────┐
+│  Source L2   │ ───────────────────────────► │  Dest L2     │
+│  (any chain) │ ◄─────────────────────────── │  (any chain) │
+└──────────────┘   timeout → stuck / social   └──────────────┘
+                   recovery · lostUsd > 0 risk
+
+SilverVine Pillar 2 Compliance Escort (unidirectional · fail-closed)
+┌─────────────────────┐  Across reference   ┌─────────────────────┐
+│ Robinhood Chain     │  escort state mach. │ Arbitrum One 42161  │
+│ 46630 / 4663 USDG   │ ──────────────────► │ GMX v2 · Pendle PT  │
+│ institutional treas.│ IN_FLIGHT → SETTLED │ deployable NAV only │
+└─────────────────────┘                     └─────────────────────┘
+         ▲
+         └── inbound 42161→46630/4663 AML BLOCKED · lostUsd ≡ 0
+```
+
+| Dimension | Traditional Bridge | SilverVine Pillar 2 Escort |
+|-----------|-------------------|----------------------------|
+| **Ingress direction** | Bidirectional pools · any-chain routing | **Unidirectional outbound-only** — Robinhood `46630`/`4663` → Arbitrum `42161` |
+| **In-flight timeout shield** | Capital may appear lost · manual recovery | **>3600s** Across timeout → `BRIDGE_TIMEOUT_FAIL_CLOSED` · **0-Gas severance** |
+| **Pending-capital accounting** | Ambiguous pending / LP share semantics | `IN_FLIGHT_BRIDGE_CAPITAL` → `SETTLED` · deployable ⇔ settled ∧ route allowed |
+| **Loss invariant** | External insurance / social layer | **`lostUsd ≡ 0`** — state machine SSOT · Vitest **6/6** · `pnpm demo:escort` |
+
+**CLI:** `pnpm demo:escort` — multi-route HUD (Route A RH→42161 · Route B HL L1 probe · Route C Arb→Base) · `pnpm demo:escort -- --trip` — timeout fail-closed + `lostUsd ≡ 0` check.
+
 ### 2.3 ZeroDev Smart Route Calldata Binding (Pillar 2 Reference Harness — Demo Spec)
 
 > **Status:** **Reference Harness & Spec** — Dry-run verified via Vitest (`tests/adapters/gmx-smart-route-payload-binding.test.ts`). This serves as an evaluator-reproducible reference adapter. Production execution baseline defaults to **Arbitrum One Native Ingress**.
