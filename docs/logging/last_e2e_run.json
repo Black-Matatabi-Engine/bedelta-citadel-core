@@ -7,10 +7,10 @@
       "ok": true,
       "wasmUsed": true,
       "deadmanOk": true,
-      "wasmHotPathUs": 11.19,
-      "wasmP50Us": 12.49,
+      "wasmHotPathUs": 6.64,
+      "wasmP50Us": 6.88,
       "wasmP50BandStatus": "FAST_LOCAL",
-      "nodeE2eRttUs": 4202.25
+      "nodeE2eRttUs": 3305.2
     },
     "2_robinhoodUnidirectionalEscort": {
       "ok": true,
@@ -18,18 +18,20 @@
       "inboundBlocked": true,
       "capitalLabel": "AML_INBOUND_TO_ROBINHOOD_BLOCKED"
     },
-    "3_gmxUnderweightRebalance": {
+    "3_gmxGmPoolDeposit": {
       "ok": true,
+      "gmDepositUsd": 2400,
+      "ethLongExposureUsd": 1200,
       "underweightSide": "short",
       "uiFeeBps": 10,
       "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
-      "payloadRef": "sha256:b4a152775e18182f"
+      "payloadRef": "sha256:1801bec7351f2fb2"
     },
     "4_hlSessionKeyHedge": {
       "ok": true,
       "dryRun": true,
-      "notionalUsd": 100,
-      "ethShortSize": 0.0289,
+      "notionalUsd": 1200,
+      "ethShortSize": "0.3463",
       "oid": null,
       "detail": "SIMULATED_SESSION_KEY_HEDGE"
     },
@@ -43,9 +45,16 @@
   },
   "capitalInvariant": {
     "initialUsd": 2500,
-    "finalUsd": 2500,
+    "finalUsd": 2502.4,
+    "principalUsd": 2500,
     "lostUsd": 0,
-    "token": "USDC"
+    "token": "USDC",
+    "gmxGmDepositUsd": 2400,
+    "hlMarginUsd": 100,
+    "gmxLongExposureUsd": 1200,
+    "hlShortExposureUsd": 1200,
+    "builderFeeUsd": 2.4,
+    "deltaNetEth": "0.0000"
   },
-  "timestamp": "2026-09-06T15:26:16.459Z"
+  "timestamp": "2026-09-06T15:36:13.742Z"
 }

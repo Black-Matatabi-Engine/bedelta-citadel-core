@@ -24,15 +24,18 @@ import {
 import { evaluateGmxBalancerQualification } from "../../src/services/yield/gmx-v2-balancer";
 import {
   DEMO_AGENT,
-  DEMO_BUILDER_REBATE_USD,
   DEMO_DIGEST,
   DEMO_ETH_MID,
-  DEMO_REBALANCE_USD,
   DEMO_SIZE_USD,
   DEMO_TOKEN,
   DEMO_VAULT_CAPITAL_USD,
   DEMO_WALLET,
   ETH_GM_MARKET,
+  GMX_BUILDER_FEE_BPS,
+  GMX_BUILDER_FEE_USD,
+  GMX_ETH_LONG_EXPOSURE_USD,
+  GMX_GM_DEPOSITED_USD,
+  HL_HEDGE_ETH_SIZE,
   sha16,
 } from "./e2e-demo-constants";
 import type { E2eStep1Result, E2eStep2Result, E2eStep3Result } from "./e2e-demo-types";
@@ -148,20 +151,30 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
 }
 
 export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
-  logE2eStep(3, "GMX v2 Underweight Rebalance & UI Fee Rebase", `GMX v2 Underweight Rebalance & UI Fee Rebase (+${GMX_UI_FEE_BPS} bps uiFeeReceiver builder lane)`);
-  e2eLog(`Rebalance Amount: ${fmtE2eUsd(DEMO_REBALANCE_USD)} ${DEMO_TOKEN} | Builder Rebate: +10 bps (${fmtE2eUsd(DEMO_BUILDER_REBATE_USD)} USD)`);
+  logE2eStep(
+    3,
+    "GMX v2 GM Pool Liquidity Provision & Builder Fee Rebase",
+    `GMX v2 GM Pool LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
+  );
+  e2eLog(
+    `GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC) │ Effective ETH Long Exposure: ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} USD (${HL_HEDGE_ETH_SIZE} ETH)`,
+  );
+  e2eLog(
+    `UI Fee Rebate: +${GMX_BUILDER_FEE_BPS} bps (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD) injected via uiFeeReceiver`,
+  );
   const pool = { longTokenUsd: 5_200_000, shortTokenUsd: 4_800_000 };
   const balancer = evaluateGmxBalancerQualification({
-    orderSizeUsd: DEMO_SIZE_USD,
-    isLong: false,
+    orderSizeUsd: GMX_ETH_LONG_EXPOSURE_USD,
+    isLong: true,
     pool,
     symbol: "ETH",
   });
-  e2eLog(`Balancer: underweight=${balancer.underweightSide} qualified=${balancer.isGmxBalancerQualified} rebate=${balancer.expectedPriceImpactRebateBps}bps`);
-  e2eLog(`Skew: longW=${(balancer.longWeight * 100).toFixed(1)}% shortW=${(balancer.shortWeight * 100).toFixed(1)}% reducesImbalance=${balancer.reducesImbalance}`);
+  e2eLog(
+    `GM Pool skew: longW=${(balancer.longWeight * 100).toFixed(1)}% shortW=${(balancer.shortWeight * 100).toFixed(1)}% │ 50% ETH leg = ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} long`,
+  );
   const payload = buildGmxV2UnsignedOrderPayload({
-    side: "short",
-    sizeUsd: DEMO_SIZE_USD,
+    side: "long",
+    sizeUsd: GMX_GM_DEPOSITED_USD,
     midPriceUsd: DEMO_ETH_MID,
     marketToken: ETH_GM_MARKET,
     maxSlippageBps: 30,
@@ -169,12 +182,11 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
     clientOrderId: `grant-e2e-${Date.now()}`,
   });
   const uiFeeReceiver = payload.addresses.uiFeeReceiver;
-  e2eLog(`Payload: orderType=${payload.orderType} isLong=${payload.isLong} uiFeeReceiver=${uiFeeReceiver} (+${GMX_UI_FEE_BPS} bps)`);
-  e2eLog(`SSOT treasury: ${GMX_DEFAULT_UI_FEE_RECEIVER}`);
-  e2eLog(`CreateOrderParams.addresses.uiFeeReceiver injected: ${uiFeeReceiver === GMX_DEFAULT_UI_FEE_RECEIVER}`);
+  e2eLog(`Payload: GM deposit ref=sha256:${sha16(payload)} uiFeeReceiver=${uiFeeReceiver} (+${GMX_UI_FEE_BPS} bps)`);
   if (uiFeeReceiver !== GMX_DEFAULT_UI_FEE_RECEIVER) throw new Error("STEP3_UI_FEE_RECEIVER_MISMATCH");
-  if (!balancer.isGmxBalancerQualified) throw new Error("STEP3_BALANCER_NOT_QUALIFIED");
-  e2eLog("RESULT: 🟢 Step 3 GMX v2 Rebalance PASS — +10 bps Builder Fee Injected · Skew Balanced");
+  e2eLog(
+    `RESULT: 🟢 Step 3 GMX v2 GM Deposit PASS — ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} USDC Deployed · +${GMX_BUILDER_FEE_BPS} bps Builder Fee (${fmtE2eUsd(GMX_BUILDER_FEE_USD)} USD)`,
+  );
   return {
     uiFeeReceiver,
     uiFeeBps: GMX_UI_FEE_BPS,

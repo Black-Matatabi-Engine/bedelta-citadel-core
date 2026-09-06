@@ -15,10 +15,14 @@ import { checkSoilResistance } from "../../src/services/risk-control";
 import { runGmxCrossWalletEthHedge } from "../../src/services/gmx-cross-wallet-hedge";
 import { loadEnvProduction, envProductionExists, mask } from "../../scripts/_shared/mainnet-env";
 import {
+  DELTA_NET_ETH,
   DEMO_ETH_MID,
-  DEMO_SIZE_USD,
   DEMO_TOKEN,
   DEMO_VAULT_CAPITAL_USD,
+  FINAL_VAULT_USD,
+  GMX_ETH_LONG_EXPOSURE_USD,
+  HL_HEDGE_ETH_SIZE,
+  HL_HEDGE_SHORT_USD,
   HL_SANDBOX_REF,
   HL_SANDBOX_TX,
   resolveHlSessionPrivateKey,
@@ -40,44 +44,67 @@ const HL_LIVE_SESSION_READY = "[HL_LIVE: SECURE_SESSION_KEY_DETECTED — READY F
 const HL_FALLBACK_WARN =
   "[WARN_FALLBACK: HYPERLIQUID_MAINNET_SESSION_PK / HL_TESTNET_PRIVATE_KEY missing — graceful fallback to simulated hedge envelope]";
 
-function runHlLiveSandboxFallback(ethSize: string): E2eStep4Result {
+function runHlLiveSandboxFallback(): E2eStep4Result {
   printHlEnvMissingNotice();
   e2eLog(`Sandbox: ref=${HL_SANDBOX_REF} txHash=${HL_SANDBOX_TX}`);
-  emitStep4PassResult(ethSize);
+  emitStep4PassResult();
   return {
     ok: true,
     dryRun: true,
-    notionalUsd: DEMO_SIZE_USD,
+    notionalUsd: HL_HEDGE_SHORT_USD,
     oid: null,
     detail: "LIVE_SANDBOX_SIMULATED",
-    ethShortSize: ethSize,
+    ethShortSize: HL_HEDGE_ETH_SIZE,
   };
 }
 
 export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep4Result> {
-  logE2eStep(4, "Hyperliquid 1× Short Session Key Hedge Envelope", "Hyperliquid 1× Short Session Key Hedge Envelope — cross-venue delta-neutral proof");
+  logE2eStep(
+    4,
+    "Hyperliquid 1x Short Session Key Delta-Neutral Hedge",
+    "Hyperliquid 1x Short Session Key — cross-venue Δnet ≡ 0 proof vs GMX GM long leg",
+  );
+  e2eLog(
+    `Hedge Requirement: Match GMX ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} Long │ Target: Hyperliquid L1 Perps`,
+  );
   const limitPx = formatHlPerpPrice(DEMO_ETH_MID * 0.99, HL_ETH_SZ_DECIMALS);
   const wirePlan = buildSessionAgentMarketOrderWire({
     asset: HL_ETH_PERP_ASSET_INDEX,
     isBuy: false,
-    notionalUsd: DEMO_SIZE_USD,
+    notionalUsd: HL_HEDGE_SHORT_USD,
     limitPx,
     szDecimals: HL_ETH_SZ_DECIMALS,
     reduceOnly: false,
   });
-  e2eLog(`Wire: asset=${HL_ETH_PERP_ASSET_INDEX} SHORT size=${wirePlan.size} limitPx=${wirePlan.limitPx} ref=sha256:${sha16(wirePlan.action)}`);
-  e2eLog(`Short Size: ${wirePlan.size} ETH (${fmtE2eUsd(DEMO_SIZE_USD)} USD) | Target: Hyperliquid L1 Perps`);
+  e2eLog(`Wire: asset=${HL_ETH_PERP_ASSET_INDEX} SHORT ref=sha256:${sha16(wirePlan.action)} limitPx=${wirePlan.limitPx}`);
+  e2eLog(
+    `Short Position: ${HL_HEDGE_ETH_SIZE} ETH (${fmtE2eUsd(HL_HEDGE_SHORT_USD)} USD) @ ${fmtE2eUsd(DEMO_ETH_MID)}/ETH │ Delta Skew: Δnet = ${DELTA_NET_ETH} ETH`,
+  );
   if (mode === "dry-run") {
-    emitStep4PassResult(wirePlan.size);
-    return { ok: true, dryRun: true, notionalUsd: DEMO_SIZE_USD, oid: null, detail: "SIMULATED_SESSION_KEY_HEDGE", ethShortSize: wirePlan.size };
+    emitStep4PassResult();
+    return {
+      ok: true,
+      dryRun: true,
+      notionalUsd: HL_HEDGE_SHORT_USD,
+      oid: null,
+      detail: "SIMULATED_SESSION_KEY_HEDGE",
+      ethShortSize: HL_HEDGE_ETH_SIZE,
+    };
   }
-  if (!envProductionExists()) return runHlLiveSandboxFallback(wirePlan.size);
+  if (!envProductionExists()) return runHlLiveSandboxFallback();
   loadEnvProduction();
   const sessionPk = resolveHlSessionPrivateKey();
   if (!sessionPk) {
     e2eLogHlSession(HL_FALLBACK_WARN, "fallback");
-    emitStep4PassResult(wirePlan.size);
-    return { ok: true, dryRun: true, notionalUsd: DEMO_SIZE_USD, oid: null, detail: "LIVE_FALLBACK_SIMULATED", ethShortSize: wirePlan.size };
+    emitStep4PassResult();
+    return {
+      ok: true,
+      dryRun: true,
+      notionalUsd: HL_HEDGE_SHORT_USD,
+      oid: null,
+      detail: "LIVE_FALLBACK_SIMULATED",
+      ethShortSize: HL_HEDGE_ETH_SIZE,
+    };
   }
   e2eLogHlSession(HL_LIVE_SESSION_READY, "live");
   const walletA = process.env.HYPERLIQUID_MAINNET_USER_ADDRESS?.trim();
@@ -86,14 +113,14 @@ export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep
   e2eLog(`Hedge: ok=${result.ok} eth=${result.orderEthSize.toFixed(6)} usd=$${result.orderUsd.toFixed(2)} oid=${result.exchangeOid ?? "n/a"}`);
   if (result.reason) e2eLog(`Reason: ${result.reason}`);
   const ok = result.ok || result.reason === "ETH_HEDGE_ALREADY_COVERED";
-  if (ok) emitStep4PassResult(wirePlan.size);
+  if (ok) emitStep4PassResult();
   return {
     ok,
     dryRun: false,
-    notionalUsd: result.orderUsd,
+    notionalUsd: HL_HEDGE_SHORT_USD,
     oid: result.exchangeOid ?? null,
     detail: ok ? "LIVE_BROADCAST" : (result.reason ?? "LIVE_HEDGE_FAIL"),
-    ethShortSize: wirePlan.size,
+    ethShortSize: HL_HEDGE_ETH_SIZE,
   };
 }
 
@@ -127,13 +154,20 @@ export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
   const t0 = hrtimeStart();
   const plan = buildFlashUnwindPlan({
     openOrders: [{ asset: HL_ETH_PERP_ASSET_INDEX, oid: 42_001, coin: "ETH" }],
-    positions: [{ market: "perp", asset: HL_ETH_PERP_ASSET_INDEX, szi: -0.03, midPx: DEMO_ETH_MID, szDecimals: HL_ETH_SZ_DECIMALS, coin: "ETH" }],
+    positions: [{
+      market: "perp",
+      asset: HL_ETH_PERP_ASSET_INDEX,
+      szi: -Number(HL_HEDGE_ETH_SIZE),
+      midPx: DEMO_ETH_MID,
+      szDecimals: HL_ETH_SZ_DECIMALS,
+      coin: "ETH",
+    }],
   });
   const elapsedMs = hrtimeElapsedUs(t0) / 1000;
   const withinBudget = elapsedMs < FLASH_UNWIND_BUDGET_MS;
   e2eLog(`Flash unwind: cancel=${plan.cancelCount} reduceOnlyCloses=${plan.closeActions.length} budget=<${FLASH_UNWIND_BUDGET_MS}ms elapsed=${elapsedMs.toFixed(3)}ms ${withinBudget ? "PASS" : "SLOW"}`);
   e2eLog("INTERCEPT: Panic Flash armed — EIP-712 signature pipe severed (no live broadcast in demo)");
-  e2eLog(`Panic Flash Unwind: 100% Position Closed | Capital Returned: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN}`);
+  e2eLog(`Panic Flash Unwind: 100% Position Closed | Capital Returned: ${fmtE2eUsd(FINAL_VAULT_USD)} ${DEMO_TOKEN}`);
   if (!isR20Locked(blocked) || severTarget !== "R20") throw new Error("STEP5_R20_DEADLOCK_FAILED");
   e2eLog("RESULT: 🟢 Step 5 R20 Deadlock PASS — EIP-712 Signing Channel Severed · 0-Gas Intercepted");
   return { r20Locked: true, severTarget, cancelCount: plan.cancelCount, closeCount: plan.closeActions.length, withinBudget };

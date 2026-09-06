@@ -68,8 +68,10 @@ export interface E2eProofPayload {
       inboundBlocked: boolean;
       capitalLabel: string;
     };
-    "3_gmxUnderweightRebalance": {
+    "3_gmxGmPoolDeposit": {
       ok: boolean;
+      gmDepositUsd: number;
+      ethLongExposureUsd: number;
       underweightSide: string;
       uiFeeBps: number;
       uiFeeReceiver: string;
@@ -94,8 +96,15 @@ export interface E2eProofPayload {
   capitalInvariant: {
     initialUsd: number;
     finalUsd: number;
+    principalUsd: number;
     lostUsd: number;
     token: string;
+    gmxGmDepositUsd: number;
+    hlMarginUsd: number;
+    gmxLongExposureUsd: number;
+    hlShortExposureUsd: number;
+    builderFeeUsd: number;
+    deltaNetEth: string;
   };
   timestamp: string;
 }
