@@ -1,8 +1,11 @@
-/** HL auto-hedge notional sizing — legacy cron vs Citadel grant SSOT ledger anchor. */
+/** HL auto-hedge notional sizing — legacy (deprecated) vs Citadel grant live-ledger anchor. */
 import {
+  buildLiveCapitalLedgerParams,
   computeCapitalInvariantLedger,
+  isMainnetLiveMode,
   type CapitalLedgerParams,
 } from "../core/capital-invariant-ledger";
+import type { GmxGmBalanceSnapshot } from "./adapters/gmx-v2-gm-balance-cache";
 import {
   HL_AUTO_HEDGE_ETH_MID_FALLBACK_USD,
   HL_AUTO_HEDGE_MAX_NOTIONAL_USD,
@@ -10,9 +13,20 @@ import {
   HL_AUTO_HEDGE_MIN_NOTIONAL_USD,
 } from "./hl-auto-hedge-status";
 
+/** @deprecated Legacy 160–190 USD cron sizing — use executeGmxCrossWalletHedge (delta-based) instead. */
+export const HL_AUTO_HEDGE_LEGACY_SIZING_DEPRECATED = true;
+
 export interface ComputeAutoHedgeSizeUsdOptions {
   citadelGrantMode?: boolean;
   ledgerParams?: CapitalLedgerParams;
+}
+
+export function isGmxTelemetrySafeForSizing(
+  snap: GmxGmBalanceSnapshot | null | undefined,
+): boolean {
+  if (!snap) return false;
+  if (snap.isCached === true) return false;
+  return snap.gmLiquidityUsd > 0;
 }
 
 function emitAutoHedgeSizeLog(details: Record<string, number | string | boolean>): void {
@@ -32,14 +46,32 @@ export function computeAutoHedgeSizeUsd(
   options?: ComputeAutoHedgeSizeUsdOptions,
 ): number {
   if (gmLiquidityUsd <= 0 || hlMarginUsd < HL_AUTO_HEDGE_MIN_MARGIN_USD) {
-    emitAutoHedgeSizeLog({ mode: options?.citadelGrantMode ? "citadel-grant" : "legacy", sizeUsd: 0, reason: "BELOW_MIN_MARGIN" });
+    emitAutoHedgeSizeLog({
+      mode: options?.citadelGrantMode ? "citadel-grant" : "legacy-deprecated",
+      sizeUsd: 0,
+      reason: "BELOW_MIN_MARGIN",
+    });
     return 0;
   }
 
   if (options?.citadelGrantMode) {
+    const ledgerParams =
+      options.ledgerParams ??
+      buildLiveCapitalLedgerParams({
+        gmLiquidityUsd,
+        hlMarginUsd,
+        ethPriceUsd: ethMidUsd,
+      });
+    if (
+      isMainnetLiveMode() &&
+      (!ledgerParams.totalVaultCapitalUsd || !ledgerParams.gmxDepositUsd || !ledgerParams.ethPriceUsd)
+    ) {
+      emitAutoHedgeSizeLog({ mode: "citadel-grant", sizeUsd: 0, reason: "CITADEL_GRANT_LIVE_INPUTS_REQUIRED" });
+      return 0;
+    }
     const ledger = computeCapitalInvariantLedger({
-      ...options.ledgerParams,
-      ethPriceUsd: options.ledgerParams?.ethPriceUsd ?? ethMidUsd,
+      ...ledgerParams,
+      ethPriceUsd: ledgerParams.ethPriceUsd ?? ethMidUsd,
       silent: true,
     });
     const legShare = ledger.gmxEffectiveLongUsd / ledger.gmxDepositUsd;
@@ -55,6 +87,7 @@ export function computeAutoHedgeSizeUsd(
       gmCap,
       marginCap,
       sizeUsd,
+      provenance: ledger.provenance,
     });
     return sizeUsd;
   }
@@ -66,6 +99,13 @@ export function computeAutoHedgeSizeUsd(
     HL_AUTO_HEDGE_MAX_NOTIONAL_USD,
   );
   const sizeUsd = Math.min(bounded, riskCap);
-  emitAutoHedgeSizeLog({ mode: "legacy", gmLiquidityUsd, hlMarginUsd, targetUsd, riskCap, sizeUsd });
+  emitAutoHedgeSizeLog({
+    mode: "legacy-deprecated",
+    gmLiquidityUsd,
+    hlMarginUsd,
+    targetUsd,
+    riskCap,
+    sizeUsd,
+  });
   return sizeUsd;
 }
