@@ -588,8 +588,8 @@ function main(): void {
   const loop = parseLoop(argv);
   const hedge = parseHedge(argv);
   const spotAnomaly = parseSpotAnomaly(argv);
-  const healthyOnly = argv.includes("--healthy-only");
-  const trip = !healthyOnly;
+  const healthyOnly = argv.includes("--healthy-only") && !isDemoTripArgv(argv);
+  const trip = isDemoTripArgv(argv) || !healthyOnly;
   const gmxTrip = argv.includes("--gmx");
   const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
   const perpKeys = perpKeysForHedge(hedge);

@@ -47,7 +47,7 @@ const STEP2_INBOUND_ARROW = "───( Reversal Blocked )───x";
 function highlight(line: string): string {
   if (!useColor) return line;
   let out = line;
-  for (const kw of ["PHYSICAL_DEADLOCK_TRIGGERED", "SOIL_TRIPPED", AML_INBOUND_TO_ROBINHOOD_BLOCKED]) {
+  for (const kw of ["PHYSICAL_DEADLOCK_TRIGGERED", "SOIL_TRIPPED", AML_INBOUND_TO_ROBINHOOD_BLOCKED, "[ ALERT ]"]) {
     out = out.split(kw).join(`${RED_BOLD}${kw}${RESET}`);
   }
   out = out.replace(/uiFeeReceiver/gi, `${YELLOW}uiFeeReceiver${RESET}`);

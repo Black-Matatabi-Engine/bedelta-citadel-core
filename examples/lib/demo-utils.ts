@@ -6,12 +6,21 @@ const DEMO_SAFE_ISO = "2026-07-25T06:00:00.000Z";
 export const IS_LIVINGWATER_MODE =
   process.argv.includes("--livingwater") || process.argv.includes("--live");
 
+export function parseTripMode(argv: readonly string[] = process.argv): boolean {
+  return (
+    argv.includes("--trip") ||
+    argv.includes("--rogue") ||
+    argv.includes("trip") ||
+    argv.includes("rogue")
+  );
+}
+
+export const IS_TRIP_MODE = parseTripMode();
+
 const R = "\x1b[0m";
 const GREEN = "\x1b[32;1m";
-const CYAN = "\x1b[36;1m";
-const MAGENTA = "\x1b[35;1m";
+const RED = "\x1b[31;1m";
 const BOLD = "\x1b[1m";
-const BOX_W = 65;
 
 export function getDemoSafeTimestamp(): { nowMs: number; at: Date } {
   const at = new Date(DEMO_SAFE_ISO);
@@ -19,7 +28,8 @@ export function getDemoSafeTimestamp(): { nowMs: number; at: Date } {
 }
 
 export function printLivingWaterBanner(): void {
-  const line = "═".repeat(BOX_W);
+  const MAGENTA = "\x1b[35;1m";
+  const line = "═".repeat(65);
   console.log(`\n${MAGENTA}${line}${R}`);
   console.log(`${MAGENTA}${BOLD}[LIVING_WATER PRIVATE LIVE DEBUG MODE ACTIVE]${R}`);
   console.log(`${MAGENTA}${line}${R}\n`);
@@ -64,14 +74,13 @@ export function muteLibraryConsole(): () => void {
   };
 }
 
+export function printCitadelGuardInterceptionBanner(reason = "FAIL_CLOSED"): void {
+  console.log(`\n${RED}${BOLD}🛑 CITADEL GUARD INTERCEPTED: ${reason} (0-Gas Intercepted)${R}`);
+  console.log(`${GREEN}└─ Status: 🟢 INTERCEPTION VERIFIED (lostUsd ≡ $0.00)${R}\n`);
+}
+
 export function handleDemoExit(isTripped: boolean, reason: string): void {
   if (!isTripped) return;
-  const line = "═".repeat(BOX_W);
-  console.log(`\n${GREEN}${line}${R}`);
-  console.log(
-    `${GREEN}${BOLD}🟢 INTERCEPTION VERIFIED: This exit is an INTENTIONAL 0-Gas Fail-Closed Guard (NOT a script crash).${R}`,
-  );
-  console.log(`${CYAN}  Trigger: ${reason}${R}`);
-  console.log(`${GREEN}${line}${R}\n`);
+  printCitadelGuardInterceptionBanner(reason);
   process.exit(0);
 }

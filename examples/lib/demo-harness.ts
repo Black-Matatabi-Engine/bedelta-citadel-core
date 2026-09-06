@@ -10,6 +10,8 @@ import {
   handleDemoExit,
   initDemoEnvironmentClock,
   IS_LIVINGWATER_MODE,
+  IS_TRIP_MODE,
+  parseTripMode,
 } from "./demo-utils";
 
 export {
@@ -17,7 +19,10 @@ export {
   handleDemoExit,
   initDemoEnvironmentClock,
   IS_LIVINGWATER_MODE,
+  IS_TRIP_MODE,
   muteLibraryConsole,
+  parseTripMode,
+  printCitadelGuardInterceptionBanner,
 } from "./demo-utils";
 
 export interface DemoEnvironment {
@@ -60,7 +65,7 @@ const INTERCEPTION_MARKERS = [
 ];
 
 export function isDemoTripArgv(argv: readonly string[] = process.argv): boolean {
-  return argv.includes("--trip");
+  return parseTripMode(argv);
 }
 
 export function demoErrorReason(err: unknown): string {

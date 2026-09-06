@@ -6,6 +6,7 @@
  *   pnpm demo:e2e
  *   pnpm demo:e2e --hedge-live
  *   pnpm demo:e2e --livingwater
+ *   pnpm demo:e2e --trip
  */
 import { E2E_PROOF_REL_PATH, parseE2eMode } from "../examples/lib/e2e-demo-constants";
 import {
@@ -21,8 +22,8 @@ import {
   evaluateE2ePipelineOk,
   saveE2eProof,
 } from "../examples/lib/e2e-proof-persister";
-import { runE2ePipeline } from "../examples/lib/e2e-steps-runner";
-import { handleDemoExit, IS_LIVINGWATER_MODE, wrapDemoExecution } from "../examples/lib/demo-harness";
+import { runE2ePipeline, runE2eTripIntercept } from "../examples/lib/e2e-steps-runner";
+import { IS_LIVINGWATER_MODE, IS_TRIP_MODE, wrapDemoExecution } from "../examples/lib/demo-harness";
 import { resetProbes } from "./_shared/santenmoku-stress-probes";
 
 wrapDemoExecution(async ({ nowMs, at }) => {
@@ -33,6 +34,11 @@ wrapDemoExecution(async ({ nowMs, at }) => {
   logE2eHeaderClock(IS_LIVINGWATER_MODE);
   logE2ePipelineRoadmap();
   if (!IS_LIVINGWATER_MODE) resetProbes(nowMs);
+
+  if (IS_TRIP_MODE) {
+    runE2eTripIntercept(nowMs);
+    return { tripped: true, reason: "FAIL_CLOSED" };
+  }
 
   const steps = await runE2ePipeline(mode, nowMs, at);
   e2eLog("");
@@ -45,6 +51,5 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     process.exitCode = 1;
     return;
   }
-  handleDemoExit(false, "E2E_OK");
   process.exit(0);
 });

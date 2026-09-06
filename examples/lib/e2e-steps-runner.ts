@@ -5,7 +5,13 @@ import { assertE2eFinancialInvariants, computeE2eFinancialLedger } from "./e2e-f
 import { runStep1CitadelPreExec, runStep2RobinhoodEscort, runStep3GmxUnderweightRebalance } from "./e2e-steps-early";
 import { runStep4HlSessionHedge, runStep5R20PanicFlash } from "./e2e-steps-late";
 
+import { runE2eStep1TripIntercept } from "./e2e-trip-intercept";
+
 export type { E2ePipelineResult } from "./e2e-demo-types";
+
+export function runE2eTripIntercept(demoNowMs: number): void {
+  runE2eStep1TripIntercept(demoNowMs);
+}
 
 export async function runE2ePipeline(
   mode: E2eDemoMode,
