@@ -7,10 +7,10 @@
       "ok": true,
       "wasmUsed": true,
       "deadmanOk": true,
-      "wasmHotPathUs": 7.53,
-      "wasmP50Us": 7.7,
+      "wasmHotPathUs": 11.19,
+      "wasmP50Us": 12.49,
       "wasmP50BandStatus": "FAST_LOCAL",
-      "nodeE2eRttUs": 3896.83
+      "nodeE2eRttUs": 4202.25
     },
     "2_robinhoodUnidirectionalEscort": {
       "ok": true,
@@ -23,7 +23,7 @@
       "underweightSide": "short",
       "uiFeeBps": 10,
       "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
-      "payloadRef": "sha256:bbb84fd8bf119daa"
+      "payloadRef": "sha256:b4a152775e18182f"
     },
     "4_hlSessionKeyHedge": {
       "ok": true,
@@ -47,5 +47,5 @@
     "lostUsd": 0,
     "token": "USDC"
   },
-  "timestamp": "2026-09-06T15:24:16.933Z"
+  "timestamp": "2026-09-06T15:26:16.459Z"
 }
