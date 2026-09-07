@@ -67,6 +67,18 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Admin Rotation Tx** | `<!-- PENDING (optional --rotate-admin): 0x... -->` |
 | **Notional (USD)** | `$10–$20` (CLI `--size`) |
 
+### [POLICYGUARD_MAINNET_ANCHOR]
+
+> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · Live: `CONFIRM_MAINNET_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x… USE_ZERODEV_AA=true ZERODEV_PROJECT_ID=…`
+
+| Field | Value |
+|-------|-------|
+| **PolicyGuard Address** | `<!-- PENDING: 0x... -->` |
+| **PolicyGuard Deploy Tx** | `<!-- PENDING: 0x... -->` |
+| **Gate setPolicyGuard Tx** | `<!-- PENDING: 0x... -->` |
+| **ZeroDev Live Execution Tx** | `<!-- PENDING: 0x... -->` |
+| **Arbiscan URL (Live)** | `<!-- PENDING: https://arbiscan.io/tx/0x... -->` |
+
 **Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary).
 
 **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.
