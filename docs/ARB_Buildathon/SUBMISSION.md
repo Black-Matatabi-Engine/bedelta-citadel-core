@@ -716,13 +716,13 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
-> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · Live: `CONFIRM_MAINNET_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x…` · Legacy: `scripts/execute-mainnet-live-fill.ts`
+> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Live: `CONFIRM_ZERODEV_MAINNET=YES BROADCAST=1`
 
 | Field | Value |
 |-------|-------|
-| **Contract** | `SliverVineAgentPolicyGuard` · [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
-| **Mainnet Deployment Tx Hash** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` |
-| **Arbiscan URL** | [Arbiscan Tx](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **PolicyGuard Contract** | `SliverVineAgentPolicyGuard` · [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
+| **PolicyGuard Deployment Tx** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` · [Arbiscan](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **ZeroDev Kernel v3 UserOp Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` · [Arbiscan](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
 | **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
