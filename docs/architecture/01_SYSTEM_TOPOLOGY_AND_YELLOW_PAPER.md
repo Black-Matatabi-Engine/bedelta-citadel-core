@@ -13,6 +13,8 @@
 | Anchor | Chain ID | Value |
 |--------|----------|-------|
 | **SliverVineGate (Arbitrum One)** | `42161` | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **SliverVineAgentPolicyGuard (Arbitrum One)** | `42161` | `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` · [Arbiscan](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **ZeroDev Smart Route UserOp (Arbitrum One)** | `42161` | [`0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816`](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) · `execute-smart-route-live-demo.ts` |
 | **SliverVineGate (Arbitrum Sepolia)** | `421614` | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (CREATE2 same-address) |
 | **Mainnet Ignition Tx** | `42161` | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **SliverVineRiskOracle (Sepolia)** | `421614` | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
@@ -219,7 +221,9 @@ Solidity vault surface splits capital into two non-fungible risk lanes:
 | Contract | Role | Verified Address (Arbitrum One) |
 |----------|------|----------------------------------|
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| **Mainnet Ignition Tx** | Forge broadcast · contract creation | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| `SliverVineAgentPolicyGuard` | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent-policy pre-screen · `validateAgentPolicy` | `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **ZeroDev Smart Route UserOp** | Kernel v3 ERC-7579 · Robinhood ingress → GMX smart-route `payloadHash` bind | [`0xe12714a7…`](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
+| **Mainnet Ignition Tx** | Forge broadcast · Gate contract creation | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Deploy script** | ChainID guard + optional smoke | [`DeployArbitrumOneGate.s.sol`](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) · [`deploy-mainnet-gate-ignition.ts`](../../scripts/deploy-mainnet-gate-ignition.ts) |
 
 > **Bootstrap Keys:** Initial mainnet deploy uses Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification; production multisig rotation via native governance.
@@ -230,7 +234,7 @@ Solidity vault surface splits capital into two non-fungible risk lanes:
 |----------|------|----------------------------|
 | **Deployer / Admin / Signer** | OpSec-isolated Forge broadcast signer · gate stack admin | `0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F` |
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| `SliverVineAgentPolicyGuard` | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent-policy pre-screen · `SliverVineCitadel` domain · one-way `isPolicyActive` | **Code-Verified** (Foundry unit) · on-chain deploy pending |
+| `SliverVineAgentPolicyGuard` | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent-policy pre-screen · `SliverVineCitadel` domain · one-way `isPolicyActive` | **Verified Live (42161)** · `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` · [Deploy Tx](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | `SliverVineRiskOracle` | EIP-712 offline risk report · `STATUS_SHUTDOWN` flush | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
 | `IngressSafetySwitch` | Pillar 2 compliance filter (oracle flush + blacklist) | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` |
 | `SliverVineSoilCoprocessor` (Stylus) | On-chain HF soil math coprocessor | **Code-Verified** (Cargo **9/9 PASS** · Stylus SDK **0.10.7** · Wasm Sandbox Vitest Passed · On-chain Deploy Pending Tooling Lock) |
