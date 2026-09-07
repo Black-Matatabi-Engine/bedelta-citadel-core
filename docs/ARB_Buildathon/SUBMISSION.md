@@ -714,6 +714,18 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 > **0-Gas Off-Chain Severance architecture:** Arbitrum One Gate (`0xb174…`) **is engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — toxic paths never consume Sequencer gas; on-chain Gate anchors consume-once attestations only for cleared intents.
 
+### [MAINNET_LIVE_EXECUTION_EVIDENCE]
+
+> **Harness:** `pnpm tsx scripts/execute-mainnet-live-fill.ts` · Live: `CONFIRM_MAINNET_LIVE_FILL=YES BROADCAST=1 MAINNET_PK=0x…` · Optional: `--rotate-admin` · `--size=15`
+
+| Field | Value |
+|-------|-------|
+| **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
+| **Block Number** | `<!-- PENDING: ... -->` |
+| **Arbiscan URL** | `<!-- PENDING: https://arbiscan.io/tx/0x... -->` |
+| **Admin Rotation Tx** | `<!-- PENDING (optional): 0x... -->` |
+| **Notional (USD)** | `$10–$20` |
+
 ---
 
 ## On-Chain Verification — Arbitrum Sepolia (421614)

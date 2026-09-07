@@ -55,6 +55,18 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
+### [MAINNET_LIVE_EXECUTION_EVIDENCE]
+
+> **Harness:** `pnpm tsx scripts/execute-mainnet-live-fill.ts` · Live: `CONFIRM_MAINNET_LIVE_FILL=YES BROADCAST=1 MAINNET_PK=0x…`
+
+| Field | Value |
+|-------|-------|
+| **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
+| **Block Number** | `<!-- PENDING: ... -->` |
+| **Arbiscan URL** | `<!-- PENDING: https://arbiscan.io/tx/0x... -->` |
+| **Admin Rotation Tx** | `<!-- PENDING (optional --rotate-admin): 0x... -->` |
+| **Notional (USD)** | `$10–$20` (CLI `--size`) |
+
 **Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary).
 
 **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.
