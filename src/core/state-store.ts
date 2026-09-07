@@ -1,9 +1,7 @@
-/** Core state override + R20 severance — no risk-control import (breaks cycles). */
-import {
-  buildSystemState,
-  type SystemState,
-} from "../services/systemState";
-import { enrichSystemStateVectorEquilibrium } from "../services/vector-equilibrium";
+/** Core state override + R20 severance — pure core only. */
+import { buildSystemState } from "./system-state-build";
+import type { SystemState } from "./system-state-types";
+import { enrichSystemStateVectorEquilibrium } from "./vector-equilibrium-core";
 
 export interface CoreSystemState extends SystemState {
   isHedgeActive: boolean;
@@ -19,7 +17,6 @@ export function writeStateOverride(state: CoreSystemState | null): void {
   activeStateOverride = state;
 }
 
-/** Immediately sever the Session Key signing channel (physical R20 hardlock). */
 export function severSigningChannel(): CoreSystemState {
   const current =
     activeStateOverride ??

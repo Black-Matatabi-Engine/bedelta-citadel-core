@@ -13,7 +13,8 @@ import {
 import { SESSION_KEY_AUTO_EXPIRE_MS, SESSION_KEY_CLIP_USD } from "../services/risk/session-audit";
 import { readDefaultWasmBytesSync } from "./soil-wasm-node";
 
-export const WASM_ABI_VERSION = 2 as const;
+import { WASM_ABI_VERSION } from "../core/wasm-soil-ffi";
+export { WASM_ABI_VERSION };
 export const WASM_BUDGET_BYTES = 28 * 1024;
 export const WASM_EXEC_BUDGET_US = 60;
 

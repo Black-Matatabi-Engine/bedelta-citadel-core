@@ -1,5 +1,6 @@
 /** Pillar 3 — Agent-Citadel-Guard (EIP-712 Intent Shield + Deadman Switch). */
-import { checkSoilResistance, type SoilResistanceInput } from "../services/risk-control";
+import { checkSoilResistance } from "./risk-engine-soil";
+import type { SoilResistanceInput } from "./soil-resistance-types";
 import {
   AGENT_DEADMAN_SLIPPAGE_BPS,
   bpsToRatio,

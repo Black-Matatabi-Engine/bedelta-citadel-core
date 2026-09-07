@@ -1,5 +1,5 @@
 /** Pure soil math SSOT — cross-venue / spot-perp slippage lane (Wasm-aligned 6×f64). */
-import type { SoilResistanceInput } from "../services/risk-control-lib/soil-resistance-types";
+import type { SoilResistanceInput } from "./soil-resistance-types";
 
 export const MAX_SLIPPAGE = 0.005;
 export const MIN_DEPTH_USD = 100_000;

@@ -1,6 +1,6 @@
 /** Pillar 3 Agent-Citadel-Guard types + EIP-712 intent envelope. */
 import { ARBITRUM_ONE_CHAIN_ID } from "../sdk/constants";
-import type { SoilResistanceInput, SoilResistanceResult } from "../services/risk-control";
+import type { SoilResistanceInput, SoilResistanceResult } from "./soil-resistance-types";
 
 export const CITADEL_SLIPPAGE_EXCEEDED = "CITADEL_SLIPPAGE_EXCEEDED" as const;
 export const DEADMAN_SWITCH_TRIPPED = "DEADMAN_SWITCH_TRIPPED" as const;

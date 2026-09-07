@@ -1,5 +1,6 @@
 /** Lean Santenmoku risk engine — f64 protocol lanes + bitmask invariants. */
-import { HardlockError, RiskLimitExceeded, vineWrapProtection } from "./risk";
+import { HardlockError, RiskLimitExceeded } from "./errors";
+import { vineWrapProtection } from "./root-protection-core";
 import type { CitadelRiskGateVerdict, GatewayRulesInput, GatewayRulesResult } from "./risk-engine-lib/risk-engine-types";
 import {
   FLAG_AAVE_HEALTH_FACTOR_LOW,

@@ -1,7 +1,10 @@
 /** Global risk policy orchestration — extracted to keep risk-engine-core <200 LOC. */
 import { R20_LOCKED, readActiveSystemState } from "./state";
 import { checkFoolProofGuard } from "../services/fool-proof-guard";
-import { HardlockError, RiskLimitExceeded, evaluateFundingRegimePolicy, isR20Locked, vineWrapProtection } from "./risk";
+import { evaluateFundingRegimePolicy } from "./funding-regime-policy-core";
+import { HardlockError, RiskLimitExceeded } from "./errors";
+import { isR20Locked } from "./risk";
+import { vineWrapProtection } from "./root-protection-core";
 import type { GlobalRiskPolicyResult, RiskIntent } from "./risk-engine-lib/risk-engine-types";
 import { deny } from "./risk-engine-lib/risk-engine-types";
 import { checkSoilResistance } from "./risk-engine-soil";

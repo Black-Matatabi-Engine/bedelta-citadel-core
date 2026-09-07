@@ -1,7 +1,13 @@
 /** Soil fast-path + auto-sever wrapper — extracted to keep risk-engine-core <200 LOC. */
-import { checkSoilResistance as checkSoilResistanceBase, MAX_SLIPPAGE, isTsunamiShieldWindow, type SoilResistanceInput, type SoilResistanceResult } from "./risk";
-import { resolveSoilMinDepthUsd } from "../services/risk-control";
-import { evaluateSoilSlippagePacked, packSoilLane } from "../services/risk-control-lib/soil-resistance-math";
+import {
+  MAX_SLIPPAGE,
+  isTsunamiShieldWindow,
+  packSoilLane,
+  evaluateSoilSlippagePacked,
+  resolveSoilMinDepthUsd,
+} from "./soil-resistance-core";
+import type { SoilResistanceInput, SoilResistanceResult } from "./soil-resistance-types";
+import { checkSoilResistance as checkSoilResistanceBase } from "../services/risk-control-lib/soil-resistance";
 import { isXyzOrHip3Key } from "../services/exchanges/asset-classifier-lib/asset-classifier-keywords";
 import { isArbitrumStatusSequencerHealthy } from "../services/adapters/arbitrum-status-sentinel";
 import { isRpcRadarSequencerHealthy } from "../services/adapters/rpc-radar";
