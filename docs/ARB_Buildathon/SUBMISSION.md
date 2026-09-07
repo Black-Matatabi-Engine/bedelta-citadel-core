@@ -61,7 +61,7 @@
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Live Event Telemetry actively streams on Sepolia Testnet** (`0xb174…`); **Arbitrum One (`42161`) SQL Query Indexers fully pre-compiled for production event ingestion** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`5829e9a`** (`bedelta-citadel-core`) — v0.95 SSOT session-key replay + clock patches |
 
-### v0.95 SSOT — Marcus Chen Audit Closure (Resolved)
+### v0.95 SSOT — ZeroDev AA Security Audit Closure (Resolved)
 
 | Audit item | Status | SSOT |
 |------------|--------|------|

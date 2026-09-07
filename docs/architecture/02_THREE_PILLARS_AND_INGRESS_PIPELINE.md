@@ -30,7 +30,7 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 **ZeroDev AA v1.0 active scope (Opt-In Pillar 1):** **Native Integration** with **ZeroDev Kernel v3 (ERC-7579)** + **Ultra-Relay Intent Network** — Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579 TYPE 1 validator) · ⑤ Execution — `SliverVineRiskOracle` = **ERC-7579 Pre-Execution Hook (TYPE 4)** · Sepolia dry-run verified (`pnpm test:zerodev`). **v0.95 SSOT (`5829e9a`):** HL session-key consume-once nonce + `expiresAt` replay guard · USD.ai `[CLOCK_SSOT_VERIFIED]`. Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar 3 Wasm Shield and Pillar 2 Arbitrum Native Ingress operate **100% independently** of ZeroDev.
 
-#### 2.4.6 v0.95 SSOT — Marcus Chen Audit Closure
+#### 2.4.6 v0.95 SSOT — ZeroDev AA Security Audit Closure
 
 | Item | Resolution | Code / doc anchor |
 |------|------------|-------------------|

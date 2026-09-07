@@ -89,7 +89,7 @@
 |-------|------------|-----------|
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` on USD.ai oracle lane | `[CLOCK_SSOT_VERIFIED]` |
-| **Marcus Chen audit** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) |
+| **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification. Production multisig rotation via native governance.
 
