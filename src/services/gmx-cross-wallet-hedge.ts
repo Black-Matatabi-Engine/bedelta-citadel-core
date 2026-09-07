@@ -7,6 +7,10 @@ import { formatHlPerpPrice } from "../adapters/hl/execution-wire";
 import { sanitizeSessionKeyForMasterWalletTrading } from "../adapters/hl/execution-types";
 import { buildClearinghouseStateRequest } from "../adapters/hl/wallet/marginChecker";
 import { buildSystemState } from "../core/state";
+import {
+  computeDeltaNeutralHedgeOrder,
+  computeHedgeSlippageLimitPx,
+} from "../core/delta-neutral-calculator";
 import type { IntentLeg } from "../core/intent-ledger";
 import {
   HL_ETH_PERP_ASSET_INDEX,
@@ -93,11 +97,14 @@ export async function runGmxCrossWalletEthHedge(input: {
     existingShortEth: existingShort,
     unwind: input.unwind,
   });
-  const uncovered = delta.ethDeltaSize - existingShort;
-  const orderEthSize = input.unwind ? Math.max(0, -uncovered) : Math.max(0, uncovered);
   const reduceOnly = input.unwind === true;
-
-  if (orderEthSize <= 0) {
+  const preSizing = computeDeltaNeutralHedgeOrder({
+    ethDeltaSize: delta.ethDeltaSize,
+    existingShortEth: existingShort,
+    unwind: input.unwind,
+    limitPxUsd: 1,
+  });
+  if (!preSizing.ok) {
     return {
       ok: false,
       dryRun: input.dryRun !== false,
@@ -105,7 +112,7 @@ export async function runGmxCrossWalletEthHedge(input: {
       ethDeltaUsd: delta.ethDeltaUsd,
       orderEthSize: 0,
       orderUsd: 0,
-      reason: reduceOnly ? "ETH_UNWIND_NOT_OVERHEDGED" : "ETH_HEDGE_ALREADY_COVERED",
+      reason: preSizing.reason,
       delta,
     };
   }
@@ -113,10 +120,15 @@ export async function runGmxCrossWalletEthHedge(input: {
   await refreshSoilArbitrumProbesWithFallback();
   const live = input.dryRun !== true;
   const ethMarkUsd = await fetchHlEthMarkUsdStrict(input.fetchFn);
-  const slipPx = reduceOnly ? ethMarkUsd * 1.01 : ethMarkUsd * 0.99;
+  const slipPx = computeHedgeSlippageLimitPx(ethMarkUsd, reduceOnly);
   const shortLimitPx = formatHlPerpPrice(slipPx, HL_ETH_SZ_DECIMALS);
-  const orderUsd = orderEthSize * shortLimitPx;
-  if (!(orderUsd > 0)) {
+  const sizing = computeDeltaNeutralHedgeOrder({
+    ethDeltaSize: delta.ethDeltaSize,
+    existingShortEth: existingShort,
+    unwind: input.unwind,
+    limitPxUsd: shortLimitPx,
+  });
+  if (!sizing.ok) {
     return {
       ok: false,
       dryRun: input.dryRun !== false,
@@ -124,10 +136,11 @@ export async function runGmxCrossWalletEthHedge(input: {
       ethDeltaUsd: delta.ethDeltaUsd,
       orderEthSize: 0,
       orderUsd: 0,
-      reason: "ETH_HEDGE_ORDER_USD_ZERO",
+      reason: sizing.reason,
       delta,
     };
   }
+  const { orderEthSize, orderUsd } = sizing;
   const signer = createViemEip712Signer(input.sessionPk as Hex);
   const leg: IntentLeg = {
     venue: "HL",

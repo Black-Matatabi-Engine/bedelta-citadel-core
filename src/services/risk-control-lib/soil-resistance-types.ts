@@ -13,20 +13,13 @@ import type {
 import type { CrossSpreadSoilInput } from "../yield/cross-spread-cache";
 import type { GmxV2PriceImpactSoilInput } from "../yield/gmx-v2-price-impact";
 
-/** Cross-venue / cross-book slippage trip threshold (0.5%) */
-export const MAX_SLIPPAGE = 0.005;
-
-/**
- * Minimum liquidity depth (USD notional proxy). Rows without an explicit
- * depth reading are judged by dual-venue price presence only.
- */
-export const MIN_DEPTH_USD = 100_000;
-
-/** Relaxed depth gate for HL HyperEVM testnet (chainId 998) low-liquidity books. */
-export const HL_TESTNET_MIN_DEPTH_USD = 5_000;
-
-/** Vine soil fuse — L2 slippage isolation threshold (0.3%) */
-export const VINE_SOIL_MAX_SLIPPAGE = 0.003;
+export {
+  MAX_SLIPPAGE,
+  MIN_DEPTH_USD,
+  HL_TESTNET_MIN_DEPTH_USD,
+  VINE_SOIL_MAX_SLIPPAGE,
+  resolveSoilMinDepthUsd,
+} from "../../core/soil-resistance-core";
 
 export interface SoilResistanceInput {
   symbol: string;
@@ -82,11 +75,4 @@ export interface SoilResistanceResult {
   soilRiskUsd?: number;
   /** min(dynamic Max SL, orderSize×fuse) when order + balance provided */
   cappedMaxSlUsd?: number;
-}
-
-/** Resolve effective depth floor — $5K on HL testnet, $100K mainnet unless overridden. */
-export function resolveSoilMinDepthUsd(input: SoilResistanceInput): number {
-  if (input.minDepthUsd !== undefined) return input.minDepthUsd;
-  if (input.isTestnet) return HL_TESTNET_MIN_DEPTH_USD;
-  return MIN_DEPTH_USD;
 }

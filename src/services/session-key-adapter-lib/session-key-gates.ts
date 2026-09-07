@@ -5,6 +5,7 @@ import {
   type SystemState,
 } from "../../core/state";
 import { vineWrapProtection } from "../../core/risk";
+import { resolveOrderNotionalUsd } from "../../core/session-key-guard-core";
 import { assertVineShield, type VineShieldOrder } from "../fool-proof-guard";
 import {
   DefenseMatrixError,
@@ -12,20 +13,6 @@ import {
   SESSION_KEY_NOTIONAL_CAP_USD,
   type SessionKeyOrderPayload,
 } from "./session-key-types";
-
-function resolveOrderNotionalUsd(payload: SessionKeyOrderPayload): number {
-  const px = Number(payload.limitPx);
-  const sz = Number(payload.sz);
-  if (!Number.isFinite(px) || !Number.isFinite(sz) || px <= 0 || sz <= 0) {
-    throw new DefenseMatrixError(
-      "SESSION_KEY_INVALID_ORDER",
-      "Invalid Session Key order notional — limitPx and sz must be positive",
-      [`limitPx=${payload.limitPx}`, `sz=${payload.sz}`],
-      422,
-    );
-  }
-  return px * sz;
-}
 
 /** Derived R20 lock flag — mirrors telemetry `circuitBreakers.r20Locked`. */
 export function resolveR20Locked(state: SystemState): boolean {
