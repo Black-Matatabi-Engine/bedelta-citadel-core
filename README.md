@@ -81,6 +81,15 @@
 | **Agentic Commerce** | Pre-consensus execution safety primitive for AI agent swarms & machine-payment rails (x402-ready) | `checkSoilResistance()` · `SliverVineGate.sol` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) |
 | **Robinhood Chain (`46630`/`4663`)** | Pillar 2 RWA ingress — outbound-only USDG escort → Arbitrum One · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** — [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) · [`03_PILLAR_2` audit](./docs/audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 | **ArbOS 61 Elara** | Protocol ingress filtering reinforces Edge fail-closed — never a weaker substitute for pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
+| **ZeroDev Kernel v3 (v0.95 SSOT)** | **Pillar 1 Native Integration** — ERC-7579 Modular Account Hook · Ultra-Relay Intent Network · proprietary Citadel adapter (`src/adapters/arbitrum/zerodev-aa/`) | `pnpm test:zerodev` · [`02_THREE_PILLARS` §2.4](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-1--opt-in-zerodev-account-abstraction-integration-summary) |
+
+### v0.95 SSOT Security Patches (Commit `5829e9a`)
+
+| Patch | Resolution | Telemetry |
+|-------|------------|-----------|
+| **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
+| **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` on USD.ai oracle lane | `[CLOCK_SSOT_VERIFIED]` |
+| **Marcus Chen audit** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification. Production multisig rotation via native governance.
 

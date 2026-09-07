@@ -28,7 +28,15 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
-**ZeroDev AA v1.0 active scope (Opt-In Pillar 1):** Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579) · ⑤ Execution — Sepolia dry-run verified (`pnpm test:zerodev`). Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar 3 Wasm Shield and Pillar 2 Arbitrum Native Ingress operate **100% independently** of ZeroDev.
+**ZeroDev AA v1.0 active scope (Opt-In Pillar 1):** **Native Integration** with **ZeroDev Kernel v3 (ERC-7579)** + **Ultra-Relay Intent Network** — Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579 TYPE 1 validator) · ⑤ Execution — `SliverVineRiskOracle` = **ERC-7579 Pre-Execution Hook (TYPE 4)** · Sepolia dry-run verified (`pnpm test:zerodev`). **v0.95 SSOT (`5829e9a`):** HL session-key consume-once nonce + `expiresAt` replay guard · USD.ai `[CLOCK_SSOT_VERIFIED]`. Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar 3 Wasm Shield and Pillar 2 Arbitrum Native Ingress operate **100% independently** of ZeroDev.
+
+#### 2.4.6 v0.95 SSOT — Marcus Chen Audit Closure
+
+| Item | Resolution | Code / doc anchor |
+|------|------------|-------------------|
+| Proprietary vs official ZeroDev plugin | **Resolved in v0.95 SSOT** — Citadel-owned adapter; ERC-7579 typings in `zerodev-aa-types.ts` | `src/adapters/arbitrum/zerodev-aa/` |
+| Session key replay (70.88 KiB Worker path) | **Resolved in v0.95 SSOT** — `auditSessionKeyNonceState` + `verifySessionKeyValidity` before broadcast | `execute-order.ts` · commit `5829e9a` |
+| `SliverVineRiskOracle` hook classification | **ERC-7579 Pre-Execution Hook** — gate binds oracle status before Ultra-Relay UserOp ingress | `SliverVineRiskOracle.sol` · `zerodev-aa-gate-types.ts` |
 
 **Demo:** `pnpm demo` — 12 Tri-Pillar ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
 
@@ -265,7 +273,8 @@ v1.0 Active Triangle (42161)
 
 | Plane | Component | Latency | Function |
 |-------|-----------|---------|----------|
-| **① Validator (ERC-7579)** | ZeroDev Kernel v3 modular session module | **&lt;1 ms** | Scoped `ORDER_EXECUTE` · whitelisted target/selector · R06 notional cap · R07 daily clip · R14 re-auth |
+| **① Validator (ERC-7579)** | ZeroDev Kernel v3 modular session module (TYPE 1) · Ultra-Relay Intent Network | **&lt;1 ms** | Scoped `ORDER_EXECUTE` · whitelisted target/selector · R06 notional cap · R07 daily clip · R14 re-auth |
+| **①b Pre-Exec Hook (ERC-7579 TYPE 4)** | `SliverVineRiskOracle` — status mask + SLO circuit breaker | **on-chain** | Evaluated before UserOp reaches bundler; mirrored off-chain in `zerodev-aa-gate` |
 | **② Reflex Hook (Wasm + Stylus)** | Edge `checkSoilResistance()` ∥ `SliverVineSoilCoprocessor` | **p50 ~106 µs** Edge · on-chain coprocessor reinforcement | Soil fuse · cross-spread · oracle-lag · depth fail-closed **before** UserOp reaches bundler |
 
 ```text

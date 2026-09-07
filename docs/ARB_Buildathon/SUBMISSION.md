@@ -59,7 +59,18 @@
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Live Event Telemetry actively streams on Sepolia Testnet** (`0xb174…`); **Arbitrum One (`42161`) SQL Query Indexers fully pre-compiled for production event ingestion** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`1acbc24`** (`bedelta-citadel-core`) |
+| **Verified Commit** | `main` @ **`5829e9a`** (`bedelta-citadel-core`) — v0.95 SSOT session-key replay + clock patches |
+
+### v0.95 SSOT — Marcus Chen Audit Closure (Resolved)
+
+| Audit item | Status | SSOT |
+|------------|--------|------|
+| **ZeroDev official Kernel Plugin?** | **Resolved** — proprietary Citadel adapter aligned to **ERC-7579 Kernel v3** + **Ultra-Relay Intent Network** (not npm official plugin) | `src/adapters/arbitrum/zerodev-aa/` |
+| **Session key EIP-712 replay** | **Resolved** — consume-once nonce + `expiresAt` validation before `executeSignedAction` (`5829e9a`) | `executeHlSessionKeyOrder` · `SESSION_KEY_NONCE_REPLAY_GUARD` |
+| **Clock / oracle age forgery** | **Resolved** — `resolveUsdAiClockSsot()` enforces `Date.now()` fallback | `[CLOCK_SSOT_VERIFIED]` |
+| **`SliverVineRiskOracle` hook role** | **Resolved** — documented as **ERC-7579 Pre-Execution Hook** (TYPE 4) | `contracts/SliverVineRiskOracle.sol` · `zerodev-aa-gate-types.ts` |
+
+> **Telemetry tags (unchanged):** `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[CLOCK_SSOT_VERIFIED]`
 
 > **Note:** Initial mainnet deployment utilizes **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
@@ -372,7 +383,7 @@ Traditional DeFi / Agent risk checks rely on **post-hoc analytics** or **mutable
 | 🟢 **Sub-ms Pre-Broadcast Severance** | 0-Gas Wasm soil fuse (`checkSoilResistance()` p50 ~106µs) blocks MEV & toxic fills **before** mempool / Sequencer queues |
 | 🟢 **AI Behavioral Safety Substrate** | **60s LLM cooldown lock** prevents token-burning infinite retry loops; **dynamic ±2–5 bps jitter** prevents MEV threshold sniping ([`decorator.ts`](../../src/sdk/decorator.ts) · [`soil-threshold-jitter.ts`](../../src/services/risk-control-lib/soil-threshold-jitter.ts)) |
 | 🟢 **0-Proxy Immutable Gate** | No admin upgrade backdoors; EIP-712 consume-once attestation (`consumed[digest]`) on live **Arbitrum One** Gate |
-| 🟢 **Session Key Blast-Radius Isolation** | Scoped `ORDER_EXECUTE` + **$5,000** notional cap (`SESSION_KEY_NOTIONAL_CAP_USD`) caps key-compromise damage |
+| 🟢 **Session Key Blast-Radius Isolation** | Scoped `ORDER_EXECUTE` + **$5,000** notional cap · **v0.95 replay guard** — consume-once nonce + `expiresAt` (`5829e9a`) | `executeHlSessionKeyOrder` |
 | 🟢 **Oracle & RPC Resilience** | **30s** oracle-lag fail-closed (`ORACLE_LAG_DEADLOCK` / `ORACLE_LAG_DEADLOCK_MS = 30_000`) + **Honeypot trap RPC** defense (`evaluateRpcDefenseGate()` · 99% synthetic slippage decoy) |
 
 > **Engineering scope boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee).

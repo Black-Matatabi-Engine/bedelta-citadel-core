@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: BUSL-1.1
 pragma solidity ^0.8.24;
 
-/// @title SliverVineRiskOracle — Stateless circuit breaker (EIP-712 + timestamp + status mask)
+/// @title SliverVineRiskOracle — ERC-7579 Pre-Execution Hook (ZeroDev Kernel v3 risk circuit)
+/// @notice Stateless circuit breaker (EIP-712 + timestamp + status mask) evaluated before UserOp ingress.
 contract SliverVineRiskOracle {
     address public immutable offlineSigner;
     bool public isSystemFlushed;

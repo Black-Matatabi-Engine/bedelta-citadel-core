@@ -1,4 +1,4 @@
-/** @module ZeroDevAA — Opt-in CLI/SDK Citadel Risk Gate (Not mounted on Worker hot path) */
+/** @module ZeroDevAA — Opt-in CLI/SDK Citadel Risk Gate (ERC-7579 Pre-Execution Hook · Kernel v3 · Ultra-Relay) */
 
 import {
   getGasLedgerSnapshot,

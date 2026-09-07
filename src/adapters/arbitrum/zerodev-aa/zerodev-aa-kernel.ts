@@ -16,7 +16,8 @@ import { resolveArbitrumRpcUrl } from "./zerodev-aa-chain";
 
 export type ZeroDevViemChain = typeof arbitrum | typeof arbitrumNova | typeof arbitrumSepolia;
 
-/** ZeroDev Kernel v0.3.1 + ERC-4337 EntryPoint v0.7 — canonical binding SSOT. */
+/** ZeroDev Kernel v3 (ERC-7579 Modular Account) + ERC-4337 EntryPoint v0.7 canonical binding.
+ *  Validator modules = ERC-7579 TYPE(1); `SliverVineRiskOracle` = TYPE(4) Pre-Execution Hook via gate. */
 export const KERNEL_ENTRY_POINT = {
   address: ZERODEV_ENTRY_POINT_ADDRESS,
   version: ZERODEV_ENTRY_POINT_VERSION,
@@ -37,6 +38,8 @@ export interface KernelBuildResult {
   chainId: number;
   kernelVersion: typeof ZERODEV_KERNEL_VERSION;
   entryPoint: typeof KERNEL_ENTRY_POINT;
+  /** ERC-7579 manifest — Kernel v3 + Ultra-Relay Intent Network delivery plane. */
+  erc7579: { validatorType: 1; hookType: 4; ultraRelay: true };
 }
 
 function resolveChain(chainId: number): ZeroDevViemChain {
@@ -78,5 +81,6 @@ export async function buildKernelAccount(input: KernelBuildInput = {}): Promise<
     chainId,
     kernelVersion,
     entryPoint: KERNEL_ENTRY_POINT,
+    erc7579: { validatorType: 1, hookType: 4, ultraRelay: true },
   };
 }
