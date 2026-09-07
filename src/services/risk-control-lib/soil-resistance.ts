@@ -5,10 +5,9 @@
 
 import { applySoilTripSeverance } from "../../core/risk-severance";
 import {
-  mergeProtocolMaskLocal,
-  readProtocolMaskSync,
-  scheduleProtocolMaskKvWrite,
-} from "../kv-lib/protocol-mask";
+  commitProtocolMaskScratch,
+  seedProtocolMaskScratch,
+} from "../../core/soil-resistance-core";
 import { emitRiskLog, formatTripReasons, isoNow } from "./logging";
 import {
   isAllowedTelemetrySymbol,
@@ -129,13 +128,9 @@ export function checkSoilResistance(
     minDepthUsd,
   });
   const scratch = createSoilReasonScratch(metrics.tripFlags);
-  scratch.protocolMask = readProtocolMaskSync();
-  const maskBefore = scratch.protocolMask;
+  const maskBefore = seedProtocolMaskScratch(scratch);
   collectExternalSoilFlags(input, minDepthUsd, scratch);
-  scratch.protocolMask = mergeProtocolMaskLocal(scratch.protocolMask);
-  if (scratch.protocolMask !== maskBefore) {
-    scheduleProtocolMaskKvWrite(scratch.protocolMask);
-  }
+  commitProtocolMaskScratch(scratch, maskBefore);
 
   const tripped = scratch.flags !== 0 || scratch.protocolMask !== 0 || scratch.external !== null;
   const crossVenueSlippage = Number.isFinite(metrics.crossVenueSlippage)

@@ -180,3 +180,22 @@ export function evaluateHlOrderbookGapGuardPure(
   }
   return { triggered: true, targetLeverage, requiredMinDepthUsd, reasons };
 }
+
+export {
+  PROTOCOL_MASK_KV_KEY,
+  PROTOCOL_MASK_KV_TTL_SECONDS,
+  SOIL_REASON_PROTOCOL_MASK,
+  bindProtocolMaskGlobalState,
+  bindProtocolMaskKvPort,
+  commitProtocolMaskScratch,
+  ingestProtocolMaskRecord,
+  mergeProtocolMaskIntoTripFlags,
+  mergeProtocolMaskLocal,
+  prefetchProtocolMaskKv,
+  readProtocolMaskSync,
+  scheduleProtocolMaskKvWrite,
+  seedProtocolMaskScratch,
+  type ProtocolMaskKvPort,
+  type ProtocolMaskKvRecord,
+  type ProtocolMaskScratch,
+} from "./protocol-mask-sync";
