@@ -499,7 +499,8 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 
 ### 2. Robinhood Chain (Chain ID: 46630 / 4663) — Pillar 2 RWA Ingress Firewall
 
-* **Arbitrum H1 2026 alignment:** Permissioned **RWA capital escort** from Robinhood Chain (`46630` testnet · `4663` mainnet-ready) into **Arbitrum One (`42161`)** via Pillar 2 Compliance Ingress Firewall — institutional treasuries ingress without naked delta or phantom loss booking.
+* **Arbitrum H1 2026 alignment:** Permissioned **RWA capital escort** from Robinhood Chain (`46630` testnet · `4663` **production mainnet ingress**) into **Arbitrum One (`42161`)** via Pillar 2 Compliance Ingress Firewall — institutional treasuries ingress without naked delta or phantom loss booking.
+* **Live Mainnet Smart Route (4663 → 42161):** ZeroDev Kernel v3 UserOp Hash `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` · Verified Tx [`0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · Harness `pnpm tsx scripts/execute-smart-route-live-demo.ts`
 * **Integration**: Pillar 2 Ingress Bridge Adapter (`src/adapters/across-ingress-bridge.ts`) & R20 Circuit Breaker Sever Pipeline (`src/services/root-protection-lib/circuit-breaker-sever.ts`) · on-chain **`IngressSafetySwitch.sol`** AML oracle flush.
 * **Mechanism**: **Optional Pillar 2 Reference Escort Adapter** (not the protocol identity). Outbound `46630`/`4663` → `42161` only; inbound `42161` → Robinhood → **`AML_INBOUND_TO_ROBINHOOD_BLOCKED`**. **Pending-Capital Recognition Invariant:** **`lostUsd ≡ 0`** on `IN_FLIGHT_BRIDGE_CAPITAL` until explicit `SETTLED` or `BRIDGE_TIMEOUT_FAIL_CLOSED` (>1h). When deadlock condition R20 is triggered, `severSigningChannel()` immediately severs hot-key signature pipelines, locking the engine into read-only observer mode.
 
@@ -696,7 +697,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in `/api/grant-audit` | Arbitrum | ✅ Delivered |
 | **M-CLI** | Vitest **199 test files \| 868 PASS Clean (100% PASS)** | All | ✅ Delivered |
-| **M-RH-Demo** | `46630`/`4663` → `42161` outbound escort OK · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Code-verified · ⏳ video |
+| **M-RH-Demo** | `4663` → `42161` outbound Smart Route **Verified Live** · UserOp `0x7b72ee9f…` · Tx [`0x4c4ca136…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Live-verified |
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **M6-Mainnet** | Arbitrum One Gate ignition on `42161` · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Tx `0x54c153…b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | Arbitrum · Grant | ✅ Delivered |
@@ -716,7 +717,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
-> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1`
+> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1` · Default ingress: Robinhood Mainnet `4663` (`SMART_ROUTE_SOURCE_CHAIN_ID` override supported)
 
 | Field | Value |
 |-------|-------|
@@ -724,7 +725,10 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | **PolicyGuard Deployment Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` · [Arbiscan](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
 | **PolicyGuard Contract (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` · [Arbiscan](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
-| **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816` · [Arbiscan](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
+| **Smart Route Source Chain** | Robinhood Mainnet (`4663`) |
+| **Smart Route Target Chain** | Arbitrum One (`42161`) |
+| **ZeroDev Kernel v3 Smart Route UserOp Hash** | `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` |
+| **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` · [Arbiscan](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
 | **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
