@@ -716,14 +716,16 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
-> **Harness:** `pnpm tsx scripts/execute-mainnet-live-fill.ts` · Live: `CONFIRM_MAINNET_LIVE_FILL=YES BROADCAST=1 MAINNET_PK=0x…` · Optional: `--rotate-admin` · `--size=15`
+> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · Live: `CONFIRM_MAINNET_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x…` · Legacy: `scripts/execute-mainnet-live-fill.ts`
 
 | Field | Value |
 |-------|-------|
+| **Contract** | `SliverVineAgentPolicyGuard` · [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
+| **Mainnet Deployment Tx Hash** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` |
+| **Arbiscan URL** | [Arbiscan Tx](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **Chain** | Arbitrum One (`42161`) |
+| **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
 | **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
-| **Block Number** | `<!-- PENDING: ... -->` |
-| **Arbiscan URL** | `<!-- PENDING: https://arbiscan.io/tx/0x... -->` |
-| **Admin Rotation Tx** | `<!-- PENDING (optional): 0x... -->` |
 | **Notional (USD)** | `$10–$20` |
 
 ---
