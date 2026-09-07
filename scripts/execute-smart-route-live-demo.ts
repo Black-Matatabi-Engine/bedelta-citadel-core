@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Robinhood ingress → Arbitrum One smart-route ZeroDev Kernel v3 UserOp (PolicyGuard + Gate bind).
+ * Robinhood ingress → Arbitrum One smart-route ZeroDev Kernel v3 UserOp (PolicyGuard + optional Gate bind).
  * Dry-run default. Live: CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…
  */
 import { createKernelAccountClient, createZeroDevPaymasterClient } from "@zerodev/sdk";
@@ -27,8 +27,11 @@ const SOURCE_CHAIN = Number(process.env.SMART_ROUTE_SOURCE_CHAIN_ID ?? ROBINHOOD
 const AGENT_ID = keccak256(toHex(`silvervine:smart-route:${SOURCE_CHAIN}->${CHAIN_ID}`));
 const policyAbi = parseAbi(["function validateAgentPolicy(bytes32 agentId, uint256 maxNotional, uint256 ttl) returns (bytes32)"]);
 const gateAbi = parseAbi([
+  "function isSigner(address) view returns (bool)",
   "function verifyAndConsume((bytes32 payloadHash,address subject,uint8 verdict,uint16 riskBps,uint64 issuedAt,uint64 expiresAt,uint256 nonce) att, bytes[] signatures) returns (bytes32)",
 ]);
+
+type KernelCall = { to: Hex; value: bigint; data: Hex };
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_SMART_ROUTE_DEMO === "YES"; }
@@ -52,6 +55,16 @@ async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: objec
   });
 }
 
+async function resolveRegisteredGateSigner(client: ReturnType<typeof createPublicClient>, pk: Hex): Promise<Hex | null> {
+  const candidates = [(process.env.GATE_SIGNER_KEY_0 ?? "").trim(), pk].filter((k) => k.startsWith("0x")) as Hex[];
+  for (const signerPk of candidates) {
+    const addr = privateKeyToAccount(signerPk).address;
+    const ok = await client.readContract({ address: GATE, abi: gateAbi, functionName: "isSigner", args: [addr] });
+    if (ok) return signerPk;
+  }
+  return null;
+}
+
 async function main(): Promise<void> {
   try { loadEnvProduction(); } catch { /* optional */ }
   const sizeUsd = parseSize(process.argv.slice(2));
@@ -67,11 +80,18 @@ async function main(): Promise<void> {
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
   const pk = resolvePk();
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
+  const bytecode = await client.getBytecode({ address: kernel.address });
+  const factoryArgs = await kernel.account.getFactoryArgs?.();
+  console.log("[smart-route] kernel", {
+    address: kernel.address, deployed: Boolean(bytecode && bytecode !== "0x"),
+    factory: factoryArgs?.factory ?? null, hasFactoryData: Boolean(factoryArgs?.factoryData),
+  });
+
   const market = GMX_MARKET_REGISTRY["ETH/USDC"];
   const order = buildGmxV2UnsignedOrderPayload({ side: "long", sizeUsd, midPriceUsd: 3_500, marketToken: market.marketToken, maxSlippageBps: 30 });
-  const nonce = BigInt(Date.now());
+  const bindNonce = BigInt(Date.now());
   const binding = buildGmxSmartRoutePayloadBinding({
-    sourceChainId: SOURCE_CHAIN, executor: GATE, initiator: kernel.address, nonce, orderPayload: order, targetRoute: "GM_ETH_USDC",
+    sourceChainId: SOURCE_CHAIN, executor: GATE, initiator: kernel.address, nonce: bindNonce, orderPayload: order, targetRoute: "GM_ETH_USDC",
   });
   console.log("[smart-route] binding OK", {
     sourceChainId: SOURCE_CHAIN, destChainId: binding.chainId, targetRoute: binding.targetRoute,
@@ -84,28 +104,35 @@ async function main(): Promise<void> {
   }
 
   const now = BigInt(Math.floor(Date.now() / 1000));
-  const policyData = encodeFunctionData({
-    abi: policyAbi, functionName: "validateAgentPolicy",
-    args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n],
-  });
-  const calls: { to: Hex; data: Hex }[] = [{ to: POLICY_GUARD, data: policyData }];
+  const calls: KernelCall[] = [{
+    to: POLICY_GUARD, value: 0n,
+    data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n] }),
+  }];
 
-  const signerPk = (process.env.GATE_SIGNER_KEY_0 ?? "").trim() as Hex;
-  if (!signerPk.startsWith("0x")) throw new Error("GATE_SIGNER_KEY_0 required for Gate payloadHash bind");
-  const att = { payloadHash: binding.payloadHash, subject: kernel.address, verdict: 1, riskBps: 1200, issuedAt: now, expiresAt: now + 30n, nonce };
-  const gateSig = await signAtt(createWalletClient({ account: privateKeyToAccount(signerPk), chain: arbitrum, transport: http(RPC) }), att);
-  calls.push({ to: GATE, data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [gateSig]] }) });
+  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
+  if (gateSignerPk) {
+    const att = { payloadHash: binding.payloadHash, subject: kernel.address, verdict: 1, riskBps: 1200, issuedAt: now, expiresAt: now + 30n, nonce: bindNonce };
+    const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(RPC) });
+    const gateSig = await signAtt(gateWallet, att);
+    calls.push({
+      to: GATE, value: 0n,
+      data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [gateSig]] }),
+    });
+  } else {
+    console.warn("[smart-route] skip Gate verifyAndConsume — no on-chain registered signer (avoids UnknownSigner 0x5e4b9f75)");
+  }
 
+  const callData = await kernel.account.encodeCalls(calls);
   const bundlerRpc = buildZeroDevRpcUrl(projectId, CHAIN_ID);
   const paymaster = createZeroDevPaymasterClient({ chain: arbitrum, transport: http(bundlerRpc) });
   const kernelClient = createKernelAccountClient({
     account: kernel.account as SmartAccount, chain: arbitrum, bundlerTransport: http(bundlerRpc), client,
     paymaster: { getPaymasterData: (userOperation) => paymaster.sponsorUserOperation({ userOperation }) },
   });
-  const userOpHash = await kernelClient.sendUserOperation({ calls });
+  const userOpHash = await kernelClient.sendUserOperation({ callData });
   const receipt = await kernelClient.waitForUserOperationReceipt({ hash: userOpHash });
   const tx = receipt.receipt.transactionHash;
-  console.log("[smart-route] ZeroDev UserOp", { kernel: kernel.address, userOpHash, tx, success: receipt.success, url: arbiscan(tx) });
+  console.log("[smart-route] ZeroDev UserOp", { kernel: kernel.address, userOpHash, tx, success: receipt.success, calls: calls.length, url: arbiscan(tx) });
   if (!receipt.success) throw new Error("Smart-route UserOp reverted");
 }
 
