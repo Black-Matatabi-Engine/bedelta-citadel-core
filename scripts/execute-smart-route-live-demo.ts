@@ -12,7 +12,7 @@ import { arbitrum } from "viem/chains";
 import type { SmartAccount } from "viem/account-abstraction";
 import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-constants";
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
-import { GMX_MARKET_REGISTRY } from "../config/gmx-markets";
+import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
 import { ROBINHOOD_TESTNET_CHAIN_ID, EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { buildGmxSmartRoutePayloadBinding } from "../src/services/adapters/gmx-smart-route-payload-binding";
