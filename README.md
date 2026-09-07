@@ -6,6 +6,8 @@
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
+**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** is collision-avoidance — it slams the brakes in **<14µs** before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). No gas burned on blocked paths; the EIP-712 signing channel is severed while the intent is still in the cabin.
+
 | | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
 |---|-------------------------------------------|-------------------------------------|
 | **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
@@ -36,7 +38,7 @@
 **Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
-[![Vitest](https://img.shields.io/badge/Vitest-868%20PASS%20%28199%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-869%20PASS%20%28199%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -65,9 +67,10 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **199 test files \| 868 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **199 test files \| 869 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Wasm ABI v2** | `pkg/soil_core.wasm` · `soil_core_abi_version() = 2` · **28-protocol-slot** FFI (`PROTO_VECT_LEN=28`) — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` · slots **28–35** = soil math input |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
-| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
+| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
@@ -249,7 +252,7 @@ pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (199 test files | 868 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (199 test files | 869 PASS Clean (100% PASS))
 ```
 
 ### Path 2: Isolated Docker
@@ -266,8 +269,8 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **199 test files \| 868 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
-| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
+| **Vitest SSOT** | **199 test files \| 869 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
+| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · **ABI v2** · 28-protocol-slot FFI · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
 | **Foundry Gate** | **60/60** unit tests · **327,675** deep fuzz (`pnpm audit:nightly`) · **95.51%** line coverage |
@@ -281,7 +284,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-----------|--------|-----------|
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **868 PASS** · **50.94 KiB gzip** |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **869 PASS** · **50.94 KiB gzip** |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |
