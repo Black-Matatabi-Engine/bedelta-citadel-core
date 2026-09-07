@@ -720,13 +720,14 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 | Field | Value |
 |-------|-------|
-| **PolicyGuard Contract** | `SliverVineAgentPolicyGuard` · [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
-| **PolicyGuard Deployment Tx** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` · [Arbiscan](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **PolicyGuard Contract (current)** | `SliverVineAgentPolicyGuard` · [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
+| **PolicyGuard Deployment Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` · [Arbiscan](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
+| **PolicyGuard Contract (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` · [Arbiscan](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816` · [Arbiscan](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
+| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **Notional (USD)** | `$10–$20` |
 
 ---

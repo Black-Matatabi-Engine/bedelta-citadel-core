@@ -40,8 +40,9 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Stabilizer Sepolia adapter** | Universal Cross-DEX Testnet Sandbox on **421614** — 1:1 capacity · de-peg severance · cross-pass routing | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ >50bps peg guard · 60s LLM cooldown | [`stabilizer-adapter.ts`](../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:stabilizer` |
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
-| **PolicyGuard (Arbitrum One)** | `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` | [Arbiscan](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
-| **PolicyGuard Deploy Tx (42161)** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` | [Arbiscan Tx](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **PolicyGuard (Arbitrum One)** | `0xc66f96611a737c4e58706d0955594456eab88959` | [Arbiscan](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
+| **PolicyGuard Deploy Tx (42161)** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` | [Arbiscan Tx](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
+| **PolicyGuard (legacy v1)** | `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` | [Arbiscan](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | **ZeroDev Smart Route UserOp (42161)** | `0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816` | [Arbiscan Tx](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
 | **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../examples/agent-interceptor-demo.ts) |
@@ -64,13 +65,14 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Field | Value |
 |-------|-------|
-| **PolicyGuard Contract** | `SliverVineAgentPolicyGuard` · [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
-| **PolicyGuard Deployment Tx** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` · [Arbiscan](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **PolicyGuard Contract (current)** | `SliverVineAgentPolicyGuard` · [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
+| **PolicyGuard Deployment Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` · [Arbiscan](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
+| **PolicyGuard Contract (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` · [Arbiscan](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816` · [Arbiscan](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Gate Fill Tx Hash** | `<!-- PENDING: 0x... -->` |
+| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **Notional (USD)** | `$10–$20` (CLI `--size`) |
 
 ### [POLICYGUARD_MAINNET_ANCHOR]
@@ -79,12 +81,14 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Field | Value |
 |-------|-------|
-| **PolicyGuard Address** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
-| **PolicyGuard Deploy Tx** | `0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa` |
+| **PolicyGuard Address (current)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
+| **PolicyGuard Deploy Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` |
+| **PolicyGuard Address (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816` |
+| **GMX Fill Live Attempt** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
 | **Gate setPolicyGuard Tx** | `<!-- PENDING: bootstrap gate lacks setter -->` |
-| **Arbiscan URL (Deploy)** | [Arbiscan Tx](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **Arbiscan URL (Deploy)** | [Arbiscan Tx](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
 | **Arbiscan URL (Smart Route)** | [Arbiscan Tx](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) |
 
 **Core invariants:** $\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary).
