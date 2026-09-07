@@ -1,5 +1,5 @@
 /** Pure session-key validity + notional invariants (zero I/O). */
-import { DefenseMatrixError } from "../services/session-key-adapter-lib/session-key-types";
+import { DefenseMatrixError } from "./errors";
 
 export interface SessionKeyOrderNotionalInput {
   limitPx: string;

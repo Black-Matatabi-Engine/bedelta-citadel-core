@@ -64,26 +64,6 @@ export function resolveUsdAiClockSsotPure<T extends UsdaiSoilInput>(
   return { input: { ...input, nowMs }, skewMs, tripped, reasons };
 }
 
-export function emitUsdAiClockSsotLog<T extends UsdaiSoilInput>(
-  result: UsdaiClockSsotResult<T>,
-  callerProvided: boolean,
-): void {
-  const source = callerProvided ? "CallerValidated" : "Date.now";
-  const status = result.tripped ? "TRIPPED" : "PASS";
-  console.info(`[CLOCK_SSOT_VERIFIED] source=${source} skewMs=${result.skewMs} status=${status}`);
-}
-
-/** Production clock SSOT — reject caller skew >30s; default `Date.now()` when `nowMs` omitted. */
-export function resolveUsdAiClockSsot<T extends UsdaiSoilInput>(
-  input: T,
-  emitLog = true,
-): UsdaiClockSsotResult<T> {
-  const callerProvided = input.nowMs != null;
-  const result = resolveUsdAiClockSsotPure(input);
-  if (emitLog) emitUsdAiClockSsotLog(result, callerProvided);
-  return result;
-}
-
 export function computeUsdAiPegDriftBps(susdaiPriceUsd: number): number {
   return Math.abs(susdaiPriceUsd - 1) * 10_000;
 }
@@ -108,8 +88,8 @@ export function packUsdAiProtocolLane(
   );
 }
 
-export function resolveUsdAiProtocolMask(input: UsdaiSoilInput, emitClockLog = true): number {
-  const clock = resolveUsdAiClockSsot(input, emitClockLog);
+export function resolveUsdAiProtocolMask(input: UsdaiSoilInput, _emitClockLog = true): number {
+  const clock = resolveUsdAiClockSsotPure(input);
   if (clock.tripped) return FLAGS_SEVERED;
   const clocked = clock.input;
   packUsdAiProtocolLane(clocked, clocked.susdaiPriceUsd, USDAI_PROTO_VEC);
@@ -132,7 +112,7 @@ export function formatUsdAiFlagMask(flags: number): string {
 }
 
 export function verifyUsdAiOracle(input: UsdaiSoilInput): UsdaiOracleCheckResult {
-  const clock = resolveUsdAiClockSsot(input, input.nowMs == null);
+  const clock = resolveUsdAiClockSsotPure(input);
   if (clock.tripped) {
     return { ok: false, oracleAgeMs: 0, pegDriftBps: 0, navDeviationBps: 0, reasons: clock.reasons };
   }
