@@ -150,6 +150,32 @@ TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in `pkg/so
 
 **Wire modules:** [`soil-core-sim.ts`](../../src/services/wasm-feasibility-lib/soil-core-sim.ts) (`WASM_SOIL_INPUT_BYTES = 288`) · [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) (`WASM_ABI_VERSION = 2`) · [`soil_core.rs`](../../src/wasm/soil_core.rs) (`#![no_std]`).
 
+### 1.5 Dual-Layer Sequencer Defense Model
+
+Citadel Shield is **not** “Edge-only” or “on-chain-only” — it is a **dual-layer** stack that answers the Nitro reviewer question: *TS Gateway latency ≠ Nitro opcode latency; both layers protect different phases.*
+
+| Layer | Runtime | Role | Latency / Gas | SSOT |
+|-------|---------|------|---------------|------|
+| **Layer 1 — Edge Pre-Consensus** | Cloudflare Worker · `pkg/soil_core.wasm` · TS `checkSoilResistance()` | **Zero-gas** pre-broadcast intercept · sever signing before Sequencer / Bundler / mempool | **p50 ~106 µs** · **0 gas** on blocked paths | `worker-fetch.ts` · `soil-wasm.ts` |
+| **Layer 2 — On-Chain Sequencer Execution** | Arbitrum **Nitro Stylus** native Wasm · `SliverVineRiskOracle.sol` | On-chain fail-closed reinforcement inside Nitro VM block execution · auditable parity with Edge soil fuse | **~313 gas** modeled (`check_soil_resistance_stylus`) vs **~34,540 gas** naive EVM equivalent (**~110×**) · sub-ms Nitro runtime | [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) · [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) |
+
+```text
+Agent Intent
+    │
+    ▼
+[Layer 1] Edge Gateway + Wasm  (~106µs · 0 gas) ──FAIL──► severSigningChannel()
+    │ PASS
+    ▼
+[Layer 2] Nitro Sequencer block
+    ├── Stylus SliverVineSoilCoprocessor  (native Wasm opcode · ~313 gas)
+    └── SliverVineRiskOracle STATUS_SHUTDOWN flush
+    │ PASS
+    ▼
+EIP-712 SliverVineGate attestation → GMX / HL execution
+```
+
+**Benchmark harness:** `pnpm tsx scripts/benchmark-stylus-opcode.ts` — Cargo `stylus_core` release tests + opcode-weighted Gas table vs EVM-equivalent storage path.
+
 ---
 
 ## 2. Triangle Liquidity Loop & Segregated Tranches
