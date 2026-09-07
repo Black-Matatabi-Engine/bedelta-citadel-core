@@ -65,11 +65,11 @@ export const DEPOSIT_TRANCHE_B: DepositTrancheConfig = {
   id: "tranche-b-robinhood",
   label: "Tranche B — Robinhood Ingress Escort",
   subtitle:
-    "46630 → 42161 outbound-only · Elara-aligned AML firewall · bridge state machine",
+    "4663 → 42161 outbound-only · Elara-aligned AML firewall · bridge state machine",
   sendToken: "USDG",
   sendTokenOptions: [{ value: "USDG", label: "USDG" }],
-  sendChain: "rh-46630",
-  sendChainOptions: [{ value: "rh-46630", label: "Robinhood Chain 46630" }],
+  sendChain: "rh-4663",
+  sendChainOptions: [{ value: "rh-4663", label: "Robinhood Mainnet 4663" }],
   receiveToken: "USDG",
   receiveTokenOptions: [
     { value: "USDG", label: "USDG" },
@@ -78,7 +78,7 @@ export const DEPOSIT_TRANCHE_B: DepositTrancheConfig = {
   receiveChain: "arbitrum",
   receiveChainOptions: [
     { value: "arbitrum", label: "Arbitrum One" },
-    { value: "rh-46630", label: "Robinhood Chain 46630" },
+    { value: "rh-4663", label: "Robinhood Mainnet 4663" },
   ],
   safetyBadgeLabel:
     "Calldata Hash Bound via payloadHash · AML inbound blocked · ArbOS Elara ingress (V1.0)",

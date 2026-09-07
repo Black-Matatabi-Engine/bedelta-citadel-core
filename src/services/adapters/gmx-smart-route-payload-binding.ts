@@ -3,6 +3,7 @@ import { encodeAbiParameters, keccak256, type Hex } from "viem";
 import { type GmPoolRouteKey, resolveGmxMarketByRouteKey } from "../../config/gmx-markets";
 import {
   GMX_V2_EXCHANGE_ROUTER_ARBITRUM,
+  resolveSmartRouteSourceChainId,
   resolveZeroDevSmartRouteTarget,
 } from "../../config/gmx-revenue";
 import { ARBITRUM_ONE_CHAIN_ID } from "../../sdk/constants";
@@ -10,7 +11,7 @@ import { computeGatedExecutorPayloadHash } from "../../sdk/gated-executor-payloa
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 
 export interface GmxSmartRouteBindingInput {
-  sourceChainId: number;
+  sourceChainId?: number;
   executor: `0x${string}`;
   initiator: `0x${string}`;
   nonce: bigint;
@@ -49,13 +50,14 @@ export function encodeGmxSmartRouteBindingData(input: {
 export function buildGmxSmartRoutePayloadBinding(
   input: GmxSmartRouteBindingInput,
 ): GmxSmartRouteBindingResult {
-  const smart = resolveZeroDevSmartRouteTarget(input.sourceChainId);
+  const sourceChainId = resolveSmartRouteSourceChainId(input.sourceChainId);
+  const smart = resolveZeroDevSmartRouteTarget(sourceChainId);
   const targetRoute = input.targetRoute ?? smart?.gmPoolRouteKey ?? "GM_ETH_USDC";
   const market = resolveGmxMarketByRouteKey(targetRoute);
   const smartRoutingAddress = smart?.smartRoutingAddress ?? GMX_V2_EXCHANGE_ROUTER_ARBITRUM;
   const chainId = smart?.destChainId ?? ARBITRUM_ONE_CHAIN_ID;
   const data = encodeGmxSmartRouteBindingData({
-    sourceChainId: input.sourceChainId,
+    sourceChainId,
     targetRoute,
     marketToken: market.marketToken,
     orderPayload: input.orderPayload,

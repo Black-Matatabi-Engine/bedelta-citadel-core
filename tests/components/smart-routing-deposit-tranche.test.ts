@@ -20,7 +20,7 @@ describe("deposit-tranche-config", () => {
       "BRIDGE_TIMEOUT_FAIL_CLOSED",
     );
     expect(resolveDepositTrancheConfig("tranche-b-robinhood").sendChain).toBe(
-      "rh-46630",
+      "rh-4663",
     );
   });
 });

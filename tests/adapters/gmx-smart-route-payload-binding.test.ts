@@ -6,7 +6,15 @@ import {
   GMX_V2_EXCHANGE_ROUTER_ARBITRUM,
   resolveZeroDevSmartRouteTarget,
 } from "../../src/config/gmx-revenue";
-import { ARBITRUM_ONE_CHAIN_ID, ROBINHOOD_TESTNET_CHAIN_ID } from "../../src/sdk/constants";
+import {
+  DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID,
+  resolveSmartRouteSourceChainId,
+} from "../../src/config/gmx-revenue";
+import {
+  ARBITRUM_ONE_CHAIN_ID,
+  ROBINHOOD_MAINNET_CHAIN_ID,
+  ROBINHOOD_TESTNET_CHAIN_ID,
+} from "../../src/sdk/constants";
 import { computeGatedExecutorPayloadHash } from "../../src/sdk/gated-executor-payload";
 import {
   buildGmxSmartRoutePayloadBinding,
@@ -47,6 +55,32 @@ describe("gmx smart-route payload binding", () => {
     expect(q.targetRoute).toBe("GM_BTC_USDC");
     expect(q.smartRoutingAddress).toBe(GMX_V2_EXCHANGE_ROUTER_ARBITRUM);
     expect(q.destMarketToken).toBe(GMX_MARKET_REGISTRY["BTC/USDC"].marketToken);
+  });
+
+  it("resolveSmartRouteSourceChainId defaults to Robinhood mainnet 4663", () => {
+    expect(DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID).toBe(ROBINHOOD_MAINNET_CHAIN_ID);
+    expect(resolveSmartRouteSourceChainId()).toBe(ROBINHOOD_MAINNET_CHAIN_ID);
+    expect(resolveSmartRouteSourceChainId(ROBINHOOD_TESTNET_CHAIN_ID)).toBe(
+      ROBINHOOD_TESTNET_CHAIN_ID,
+    );
+  });
+
+  it("buildGmxSmartRoutePayloadBinding defaults source chain to mainnet 4663", () => {
+    const binding = buildGmxSmartRoutePayloadBinding({
+      executor: EXECUTOR,
+      initiator: INITIATOR,
+      nonce: 3n,
+      orderPayload,
+    });
+    const smart = resolveZeroDevSmartRouteTarget(ROBINHOOD_MAINNET_CHAIN_ID)!;
+    const data = encodeGmxSmartRouteBindingData({
+      sourceChainId: ROBINHOOD_MAINNET_CHAIN_ID,
+      targetRoute: "GM_ETH_USDC",
+      marketToken: GMX_MARKET_REGISTRY["ETH/USDC"].marketToken,
+      orderPayload,
+    });
+    expect(binding.data).toBe(data);
+    expect(binding.chainId).toBe(smart.destChainId);
   });
 
   it("buildGmxSmartRoutePayloadBinding matches GatedExecutor.payloadHash formula", () => {

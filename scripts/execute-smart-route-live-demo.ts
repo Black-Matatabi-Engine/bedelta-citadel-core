@@ -13,7 +13,8 @@ import type { SmartAccount } from "viem/account-abstraction";
 import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-constants";
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
-import { ROBINHOOD_TESTNET_CHAIN_ID, EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
+import { resolveSmartRouteSourceChainId } from "../src/config/gmx-revenue";
+import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { buildGmxSmartRoutePayloadBinding } from "../src/services/adapters/gmx-smart-route-payload-binding";
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
@@ -23,7 +24,7 @@ const POLICY_GUARD = "0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b" as Hex;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
 const CHAIN_ID = 42161;
 const RPC = process.env.ARB_MAINNET_RPC_URL ?? "https://arb1.arbitrum.io/rpc";
-const SOURCE_CHAIN = Number(process.env.SMART_ROUTE_SOURCE_CHAIN_ID ?? ROBINHOOD_TESTNET_CHAIN_ID);
+const SOURCE_CHAIN = resolveSmartRouteSourceChainId();
 const AGENT_ID = keccak256(toHex(`silvervine:smart-route:${SOURCE_CHAIN}->${CHAIN_ID}`));
 const policyAbi = parseAbi(["function validateAgentPolicy(bytes32 agentId, uint256 maxNotional, uint256 ttl) returns (bytes32)"]);
 const gateAbi = parseAbi([

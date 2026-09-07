@@ -50,6 +50,19 @@ describe("r-chain-yield-router escort", () => {
     expect(q.sourceChainId).toBe(ROBINHOOD_MAINNET_CHAIN_ID);
   });
 
+  it("defaults source chain to Robinhood mainnet 4663 when omitted", () => {
+    const q = quoteRChainYieldToArbitrumGm({
+      assetKind: "idle",
+      symbol: "USDG",
+      amountUsd: 500,
+      wallet: WALLET,
+      initiatedAtMs: NOW,
+      settledAtMs: NOW + 500,
+      nowMs: NOW + 1_000,
+    });
+    expect(q.sourceChainId).toBe(ROBINHOOD_MAINNET_CHAIN_ID);
+  });
+
   it("rejects undersized amount", () => {
     const q = quoteRChainYieldToArbitrumGm({
       assetKind: "idle",

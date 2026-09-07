@@ -25,6 +25,24 @@ const ARBITRUM_ONE = 42161 as const;
 const ROBINHOOD_TESTNET = 46630 as const;
 const ROBINHOOD_MAINNET = 4663 as const;
 
+/** Production default Robinhood ingress for ZeroDev smart routing (institutional mainnet). */
+export const DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID = ROBINHOOD_MAINNET;
+
+/** Env `SMART_ROUTE_SOURCE_CHAIN_ID` overrides institutional mainnet baseline when set. */
+export function resolveSmartRouteSourceChainId(chainId?: number | string | null): number {
+  if (chainId !== undefined && chainId !== null && chainId !== "") {
+    const parsed = Number(chainId);
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+  const envOverride =
+    typeof process !== "undefined" ? process.env.SMART_ROUTE_SOURCE_CHAIN_ID : undefined;
+  if (envOverride) {
+    const parsed = Number(envOverride);
+    if (Number.isFinite(parsed) && parsed > 0) return parsed;
+  }
+  return DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID;
+}
+
 /** GMX v2 ExchangeRouter — Arbitrum One gated execution target (docs.gmx.io). */
 export const GMX_V2_EXCHANGE_ROUTER_ARBITRUM =
   "0x7dE39FF2e232A2203196788d37e234cF8F1b83f1" as const;

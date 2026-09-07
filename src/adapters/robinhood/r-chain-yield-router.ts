@@ -12,6 +12,7 @@ import { assertUnidirectionalBridge } from "../../sdk/unidirectional-bridge";
 import { IN_FLIGHT_BRIDGE_CAPITAL } from "../across-ingress-bridge";
 import { type GmPoolRouteKey, resolveGmxMarketByRouteKey } from "../../config/gmx-markets";
 import {
+  DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID,
   GMX_V2_EXCHANGE_ROUTER_ARBITRUM,
   resolveZeroDevSmartRouteTarget,
 } from "../../config/gmx-revenue";
@@ -62,7 +63,7 @@ const APY_BPS: Record<RChainYieldAssetKind, number> = { rwa: 450, idle: 320 };
 const ROUTE_TTL_MS = 300_000;
 
 function resolveSourceChainId(chainId?: number): number | null {
-  if (chainId === undefined) return ROBINHOOD_TESTNET_CHAIN_ID;
+  if (chainId === undefined) return DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID;
   if (chainId === ROBINHOOD_MAINNET_CHAIN_ID || chainId === ROBINHOOD_TESTNET_CHAIN_ID) {
     return chainId;
   }
@@ -75,7 +76,7 @@ export function quoteRChainYieldToArbitrumGm(
 ): RChainYieldEscortQuote {
   const nowMs = input.nowMs ?? Date.now();
   const resolvedSource = resolveSourceChainId(input.sourceChainId);
-  const sourceChainId = resolvedSource ?? ROBINHOOD_TESTNET_CHAIN_ID;
+  const sourceChainId = resolvedSource ?? DEFAULT_SMART_ROUTE_SOURCE_CHAIN_ID;
   const smartRoute = resolvedSource !== null ? resolveZeroDevSmartRouteTarget(sourceChainId) : null;
   const targetRoute: GmPoolRouteKey =
     input.targetRoute ??

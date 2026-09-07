@@ -1,11 +1,7 @@
 /** Deposit → checkSoilResistance → GatedExecutor payloadHash preview (SPA-only, no EIP-712 change). */
 import { quoteRChainYieldToArbitrumGm, RWA_YIELD_MIN_USD } from "../../../adapters/robinhood/r-chain-yield-router";
 import { type GmPoolRouteKey, GMX_MARKET_REGISTRY } from "../../../config/gmx-markets";
-import {
-  ARBITRUM_ONE_CHAIN_ID,
-  ROBINHOOD_TESTNET_CHAIN_ID,
-  SLIVERVINE_GATE_ADDRESS,
-} from "../../../sdk/constants";
+import { ARBITRUM_ONE_CHAIN_ID, SLIVERVINE_GATE_ADDRESS } from "../../../sdk/constants";
 import { checkSoilResistance } from "../../../services/risk-control";
 import { buildGmxSmartRoutePayloadBinding } from "../../../services/adapters/gmx-smart-route-payload-binding";
 import { buildGmxV2UnsignedOrderPayload } from "../../../services/adapters/gmx-v2-order-payload";
@@ -150,7 +146,6 @@ export function runSmartRouteDepositPreview(input: {
     symbol: input.symbol ?? "USDG",
     amountUsd: input.amountUsd,
     wallet: input.wallet,
-    sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
     targetRoute: input.targetRoute,
     initiatedAtMs,
     settledAtMs,
