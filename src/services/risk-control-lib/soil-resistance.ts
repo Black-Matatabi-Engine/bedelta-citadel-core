@@ -20,7 +20,7 @@ import { isSequencerSafe } from "../risk/sequencer-guard";
 import { isArbitrumGasGuardBlocked } from "../risk/arbitrum-gas-guard";
 import { isSoftConfirmationSafe } from "../risk/soft-confirmation-guard";
 import { resolveUsdAiProtocolMask } from "../../adapters/usdai/usdai-protocol-lane";
-import { evaluateUsdAiSoilGate } from "../../adapters/usdai/usdai-adapter";
+import { evaluateUsdAiSoilGate } from "../../adapters/usdai/usdai-soil-gate";
 import { evaluatePendlePoolFactorySoilGate } from "../../adapters/pendle/pendle-pool-factory-adapter";
 import { evaluatePendleCrossGuardSoilGate, evaluatePendleOracleSoilGateFromRegistry } from "../../guards/pendle-gmx-cross-guard";
 import { evaluateCrossSpreadSoilGate } from "../yield/cross-spread-cache";

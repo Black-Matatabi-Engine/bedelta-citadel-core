@@ -11,42 +11,26 @@ import {
 } from "./api/routes/grant-audit";
 import { handleExecutionLogsRequest } from "./api/routes/logs";
 
-const GEO_BLOCKED_COUNTRIES = new Set(["US", "CU", "IR", "KP", "SY"]);
-
-const PUBLIC_READ_ONLY_PATHS = new Set([
-  "/api/telemetry/health",
-  "/api/telemetry/analytics",
-  "/api/badge/health",
-  "/api/badge/proofs",
-  "/api/yield/triangle",
-  "/api/logs",
-  "/api/grant-audit",
-  "/api",
-  "/api/health",
-  "/logs",
-  "/",
-  "/grant-audit",
-  "/b2b",
-  "/app",
-]);
+import {
+  isGeoBlockedCountry,
+  isPublicReadOnlyPath,
+  WRK_MSG_GEO_BLOCKED,
+} from "./worker/worker-error-codes";
 
 function enforceGeoCompliance(request: Request): Response | null {
   const url = new URL(request.url);
-  if (request.method === "GET" && PUBLIC_READ_ONLY_PATHS.has(url.pathname)) {
+  if (request.method === "GET" && isPublicReadOnlyPath(url.pathname)) {
     return null;
   }
   const country = request.cf?.country;
-  if (typeof country !== "string" || !GEO_BLOCKED_COUNTRIES.has(country)) {
+  if (typeof country !== "string" || !isGeoBlockedCountry(country)) {
     return null;
   }
   severSigningChannel();
-  return new Response(
-    "[SLIVERVINE DEFENSE] Access Denied by Geo-Compliance Circuit Breaker\n\nHyperliquid Foundation Evaluators: Contact grants@silvervinelabs.com for evaluator whitelist onboarding.",
-    {
-      status: 403,
-      headers: { "Content-Type": "text/plain; charset=UTF-8" },
-    },
-  );
+  return new Response(WRK_MSG_GEO_BLOCKED, {
+    status: 403,
+    headers: { "Content-Type": "text/plain; charset=UTF-8" },
+  });
 }
 
 export async function handleWorkerFetch(

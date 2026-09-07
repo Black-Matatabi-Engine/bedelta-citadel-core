@@ -4,7 +4,7 @@
  * Soil resistance types + depth/slippage constants.
  */
 
-import type { UsdaiSoilInput } from "../../adapters/usdai/usdai-adapter";
+import type { UsdaiSoilInput } from "../../adapters/usdai/usdai-constants";
 import type {
   PendleCrossGuardSoilInput,
   PendleOracleSoilInput,
