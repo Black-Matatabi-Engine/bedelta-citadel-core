@@ -24,6 +24,7 @@ const SAFETY_THRESHOLD: u64 = 10_000;
 const SPREAD_WEIGHT: u128 = 100;
 const SLIPPAGE_WEIGHT: u128 = 120;
 const DEPTH_FIXED_SCALE: u128 = 10_000;
+const ERR_SOIL_U64_OVERFLOW: &[u8] = b"SOIL_U64_OVERFLOW";
 
 sol_storage! {
     #[entrypoint]
@@ -39,22 +40,24 @@ impl SliverVineSoilCoprocessor {
         depth_usd: U256,
         slippage_bps: U256,
     ) -> Result<(bool, U256), Vec<u8>> {
-        let spread = u256_to_u64_fail_closed(spread_bps)?;
-        let depth = u256_to_u64_fail_closed(depth_usd)?;
-        let slippage = u256_to_u64_fail_closed(slippage_bps)?;
+        let spread = u256_to_u64_fail_closed(spread_bps).map_err(|e| e.to_vec())?;
+        let depth = u256_to_u64_fail_closed(depth_usd).map_err(|e| e.to_vec())?;
+        let slippage = u256_to_u64_fail_closed(slippage_bps).map_err(|e| e.to_vec())?;
         let (passed, score) = evaluate_soil_coprocessor_core(spread, depth, slippage);
         Ok((passed, U256::from(score)))
     }
 }
 
-fn u256_to_u64_fail_closed(value: U256) -> Result<u64, Vec<u8>> {
+#[inline(always)]
+fn u256_to_u64_fail_closed(value: U256) -> Result<u64, &'static [u8]> {
     if value > U256::from(u64::MAX) {
-        return Err(b"SOIL_U64_OVERFLOW".to_vec());
+        return Err(ERR_SOIL_U64_OVERFLOW);
     }
     Ok(value.to::<u64>())
 }
 
 /// Core fixed-point soil resistance evaluator (pure, no storage).
+#[inline(always)]
 pub fn evaluate_soil_coprocessor_core(
     spread_bps: u64,
     depth_usd: u64,

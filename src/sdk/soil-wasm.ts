@@ -103,17 +103,16 @@ export function ensureSoilWasm(): boolean {
 
 function runViaWasm(input: WasmSoilCoreInput): WasmSoilCoreOutput {
   const ex = exportsRef!;
-  const view = new DataView(ex.memory.buffer);
-  const encoded = new DataView(encodeWasmSoilInput(input));
-  for (let i = 0; i < 64; i++) view.setUint8(i, encoded.getUint8(i));
+  const heap = new Float64Array(ex.memory.buffer, 0, 16);
+  heap.set(new Float64Array(encodeWasmSoilInput(input)), 0);
   const flags = ex.soil_core_eval(0, 64);
   return {
-    crossVenueSlippage: view.getFloat64(64, true),
-    spotPerpSlippage: view.getFloat64(72, true),
-    tripped: view.getFloat64(80, true) !== 0 || flags !== 0,
-    soilRiskUsd: view.getFloat64(88, true),
-    cappedMaxSlUsd: view.getFloat64(96, true),
-    tripFlags: flags || Math.trunc(view.getFloat64(104, true)),
+    crossVenueSlippage: heap[8],
+    spotPerpSlippage: heap[9],
+    tripped: heap[10] !== 0 || flags !== 0,
+    soilRiskUsd: heap[11],
+    cappedMaxSlUsd: heap[12],
+    tripFlags: flags || Math.trunc(heap[13]),
   };
 }
 

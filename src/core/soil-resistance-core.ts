@@ -7,6 +7,7 @@ export const HL_TESTNET_MIN_DEPTH_USD = 5_000;
 export const VINE_SOIL_MAX_SLIPPAGE = 0.003;
 
 const SOIL_PACK_LEN = 6;
+const SOIL_LANE_SCRATCH = new Float64Array(SOIL_PACK_LEN);
 const SOIL_IDX_HL_SPOT = 0;
 const SOIL_IDX_HL_PERP = 1;
 const SOIL_IDX_DYDX_PERP = 2;
@@ -78,15 +79,16 @@ export function computeSoilSlippageMetrics(
 ): { crossVenueSlippage: number; spotPerpSlippage: number; tripFlags: number } {
   const slippageFuse = overrides?.maxSlippage ?? input.maxSlippage ?? MAX_SLIPPAGE;
   const minDepthUsd = overrides?.minDepthUsd ?? resolveSoilMinDepthUsd(input);
-  const lane = packSoilLane(
+  packSoilLane(
     input.hlSpot,
     input.hlPerp,
     input.dydxPerp,
     input.depthUsd ?? Number.NaN,
     slippageFuse,
     minDepthUsd,
+    SOIL_LANE_SCRATCH,
   );
-  return evaluateSoilSlippagePacked(lane);
+  return evaluateSoilSlippagePacked(SOIL_LANE_SCRATCH);
 }
 
 export const TSUNAMI_SHIELD_HKT_START = 21;

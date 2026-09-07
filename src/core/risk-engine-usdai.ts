@@ -13,6 +13,8 @@ import {
   PROTO_VECT_LEN,
 } from "./risk-engine-core";
 
+const USDAI_PROTO_VEC = new Float64Array(PROTO_VECT_LEN);
+
 export const USDAI_ARBITRUM_CHAIN_ID = 42161 as const;
 export const USDAI_ORACLE_MAX_AGE_MS = 7_200_000 as const;
 export const USDAI_PEG_DRIFT_MAX_BPS = 30 as const;
@@ -94,7 +96,7 @@ export function computeUsdAiNavDeviationBps(navUsd: number, gpuMarkUsd: number):
 export function packUsdAiProtocolLane(
   input: UsdaiSoilInput,
   prevSusdaiPriceUsd = input.susdaiPriceUsd,
-  out: Float64Array = new Float64Array(PROTO_VECT_LEN),
+  out: Float64Array = USDAI_PROTO_VEC,
 ): Float64Array {
   return packProtocolLane(
     PROTO_USDAI,
@@ -110,17 +112,22 @@ export function resolveUsdAiProtocolMask(input: UsdaiSoilInput, emitClockLog = t
   const clock = resolveUsdAiClockSsot(input, emitClockLog);
   if (clock.tripped) return FLAGS_SEVERED;
   const clocked = clock.input;
-  const vec = new Float64Array(PROTO_VECT_LEN);
-  packUsdAiProtocolLane(clocked, clocked.susdaiPriceUsd, vec);
-  return evaluateUsdAiFlagsFromLane(vec, clocked.nowMs, clocked.oracleTimestampMs);
+  packUsdAiProtocolLane(clocked, clocked.susdaiPriceUsd, USDAI_PROTO_VEC);
+  return evaluateUsdAiFlagsFromLane(USDAI_PROTO_VEC, clocked.nowMs, clocked.oracleTimestampMs);
 }
+
+const USDAI_FLAG_LABELS: readonly [number, string][] = [
+  [FLAG_USDAI_ORACLE_STALE, "USDAI_ORACLE_STALE"],
+  [FLAG_USDAI_PEG_DRIFT, "USDAI_PEG_DRIFT"],
+];
 
 export function formatUsdAiFlagMask(flags: number): string {
   const core = flags & ~FLAGS_SEVERED;
   if (core === FLAGS_CLEAR) return "0x0";
   const parts: string[] = [];
-  if (core & FLAG_USDAI_ORACLE_STALE) parts.push("USDAI_ORACLE_STALE");
-  if (core & FLAG_USDAI_PEG_DRIFT) parts.push("USDAI_PEG_DRIFT");
+  for (const [bit, label] of USDAI_FLAG_LABELS) {
+    if (core & bit) parts.push(label);
+  }
   return parts.length > 0 ? parts.join("|") : `0x${core.toString(16)}`;
 }
 

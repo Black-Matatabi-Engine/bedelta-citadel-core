@@ -17,6 +17,7 @@ const MAX_IMBALANCE: f64 = 0.35;
 const MIN_HF: f64 = 1.15;
 
 /// risk_vector: [spread_bps, depth_usd, slippage_bps, yield_shock_bps, imbalance_ratio, health_factor]
+#[inline(always)]
 pub fn check_soil_resistance_stylus(flags: u64, risk_vector: [f64; 6]) -> bool {
     if flags & (FLAG_IMBALANCE | FLAG_COLLATERAL | FLAG_YIELD_SHOCK | FLAG_SLIPPAGE | FLAG_HF | FLAG_NAV | FLAG_DEPEG) != 0 {
         return false;

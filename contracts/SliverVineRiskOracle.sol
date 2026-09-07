@@ -4,6 +4,12 @@ pragma solidity ^0.8.24;
 /// @title SliverVineRiskOracle — ERC-7579 Pre-Execution Hook (ZeroDev Kernel v3 risk circuit)
 /// @notice Stateless circuit breaker (EIP-712 + timestamp + status mask) evaluated before UserOp ingress.
 contract SliverVineRiskOracle {
+    error SignerZero();
+    error SloZero();
+    error SloTimeout();
+    error InvalidStatus();
+    error InvalidSigner();
+
     address public immutable offlineSigner;
     bool public isSystemFlushed;
     uint8 public statusCode;
@@ -25,8 +31,8 @@ contract SliverVineRiskOracle {
     event ErrorTriggered(bytes32 indexed code, address indexed actor);
 
     constructor(address offlineSigner_, uint256 sloWindowSec_) {
-        require(offlineSigner_ != address(0), "SIGNER_ZERO");
-        require(sloWindowSec_ > 0, "SLO_ZERO");
+        if (offlineSigner_ == address(0)) revert SignerZero();
+        if (sloWindowSec_ == 0) revert SloZero();
         offlineSigner = offlineSigner_;
         sloWindowSec = sloWindowSec_;
         _DOMAIN = keccak256(
@@ -43,10 +49,10 @@ contract SliverVineRiskOracle {
     function applySignedReport(uint8 newStatusCode, uint256 timestamp, bytes calldata signature) external {
         if (block.timestamp > timestamp + sloWindowSec) {
             emit ErrorTriggered(ERR_SLO_TIMEOUT, msg.sender);
-            revert("SLO_TIMEOUT");
+            revert SloTimeout();
         }
         if (newStatusCode != STATUS_SAFE && newStatusCode != STATUS_WARNING && newStatusCode != STATUS_SHUTDOWN) {
-            revert("INVALID_STATUS");
+            revert InvalidStatus();
         }
         bytes32 digest = keccak256(
             abi.encodePacked(
@@ -57,7 +63,7 @@ contract SliverVineRiskOracle {
         );
         if (_recover(digest, signature) != offlineSigner) {
             emit ErrorTriggered(ERR_INVALID_SIGNER, msg.sender);
-            revert("INVALID_SIGNER");
+            revert InvalidSigner();
         }
         statusCode = newStatusCode;
         lastTimestamp = timestamp;

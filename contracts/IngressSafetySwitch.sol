@@ -5,6 +5,11 @@ import {SliverVineRiskOracle} from "./SliverVineRiskOracle.sol";
 
 /// @title IngressSafetySwitch — venue-agnostic ingress compliance filter (oracle flush + institutional blacklist)
 contract IngressSafetySwitch {
+    error OracleZero();
+    error BlacklistZero();
+    error SloTimeout();
+    error Blacklisted();
+
     SliverVineRiskOracle public immutable riskOracle;
     mapping(address => bool) public institutionalBlacklist;
 
@@ -16,11 +21,11 @@ contract IngressSafetySwitch {
     event ErrorTriggered(bytes32 indexed code, address indexed actor);
 
     constructor(address oracle_, address[] memory blacklisted_) {
-        require(oracle_ != address(0), "ORACLE_ZERO");
+        if (oracle_ == address(0)) revert OracleZero();
         riskOracle = SliverVineRiskOracle(oracle_);
         uint256 len = blacklisted_.length;
         for (uint256 i; i < len; ++i) {
-            require(blacklisted_[i] != address(0), "BLACKLIST_ZERO");
+            if (blacklisted_[i] == address(0)) revert BlacklistZero();
             institutionalBlacklist[blacklisted_[i]] = true;
         }
     }
@@ -37,11 +42,11 @@ contract IngressSafetySwitch {
             uint8 code = riskOracle.statusCode();
             emit EmergencyJumped(target, code, block.timestamp);
             emit ErrorTriggered(ERR_SLO_TIMEOUT, target);
-            revert("SLO_TIMEOUT");
+            revert SloTimeout();
         }
         if (institutionalBlacklist[target]) {
             emit ErrorTriggered(ERR_INVALID_SIGNER, target);
-            revert("BLACKLISTED");
+            revert Blacklisted();
         }
         emit StatusRefreshed(target, block.timestamp);
     }
