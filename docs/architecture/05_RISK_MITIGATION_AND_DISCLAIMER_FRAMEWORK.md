@@ -114,6 +114,88 @@ User / AI intent → Pillar 1 Gatehouse (session scope)
 
 SliverVine Protocol is **sophisticated smart-contract infrastructure** — not a bank deposit, money-market fund, or insured cash product. Dynamic Target Range **8.2% ~ 11.8% APY** is a **non-guaranteed display band**, not a yield guarantee. See [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) § Risk & Disclaimer for full allocator disclosures.
 
+### 0.5 Fail-Closed Fund Safety & User Notification Flow
+
+> **Institutional SSOT:** What happens to user capital and operator UX when a pre-execution risk trip fires — before any mempool submission, bundler relay, or venue broadcast.
+
+#### 0.5.1 Asset Safety Guarantee — Pre-Broadcast Interception (0 Wasted Gas)
+
+SliverVine Citadel Shield evaluates every intent at the **Edge** via `checkSoilResistance()` (**p50 ~106 µs** · `pkg/soil_core.wasm`) and venue-specific guards (GMX pool invariants, HL session limits, bridge escort rules) **before** constructing a signed payload, UserOp, or router calldata.
+
+| Trip class | Example reason codes | When evaluated | On-chain / gas impact |
+|------------|---------------------|----------------|---------------------|
+| **Soil / microstructure** | `SOIL_RESISTANCE_TRIP` · `ARBITRUM_SEQUENCER_PROBE_MISSING` · cross-venue slippage fuse | Pillar 3 Edge · Wasm + TS orchestration | **No tx submitted** · **0 gas** · `tradeAllowed: false` |
+| **GMX pool invariant** | `GMX_POOL_IMBALANCE_BREACH` · `GMX_COLLATERAL_RESERVE_BREACH` | Pre-payload in `gmx-v2-order-payload-guards.ts` / `gmx-v2-invariants.ts` | **No GMX router call** · **0 gas** on rejected intent |
+| **AA / bundler path** | `RiskLimitExceeded` · oracle fail-closed · soil trip propagated to ZeroDev gate | Pillar 1 `zerodev-aa-gate.ts` **before** `sendUserOperation` | **UserOp never reaches bundler** · **0 sponsorship gas** on rejected simulation |
+| **Session / policy** | R06/R07 scope breach · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy inactive | Pillar 1 Gatehouse + `SliverVineAgentPolicyGuard` | **No Gate `verifyAndConsume`** · signing channel severed |
+
+**Fund safety mechanics:**
+
+1. **Funds remain in the user's custody** — EOA, ZeroDev Kernel smart account, or source-chain wallet. Citadel is **non-custodial**; rejection does not move principal.
+2. **No mempool pollution** — toxic intents are severed at `signingChannelOpen: false` / `severSigningChannel()`; Arbitrum sequencer gas is not spent on doomed trades.
+3. **Live mainnet proof (42161):** GMX fill attempted under live pool stress correctly tripped **`GMX_POOL_IMBALANCE_BREACH`** pre-broadcast — confirming the fail-closed invariant shield is **active in production** (see [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) `[MAINNET_LIVE_EXECUTION_EVIDENCE]`).
+
+```text
+Operator intent
+  → checkSoilResistance() + venue guards (p50 ~106µs)
+  → [ PASS ]  → payload / UserOp assembly → optional Gate attestation → broadcast
+  → [ TRIP ]  → RiskLimitExceeded / soil reasons
+              → NO calldata signed for venue
+              → NO UserOp to bundler
+              → user funds unchanged · gas cost = 0
+```
+
+#### 0.5.2 In-Flight & Cross-Chain Escort Handling (`lostUsd ≡ 0`)
+
+Pillar 2 Compliance Ingress Firewall enforces **honest bridge accounting** — pending escort capital is **labeled, not lost**.
+
+| State | `capitalLabel` | `deployable` | `lostUsd` | Operator action |
+|-------|----------------|--------------|-----------|-----------------|
+| **Bridge initiated** | `IN_FLIGHT_BRIDGE_CAPITAL` | `false` | `0` | Wait for escort settlement; no naked GMX/HL leg opens |
+| **Bridge settled** | `DEPLOYABLE` (post-escort) | `true` | `0` | Citadel re-runs soil + venue guards before venue broadcast |
+| **Bridge timeout (>1h)** | `BRIDGE_TIMEOUT_FAIL_CLOSED` | `false` | `0` | Fail-closed — no delta-neutral open; capital remains on source chain or Kernel account |
+
+**State machine (Pillar 2 reference escort):**
+
+```text
+IN_FLIGHT_BRIDGE_CAPITAL
+  ├─ settled within DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS (3_600_000 ms = 1h)
+  │    → escort OK · lostUsd ≡ 0 · proceed to Pillar 3 soil gate
+  └─ elapsed > 1h without settlement
+       → BRIDGE_TIMEOUT_FAIL_CLOSED
+       → refuse naked positions · lostUsd ≡ 0
+       → funds NOT trapped in Citadel contracts (non-custodial escort labels only)
+```
+
+**Capital location on trip:** Funds stay in the **user's Kernel AA account** (Arbitrum) or **source-chain wallet** (e.g. Robinhood `46630` outbound escort). SliverVine Protocol does not sweep principal into protocol-owned contracts on fail-closed paths.
+
+**Code SSOT:** `src/adapters/across-ingress-bridge.ts` · `src/sdk/unidirectional-bridge.ts` · `src/core/capital-invariant-ledger.ts` (`lostUsd` hard-assert = 0) · Pillar 2 audit [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) §2.4.
+
+#### 0.5.3 User Feedback & Notification Flow (HUD · SDK · Operator Console)
+
+Rejected intents surface as **structured, actionable errors** — never silent drops.
+
+| Layer | Mechanism | Operator sees |
+|-------|-----------|---------------|
+| **Core exception** | `RiskLimitExceeded` (`src/services/risk-control`) with `reason` + `details.reasons[]` | Machine-readable trip code (e.g. `GMX_POOL_IMBALANCE_BREACH`) |
+| **HUD / SPA** | `resolveComplianceAlertsFromReasons()` · `COMPLIANCE_TRIP_ALERTS` in `compliance-trip-alerts.ts` | Title + severity (`critical` / `warning`) + plain-language remediation |
+| **SSE telemetry** | `GET /api/hud-stream` · `section1-soil-probes.ts` log templates | Live `SOIL_RESISTANCE_PROBE: REJECTED` with reason list |
+| **SDK / decorator** | `withCitadelShield` · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
+| **Grant audit API** | `GET /api/grant-audit` · Robinhood audit snapshot | `lostUsd: 0` · `tradeAllowed: false` on trip paths |
+
+**Example operator messages (UI SSOT):**
+
+| Trip code | HUD title | Actionable guidance |
+|-----------|-----------|---------------------|
+| `GMX_POOL_IMBALANCE_BREACH` | Pool Imbalance Fail-Closed | Reduce size, wait for pool rebalance, or switch tranche — **no trade was sent** |
+| `SOIL_RESISTANCE_TRIP` | Soil Fuse Armed | Depth/slippage exceeded fuse — retry when cross-venue books normalize |
+| `BRIDGE_TIMEOUT_FAIL_CLOSED` | Bridge Timeout Fail-Closed | Escort exceeded 1h — capital remains in-flight label; **do not force naked hedge** |
+| `SYSTEM_FAIL_CLOSED_TRIP` | System Fail-Closed | Signing channel severed — clear soil/sequencer/oracle trips before re-arm |
+
+**ZeroDev AA path:** `assertCitadelRiskGate()` and `assertRiskOracleUserOpGateOnChain()` run **before** `sendUserOperation`. Bundler simulation failures (e.g. `UnknownSigner`) are caught pre-relay; operators receive fail-closed console output from `scripts/execute-*-mainnet-*.ts` harnesses with Arbiscan URLs only on **successful** broadcasts.
+
+**Design principle:** Every rejection answers three questions for the operator: **(1)** What tripped? **(2)** Are my funds safe? **(3)** What should I do next? — Answer template: *«{CODE} — no broadcast; funds unchanged; {remediation}»*.
+
 ---
 
 ## Executive Summary
