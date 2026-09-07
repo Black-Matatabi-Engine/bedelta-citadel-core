@@ -6,13 +6,14 @@
 import {
   encodeWasmSoilInput,
   runWasmSoilCoreSim,
+  WASM_SOIL_INPUT_FLOATS,
   type WasmSoilCoreInput,
   type WasmSoilCoreOutput,
 } from "../services/wasm-feasibility-lib/soil-core-sim";
 import { SESSION_KEY_AUTO_EXPIRE_MS, SESSION_KEY_CLIP_USD } from "../services/risk/session-audit";
 import { readDefaultWasmBytesSync } from "./soil-wasm-node";
 
-export const WASM_ABI_VERSION = 1 as const;
+export const WASM_ABI_VERSION = 2 as const;
 export const WASM_BUDGET_BYTES = 28 * 1024;
 export const WASM_EXEC_BUDGET_US = 60;
 
@@ -103,16 +104,18 @@ export function ensureSoilWasm(): boolean {
 
 function runViaWasm(input: WasmSoilCoreInput): WasmSoilCoreOutput {
   const ex = exportsRef!;
-  const heap = new Float64Array(ex.memory.buffer, 0, 16);
+  const outOffset = WASM_SOIL_INPUT_FLOATS * 8;
+  const heap = new Float64Array(ex.memory.buffer, 0, WASM_SOIL_INPUT_FLOATS + 8);
   heap.set(new Float64Array(encodeWasmSoilInput(input)), 0);
-  const flags = ex.soil_core_eval(0, 64);
+  const flags = ex.soil_core_eval(0, outOffset);
+  const outIdx = WASM_SOIL_INPUT_FLOATS;
   return {
-    crossVenueSlippage: heap[8],
-    spotPerpSlippage: heap[9],
-    tripped: heap[10] !== 0 || flags !== 0,
-    soilRiskUsd: heap[11],
-    cappedMaxSlUsd: heap[12],
-    tripFlags: flags || Math.trunc(heap[13]),
+    crossVenueSlippage: heap[outIdx],
+    spotPerpSlippage: heap[outIdx + 1],
+    tripped: heap[outIdx + 2] !== 0 || flags !== 0,
+    soilRiskUsd: heap[outIdx + 3],
+    cappedMaxSlUsd: heap[outIdx + 4],
+    tripFlags: flags || Math.trunc(heap[outIdx + 5]),
   };
 }
 

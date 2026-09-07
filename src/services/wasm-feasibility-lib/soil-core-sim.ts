@@ -9,8 +9,13 @@ export const WASM_SOIL_DEFAULT_SLIPPAGE_FUSE = 0.005;
 export const WASM_SOIL_MIN_DEPTH_USD = 100_000;
 export const WASM_SOIL_TESTNET_MIN_DEPTH_USD = 5_000;
 
-/** `#[repr(C)]` layout — 8-byte aligned f64 fields (Rust/Wasm portable). */
-export const WASM_SOIL_INPUT_BYTES = 64;
+/** Protocol lane vector — matches `PROTO_VECT_LEN` in risk-engine-core. */
+export const WASM_PROTOCOL_LEN = 28;
+export const WASM_SOIL_OFFSET = WASM_PROTOCOL_LEN;
+export const WASM_SOIL_INPUT_FLOATS = WASM_PROTOCOL_LEN + 8;
+
+/** `#[repr(C)]` layout — 28 protocol + 8 soil f64 fields (Rust/Wasm portable). */
+export const WASM_SOIL_INPUT_BYTES = WASM_SOIL_INPUT_FLOATS * 8;
 export const WASM_SOIL_OUTPUT_BYTES = 64;
 
 export interface WasmSoilCoreInput {
@@ -22,6 +27,7 @@ export interface WasmSoilCoreInput {
   accountBalanceUsd: number;
   maxSlippage: number;
   minDepthUsd: number;
+  protocolMask?: number;
 }
 
 export interface WasmSoilCoreOutput {
@@ -36,26 +42,25 @@ export interface WasmSoilCoreOutput {
 const TRIP_CROSS_VENUE = 1 << 0;
 const TRIP_DEPTH = 1 << 1;
 const TRIP_INSUFFICIENT = 1 << 2;
+const TRIP_PROTOCOL = 1 << 3;
 
-function align8(offset: number): number {
-  return (offset + 7) & ~7;
-}
+const SOIL_FIELD_ORDER: (keyof WasmSoilCoreInput)[] = [
+  "hlSpot",
+  "hlPerp",
+  "dydxPerp",
+  "depthUsd",
+  "orderSizeUsd",
+  "accountBalanceUsd",
+  "maxSlippage",
+  "minDepthUsd",
+];
 
 export function wasmSoilInputByteOffset(field: keyof WasmSoilCoreInput): number {
-  const order: (keyof WasmSoilCoreInput)[] = [
-    "hlSpot",
-    "hlPerp",
-    "dydxPerp",
-    "depthUsd",
-    "orderSizeUsd",
-    "accountBalanceUsd",
-    "maxSlippage",
-    "minDepthUsd",
-  ];
-  let offset = 0;
-  for (const key of order) {
+  if (field === "protocolMask") return (WASM_PROTOCOL_LEN - 1) * 8;
+  let offset = WASM_SOIL_OFFSET * 8;
+  for (const key of SOIL_FIELD_ORDER) {
     if (key === field) return offset;
-    offset = align8(offset + 8);
+    offset += 8;
   }
   return offset;
 }
@@ -63,6 +68,9 @@ export function wasmSoilInputByteOffset(field: keyof WasmSoilCoreInput): number 
 export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
   const buf = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
   const view = new DataView(buf);
+  if (input.protocolMask) {
+    view.setFloat64(wasmSoilInputByteOffset("protocolMask"), input.protocolMask, true);
+  }
   view.setFloat64(wasmSoilInputByteOffset("hlSpot"), input.hlSpot, true);
   view.setFloat64(wasmSoilInputByteOffset("hlPerp"), input.hlPerp, true);
   view.setFloat64(wasmSoilInputByteOffset("dydxPerp"), input.dydxPerp, true);
@@ -76,6 +84,7 @@ export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
 
 export function decodeWasmSoilInput(buf: ArrayBuffer): WasmSoilCoreInput {
   const view = new DataView(buf);
+  const protocolMask = view.getFloat64(wasmSoilInputByteOffset("protocolMask"), true);
   return {
     hlSpot: view.getFloat64(wasmSoilInputByteOffset("hlSpot"), true),
     hlPerp: view.getFloat64(wasmSoilInputByteOffset("hlPerp"), true),
@@ -85,6 +94,7 @@ export function decodeWasmSoilInput(buf: ArrayBuffer): WasmSoilCoreInput {
     accountBalanceUsd: view.getFloat64(wasmSoilInputByteOffset("accountBalanceUsd"), true),
     maxSlippage: view.getFloat64(wasmSoilInputByteOffset("maxSlippage"), true),
     minDepthUsd: view.getFloat64(wasmSoilInputByteOffset("minDepthUsd"), true),
+    protocolMask: protocolMask !== 0 ? protocolMask : undefined,
   };
 }
 
@@ -128,6 +138,9 @@ export function runWasmSoilCoreSim(input: WasmSoilCoreInput): WasmSoilCoreOutput
   }
   if (input.depthUsd >= 0 && input.depthUsd < input.minDepthUsd) {
     tripFlags |= TRIP_DEPTH;
+  }
+  if (input.protocolMask) {
+    tripFlags |= TRIP_PROTOCOL;
   }
 
   const slipForRisk =
