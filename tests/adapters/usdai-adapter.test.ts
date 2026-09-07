@@ -121,4 +121,15 @@ describe("usdai-adapter", () => {
     const flags = evaluateUsdAiFlagsFromLane(vec, NOW_MS, NOW_MS - 120_000);
     expect(flags & FLAG_USDAI_PEG_DRIFT).not.toBe(0);
   });
+
+  it("caller clock skew >30s → FAIL_CLOSED with CLOCK_SKEW_EXCEEDED", () => {
+    const skewedNow = Date.now() - 60_000;
+    const tripped = evaluateUsdAiCollateralGuard({
+      ...HEALTHY,
+      nowMs: skewedNow,
+    });
+    expect(tripped.ok).toBe(false);
+    expect(tripped.status).toBe("FAIL_CLOSED");
+    expect(tripped.reasons.some((r) => r.startsWith("CLOCK_SKEW_EXCEEDED"))).toBe(true);
+  });
 });

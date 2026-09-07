@@ -5,6 +5,8 @@ export const USDAI_PEG_DRIFT_MAX_BPS = 30 as const;
 export const USDAI_NAV_DEVIATION_MAX_BPS = 50 as const;
 export const USDAI_MIN_LIQUIDITY_DEPTH_USD = 100_000 as const;
 export const USD_AI_DEPEG_ORACLE_TRIP = "USD_AI_DEPEG_ORACLE_TRIP" as const;
+export const USDAI_CLOCK_SKEW_MAX_MS = 30_000 as const;
+export const CLOCK_SKEW_EXCEEDED = "CLOCK_SKEW_EXCEEDED" as const;
 
 export interface UsdaiSoilInput {
   oracleTimestampMs: number;
@@ -17,16 +19,30 @@ export interface UsdaiSoilInput {
   amountUsd?: number;
 }
 
-/** Production clock SSOT — reject caller forgery when `nowMs` omitted. */
+export interface UsdaiClockSsotResult<T extends UsdaiSoilInput> {
+  input: T & { nowMs: number };
+  skewMs: number;
+  tripped: boolean;
+  reasons: string[];
+}
+
+/** Production clock SSOT — reject caller skew >30s; default `Date.now()` when `nowMs` omitted. */
 export function resolveUsdAiClockSsot<T extends UsdaiSoilInput>(
   input: T,
   emitLog = true,
-): T & { nowMs: number } {
+): UsdaiClockSsotResult<T> {
   const wallMs = Date.now();
+  const callerProvided = input.nowMs != null;
   const nowMs = input.nowMs ?? wallMs;
-  const skewMs = input.nowMs != null ? Math.abs(input.nowMs - wallMs) : 0;
+  const skewMs = callerProvided ? Math.abs(input.nowMs! - wallMs) : 0;
+  const tripped = callerProvided && skewMs > USDAI_CLOCK_SKEW_MAX_MS;
+  const reasons = tripped
+    ? [`${CLOCK_SKEW_EXCEEDED}:skewMs=${skewMs}>${USDAI_CLOCK_SKEW_MAX_MS}`]
+    : [];
   if (emitLog) {
-    console.info(`[CLOCK_SSOT_VERIFIED] source=Date.now skewMs=${skewMs}`);
+    const source = callerProvided ? "CallerValidated" : "Date.now";
+    const status = tripped ? "TRIPPED" : "PASS";
+    console.info(`[CLOCK_SSOT_VERIFIED] source=${source} skewMs=${skewMs} status=${status}`);
   }
-  return { ...input, nowMs };
+  return { input: { ...input, nowMs }, skewMs, tripped, reasons };
 }

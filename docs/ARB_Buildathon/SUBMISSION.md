@@ -58,7 +58,7 @@
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
-| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Live Event Telemetry actively streams on Sepolia Testnet** (`0xb174…`); **Arbitrum One (`42161`) SQL Query Indexers fully pre-compiled for production event ingestion** per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Sepolia (`0xb174…`) live event ingest operational**; **Arbitrum One (`42161`) dashboard = pre-compiled DuneSQL specification** awaiting mainnet Gate business-event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`5829e9a`** (`bedelta-citadel-core`) — v0.95 SSOT session-key replay + clock patches |
 
 ### v0.95 SSOT — ZeroDev AA Security Audit Closure (Resolved)
@@ -67,14 +67,14 @@
 |------------|--------|------|
 | **ZeroDev official Kernel Plugin?** | **Resolved** — proprietary Citadel adapter aligned to **ERC-7579 Kernel v3** + **Ultra-Relay Intent Network** (not npm official plugin) | `src/adapters/arbitrum/zerodev-aa/` |
 | **Session key EIP-712 replay** | **Resolved** — consume-once nonce + `expiresAt` validation before `executeSignedAction` (`5829e9a`) | `executeHlSessionKeyOrder` · `SESSION_KEY_NONCE_REPLAY_GUARD` |
-| **Clock / oracle age forgery** | **Resolved** — `resolveUsdAiClockSsot()` enforces `Date.now()` fallback | `[CLOCK_SSOT_VERIFIED]` |
+| **Clock / oracle age forgery** | **Resolved** — `resolveUsdAiClockSsot()` + **`CLOCK_SKEW_EXCEEDED` hard trip (>30s skew)** | `[CLOCK_SSOT_VERIFIED]` |
 | **`SliverVineRiskOracle` hook role** | **Resolved** — documented as **ERC-7579 Pre-Execution Hook** (TYPE 4) | `contracts/SliverVineRiskOracle.sol` · `zerodev-aa-gate-types.ts` |
 
 > **Telemetry tags (unchanged):** `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[CLOCK_SSOT_VERIFIED]`
 
 > **Note:** Initial mainnet deployment utilizes **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
 
-> **Core Pitch:** **SliverVine Citadel Shield** is the **Pre-Consensus Execution Safety Primitive for AI Agents** — **Agentic Commerce / x402 Protocol Ready** on Arbitrum. It intercepts toxic payloads at sub-ms (**p50 ~106µs** · Wasm **<28kb Cloudflare budget, <60µs execution**) **before** Arbitrum Sequencer queues — 0-Gas fail-closed severance via `checkSoilResistance()` plus immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
+> **Core Pitch:** **SliverVine Citadel Shield** intercepts toxic payloads at sub-ms (**p50 ~106µs** TypeScript Gateway + Wasm Edge reflex — **not** L1/L2 block confirmation time) **before** Arbitrum Sequencer queues — 0-Gas fail-closed severance via `checkSoilResistance()` plus immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
 ### Arbitrum Foundation H1 2026 Strategic Alignment
 

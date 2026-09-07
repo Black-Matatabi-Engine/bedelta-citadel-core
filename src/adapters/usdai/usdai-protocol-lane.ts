@@ -27,7 +27,9 @@ export function packUsdAiProtocolLane(
 }
 
 export function resolveUsdAiProtocolMask(input: UsdaiSoilInput, emitClockLog = true): number {
-  const clocked = resolveUsdAiClockSsot(input, emitClockLog);
+  const clock = resolveUsdAiClockSsot(input, emitClockLog);
+  if (clock.tripped) return FLAGS_SEVERED;
+  const clocked = clock.input;
   const vec = new Float64Array(PROTO_VECT_LEN);
   packUsdAiProtocolLane(clocked, clocked.susdaiPriceUsd, vec);
   return evaluateUsdAiFlagsFromLane(vec, clocked.nowMs, clocked.oracleTimestampMs);

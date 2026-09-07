@@ -50,6 +50,8 @@
 
 > **⚡ Pre-Consensus Intent Firewall:** Sub-ms intent clearing at **p50 ~106 μs** — toxic payloads are severed **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools (0-Gas fail-closed).
 >
+> **Latency scope:** **p50 ~106 µs** measures **TypeScript Gateway + Wasm `checkSoilResistance()` interception** on Cloudflare Edge — **not** L1/L2 block confirmation, sequencer finality, or on-chain inclusion time.
+>
 > *Sub-ms End-to-End Shield Path (Pure-Math Kernel: 200 ns / 0.0002 ms) · < 1.0ms SLO Session Key verification · **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.*
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing that conforms to venue constraints without breaking invariants. **Δ (Delta)** denotes **market delta-neutrality** — neutralizing directional exposure through the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive that binds both.
@@ -69,7 +71,7 @@
 | **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate `0xb174118b…` |
+| **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Sepolia live ingest** · **42161 = pre-compiled SQL spec** awaiting mainnet event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 
 > **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **ArbOS 61 Elara** compatible · **96KB** Wasm budget ready · Cargo **9/9 PASS**. → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
@@ -88,7 +90,7 @@
 | Patch | Resolution | Telemetry |
 |-------|------------|-----------|
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
-| **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` on USD.ai oracle lane | `[CLOCK_SSOT_VERIFIED]` |
+| **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
 | **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) |
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification. Production multisig rotation via native governance.
@@ -197,7 +199,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Cognitive role** | Transport relay (no reflex) | **Involuntary safety reflex** (pre-signature deadlock) |
-| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** (0.014ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
+| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** Edge Gateway + Wasm reflex (**not** block time) vs LLM **~1.0s–10.0s** reasoning loop |
 | **Determinism** | N/A | **100% deterministic** bitmask evaluation |
 | **On hallucination** | Forwards opaque calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
 | **Demo proof** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |

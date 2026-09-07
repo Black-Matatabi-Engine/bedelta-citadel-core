@@ -25,6 +25,15 @@
 >
 > The Dune engine **actively ingests decoded events** from the Sepolia Gate and reconciles against live `duneTelemetry` snapshots from the Edge Worker.
 
+### Arbitrum One (`42161`) — Pre-Compiled SQL Spec (Awaiting Live Ingest)
+
+| Field | Status |
+|-------|--------|
+| **Chain** | Arbitrum One `42161` · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
+| **Dashboard** | Queries 1–3 below are **pre-compiled DuneSQL** for production PEV / toxic-flow panels |
+| **Live ingest** | **Not yet operational** — awaits mainnet `IntentAttested` / `RiskTripBlocked` business-event indexer activation |
+| **Sepolia parity** | Sepolia stream proves decode + PEV math; 42161 spec is **copy-ready** for sponsor diligence |
+
 ---
 
 ## Dashboard Panels (Production DuneSQL)

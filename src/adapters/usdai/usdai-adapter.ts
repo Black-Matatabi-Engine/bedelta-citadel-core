@@ -22,6 +22,8 @@ export {
   USDAI_ORACLE_MAX_AGE_MS,
   USDAI_PEG_DRIFT_MAX_BPS,
   USD_AI_DEPEG_ORACLE_TRIP,
+  CLOCK_SKEW_EXCEEDED,
+  USDAI_CLOCK_SKEW_MAX_MS,
   type UsdaiSoilInput,
 } from "./usdai-constants";
 export { packUsdAiProtocolLane, resolveUsdAiProtocolMask, formatUsdAiFlagMask } from "./usdai-protocol-lane";
@@ -62,7 +64,17 @@ export function computeUsdAiNavDeviationBps(navUsd: number, gpuMarkUsd: number):
 
 /** Decoupled oracle lane — GPU valuation age · peg drift · NAV vs GPU mark. */
 export function verifyUsdAiOracle(input: UsdaiSoilInput): UsdaiOracleCheckResult {
-  const clocked = resolveUsdAiClockSsot(input, input.nowMs == null);
+  const clock = resolveUsdAiClockSsot(input, input.nowMs == null);
+  if (clock.tripped) {
+    return {
+      ok: false,
+      oracleAgeMs: 0,
+      pegDriftBps: 0,
+      navDeviationBps: 0,
+      reasons: clock.reasons,
+    };
+  }
+  const clocked = clock.input;
   const reasons: string[] = [];
   const oracleAgeMs = Math.max(0, clocked.nowMs - clocked.oracleTimestampMs);
   const pegDriftBps = computeUsdAiPegDriftBps(clocked.susdaiPriceUsd);
@@ -129,8 +141,20 @@ function buildUsdAiSoilInput(input: UsdaiCollateralInput): SoilResistanceInput {
 export function evaluateUsdAiCollateralGuard(
   input: UsdaiCollateralInput,
 ): UsdaiCollateralGuardResult {
-  const clocked = resolveUsdAiClockSsot(input);
+  const clock = resolveUsdAiClockSsot(input);
   const t0 = performance.now();
+  if (clock.tripped) {
+    return {
+      ok: false,
+      status: "FAIL_CLOSED",
+      reasons: [...clock.reasons],
+      oracleOk: false,
+      depthOk: false,
+      soilOk: false,
+      latencyUs: (performance.now() - t0) * 1000,
+    };
+  }
+  const clocked = clock.input;
   const reasons: string[] = [];
 
   if (clocked.chainId !== USDAI_ARBITRUM_CHAIN_ID) {
