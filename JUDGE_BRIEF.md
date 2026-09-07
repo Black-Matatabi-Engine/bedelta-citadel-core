@@ -2,7 +2,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **194 test files | 845 PASS Clean (100% PASS)** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · Shield **p50 ~106µs**
+> **SSOT Lock:** **199 test files | 869 PASS Clean (100% PASS)** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI · Shield **p50 ~106µs**
 
 ---
 
@@ -17,6 +17,39 @@
 | **On threat** | Out-of-scope calldata (Base / Aerodrome drift) | **<14.0µs** — severs EIP-712 channel · **$0 Gas** |
 
 **One-liner:** LLM emits toxic intent → Citadel severs signing **before** Sequencer queues → `pnpm demo:quad -- --trip`
+
+---
+
+## 3-Layer Temporal Execution Stack
+
+SilverVine occupies **Layer 3** — the only tier that operates at **microsecond** scale **before** broadcast ingress. No external dependency names; this is the temporal ordering every autonomous agent must traverse.
+
+```text
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Layer 1 — On-Chain Settlement & Finality                              │
+│ Timescale: seconds → minutes (block inclusion · keeper settlement)      │
+│ Role: Post-execution truth · consume-once Gate attestation              │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ▲
+                                    │ (only if Layer 3 PASS)
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Layer 2 — Sequencer · Bundler · Mempool Ingress                       │
+│ Timescale: milliseconds (L2 ordering · AA bundler · public mempool)     │
+│ Role: Irreversible broadcast window — toxic intents become on-chain     │
+│         exposure without a pre-broadcast safety primitive               │
+└─────────────────────────────────────────────────────────────────────────┘
+                                    ▲
+                                    │ (only if Layer 3 PASS)
+┌─────────────────────────────────────────────────────────────────────────┐
+│ Layer 3 — SilverVine Pre-Broadcast Intent Firewall (Citadel Shield)   │
+│ Timescale: 14µs – 106µs (Edge Gateway + Wasm checkSoilResistance())   │
+│ Role: Microsecond FAIL-CLOSED reflex · severSigningChannel() · 0-Gas    │
+│ Position: BEFORE Layer 2 ingress — the involuntary safety reflex      │
+└─────────────────────────────────────────────────────────────────────────┘
+         Agent intent flows upward ↑ only after Layer 3 clears
+```
+
+**Judge takeaway:** Post-execution dashboards and on-chain pause switches live at **Layer 1–2**. Citadel Shield is the **Layer 3 microsecond brake** — analogous to **AEB (Automated Emergency Braking)** — that stops toxic calldata before it ever reaches ingress.
 
 ---
 
@@ -37,9 +70,9 @@
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest** | **199 test files \| 869 PASS Clean (100% PASS)** · `pnpm test -- --run` |
 | **Security** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
-| **Worker bundle** | **70.88 KiB gzip** · 284.56 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
+| **Worker bundle** | **50.94 KiB gzip** · 143.77 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`README.md`](./docs/architecture/README.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
@@ -48,7 +81,7 @@
 
 ## 30-Second Identity
 
-SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc risk dashboard. Edge `checkSoilResistance()` (**p50 ~106µs** · `pkg/soil_core.wasm`) + immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. Toxic AI Agent intents severed **before** Sequencer / Bundler ingress — **0-Gas** on blocked paths. ZeroDev AA = **opt-in Pillar 1** only (`USE_ZERODEV_AA` default-off).
+SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc risk dashboard. Edge `checkSoilResistance()` (**p50 ~106µs** · `pkg/soil_core.wasm` · ABI **v2**) + immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. Toxic AI Agent intents severed **before** Sequencer / Bundler ingress — **0-Gas** on blocked paths. ZeroDev AA = **opt-in Pillar 1** only (`USE_ZERODEV_AA` default-off).
 
 **Production highlights:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Gate · GMX v2 **0-Gas pre-flight** (`pnpm demo`) · Pendle Institutional Sentinel + AI Guarded Pool Factory · **V1.0 agent integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Sepolia Dune live + 42161 SQL pre-compiled · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
 
@@ -82,7 +115,7 @@ $$
 ## Judge Quickstart (60s Verification)
 
 ```bash
-pnpm test -- --run          # 194 test files | 845 PASS Clean (100% PASS)
+pnpm test -- --run          # 199 test files | 869 PASS Clean (100% PASS)
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 pnpm demo                   # Primary showcase (12 Tri-Pillar scenarios)

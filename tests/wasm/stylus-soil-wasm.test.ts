@@ -9,6 +9,7 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { WASM_ABI_VERSION } from "../../src/sdk/soil-wasm";
 import {
   encodeWasmSoilInput,
+  WASM_SOIL_INPUT_BYTES,
   WASM_SOIL_TESTNET_MIN_DEPTH_USD,
   type WasmSoilCoreInput,
 } from "../../src/services/wasm-feasibility-lib/soil-core-sim";
@@ -20,6 +21,8 @@ const WASM_PATH = join(
 
 const TRIP_CROSS_VENUE = 1;
 const TRIP_DEPTH = 2;
+const TRIP_PROTOCOL = 8;
+const WASM_OUT_OFFSET = WASM_SOIL_INPUT_BYTES;
 
 type SoilWasmExports = {
   memory: WebAssembly.Memory;
@@ -54,12 +57,12 @@ function evalWasmSoil(input: WasmSoilCoreInput): {
 } {
   const view = new DataView(wasmExports.memory.buffer);
   const encoded = new DataView(encodeWasmSoilInput(input));
-  for (let i = 0; i < 64; i++) view.setUint8(i, encoded.getUint8(i));
-  const flags = wasmExports.soil_core_eval(0, 64);
+  for (let i = 0; i < WASM_SOIL_INPUT_BYTES; i++) view.setUint8(i, encoded.getUint8(i));
+  const flags = wasmExports.soil_core_eval(0, WASM_OUT_OFFSET);
   return {
     flags,
-    tripped: flags !== 0 || view.getFloat64(80, true) !== 0,
-    crossVenueSlippage: view.getFloat64(64, true),
+    tripped: flags !== 0 || view.getFloat64(WASM_OUT_OFFSET + 16, true) !== 0,
+    crossVenueSlippage: view.getFloat64(WASM_OUT_OFFSET, true),
   };
 }
 
@@ -103,6 +106,15 @@ describe("stylus / soil_core.wasm integration", () => {
     });
     expect(result.tripped).toBe(true);
     expect(result.flags & TRIP_DEPTH).toBe(TRIP_DEPTH);
+  });
+
+  it("trips circuit breaker on non-zero protocol mask lane", () => {
+    const result = evalWasmSoil({
+      ...HEALTHY,
+      protocolMask: 1 << 18,
+    });
+    expect(result.tripped).toBe(true);
+    expect(result.flags & TRIP_PROTOCOL).toBe(TRIP_PROTOCOL);
   });
 
   it("session_core_ok enforces clip and TTL bounds", () => {

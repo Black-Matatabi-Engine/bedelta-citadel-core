@@ -19,6 +19,7 @@ export const KV_KEYS = {
   MARKET_SNAPSHOT: "market:price-basis-snapshot",
   MATRIX_LATEST: "matrix:latest",
   RISK_LOG_ROLLING: "telemetry:risk-log-rolling",
+  PROTOCOL_MASK: "soil:protocol_mask",
 } as const;
 
 export const KV_TTL_SECONDS = {

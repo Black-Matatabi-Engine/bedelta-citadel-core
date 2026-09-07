@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import {
   WASM_SOIL_MEMORY_BUDGET_BYTES,
+  WASM_SOIL_OFFSET,
   WASM_SOIL_TESTNET_MIN_DEPTH_USD,
   encodeWasmSoilInput,
   estimateWasmSoilFootprintBytes,
@@ -51,8 +52,8 @@ afterEach(() => {
 
 describe("soil-core-sim / M4 Wasm", () => {
   it("aligns f64 input fields on 8-byte boundaries", () => {
-    expect(wasmSoilInputByteOffset("hlSpot")).toBe(0);
-    expect(wasmSoilInputByteOffset("minDepthUsd")).toBe(56);
+    expect(wasmSoilInputByteOffset("hlSpot")).toBe(WASM_SOIL_OFFSET * 8);
+    expect(wasmSoilInputByteOffset("minDepthUsd")).toBe(WASM_SOIL_OFFSET * 8 + 56);
     expect(encodeWasmSoilInput(BASE).byteLength % 8).toBe(0);
   });
 

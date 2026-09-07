@@ -4,6 +4,7 @@ import { applyPublicApiResponseHeaders } from "./middleware/citadel-tier-headers
 import { CORS_JSON_HEADERS } from "./services/config";
 import { severSigningChannel } from "./services/session-key-adapter-lib/session-key-gates";
 import { configureTelegramAlert } from "./services/telemetry/telegram-alert";
+import { bindProtocolMaskKv, prefetchProtocolMaskKv } from "./services/kv-lib/protocol-mask";
 import { fetchStaticAsset, isWorkerApiPath, DUNE_TELEMETRY_PORTAL_URL } from "./worker-routing";
 import {
   handleGrantAuditRequest,
@@ -42,7 +43,9 @@ export async function handleWorkerFetch(
     TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHAT_ID: env.TELEGRAM_CHAT_ID,
   });
-  void ctx;
+  const kv = env.SLIVERVINE_KV ?? env.SYSTEM_STATE_KV;
+  bindProtocolMaskKv(kv);
+  ctx.waitUntil(prefetchProtocolMaskKv(kv));
 
   const geoResponse = enforceGeoCompliance(request);
   if (geoResponse) return geoResponse;

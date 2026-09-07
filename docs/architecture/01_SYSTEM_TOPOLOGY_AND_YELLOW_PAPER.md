@@ -1,6 +1,6 @@
 # SliverVine Citadel Shield — System Topology & Yellow Paper
 
-> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · **Wasm Core:** `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
+> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **199 test files \| 869 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · **Wasm Core:** ABI **v2** · 28-protocol-slot FFI · `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
 > **Architecture index:** [`README.md`](./README.md) · **Three Pillars:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **Standards:** [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Risk framework:** [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md)
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive.  
@@ -17,7 +17,7 @@
 | **Mainnet Ignition Tx** | `42161` | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **SliverVineRiskOracle (Sepolia)** | `421614` | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
 | **IngressSafetySwitch (Sepolia)** | `421614` | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` |
-| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · p50 ~106 µs |
+| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · p50 ~106 µs |
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -123,6 +123,33 @@ v1.0 is intentionally restricted to **ETH/USDC** so oracle reliability holds dur
 
 `checkSoilResistance()` (p50 ~106 μs) short-circuits any broadcast when local GM market depth cannot absorb a large institutional order without severe price impact (**>10 bps**). Fail-closed before L2 submission — depth / cross-spread / slippage fuse (R01).
 
+### 1.3 Cross-Isolate `protocolMask` KV Synchronization
+
+Multi-Worker Cloudflare Edge isolates do not share in-memory state. When one isolate trips a protocol lane (e.g. USD.ai de-peg), sibling isolates must inherit the same bitmask without blocking the **<14µs** hot path.
+
+| Concern | SSOT | Hot-path behavior |
+|---------|------|-------------------|
+| **KV namespace** | `env.SLIVERVINE_KV` (fallback `SYSTEM_STATE_KV`) | Bound per request in `worker-fetch.ts` |
+| **KV key** | `soil:protocol_mask` (`KV_KEYS.PROTOCOL_MASK`) | JSON record `{ version: 1, mask, savedAt }` |
+| **Read path** | [`protocol-mask.ts`](../../src/services/kv-lib/protocol-mask.ts) · `readProtocolMaskSync()` | Module-level cache — **zero await** inside `checkSoilResistance()` |
+| **Prefetch** | `ctx.waitUntil(prefetchProtocolMaskKv(kv))` | Non-blocking KV `get` warms cache at request ingress |
+| **Write path** | `scheduleProtocolMaskKvWrite()` | Fire-and-forget `kv.put()` after local OR merge; cache updated synchronously |
+
+**Invariant:** `checkSoilResistance()` merges `scratch.protocolMask |= readProtocolMaskSync()` before external flag collection, then persists any delta via `scheduleProtocolMaskKvWrite()` — preserving microsecond Edge latency while closing the cross-isolate residual risk.
+
+### 1.4 Wasm FFI ABI v2 — 28-Protocol-Slot Alignment
+
+TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in `pkg/soil_core.wasm` via **`soil_core_abi_version() = 2`**.
+
+| Field | Offset (f64 index) | Semantics |
+|-------|-------------------|-----------|
+| **Protocol lanes** | `0 … 27` | Reserved per-venue lane vector — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational |
+| **`protocolMask`** | **27** | Aggregated bitmask; non-zero ⇒ `TRIP_PROTOCOL` (bit 8) |
+| **Soil math input** | `28 … 35` | Legacy 8×f64 slippage / depth fuse (`hlSpot` … `minDepthUsd`) |
+| **Output** | `out_ptr` + 6×f64 | `crossVenue` · `spotPerp` · `tripped` · `soilRiskUsd` · `cappedMaxSlUsd` · `tripFlags` |
+
+**Wire modules:** [`soil-core-sim.ts`](../../src/services/wasm-feasibility-lib/soil-core-sim.ts) (`WASM_SOIL_INPUT_BYTES = 288`) · [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) (`WASM_ABI_VERSION = 2`) · [`soil_core.rs`](../../src/wasm/soil_core.rs) (`#![no_std]`).
+
 ---
 
 ## 2. Triangle Liquidity Loop & Segregated Tranches
@@ -218,7 +245,7 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
-| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **199 test files \| 869 PASS Clean (100% PASS)** |
 | **USD.ai** | AI-compute RWA yield-bearing collateral tier — sUSDai peg · GPU oracle freshness · NAV deviation · depth fuse · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Core Pillar 3 · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) (SSOT) · [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) (orchestration) · `pnpm demo:usdai` |
 | **Uniswap V3 DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Uniswap V3 **V1.5** | ✅ Stabilizer Live · ⏳ Uniswap V3 Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |

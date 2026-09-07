@@ -11,6 +11,7 @@ import {
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
 } from "../core/risk-engine-limits";
+import { checkSoilResistance, type SoilResistanceInput } from "../services/risk-control";
 export {
   VARIATIONAL_OLP_DEPTH_MAX_UTILIZATION,
   VARIATIONAL_PRICE_DEVIATION_MAX_BPS,
@@ -36,6 +37,21 @@ export interface VariationalRFQResult {
   detail?: string;
   /** Core bitmask flags (includes FLAGS_SEVERED when auto-sever tripped). */
   flags: number;
+  soilOk?: boolean;
+}
+
+function buildVariationalSoilInput(payload: VariationalRFQPayload): SoilResistanceInput {
+  const mark = payload.oracleMarkUsd;
+  return {
+    symbol: payload.symbol,
+    hlSpot: mark,
+    hlPerp: payload.quotePriceUsd,
+    dydxPerp: mark,
+    depthUsd: payload.olpDepthUsd,
+    orderSizeUsd: payload.tradeSizeUsd,
+    at: new Date(payload.nowMs),
+    disableThresholdJitter: true,
+  };
 }
 
 function staleQuoteDetail(payload: VariationalRFQPayload): string {
@@ -52,7 +68,18 @@ export function validateVariationalRFQIntent(payload: VariationalRFQPayload): Va
   const flags = evaluateVariationalFlags(payload);
   const tripMask = FLAG_VARIATIONAL_STALE_QUOTE | FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED;
   if ((flags & tripMask) === FLAGS_CLEAR) {
-    return { ok: true, status: "ALLOW", detail: "OLP depth ok", flags };
+    const soilProbe = checkSoilResistance(buildVariationalSoilInput(payload));
+    if (!soilProbe.ok) {
+      return {
+        ok: false,
+        status: "FAIL_CLOSED",
+        reason: "FAIL_CLOSED: SOIL_RESISTANCE_TRIP",
+        detail: soilProbe.reasons.join("|"),
+        flags,
+        soilOk: false,
+      };
+    }
+    return { ok: true, status: "ALLOW", detail: "OLP depth ok", flags, soilOk: true };
   }
   if (flags & FLAG_VARIATIONAL_STALE_QUOTE) {
     return {
