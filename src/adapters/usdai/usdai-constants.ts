@@ -8,10 +8,25 @@ export const USD_AI_DEPEG_ORACLE_TRIP = "USD_AI_DEPEG_ORACLE_TRIP" as const;
 
 export interface UsdaiSoilInput {
   oracleTimestampMs: number;
-  nowMs: number;
+  /** Omitted in production — defaults to `Date.now()` (see `resolveUsdAiClockSsot`). */
+  nowMs?: number;
   susdaiPriceUsd: number;
   navUsd: number;
   gpuMarkUsd: number;
   liquidityDepthUsd: number;
   amountUsd?: number;
+}
+
+/** Production clock SSOT — reject caller forgery when `nowMs` omitted. */
+export function resolveUsdAiClockSsot<T extends UsdaiSoilInput>(
+  input: T,
+  emitLog = true,
+): T & { nowMs: number } {
+  const wallMs = Date.now();
+  const nowMs = input.nowMs ?? wallMs;
+  const skewMs = input.nowMs != null ? Math.abs(input.nowMs - wallMs) : 0;
+  if (emitLog) {
+    console.info(`[CLOCK_SSOT_VERIFIED] source=Date.now skewMs=${skewMs}`);
+  }
+  return { ...input, nowMs };
 }

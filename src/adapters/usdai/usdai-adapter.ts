@@ -11,6 +11,7 @@ import {
   USDAI_ORACLE_MAX_AGE_MS,
   USDAI_PEG_DRIFT_MAX_BPS,
   USD_AI_DEPEG_ORACLE_TRIP,
+  resolveUsdAiClockSsot,
   type UsdaiSoilInput,
 } from "./usdai-constants";
 
@@ -61,11 +62,12 @@ export function computeUsdAiNavDeviationBps(navUsd: number, gpuMarkUsd: number):
 
 /** Decoupled oracle lane — GPU valuation age · peg drift · NAV vs GPU mark. */
 export function verifyUsdAiOracle(input: UsdaiSoilInput): UsdaiOracleCheckResult {
+  const clocked = resolveUsdAiClockSsot(input, input.nowMs == null);
   const reasons: string[] = [];
-  const oracleAgeMs = Math.max(0, input.nowMs - input.oracleTimestampMs);
-  const pegDriftBps = computeUsdAiPegDriftBps(input.susdaiPriceUsd);
-  const navDeviationBps = computeUsdAiNavDeviationBps(input.navUsd, input.gpuMarkUsd);
-  const mask = resolveUsdAiProtocolMask(input);
+  const oracleAgeMs = Math.max(0, clocked.nowMs - clocked.oracleTimestampMs);
+  const pegDriftBps = computeUsdAiPegDriftBps(clocked.susdaiPriceUsd);
+  const navDeviationBps = computeUsdAiNavDeviationBps(clocked.navUsd, clocked.gpuMarkUsd);
+  const mask = resolveUsdAiProtocolMask(clocked, false);
 
   if (mask !== 0) {
     if (oracleAgeMs > USDAI_ORACLE_MAX_AGE_MS) {
@@ -118,7 +120,7 @@ function buildUsdAiSoilInput(input: UsdaiCollateralInput): SoilResistanceInput {
     dydxPerp: input.navUsd,
     depthUsd: Math.max(0, input.liquidityDepthUsd - (input.amountUsd ?? 0)),
     orderSizeUsd: input.amountUsd,
-    at: input.at ?? new Date(input.nowMs),
+    at: input.at ?? new Date(input.nowMs ?? Date.now()),
     disableThresholdJitter: true,
     usdai: input,
   };
@@ -127,20 +129,21 @@ function buildUsdAiSoilInput(input: UsdaiCollateralInput): SoilResistanceInput {
 export function evaluateUsdAiCollateralGuard(
   input: UsdaiCollateralInput,
 ): UsdaiCollateralGuardResult {
+  const clocked = resolveUsdAiClockSsot(input);
   const t0 = performance.now();
   const reasons: string[] = [];
 
-  if (input.chainId !== USDAI_ARBITRUM_CHAIN_ID) {
-    reasons.push(`USDAI_CHAIN_UNSUPPORTED:chainId=${input.chainId}`);
+  if (clocked.chainId !== USDAI_ARBITRUM_CHAIN_ID) {
+    reasons.push(`USDAI_CHAIN_UNSUPPORTED:chainId=${clocked.chainId}`);
   }
 
-  const oracle = verifyUsdAiOracle(input);
+  const oracle = verifyUsdAiOracle({ ...clocked, nowMs: clocked.nowMs });
   if (!oracle.ok) reasons.push(...oracle.reasons);
 
-  const depth = verifyUsdAiLiquidityDepth(input.liquidityDepthUsd, input.amountUsd ?? 0);
+  const depth = verifyUsdAiLiquidityDepth(clocked.liquidityDepthUsd, clocked.amountUsd ?? 0);
   if (!depth.ok) reasons.push(...depth.reasons);
 
-  const soilProbe = checkSoilResistance(buildUsdAiSoilInput(input));
+  const soilProbe = checkSoilResistance(buildUsdAiSoilInput(clocked));
   const soilOk = soilProbe.ok;
   if (!soilOk) reasons.push("SOIL_RESISTANCE_TRIP", ...soilProbe.reasons);
 

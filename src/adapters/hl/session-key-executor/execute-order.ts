@@ -1,7 +1,12 @@
+import { verifySessionKeyValidity } from "../auth";
 import { readActiveSystemState } from "../../../core/state";
 import {
   assertSessionKeyExecutionGates,
 } from "../../../services/session-key-adapter";
+import {
+  auditSessionKeyNonceState,
+  resolveSessionKeyNonce,
+} from "../../../services/session-key-adapter-lib/nonce-auto-healing";
 import {
   assertSessionKeyPermission,
   type SessionKeyPermission,
@@ -132,11 +137,32 @@ export async function executeHlSessionKeyOrder(
   }
 
   const ctx = buildExecutionContext(opts, state);
+  const nowMs = Date.now();
+  const sessionKey = opts.sessionKey ?? ctx.sessionKey;
+  if (sessionKey && !verifySessionKeyValidity(sessionKey.agentAddress, sessionKey.expiresAt, nowMs)) {
+    return {
+      ok: false,
+      dryRun: ctx.dryRun ?? true,
+      reason: `SESSION_KEY_EXPIRED:expiresAt<=${nowMs}`,
+      reduceOnly,
+    };
+  }
+  const nonceAudit = auditSessionKeyNonceState(nowMs);
+  if (!nonceAudit.ok) {
+    return {
+      ok: false,
+      dryRun: ctx.dryRun ?? true,
+      reason: `SESSION_KEY_NONCE_REPLAY_GUARD:${nonceAudit.reasons.join("|")}`,
+      reduceOnly,
+    };
+  }
+  const orderNonce = ctx.dryRun ? undefined : resolveSessionKeyNonce(nowMs);
 
   try {
     const result = await executeSignedAction(action, ctx, {
       preTrade: opts.preTrade,
       skipPreTrade: reduceOnly || opts.skipPreTrade === true,
+      nonce: orderNonce,
     });
 
     if (result.dryRun) {
