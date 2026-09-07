@@ -4,6 +4,8 @@ broadcast/
 coverage/
 dist/
 dist-worker/
+dist-worker-probe/
+dist-worker-test/
 .wrangler/
 
 # Dependencies
