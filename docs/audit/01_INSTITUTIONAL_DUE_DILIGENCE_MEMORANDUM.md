@@ -10,7 +10,7 @@
 | **Product** | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive |
 | **Identity** | **SliverVine Citadel Shield** on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ) — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum |
 | **Audience** | Arbitrum Foundation · ZeroDev Grant Committee · Institutional allocators · Fund-of-funds diligence |
-| **Baseline** | **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · **Security Matrix:** **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Wasm hot-path **70.88 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
+| **Baseline** | **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · **Security Matrix:** **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Wasm hot-path **50.94 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway) · Wasm warm **&lt;60 µs** |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 | **Spec SSOT** | [`../architecture/README.md`](../architecture/README.md) |
 | **Risk Framework SSOT** | [`../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
@@ -78,7 +78,7 @@ SliverVine Protocol **does not** market "zero risk," "guaranteed yield," or "cap
 | **Basis drift (GM vs HL)** | Dual-leg delta tracking · Citadel Safety Buffer · Survival Benchmark 3σ replay | Persistent funding/basis divergence · venue-specific insolvency |
 | **Oracle staleness** | `ORACLE_LAG_DEADLOCK` (>30s) · fail-closed severance | Oracle manipulation · feed outage beyond modeled thresholds |
 | **Sequencer / ArbOS desync** | 600s recovery grace · no naked opens during desync | Extended L2 outage · reordering/MEV beyond PGATE budget |
-| **Smart-contract risk** | Immutable Wasm · L1 consume-once gate · **194 test files \| 845 PASS Clean (100% PASS)** + chaos matrix | Unknown vulnerabilities · upgrade/key compromise · third-party venue bugs |
+| **Smart-contract risk** | Immutable Wasm · L1 consume-once gate · **199 test files \| 868 PASS Clean (100% PASS)** + chaos matrix | Unknown vulnerabilities · upgrade/key compromise · third-party venue bugs |
 | **Market / liquidity** | `MIN_DEPTH_USD` · 0.5% slippage fuse · TWAP path slicing | Gap windows · depth evaporation · black-swan tail beyond stress replay |
 | **Yield variability** | Dynamic Target Range **8.2% ~ 11.8%** (non-guaranteed HUD band) · **0.5% Hurdle Gate** | Negative funding · fee compression · emission-independent return shortfall |
 
@@ -134,15 +134,15 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | **Pillar 3 — SliverVine Citadel Shield** | Fail-closed before broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 matrix · [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 | **Capital accounting** | `lostUsd ≡ 0` on pending bridge liquidity | `src/adapters/across-ingress-bridge.ts` · 6/6 Vitest |
 | **Pillar 1 — Gatehouse** | **Opt-In** scoped keys · notional cap · gas ledger | ZeroDev AA gate (`USE_ZERODEV_AA` default-off) · `session-key-gates.ts` · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **Stress & simulation** | 30D Survival Benchmark + **194 test files \| 845 PASS Clean (100% PASS)** regression | `generate-survival-report.ts` · `pnpm test -- --run` |
+| **Stress & simulation** | 30D Survival Benchmark + **199 test files \| 868 PASS Clean (100% PASS)** regression | `generate-survival-report.ts` · `pnpm test -- --run` |
 | **Pillar 2 — Compliance Ingress Firewall** | Outbound-only escort · AML inbound block · Robinhood Chain as inaugural reference adapter | `IngressSafetySwitch.sol` · [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 
 ### 1.2 Locked SSOT Metrics (Evaluator Copy-Paste)
 
 | Metric | Locked value | Verifier |
 |--------|--------------|----------|
-| **Vitest regression** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
-| **Wasm hot-path bundle** | **70.88 KiB gzip** (284.56 KiB raw · `pnpm bundle:measure`) | Worker hot-path · limit 150 KiB |
+| **Vitest regression** | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Wasm hot-path bundle** | **50.94 KiB gzip** (143.77 KiB raw · `pnpm bundle:measure`) | Worker hot-path · limit 150 KiB |
 | **Wasm Soil Core** | `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** | `pnpm build:wasm` · `tests/services/wasm-feasibility-lib/*` |
 | **Shield decision latency** | **p50 ~106 µs** (`checkSoilResistance()` / TS Gateway) | Resilience / soil benchmark harness |
 | **Bridge invariants** | **6/6 PASS** | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` |
@@ -152,7 +152,7 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | **V1.0 capacity anchor** | **$100,000** Alpha Vault / design notional | `MIN_DEPTH_USD` · `ORDER_SIZE_MAX_USD` · Survival `NOTIONAL_USD` |
 
 **Single regression phrase (all DDIP prose):**
-`194 test files | 845 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm **70.88 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** · Shield **p50 ~106 µs**.
+`199 test files | 868 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm **50.94 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · warm **< 60 µs** · Shield **p50 ~106 µs**.
 
 ### 1.3 Document Map for Deep Diligence
 
@@ -229,7 +229,7 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 **Evaluator command pack:**
 
 ```bash
-pnpm test -- --run # 194 test files | 845 PASS Clean (100% PASS)
+pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 pnpm audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
@@ -385,7 +385,7 @@ When heartbeat expires, `auditSessionKeyHeartbeat()` sets `revocationLocked: tru
 
 | Harness | Command | Expected |
 |---------|---------|----------|
-| **Full Vitest** | `pnpm test -- --run` | **194 test files \| 845 PASS Clean (100% PASS)** |
+| **Full Vitest** | `pnpm test -- --run` | **199 test files \| 868 PASS Clean (100% PASS)** |
 | **Grant risk sim (v1.0 suite)** | `pnpm test:grant-v09-sim` | AA / risk sim PASS |
 | **Wasm feasibility** | `pnpm test:wasm-feasibility` | Soil Wasm sim PASS |
 | **Security matrix** | `pnpm audit:security` | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** |
@@ -547,7 +547,7 @@ Portfolio tail ≤ $100k Alpha Cap + stress replay ← §4 + Survival Benchmark
 | Soil-trip rejected order | **No** — fail-closed pre-execution | **0** |
 | Bounded execution slippage | **Yes** — capped by order-aware Max SL | ≤ fuse budget |
 
-**SSOT:** `evaluateAcrossBridgeTransfer()` · `computeOrderAwareMaxSlUsd()` · Vitest **194 test files | 845 PASS Clean (100% PASS)**.
+**SSOT:** `evaluateAcrossBridgeTransfer()` · `computeOrderAwareMaxSlUsd()` · Vitest **199 test files | 868 PASS Clean (100% PASS)**.
 
 ### 5.3 0-Proxy Immutable Infrastructure (SOC 2–Aligned)
 
@@ -567,7 +567,7 @@ Portfolio tail ≤ $100k Alpha Cap + stress replay ← §4 + Survival Benchmark
 ```text
 Layer 1 — Wasm Soil Core (#![no_std], <28kb) → hot-path fuse, no runtime injection
 Layer 2 — SliverVineGate.sol (consume-once) → L1 attestation digest lock
-Layer 3 — Negative proofs + 194 test files | 845 PASS Clean (100% PASS) regression → silent fuse widening impossible
+Layer 3 — Negative proofs + 199 test files | 868 PASS Clean (100% PASS) regression → silent fuse widening impossible
 ```
 
 > **SOC 2 note:** Controls are **mapped** to AICPA Trust Services Criteria for transparency — SliverVine Protocol does **not** claim SOC 2 Type II certification. See also §2.1 for full TSC table.
@@ -597,7 +597,7 @@ MiCA (Markets in Crypto-Assets Regulation) emphasizes **operational resilience, 
 
 ```bash
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts # 6/6 — AML + in-flight + clock skew
-pnpm test -- --run # 194 test files | 845 PASS Clean (100% PASS)
+pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 ```
 
 ### 5.6 ArbOS Elara Compliance Alignment & Dynamic Target Range
@@ -636,7 +636,7 @@ pnpm test -- --run # 194 test files | 845 PASS Clean (100% PASS)
 |------|----------|------------|
 | **First** | Business operations | Yield hurdle · buffer engine (5–10%) · rebalance rules |
 | **Second** | Risk & compliance | Fail-closed soil · PGATE · AML firewall · bridge accounting |
-| **Third** | Independent assurance | **194 test files \| 845 PASS Clean (100% PASS)** · Survival Benchmark (§3) · chaos matrix · DDIP |
+| **Third** | Independent assurance | **199 test files \| 868 PASS Clean (100% PASS)** · Survival Benchmark (§3) · chaos matrix · DDIP |
 
 | Question | Answer | Verify |
 |----------|--------|--------|
@@ -696,7 +696,7 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 
 | # | Check | Command / surface | Pass |
 |---|-------|-------------------|------|
-| 1 | Full regression | `pnpm test -- --run` | **194 test files \| 845 PASS Clean (100% PASS)** |
+| 1 | Full regression | `pnpm test -- --run` | **199 test files \| 868 PASS Clean (100% PASS)** |
 | 2 | Bridge accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | 6/6 |
 | 3 | ZeroDev gate | `pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts` | 4/4 |
 | 4 | Security matrix | `pnpm audit:security` | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** |
@@ -706,7 +706,7 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 | 8 | Session R07 cap | `tests/services/session-key-gates.test.ts` | `SESSION_CAP>5000` severed |
 | 9 | Negative proofs | `pnpm verify:negative` | Soil trips confirmed |
 | 10 | Ingress path comparison | §4.1 table · `across-ingress-bridge.test.ts` | 6/6 · state machine verified |
-| 11 | Regulatory mapping | §5.1–§5.4 · `pnpm test -- --run` | Basel/ES/MiCA tables · **194 test files \| 845 PASS Clean (100% PASS)** |
+| 11 | Regulatory mapping | §5.1–§5.4 · `pnpm test -- --run` | Basel/ES/MiCA tables · **199 test files \| 868 PASS Clean (100% PASS)** |
 
 ---
 

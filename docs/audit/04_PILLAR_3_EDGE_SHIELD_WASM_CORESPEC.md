@@ -21,11 +21,11 @@
 
 | Gate | Status |
 |------|--------|
-| **Vitest — full regression** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **Vitest — full regression** | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 | **`checkSoilResistance()` warm p50** | **&lt; 1 ms** full-path budget (`soil-resistance-latency.test.ts`) |
 | **Wasm hot-path (`soil_core_eval`)** | **&lt; 60 µs** warm budget (`WASM_EXEC_BUDGET_US`) |
 | **Shield/TS Gateway p50** | **~106 µs** (production Edge target · demo empirical sampling) |
-| **Wasm bundle** | **&lt; 28 KiB** Cloudflare budget (`pkg/soil_core.wasm`) · Worker hot-path **70.88 KiB gzip** (`pnpm bundle:measure`) |
+| **Wasm bundle** | **&lt; 28 KiB** Cloudflare budget (`pkg/soil_core.wasm`) · Worker hot-path **50.94 KiB gzip** (`pnpm bundle:measure`) |
 | **Defense Matrix** | **17 Active \| 2 Refactored \| 1 Deprecated** (R05 SpoofBuster deprecated) |
 | **Fail-closed posture** | `signingChannelOpen: false` on any soil / oracle / sequencer trip |
 | **Interceptor mesh coverage** | **88%** pre-broadcast · **12%** systemic residual (Fail-Closed) — [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
@@ -89,7 +89,7 @@ $$
 |----------|------|----------|
 | **Artifact** | `pkg/soil_core.wasm` | Rust `#![no_std]` · portable `soil_core_eval` |
 | **Memory budget** | **&lt; 28 KiB** (`pkg/soil_core.wasm`) | Cloudflare Edge deployment constraint |
-| **Worker bundle** | **70.88 KiB gzip** | `pnpm bundle:measure` · limit 150 KiB · `pass: true` |
+| **Worker bundle** | **50.94 KiB gzip** | `pnpm bundle:measure` · limit 150 KiB · `pass: true` |
 | **Warm execution** | **&lt; 60 µs** | `WASM_EXEC_BUDGET_US` · `tests/services/wasm-feasibility-lib/soil-core-sim.test.ts` |
 | **Wire / loader** | `src/sdk/soil-wasm.ts` | `initSoilWasm()` · `evaluateSoilCore()` |
 | **TS sim fallback** | `runWasmSoilCoreSim()` | Dev / Vitest when Wasm not loaded |
@@ -149,7 +149,7 @@ pnpm exec vitest run tests/adapters/pendle-pt-registry.test.ts
 pnpm exec vitest run tests/risk-control/pendle-soil-guard.test.ts
 ```
 
-**Regression bar:** **194 test files \| 845 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
+**Regression bar:** **199 test files \| 868 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 ---
 

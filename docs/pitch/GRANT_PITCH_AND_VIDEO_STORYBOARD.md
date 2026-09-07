@@ -9,7 +9,7 @@
 | **Entity** | SilverVine Labs |
 | **Protocol** | SliverVine Protocol / SliverVine Citadel |
 | **Identity** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum. |
-| **Baseline** | Vitest **194 test files | 845 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
+| **Baseline** | Vitest **199 test files | 868 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
 | **Live proof** | [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit` · [Dune telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | ERC-8196 (Final) Sub-ms Policy Gate |
 | **Related SSOT** | [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) · [`README.md`](../architecture/README.md) · [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
@@ -85,7 +85,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 |------|--------|----------------|--------|
 | **2:30–2:45** | M1–M6 checklist: Sepolia ✅ · CLI ✅ · RH demo ✅ · GMX fee ✅ · Dune spec ✅ · Mainnet ⏳ | *"Milestones are CLI-verifiable. Mainnet is M6 — we do not pretend it is done."* | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **2:45–2:55** | Dune 3-query spec card · `GET /api/grant-audit` | *"Dune: three-query production spec plus grant-audit KV reconciliation."* | [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **2:55–3:00** | End card · URL · SSOT string | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` |
+| **2:55–3:00** | End card · URL · SSOT string | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 
 **SECTION A forbidden lines:** APY guarantee · 99.82% · “already saved LPs $9.88M” · Stylus mainnet · Hyperliquid as the Arbitrum deployment proof · inbound Robinhood as a product.
 
@@ -135,7 +135,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVe
 
 | Time | Action | On-screen proof |
 |------|--------|-----------------|
-| **1:48–2:00** | Terminal: `pnpm test -- --run` (pre-recorded full run acceptable if timestamped; freeze on summary). | Exact string: **194 test files \| 845 PASS Clean (100% PASS)** superimposed if the CLI summary is `Test Files 193 passed` / `Tests 840 passed` |
+| **1:48–2:00** | Terminal: `pnpm test -- --run` (pre-recorded full run acceptable if timestamped; freeze on summary). | Exact string: **199 test files \| 868 PASS Clean (100% PASS)** superimposed if the CLI summary is `Test Files 193 passed` / `Tests 840 passed` |
 
 **SECTION B forbidden cuts:** stock APY charts, unrun Halmos CLI claiming “proved,” synthetic Dune Query 0 labels presented as decoded Gate events without caption.
 
@@ -145,7 +145,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVe
 
 | Metric | Lock |
 |--------|------|
-| Vitest | **194 test files \| 845 PASS Clean (100% PASS)** |
+| Vitest | **199 test files \| 868 PASS Clean (100% PASS)** |
 | ZeroDev gate | **4/4** · `tests/adapters/zerodev-aa-gate.test.ts` |
 | Across / Robinhood escort | **6/6** · `tests/adapters/across-ingress-bridge.test.ts` |
 | Chaos | **255/255** · `capitalLossUsd: 0` |

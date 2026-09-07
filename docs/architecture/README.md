@@ -1,6 +1,6 @@
 # Architecture Specification Index
 
-> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** · **Wasm:** `p50 ~106 µs` · `<28kb` budget · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
+> **Vitest SSOT:** **199 test files | 868 PASS Clean (100% PASS)** · **Wasm:** `p50 ~106 µs` · `<28kb` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
 
 | # | Document | Scope |
 |---|----------|-------|
@@ -11,6 +11,20 @@
 | **05** | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | **88% / 12%** risk spectrum · Basel mapping · fail-closed boundaries · disclaimers |
 
 **Legacy path:** [`README.md`](./README.md) was modularized into **01–05** above (no content removed).
+
+## Core Sinking SSOT (`src/core/`)
+
+Five pure invariant modules are the TypeScript SSOT; `src/adapters/` and `src/services/` retain legacy import paths via thin-shell re-exports.
+
+| Module | Responsibility |
+|--------|----------------|
+| [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) | USD.ai clock · oracle · depth · `PROTO_USDAI` lane |
+| [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) | `packSoilLane()` · slippage math · HKT time gates · jitter · `evaluateHlOrderbookGapGuardPure()` |
+| [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) | `verifySessionKeyValidity()` · `resolveOrderNotionalUsd()` |
+| [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) | `computeDeltaNeutralHedgeOrder()` · 0-Δ sizing |
+| [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts) | `evaluateFundingRegime()` · `resolveFundingLeverage()` |
+
+**Solidity ingress (custom errors):** [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) — `revert CustomError()` for gas-efficient fail-closed; `ERR_SLO_TIMEOUT` / `ERR_INVALID_SIGNER` bytes32 **events** unchanged for Dune/telemetry.
 
 **Hub:** [`docs/README.md`](../README.md) · **Verification:** [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md)
 

@@ -4,7 +4,7 @@
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
-> **Baseline:** Vitest **194 test files \| 845 PASS Clean (100% PASS)** · Wasm hot-path **70.88 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs**
+> **Baseline:** Vitest **199 test files \| 868 PASS Clean (100% PASS)** · Wasm hot-path **50.94 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs**
 > **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-Execution Citadel Protection.
 > **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md)
 
@@ -19,8 +19,8 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
-| **Wasm hot-path** | **70.88 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · `pass: true` (`pnpm bundle:measure`) |
+| **Vitest baseline** | **199 test files \| 868 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Wasm hot-path** | **50.94 KiB gzip** · `pkg/soil_core.wasm` **< 28 KiB** · `pass: true` (`pnpm bundle:measure`) |
 | **Shield performance** | **p50 ~106 µs** Edge `checkSoilResistance()` |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Arbitrum Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
@@ -136,7 +136,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 │ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation                          │
 │ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1           │
 │ · Mainnet Ignition Tx 0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6 │
-│ · Vitest SSOT: 194 test files | 845 PASS Clean (100% PASS)                      │
+│ · Vitest SSOT: 199 test files | 868 PASS Clean (100% PASS)                      │
 └────────────────────────────────────────┬────────────────────────────────────────┘
                                          │
                                          ▼
@@ -159,7 +159,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 
 | Stage | Status | Center of Gravity |
 |-------|--------|-------------------|
-| **A — V1.0** | ✅ Code-Verified (**194 test files \| 845 PASS Clean (100% PASS)**) | Arbitrum One GMX v2 / HL Δ-neutral · Wasm Shield · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy gate · Gate `0xb174118b…` · Sepolia + One consume-once Gate |
+| **A — V1.0** | ✅ Code-Verified (**199 test files \| 868 PASS Clean (100% PASS)**) | Arbitrum One GMX v2 / HL Δ-neutral · Wasm Shield · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy gate · Gate `0xb174118b…` · Sepolia + One consume-once Gate |
 | **B — V1.5** | ⏳ Roadmap | ERC-8196 (Final) fleet enforcement · EIP-7702 agent onboarding · prompt-injection pipe sever · Variational native hedge PoC |
 | **C — V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -177,7 +177,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 | **Monetization** | GMX +10 bps `uiFeeReceiver` (builder lane) | Design-partner PoV · no new fee surface required | Institutional CaaS SDK licensing · pre-execution risk-check APIs |
 | **AML / compliance** | Outbound-only Robinhood escort · reverse path blocked | Stronger fleet policy + segregated RWA tranche (planned) | Tenant CaaS policy packs · Robinhood opt-in |
 | **Oracle / sequencer** | <30s oracle lag fail-closed · 600s sequencer grace | Same sensors + storm fallback (planned) | Cross-L2 synchronized telemetry |
-| **Regression bar** | **194 test files \| 845 PASS Clean (100% PASS)** | No Wasm rewrite · additive swarm tests | No Wasm rewrite · CaaS SDK contract tests |
+| **Regression bar** | **199 test files \| 868 PASS Clean (100% PASS)** | No Wasm rewrite · additive swarm tests | No Wasm rewrite · CaaS SDK contract tests |
 
 ---
 
@@ -275,7 +275,7 @@ export const FRICTION_BUFFER_APY = 0.005 as const; // 0.5% friction buffer
 
 **Design rule:** Citadel Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
 
-**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **194 test files | 845 PASS Clean (100% PASS)** regression bar.
+**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **199 test files | 868 PASS Clean (100% PASS)** regression bar.
 
 ### 2.6 Real Yield vs. Toxic Inflation
 
@@ -420,7 +420,7 @@ Real yield stack (conceptual):
 |---|--------|-----------|-----------|
 | 31 | ✅ | **Venue-Agnostic Shield** | `checkSoilResistance()` on abstract Soil state — independent of venue |
 | 32 | ✅ | **p50 ~106 µs Hot Path** | Rust `#![no_std]` Wasm on Cloudflare Edge |
-| 33 | ✅ | **Hot/Cold Decoupling** | 70.88 KiB gzip hot path isolated from 5-min Cron Workers; zero GC pauses |
+| 33 | ✅ | **Hot/Cold Decoupling** | 50.94 KiB gzip hot path isolated from 5-min Cron Workers; zero GC pauses |
 | 34 | ✅ | **Wasm Budget** | `<28kb` artifact · `<60µs` warm execution (`pkg/soil_core.wasm`) |
 | 35 | ✅ | **R01 Soil Resistance** | Depth · cross-spread · slippage fuse — fail-closed pre-broadcast |
 | 36 | ✅ | **R04 PGATE Latency** | `PGATE_MAX_LATENCY_MS` = 200 — rejects stale venue timestamps |
@@ -457,7 +457,7 @@ Real yield stack (conceptual):
 | 57 | ⏳ | **PoR De-peg Defense** | Chainlink Proof-of-Reserve >0.5% RWA de-peg → execution hard-lock |
 | 58 | ⏳ | **EIP-7702 Zero-Friction Onboarding** | EOA wallet → Smart Account without asset migration |
 | 59 | ⏳ | **Dynamic Hurdle Rate** | Performance fee charged only above Aave benchmark + 1.5% *(Hurdle-rate probe only — not a yield-stacking product track)* |
-| 60 | ⏳ | **Immutable B2B License** | Static 70.88 KiB gzip Worker hot path powering CaaS ecosystem subscriptions |
+| 60 | ⏳ | **Immutable B2B License** | Static 50.94 KiB gzip Worker hot path powering CaaS ecosystem subscriptions |
 
 ---
 
@@ -627,7 +627,7 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 | **Historical simulation** | Survival Benchmark 30D HL funding + L2 book | On-demand (`generate-survival-report.ts`) |
 | **Stress scenarios** | $100k canonical + **$1M** stress notional (`STRESS_NOTIONAL_USD`) | Same report |
 | **Reverse stress** | Negative proofs — depth breach, soil trip, bridge timeout | `pnpm verify:negative` |
-| **Model validation** | Vitest **194 test files \| 845 PASS Clean (100% PASS)** full regression | CI / pre-release |
+| **Model validation** | Vitest **199 test files \| 868 PASS Clean (100% PASS)** full regression | CI / pre-release |
 
 ### 6.4 Three Lines of Defense Mapping
 
@@ -694,7 +694,7 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 
 | Check | Command / Surface | Expected |
 |-------|-------------------|----------|
-| Full regression | `pnpm test -- --run` | **194 test files \| 845 PASS Clean (100% PASS)** |
+| Full regression | `pnpm test -- --run` | **199 test files \| 868 PASS Clean (100% PASS)** |
 | Bridge invariants | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 PASS** |
 | Live audit | `GET /api/grant-audit` | `lostUsd: 0` · guard states exposed |
 

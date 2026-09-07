@@ -1,6 +1,6 @@
 # Defense Matrix (R01–R20) & Wasm Soil Core
 
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar 3 audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## 3. Cross-Venue Risk Engine & Defense Matrix (R01–R20)
@@ -16,6 +16,10 @@
 | **NTP Clock Drift Compensator** | `NTP_CLOCK_DRIFT_COMPENSATOR` | Rejects / skew-corrects venue timestamps with **&lt;200ms** drift vs Edge NTP; aligns with Pgate latency fuse (`PGATE_MAX_LATENCY_MS` = 200) |
 | **Cross-Venue Net Slippage TWAP** | `CrossVenueNetSlippage` | When net cross-book slippage **&gt; 0.5%** (`MAX_SLIPPAGE = 0.005`), trips soil + schedules **TWAPEngineV2** path slicing instead of market sweep |
 | **GMX Positive Skew Rebate** | `gmx-v2-balancer` / price-impact soil | Qualifies underweight-side flow · captures **positive skew / price-impact rebate** bps — never conflated with builder UI fee |
+| **Core Sinking SSOT** | `src/core/*` (5 modules) | Pure invariants sunk from adapters/services · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
+| **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
+
+**Core modules (`src/core/`):** [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
 
 **Formal risk equations (SSOT):**
 
@@ -56,14 +60,15 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **194 test files \| 845 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **199 test files \| 868 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
 
 #### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar 3)
 
 | Layer | Module | Hot-path behavior |
 |-------|--------|-------------------|
-| **Collateral Guard** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `evaluateUsdAiCollateralGuard()` — decoupled GPU oracle · sUSDai peg · NAV vs mark · depth fuse |
-| **TypedArray lane** | [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | `PROTO_USDAI` slot · `evaluateUsdAiFlagsFromLane()` · bits **18–19** |
+| **Core SSOT** | [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) | `resolveUsdAiClockSsotPure()` · peg/NAV/depth gates · `PROTO_USDAI` lane (module-level `Float64Array` scratch) |
+| **Collateral Guard** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | Thin orchestration · `evaluateUsdAiCollateralGuard()` — re-exports core via `usdai-*` shells |
+| **Legacy shells** | [`usdai-constants.ts`](../../src/adapters/usdai/usdai-constants.ts) · [`usdai-soil-gate.ts`](../../src/adapters/usdai/usdai-soil-gate.ts) · [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | 100% backward-compatible re-exports from `risk-engine-usdai.ts` |
 | **Soil Fuse** | [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | `usdai` → `collectExternalSoilFlags()` · `protocolMask \|=` · `USD_AI_DEPEG_ORACLE_TRIP` |
 | **Matrix CLI** | `pnpm demo:matrix -- --loop=spot` | 7th venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` ANSI board |
 

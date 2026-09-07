@@ -16,8 +16,8 @@
 
 | Metric | Locked value | Artifact / verifier |
 |--------|--------------|---------------------|
-| **Vitest Baseline** | **194 test files \| 845 PASS Clean (100% PASS)** | `pnpm test -- --run` · security-tier Vitest in [`static-analysis-report.json`](./static-analysis-report.json) |
-| **Wasm Core Budget** | **`<28kb` Cloudflare budget, `<60µs` execution (`<150µs` P99 tail)** · **70.88 KiB gzip** Worker hot-path (`pkg/soil_core.wasm` **< 28 KiB**) | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · [`soil_core.rs`](../../src/wasm/soil_core.rs) · `WASM_BUDGET_BYTES` in [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) · `pnpm bundle:measure` |
+| **Vitest Baseline** | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` · security-tier Vitest in [`static-analysis-report.json`](./static-analysis-report.json) |
+| **Wasm Core Budget** | **`<28kb` Cloudflare budget, `<60µs` execution (`<150µs` P99 tail)** · **50.94 KiB gzip** Worker hot-path (`pkg/soil_core.wasm` **< 28 KiB**) | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · [`soil_core.rs`](../../src/wasm/soil_core.rs) · `WASM_BUDGET_BYTES` in [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) · `pnpm bundle:measure` |
 | **Active Guards** | **`agent-citadel-guard` (Configurable Dynamic Slippage Deadman)** + R01–R20 matrix **17 Active \| 2 Refactored \| 1 Deprecated** | `src/core/agent-citadel-guard.ts` |
 | **Revenue Integration** | GMX v2 **`uiFeeReceiver` (+10 bps protocol yield accrual)** + up to **25%** referral rebate | `GMX_UI_FEE_BPS` · `gmx-v2-order-payload.ts` |
 | **Security Matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** | `pnpm run audit:security` → [`static-analysis-report.json`](./static-analysis-report.json) `summary.pass=5` |
@@ -29,7 +29,7 @@
 | **Risk spectrum (modeled)** | **88%** pre-broadcast interception mesh · **12%** insurmountable systemic residuals (`88% + 12% = 100%`) | [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
 
 **Single regression phrase (all audit prose):**
-`194 test files | 845 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail) · **70.88 KiB gzip** · Gate `0xb174118b…` · p50 ~106 µs.
+`199 test files | 868 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail) · **50.94 KiB gzip** · Gate `0xb174118b…` · p50 ~106 µs.
 
 ### Three Pillars — Independent Audit Specs
 
@@ -46,7 +46,7 @@
 | Horizon | Status | Asset / clearing bound |
 |---------|--------|------------------------|
 | **v1.0 Delivered (Sepolia verified)** | ✅ Code-Verified | Strictly **ETH/USDC GM Pool** — eliminates oracle de-peg and FX slippage when escorting treasuries via **Pillar 2 Reference Escort Adapters** (Robinhood Chain `46630` → Arbitrum One `42161`) · Mainnet deployment ties to **M6 Grant distribution** |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **194 test files \| 845 PASS Clean (100% PASS)** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **199 test files \| 868 PASS Clean (100% PASS)** |
 | **V1.0 Isomorphic Extension** | ⏳ Planned | **BTC/USDC GM Pool** — config-driven market address mapping; **zero** bytecode / Wasm rewrite |
 | **V1.0 Treasury Routing** | ⏳ Planned | Native **USDG Robinhood Chain Treasury routing** (**Pillar 2 Reference Escort Adapters**) — USDG clearing remains on Robinhood Chain (`46630`) via unidirectional bridge |
 
@@ -121,7 +121,7 @@
 |------|------|
 | Source | [`soil_core.rs`](../../src/wasm/soil_core.rs) (`#![no_std]`, Apache-2.0 SPDX) |
 | Artifact | `pkg/soil_core.wasm` (**< 28 KiB**) |
-| Worker bundle | **70.88 KiB gzip** (`pnpm bundle:measure` · `pass: true` · limit 150 KiB) |
+| Worker bundle | **50.94 KiB gzip** (`pnpm bundle:measure` · `pass: true` · limit 150 KiB) |
 | Cloudflare budget | **`<28kb`** (`WASM_BUDGET_BYTES = 28 * 1024`) |
 | Hot-path exec | **`<60µs`** warm; **`<150µs` P99 tail** · Shield p50 **~106 µs** |
 | Entry | `soil_core_eval` — 8×f64 LE input → trip flags (cross-venue / depth / insufficient) + Dynamic Account Risk Ceiling (V0.8 Baseline: Equity-Weighted SL; V1.0 Mainnet: Dynamic Adaptive Engine) |
@@ -184,7 +184,7 @@ Cohort contrast matrix (infra vs app): see grant audit matrix generator narrativ
 ## Verification (Principal — 60s)
 
 ```bash
-pnpm install && pnpm test -- --run # 194 test files | 845 PASS Clean (100% PASS)
+pnpm install && pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 pnpm run audit:fast # fast tier scorecard → security-scorecard.json
 cd SliverVineGate && forge test && cd ..

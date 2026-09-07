@@ -2,7 +2,7 @@
 
 > **Product:** **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
-> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)**  
+> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)**  
 > **Architecture index:** [`README.md`](./README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **This file**
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
@@ -13,9 +13,9 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **194 test files \| 845 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **199 test files \| 868 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · warm exec **< 60 µs** · Edge p50 ~106 µs |
-| **Worker bundle** | **70.88 KiB gzip** hot-path (`pnpm bundle:measure` · `pass: true`) |
+| **Worker bundle** | **143.77 KiB raw** · **50.94 KiB gzip** hot-path (`pnpm bundle:measure` · `limitKiB: 150` · `pass: true`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Stylus coprocessor** | `SliverVineSoilCoprocessor` · [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** |
 
@@ -31,6 +31,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 | **[ERC-1271](https://eips.ethereum.org/EIPS/eip-1271)** | Contract signature validation for Kernel smart accounts | ZeroDev Kernel `isValidSignature` · Gate ECDSA m-of-n on `RiskAttestation` | Gate Forge suite · agent-intent SDK |
 | **[ERC-20](https://eips.ethereum.org/EIPS/eip-20) / [ERC-777](https://eips.ethereum.org/EIPS/eip-777)** | Non-custodial asset transfer & in-flight escrow semantics | `GMX_USDC_ARBITRUM` · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `GatedExecutor` payload binding | [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · GMX payload tests |
 | **[OpenZeppelin Contracts v5](https://docs.openzeppelin.com/contracts/5.x/)** | On-chain gate access control & reentrancy guard | `SliverVineGate.sol` · OZ `ECDSA.tryRecover` alignment · `IngressSafetySwitch.sol` is a stateless compliance filter (no OZ import) | Foundry Gate **60 passed** · Forge property fuzz |
+| **Solidity Custom Errors** | Bytecode-efficient fail-closed ingress (`revert CustomError()`) with telemetry-compatible `ERR_*` bytes32 events | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) (`SignerZero` · `SloTimeout` · …) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) (`InvalidSigner` · `ComplianceBlocked` · …) — `ERR_SLO_TIMEOUT` / `ERR_INVALID_SIGNER` event constants unchanged for Dune | Foundry oracle/switch tests · Dune `ERR_*` decoders |
 | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | Modular smart-account modules — session-key permission scopes | ZeroDev Kernel v3 modular session keys · scoped `ORDER_EXECUTE` clip · daily gas sponsorship limits | Gatehouse (Pillar 1) · agent-intent SDK |
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | EOA Account Abstraction via `SetCode` — Agent Smart Account upgrade path (`SliverVineGate.sol` compatible) | Kernel v4 intent composer · [Technical Specification §2.4.5](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#245-zerodev-v4-seven-stages-one-stack-alignment-roadmap-post-grant-spec) · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | ✅ v1.0 Delivered (Gate-compatible) · Kernel v4 adapter ⏳ V1.5 |
 | **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715)** | Advanced Wallet Permissions — session-key permission evolution target | [Technical Specification §0.1](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#01-bytecode-predicate-verification-v10--erc-7715--post-grant-design-spec) · [Compliance Posture](#compliance-posture) · `session-key-gates.ts` · ZeroDev Kernel v3 session adapter | ✅ v1.0 Delivered (Kernel v3) · ERC-7715 universal permissions ⏳ Post-Grant |
@@ -111,10 +112,10 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 | Field | Citadel binding |
 |-------|-----------------|
 | **Artifact** | `pkg/soil_core.wasm` — `#![no_std]` Rust compiled for Cloudflare Workers |
-| **Size budget** | **< 28 KiB** artifact · **70.88 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
+| **Size budget** | **< 28 KiB** artifact · **50.94 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
 | **Latency** | Warm exec **< 60 µs** · Edge shield p50 **~106 µs** (`checkSoilResistance()`) |
 | **Parity** | Bitmask + six-lane risk vector semantics mirrored by Stylus `check_soil_resistance_stylus()` |
-| **Verification** | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · `tests/risk-control/*` · Vitest **194 test files \| 845 PASS Clean (100% PASS)** |
+| **Verification** | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · `tests/risk-control/*` · Vitest **199 test files \| 868 PASS Clean (100% PASS)** |
 
 Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain reinforcement — never a weaker substitute for fail-closed Edge gates.
 

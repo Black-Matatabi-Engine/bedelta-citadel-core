@@ -6,7 +6,7 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **194 test files | 845 PASS Clean (100% PASS)** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **199 test files | 868 PASS Clean (100% PASS)** · `pnpm exec tsc --noEmit` **0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
 

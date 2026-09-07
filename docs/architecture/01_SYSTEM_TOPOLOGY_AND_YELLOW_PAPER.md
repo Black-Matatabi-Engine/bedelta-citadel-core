@@ -1,6 +1,6 @@
 # SliverVine Citadel Shield — System Topology & Yellow Paper
 
-> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **194 test files \| 845 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · **Wasm Core:** `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
+> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · Security-tier `5/0/0 PASS` · **Wasm Core:** `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
 > **Architecture index:** [`README.md`](./README.md) · **Three Pillars:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **Standards:** [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Risk framework:** [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md)
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive.  
@@ -17,7 +17,21 @@
 | **Mainnet Ignition Tx** | `42161` | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **SliverVineRiskOracle (Sepolia)** | `421614` | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
 | **IngressSafetySwitch (Sepolia)** | `421614` | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` |
-| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · Worker bundle **70.88 KiB gzip** · p50 ~106 µs |
+| **Wasm hot path** | Edge | `pkg/soil_core.wasm` **< 28 KiB** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · p50 ~106 µs |
+
+### Core Sinking SSOT (`src/core/`)
+
+Five pure invariant modules are the TypeScript SSOT; legacy import paths under `src/adapters/` and `src/services/` remain **100% backward compatible** via thin-shell re-exports.
+
+| Module | Responsibility |
+|--------|----------------|
+| [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) | USD.ai clock · oracle · depth · `PROTO_USDAI` lane |
+| [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) | Soil lane math · HKT time gates · jitter · orderbook gap |
+| [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) | Session key validity · notional math |
+| [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) | 0-Δ cross-wallet hedge sizing |
+| [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts) | Funding regime classification · leverage scaling |
+
+**Solidity ingress:** [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) — **Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants preserved for Dune/telemetry.
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
@@ -204,8 +218,8 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
-| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **194 test files \| 845 PASS Clean (100% PASS)** |
-| **USD.ai** | AI-compute RWA yield-bearing collateral tier — sUSDai peg · GPU oracle freshness · NAV deviation · depth fuse · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Core Pillar 3 · [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `pnpm demo:usdai` |
+| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Core Pillar 3 · soil-wired · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **USD.ai** | AI-compute RWA yield-bearing collateral tier — sUSDai peg · GPU oracle freshness · NAV deviation · depth fuse · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Core Pillar 3 · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) (SSOT) · [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) (orchestration) · `pnpm demo:usdai` |
 | **Uniswap V3 DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Uniswap V3 **V1.5** | ✅ Stabilizer Live · ⏳ Uniswap V3 Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
 

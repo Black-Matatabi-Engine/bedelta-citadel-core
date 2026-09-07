@@ -36,7 +36,7 @@
 **Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
-[![Vitest](https://img.shields.io/badge/Vitest-840%20PASS%20%28193%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-868%20PASS%20%28199%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -65,14 +65,28 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **196+ test files \| 863+ PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest baseline** | **199 test files \| 868 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
-| **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Sepolia live ingest** · **42161 = pre-compiled SQL spec** awaiting mainnet event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
+
+### Core Sinking SSOT (`src/core/`)
+
+Pure risk invariants are sunk into five core modules; legacy paths under `src/adapters/` and `src/services/` keep **100% backward compatibility** via thin-shell re-exports.
+
+| Core module | Scope |
+|-------------|--------|
+| [`risk-engine-usdai.ts`](./src/core/risk-engine-usdai.ts) | USD.ai invariants · `resolveUsdAiClockSsotPure()` clock SSOT |
+| [`soil-resistance-core.ts`](./src/core/soil-resistance-core.ts) | Soil lane math · time gates · jitter · orderbook gap pure decision |
+| [`session-key-guard-core.ts`](./src/core/session-key-guard-core.ts) | Session key validity · notional math |
+| [`delta-neutral-calculator.ts`](./src/core/delta-neutral-calculator.ts) | 0-Δ cross-wallet hedge sizing |
+| [`funding-regime-core.ts`](./src/core/funding-regime-core.ts) | Funding regime classification · leverage scaling |
+
+> **Solidity ingress:** [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](./contracts/IngressSafetySwitch.sol) use **Solidity Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants remain for telemetry.
 
 > **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **ArbOS 61 Elara** compatible · **96KB** Wasm budget ready · Cargo **9/9 PASS**. → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
 
@@ -235,7 +249,7 @@ pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (196+ test files | 863+ PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (199 test files | 868 PASS Clean (100% PASS))
 ```
 
 ### Path 2: Isolated Docker
@@ -252,9 +266,9 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **196+ test files \| 863+ PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
+| **Vitest SSOT** | **199 test files \| 868 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · Shield **p50 ~106 µs** · warm **< 60 µs** |
-| **Worker bundle** | **70.88 KiB gzip** · **284.56 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
+| **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
 | **Foundry Gate** | **60/60** unit tests · **327,675** deep fuzz (`pnpm audit:nightly`) · **95.51%** line coverage |
 | **Deep fuzz (standard)** | **5,120** = 5×1,024 (`forge test`) |
@@ -267,7 +281,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-----------|--------|-----------|
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **845 PASS** · **70.88 KiB gzip** |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **868 PASS** · **50.94 KiB gzip** |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |
