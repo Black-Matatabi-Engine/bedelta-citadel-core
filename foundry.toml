@@ -13,3 +13,4 @@ remappings = [
   "forge-std/=SliverVineGate/lib/forge-std/src/",
   "slivervine-gate/=SliverVineGate/src/"
 ]
+fs_permissions = [{ access = "read", path = "./contracts/test/fixtures" }]
