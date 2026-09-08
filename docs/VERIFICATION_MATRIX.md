@@ -65,6 +65,24 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 |--------|---------|------|----------|
 | **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | **Deployed & activated** `0xc23587d6573dd134f95b02b0202ffbf84686625e` · Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + ArbWasm `0x71` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 | **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
+| **GMX GM Pool deposit** | `pnpm execute:gmx:gm-deposit` | **Verified Live** — `sendWnt → sendTokens → createDeposit` · ExchangeRouter `0x7dE39…83f1` · ETH/USDC GM `0x70d955…6336` | [`scripts/execute-gmx-mainnet-gm-deposit.ts`](../scripts/execute-gmx-mainnet-gm-deposit.ts) · Live: `CONFIRM_GMX_GM_DEPOSIT=YES BROADCAST=1 MAINNET_PK=0x…` |
+| **GMX GM Pool withdraw** | `pnpm execute:gmx:gm-withdraw` | **Verified Live** — dual GM LP approve (ExchangeRouter + Synthetics Router `0xaBBc7805…`) · `sendWnt → sendTokens(GM) → createWithdrawal` | [`scripts/execute-gmx-mainnet-gm-withdraw.ts`](../scripts/execute-gmx-mainnet-gm-withdraw.ts) · Live: `CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x…` |
+
+### GMX GM Pool I/O Channel (Arbitrum One · 42161) — Verified Live
+
+> **Status:** **CLOSED（執行層）** — Wallet B GM Pool deposit + withdraw ExchangeRouter multicall paths **broadcast and confirmed** on Arbitrum One. Async GMX keeper settlement remains protocol-native two-stage semantics; **user-side I/O channel SSOT is closed**.
+
+| Field | Value |
+|-------|-------|
+| **Channel Status** | **CLOSED** — GM Pool I/O (`execute:gmx:gm-deposit` · `execute:gmx:gm-withdraw`) |
+| **ExchangeRouter** | [`0x7dE39FF2e232A2203196788d37e234cF8F1b83f1`](https://arbiscan.io/address/0x7dE39FF2e232A2203196788d37e234cF8F1b83f1) |
+| **Synthetics Router (GM LP spender)** | [`0xaBBc7805d812eA10e7D47d54169b8922596f9a0c`](https://arbiscan.io/address/0xaBBc7805d812eA10e7D47d54169b8922596f9a0c) |
+| **GM Deposit Multicall Tx** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** · **Success** |
+| **GM Synthetics Router Approve Tx** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Block **503038459** · **Success** |
+| **GM Withdraw Multicall Tx** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block **503038714** · **Success** |
+| **DepositVault** | `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` |
+| **WithdrawalVault** | `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` |
+| **GM Market (ETH/USDC)** | `0x70d95587d40a2caf56bd97485ab3eec10bee6336` |
 
 ### Stylus Module Build Proof (Local Verification)
 
@@ -110,7 +128,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
-> **Harness:** `pnpm deploy:stylus:mainnet` · `pnpm execute:gmx:micro-fill --size=1` · `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1` · Default ingress: Robinhood Mainnet `4663` (`SMART_ROUTE_SOURCE_CHAIN_ID` override supported)
+> **Harness:** `pnpm deploy:stylus:mainnet` · `pnpm execute:gmx:micro-fill --size=1` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1` · Default ingress: Robinhood Mainnet `4663` (`SMART_ROUTE_SOURCE_CHAIN_ID` override supported)
 
 | Field | Value |
 |-------|-------|
@@ -126,6 +144,10 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
 | **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
+| **GM Pool I/O Channel Status** | **CLOSED** — deposit + withdraw ExchangeRouter multicall **Verified Live** on `42161` |
+| **GM Deposit Multicall Tx** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** |
+| **GM Synthetics Router Approve Tx** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Block **503038459** |
+| **GM Withdraw Multicall Tx** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block **503038714** |
 | **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
 
 ### [POLICYGUARD_MAINNET_ANCHOR]

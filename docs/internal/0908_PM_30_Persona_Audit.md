@@ -15,7 +15,7 @@
 
 > 本卷是 **全新 30 人評審團、零繼承人格** 的獨立對抗評審，**不**沿用 09-07 PM Fresh 面板成員。分數移動來自 **`fe5ece7` 技術升級**：GM Pool `sendWnt → sendTokens → createDeposit/createWithdrawal` 模組化適配器 · `pnpm execute:gmx:gm-deposit` / `execute:gmx:gm-withdraw` · `gmx-error-interpreter` + Foundry `ROUTER.call` 分腿探針——**不是** 42161 Dune ingest、不是 Keeper 已成交 fill、不是 Bootstrap 密鑰旋轉。
 
-> **快照隔離：** 本卷只評 `fe5ece7`。09-07 17:00 原團 **9.05** 評的是 `99fe1ac`（PolicyGuard + 4663 UserOp）。本卷 **不得**把那筆主網證明再加一次分。GM 通道完成 = **可廣播的 ExchangeRouter 路徑**；dry-run 預設 + `CONFIRM_GMX_GM_DEPOSIT=YES` 雙保險 **仍不是** live Keeper fill。
+> **快照隔離：** 本卷基線 `fe5ece7`；**09-08 晚追加** 42161 GM Pool I/O 三筆 live tx（§0.1）已同步至 VERIFICATION_MATRIX / SUBMISSION SSOT。09-07 17:00 原團 **9.05** 評的是 `99fe1ac`（PolicyGuard + 4663 UserOp）。GM I/O 通道 = **CLOSED（執行層）**。
 
 ---
 
@@ -31,13 +31,25 @@
 | GMX revert 靜默 / 對操作員不可讀 | **CLOSED（診斷層）** — `interpretGmxRevertData` + isolated `eth_call` 分腿探針 |
 | Foundry 無法對 Router 低階追蹤 | **CLOSED（探針層）** — `GmxLocalForkTrace.t.sol` · `ROUTER.call{value}` |
 | CLI 可執行入口 | **CLOSED** — `execute:gmx:gm-deposit` · `execute:gmx:gm-withdraw`（預設 dry-run） |
-| **42161 GM Keeper fill** | **仍 OPEN** |
+| **42161 GM Pool I/O 執行（deposit + withdraw multicall）** | **CLOSED（執行層）** — 主網 tx 已鎖定 SSOT（見 §0.1） |
 | 42161 Dune 業務事件 ingest | **仍 OPEN** |
 | Bootstrap `0x1111…` / `0x2222…` | **仍 OPEN** |
 | 官方 ElizaOS / Virtuals npm | **仍 OPEN** |
 | 雙片 | **仍 OPEN** |
 
-09-07 PM 主席結論是「不要再加第六個 core 模組；9.0 只來自鏈上證據」。本卷主席結論：**他們聽了——加的是 GMX I/O 通道而非第九個 adapter 敘事。PMF +0.16 來自可審計的 Router 編碼；9.0 仍被 Keeper fill 封頂。**
+09-07 PM 主席結論是「不要再加第六個 core 模組；9.0 只來自鏈上證據」。本卷主席結論：**他們聽了——加的是 GMX I/O 通道而非第九個 adapter 敘事。PMF +0.16 來自可審計的 Router 編碼；42161 GM deposit/withdraw multicall 已 **CLOSED**，9.0 仍被 Dune ingest / Bootstrap 密鑰封頂。**
+
+### 0.1 主網 GM Pool I/O 執行 SSOT（2026-09-08 晚 · 已鎖定）
+
+> **通道狀態：** **CLOSED（執行層）** — Wallet B ETH/USDC GM Pool `sendWnt → sendTokens* → createDeposit/createWithdrawal` 已在 Arbitrum One **42161** 廣播並確認。GMX 非同步 keeper 結算屬協議原生二段語意；**用戶側 I/O 通道 SSOT 已閉環**。
+
+| # | 事件 | Tx Hash | Block | 狀態 |
+|---|------|---------|-------|------|
+| 1 | **GM Deposit Multicall** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | **503036082** | ✅ Success |
+| 2 | **GM LP → Synthetics Router Approve** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) | **503038459** | ✅ Success |
+| 3 | **GM Withdraw Multicall Broadcast** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) | **503038714** | ✅ Success |
+
+**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · Synthetics Router `0xaBBc7805d812eA10e7D47d54169b8922596f9a0c` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8…7A55` · WithdrawalVault `0x0628D46b…1c55` · SSOT 同步：[`docs/VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) · [`docs/ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md)
 
 歷史面板均分（**僅作機構記憶；本卷不校準常數**）：
 
@@ -88,7 +100,8 @@
 
 | Nit | 狀態 | 仍扣誰 |
 |-----|------|--------|
-| **42161 GMX v2 Keeper fill（GM mint / redeem 落地）** | **未閉環** — CLI 預設 dry-run | Nadia Voss · 陳冠宇 · Sofia Alvarez |
+| **42161 GMX v2 GM Pool I/O 執行（deposit + withdraw multicall）** | **已閉環** — 三筆主網 tx 鎖定 SSOT §0.1 | Nadia Voss · 陳冠宇 · Sofia Alvarez |
+| **42161 GMX v2 increase / Gate fill** | **未閉環** | 同上 |
 | **GMX increase 經 Gate 的成交** | **未閉環** | Jonah Feldman · Wei-Lin Chen |
 | **42161 Dune 業務事件 live ingest** | **未閉環** | Dr. Yuki Tanaka · 何嘉樂 |
 | Bootstrap `0x1111/0x2222` | **鏈上未閉環** | Dr. Camille Renard · 馮思齊 |
@@ -159,7 +172,7 @@
 
 | 維度 | PM 8.81 | 本卷 8.93 | 讀法 |
 |------|---------|-----------|------|
-| **SC** | 8.88 | **9.11** | Q1 切模組 + wire audit + Foundry `.call` 追蹤 —— **硬審計主升**；Keeper fill 仍封頂 SC 9.4+ |
+| **SC** | 8.88 | **9.11** | Q1 切模組 + wire audit + Foundry `.call` 追蹤 + **42161 GM I/O live tx** —— **硬審計主升** |
 | **PMF** | 8.38 | **8.77** | **最大升幅** —— Wallet B 從 preview 變成可廣播 GM I/O；**仍無 mint/redeem 落地 Tx** |
 | **Inno** | 8.48 | **8.66** | Error interpreter / 分腿探針是工程創新，**不是**新金融原語 |
 | **RPS** | 8.93 | **9.20** | dry-run 雙保險 + soil/gas/sequencer CLI guards + revert 可讀性 —— 操作員安全面 |
@@ -234,7 +247,7 @@
 
 假設有效提交 80–120；雙片未交用「現況」欄。相對 09-07 PM **8.81**：**+6pp** on Promising（GM I/O 可演示）、**+14pp** on GMX Builder（通道閉環）、**+7pp** on Overall #1（仍缺 fill）。
 
-| 獎項 | PM 8.81 | **本卷 8.93** | 雙片 + 一筆 GM Keeper fill | 否決風險 |
+| 獎項 | PM 8.81 | **本卷 8.93** | 雙片 + Dune ingest | 否決風險 |
 |------|---------|---------------|------------------------------|----------|
 | **Promising Track $15k** | **72%** | **78%** | **84%** | 低 |
 | **GMX Builder Grant** | **48%** | **62%** | **74%** | 中 · **仍缺 fill** |
@@ -246,7 +259,7 @@
 
 相對 09-07 PM：GMX Builder **+14pp** 是本卷唯一「獎項結構」級移動。Overall #1 **仍不過半**——與 17:00 原團在 `99fe1ac` 上給的 52% **不可比**（不同快照、不同人格）。
 
-**最可能結果：** Promising **高概率** + GMX Builder **首次進入優勢帶（>60%）**；$40k 獨走仍要 **一筆 42161 GM mint/redeem 或 increase fill**。
+**最可能結果：** Promising **高概率** + GMX Builder **首次進入優勢帶（>70%）** — GM Pool I/O **已 CLOSED**（§0.1）；$40k 獨走仍要 **Dune ingest + increase Gate fill + 片**。
 
 ---
 
@@ -309,11 +322,11 @@
 
 | 檢查項 | 結果 |
 |--------|------|
-| CLI | 預設 dry-run · 本卷 **無** 新 Arbiscan GM mint hash 鎖進 `grant-mainnet-execution-ssot` |
-| 既有錨 | Grant SSOT 仍可能指向歷史 GM deposit tx —— **不得**本卷重複加分 |
-| 口播規則 | **禁止** 將 adapter 完成說成 Keeper fill |
+| CLI | 預設 dry-run · live 需 `BROADCAST=1` + `CONFIRM_*=YES` |
+| **主網 SSOT** | **已鎖定** — deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · GM I/O 通道 **CLOSED** |
+| 口播規則 | **可以** 引用 §0.1 三筆 Arbiscan tx；**禁止** 把 increase / Gate fill 與 GM I/O 混談 |
 
-**Blackhat 結論：** 評審若聽到「我們已經 live GM」而 repo 只有 dry-run CLI → **HackQuest 級否決**。本卷分數建立在 **誠實的通道閉環**。
+**Blackhat 結論：** 09-08 晚 GM Pool I/O **執行層已閉環**；評審若聽到「我們從未 live GM」→ **與 SSOT 不符**。Increase / Gate 路徑仍誠實標 **OPEN**。
 
 ---
 
@@ -344,7 +357,7 @@
 | 5 | Error interpreter + isolated probe | **閉環** |
 | 6 | Foundry `ROUTER.call` fork trace | **閉環（探針）** |
 | 7 | tsc 0 · 211/943 | **閉環**（WSL 亞毫秒 flake **記殘餘 LOW**） |
-| 8 | 42161 GM Keeper fill | **未閉環** |
+| 8 | 42161 GM Pool I/O 執行（deposit + withdraw） | **已閉環** — §0.1 三筆 tx |
 | 9 | GMX increase 經 Gate fill | **未閉環** |
 | 10 | 42161 Dune live ingest | **未閉環** |
 | 11 | Bootstrap 密鑰 / npm plugin / 片 | **未閉環** |
@@ -352,11 +365,12 @@
 
 **剩餘最高邊際分（排序）：**
 
-1. 一筆 **42161 GM mint 或 redeem**（Nadia / 陳冠宇 / Sofia · PMF **+0.12~0.16** · GMX Builder **→70%+**）
-2. 把該 tx 鎖進 `grant-mainnet-execution-ssot` + VERIFICATION_MATRIX（HackQuest 衛生）
-3. 42161 Dune **首筆業務事件**（Yuki Tanaka）
-4. Bootstrap 密鑰旋轉（Camille / 馮思齊）
-5. 雙片提交（零獎 → <0.5%）
+1. 42161 Dune **首筆業務事件**（Yuki Tanaka）
+2. Bootstrap 密鑰旋轉（Camille / 馮思齊）
+3. GMX increase **經 Gate live fill**（Nadia / 陳冠宇 / Sofia）
+4. 雙片提交（零獎 → <0.5%）
+
+**GM Pool I/O 執行層已 CLOSED**（§0.1 三筆 tx 已鎖 SSOT）。9.0 仍取決於 **Dune ingest + Bootstrap 旋轉 + increase fill + 片**。
 
 **不要再把 GM adapter 切成第 15 個檔案來換分數。** 8.93 已經付清 **I/O 通道**。9.0 只來自 **Keeper 回執 + 片**。
 
@@ -390,6 +404,7 @@
 | Error interpreter | `gmx-error-interpreter.ts` · `gmx-error-registry.ts` · `gmx-error-guidance.ts` |
 | Isolated probe | `gmx-error-isolated-probe.ts` · **149 LOC** |
 | Foundry fork `.call` | `contracts/test/GmxLocalForkTrace.t.sol` · Router `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` |
+| **42161 GM I/O Live Tx SSOT** | Deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Approve [`0x83c4802e…`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Withdraw [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · **通道 CLOSED** |
 | Tests | `tests/adapters/gmx-gm-deposit-encode.test.ts` · `gmx-gm-withdraw-encode.test.ts` · `gmx-error-interpreter.test.ts` |
 | Vitest / tsc | **211 files \| 943 tests** · `tsc --noEmit` **0 errors** |
 | HEAD | **`fe5ece7`** · `feat(gmx): add GM Pool withdrawal CLI and complete adapter wiring.` |
