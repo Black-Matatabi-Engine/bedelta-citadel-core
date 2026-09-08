@@ -1,5 +1,9 @@
 /** GMX v2 GM Pool withdrawal wire audit (IWithdrawalUtils / ExchangeRouter). */
 import { getAddress, type Hex } from "viem";
+import {
+  collectGmxGmRiskInvariantErrors,
+  type GmxGmRiskAuditContext,
+} from "../../core/gmx-risk-core";
 import { GMX_GM_ETH_USDC_MARKET } from "./gmx-gm-withdraw-constants";
 import type { GmxGmWithdrawWireParams } from "./gmx-gm-withdraw-types";
 import { GMX_ZERO_ADDRESS } from "./gmx-v2-order-payload-constants";
@@ -14,6 +18,7 @@ export type GmxGmWithdrawAuditResult = {
 export function auditGmxGmWithdrawWireParams(
   wire: GmxGmWithdrawWireParams,
   market: Hex = GMX_GM_ETH_USDC_MARKET,
+  risk?: GmxGmRiskAuditContext,
 ): GmxGmWithdrawAuditResult {
   const errors: string[] = [];
   const warnings: string[] = [];
@@ -30,7 +35,13 @@ export function auditGmxGmWithdrawWireParams(
   if (wire.addresses.market !== expectedMarket) {
     errors.push(`addresses.market mismatch: ${wire.addresses.market} != ${expectedMarket}`);
   }
-  if (wire.executionFee <= 0n) errors.push("executionFee must be > 0");
+  errors.push(
+    ...collectGmxGmRiskInvariantErrors(risk, {
+      executionFee: wire.executionFee,
+      minLongTokenAmount: wire.minLongTokenAmount,
+      minShortTokenAmount: wire.minShortTokenAmount,
+    }),
+  );
   if (wire.addresses.receiver === GMX_ZERO_ADDRESS) errors.push("receiver must not be zero");
   if (wire.addresses.longTokenSwapPath.length > 0) warnings.push("longTokenSwapPath non-empty");
   if (wire.addresses.shortTokenSwapPath.length > 0) warnings.push("shortTokenSwapPath non-empty");
@@ -41,7 +52,11 @@ export function auditGmxGmWithdrawWireParams(
   return { ok: errors.length === 0, errors, warnings, fields };
 }
 
-export function assertGmxGmWithdrawWire(wire: GmxGmWithdrawWireParams, market?: Hex): void {
-  const audit = auditGmxGmWithdrawWireParams(wire, market);
+export function assertGmxGmWithdrawWire(
+  wire: GmxGmWithdrawWireParams,
+  market?: Hex,
+  risk?: GmxGmRiskAuditContext,
+): void {
+  const audit = auditGmxGmWithdrawWireParams(wire, market, risk);
   if (!audit.ok) throw new Error(`GMX_GM_WITHDRAW_AUDIT: ${audit.errors.join(" | ")}`);
 }
