@@ -57,18 +57,18 @@ function verifyStylusCheck(rpc: string): void {
   const stylusBin = which.output.split("\n")[0]?.includes("cargo stylus")
     ? "rustup run 1.91 cargo stylus"
     : "cargo-stylus";
-  const check = run("bash", ["-lc", `${stylusBin} check --rpc-url ${rpc}`], STYLUS_DIR);
+  const check = run("bash", ["-lc", `${stylusBin} check --endpoint-url '${rpc}'`], STYLUS_DIR);
   if (!check.ok) {
     console.error("[stylus:mainnet] cargo stylus check FAILED\n", check.output);
     process.exit(1);
   }
-  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, rpcUrl: rpc });
+  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, endpointUrl: rpc });
 }
 
 function deployStylus(rpc: string, pk: string): void {
   const deploy = run(
     "bash",
-    ["-lc", `rustup run 1.91 cargo stylus deploy --rpc-url ${rpc} --private-key ${pk} --no-verify`],
+    ["-lc", `rustup run 1.91 cargo stylus deploy --endpoint-url '${rpc}' --private-key ${pk} --no-verify`],
     STYLUS_DIR,
   );
   if (!deploy.ok) {

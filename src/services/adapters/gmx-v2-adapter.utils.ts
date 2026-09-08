@@ -72,7 +72,13 @@ export function deriveGmxMidPriceUsd(
 }
 
 export async function fetchGmxLiveContext(opts: GmxV2AdapterOptions): Promise<GmxV2LiveContext> {
-  const [markets, rpc] = await Promise.all([fetchMarketsInfo(opts), fetchGmxRpcProbe(opts)]);
+  const rpc = await fetchGmxRpcProbe(opts);
+  let markets: GmxMarketInfo[] = [];
+  try {
+    markets = await fetchMarketsInfo(opts);
+  } catch {
+    markets = [];
+  }
   const degradationReasons = [...rpc.reasons];
   if (markets.length === 0) degradationReasons.push("GMX_MARKETS_EMPTY");
   return {
