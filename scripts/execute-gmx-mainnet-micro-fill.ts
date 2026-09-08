@@ -44,11 +44,18 @@ import {
   MICRO_FILL_LEVERAGE_X,
   MICRO_FILL_MIN_POSITION_USD,
   MICRO_FILL_SIZE_DELTA_USD_30,
-  formatGmxSimulateRevert,
   oracleHumanUsdFromTicker,
   readGmxCollateralAllowance,
-  simulateGmxMicroFillOrder,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
+import {
+  GmxMicroFillExecutionError,
+  contextFromPayload,
+  formatGmxMicroFillErrorSummary,
+  isBypassSimulationEnabled,
+  isBypassSimulationEnabled,
+  printGmxMicroFillError,
+  runGmxMicroFillSimulationPreflight,
+} from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import { dispatchGmxMicroFillLive, resolveBufferedEip1559Fees, type KernelCall } from "./gmx-micro-fill-dispatch";
 
 const allowStaleOracle = (argv: string[]): boolean =>
@@ -148,6 +155,9 @@ async function main(): Promise<void> {
   if (!guardVerdict.ok) throw new Error(`GUARD_BLOCKED:${guardVerdict.reasons.join("|")}`);
   if (staleOracleOk || probeBypass) {
     console.warn("[gmx-micro-fill] probe bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
+  }
+  if (isBypassSimulationEnabled()) {
+    console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — silent eth_call revert 將跳過預檢並直接 broadcast");
   }
 
   const market = await loadMarketSnapshot(symbol);
@@ -273,13 +283,11 @@ async function main(): Promise<void> {
     rpc: RPC,
     resolveFees: () => resolveBufferedEip1559Fees(client),
   });
-  try {
-    await simulateGmxMicroFillOrder({ client, payload: livePayload, from: dispatchOwner });
+  const sim = await runGmxMicroFillSimulationPreflight({ client, payload: livePayload, from: dispatchOwner });
+  if (sim.bypassed) {
+    console.warn("[gmx-micro-fill] simulation bypassed — proceeding to on-chain broadcast");
+  } else {
     console.log("[gmx-micro-fill] router simulateContract OK", { from: dispatchOwner });
-  } catch (err) {
-    const reason = formatGmxSimulateRevert(err);
-    console.error("[gmx-micro-fill] router simulateContract REVERT", { reason, from: dispatchOwner });
-    throw new Error(`GMX_SIMULATE_REVERT:${reason}`);
   }
   const preCalls: KernelCall[] = [{
     to: POLICY_GUARD, value: 0n,
@@ -315,9 +323,20 @@ async function main(): Promise<void> {
     mode, owner: dispatchOwner, kernel: kernel.address, tx, status: receipt.status, side: liveSide, sizeUsd, url: arbiscan(tx),
   });
   if (receipt.status !== "success") {
-    console.warn("[gmx-micro-fill] router tx mined with revert — Arbiscan hash recorded for audit", { tx, url: arbiscan(tx) });
+    const ctx = contextFromPayload(livePayload, dispatchOwner, "on-chain broadcast revert", {
+      dispatchMode: mode, txHash: tx,
+    });
+    printGmxMicroFillError(new Error("Transaction mined with revert status=0"), ctx);
     process.exit(1);
   }
 }
 
-main().catch((err) => { console.error("[gmx-micro-fill] fail-closed", err); process.exit(1); });
+function handleMicroFillFatal(err: unknown): void {
+  if (err instanceof GmxMicroFillExecutionError) {
+    console.error(err.summary);
+    return;
+  }
+  printGmxMicroFillError(err, { step: "gmx-micro-fill main" });
+}
+
+main().catch((err) => { handleMicroFillFatal(err); process.exit(1); });

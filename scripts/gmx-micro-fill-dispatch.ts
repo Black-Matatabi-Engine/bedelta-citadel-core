@@ -12,9 +12,12 @@ import {
   encodeGmxV2RouterCreateOrderMulticall,
   bindGmxOrderReceiver,
   ensureGmxCollateralAllowance,
-  formatGmxSimulateRevert,
-  simulateGmxMicroFillOrder,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
+import {
+  GmxMicroFillExecutionError,
+  contextFromPayload,
+  runGmxMicroFillSimulationPreflight,
+} from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 
 export const WETH_ARBITRUM = getAddress("0x82aF49447D8a07e3bd95BD0d56f35241523fBab1");
@@ -197,16 +200,21 @@ export async function dispatchGmxRouterViaEoa(input: {
     chain: input.chain,
     rpc: input.rpc,
   });
-  try {
-    await simulateGmxMicroFillOrder({ client: input.client, payload, from: account.address });
-  } catch (err) {
-    const reason = formatGmxSimulateRevert(err);
-    console.error("[gmx-micro-fill] router simulateContract REVERT", { reason, from: account.address });
-    throw new Error(`GMX_SIMULATE_REVERT:${reason}`);
-  }
-  return sendRouterTx({
-    wallet, client: input.client, account, chain: input.chain, value: router.value, data: router.data,
+  const sim = await runGmxMicroFillSimulationPreflight({
+    client: input.client, payload, from: account.address,
   });
+  if (sim.bypassed) {
+    console.warn("[gmx-micro-fill] EOA path — simulation bypassed, sending router tx");
+  }
+  try {
+    return await sendRouterTx({
+      wallet, client: input.client, account, chain: input.chain, value: router.value, data: router.data,
+    });
+  } catch (err) {
+    throw new GmxMicroFillExecutionError(err, contextFromPayload(payload, account.address, "EOA sendTransaction", {
+      dispatchMode: "eoa",
+    }));
+  }
 }
 
 export async function dispatchGmxMicroFillLive(input: {
@@ -253,7 +261,11 @@ export async function dispatchGmxMicroFillLive(input: {
     if (!receipt.success) throw new Error("GMX micro-fill UserOp reverted");
     return { tx: receipt.receipt.transactionHash, mode: "zerodev" };
   } catch (err) {
-    if (!isBundlerBlocked(err)) throw err;
+    if (!isBundlerBlocked(err)) {
+      throw new GmxMicroFillExecutionError(err, contextFromPayload(input.payload, input.kernel.address, "ZeroDev UserOp", {
+        dispatchMode: "zerodev",
+      }));
+    }
     console.warn("[gmx-micro-fill] ZeroDev bundler blocked — falling back to EOA direct router dispatch");
     const tx = await dispatchGmxRouterViaEoa({
       pk: input.pk, chain: input.chain, rpc: input.rpc, client: input.client, payload: input.payload,
