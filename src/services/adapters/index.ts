@@ -88,6 +88,21 @@ export {
 } from "./gmx-gm-deposit-router-encode";
 
 export {
+  assertGmxGmWithdrawWire,
+  auditGmxGmWithdrawWireParams,
+  buildGmxGmWithdrawFromLegacyInput,
+  buildGmxGmWithdrawGmAmountPayload,
+  buildGmxGmWithdrawRouterMulticall,
+  buildGmxGmWithdrawUnsignedPayload,
+  encodeGmxCreateWithdrawalCalldata,
+  GMX_CREATE_WITHDRAWAL_ABI_FRAGMENT,
+  GMX_GM_WITHDRAW_MULTICALL_METHODS,
+  GMX_WITHDRAWAL_VAULT_ARBITRUM,
+  type GmxGmWithdrawUnsignedPayload,
+  type GmxGmWithdrawWireParams,
+} from "./gmx-gm-withdraw-router-encode";
+
+export {
   fetchSplitBorrowRates,
   hashData,
   hashString,
