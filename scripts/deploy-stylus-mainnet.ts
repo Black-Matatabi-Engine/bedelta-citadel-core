@@ -3,6 +3,7 @@
  * Arbitrum One (42161) — SliverVineSoilCoprocessor Stylus compile check + optional deploy.
  * Dry-run: pnpm tsx scripts/deploy-stylus-mainnet.ts
  * Live: CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x… ARB_MAINNET_RPC_URL=…
+ * Verified mainnet: 0xc23587d6573dd134f95b02b0202ffbf84686625e (activation 0x92079e15…)
  */
 import { spawnSync } from "node:child_process";
 import { existsSync } from "node:fs";

@@ -144,7 +144,7 @@ Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain re
 
 | Layer | Alignment | Status |
 |-------|-----------|--------|
-| **Stylus Soil Coprocessor** | **`SliverVineSoilCoprocessor`** — u128 fixed-point score · `check_soil_resistance_stylus(flags, risk_vector)` · quadratic spread/slippage penalty · fail-closed `depth_usd ≥ 10_000` · `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` · parity with Edge soil fuse | ✅ **Code-Verified Coprocessor** (`contracts/stylus-probe/src/lib.rs` · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** · `pnpm build:stylus` · Wasm Sandbox Vitest Passed · on-chain Sepolia deploy **pending tooling lock** · **EIP-1967 proxy path documented**) |
+| **Stylus Soil Coprocessor** | **`SliverVineSoilCoprocessor`** — u128 fixed-point score · `check_soil_resistance_stylus(flags, risk_vector)` · quadratic spread/slippage penalty · fail-closed `depth_usd ≥ 10_000` · `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` · parity with Edge soil fuse | ✅ **Mainnet Deployed & Activated** (`0xc23587d6573dd134f95b02b0202ffbf84686625e` · activation tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** · Stylus SDK **0.10.9** · `cargo test` **9/9 PASS** · `pnpm deploy:stylus:mainnet`) |
 | **Elara protocol ingress** | Protocol-level ingress filtering drops non-compliant Robinhood Chain / blacklisted senders before GM payload construction — complements `IngressSafetySwitch` | ⏳ V1.0 Design Spec |
 | **ArbOS gas / base-fee sensor** | Tri-Sensor **BaseFee Velocity** channel remains the congestion throttle for dispatch SLO | ✅ v1.0 Delivered (Sepolia verified) (`arbitrum-gas-guard.ts`) |
 
@@ -161,7 +161,7 @@ V2.0 on-chain Stylus rollout targets the standard **[EIP-1967](https://eips.ethe
 
 The immutable **Solidity `SliverVineGate`** on Arbitrum One (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) remains the live attestation plane; Stylus is an additive coprocessor reinforcement layer deployable behind EIP-1967 without restricting future math upgrades.
 
-**Dual-execution SSOT:** [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) exports `check_soil_resistance_stylus(flags: u64, risk_vector: [f64; 6]) -> bool` — bitmask + six-lane vector parity with Edge `evaluate*Flags()` / `checkSoilResistance()`. Build: `pnpm build:stylus`.
+**Dual-execution SSOT:** [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) exports `check_soil_resistance_stylus(flags: u64, risk_vector: [f64; 6]) -> bool` — bitmask + six-lane vector parity with Edge `evaluate*Flags()` / `checkSoilResistance()`. **Arbitrum One mainnet:** `0xc23587d6573dd134f95b02b0202ffbf84686625e` · activation [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) (Nitro JIT + ArbWasm `0x71`). Build: `pnpm deploy:stylus:mainnet`.
 
 ---
 

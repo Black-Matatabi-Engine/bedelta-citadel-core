@@ -73,6 +73,7 @@
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **Stylus Soil Coprocessor (42161)** | `0xc23587d6573dd134f95b02b0202ffbf84686625e` · [Arbiscan](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · Activation Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Sepolia live ingest** · **42161 = pre-compiled SQL spec** awaiting mainnet event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
@@ -91,7 +92,7 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 
 > **Solidity ingress:** [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](./contracts/IngressSafetySwitch.sol) use **Solidity Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants remain for telemetry.
 
-> **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **ArbOS 61 Elara** compatible · **96KB** Wasm budget ready · Cargo **9/9 PASS**. → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
+> **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **mainnet deployed & activated** at `0xc23587d6573dd134f95b02b0202ffbf84686625e` (Nitro Prover JIT via ArbWasm `0x71`). → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
 
 ### Arbitrum Ecosystem Alignment (H1 2026)
 

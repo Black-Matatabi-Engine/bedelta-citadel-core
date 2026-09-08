@@ -5,7 +5,10 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import type { Hex } from "viem";
 
-export const STYLUS_PRE_DEPLOYED_MAINNET = "0x58de19b5a167f84f156fae18a109a4fb09db20f9" as const;
+export const STYLUS_MAINNET_CONTRACT = "0xc23587d6573dd134f95b02b0202ffbf84686625e" as const;
+export const STYLUS_MAINNET_ACTIVATION_TX = "0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397" as const;
+/** @deprecated Use STYLUS_MAINNET_CONTRACT */
+export const STYLUS_PRE_DEPLOYED_MAINNET = STYLUS_MAINNET_CONTRACT;
 
 export function runCargoStylus(
   args: string[],

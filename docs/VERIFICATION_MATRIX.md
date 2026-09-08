@@ -31,7 +31,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../tests/core/risk-severance.test.ts) |
 | **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) |
 | **Sliding-window pending OI** | 30s GMX skew/notional accumulator — split-payload defense | [`pending-exposure-window.ts`](../src/core/pending-exposure-window.ts) |
-| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `cargo test stylus_core` **5/5 PASS** · `wasm32-unknown-unknown` release build **verified locally** · Stylus Wasm **ABI v2 (28-slot)** ↔ TS core via [`wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) (`WASM_ABI_VERSION = 2` · `PROTO_VECT_LEN = 28`) · `pnpm deploy:stylus:mainnet` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../tests/core/wasm-ffi-alignment.test.ts) · EIP-1967 proxy path in [EIP Wiki](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
+| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · **Mainnet `0xc23587d6573dd134f95b02b0202ffbf84686625e`** · Activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + **ArbWasm `0x71`** · `cargo test stylus_core` **5/5 PASS** · Wasm **ABI v2 (28-slot)** ↔ TS via [`wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -63,7 +63,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Script | Command | Role | Live arm |
 |--------|---------|------|----------|
-| **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | `cargo test stylus_core` + `wasm32-unknown-unknown` release build · optional `cargo stylus check --rpc-url` (ChainID **42161** · `cargo-stylus v0.10.9`) · deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x…` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
+| **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | **Deployed & activated** `0xc23587d6573dd134f95b02b0202ffbf84686625e` · Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + ArbWasm `0x71` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 | **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
 
 ### Stylus Module Build Proof (Local Verification)
@@ -74,6 +74,15 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | `cargo build --target wasm32-unknown-unknown --release` | **Verified locally** (100%) | [`contracts/stylus-probe/Stylus.toml`](../contracts/stylus-probe/Stylus.toml) · ChainID **42161** |
 | Wasm ABI v2 **28-slot** alignment | `WASM_ABI_VERSION = 2` · `WASM_PROTOCOL_LEN = PROTO_VECT_LEN = 28` | [`src/core/wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) · [`src/wasm/soil_core.rs`](../src/wasm/soil_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../tests/core/wasm-ffi-alignment.test.ts) |
 | Mainnet readiness harness | `pnpm deploy:stylus:mainnet` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
+
+### Stylus Mainnet Deployment (Arbitrum One · 42161) — Verified
+
+| Field | Value |
+|-------|-------|
+| **Contract** | `SliverVineSoilCoprocessor` · `0xc23587d6573dd134f95b02b0202ffbf84686625e` · [Arbiscan](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) |
+| **Activation Tx** | [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) |
+| **Activation path** | Nitro Prover **JIT compilation** + `activateProgram` via **ArbWasm precompile `0x0000000000000000000000000000000000000071`** (`cargo stylus activate` SSOT) |
+| **Toolchain** | `cargo-stylus v0.10.9` · `cargo stylus get-initcode` + viem deploy · ChainID **42161** |
 
 ### GMX Micro-Fill Fail-Closed Evidence (Live Interception Payload)
 
