@@ -40,7 +40,7 @@ function formatDecodedContractError(data: unknown): string | undefined {
   return args?.length ? `${errorName}(${args.map(String).join(", ")})` : errorName;
 }
 
-function decodeGmxRevertData(data: Hex): string | null {
+export function decodeGmxRevertData(data: Hex): string | null {
   const selector = data.slice(0, 10).toLowerCase();
   const gmxDecoded = decodeGmxSyntheticsError(data);
   if (gmxDecoded) return gmxDecoded;

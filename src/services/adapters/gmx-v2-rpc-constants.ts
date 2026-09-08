@@ -14,6 +14,14 @@ export const GMX_RPC_PROVIDERS = [
   "https://arb-mainnet.g.alchemy.com/v2/demo",
 ] as const;
 
+/** Non-Alchemy RPCs for revert replay / trace (Alchemy often strips custom error data). */
+export const GMX_DIAGNOSTIC_RPC_PROVIDERS = [
+  ARBITRUM_RPC_URL,
+  "https://rpc.ankr.com/arbitrum",
+  "https://arbitrum.drpc.org",
+  "https://1rpc.io/arb",
+] as const;
+
 export const GMX_RPC_EXTRA_HOSTS = [
   "arb1.arbitrum.io",
   "rpc.ankr.com",

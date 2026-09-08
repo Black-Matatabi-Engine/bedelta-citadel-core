@@ -166,9 +166,9 @@ export async function executeGmxMicroFillLive(input: GmxMicroFillLiveInput): Pro
     mode, owner: dispatchOwner, kernel: kernel.address, tx, status: receipt.status, side: input.side, sizeUsd: input.sizeUsd, url: arbiscan(tx),
   });
   if (receipt.status !== "success") {
-    const decodedOnChainRevert = await decodeGmxFailedTransaction(client, tx);
+    const diag = await decodeGmxFailedTransaction(client, tx, { primaryRpc: input.rpc });
     printGmxMicroFillError(new Error("Transaction mined with revert status=0"), contextFromPayload(livePayload, dispatchOwner, "on-chain broadcast revert", {
-      dispatchMode: mode, txHash: tx, decodedOnChainRevert,
+      dispatchMode: mode, txHash: tx, decodedOnChainRevert: diag?.summary,
     }));
     process.exit(1);
   }

@@ -45,6 +45,8 @@ export async function fetchArbitrumRpc(
     providers?: readonly string[];
     extraHosts?: readonly string[];
     preferredRpc?: string;
+    /** When true, return HTTP 200 bodies that contain JSON-RPC `error` (e.g. eth_call reverts). */
+    allowJsonRpcError?: boolean;
   } = {},
 ): Promise<Response | null> {
   const base = opts.providers ?? GMX_RPC_PROVIDERS;
@@ -61,7 +63,7 @@ export async function fetchArbitrumRpc(
       );
       if (shouldRotateProvider(res)) continue;
       if (res.ok) {
-        if (await hasJsonRpcError(res)) continue;
+        if (!opts.allowJsonRpcError && (await hasJsonRpcError(res))) continue;
         return res;
       }
     } catch {
@@ -111,6 +113,7 @@ export async function postArbitrumJsonRpc(
     fetchFn?: typeof fetch;
     providers?: readonly string[];
     preferredRpc?: string;
+    allowJsonRpcError?: boolean;
   } = {},
 ): Promise<unknown | null> {
   const init = {
