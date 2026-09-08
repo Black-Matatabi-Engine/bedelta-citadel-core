@@ -63,7 +63,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Script | Command | Role | Live arm |
 |--------|---------|------|----------|
-| **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | `cargo test stylus_core` + `wasm32-unknown-unknown` release build · optional `cargo stylus check` (ChainID **42161**) · deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x…` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
+| **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | `cargo test stylus_core` + `wasm32-unknown-unknown` release build · optional `cargo stylus check --rpc-url` (ChainID **42161** · `cargo-stylus v0.10.9`) · deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x…` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 | **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
 
 ### Stylus Module Build Proof (Local Verification)
@@ -75,19 +75,20 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | Wasm ABI v2 **28-slot** alignment | `WASM_ABI_VERSION = 2` · `WASM_PROTOCOL_LEN = PROTO_VECT_LEN = 28` | [`src/core/wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) · [`src/wasm/soil_core.rs`](../src/wasm/soil_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../tests/core/wasm-ffi-alignment.test.ts) |
 | Mainnet readiness harness | `pnpm deploy:stylus:mainnet` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 
-### GMX Micro-Fill Oracle Lag Fail-Closed Evidence
+### GMX Micro-Fill Fail-Closed Evidence (Live Interception Payload)
 
-> **Harness:** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) · **no broadcast** — Root Protection tripped pre-mempool.
+> **Harness:** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) · **no broadcast** — Soil Resistance + Root Protection tripped pre-mempool.
 
 | Field | Value |
 |-------|-------|
 | **Command** | `pnpm execute:gmx:micro-fill --size=1` |
 | **Network** | Arbitrum One (`42161`) |
-| **Root Protection Trip** | `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` |
-| **Oracle Lag Window** | **154 seconds** stale Chainlink oracle lag detected (> **30s** `ORACLE_LAG_DEADLOCK_MS` SSOT) |
-| **Execution Outcome** | **Fail-Closed** — Citadel Shield **actively prevented** GMX v2 increase order broadcast during stale-oracle window |
-| **Capital Invariant** | **`lostUsd ≡ 0`** — zero stale-price impact · zero mempool exposure · no toxic fill submitted |
-| **Prior Trip (pool state)** | `GMX_POOL_IMBALANCE_BREACH` also documented — shield remains active on both oracle-lag and pool-imbalance axes |
+| **Balanced Side Calibration** | Harness intelligently selected **`"short"`** leg — GM pool snapshot **$71 Long** vs **$58 Short** (low-OI side) to reduce skew before preflight |
+| **Soil Resistance Trip** | `DEPTH_USD = $129 < $100,000` min requirement (`minDepthUsd` SSOT) · `SOIL_RESISTANCE_TRIP` |
+| **Root Protection Trip** | `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **154 seconds** stale Chainlink oracle lag (> **30s** `ORACLE_LAG_DEADLOCK_MS`) |
+| **Execution Outcome** | **Fail-Closed** — Citadel Shield **successfully intercepted** GMX v2 increase order before mempool · dual-axis block (depth + oracle lag) |
+| **Capital Invariant** | **`lostUsd ≡ 0`** — **0 slippage loss** · zero stale-price impact · zero mempool exposure · no toxic fill submitted |
+| **Prior Trip (pool state)** | `GMX_POOL_IMBALANCE_BREACH` also documented — shield remains active on oracle-lag · depth · pool-imbalance axes |
 
 ### Dune Telemetry Boundary (Re-confirmed)
 
@@ -114,7 +115,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` · [Arbiscan](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · Citadel Shield blocked execution during **154s** stale oracle window on Arbitrum One · **`lostUsd ≡ 0`** |
+| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
 
@@ -132,7 +133,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Smart Route Target Chain** | Arbitrum One (`42161`) |
 | **ZeroDev Kernel v3 Smart Route UserOp Hash** | `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` |
-| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · shield active · **`lostUsd ≡ 0`** |
+| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
 | **Gate setPolicyGuard Tx** | `<!-- PENDING: bootstrap gate lacks setter -->` |
 | **Arbiscan URL (Deploy)** | [Arbiscan Tx](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
