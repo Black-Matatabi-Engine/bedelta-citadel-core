@@ -1,14 +1,22 @@
 /** GMX v2 micro-fill router encoder — acceptablePrice (1% slip) + ExchangeRouter multicall. */
-import { encodeFunctionData, getAddress, maxUint256, parseAbi, toHex, type Hex } from "viem";
+import {
+  createWalletClient, encodeFunctionData, getAddress, http, maxUint256, parseAbi, toHex, type Chain, type Hex,
+} from "viem";
+import { privateKeyToAccount } from "viem/accounts";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
-import { GMX_USDC_ARBITRUM } from "./gmx-v2-order-payload-constants";
+import { GMX_USDC_ARBITRUM, USDC_DECIMALS } from "./gmx-v2-order-payload-constants";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
 
 export const GMX_ORDER_VAULT_ARBITRUM = getAddress("0x31eF83a530Fde1B38EE9A18093A333D8Bbbc40D5");
 /** ExchangeRouter — ERC20 allowance spender for sendTokens → OrderVault. */
 export const GMX_COLLATERAL_SPENDER_ARBITRUM = getAddress(GMX_V2_EXCHANGE_ROUTER_ARBITRUM);
 export { GMX_USDC_ARBITRUM };
+export const MICRO_FILL_MIN_POSITION_USD = 10;
+export const MICRO_FILL_COLLATERAL_USD = 2;
+export const MICRO_FILL_LEVERAGE_X = 5;
+export const MICRO_FILL_SIZE_DELTA_USD_30 = 10n * 10n ** 30n;
+export const MICRO_FILL_COLLATERAL_USDC = BigInt(MICRO_FILL_COLLATERAL_USD) * 10n ** BigInt(USDC_DECIMALS);
 export const GMX_ORACLE_TICKERS_URL = "https://arbitrum-api.gmxinfra.io/prices/tickers";
 export const MICRO_FILL_SLIPPAGE_BPS = 100;
 const ETH_INDEX_DECIMALS = 18;
@@ -62,10 +70,61 @@ export function applyMicroFillOrderPricing(
   };
 }
 
+export function applyMicroFillMinPositionSizing(
+  payload: GmxV2UnsignedOrderPayload,
+): GmxV2UnsignedOrderPayload {
+  return {
+    ...payload,
+    addresses: { ...payload.addresses, initialCollateralToken: GMX_USDC_ARBITRUM },
+    numbers: {
+      ...payload.numbers,
+      sizeDeltaUsd: MICRO_FILL_SIZE_DELTA_USD_30.toString(),
+      initialCollateralDeltaAmount: MICRO_FILL_COLLATERAL_USDC.toString(),
+      minOutputAmount: "0",
+    },
+  };
+}
+
 const erc20ApproveAbi = parseAbi([
   "function allowance(address owner, address spender) view returns (uint256)",
   "function approve(address spender, uint256 amount) returns (bool)",
 ]);
+
+export type GmxKernelCall = { to: Hex; value: bigint; data: Hex };
+
+export async function ensureGmxCollateralAllowance(input: {
+  client: { readContract: (args: object) => Promise<unknown>; waitForTransactionReceipt: (args: { hash: Hex }) => Promise<{ status: string; blockNumber: bigint }> };
+  owner: Hex;
+  token: Hex;
+  required: bigint;
+  pk?: Hex;
+  chain: Chain;
+  rpc: string;
+  resolveFees?: () => Promise<{ maxFeePerGas: bigint; maxPriorityFeePerGas: bigint }>;
+}): Promise<{ approveTx: Hex | null; approveCall: GmxKernelCall | null }> {
+  const allowance = await readGmxCollateralAllowance(input.client, input.owner, input.token);
+  if (allowance >= input.required) return { approveTx: null, approveCall: null };
+  const approveCall: GmxKernelCall = { to: input.token, value: 0n, data: encodeGmxCollateralApprove() };
+  if (!input.pk) return { approveTx: null, approveCall };
+  const wallet = createWalletClient({
+    account: privateKeyToAccount(input.pk), chain: input.chain, transport: http(input.rpc),
+  });
+  const fees = input.resolveFees ? await input.resolveFees() : { maxFeePerGas: 150_000_000n, maxPriorityFeePerGas: 10_000_000n };
+  const approveTx = await wallet.writeContract({
+    address: input.token,
+    abi: erc20ApproveAbi,
+    functionName: "approve",
+    args: [GMX_COLLATERAL_SPENDER_ARBITRUM, maxUint256],
+    maxFeePerGas: fees.maxFeePerGas,
+    maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
+  });
+  const receipt = await input.client.waitForTransactionReceipt({ hash: approveTx });
+  if (receipt.status !== "success") throw new Error(`GMX approve reverted: ${approveTx}`);
+  console.log("[gmx-micro-fill] USDC approve confirmed", {
+    owner: input.owner, spender: GMX_COLLATERAL_SPENDER_ARBITRUM, block: receipt.blockNumber.toString(), tx: approveTx,
+  });
+  return { approveTx, approveCall: null };
+}
 
 export function encodeGmxCollateralApprove(amount: bigint = maxUint256): Hex {
   return encodeFunctionData({

@@ -31,13 +31,21 @@ import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 import { resolveSoilMinDepthUsd, shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
 import {
   applyMicroFillOrderPricing,
+  applyMicroFillMinPositionSizing,
   bindGmxOrderReceiver,
   computeMicroFillAcceptablePrice,
+  ensureGmxCollateralAllowance,
   fetchGmxIndexOracleTicker,
+  GMX_COLLATERAL_SPENDER_ARBITRUM,
+  GMX_USDC_ARBITRUM,
+  MICRO_FILL_COLLATERAL_USDC,
+  MICRO_FILL_LEVERAGE_X,
+  MICRO_FILL_MIN_POSITION_USD,
+  MICRO_FILL_SIZE_DELTA_USD_30,
   oracleHumanUsdFromTicker,
+  readGmxCollateralAllowance,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
-import { dispatchGmxMicroFillLive, type KernelCall, usdToWethWei, WETH_ARBITRUM } from "./gmx-micro-fill-dispatch";
-import { GMX_USDC_ARBITRUM, readGmxCollateralAllowance, GMX_COLLATERAL_SPENDER_ARBITRUM } from "../src/services/adapters/gmx-micro-fill-router-encode";
+import { dispatchGmxMicroFillLive, type KernelCall } from "./gmx-micro-fill-dispatch";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -172,34 +180,18 @@ async function main(): Promise<void> {
 
   const pk = resolvePk();
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
+  const eoa = privateKeyToAccount(pk).address;
   const now = BigInt(Math.floor(Date.now() / 1000));
+  let liveSide = side;
+  let livePayload = applyMicroFillMinPositionSizing(bindGmxOrderReceiver(orderPayload, kernel.address));
   const usdcBal = await client.readContract({
-    address: getAddress("0xaf88d065e77c8cC2239327C5EDb3A432268e5831"),
+    address: getAddress(GMX_USDC_ARBITRUM),
     abi: parseAbi(["function balanceOf(address) view returns (uint256)"]),
     functionName: "balanceOf",
-    args: [privateKeyToAccount(pk).address],
+    args: [kernel.address],
   });
-  let liveSide = side;
-  let livePayload = bindGmxOrderReceiver(orderPayload, kernel.address);
-  if (usdcBal < BigInt(livePayload.numbers.initialCollateralDeltaAmount)) {
-    liveSide = "long";
-    const longPayload = buildGmxV2UnsignedOrderPayload({
-      side: "long", sizeUsd, reduceOnly: false, clientOrderId: `gmx-micro-${Date.now()}`, maxSlippageBps: 30,
-      marketToken: registry.marketToken, midPriceUsd: market.midPriceUsd, pool: market.pool, allowStaleOracle: staleOracleOk,
-    });
-    const wethWei = usdToWethWei(sizeUsd, market.midPriceUsd);
-    livePayload = {
-      ...bindGmxOrderReceiver(longPayload, kernel.address),
-      addresses: { ...longPayload.addresses, initialCollateralToken: WETH_ARBITRUM },
-      numbers: {
-        ...longPayload.numbers,
-        initialCollateralDeltaAmount: wethWei.toString(),
-        minOutputAmount: "0",
-      },
-    };
-    console.warn("[gmx-micro-fill] USDC low — LONG + WETH collateral fallback", {
-      wethWei: wethWei.toString(), flippedFrom: side, ethPriceUsd: market.midPriceUsd,
-    });
+  if (usdcBal < MICRO_FILL_COLLATERAL_USDC) {
+    throw new Error(`GMX_USDC_INSUFFICIENT: kernel needs $${MICRO_FILL_COLLATERAL_USD} USDC, have=${usdcBal}`);
   }
   let acceptablePrice: bigint;
   try {
@@ -221,26 +213,34 @@ async function main(): Promise<void> {
     side: liveSide,
     isLong: livePayload.isLong,
     oraclePriceUsd: market.midPriceUsd,
+    sizeDeltaUsd: livePayload.numbers.sizeDeltaUsd,
+    collateralUsdc: livePayload.numbers.initialCollateralDeltaAmount,
+    leverageX: MICRO_FILL_LEVERAGE_X,
     acceptablePrice: livePayload.numbers.acceptablePrice,
     minOutputAmount: livePayload.numbers.minOutputAmount,
   });
   const collateralToken = getAddress(livePayload.addresses.initialCollateralToken as Hex);
   const requiredCollateral = BigInt(livePayload.numbers.initialCollateralDeltaAmount);
-  if (collateralToken === getAddress(GMX_USDC_ARBITRUM)) {
-    const allowance = await readGmxCollateralAllowance(client, kernel.address, collateralToken);
-    console.log("[gmx-micro-fill] USDC allowance preflight", {
-      owner: kernel.address,
-      spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
-      allowance: allowance.toString(),
-      required: requiredCollateral.toString(),
-      needsApprove: allowance < requiredCollateral,
+  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
+  const allowanceOwner = gateSignerPk ? kernel.address : eoa;
+  const allowance = await readGmxCollateralAllowance(client, allowanceOwner, collateralToken);
+  console.log("[gmx-micro-fill] USDC allowance preflight", {
+    owner: allowanceOwner,
+    spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
+    allowance: allowance.toString(),
+    required: requiredCollateral.toString(),
+    sizeDeltaUsd30: MICRO_FILL_SIZE_DELTA_USD_30.toString(),
+    needsApprove: allowance < requiredCollateral,
+  });
+  if (!gateSignerPk) {
+    await ensureGmxCollateralAllowance({
+      client, owner: eoa, token: collateralToken, required: requiredCollateral, pk, chain: arbitrum, rpc: RPC,
     });
   }
   const preCalls: KernelCall[] = [{
     to: POLICY_GUARD, value: 0n,
-    data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n] }),
+    data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(MICRO_FILL_MIN_POSITION_USD * 1e6)), now + 3600n] }),
   }];
-  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
   if (gateSignerPk) {
     const att = {
       payloadHash: computeGatedExecutorPayloadHash({

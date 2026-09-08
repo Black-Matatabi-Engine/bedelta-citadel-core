@@ -3,7 +3,7 @@ import { evaluateGmxV2PoolGuard, verifyGmxPoolImbalance } from "../src/adapters/
 import { filterSoftConfirmationProbeReasons } from "../src/core/soil-resistance-core";
 import type { GmxV2PoolWeights } from "../src/services/yield/gmx-v2-price-impact";
 
-export const MICRO_FILL_MIN_SIZE_USD = 1;
+export const MICRO_FILL_MIN_SIZE_USD = 10;
 export const MICRO_FILL_MAX_SIZE_USD = 20;
 
 export interface MicroFillMarketSnapshot {

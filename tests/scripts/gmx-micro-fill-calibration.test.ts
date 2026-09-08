@@ -19,8 +19,8 @@ describe("gmx-micro-fill-calibration", () => {
     expect(resolveBalancedSide({ longTokenUsd: 1, shortTokenUsd: 9 })).toBe("long");
   });
 
-  it("calibrateMicroFillExecution allows $1 balanced micro-fill on healthy pool", () => {
-    const result = calibrateMicroFillExecution({ market, sizeUsd: 1, preferredSide: "short" });
+  it("calibrateMicroFillExecution allows $10 balanced micro-fill on healthy pool", () => {
+    const result = calibrateMicroFillExecution({ market, sizeUsd: 10, preferredSide: "short" });
     expect(result.guard.ok).toBe(true);
     expect(result.side).toBe("short");
   });
