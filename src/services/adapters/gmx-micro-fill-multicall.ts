@@ -1,7 +1,8 @@
 /** GMX micro-fill ExchangeRouter multicall builder. */
 import { getAddress, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
-import { stripGmxOnChainMetadata } from "./gmx-create-order-encode";
+import { stripGmxOnChainMetadata, buildGmxCreateOrderWireParams } from "./gmx-create-order-encode";
+import { assertGmxMicroFillCreateOrderWire } from "./gmx-create-order-audit";
 import {
   assertGmxMicroFillUsdcTransferLegs,
   buildGmxMarketIncreaseMulticallCalls,
@@ -34,6 +35,7 @@ export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
     market,
     orderVault: GMX_ORDER_VAULT_ARBITRUM,
   });
+  assertGmxMicroFillCreateOrderWire(buildGmxCreateOrderWireParams(wirePayload, market), market);
   const legs = decodeGmxMarketIncreaseMulticallLegs(calls);
   assertGmxMicroFillUsdcTransferLegs(legs, MICRO_FILL_COLLATERAL_USDC);
   if (msgValue !== executionFee) {

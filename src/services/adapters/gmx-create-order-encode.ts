@@ -5,14 +5,14 @@
  * @see https://github.com/gmx-io/gmx-interface/blob/master/sdk/src/utils/orderTransactions/utils.ts
  * @see https://github.com/gmx-io/gmx-synthetics/blob/main/contracts/order/IBaseOrderUtils.sol
  */
-import { encodeFunctionData, getAddress, isHex, parseAbi, stringToHex, type Hex } from "viem";
+import { encodeFunctionData, getAddress, isHex, padHex, parseAbi, stringToHex, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { GMX_ZERO_ADDRESS, GMX_ZERO_REFERRAL_CODE } from "./gmx-v2-order-payload-constants";
 import { GMX_ORDER_TYPE_INDEX } from "./gmx-v2-order-payload.types";
 
 /** gmx-interface ExchangeRouter.createOrder ABI fragment (IBaseOrderUtils.CreateOrderParams). */
 export const GMX_CREATE_ORDER_ABI_FRAGMENT =
-  "function createOrder(((address receiver, address cancellationReceiver, address callbackContract, address uiFeeReceiver, address market, address initialCollateralToken, address[] swapPath) addresses, (uint256 sizeDeltaUsd, uint256 initialCollateralDeltaAmount, uint256 triggerPrice, uint256 acceptablePrice, uint256 executionFee, uint256 callbackGasLimit, uint256 minOutputAmount, uint256 validFromTime) numbers, uint8 orderType, uint8 decreasePositionSwapType, bool isLong, bool shouldUnwrapNativeToken, bool autoCancel, bytes32 referralCode, bytes[] dataList) params) payable returns (bytes32)";
+  "function createOrder(((address receiver, address cancellationReceiver, address callbackContract, address uiFeeReceiver, address market, address initialCollateralToken, address[] swapPath) addresses, (uint256 sizeDeltaUsd, uint256 initialCollateralDeltaAmount, uint256 triggerPrice, uint256 acceptablePrice, uint256 executionFee, uint256 callbackGasLimit, uint256 minOutputAmount, uint256 validFromTime) numbers, uint8 orderType, uint8 decreasePositionSwapType, bool isLong, bool shouldUnwrapNativeToken, bool autoCancel, bytes32 referralCode, bytes32[] dataList) params) payable returns (bytes32)";
 
 export const gmxCreateOrderAbi = parseAbi([GMX_CREATE_ORDER_ABI_FRAGMENT]);
 
@@ -37,7 +37,7 @@ export type GmxCreateOrderWireNumbers = {
   validFromTime: bigint;
 };
 
-/** Mirrors gmx-interface `CreateOrderPayload` (bigint numbers, bytes32 referral, bytes[] dataList). */
+/** Mirrors gmx-interface `CreateOrderPayload` (bigint numbers, bytes32 referral, bytes32[] dataList). */
 export type GmxCreateOrderWireParams = {
   addresses: GmxCreateOrderWireAddresses;
   numbers: GmxCreateOrderWireNumbers;
@@ -58,12 +58,16 @@ function addr(v: string): Hex {
   return getAddress(t as Hex);
 }
 
-/** UTF-8 client id or `0x` hex bytes → ABI `bytes` element (gmx-interface passes `string[]` as bytes). */
+/** UTF-8 / hex metadata → ABI bytes32 element (gmx-synthetics CreateOrderParams.dataList). */
 export function encodeGmxDataListEntry(entry: string): Hex {
   const t = entry.trim();
-  if (t.length === 0) return "0x";
-  if (isHex(t)) return t as Hex;
-  return stringToHex(t);
+  if (t.length === 0) return padHex("0x", { size: 32 });
+  if (isHex(t) && t.length === 66) return t as Hex;
+  const hex = isHex(t) ? (t as Hex) : stringToHex(t);
+  if ((hex.length - 2) / 2 > 32) {
+    throw new Error(`GMX dataList entry exceeds bytes32: ${t.slice(0, 32)}`);
+  }
+  return padHex(hex, { size: 32, dir: "right" });
 }
 
 export function encodeGmxDataList(entries: readonly string[]): Hex[] {

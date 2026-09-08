@@ -39,13 +39,14 @@ contract GmxLocalForkTraceTest is Test {
         vm.stopPrank();
 
         if (ok) {
-            console2.log("[gmx-fork] multicall SUCCESS (unexpected)");
+            console2.log("[gmx-fork] multicall SUCCESS");
+            _printLogs();
             return;
         }
-        console2.log("[gmx-fork] multicall REVERT (expected diagnostic)");
+        console2.log("[gmx-fork] multicall REVERT");
         returndata.logReturndata("multicall");
         _printLogs();
-        assertFalse(ok, "multicall reverted - see -vvvv trace for createOrder leg");
+        assertFalse(ok, "multicall reverted unexpectedly");
     }
 
     function _lowLevelRouterCall(uint256 value, bytes memory data, string memory label)

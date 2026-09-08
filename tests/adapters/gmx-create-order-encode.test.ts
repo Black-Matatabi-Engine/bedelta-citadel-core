@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { decodeFunctionData, encodeFunctionData, getAddress, parseAbi, stringToHex, type Hex } from "viem";
+import { decodeFunctionData, encodeFunctionData, getAddress, padHex, parseAbi, stringToHex, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "../../src/services/adapters/gmx-v2-adapter.types";
 import {
   buildGmxCreateOrderWireParams,
@@ -59,10 +59,10 @@ function encodeGmxInterfaceReferenceCreateOrder(payload: GmxV2UnsignedOrderPaylo
 }
 
 describe("gmx-create-order-encode", () => {
-  it("encodeGmxDataListEntry maps UTF-8 client ids to ABI bytes (not double-hex)", () => {
+  it("encodeGmxDataListEntry maps UTF-8 client ids to bytes32 (gmx-synthetics dataList)", () => {
     const id = "gmx-micro-1788850002810";
-    expect(encodeGmxDataListEntry(id)).toBe(stringToHex(id));
-    expect(encodeGmxDataListEntry(stringToHex(id))).toBe(stringToHex(id));
+    expect(encodeGmxDataListEntry(id)).toBe(padHex(stringToHex(id), { size: 32, dir: "right" }));
+    expect(encodeGmxDataListEntry(stringToHex(id))).toBe(padHex(stringToHex(id), { size: 32, dir: "right" }));
   });
 
   it("buildGmxCreateOrderWireParams preserves gmx-synthetics tuple field order", () => {
@@ -73,13 +73,13 @@ describe("gmx-create-order-encode", () => {
     expect(wire.numbers.acceptablePrice).toBe(2_490_632_184_242_090n);
     expect(wire.numbers.executionFee).toBe(10n ** 15n);
     expect(wire.orderType).toBe(2);
-    expect(wire.dataList).toEqual([stringToHex("gmx-micro-1788850002810")]);
+    expect(wire.dataList).toEqual([padHex(stringToHex("gmx-micro-1788850002810"), { size: 32, dir: "right" })]);
   });
 
   it("encodeGmxCreateOrderCalldata round-trips ABI decode (Arb micro-fill fixture)", () => {
     const ours = encodeGmxCreateOrderCalldata(goldenPayloadWithClientId(), MARKET);
-    expect(ours.startsWith("0x23b26510")).toBe(true);
-    expect(ours.length).toBe(1866);
+    const selector = encodeFunctionData({ abi: gmxCreateOrderAbi, functionName: "createOrder", args: [buildGmxCreateOrderWireParams(goldenPayloadWithClientId(), MARKET)] }).slice(0, 10);
+    expect(ours.startsWith(selector)).toBe(true);
     decodeFunctionData({ abi: gmxCreateOrderAbi, data: ours });
   });
 

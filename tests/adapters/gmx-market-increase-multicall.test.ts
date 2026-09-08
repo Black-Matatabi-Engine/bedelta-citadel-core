@@ -7,7 +7,7 @@ import {
   GMX_MARKET_INCREASE_MULTICALL_METHODS,
   GMX_ORDER_VAULT_ARBITRUM,
 } from "../../src/services/adapters/gmx-market-increase-multicall";
-import { stripGmxOnChainMetadata } from "../../src/services/adapters/gmx-create-order-encode";
+import { stripGmxOnChainMetadata, encodeGmxCreateOrderCalldata } from "../../src/services/adapters/gmx-create-order-encode";
 import { buildGmxRouterMulticall } from "../../src/services/adapters/gmx-micro-fill-multicall";
 import {
   GMX_USDC_ARBITRUM,
@@ -76,7 +76,7 @@ describe("gmx-market-increase-multicall", () => {
     const { data, value } = encodeGmxExchangeRouterMulticall(calls, msgValue);
     expect(value).toBe(EXECUTION_FEE);
     expect(data.startsWith("0xac9650d8")).toBe(true);
-    expect(legs.createOrder.startsWith("0x23b26510")).toBe(true);
+    expect(legs.createOrder).toBe(encodeGmxCreateOrderCalldata(payload, MARKET));
   });
 
   it("buildGmxRouterMulticall enforces Arbitrum USDC 10_000_000 raw collateral SSOT", () => {
