@@ -224,7 +224,7 @@ describe("gmx-error-isolated-probe", () => {
     expect(result.legs.length).toBeGreaterThanOrEqual(5);
     expect(result.failingLeg).toBeDefined();
     expect(formatGmxIsolatedProbeResult(result)).toContain("Leg probes");
-    expect(client.call.mock.calls.length).toBeGreaterThan(3);
+    expect(vi.mocked(client.call).mock.calls.length).toBeGreaterThan(3);
   });
 
   it("reports all OK when every leg succeeds", async () => {
