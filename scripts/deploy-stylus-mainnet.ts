@@ -21,7 +21,7 @@ function run(cmd: string, args: string[], cwd = STYLUS_DIR, env = process.env): 
 }
 
 function stylusEnv(rpc: string): NodeJS.ProcessEnv {
-  return { ...process.env, STYLUS_ENDPOINT: rpc, RPC_URL: rpc };
+  return { ...process.env, STYLUS_ENDPOINT: rpc, STYLUS_RPC_URL: rpc, RPC_URL: rpc };
 }
 
 function armed(): boolean {
@@ -53,26 +53,24 @@ function verifyCompileChain(): void {
 }
 
 function verifyStylusCheck(rpc: string): void {
-  const which = run("bash", ["-lc", "command -v cargo-stylus || rustup run 1.91 cargo stylus --version"]);
-  if (!which.ok) {
+  const version = run("cargo", ["stylus", "--version"]);
+  if (!version.ok) {
     console.warn("[stylus:mainnet] cargo-stylus CLI unavailable — compile chain verified; install cargo-stylus for on-chain check");
     return;
   }
-  const stylusBin = which.output.split("\n")[0]?.includes("cargo stylus")
-    ? "rustup run 1.91 cargo stylus"
-    : "cargo-stylus";
-  const check = run("bash", ["-lc", `${stylusBin} check --endpoint '${rpc}'`], STYLUS_DIR, stylusEnv(rpc));
+  const cargo = "cargo";
+  const check = run(cargo, ["stylus", "check", "--endpoint", rpc], STYLUS_DIR, stylusEnv(rpc));
   if (!check.ok) {
     console.error("[stylus:mainnet] cargo stylus check FAILED\n", check.output);
     process.exit(1);
   }
-  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, endpoint: rpc });
+  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, endpoint: rpc, cli: version.output.split("\n")[0] });
 }
 
 function deployStylus(rpc: string, pk: string): void {
   const deploy = run(
-    "bash",
-    ["-lc", `rustup run 1.91 cargo stylus deploy --endpoint '${rpc}' --private-key ${pk} --no-verify`],
+    "cargo",
+    ["stylus", "deploy", "--endpoint", rpc, "--private-key", pk, "--no-verify"],
     STYLUS_DIR,
     stylusEnv(rpc),
   );

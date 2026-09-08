@@ -44,6 +44,22 @@ export function shouldBypassOracleLagDeadlock(): boolean {
   return allow === "true" || allow === "1" || bypassSoil === "true";
 }
 
+export function shouldBypassSoftConfirmationProbe(): boolean {
+  return shouldBypassOracleLagDeadlock();
+}
+
+export function filterSoftConfirmationProbeReasons(reasons: readonly string[]): string[] {
+  if (!shouldBypassSoftConfirmationProbe()) return [...reasons];
+  return reasons.filter(
+    (r) =>
+      !r.includes("SOFT_CONFIRMATION_PROBE_MISSING") &&
+      !r.includes("SOFT_CONFIRMATION_PROBE_STALE") &&
+      !r.includes("SOFT_CONFIRMATION_DRIFT") &&
+      !r.includes("SOFT_CONFIRMATION_RPC_FAIL") &&
+      !r.includes("SOFT_CONFIRMATION"),
+  );
+}
+
 export function filterOracleLagDeadlockReasons(reasons: readonly string[]): string[] {
   if (!shouldBypassOracleLagDeadlock()) return [...reasons];
   return reasons.filter((r) => !r.includes("ORACLE_LAG_DEADLOCK") && !r.includes("ORACLE_LAG:"));

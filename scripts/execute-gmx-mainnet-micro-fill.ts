@@ -31,7 +31,7 @@ import {
 } from "./gmx-micro-fill-calibration";
 import { computeGmxPoolImbalanceRatio } from "../src/adapters/gmx/gmx-v2-invariants";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
-import { resolveSoilMinDepthUsd, shouldBypassOracleLagDeadlock } from "../src/core/soil-resistance-core";
+import { resolveSoilMinDepthUsd, shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -94,8 +94,9 @@ async function main(): Promise<void> {
   try { loadEnvProduction(); } catch { /* optional */ }
   const minDepthUsd = resolveSoilMinDepthUsd({});
   const argv = process.argv.slice(2);
-  const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock();
-  const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true";
+  const probeBypass = shouldBypassSoftConfirmationProbe();
+  const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
+  const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true" || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
   const sizeUsd = parseMicroFillSize(argv);
   const symbol = (argv.find((a, i) => argv[i - 1] === "--symbol") ?? "ETH").toUpperCase();
@@ -105,8 +106,8 @@ async function main(): Promise<void> {
   await Promise.all([refreshSequencerGuard(), refreshArbitrumGasGuard({ targetYieldUsd: sizeUsd * 0.001 })]);
   const guardVerdict = validateGmxExecutionGuards(staleOracleOk);
   if (!guardVerdict.ok) throw new Error(`GUARD_BLOCKED:${guardVerdict.reasons.join("|")}`);
-  if (staleOracleOk) {
-    console.warn("[gmx-micro-fill] ORACLE_LAG_DEADLOCK bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
+  if (staleOracleOk || probeBypass) {
+    console.warn("[gmx-micro-fill] probe bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
   }
 
   const market = await loadMarketSnapshot(symbol);
@@ -114,7 +115,7 @@ async function main(): Promise<void> {
   let side: "long" | "short";
   let guard: ReturnType<typeof calibrateMicroFillExecution>["guard"];
   try {
-    ({ side, guard } = calibrateMicroFillExecution({ market, sizeUsd, preferredSide, bypassSoil: bypassSoil && !armed() }));
+    ({ side, guard } = calibrateMicroFillExecution({ market, sizeUsd, preferredSide, bypassSoil }));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.log(JSON.stringify({
@@ -150,7 +151,7 @@ async function main(): Promise<void> {
   });
   console.log("[gmx-micro-fill] preflight OK", {
     sizeUsd, side, preferredSide, balanced: side !== preferredSide ? "flipped" : "kept",
-    minDepthUsd, oracleLagBypass: staleOracleOk, imbalanceOk: guard.imbalanceOk, soilOk: guard.soilOk,
+    minDepthUsd, oracleLagBypass: staleOracleOk, softConfirmBypass: probeBypass, imbalanceOk: guard.imbalanceOk, soilOk: guard.soilOk,
     policyGuard: POLICY_GUARD, payloadHash,
   });
 

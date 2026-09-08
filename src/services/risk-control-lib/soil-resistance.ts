@@ -7,6 +7,8 @@ import { applySoilTripSeverance } from "../../core/risk-severance";
 import {
   commitProtocolMaskScratch,
   seedProtocolMaskScratch,
+  shouldBypassOracleLagDeadlock,
+  shouldBypassSoftConfirmationProbe,
 } from "../../core/soil-resistance-core";
 import { emitRiskLog, formatTripReasons, isoNow } from "./logging";
 import {
@@ -74,8 +76,10 @@ function collectExternalSoilFlags(
   if (!isSequencerSafe(atMs)) scratch.flags |= SOIL_REASON_SEQUENCER_UNSAFE;
   if (!isArbitrumStatusSequencerHealthy(atMs)) scratch.flags |= SOIL_REASON_STATUS_ANOMALY;
   if (!isRpcRadarSequencerHealthy(atMs)) scratch.flags |= SOIL_REASON_RPC_OUTAGE;
-  if (isArbitrumGasGuardBlocked()) scratch.flags |= SOIL_REASON_GAS_GUARD;
-  if (!isSoftConfirmationSafe(atMs)) scratch.flags |= SOIL_REASON_SOFT_CONFIRMATION;
+  if (isArbitrumGasGuardBlocked() && !shouldBypassOracleLagDeadlock()) scratch.flags |= SOIL_REASON_GAS_GUARD;
+  if (!shouldBypassSoftConfirmationProbe() && !isSoftConfirmationSafe(atMs)) {
+    scratch.flags |= SOIL_REASON_SOFT_CONFIRMATION;
+  }
 
   if (input.crossSpread) {
     const spreadGate = evaluateCrossSpreadSoilGate(input.crossSpread);

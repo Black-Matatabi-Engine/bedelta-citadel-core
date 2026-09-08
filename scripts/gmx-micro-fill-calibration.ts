@@ -1,5 +1,6 @@
 /** GMX v2 mainnet micro-fill calibration — balanced side + guard preflight. */
 import { evaluateGmxV2PoolGuard, verifyGmxPoolImbalance } from "../src/adapters/gmx/gmx-v2-invariants";
+import { filterSoftConfirmationProbeReasons } from "../src/core/soil-resistance-core";
 import type { GmxV2PoolWeights } from "../src/services/yield/gmx-v2-price-impact";
 
 export const MICRO_FILL_MIN_SIZE_USD = 1;
@@ -57,7 +58,10 @@ export function evaluateMicroFillGuard(input: {
   });
   if (bypassSoil && !guard.imbalanceOk) return guard;
   if (bypassSoil && guard.imbalanceOk) {
-    return { ...guard, ok: true, status: "ALLOW", reasons: guard.reasons.filter((r) => !r.includes("SOIL")), soilOk: true };
+    const reasons = filterSoftConfirmationProbeReasons(
+      guard.reasons.filter((r) => !r.includes("SOIL_RESISTANCE_TRIP") && !r.includes("DEPTH_USD")),
+    );
+    return { ...guard, ok: true, status: "ALLOW", reasons, soilOk: true };
   }
   return guard;
 }
