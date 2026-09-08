@@ -9,8 +9,8 @@ import { existsSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import type { Hex } from "viem";
-import { deployStylusWasmViaViem, resolveStylusDeployFees } from "../src/services/adapters/stylus-viem-deploy";
-import { loadWasmInitcode } from "../src/services/adapters/stylus-wasm-initcode";
+import { deployStylusWasmViaViem, resolveExistingStylusAddress, resolveStylusDeployFees } from "../src/services/adapters/stylus-viem-deploy";
+import { loadProjectInitcode } from "../src/services/adapters/stylus-wasm-initcode";
 import { createPublicClient, http } from "viem";
 import { arbitrum } from "viem/chains";
 import { loadEnvProduction } from "./_shared/mainnet-env";
@@ -65,12 +65,7 @@ function verifyStylusCheck(rpc: string): void {
     console.warn("[stylus:mainnet] cargo-stylus CLI unavailable — compile chain verified; install cargo-stylus for on-chain check");
     return;
   }
-  const check = run(
-    "cargo",
-    ["stylus", "check", "--endpoint", rpc, "--wasm-file", WASM_PATH],
-    STYLUS_DIR,
-    stylusEnv(rpc),
-  );
+  const check = run("cargo", ["stylus", "check", "--endpoint", rpc], STYLUS_DIR, stylusEnv(rpc));
   if (!check.ok) {
     console.error("[stylus:mainnet] cargo stylus check FAILED\n", check.output);
     process.exit(1);
@@ -91,28 +86,32 @@ async function main(): Promise<void> {
 
   const client = createPublicClient({ chain: arbitrum, transport: http(rpc) });
   const fees = await resolveStylusDeployFees(client);
-  const initcode = loadWasmInitcode(WASM_PATH);
+  const initcode = loadProjectInitcode(STYLUS_DIR);
+  const existing = resolveExistingStylusAddress();
   console.log("[stylus:mainnet] gas quote", {
     maxFeePerGas: fees.maxFeePerGas.toString(),
     maxPriorityFeePerGas: fees.maxPriorityFeePerGas.toString(),
     initcodeBytes: (initcode.length - 2) / 2,
-    buffer: "max(rpcMax×2, 0.15 gwei) cap; priority min(0.01 gwei, maxFee/10)",
+    activateOnly: existing ?? null,
+    buffer: "max(rpcMax×2, 0.15 gwei) cap; priority min(0.01 gwei, maxFee/10); activate via cargo-stylus",
   });
 
   if (!armed()) {
     console.log("[stylus:mainnet] dry-run — set CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x… to deploy");
     return;
   }
-  const result = await deployStylusWasmViaViem({ rpc, privateKey: resolvePk(), wasmPath: WASM_PATH });
+  const result = await deployStylusWasmViaViem({
+    rpc, privateKey: resolvePk(), stylusProjectDir: STYLUS_DIR, existingContractAddress: existing,
+  });
   console.log("[stylus:mainnet] Stylus Deployed Contract Address:", result.contractAddress);
-  console.log("[stylus:mainnet] Deployment Transaction Hash:", result.deployTxHash);
+  if (result.deployTxHash) console.log("[stylus:mainnet] Deployment Transaction Hash:", result.deployTxHash);
   console.log("[stylus:mainnet] Activation Transaction Hash:", result.activateTxHash);
   console.log("[stylus:mainnet] deploy broadcast OK", {
     chainId: CHAIN_ID,
     contract: result.contractAddress,
     tx: result.deployTxHash,
     activateTx: result.activateTxHash,
-    arbiscan: `https://arbiscan.io/tx/${result.deployTxHash}`,
+    arbiscan: result.deployTxHash ? `https://arbiscan.io/tx/${result.deployTxHash}` : null,
   });
 }
 
