@@ -1,9 +1,14 @@
 /** GMX v2 micro-fill router encoder — acceptablePrice (1% slip) + ExchangeRouter multicall. */
-import { encodeFunctionData, getAddress, parseAbi, toHex, type Hex } from "viem";
+import { encodeFunctionData, getAddress, maxUint256, parseAbi, toHex, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
+import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
+import { GMX_USDC_ARBITRUM } from "./gmx-v2-order-payload-constants";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
 
 export const GMX_ORDER_VAULT_ARBITRUM = getAddress("0x31eF83a530Fde1B38EE9A18093A333D8Bbbc40D5");
+/** ExchangeRouter — ERC20 allowance spender for sendTokens → OrderVault. */
+export const GMX_COLLATERAL_SPENDER_ARBITRUM = getAddress(GMX_V2_EXCHANGE_ROUTER_ARBITRUM);
+export { GMX_USDC_ARBITRUM };
 export const GMX_ORACLE_TICKERS_URL = "https://arbitrum-api.gmxinfra.io/prices/tickers";
 export const MICRO_FILL_SLIPPAGE_BPS = 100;
 const ETH_INDEX_DECIMALS = 18;
@@ -55,6 +60,32 @@ export function applyMicroFillOrderPricing(
       triggerPrice: "0",
     },
   };
+}
+
+const erc20ApproveAbi = parseAbi([
+  "function allowance(address owner, address spender) view returns (uint256)",
+  "function approve(address spender, uint256 amount) returns (bool)",
+]);
+
+export function encodeGmxCollateralApprove(amount: bigint = maxUint256): Hex {
+  return encodeFunctionData({
+    abi: erc20ApproveAbi,
+    functionName: "approve",
+    args: [GMX_COLLATERAL_SPENDER_ARBITRUM, amount],
+  });
+}
+
+export async function readGmxCollateralAllowance(
+  client: { readContract: (args: object) => Promise<unknown> },
+  owner: Hex,
+  token: Hex,
+): Promise<bigint> {
+  return client.readContract({
+    address: token,
+    abi: erc20ApproveAbi,
+    functionName: "allowance",
+    args: [owner, GMX_COLLATERAL_SPENDER_ARBITRUM],
+  }) as Promise<bigint>;
 }
 
 const gmxRouterAbi = parseAbi([

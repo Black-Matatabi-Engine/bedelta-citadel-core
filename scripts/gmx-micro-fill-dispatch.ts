@@ -1,18 +1,22 @@
 /** Live GMX micro-fill dispatch — ZeroDev Kernel UserOp with EOA router fallback. */
 import { createKernelAccountClient, createZeroDevPaymasterClient } from "@zerodev/sdk";
 import {
-  createPublicClient, createWalletClient, getAddress, http, parseAbi, type Hex,
+  createPublicClient, createWalletClient, getAddress, http, maxUint256, parseAbi, type Hex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type { Chain } from "viem/chains";
 import type { SmartAccount } from "viem/account-abstraction";
 import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-constants";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../src/config/gmx-revenue";
-import { GMX_USDC_ARBITRUM } from "../src/services/adapters/gmx-v2-order-payload-constants";
-import { encodeGmxV2RouterCreateOrderMulticall, bindGmxOrderReceiver } from "../src/services/adapters/gmx-micro-fill-router-encode";
+import {
+  encodeGmxCollateralApprove,
+  encodeGmxV2RouterCreateOrderMulticall,
+  bindGmxOrderReceiver,
+  GMX_COLLATERAL_SPENDER_ARBITRUM,
+  readGmxCollateralAllowance,
+} from "../src/services/adapters/gmx-micro-fill-router-encode";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 
-export const GMX_ROUTER_ARBITRUM = getAddress("0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6");
 export const WETH_ARBITRUM = getAddress("0x82aF49447D8a07e3bd95BD0d56f35241523fBab1");
 
 /** BigInt-safe USD→WETH wei (avoids JS `* 1e18` precision loss above MAX_SAFE_INTEGER). */
@@ -122,10 +126,48 @@ export async function ensureTokenAllowance(input: {
   const wallet = createWalletClient({
     account: privateKeyToAccount(input.pk), chain: input.chain, transport: http(input.rpc),
   });
-  const approveAmount = allowance > 0n ? input.amount : (2n ** 256n - 1n);
-  return wallet.writeContract({
-    address: input.token, abi: erc20Abi, functionName: "approve", args: [input.spender, approveAmount],
+  const fees = await resolveBufferedEip1559Fees(input.client);
+  const approveTx = await wallet.writeContract({
+    address: input.token,
+    abi: erc20Abi,
+    functionName: "approve",
+    args: [input.spender, maxUint256],
+    maxFeePerGas: fees.maxFeePerGas,
+    maxPriorityFeePerGas: fees.maxPriorityFeePerGas,
   });
+  const receipt = await input.client.waitForTransactionReceipt({ hash: approveTx });
+  if (receipt.status !== "success") throw new Error(`GMX approve reverted: ${approveTx}`);
+  console.log("[gmx-micro-fill] collateral approve confirmed", {
+    token: input.token, spender: input.spender, block: receipt.blockNumber.toString(), tx: approveTx,
+  });
+  return approveTx;
+}
+
+async function ensureCollateralAllowanceForOwner(input: {
+  client: ReturnType<typeof createPublicClient>;
+  owner: Hex;
+  token: Hex;
+  required: bigint;
+  pk?: Hex;
+  chain: Chain;
+  rpc: string;
+}): Promise<KernelCall | null> {
+  const allowance = await readGmxCollateralAllowance(input.client, input.owner, input.token);
+  if (allowance >= input.required) return null;
+  if (input.pk) {
+    await ensureTokenAllowance({
+      client: input.client,
+      token: input.token,
+      owner: input.owner,
+      spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
+      amount: input.required,
+      pk: input.pk,
+      chain: input.chain,
+      rpc: input.rpc,
+    });
+    return null;
+  }
+  return { to: input.token, value: 0n, data: encodeGmxCollateralApprove() };
 }
 
 export async function dispatchGmxRouterViaEoa(input: {
@@ -162,14 +204,15 @@ export async function dispatchGmxRouterViaEoa(input: {
       throw new Error(`GMX_COLLATERAL_INSUFFICIENT:${tokenBal}<${router.collateral}`);
     }
   }
-  const approveTx = await ensureTokenAllowance({
-    client: input.client, token: collateralToken, owner: account.address, spender: GMX_ROUTER_ARBITRUM,
-    amount: router.collateral, pk: input.pk, chain: input.chain, rpc: input.rpc,
+  await ensureCollateralAllowanceForOwner({
+    client: input.client,
+    owner: account.address,
+    token: collateralToken,
+    required: router.collateral,
+    pk: input.pk,
+    chain: input.chain,
+    rpc: input.rpc,
   });
-  if (approveTx) {
-    const approveRcpt = await input.client.waitForTransactionReceipt({ hash: approveTx });
-    console.log("[gmx-micro-fill] collateral approve OK", { token: collateralToken, tx: approveTx, status: approveRcpt.status, url: `https://arbiscan.io/tx/${approveTx}` });
-  }
   return sendRouterTx({
     wallet, client: input.client, account, chain: input.chain, value: router.value, data: router.data,
   });
@@ -189,7 +232,16 @@ export async function dispatchGmxMicroFillLive(input: {
 }): Promise<{ tx: Hex; mode: "zerodev" | "eoa" }> {
   const router = encodeGmxV2RouterCreateOrderMulticall(input.payload);
   const routerCall: KernelCall = { to: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, value: router.value, data: router.data };
-  const calls = [...input.preCalls, routerCall];
+  const collateralToken = getAddress(input.payload.addresses.initialCollateralToken as Hex);
+  const approveCall = await ensureCollateralAllowanceForOwner({
+    client: input.client,
+    owner: input.kernel.address,
+    token: collateralToken,
+    required: router.collateral,
+    chain: input.chain,
+    rpc: input.rpc,
+  });
+  const calls = [...input.preCalls, ...(approveCall ? [approveCall] : []), routerCall];
 
   if (input.forceEoa || input.preCalls.length === 0) {
     const tx = await dispatchGmxRouterViaEoa({

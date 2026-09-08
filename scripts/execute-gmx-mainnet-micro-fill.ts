@@ -37,6 +37,7 @@ import {
   oracleHumanUsdFromTicker,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
 import { dispatchGmxMicroFillLive, type KernelCall, usdToWethWei, WETH_ARBITRUM } from "./gmx-micro-fill-dispatch";
+import { GMX_USDC_ARBITRUM, readGmxCollateralAllowance, GMX_COLLATERAL_SPENDER_ARBITRUM } from "../src/services/adapters/gmx-micro-fill-router-encode";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -223,6 +224,18 @@ async function main(): Promise<void> {
     acceptablePrice: livePayload.numbers.acceptablePrice,
     minOutputAmount: livePayload.numbers.minOutputAmount,
   });
+  const collateralToken = getAddress(livePayload.addresses.initialCollateralToken as Hex);
+  const requiredCollateral = BigInt(livePayload.numbers.initialCollateralDeltaAmount);
+  if (collateralToken === getAddress(GMX_USDC_ARBITRUM)) {
+    const allowance = await readGmxCollateralAllowance(client, kernel.address, collateralToken);
+    console.log("[gmx-micro-fill] USDC allowance preflight", {
+      owner: kernel.address,
+      spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
+      allowance: allowance.toString(),
+      required: requiredCollateral.toString(),
+      needsApprove: allowance < requiredCollateral,
+    });
+  }
   const preCalls: KernelCall[] = [{
     to: POLICY_GUARD, value: 0n,
     data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n] }),
