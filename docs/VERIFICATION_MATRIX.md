@@ -66,7 +66,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | **Deployed & activated** `0xc23587d6573dd134f95b02b0202ffbf84686625e` · Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + ArbWasm `0x71` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
 | **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
 | **GMX GM Pool deposit** | `pnpm execute:gmx:gm-deposit` | **Verified Live** — `sendWnt → sendTokens → createDeposit` · ExchangeRouter `0x7dE39…83f1` · ETH/USDC GM `0x70d955…6336` | [`scripts/execute-gmx-mainnet-gm-deposit.ts`](../scripts/execute-gmx-mainnet-gm-deposit.ts) · Live: `CONFIRM_GMX_GM_DEPOSIT=YES BROADCAST=1 MAINNET_PK=0x…` |
-| **GMX GM Pool withdraw** | `pnpm execute:gmx:gm-withdraw` | **Verified Live** — dual GM LP approve (ExchangeRouter + Synthetics Router `0xaBBc7805…`) · `sendWnt → sendTokens(GM) → createWithdrawal` | [`scripts/execute-gmx-mainnet-gm-withdraw.ts`](../scripts/execute-gmx-mainnet-gm-withdraw.ts) · Live: `CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x…` |
+| **GMX GM Pool withdraw** | `pnpm execute:gmx:gm-withdraw` | **Verified Live** — GM LP approve → GMX v2 Router `0x7452c558…` · `sendWnt → sendTokens(GM) → createWithdrawal` | [`scripts/execute-gmx-mainnet-gm-withdraw.ts`](../scripts/execute-gmx-mainnet-gm-withdraw.ts) · Live: `CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x…` |
 
 ### GMX GM Pool I/O Channel (Arbitrum One · 42161) — Verified Live
 
@@ -76,10 +76,10 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 |-------|-------|
 | **Channel Status** | **CLOSED** — GM Pool I/O (`execute:gmx:gm-deposit` · `execute:gmx:gm-withdraw`) |
 | **ExchangeRouter** | [`0x7dE39FF2e232A2203196788d37e234cF8F1b83f1`](https://arbiscan.io/address/0x7dE39FF2e232A2203196788d37e234cF8F1b83f1) |
-| **Synthetics Router (GM LP spender)** | [`0xaBBc7805d812eA10e7D47d54169b8922596f9a0c`](https://arbiscan.io/address/0xaBBc7805d812eA10e7D47d54169b8922596f9a0c) |
+| **GMX v2 Router (GM LP spender)** | [`0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6`](https://arbiscan.io/address/0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6) |
 | **GM Deposit Multicall Tx** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** · **Success** |
-| **GM Synthetics Router Approve Tx** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Block **503038459** · **Success** |
-| **GM Withdraw Multicall Tx** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block **503038714** · **Success** |
+| **GM Router Approve Tx** | [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Block **503051738** · **Success** |
+| **GM Withdraw Multicall Tx** | [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · Block **503051752** · **Success** |
 | **DepositVault** | `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` |
 | **WithdrawalVault** | `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` |
 | **GM Market (ETH/USDC)** | `0x70d95587d40a2caf56bd97485ab3eec10bee6336` |
@@ -146,8 +146,8 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **GM Pool I/O Channel Status** | **CLOSED** — deposit + withdraw ExchangeRouter multicall **Verified Live** on `42161` |
 | **GM Deposit Multicall Tx** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** |
-| **GM Synthetics Router Approve Tx** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Block **503038459** |
-| **GM Withdraw Multicall Tx** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block **503038714** |
+| **GM Router Approve Tx** | [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Block **503051738** |
+| **GM Withdraw Multicall Tx** | [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · Block **503051752** |
 | **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
 
 ### [POLICYGUARD_MAINNET_ANCHOR]

@@ -2,6 +2,8 @@
 export {
   GMX_GM_ETH_USDC_MARKET,
   GMX_GM_WITHDRAW_MULTICALL_METHODS,
+  GMX_GM_WITHDRAW_TOKEN_SPENDERS,
+  GMX_SYNTHETICS_ROUTER_ARBITRUM,
   GMX_WITHDRAWAL_VAULT_ARBITRUM,
 } from "./gmx-gm-withdraw-constants";
 export {
@@ -18,9 +20,11 @@ export {
   resolveGmxGmWithdrawMarket,
   stripGmxGmWithdrawOnChainMetadata,
 } from "./gmx-gm-withdraw-encode";
+export * from "./gmx-gm-withdraw-allowance";
 export {
   assertGmxGmWithdrawMulticallLegs,
   buildGmxGmWithdrawMulticallCalls,
+  buildGmxGmWithdrawMulticallLegs,
   buildGmxGmWithdrawRouterMulticall,
   buildGmxGmWithdrawTokenTransfers,
   decodeGmxGmWithdrawMulticallLegs,

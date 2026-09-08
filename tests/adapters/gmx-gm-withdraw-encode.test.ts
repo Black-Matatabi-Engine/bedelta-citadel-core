@@ -9,6 +9,7 @@ import {
 import {
   GMX_GM_ETH_USDC_MARKET,
   GMX_GM_WITHDRAW_MULTICALL_METHODS,
+  GMX_GM_WITHDRAW_TOKEN_SPENDERS,
   GMX_WITHDRAWAL_VAULT_ARBITRUM,
 } from "../../src/services/adapters/gmx-gm-withdraw-constants";
 import {
@@ -38,6 +39,11 @@ function encodeGmxReferenceCreateWithdrawal(payload: ReturnType<typeof buildGmxG
 }
 
 describe("gmx-gm-withdraw-encode", () => {
+  it("GMX_GM_WITHDRAW_TOKEN_SPENDERS targets GMX v2 Router for sendTokens", () => {
+    expect(GMX_GM_WITHDRAW_TOKEN_SPENDERS).toContain("0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6");
+    expect(GMX_GM_WITHDRAW_TOKEN_SPENDERS).toHaveLength(1);
+  });
+
   it("buildGmxCreateWithdrawalWireParams aligns ETH/USDC GM market", () => {
     const payload = buildGmxGmWithdrawGmAmountPayload({
       receiver: USER,
@@ -96,6 +102,7 @@ describe("gmx-gm-withdraw-encode", () => {
     });
     const { calls, data, value, executionFee, marketTokenAmount } = buildGmxGmWithdrawRouterMulticall(payload, MARKET);
     expect(calls).toHaveLength(GMX_GM_WITHDRAW_MULTICALL_METHODS.length);
+    expect(GMX_GM_WITHDRAW_MULTICALL_METHODS).toEqual(["sendWnt", "sendTokens", "createWithdrawal"]);
     expect(value).toBe(executionFee);
     expect(marketTokenAmount).toBe(GM_HALF);
     expect(data.startsWith("0xac9650d8")).toBe(true);

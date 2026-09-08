@@ -18,6 +18,12 @@ import type { GmxGmWithdrawTokenTransfer, GmxGmWithdrawUnsignedPayload } from ".
 import { GMX_ZERO_ADDRESS } from "./gmx-v2-order-payload-constants";
 import { encodeGmxExchangeRouterMulticall } from "./gmx-market-increase-multicall";
 
+export {
+  encodeGmxGmWithdrawApprove,
+  ensureGmxGmWithdrawAllowance,
+  readGmxGmWithdrawAllowance,
+} from "./gmx-gm-withdraw-allowance";
+
 const gmxWithdrawRouterAbi = parseAbi([
   "function multicall(bytes[] data) payable returns (bytes[])",
   "function sendWnt(address receiver, uint256 amount) payable",
@@ -59,7 +65,8 @@ function encodeWithdrawLeg(t: GmxGmWithdrawTokenTransfer): Hex {
   });
 }
 
-export function buildGmxGmWithdrawMulticallCalls(input: {
+/** Build 3-leg withdraw multicall: sendWnt → sendTokens(GM) → createWithdrawal. */
+export function buildGmxGmWithdrawMulticallLegs(input: {
   payload: GmxGmWithdrawUnsignedPayload;
   market?: Hex;
   withdrawalVault?: Hex;
@@ -77,6 +84,14 @@ export function buildGmxGmWithdrawMulticallCalls(input: {
   const calls: Hex[] = transfers.map(encodeWithdrawLeg);
   calls.push(encodeGmxCreateWithdrawalCalldata(input.payload, input.market));
   return { calls, msgValue, executionFee, marketTokenAmount };
+}
+
+export function buildGmxGmWithdrawMulticallCalls(input: {
+  payload: GmxGmWithdrawUnsignedPayload;
+  market?: Hex;
+  withdrawalVault?: Hex;
+}): { calls: Hex[]; msgValue: bigint; executionFee: bigint; marketTokenAmount: bigint } {
+  return buildGmxGmWithdrawMulticallLegs(input);
 }
 
 export function decodeGmxGmWithdrawMulticallLegs(calls: readonly Hex[]): GmxGmWithdrawMulticallLegs {
@@ -135,10 +150,7 @@ export function buildGmxGmWithdrawRouterMulticall(payload: GmxGmWithdrawUnsigned
   executionFee: bigint;
   marketTokenAmount: bigint;
 } {
-  const { calls, msgValue, executionFee, marketTokenAmount } = buildGmxGmWithdrawMulticallCalls({
-    payload,
-    market,
-  });
+  const { calls, msgValue, executionFee, marketTokenAmount } = buildGmxGmWithdrawMulticallLegs({ payload, market });
   assertGmxGmWithdrawMulticallLegs({
     calls,
     withdrawalVault: GMX_WITHDRAWAL_VAULT_ARBITRUM,

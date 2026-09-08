@@ -4,6 +4,7 @@
  * Dry-run default. Live: CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x… [--amount=100 --gm-price=1.05]
  */
 import { createPublicClient, createWalletClient, getAddress, http, parseAbi, type Hex } from "viem";
+import { mkdirSync, writeFileSync } from "node:fs";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../src/config/gmx-revenue";
@@ -11,11 +12,13 @@ import { GMX_ETH_USD_MARKET_TOKEN } from "../src/config/gmx-markets";
 import {
   buildGmxGmWithdrawGmAmountPayload,
   buildGmxGmWithdrawRouterMulticall,
+  auditGmxGmWithdrawAllowances,
+  ensureGmxGmWithdrawAllowance,
   GMX_GM_ETH_USDC_MARKET,
+  GMX_GM_WITHDRAW_TOKEN_SPENDERS,
   stripGmxGmWithdrawOnChainMetadata,
 } from "../src/services/adapters/gmx-gm-withdraw-router-encode";
 import { toGmxGmToken18 } from "../src/services/adapters/gmx-v2-order-payload-builder-helpers";
-import { ensureGmxCollateralAllowance } from "../src/services/adapters/gmx-micro-fill-router-encode";
 import { isBypassSimulationEnabled } from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
 import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
@@ -28,6 +31,7 @@ const CHAIN_ID = 42161;
 const DEFAULT_RPC = "https://arb1.arbitrum.io/rpc";
 const DEFAULT_AMOUNT_USD = 100;
 const routerAbi = parseAbi(["function multicall(bytes[] data) payable returns (bytes[])"]);
+const erc20BalAbi = parseAbi(["function balanceOf(address account) view returns (uint256)"]);
 
 const truthy = (v: string | undefined): boolean => {
   const t = (v ?? "").trim().toLowerCase();
@@ -77,6 +81,9 @@ function resolveGmTokenAmount(argv: string[], amountUsd: number): bigint {
   }
   return BigInt(toGmxGmToken18(amountUsd / gmPrice));
 }
+function parseExecutionFeeWei(argv: string[]): string | undefined {
+  return readFlag(argv, "--execution-fee") ?? process.env.GMX_GM_WITHDRAW_EXECUTION_FEE;
+}
 function validateGuards(staleOracleOk: boolean): { ok: boolean; reasons: string[] } {
   if (bypassGasGuard()) {
     console.warn("[gmx-gm-withdraw] BYPASS_GAS_GUARD=true — skipping Arbitrum gas guard");
@@ -85,12 +92,59 @@ function validateGuards(staleOracleOk: boolean): { ok: boolean; reasons: string[
   return validateGmxExecutionGuards(staleOracleOk);
 }
 
+async function capWithdrawToGmBalance(
+  client: ReturnType<typeof createPublicClient>,
+  receiver: Hex,
+  market: Hex,
+  gmTokenAmount: bigint,
+  amountUsd: number,
+  staleOracleOk: boolean,
+  probeBypass: boolean,
+  executionFeeWei?: string,
+) {
+  let payload = stripGmxGmWithdrawOnChainMetadata(
+    buildGmxGmWithdrawGmAmountPayload({
+      receiver,
+      gmTokenAmount,
+      sizeUsd: amountUsd,
+      marketToken: market,
+      executionFeeWei,
+      skipFailClosedGuards: staleOracleOk || probeBypass,
+      allowStaleOracle: staleOracleOk,
+    }),
+  );
+  let built = buildGmxGmWithdrawRouterMulticall(payload, market);
+  const gmBal = await client.readContract({
+    address: market,
+    abi: erc20BalAbi,
+    functionName: "balanceOf",
+    args: [receiver],
+  });
+  if (built.marketTokenAmount > gmBal) {
+    console.warn(`[gmx-gm-withdraw] capping gmTokenAmount ${built.marketTokenAmount} → on-chain balance ${gmBal}`);
+    payload = stripGmxGmWithdrawOnChainMetadata(
+      buildGmxGmWithdrawGmAmountPayload({
+        receiver,
+        gmTokenAmount: gmBal,
+        sizeUsd: amountUsd,
+        marketToken: market,
+        executionFeeWei,
+        skipFailClosedGuards: staleOracleOk || probeBypass,
+        allowStaleOracle: staleOracleOk,
+      }),
+    );
+    built = buildGmxGmWithdrawRouterMulticall(payload, market);
+  }
+  return built;
+}
+
 async function main(): Promise<void> {
   try { loadEnvProduction(); } catch { /* optional */ }
   const argv = process.argv.slice(2);
   const rpc = resolveRpc();
   const amountUsd = parseAmountUsd(argv);
   const gmTokenAmount = resolveGmTokenAmount(argv, amountUsd);
+  const executionFeeWei = parseExecutionFeeWei(argv);
   const probeBypass = shouldBypassSoftConfirmationProbe();
   const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
@@ -108,17 +162,12 @@ async function main(): Promise<void> {
   const market = getAddress(GMX_ETH_USD_MARKET_TOKEN);
   if (market !== GMX_GM_ETH_USDC_MARKET) throw new Error(`GMX_GM_MARKET_MISMATCH: ${market}`);
   const receiver = armed() ? privateKeyToAccount(resolvePk()).address : getAddress("0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F");
-  const payload = stripGmxGmWithdrawOnChainMetadata(
-    buildGmxGmWithdrawGmAmountPayload({
-      receiver,
-      gmTokenAmount,
-      sizeUsd: amountUsd,
-      marketToken: market,
-      skipFailClosedGuards: staleOracleOk || probeBypass,
-      allowStaleOracle: staleOracleOk,
-    }),
+  let { calls, data, value, executionFee, marketTokenAmount } = await capWithdrawToGmBalance(
+    client, receiver, market, gmTokenAmount, amountUsd, staleOracleOk, probeBypass, executionFeeWei,
   );
-  const { calls, data, value, executionFee, marketTokenAmount } = buildGmxGmWithdrawRouterMulticall(payload, market);
+  const allowanceAudit = await auditGmxGmWithdrawAllowances({
+    client, owner: receiver, token: market, gmTokenAmount: marketTokenAmount,
+  });
 
   console.log(JSON.stringify({
     event: armed() ? "GMX_GM_WITHDRAW_LIVE" : "GMX_GM_WITHDRAW_DRY_RUN",
@@ -131,6 +180,12 @@ async function main(): Promise<void> {
     executionFee: executionFee.toString(),
     multicallLegs: calls.length,
     router: GMX_V2_EXCHANGE_ROUTER_ARBITRUM,
+    gmTokenSpenders: GMX_GM_WITHDRAW_TOKEN_SPENDERS,
+    gmAllowances: allowanceAudit.map((row) => ({
+      spender: row.spender,
+      allowance: row.allowance.toString(),
+      sufficient: row.sufficient,
+    })),
     dataLen: data.length,
     msgValue: value.toString(),
     bypass: { staleOracle: staleOracleOk, gasGuard: bypassGasGuard(), simulation: isBypassSimulationEnabled() },
@@ -138,6 +193,19 @@ async function main(): Promise<void> {
   }, null, 2));
 
   if (!armed()) {
+    const fixturePath = "contracts/test/fixtures/gmx-gm-withdraw-multicall.json";
+    mkdirSync("contracts/test/fixtures", { recursive: true });
+    writeFileSync(fixturePath, `${JSON.stringify({
+      eoa: receiver,
+      router: GMX_V2_EXCHANGE_ROUTER_ARBITRUM,
+      market,
+      multicallData: data,
+      msgValue: value.toString(),
+      calls,
+      executionFee: executionFee.toString(),
+      marketTokenAmount: marketTokenAmount.toString(),
+    }, null, 2)}\n`);
+    console.log(`[gmx-gm-withdraw] wrote ${fixturePath}`);
     console.log("[gmx-gm-withdraw] dry-run — set CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x… [--amount=100 --gm-price=1.05]");
     return;
   }
@@ -145,10 +213,13 @@ async function main(): Promise<void> {
   const pk = resolvePk();
   const account = privateKeyToAccount(pk);
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(rpc) });
-  await ensureGmxCollateralAllowance({
-    client, owner: account.address, token: market, required: gmTokenAmount, pk, chain: arbitrum, rpc,
+  const { approveTxs } = await ensureGmxGmWithdrawAllowance({
+    client, owner: account.address, token: market, gmTokenAmount: marketTokenAmount, pk, chain: arbitrum, rpc,
     resolveFees: () => resolveBufferedEip1559Fees(client),
   });
+  if (approveTxs.length > 0) {
+    console.log("[gmx-gm-withdraw] allowance txs broadcast", approveTxs);
+  }
 
   if (!isBypassSimulationEnabled()) {
     await client.simulateContract({
