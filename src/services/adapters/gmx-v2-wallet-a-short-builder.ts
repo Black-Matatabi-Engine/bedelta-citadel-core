@@ -2,7 +2,7 @@
 import { getAddress, type Hex } from "viem";
 import { GMX_ETH_USD_MARKET_TOKEN } from "../../config/gmx-markets";
 import { GMX_UI_FEE_RECEIVER } from "../../config/gmx-revenue";
-import { GMX_WALLET_B_DEFAULT } from "../gmx-eth-delta";
+import { assertWalletBPerpIsolation } from "../../core/wallet-isolation-guard";
 import { HL_WALLET_A_DEFAULT } from "../gmx-cross-wallet-hedge-fetch";
 import type { GmxV2PoolWeights } from "../yield/gmx-v2-price-impact";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
@@ -40,10 +40,7 @@ export type GmxWalletAShortBuildResult = {
 };
 
 function assertWalletAIsolation(walletA: Hex): void {
-  const a = getAddress(walletA);
-  if (a === getAddress(GMX_WALLET_B_DEFAULT)) {
-    throw new Error("[GMX_SHORT_HEDGE] WALLET_B_FORBIDDEN: GMX perp short must use Wallet A only");
-  }
+  assertWalletBPerpIsolation(walletA);
 }
 
 /** Short wire audit — !isLong && acceptablePrice > 0 && MarketIncrease. */

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { getAddress } from "viem";
 import { GMX_WALLET_B_DEFAULT } from "../../src/services/gmx-eth-delta";
+import { WALLET_B_PERP_FORBIDDEN } from "../../src/core/wallet-isolation-guard";
 import {
   auditGmxWalletAShortWire,
   buildGmxWalletAShortOrder,
@@ -24,7 +25,7 @@ describe("gmx-v2-wallet-a-short-builder", () => {
         sizeUsd: 10,
         midPriceUsd: 3500,
       }),
-    ).toThrow("WALLET_B_FORBIDDEN");
+    ).toThrow(WALLET_B_PERP_FORBIDDEN);
   });
 
   it("auditGmxWalletAShortWire fails when isLong true", () => {

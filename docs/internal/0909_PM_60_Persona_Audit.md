@@ -193,10 +193,10 @@
 | # | 向量 | 結論 |
 |---|------|------|
 | 4.1 | GM approve spender 混淆 | **LOW** · 三證 SSOT 已鎖 |
-| 4.2 | Wallet A/B 混用 | **LOW-MEDIUM** · builder fail-closed · 需持續 grep |
+| 4.2 | Wallet A/B 混用 | **LOW** · `wallet-isolation-guard.ts` 全域 `WALLET_B_PERP_FORBIDDEN` · Vitest sweep PASS |
 | 4.3 | Multicall 腿順序 | **HIGH 防禦** · 仍 fail-closed |
 | 4.4 | 「Settlement live」口播成「Hedge live」 | **HIGH 否決風險** · Wallet A short 仍 simulate only |
-| 4.5 | PolicyGuardV2 未 link Gate | **MEDIUM** · 合約 live 但 Gate `setPolicyGuard` 仍 pending |
+| 4.5 | PolicyGuardV2 link Gate | **CLOSED（鏈上）** · PolicyLink `0xe4ef5350…` · setPolicyGuard tx [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Block **503079575** |
 | 4.6 | Pure Solidity fallback 被質疑為「未用 Stylus」 | **LOW** · 設計即 `address(0)` fallback · 文檔已鎖 |
 
 ---
@@ -222,8 +222,9 @@
 |---|------|---------|
 | 1–3 | GM I/O 三證 | **已閉環** |
 | 4 | 主網 Phase A+B+C 合約 | **已閉環** @ `ed485ba` |
+| 4b | Gate ↔ PolicyGuardV2 鏈上綁定 | **已閉環** · PolicyLink + tx `0x1b158a4a…` |
 | 5 | Pure Solidity Fallback live | **已閉環** |
-| 6 | 雙錢包工作流 SSOT | **已閉環** |
+| 6 | 雙錢包工作流 SSOT + Wallet B 全域隔離 | **已閉環** |
 | 7 | Q1 <180 LOC | **已閉環** |
 | 8 | 958 Vitest / 2 Cargo / 9 Forge | **已閉環** |
 | 9 | Gate live fill | **未閉環** |

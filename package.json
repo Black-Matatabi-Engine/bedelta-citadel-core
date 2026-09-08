@@ -41,6 +41,7 @@
     "build:stylus": "cd contracts/stylus-probe && cargo test stylus_core --release && cargo build --target wasm32-unknown-unknown --release",
     "build:citadel-invariants": "cargo build --manifest-path contracts/citadel_invariants/Cargo.toml --release --target wasm32-unknown-unknown --no-default-features --features host-export && mkdir -p pkg && cp contracts/citadel_invariants/target/wasm32-unknown-unknown/release/citadel_invariants.wasm pkg/citadel_invariants.wasm",
     "deploy:policy-guard-v2": "tsx scripts/deploy-policy-guard-v2-mainnet.ts",
+    "link:gate-policy-guard-v2": "tsx scripts/link-gate-policy-guard-v2.ts",
     "execute:gmx:micro-fill": "tsx scripts/execute-gmx-mainnet-micro-fill.ts",
     "execute:gmx:gm-deposit": "tsx scripts/execute-gmx-mainnet-gm-deposit.ts",
     "execute:gmx:gm-withdraw": "tsx scripts/execute-gmx-mainnet-gm-withdraw.ts",

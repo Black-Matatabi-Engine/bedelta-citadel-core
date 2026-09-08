@@ -7,6 +7,7 @@
  */
 import { encodeFunctionData, getAddress, isHex, padHex, parseAbi, stringToHex, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
+import { assertWalletBPerpIsolation } from "../../core/wallet-isolation-guard";
 import { GMX_ZERO_ADDRESS, GMX_ZERO_REFERRAL_CODE } from "./gmx-v2-order-payload-constants";
 import { GMX_ORDER_TYPE_INDEX } from "./gmx-v2-order-payload.types";
 
@@ -88,6 +89,7 @@ export function buildGmxCreateOrderWireParams(
   payload: GmxV2UnsignedOrderPayload,
   market: Hex,
 ): GmxCreateOrderWireParams {
+  assertWalletBPerpIsolation(payload.addresses.receiver);
   const collateralToken = addr(payload.addresses.initialCollateralToken);
   return {
     addresses: {

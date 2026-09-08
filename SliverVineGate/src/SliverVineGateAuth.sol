@@ -29,6 +29,7 @@ abstract contract SliverVineGateAuth {
     address public guardian;
     address public admin;
     address public pendingAdmin;
+    address public policyGuard;
     uint64 public unhaltEta;
 
     struct PendingSignerChange {
@@ -49,6 +50,7 @@ abstract contract SliverVineGateAuth {
     event AdminTransferProposed(address indexed from, address indexed to);
     event AdminTransferred(address indexed from, address indexed to);
     event GuardianChanged(address indexed from, address indexed to);
+    event PolicyGuardSet(address indexed previous, address indexed next);
 
     modifier onlyAdmin() {
         if (msg.sender != admin) revert NotAdmin();
@@ -154,5 +156,13 @@ abstract contract SliverVineGateAuth {
         address prev = guardian;
         guardian = newGuardian;
         emit GuardianChanged(prev, newGuardian);
+    }
+
+    /// @notice Bind an ERC-8196 PolicyGuard (V2) for settlement-plane pre-screen references.
+    function setPolicyGuard(address newPolicyGuard) external onlyAdmin {
+        if (newPolicyGuard == address(0)) revert ZeroAddress();
+        address prev = policyGuard;
+        policyGuard = newPolicyGuard;
+        emit PolicyGuardSet(prev, newPolicyGuard);
     }
 }

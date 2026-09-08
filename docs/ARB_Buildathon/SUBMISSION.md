@@ -453,6 +453,8 @@ SliverVine's **production delta-neutral envelope** is not a single-wallet abstra
 | **Wallet A — Hedge Engine (Primary)** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid session-key **perp short** · 0-Gas · low latency |
 | **Wallet A — Hedge Engine (Fallback)** | same | GMX v2 synthetic short via [`gmx-v2-wallet-a-short-builder.ts`](../../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) · USDC collateral · simulate only |
 | **On-Chain Settlement** | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Phase A+B+C **Verified Live** @ `ed485ba` · **`stylusCoprocessor=0`** → Pure Solidity fallback · 100% fail-closed without separate Stylus mainnet activation |
+| **Gate ↔ PolicyGuardV2 Link** | `SliverVineGatePolicyLink` `0xe4ef5350…` → Gate `0xb174…` | **Verified Live** — setPolicyGuard [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · deploy [`0x7ce414b7…`](https://arbiscan.io/tx/0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9) |
+| **Wallet B Perp Isolation** | [`wallet-isolation-guard.ts`](../../src/core/wallet-isolation-guard.ts) | Global `WALLET_B_PERP_FORBIDDEN` on all GMX createOrder builders |
 
 **Wallet B — Verified GM I/O (triple-proof Arbiscan):**
 
@@ -762,6 +764,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | Field | Value |
 |-------|-------|
 | **PolicyGuardV2 (current · Phase A+B+C)** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · Deploy [`0xcd520602…`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
+| **Gate PolicyLink (bootstrap Gate binding)** | [`0xe4ef5350963241c49a29e72a4cf093208cd19af0`](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) · setPolicyGuard [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Deploy [`0x7ce414b7…`](https://arbiscan.io/tx/0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9) |
 | **GmxSoilMatrixSwitch** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) · oracle [`0xfadb1475…`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) |
 | **SliverVineRiskOracleV2** | [`0xfadb14759a3d3c7e976697de61bf62627f14ec93`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) |
 | **PolicyGuard v1 (superseded)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) · Deploy [`0xeabd5fd1…`](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |

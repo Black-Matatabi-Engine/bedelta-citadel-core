@@ -39,7 +39,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Address** | `0xef0752df6387248B897F3A59A180af42D801960d` |
 | **Primary** | **Hyperliquid L1** EIP-712 session-key **1× perp short** · 0-Gas · sub-ms preflight · `executeHlSessionKeyOrder` |
 | **Fallback** | Arbitrum GMX v2 **Synthetic Short** · USDC collateral · [`gmx-v2-wallet-a-short-builder.ts`](../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) · `pnpm execute:gmx:wallet-a-short-fallback` · **simulate only** (Wallet A USDC=0 · **no live claims permitted**) |
-| **Isolation** | `auditGmxWalletAShortWire` **fail-closed** rejects Wallet B address |
+| **Isolation** | `auditGmxWalletAShortWire` **fail-closed** rejects Wallet B address · global `assertWalletBPerpIsolation()` in [`wallet-isolation-guard.ts`](../src/core/wallet-isolation-guard.ts) |
 
 #### 3. On-Chain Settlement Plane (Phase A+B+C · Mainnet Verified)
 
@@ -87,6 +87,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
 | **PolicyGuardV2 (Arbitrum One · current)** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · `stylusCoprocessor=0` | [Arbiscan](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · Deploy [`0xcd520602…`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
+| **Gate PolicyLink (42161 · bootstrap Gate)** | `0xe4ef5350963241c49a29e72a4cf093208cd19af0` → Gate `0xb174…` · PolicyGuardV2 `0xfd98…` | [PolicyLink](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) · Link [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
 | **GmxSoilMatrixSwitch (42161)** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` → oracle `0xfadb1475…` | [Arbiscan](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) · Deploy [`0x6790c2b8…`](https://arbiscan.io/tx/0x6790c2b8ea23ba02640c87f06e774f093061d3d98b462caa9bd84f48a24d63ab) |
 | **SliverVineRiskOracleV2 (42161)** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` | [Arbiscan](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) · Deploy [`0x8f5d79e5…`](https://arbiscan.io/tx/0x8f5d79e538ed65f863b1fdfc10d2dacf387b07c5cb7b3eb127afa835a27686ab) |
 | **PolicyGuard v1 (superseded)** | `0xc66f96611a737c4e58706d0955594456eab88959` | [Arbiscan](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) · Deploy [`0xeabd5fd1…`](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
@@ -239,7 +240,8 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` |
 | **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
-| **Gate setPolicyGuard Tx** | `<!-- PENDING: bootstrap gate lacks setter -->` |
+| **Gate setPolicyGuard Tx** | [`0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Block **503079575** · via `SliverVineGatePolicyLink` `0xe4ef5350963241c49a29e72a4cf093208cd19af0` → PolicyGuardV2 `0xfd98…` |
+| **Gate PolicyLink Deploy Tx** | [`0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9`](https://arbiscan.io/tx/0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9) · bootstrap Gate `0xb174…` lacks native setter |
 | **Arbiscan URL (Deploy)** | [Arbiscan Tx](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
 | **Arbiscan URL (Smart Route)** | [Arbiscan Tx](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 
