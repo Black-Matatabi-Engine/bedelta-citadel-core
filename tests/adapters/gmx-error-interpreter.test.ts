@@ -5,6 +5,8 @@ import {
   encodeAbiParameters,
   encodeErrorResult,
   encodeFunctionData,
+  type CallParameters,
+  type CallReturnType,
   type Hex,
 } from "viem";
 import {
@@ -20,6 +22,7 @@ import {
 import {
   formatGmxIsolatedProbeResult,
   probeIsolatedGmxCreateOrderRevert,
+  type GmxIsolatedProbeClient,
 } from "../../src/services/adapters/gmx-error-isolated-probe";
 import { gmxRouterAbi } from "../../src/services/adapters/gmx-market-increase-multicall";
 import { decodeGmxRevertData } from "../../src/services/adapters/gmx-micro-fill-revert-decode";
@@ -166,7 +169,13 @@ describe("gmx-error-interpreter", () => {
       errorName: "EmptyOrder",
       args: [],
     });
-    const err = new BaseError("rev", { cause: new ContractFunctionRevertedError({ abi: GMX_ERROR_REGISTRY_ABI, data }) });
+    const err = new BaseError("rev", {
+      cause: new ContractFunctionRevertedError({
+        abi: [...gmxRouterAbi, ...GMX_ERROR_REGISTRY_ABI],
+        data,
+        functionName: "multicall",
+      }),
+    });
     const r = interpretGmxViemError(err);
     expect(r.errorName).toBe("EmptyOrder");
   });
@@ -194,14 +203,15 @@ describe("gmx-error-isolated-probe", () => {
     const { data, value } = buildSampleMulticall();
     const createRevert = encodeErrorResult({ abi: GMX_ERROR_REGISTRY_ABI, errorName: "EmptyOrder", args: [] });
     let callCount = 0;
-    const client = {
-      call: vi.fn(async (req: { data: Hex }) => {
+    const client: GmxIsolatedProbeClient = {
+      call: vi.fn(async (parameters: CallParameters): Promise<CallReturnType> => {
         callCount++;
-        const isCreate = String(req.data).includes("createOrder") || callCount >= 4;
+        const reqData = parameters.data ?? "0x";
+        const isCreate = String(reqData).includes("createOrder") || callCount >= 4;
         if (isCreate && callCount > 2) {
           throw { data: createRevert };
         }
-        return "0x";
+        return { data: "0x" };
       }),
     };
     const result = await probeIsolatedGmxCreateOrderRevert({
@@ -219,7 +229,9 @@ describe("gmx-error-isolated-probe", () => {
 
   it("reports all OK when every leg succeeds", async () => {
     const { data, value } = buildSampleMulticall();
-    const client = { call: vi.fn(async () => "0x") };
+    const client: GmxIsolatedProbeClient = {
+      call: vi.fn(async (): Promise<CallReturnType> => ({ data: "0x" })),
+    };
     const result = await probeIsolatedGmxCreateOrderRevert({
       client, from: EOA, router: ROUTER, multicallData: data, msgValue: value,
     });

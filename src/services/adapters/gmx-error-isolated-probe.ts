@@ -1,7 +1,7 @@
 /**
  * Isolated GMX createOrder revert extraction — fund legs then probe createOrder when multicall fails silently.
  */
-import { decodeFunctionData, encodeFunctionData, type Hex, type PublicClient } from "viem";
+import { decodeFunctionData, encodeFunctionData, type CallParameters, type CallReturnType, type Hex } from "viem";
 import {
   decodeGmxMarketIncreaseMulticallLegs,
   gmxRouterAbi,
@@ -27,8 +27,12 @@ export type GmxIsolatedProbeResult = {
   summary: string;
 };
 
+export type GmxIsolatedProbeClient = {
+  call: (parameters: CallParameters) => Promise<CallReturnType>;
+};
+
 async function callRouter(
-  client: Pick<PublicClient, "call">,
+  client: GmxIsolatedProbeClient,
   input: { from: Hex; to: Hex; data: Hex; value: bigint; blockNumber?: bigint },
 ): Promise<{ ok: boolean; data: Hex }> {
   try {
@@ -48,7 +52,7 @@ async function callRouter(
 
 /** Decode ExchangeRouter.multicall(bytes[]) and run per-leg + isolated createOrder probes via eth_call. */
 export async function probeIsolatedGmxCreateOrderRevert(input: {
-  client: Pick<PublicClient, "call">;
+  client: GmxIsolatedProbeClient;
   from: Hex;
   router: Hex;
   multicallData: Hex;
