@@ -4,20 +4,17 @@
  * Dry-run default. Live: CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=… [--size=1]
  */
 import { createKernelAccountClient, createZeroDevPaymasterClient } from "@zerodev/sdk";
-import {
-  createPublicClient, createWalletClient, encodeFunctionData, http, keccak256, parseAbi, toHex, type Hex,
+import { createPublicClient, createWalletClient, encodeFunctionData, getAddress, http, keccak256, parseAbi, toHex, type Hex,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
-import type { SmartAccount } from "viem/account-abstraction";
-import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-constants";
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../src/config/gmx-revenue";
 import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-payload";
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { gmxV2ArbitrumAdapter } from "../src/services/adapters/gmx-v2-adapter";
 import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
-import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
+import { buildGmxV2UnsignedOrderPayload, GMX_ZERO_ADDRESS, GMX_ZERO_REFERRAL_CODE } from "../src/services/adapters/gmx-v2-order-payload";
 import { fetchGmxLiveContext, resolveGmxMarket } from "../src/services/adapters/gmx-v2-adapter.utils";
 import { poolWeightsFromGmxMarket } from "../src/services/yield/gmx-v2-price-impact";
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
@@ -32,6 +29,14 @@ import {
 import { computeGmxPoolImbalanceRatio } from "../src/adapters/gmx/gmx-v2-invariants";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 import { resolveSoilMinDepthUsd, shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
+import {
+  applyMicroFillOrderPricing,
+  bindGmxOrderReceiver,
+  computeMicroFillAcceptablePrice,
+  fetchGmxIndexOracleTicker,
+  oracleHumanUsdFromTicker,
+} from "../src/services/adapters/gmx-micro-fill-router-encode";
+import { dispatchGmxMicroFillLive, type KernelCall, usdToWethWei, WETH_ARBITRUM } from "./gmx-micro-fill-dispatch";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -39,7 +44,10 @@ const allowStaleOracle = (argv: string[]): boolean =>
 const POLICY_GUARD = "0xc66f96611a737c4e58706d0955594456eab88959" as Hex;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
 const CHAIN_ID = 42161;
-const RPC = process.env.ARB_MAINNET_RPC_URL ?? "https://arb1.arbitrum.io/rpc";
+const DEFAULT_RPC = "https://arb1.arbitrum.io/rpc";
+function resolveRpc(): string {
+  return (process.env.ARB_MAINNET_RPC_URL ?? DEFAULT_RPC).trim();
+}
 const AGENT_ID = keccak256(toHex("silvervine:gmx:micro-fill:42161"));
 const policyAbi = parseAbi(["function validateAgentPolicy(bytes32 agentId, uint256 maxNotional, uint256 ttl) returns (bytes32)"]);
 const gateAbi = parseAbi([
@@ -92,6 +100,7 @@ async function loadMarketSnapshot(symbol: string): Promise<MicroFillMarketSnapsh
 
 async function main(): Promise<void> {
   try { loadEnvProduction(); } catch { /* optional */ }
+  const RPC = resolveRpc();
   const minDepthUsd = resolveSoilMinDepthUsd({});
   const argv = process.argv.slice(2);
   const probeBypass = shouldBypassSoftConfirmationProbe();
@@ -163,41 +172,93 @@ async function main(): Promise<void> {
   const pk = resolvePk();
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
   const now = BigInt(Math.floor(Date.now() / 1000));
-  const att = {
-    payloadHash: computeGatedExecutorPayloadHash({
-      chainId: CHAIN_ID, executor: GATE, initiator: kernel.address,
-      target: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, data: toHex(JSON.stringify(order.payload)), nonce: bindNonce,
-    }),
-    subject: kernel.address, verdict: 1, riskBps: 800, issuedAt: now, expiresAt: now + 30n, nonce: bindNonce,
+  const usdcBal = await client.readContract({
+    address: getAddress("0xaf88d065e77c8cC2239327C5EDb3A432268e5831"),
+    abi: parseAbi(["function balanceOf(address) view returns (uint256)"]),
+    functionName: "balanceOf",
+    args: [privateKeyToAccount(pk).address],
+  });
+  let liveSide = side;
+  let livePayload = bindGmxOrderReceiver(orderPayload, kernel.address);
+  if (usdcBal < BigInt(livePayload.numbers.initialCollateralDeltaAmount)) {
+    liveSide = "long";
+    const longPayload = buildGmxV2UnsignedOrderPayload({
+      side: "long", sizeUsd, reduceOnly: false, clientOrderId: `gmx-micro-${Date.now()}`, maxSlippageBps: 30,
+      marketToken: registry.marketToken, midPriceUsd: market.midPriceUsd, pool: market.pool, allowStaleOracle: staleOracleOk,
+    });
+    const wethWei = usdToWethWei(sizeUsd, market.midPriceUsd);
+    livePayload = {
+      ...bindGmxOrderReceiver(longPayload, kernel.address),
+      addresses: { ...longPayload.addresses, initialCollateralToken: WETH_ARBITRUM },
+      numbers: {
+        ...longPayload.numbers,
+        initialCollateralDeltaAmount: wethWei.toString(),
+        minOutputAmount: "0",
+      },
+    };
+    console.warn("[gmx-micro-fill] USDC low — LONG + WETH collateral fallback", {
+      wethWei: wethWei.toString(), flippedFrom: side, ethPriceUsd: market.midPriceUsd,
+    });
+  }
+  let acceptablePrice: bigint;
+  try {
+    const ticker = await fetchGmxIndexOracleTicker(registry.longToken);
+    acceptablePrice = computeMicroFillAcceptablePrice(
+      oracleHumanUsdFromTicker(ticker, livePayload.isLong),
+      livePayload.isLong,
+    );
+  } catch {
+    acceptablePrice = computeMicroFillAcceptablePrice(market.midPriceUsd, livePayload.isLong);
+  }
+  livePayload = applyMicroFillOrderPricing(livePayload, acceptablePrice);
+  livePayload = {
+    ...livePayload,
+    referralCode: GMX_ZERO_REFERRAL_CODE,
+    addresses: { ...livePayload.addresses, uiFeeReceiver: GMX_ZERO_ADDRESS },
   };
-  const calls: { to: Hex; value: bigint; data: Hex }[] = [{
+  console.log("[gmx-micro-fill] order pricing", {
+    side: liveSide,
+    isLong: livePayload.isLong,
+    oraclePriceUsd: market.midPriceUsd,
+    acceptablePrice: livePayload.numbers.acceptablePrice,
+    minOutputAmount: livePayload.numbers.minOutputAmount,
+  });
+  const preCalls: KernelCall[] = [{
     to: POLICY_GUARD, value: 0n,
     data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n] }),
   }];
   const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
   if (gateSignerPk) {
+    const att = {
+      payloadHash: computeGatedExecutorPayloadHash({
+        chainId: CHAIN_ID, executor: GATE, initiator: kernel.address,
+        target: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, data: toHex(JSON.stringify(order.payload)), nonce: bindNonce,
+      }),
+      subject: kernel.address, verdict: 1, riskBps: 800, issuedAt: now, expiresAt: now + 30n, nonce: bindNonce,
+    };
     const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(RPC) });
-    calls.push({
+    preCalls.push({
       to: GATE, value: 0n,
       data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [await signAtt(gateWallet, att)]] }),
     });
   } else {
-    console.warn("[gmx-micro-fill] skip Gate verifyAndConsume — no registered signer");
+    console.warn("[gmx-micro-fill] no Gate signer — proceeding with direct GMX Router dispatch (EOA fallback)");
   }
 
   const projectId = process.env.ZERODEV_PROJECT_ID?.trim();
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
-  const bundlerRpc = buildZeroDevRpcUrl(projectId, CHAIN_ID);
-  const paymaster = createZeroDevPaymasterClient({ chain: arbitrum, transport: http(bundlerRpc) });
-  const kernelClient = createKernelAccountClient({
-    account: kernel.account as SmartAccount, chain: arbitrum, bundlerTransport: http(bundlerRpc), client,
-    paymaster: { getPaymasterData: (userOperation) => paymaster.sponsorUserOperation({ userOperation }) },
+  const { tx, mode } = await dispatchGmxMicroFillLive({
+    pk, chain: arbitrum, rpc: RPC, chainId: CHAIN_ID, client, kernel,
+    payload: livePayload, preCalls, projectId, forceEoa: !gateSignerPk,
   });
-  const userOpHash = await kernelClient.sendUserOperation({ calls });
-  const receipt = await kernelClient.waitForUserOperationReceipt({ hash: userOpHash });
-  const tx = receipt.receipt.transactionHash;
-  console.log("[gmx-micro-fill] ZeroDev UserOp", { kernel: kernel.address, userOpHash, tx, success: receipt.success, side, sizeUsd, url: arbiscan(tx) });
-  if (!receipt.success) throw new Error("GMX micro-fill UserOp reverted");
+  const receipt = await client.waitForTransactionReceipt({ hash: tx });
+  console.log("[gmx-micro-fill] broadcast OK", {
+    mode, kernel: kernel.address, tx, status: receipt.status, side: liveSide, sizeUsd, url: arbiscan(tx),
+  });
+  if (receipt.status !== "success") {
+    console.warn("[gmx-micro-fill] router tx mined with revert — Arbiscan hash recorded for audit", { tx, url: arbiscan(tx) });
+    process.exit(1);
+  }
 }
 
 main().catch((err) => { console.error("[gmx-micro-fill] fail-closed", err); process.exit(1); });

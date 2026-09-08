@@ -46,6 +46,9 @@ export function poolWeightsFromGmxMarket(
   const mid = midPriceUsd;
   const longAmt = parseFloat(market.longPoolAmount ?? "0");
   const shortAmt = parseFloat(market.shortPoolAmount ?? "0");
+  if (longAmt > 1e15) {
+    return { longTokenUsd: (longAmt / 1e18) * mid, shortTokenUsd: shortAmt > 0 ? shortAmt / 1e6 : 0 };
+  }
   if (longAmt > 0 || shortAmt > 0) {
     const scale = longAmt > 1e20 || shortAmt > 1e20 ? 1e30 : 1;
     return { longTokenUsd: (longAmt / scale) * mid, shortTokenUsd: (shortAmt / scale) * shortTokenPriceUsd };
