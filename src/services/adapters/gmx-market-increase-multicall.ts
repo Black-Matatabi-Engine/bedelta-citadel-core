@@ -8,10 +8,10 @@
  * @see https://github.com/gmx-io/gmx-interface/blob/master/sdk/src/utils/orderTransactions/utils.ts
  * @see https://github.com/gmx-io/gmx-synthetics/blob/main/contracts/router/BaseRouter.sol
  */
-import { encodeFunctionData, getAddress, parseAbi, toHex, type Hex } from "viem";
+import { encodeFunctionData, getAddress, parseAbi, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
-import { GMX_ORDER_TYPE_INDEX } from "./gmx-v2-order-payload.types";
 import { GMX_ZERO_ADDRESS } from "./gmx-v2-order-payload-constants";
+import { buildGmxCreateOrderWireParams, encodeGmxCreateOrderCalldata, GMX_CREATE_ORDER_ABI_FRAGMENT } from "./gmx-create-order-encode";
 
 export const GMX_ORDER_VAULT_ARBITRUM = getAddress("0x31eF83a530Fde1B38EE9A18093A333D8Bbbc40D5");
 
@@ -33,7 +33,7 @@ const gmxRouterAbi = parseAbi([
   "function multicall(bytes[] data) payable returns (bytes[])",
   "function sendWnt(address receiver, uint256 amount) payable",
   "function sendTokens(address token, address receiver, uint256 amount) payable",
-  "function createOrder(((address receiver, address cancellationReceiver, address callbackContract, address uiFeeReceiver, address market, address initialCollateralToken, address[] swapPath) addresses, (uint256 sizeDeltaUsd, uint256 initialCollateralDeltaAmount, uint256 triggerPrice, uint256 acceptablePrice, uint256 executionFee, uint256 callbackGasLimit, uint256 minOutputAmount, uint256 validFromTime) numbers, uint8 orderType, uint8 decreasePositionSwapType, bool isLong, bool shouldUnwrapNativeToken, bool autoCancel, bytes32 referralCode, bytes[] dataList) params) payable returns (bytes32)",
+  GMX_CREATE_ORDER_ABI_FRAGMENT,
 ]);
 
 /** Mirrors gmx-interface `buildTokenTransfersParamsForIncreaseOrSwap` for ERC20 collateral. */
@@ -54,37 +54,7 @@ export function buildGmxMarketIncreaseTokenTransfers(input: {
 }
 
 export function buildGmxMarketIncreaseOrderArgs(payload: GmxV2UnsignedOrderPayload, market: Hex) {
-  const executionFee = BigInt(payload.numbers.executionFee);
-  const collateral = BigInt(payload.numbers.initialCollateralDeltaAmount);
-  const collateralToken = getAddress(payload.addresses.initialCollateralToken as Hex);
-  return {
-    addresses: {
-      receiver: getAddress(payload.addresses.receiver as Hex),
-      cancellationReceiver: getAddress(payload.addresses.cancellationReceiver as Hex),
-      callbackContract: getAddress(payload.addresses.callbackContract as Hex),
-      uiFeeReceiver: getAddress(payload.addresses.uiFeeReceiver as Hex),
-      market,
-      initialCollateralToken: collateralToken,
-      swapPath: (payload.addresses.swapPath as Hex[]).map((p) => getAddress(p)),
-    },
-    numbers: {
-      sizeDeltaUsd: BigInt(payload.numbers.sizeDeltaUsd),
-      initialCollateralDeltaAmount: collateral,
-      triggerPrice: 0n,
-      acceptablePrice: BigInt(payload.numbers.acceptablePrice),
-      executionFee,
-      callbackGasLimit: BigInt(payload.numbers.callbackGasLimit),
-      minOutputAmount: BigInt(payload.numbers.minOutputAmount),
-      validFromTime: BigInt(payload.numbers.validFromTime),
-    },
-    orderType: payload.orderType ?? GMX_ORDER_TYPE_INDEX.MarketIncrease,
-    decreasePositionSwapType: payload.decreasePositionSwapType,
-    isLong: payload.isLong,
-    shouldUnwrapNativeToken: payload.shouldUnwrapNativeToken,
-    autoCancel: payload.autoCancel,
-    referralCode: payload.referralCode as Hex,
-    dataList: payload.dataList.map((item) => toHex(item)),
-  };
+  return buildGmxCreateOrderWireParams(payload, market);
 }
 
 /** Mirrors gmx-interface `buildCreateOrderMulticall` + `encodeExchangeRouterMulticall`. */
@@ -103,7 +73,6 @@ export function buildGmxMarketIncreaseMulticallCalls(input: {
     collateralToken,
     collateralAmount: collateral,
   });
-  const orderArgs = buildGmxMarketIncreaseOrderArgs(input.payload, input.market);
   const calls: Hex[] = [];
   for (const t of transfers) {
     calls.push(
@@ -112,7 +81,7 @@ export function buildGmxMarketIncreaseMulticallCalls(input: {
         : encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendTokens", args: [t.token, t.destination, t.amount] }),
     );
   }
-  calls.push(encodeFunctionData({ abi: gmxRouterAbi, functionName: "createOrder", args: [orderArgs] }));
+  calls.push(encodeGmxCreateOrderCalldata(input.payload, input.market));
   return { calls, msgValue, executionFee, collateral };
 }
 

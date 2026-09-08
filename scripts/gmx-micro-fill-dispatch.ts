@@ -163,6 +163,7 @@ export async function dispatchGmxRouterViaEoa(input: {
   rpc: string;
   client: ReturnType<typeof createPublicClient>;
   payload: GmxV2UnsignedOrderPayload;
+  skipSimulation?: boolean;
 }): Promise<Hex> {
   const account = privateKeyToAccount(input.pk);
   const payload = bindGmxOrderReceiver(input.payload, account.address);
@@ -200,11 +201,13 @@ export async function dispatchGmxRouterViaEoa(input: {
     chain: input.chain,
     rpc: input.rpc,
   });
-  const sim = await runGmxMicroFillSimulationPreflight({
-    client: input.client, payload, from: account.address,
-  });
-  if (sim.bypassed) {
-    console.warn("[gmx-micro-fill] EOA path — simulation bypassed, sending router tx");
+  if (!input.skipSimulation) {
+    const sim = await runGmxMicroFillSimulationPreflight({
+      client: input.client, payload, from: account.address,
+    });
+    if (sim.bypassed) {
+      console.warn("[gmx-micro-fill] EOA path — simulation bypassed, sending router tx");
+    }
   }
   try {
     return await sendRouterTx({
@@ -228,6 +231,7 @@ export async function dispatchGmxMicroFillLive(input: {
   preCalls: KernelCall[];
   projectId: string;
   forceEoa?: boolean;
+  skipSimulation?: boolean;
 }): Promise<{ tx: Hex; mode: "zerodev" | "eoa" }> {
   const router = encodeGmxV2RouterCreateOrderMulticall(input.payload);
   const routerCall: KernelCall = { to: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, value: router.value, data: router.data };
@@ -245,6 +249,7 @@ export async function dispatchGmxMicroFillLive(input: {
   if (input.forceEoa || input.preCalls.length === 0) {
     const tx = await dispatchGmxRouterViaEoa({
       pk: input.pk, chain: input.chain, rpc: input.rpc, client: input.client, payload: input.payload,
+      skipSimulation: input.skipSimulation,
     });
     return { tx, mode: "eoa" };
   }
@@ -269,6 +274,7 @@ export async function dispatchGmxMicroFillLive(input: {
     console.warn("[gmx-micro-fill] ZeroDev bundler blocked — falling back to EOA direct router dispatch");
     const tx = await dispatchGmxRouterViaEoa({
       pk: input.pk, chain: input.chain, rpc: input.rpc, client: input.client, payload: input.payload,
+      skipSimulation: input.skipSimulation,
     });
     return { tx, mode: "eoa" };
   }

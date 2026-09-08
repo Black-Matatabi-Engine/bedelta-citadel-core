@@ -17,6 +17,8 @@ import {
   encodeGmxExchangeRouterMulticall,
   gmxRouterAbi,
 } from "./gmx-market-increase-multicall";
+import { decodeGmxSyntheticsError } from "./gmx-synthetics-errors";
+import { stripGmxOnChainMetadata } from "./gmx-create-order-encode";
 
 export { GMX_ORDER_VAULT_ARBITRUM, GMX_MARKET_INCREASE_MULTICALL_METHODS };
 /** ExchangeRouter — ERC20 allowance spender for sendTokens → OrderVault. */
@@ -293,6 +295,8 @@ function formatDecodedContractError(data: unknown): string | undefined {
 
 function decodeGmxRevertData(data: Hex): string | null {
   const selector = data.slice(0, 10).toLowerCase();
+  const gmxDecoded = decodeGmxSyntheticsError(data);
+  if (gmxDecoded) return gmxDecoded;
   try {
     if (selector === ERROR_STRING_SELECTOR) {
       const [msg] = decodeAbiParameters([{ type: "string" }], `0x${data.slice(10)}` as Hex);
@@ -416,9 +420,10 @@ export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
   executionFee: bigint;
   collateral: bigint;
 } {
-  const market = normalizeMicroFillMarketToken(payload.addresses.market);
+  const wirePayload = stripGmxOnChainMetadata(payload);
+  const market = normalizeMicroFillMarketToken(wirePayload.addresses.market);
   const { calls, msgValue, executionFee, collateral } = buildGmxMarketIncreaseMulticallCalls({
-    payload,
+    payload: wirePayload,
     market,
     orderVault: GMX_ORDER_VAULT_ARBITRUM,
   });

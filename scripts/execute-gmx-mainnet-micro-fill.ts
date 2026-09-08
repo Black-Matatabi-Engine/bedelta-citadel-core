@@ -14,7 +14,8 @@ import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-paylo
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { gmxV2ArbitrumAdapter } from "../src/services/adapters/gmx-v2-adapter";
 import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
-import { buildGmxV2UnsignedOrderPayload, GMX_ZERO_ADDRESS, GMX_ZERO_REFERRAL_CODE } from "../src/services/adapters/gmx-v2-order-payload";
+import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
+import { stripGmxOnChainMetadata } from "../src/services/adapters/gmx-create-order-encode";
 import { fetchGmxLiveContext, resolveGmxMarket } from "../src/services/adapters/gmx-v2-adapter.utils";
 import { poolWeightsFromGmxMarket } from "../src/services/yield/gmx-v2-price-impact";
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
@@ -50,12 +51,12 @@ import {
 import {
   GmxMicroFillExecutionError,
   contextFromPayload,
-  formatGmxMicroFillErrorSummary,
-  isBypassSimulationEnabled,
+  decodeGmxFailedTransaction,
   isBypassSimulationEnabled,
   printGmxMicroFillError,
   runGmxMicroFillSimulationPreflight,
 } from "../src/services/adapters/gmx-micro-fill-execution-errors";
+import { estimateGmxMarketIncreaseExecutionFeeWei } from "../src/services/adapters/gmx-execution-fee-estimator";
 import { dispatchGmxMicroFillLive, resolveBufferedEip1559Fees, type KernelCall } from "./gmx-micro-fill-dispatch";
 
 const allowStaleOracle = (argv: string[]): boolean =>
@@ -245,11 +246,22 @@ async function main(): Promise<void> {
     acceptablePrice = computeMicroFillAcceptablePrice(market.midPriceUsd, livePayload.isLong);
   }
   livePayload = applyMicroFillOrderPricing(livePayload, acceptablePrice);
+  livePayload = stripGmxOnChainMetadata(livePayload);
+  const feeEstimate = await estimateGmxMarketIncreaseExecutionFeeWei({
+    client,
+    swapPathLength: livePayload.addresses.swapPath.length,
+    callbackGasLimit: BigInt(livePayload.numbers.callbackGasLimit),
+    gasPriceWei: (await resolveBufferedEip1559Fees(client)).maxFeePerGas,
+  });
   livePayload = {
     ...livePayload,
-    referralCode: GMX_ZERO_REFERRAL_CODE,
-    addresses: { ...livePayload.addresses, uiFeeReceiver: GMX_ZERO_ADDRESS },
+    numbers: { ...livePayload.numbers, executionFee: feeEstimate.executionFeeWei },
   };
+  console.log("[gmx-micro-fill] execution fee estimate", {
+    executionFeeWei: feeEstimate.executionFeeWei,
+    gasLimit: feeEstimate.gasLimit.toString(),
+    gasPriceWei: feeEstimate.gasPriceWei.toString(),
+  });
   console.log("[gmx-micro-fill] order pricing", {
     side: liveSide,
     isLong: livePayload.isLong,
@@ -316,15 +328,16 @@ async function main(): Promise<void> {
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
   const { tx, mode } = await dispatchGmxMicroFillLive({
     pk, chain: arbitrum, rpc: RPC, chainId: CHAIN_ID, client, kernel,
-    payload: livePayload, preCalls, projectId, forceEoa: useEoa,
+    payload: livePayload, preCalls, projectId, forceEoa: useEoa, skipSimulation: true,
   });
   const receipt = await client.waitForTransactionReceipt({ hash: tx });
   console.log("[gmx-micro-fill] broadcast OK", {
     mode, owner: dispatchOwner, kernel: kernel.address, tx, status: receipt.status, side: liveSide, sizeUsd, url: arbiscan(tx),
   });
   if (receipt.status !== "success") {
+    const decodedOnChainRevert = await decodeGmxFailedTransaction(client, tx);
     const ctx = contextFromPayload(livePayload, dispatchOwner, "on-chain broadcast revert", {
-      dispatchMode: mode, txHash: tx,
+      dispatchMode: mode, txHash: tx, decodedOnChainRevert,
     });
     printGmxMicroFillError(new Error("Transaction mined with revert status=0"), ctx);
     process.exit(1);

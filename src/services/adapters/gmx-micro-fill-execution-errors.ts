@@ -1,4 +1,4 @@
-/** GMX micro-fill — human-readable execution errors + simulation bypass helpers. */
+/** GMX micro-fill — English execution errors, simulation bypass, and on-chain revert replay. */
 import type { Hex, PublicClient } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
@@ -20,6 +20,7 @@ export type GmxMicroFillExecutionContext = {
   executionFeeWei?: string;
   dispatchMode?: string;
   txHash?: string;
+  decodedOnChainRevert?: string;
 };
 
 export class GmxMicroFillExecutionError extends Error {
@@ -52,39 +53,68 @@ function formatUsdc(raw?: string): string {
   }
 }
 
+/** Replay a mined revert via eth_call to recover GMX custom error data. */
+export async function decodeGmxFailedTransaction(
+  client: Pick<PublicClient, "getTransaction" | "call">,
+  txHash: Hex,
+): Promise<string | undefined> {
+  const tx = await client.getTransaction({ hash: txHash });
+  if (!tx.to || !tx.input) return undefined;
+  try {
+    await client.call({
+      account: tx.from,
+      to: tx.to,
+      data: tx.input,
+      value: tx.value,
+      gas: tx.gas,
+    });
+    return undefined;
+  } catch (err) {
+    const details = extractGmxSimulateRevertDetails(err);
+    return details.decodedError ?? details.message;
+  }
+}
+
 function buildSuggestions(cause: unknown, ctx: GmxMicroFillExecutionContext): string[] {
   const msg = cause instanceof Error ? cause.message : String(cause);
   const details = extractGmxSimulateRevertDetails(cause);
   const tips: string[] = [];
+  const decoded = ctx.decodedOnChainRevert ?? details.decodedError ?? "";
+  if (decoded.includes("InsufficientExecutionFee")) {
+    tips.push("Raise executionFee — use dynamic GMX DataStore estimate (gasLimit × gasPrice + 30% buffer)");
+  }
+  if (decoded.includes("InsufficientWntAmountForExecutionFee")) {
+    tips.push("Ensure multicall msg.value matches executionFee and sendWnt deposits WNT to OrderVault first");
+  }
   if (ctx.step.includes("simulate") && isSilentGmxSimulateRevert(cause)) {
-    tips.push("本地 eth_call 為 silent revert (rawData=0x)；可設 BYPASS_SIMULATION=true 直接 broadcast 以查看鏈上 revert");
+    tips.push("Local eth_call returned silent revert (rawData=0x); set BYPASS_SIMULATION=true to broadcast and inspect on-chain");
   }
   if (msg.includes("USDC_INSUFFICIENT") || msg.includes("COLLATERAL_INSUFFICIENT")) {
-    tips.push(`向 owner ${ctx.owner ?? "EOA/Kernel"} 充值至少 ${ctx.collateralUsd ?? "$2"} USDC`);
+    tips.push(`Fund owner ${ctx.owner ?? "EOA/Kernel"} with at least ${ctx.collateralUsd ?? "$2"} USDC`);
   }
   if (msg.includes("allowance") || msg.includes("approve")) {
-    tips.push(`確認 USDC 已 approve 給 ExchangeRouter spender ${GMX_COLLATERAL_SPENDER_ARBITRUM}`);
+    tips.push(`Approve USDC for ExchangeRouter spender ${GMX_COLLATERAL_SPENDER_ARBITRUM}`);
   }
   if (msg.includes("GUARD_BLOCKED") || msg.includes("CRI_HARDLOCK")) {
-    tips.push("檢查 oracle lag / gas guard；或 ALLOW_STALE_ORACLE=1 / BYPASS_SOIL_PROBE=true（僅探針）");
+    tips.push("Check oracle lag / gas guard; probe-only: ALLOW_STALE_ORACLE=1 or BYPASS_SOIL_PROBE=true");
   }
   if (msg.includes("MARKET")) {
-    tips.push("確認 marketToken 與 gmxinfra markets/info 一致（ETH/USDC SSOT）");
+    tips.push("Confirm marketToken matches gmxinfra markets/info ETH/USDC SSOT");
   }
   if (details.decodedError?.includes("Error(")) {
-    tips.push(`GMX 合約 revert: ${details.decodedError}`);
+    tips.push(`GMX contract revert: ${details.decodedError}`);
   }
   if (details.rawData) {
     const selector = details.rawData.slice(0, 10);
     if (selector && selector !== "0x") {
-      tips.push(`自訂 error selector: ${selector} — 對照 gmx-synthetics Errors.sol`);
+      tips.push(`Custom error selector ${selector} — cross-check gmx-synthetics Errors.sol`);
     }
   }
   if (ctx.txHash) {
     tips.push(`Arbiscan: https://arbiscan.io/tx/${ctx.txHash}`);
   }
   if (tips.length === 0) {
-    tips.push("檢查 executionFee ETH、acceptablePrice 30-dec 編碼、USDC 餘額與 Router multicall 順序");
+    tips.push("Verify executionFee ETH, acceptablePrice 30-dec encoding, USDC balance, and Router multicall order (sendWnt→sendTokens→createOrder)");
   }
   return tips;
 }
@@ -99,20 +129,21 @@ export function formatGmxMicroFillErrorSummary(
     : String(cause);
   const lines = [
     "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-    "GMX Micro-Fill 執行失敗",
+    "GMX Micro-Fill Execution Failed",
     "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━",
-    `步驟: ${ctx.step}`,
+    `Step: ${ctx.step}`,
     `Router: ${ctx.router ?? GMX_V2_EXCHANGE_ROUTER_ARBITRUM}`,
     `Owner: ${ctx.owner ?? "n/a"}`,
     `Market: ${ctx.market ?? "n/a"}`,
-    `抵押品: ${ctx.collateralUsd ?? formatUsdc(ctx.collateralRaw)}`,
+    `Collateral: ${ctx.collateralUsd ?? formatUsdc(ctx.collateralRaw)}`,
     `Execution fee (wei): ${ctx.executionFeeWei ?? "n/a"}`,
     `Dispatch: ${ctx.dispatchMode ?? "n/a"}`,
-    `錯誤: ${headline}`,
+    `Error: ${headline}`,
   ];
+  if (ctx.decodedOnChainRevert) lines.push(`On-chain revert: ${ctx.decodedOnChainRevert}`);
   if (details.message && details.message !== headline) lines.push(`Revert: ${details.message}`);
   if (details.rawData) lines.push(`rawData: ${details.rawData}`);
-  lines.push("── 建議 ──");
+  lines.push("── Suggestions ──");
   for (const tip of buildSuggestions(cause, ctx)) lines.push(`• ${tip}`);
   lines.push("━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━");
   return lines.join("\n");
@@ -152,7 +183,7 @@ export async function runGmxMicroFillSimulationPreflight(input: {
     return { bypassed: false };
   } catch (err) {
     if (isSilentGmxSimulateRevert(err) && isBypassSimulationEnabled()) {
-      console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — 跳過 eth_call 預檢，將直接 broadcast");
+      console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — skipping eth_call preflight, proceeding to broadcast");
       return { bypassed: true };
     }
     throw new GmxMicroFillExecutionError(err, ctx);
