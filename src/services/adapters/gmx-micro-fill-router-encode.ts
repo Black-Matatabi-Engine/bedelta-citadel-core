@@ -8,6 +8,7 @@ import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
 import { GMX_MARKET_REGISTRY, GMX_ETH_USD_MARKET_TOKEN } from "../../config/gmx-markets";
 import { GMX_USDC_ARBITRUM, USDC_DECIMALS } from "./gmx-v2-order-payload-constants";
+import { GMX_FLOAT_PRECISION } from "./gmx-v2-order-payload-guards";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
 import {
   GMX_MARKET_INCREASE_MULTICALL_METHODS,
@@ -31,7 +32,37 @@ export const GMX_MARKETS_INFO_URL = "https://arbitrum-api.gmxinfra.io/markets/in
 /** GMX v2 ETH/USD [WETH-USDC] GM marketToken — Arbitrum One SSOT (matches gmxinfra markets/info). */
 export const MICRO_FILL_ETH_USDC_MARKET = getAddress(GMX_ETH_USD_MARKET_TOKEN);
 export const MICRO_FILL_SLIPPAGE_BPS = 100;
+/** GMX Synthetics oracle / order price precision — `10^30` (FLOAT_PRECISION). */
+export const GMX_ORACLE_PRICE_PRECISION_30 = GMX_FLOAT_PRECISION;
+/** MarketIncrease orders use `triggerPrice = 0` (no limit/stop trigger). */
+export const GMX_MARKET_INCREASE_TRIGGER_PRICE_30 = 0n;
 const ETH_INDEX_DECIMALS = 18;
+const USD_MICRO_SCALE = 1_000_000n;
+
+/**
+ * USD per 1 index token (human) → GMX 30-dec oracle price.
+ * Formula: `(priceUsd / 10^tokenDecimals) * 10^30` per gmx-synthetics oracle spec.
+ */
+export function scaleHumanUsdToGmxIndexPrice30(humanUsd: number, tokenDecimals: number): bigint {
+  if (!Number.isFinite(humanUsd) || humanUsd <= 0) {
+    throw new Error("scaleHumanUsdToGmxIndexPrice30: invalid humanUsd");
+  }
+  const [whole, frac = ""] = humanUsd.toFixed(6).split(".");
+  const microUsd = BigInt(whole + (frac + "000000").slice(0, 6));
+  return (microUsd * GMX_ORACLE_PRICE_PRECISION_30) / (10n ** BigInt(tokenDecimals) * USD_MICRO_SCALE);
+}
+
+/** GMX 30-dec oracle price → human USD per 1 index token. */
+export function parseGmxIndexPrice30ToHuman(raw: bigint, tokenDecimals: number): number {
+  const unitScale = 10n ** BigInt(30 - tokenDecimals);
+  return Number(raw) / Number(unitScale);
+}
+
+/** Coerce acceptablePrice / triggerPrice to non-negative GMX 30-dec uint. */
+export function normalizeGmxOrderPrice30(price: bigint): bigint {
+  if (price < 0n) throw new Error("GMX order price must be non-negative");
+  return price;
+}
 
 export interface GmxOracleTicker {
   tokenAddress: string;
@@ -50,12 +81,6 @@ export function computeGmxAcceptablePriceFromOracleRaw(
   return (oraclePriceRaw * factor) / 10_000n;
 }
 
-function humanUsdToGmxOraclePriceRaw(humanUsd: number, indexDecimals = ETH_INDEX_DECIMALS): bigint {
-  const [whole, frac = ""] = humanUsd.toFixed(6).split(".");
-  const micro = BigInt(whole + (frac + "000000").slice(0, 6));
-  return micro * 10n ** BigInt(24 - indexDecimals);
-}
-
 /** Human USD index price → acceptablePrice (30-dec oracle encoding + slippage). */
 export function computeMicroFillAcceptablePrice(
   oraclePriceUsd: number,
@@ -66,15 +91,14 @@ export function computeMicroFillAcceptablePrice(
     throw new Error("computeMicroFillAcceptablePrice: invalid oraclePriceUsd");
   }
   return computeGmxAcceptablePriceFromOracleRaw(
-    humanUsdToGmxOraclePriceRaw(oraclePriceUsd, indexDecimals),
+    scaleHumanUsdToGmxIndexPrice30(oraclePriceUsd, indexDecimals),
     isLong,
   );
 }
 
 export function oracleHumanUsdFromTicker(ticker: GmxOracleTicker, isLong: boolean, indexDecimals = ETH_INDEX_DECIMALS): number {
   const raw = BigInt(isLong ? ticker.maxPrice : ticker.minPrice);
-  const scale = 10n ** BigInt(30 - indexDecimals);
-  return Number(raw) / Number(scale);
+  return parseGmxIndexPrice30ToHuman(raw, indexDecimals);
 }
 
 export async function fetchGmxIndexOracleTicker(indexToken: Hex): Promise<GmxOracleTicker> {
@@ -134,13 +158,15 @@ export function applyMicroFillOrderPricing(
   payload: GmxV2UnsignedOrderPayload,
   acceptablePrice: bigint,
 ): GmxV2UnsignedOrderPayload {
+  const acceptable = normalizeGmxOrderPrice30(acceptablePrice);
+  const trigger = normalizeGmxOrderPrice30(GMX_MARKET_INCREASE_TRIGGER_PRICE_30);
   return {
     ...payload,
     numbers: {
       ...payload.numbers,
-      acceptablePrice: acceptablePrice.toString(),
+      acceptablePrice: acceptable.toString(),
+      triggerPrice: trigger.toString(),
       minOutputAmount: "0",
-      triggerPrice: "0",
     },
   };
 }
