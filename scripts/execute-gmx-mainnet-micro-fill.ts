@@ -66,7 +66,7 @@ async function main(): Promise<void> {
     console.warn("[gmx-micro-fill] probe bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
   }
   if (isBypassSimulationEnabled()) {
-    console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — silent eth_call revert 將跳過預檢並直接 broadcast");
+    console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — silent eth_call revert; skipping preflight and proceeding to broadcast");
   }
 
   const market = await loadGmxMicroFillMarketSnapshot(symbol);
