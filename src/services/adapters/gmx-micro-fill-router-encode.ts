@@ -1,6 +1,7 @@
 /** GMX v2 micro-fill router encoder — acceptablePrice (1% slip) + ExchangeRouter multicall. */
 import {
-  createWalletClient, encodeFunctionData, getAddress, http, maxUint256, parseAbi, toHex, type Chain, type Hex,
+  BaseError, ContractFunctionRevertedError, createWalletClient, encodeFunctionData, getAddress, http, maxUint256, parseAbi, toHex,
+  type Chain, type Hex, type PublicClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
@@ -161,7 +162,19 @@ export function bindGmxOrderReceiver(
   return { ...payload, addresses: { ...payload.addresses, receiver } };
 }
 
-export function encodeGmxV2RouterCreateOrderMulticall(payload: GmxV2UnsignedOrderPayload): {
+export function formatGmxSimulateRevert(err: unknown): string {
+  if (err instanceof BaseError) {
+    const rev = err.walk((e) => e instanceof ContractFunctionRevertedError);
+    if (rev instanceof ContractFunctionRevertedError) {
+      return rev.reason ?? rev.shortMessage ?? rev.message;
+    }
+    return err.shortMessage ?? err.message;
+  }
+  return err instanceof Error ? err.message : String(err);
+}
+
+export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
+  calls: Hex[];
   data: Hex;
   value: bigint;
   executionFee: bigint;
@@ -202,11 +215,39 @@ export function encodeGmxV2RouterCreateOrderMulticall(payload: GmxV2UnsignedOrde
     encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendWnt", args: [GMX_ORDER_VAULT_ARBITRUM, executionFee] }),
     encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendTokens", args: [collateralToken, GMX_ORDER_VAULT_ARBITRUM, collateral] }),
     encodeFunctionData({ abi: gmxRouterAbi, functionName: "createOrder", args: [orderArgs] }),
-  ];
+  ] as Hex[];
   return {
+    calls,
     data: encodeFunctionData({ abi: gmxRouterAbi, functionName: "multicall", args: [calls] }),
     value: executionFee,
     executionFee,
     collateral,
   };
+}
+
+/** eth_call preflight via simulateContract — logs revert reason on failure. */
+export async function simulateGmxMicroFillOrder(input: {
+  client: Pick<PublicClient, "simulateContract">;
+  payload: GmxV2UnsignedOrderPayload;
+  from: Hex;
+}): Promise<void> {
+  const router = buildGmxRouterMulticall(input.payload);
+  await input.client.simulateContract({
+    address: GMX_COLLATERAL_SPENDER_ARBITRUM,
+    abi: gmxRouterAbi,
+    functionName: "multicall",
+    args: [router.calls],
+    account: input.from,
+    value: router.value,
+  });
+}
+
+export function encodeGmxV2RouterCreateOrderMulticall(payload: GmxV2UnsignedOrderPayload): {
+  data: Hex;
+  value: bigint;
+  executionFee: bigint;
+  collateral: bigint;
+} {
+  const { data, value, executionFee, collateral } = buildGmxRouterMulticall(payload);
+  return { data, value, executionFee, collateral };
 }

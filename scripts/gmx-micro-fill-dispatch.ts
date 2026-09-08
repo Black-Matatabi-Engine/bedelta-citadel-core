@@ -12,6 +12,8 @@ import {
   encodeGmxV2RouterCreateOrderMulticall,
   bindGmxOrderReceiver,
   ensureGmxCollateralAllowance,
+  formatGmxSimulateRevert,
+  simulateGmxMicroFillOrder,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 
@@ -195,6 +197,13 @@ export async function dispatchGmxRouterViaEoa(input: {
     chain: input.chain,
     rpc: input.rpc,
   });
+  try {
+    await simulateGmxMicroFillOrder({ client: input.client, payload, from: account.address });
+  } catch (err) {
+    const reason = formatGmxSimulateRevert(err);
+    console.error("[gmx-micro-fill] router simulateContract REVERT", { reason, from: account.address });
+    throw new Error(`GMX_SIMULATE_REVERT:${reason}`);
+  }
   return sendRouterTx({
     wallet, client: input.client, account, chain: input.chain, value: router.value, data: router.data,
   });

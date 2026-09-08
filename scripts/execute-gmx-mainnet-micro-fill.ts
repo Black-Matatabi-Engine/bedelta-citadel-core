@@ -43,10 +43,12 @@ import {
   MICRO_FILL_LEVERAGE_X,
   MICRO_FILL_MIN_POSITION_USD,
   MICRO_FILL_SIZE_DELTA_USD_30,
+  formatGmxSimulateRevert,
   oracleHumanUsdFromTicker,
   readGmxCollateralAllowance,
+  simulateGmxMicroFillOrder,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
-import { dispatchGmxMicroFillLive, type KernelCall } from "./gmx-micro-fill-dispatch";
+import { dispatchGmxMicroFillLive, resolveBufferedEip1559Fees, type KernelCall } from "./gmx-micro-fill-dispatch";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -260,10 +262,23 @@ async function main(): Promise<void> {
     sizeDeltaUsd30: MICRO_FILL_SIZE_DELTA_USD_30.toString(),
     needsApprove: allowance < requiredCollateral,
   });
-  if (useEoa) {
-    await ensureGmxCollateralAllowance({
-      client, owner: eoa, token: collateralToken, required: requiredCollateral, pk, chain: arbitrum, rpc: RPC,
-    });
+  await ensureGmxCollateralAllowance({
+    client,
+    owner: dispatchOwner,
+    token: collateralToken,
+    required: requiredCollateral,
+    pk: useEoa ? pk : undefined,
+    chain: arbitrum,
+    rpc: RPC,
+    resolveFees: () => resolveBufferedEip1559Fees(client),
+  });
+  try {
+    await simulateGmxMicroFillOrder({ client, payload: livePayload, from: dispatchOwner });
+    console.log("[gmx-micro-fill] router simulateContract OK", { from: dispatchOwner });
+  } catch (err) {
+    const reason = formatGmxSimulateRevert(err);
+    console.error("[gmx-micro-fill] router simulateContract REVERT", { reason, from: dispatchOwner });
+    throw new Error(`GMX_SIMULATE_REVERT:${reason}`);
   }
   const preCalls: KernelCall[] = [{
     to: POLICY_GUARD, value: 0n,
