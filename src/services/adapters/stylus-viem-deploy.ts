@@ -9,10 +9,9 @@ import { loadWasmInitcode } from "./stylus-wasm-initcode";
 export const ARB_WASM = "0x0000000000000000000000000000000000000071" as const;
 const DATA_FEE_BUMP_NUM = 120n;
 const DATA_FEE_BUMP_DEN = 100n;
-const GAS_BUFFER_NUM = 150n;
-const GAS_BUFFER_DEN = 100n;
+const MIN_MAX_FEE = parseGwei("0.15");
+const MIN_PRIORITY_FEE = parseGwei("0.01");
 const ACTIVATION_PROBE_VALUE = parseEther("0.0001");
-const PRIORITY_FEE = parseGwei("0.1");
 
 const arbWasmAbi = parseAbi([
   "function activateProgram(address program) payable returns (uint16 version, uint256 dataFee)",
@@ -21,15 +20,14 @@ const arbWasmAbi = parseAbi([
 export async function resolveStylusDeployFees(
   client: PublicClient,
 ): Promise<{ maxFeePerGas: bigint; maxPriorityFeePerGas: bigint }> {
-  const [block, fees] = await Promise.all([
-    client.getBlock({ blockTag: "latest" }),
-    client.estimateFeesPerGas(),
-  ]);
-  const baseFee = block.baseFeePerGas ?? fees.maxFeePerGas ?? 1n;
-  const buffered = (baseFee * GAS_BUFFER_NUM) / GAS_BUFFER_DEN;
-  const rpcMax = fees.maxFeePerGas ?? buffered;
-  const maxFeePerGas = buffered > rpcMax ? buffered : (rpcMax * GAS_BUFFER_NUM) / GAS_BUFFER_DEN;
-  return { maxFeePerGas, maxPriorityFeePerGas: PRIORITY_FEE };
+  const fees = await client.estimateFeesPerGas();
+  const rpcMax = fees.maxFeePerGas ?? 0n;
+  const doubled = rpcMax * 2n;
+  const maxFeePerGas = doubled > MIN_MAX_FEE ? doubled : MIN_MAX_FEE;
+  let maxPriorityFeePerGas = maxFeePerGas / 10n;
+  if (maxPriorityFeePerGas < MIN_PRIORITY_FEE) maxPriorityFeePerGas = MIN_PRIORITY_FEE;
+  if (maxPriorityFeePerGas > maxFeePerGas) maxPriorityFeePerGas = maxFeePerGas;
+  return { maxFeePerGas, maxPriorityFeePerGas };
 }
 
 async function estimateActivationDataFee(

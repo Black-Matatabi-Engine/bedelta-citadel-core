@@ -96,7 +96,7 @@ async function main(): Promise<void> {
     maxFeePerGas: fees.maxFeePerGas.toString(),
     maxPriorityFeePerGas: fees.maxPriorityFeePerGas.toString(),
     initcodeBytes: (initcode.length - 2) / 2,
-    buffer: "1.5x baseFee, priority 0.1 gwei",
+    buffer: "max(rpcMax×2, 0.15 gwei) cap; priority min(0.01 gwei, maxFee/10)",
   });
 
   if (!armed()) {
