@@ -6,6 +6,7 @@ import {
 import { privateKeyToAccount } from "viem/accounts";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
+import { GMX_MARKET_REGISTRY, GMX_ETH_USD_MARKET_TOKEN } from "../../config/gmx-markets";
 import { GMX_USDC_ARBITRUM, USDC_DECIMALS } from "./gmx-v2-order-payload-constants";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
 
@@ -19,6 +20,9 @@ export const MICRO_FILL_LEVERAGE_X = 5;
 export const MICRO_FILL_SIZE_DELTA_USD_30 = 10n * 10n ** 30n;
 export const MICRO_FILL_COLLATERAL_USDC = BigInt(MICRO_FILL_COLLATERAL_USD) * 10n ** BigInt(USDC_DECIMALS);
 export const GMX_ORACLE_TICKERS_URL = "https://arbitrum-api.gmxinfra.io/prices/tickers";
+export const GMX_MARKETS_INFO_URL = "https://arbitrum-api.gmxinfra.io/markets/info";
+/** GMX v2 ETH/USD [WETH-USDC] GM marketToken — Arbitrum One SSOT (matches gmxinfra markets/info). */
+export const MICRO_FILL_ETH_USDC_MARKET = getAddress(GMX_ETH_USD_MARKET_TOKEN);
 export const MICRO_FILL_SLIPPAGE_BPS = 100;
 const ETH_INDEX_DECIMALS = 18;
 
@@ -54,6 +58,47 @@ export async function fetchGmxIndexOracleTicker(indexToken: Hex): Promise<GmxOra
   const hit = tickers.find((t) => getAddress(t.tokenAddress as Hex) === getAddress(indexToken));
   if (!hit) throw new Error(`GMX oracle ticker missing for ${indexToken}`);
   return hit;
+}
+
+const MICRO_FILL_MARKET_TOKENS = new Set(
+  Object.values(GMX_MARKET_REGISTRY).map((e) => getAddress(e.marketToken)),
+);
+
+/** Normalize + fail-closed if marketToken is outside Arbitrum SSOT registry. */
+export function normalizeMicroFillMarketToken(market: string): Hex {
+  const normalized = getAddress(market as Hex);
+  if (!MICRO_FILL_MARKET_TOKENS.has(normalized)) {
+    throw new Error(
+      `GMX_MARKET_INVALID: ${normalized} not in micro-fill registry (${[...MICRO_FILL_MARKET_TOKENS].join(", ")})`,
+    );
+  }
+  return normalized;
+}
+
+type GmxMarketsInfoRow = { marketToken: string; longToken: string; shortToken: string; name?: string };
+
+/** Cross-check registry marketToken against live gmxinfra markets/info (long/short pair). */
+export async function verifyMicroFillMarketAgainstGmxApi(market: string): Promise<Hex> {
+  const normalized = normalizeMicroFillMarketToken(market);
+  const entry = Object.values(GMX_MARKET_REGISTRY).find((e) => getAddress(e.marketToken) === normalized);
+  if (!entry) return normalized;
+  const res = await fetch(GMX_MARKETS_INFO_URL, {
+    headers: { Accept: "application/json", "User-Agent": BROWSER_MIMIC_USER_AGENT },
+    signal: AbortSignal.timeout(8_000),
+  });
+  if (!res.ok) throw new Error(`GMX markets/info HTTP ${res.status}`);
+  const body = (await res.json()) as { markets?: GmxMarketsInfoRow[] } | GmxMarketsInfoRow[];
+  const rows = Array.isArray(body) ? body : (body.markets ?? []);
+  const live = rows.find(
+    (m) => getAddress(m.longToken as Hex) === getAddress(entry.longToken)
+      && getAddress(m.shortToken as Hex) === getAddress(entry.shortToken),
+  );
+  if (!live) throw new Error(`GMX_MARKET_NOT_LISTED: ${entry.key} missing on gmxinfra markets/info`);
+  const official = getAddress(live.marketToken as Hex);
+  if (official !== normalized) {
+    throw new Error(`GMX_MARKET_DRIFT: registry=${normalized} official=${official} for ${entry.key}`);
+  }
+  return official;
 }
 
 export function applyMicroFillOrderPricing(
@@ -326,13 +371,14 @@ export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
   const executionFee = BigInt(payload.numbers.executionFee);
   const collateral = BigInt(payload.numbers.initialCollateralDeltaAmount);
   const collateralToken = getAddress(payload.addresses.initialCollateralToken as Hex);
+  const market = normalizeMicroFillMarketToken(payload.addresses.market);
   const orderArgs = {
     addresses: {
       receiver: payload.addresses.receiver as Hex,
       cancellationReceiver: payload.addresses.cancellationReceiver as Hex,
       callbackContract: payload.addresses.callbackContract as Hex,
       uiFeeReceiver: payload.addresses.uiFeeReceiver as Hex,
-      market: payload.addresses.market as Hex,
+      market,
       initialCollateralToken: collateralToken,
       swapPath: payload.addresses.swapPath as Hex[],
     },
@@ -375,6 +421,13 @@ export async function simulateGmxMicroFillOrder(input: {
   from: Hex;
 }): Promise<void> {
   const router = buildGmxRouterMulticall(input.payload);
+  const market = normalizeMicroFillMarketToken(input.payload.addresses.market);
+  await verifyMicroFillMarketAgainstGmxApi(market);
+  console.log("[gmx-micro-fill] market verified", {
+    market,
+    ethUsdc: MICRO_FILL_ETH_USDC_MARKET,
+    collateral: GMX_USDC_ARBITRUM,
+  });
   try {
     await input.client.simulateContract({
       address: GMX_COLLATERAL_SPENDER_ARBITRUM,
