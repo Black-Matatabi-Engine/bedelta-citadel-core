@@ -18,11 +18,21 @@ const SOIL_REASON_INSUFFICIENT_DEPTH = 1;
 const SOIL_REASON_CROSS_VENUE = 2;
 const SOIL_REASON_DEPTH_USD = 4;
 
+export function resolveEnvMinDepthUsdOverride(): number | undefined {
+  if (typeof process === "undefined" || !process.env) return undefined;
+  const raw = process.env.MIN_DEPTH_USD ?? process.env.SOIL_MIN_DEPTH_USD;
+  if (raw === undefined || raw === "") return undefined;
+  const n = Number(raw);
+  return Number.isFinite(n) && n >= 0 ? n : undefined;
+}
+
 export function resolveSoilMinDepthUsd(input: {
   minDepthUsd?: number;
   isTestnet?: boolean;
 }): number {
   if (input.minDepthUsd !== undefined) return input.minDepthUsd;
+  const envMin = resolveEnvMinDepthUsdOverride();
+  if (envMin !== undefined) return envMin;
   if (input.isTestnet) return HL_TESTNET_MIN_DEPTH_USD;
   return MIN_DEPTH_USD;
 }

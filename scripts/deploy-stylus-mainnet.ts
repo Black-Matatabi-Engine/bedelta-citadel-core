@@ -14,10 +14,14 @@ const STYLUS_DIR = join(ROOT, "contracts/stylus-probe");
 const CHAIN_ID = 42161;
 const DEFAULT_RPC = "https://arb1.arbitrum.io/rpc";
 
-function run(cmd: string, args: string[], cwd = STYLUS_DIR): { ok: boolean; output: string } {
-  const r = spawnSync(cmd, args, { cwd, encoding: "utf8", env: process.env });
+function run(cmd: string, args: string[], cwd = STYLUS_DIR, env = process.env): { ok: boolean; output: string } {
+  const r = spawnSync(cmd, args, { cwd, encoding: "utf8", env });
   const output = `${r.stdout ?? ""}${r.stderr ?? ""}`.trim();
   return { ok: r.status === 0, output };
+}
+
+function stylusEnv(rpc: string): NodeJS.ProcessEnv {
+  return { ...process.env, STYLUS_ENDPOINT: rpc, RPC_URL: rpc };
 }
 
 function armed(): boolean {
@@ -57,19 +61,20 @@ function verifyStylusCheck(rpc: string): void {
   const stylusBin = which.output.split("\n")[0]?.includes("cargo stylus")
     ? "rustup run 1.91 cargo stylus"
     : "cargo-stylus";
-  const check = run("bash", ["-lc", `${stylusBin} check --endpoint-url '${rpc}'`], STYLUS_DIR);
+  const check = run("bash", ["-lc", `${stylusBin} --endpoint '${rpc}' check`], STYLUS_DIR, stylusEnv(rpc));
   if (!check.ok) {
     console.error("[stylus:mainnet] cargo stylus check FAILED\n", check.output);
     process.exit(1);
   }
-  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, endpointUrl: rpc });
+  console.log("[stylus:mainnet] cargo stylus check: PASS", { chainId: CHAIN_ID, endpoint: rpc });
 }
 
 function deployStylus(rpc: string, pk: string): void {
   const deploy = run(
     "bash",
-    ["-lc", `rustup run 1.91 cargo stylus deploy --endpoint-url '${rpc}' --private-key ${pk} --no-verify`],
+    ["-lc", `rustup run 1.91 cargo stylus --endpoint '${rpc}' deploy --private-key ${pk} --no-verify`],
     STYLUS_DIR,
+    stylusEnv(rpc),
   );
   if (!deploy.ok) {
     console.error("[stylus:mainnet] cargo stylus deploy FAILED\n", deploy.output);
