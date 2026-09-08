@@ -42,6 +42,7 @@
     "deploy:stylus:mainnet": "tsx scripts/deploy-stylus-mainnet.ts",
     "execute:gmx:micro-fill": "tsx scripts/execute-gmx-mainnet-micro-fill.ts",
     "execute:gmx:gm-deposit": "tsx scripts/execute-gmx-mainnet-gm-deposit.ts",
+    "execute:gmx:gm-withdraw": "tsx scripts/execute-gmx-mainnet-gm-withdraw.ts",
     "build": "pnpm run build:worker",
     "build:assets": "mkdir -p dist && cp index.html dist/index.html",
     "build:worker": "pnpm run build:assets && pnpm exec tsc --noEmit && WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --minify --outdir=dist-worker",
