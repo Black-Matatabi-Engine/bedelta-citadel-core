@@ -298,6 +298,24 @@ export function logGmxSimulateRevert(err: unknown, ctx?: Record<string, unknown>
   return details.message;
 }
 
+function isEmptyRevertHex(hex?: string): boolean {
+  return hex === "0x" || hex === "";
+}
+
+/** Silent eth_call revert — GMX Router multicall often returns rawData `0x` without a reason string. */
+export function isSilentGmxSimulateRevert(err: unknown): boolean {
+  const { rawData, causeData } = extractGmxSimulateRevertDetails(err);
+  if (isEmptyRevertHex(rawData) || isEmptyRevertHex(causeData)) return true;
+  if (err instanceof BaseError) {
+    const rev = err.walk((e) => e instanceof ContractFunctionRevertedError);
+    if (rev instanceof ContractFunctionRevertedError) {
+      const raw = readHexData((rev as { raw?: unknown }).raw);
+      if (isEmptyRevertHex(raw)) return true;
+    }
+  }
+  return false;
+}
+
 export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
   calls: Hex[];
   data: Hex;
@@ -373,6 +391,15 @@ export async function simulateGmxMicroFillOrder(input: {
       value: router.value.toString(),
       collateral: router.collateral.toString(),
     });
+    if (isSilentGmxSimulateRevert(err)) {
+      console.warn(
+        "[gmx-micro-fill] simulateContract silent revert (rawData=0x); local eth_call may diverge from on-chain GMX Router execution",
+      );
+      if (process.env.BYPASS_SIMULATION === "true") {
+        console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — skipping simulation preflight, proceeding to broadcast");
+        return;
+      }
+    }
     throw err;
   }
 }
