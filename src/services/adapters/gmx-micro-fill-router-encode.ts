@@ -18,6 +18,10 @@ export {
 } from "./gmx-micro-fill-constants";
 export { GMX_MARKET_INCREASE_MULTICALL_METHODS } from "./gmx-market-increase-multicall";
 export {
+  assertGmxMicroFillUsdcTransferLegs,
+  decodeGmxMarketIncreaseMulticallLegs,
+} from "./gmx-market-increase-multicall";
+export {
   applyMicroFillMinPositionSizing,
   applyMicroFillOrderPricing,
   bindGmxOrderReceiver,
