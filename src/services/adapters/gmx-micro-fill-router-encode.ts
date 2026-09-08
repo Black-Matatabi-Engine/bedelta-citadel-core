@@ -262,9 +262,39 @@ export function formatGmxSimulateRevert(err: unknown): string {
   return extractGmxSimulateRevertDetails(err).message;
 }
 
+function serializeSimulateError(err: unknown, depth = 0): unknown {
+  if (err == null || depth > 5) return err;
+  if (typeof err !== "object") return err;
+  const o = err as Record<string, unknown>;
+  const base: Record<string, unknown> = {
+    name: o.name,
+    message: o.message,
+    shortMessage: o.shortMessage,
+    data: o.data,
+    raw: o.raw,
+    reason: o.reason,
+    signature: o.signature,
+    cause: serializeSimulateError(o.cause, depth + 1),
+  };
+  if (err instanceof BaseError) {
+    base.details = err.details;
+    base.metaMessages = err.metaMessages;
+  }
+  return base;
+}
+
 export function logGmxSimulateRevert(err: unknown, ctx?: Record<string, unknown>): string {
   const details = extractGmxSimulateRevertDetails(err);
-  console.error("[gmx-micro-fill] simulateContract revert details", { ...ctx, ...details });
+  const top = err && typeof err === "object" ? (err as Record<string, unknown>) : undefined;
+  const errData = top?.data;
+  const causeObj = top?.cause;
+  const causeData = causeObj && typeof causeObj === "object" ? (causeObj as Record<string, unknown>).data : undefined;
+  const selector = details.rawData?.slice(0, 10) ?? details.causeData?.slice(0, 10);
+  console.error("[gmx-micro-fill] simulateContract err.data", errData);
+  console.error("[gmx-micro-fill] simulateContract err.cause?.data", causeData);
+  console.error("[gmx-micro-fill] simulateContract err json", JSON.stringify(serializeSimulateError(err), null, 2));
+  if (selector) console.error("[gmx-micro-fill] simulateContract error selector", selector);
+  console.error("[gmx-micro-fill] simulateContract revert details", { ...ctx, ...details, errData, causeData, selector });
   return details.message;
 }
 
