@@ -118,6 +118,12 @@ function buildSuggestions(cause: unknown, ctx: GmxMicroFillExecutionContext): st
   if (details.errorLabel === "InsufficientExecutionFee" || decoded.includes("InsufficientExecutionFee")) {
     tips.push("Raise executionFee — use dynamic GMX DataStore estimate (gasLimit × gasPrice + 30% buffer)");
   }
+  if (details.errorLabel === "AcceptablePrice" || decoded.includes("OrderNotFulfillableAtAcceptablePrice") || decoded.includes("InvalidOrderPrices")) {
+    tips.push("Refresh acceptablePrice from live oracle ticker + slippage bps; see interpretGmxRevertData adjustments");
+  }
+  if (details.errorLabel === "OracleStaleness" || decoded.includes("MaxPriceAgeExceeded") || decoded.includes("OraclePriceOutdated")) {
+    tips.push("Oracle stale — retry on fresh block; user multicall cannot include sendOraclePrices (keeper-only)");
+  }
   if (details.errorLabel === "MinCollateralUsd" || decoded.includes("InsufficientCollateralUsd") || decoded.includes("MinPositionSize")) {
     tips.push(`Raise initialCollateralDeltaAmount — GMX min collateral/position threshold; micro-fill uses $${MICRO_FILL_COLLATERAL_USD} USDC`);
   }

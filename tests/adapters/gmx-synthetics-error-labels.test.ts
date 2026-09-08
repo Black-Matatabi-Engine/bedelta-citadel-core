@@ -33,7 +33,7 @@ describe("gmx-synthetics-error-labels", () => {
       errorName: "MarketNotFound",
       args: [market],
     });
-    expect(decodeGmxRevertData(data)).toContain("[GMX:InvalidMarket]");
+    expect(decodeGmxRevertData(data)).toContain("[GMX:MarketNotFound]");
     expect(labelGmxSyntheticsError(`InvalidPositionMarket(${market})`)).toBe("InvalidMarket");
   });
 });

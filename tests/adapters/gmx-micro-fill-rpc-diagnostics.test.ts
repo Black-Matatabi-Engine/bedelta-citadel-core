@@ -134,7 +134,7 @@ describe("gmx-micro-fill-rpc-diagnostics", () => {
       primaryReplay: { summary: "silent revert (no custom error data)" },
     });
     expect(diag?.source).toBe("debug_trace");
-    expect(diag?.decodedError).toContain("[GMX:InvalidMarket]");
+    expect(diag?.decodedError).toContain("[GMX:MarketNotFound]");
     expect(diag?.callPath).toContain("DELEGATECALL");
     expect(fetchFn.mock.calls.some((c) => String(c[1]?.body ?? "").includes("debug_traceTransaction"))).toBe(true);
   });

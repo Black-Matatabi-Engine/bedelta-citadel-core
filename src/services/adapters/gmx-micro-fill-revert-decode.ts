@@ -1,12 +1,9 @@
 /** GMX micro-fill simulateContract revert decode helpers. */
 import {
-  BaseError, ContractFunctionRevertedError, decodeAbiParameters, type Hex,
+  BaseError, ContractFunctionRevertedError, type Hex,
 } from "viem";
-import { decodeGmxSyntheticsError } from "./gmx-synthetics-errors";
-import { formatGmxLabeledError, labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
-
-const ERROR_STRING_SELECTOR = "0x08c379a0";
-const PANIC_SELECTOR = "0x4e487b71";
+import { interpretGmxRevertData } from "./gmx-error-interpreter";
+import { labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
 
 export type GmxSimulateRevertDetails = {
   message: string;
@@ -43,22 +40,8 @@ function formatDecodedContractError(data: unknown): string | undefined {
 }
 
 export function decodeGmxRevertData(data: Hex): string | null {
-  const selector = data.slice(0, 10).toLowerCase();
-  const gmxDecoded = decodeGmxSyntheticsError(data);
-  if (gmxDecoded) return formatGmxLabeledError(gmxDecoded);
-  try {
-    if (selector === ERROR_STRING_SELECTOR) {
-      const [msg] = decodeAbiParameters([{ type: "string" }], `0x${data.slice(10)}` as Hex);
-      return `Error("${msg}")`;
-    }
-    if (selector === PANIC_SELECTOR) {
-      const [code] = decodeAbiParameters([{ type: "uint256" }], `0x${data.slice(10)}` as Hex);
-      return `Panic(0x${code.toString(16)})`;
-    }
-    return `CustomError(selector=${selector}, payload=${data})`;
-  } catch {
-    return `UndecodedRevert(data=${data})`;
-  }
+  const interpreted = interpretGmxRevertData(data);
+  return interpreted.silent ? null : interpreted.decoded;
 }
 
 function attachErrorLabel(decoded?: string): { decodedError?: string; errorLabel?: GmxSyntheticsErrorLabel } {

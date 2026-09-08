@@ -2,6 +2,7 @@
 import { type Hex } from "viem";
 import { postArbitrumJsonRpc } from "./arbitrum-rpc-fallback";
 import { decodeGmxRevertData } from "./gmx-micro-fill-revert-decode";
+import { interpretGmxRevertData } from "./gmx-error-interpreter";
 import { labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
 import {
   resolveGmxDiagnosticRpcProviders,
@@ -39,6 +40,14 @@ export {
   scrapeJsonRpcRevertData,
 } from "./gmx-micro-fill-rpc-providers";
 export { extractTraceRevertHint, isSilentRevertHex } from "./gmx-micro-fill-trace-parse";
+export { probeIsolatedGmxCreateOrderRevert, formatGmxIsolatedProbeResult } from "./gmx-error-isolated-probe";
+export {
+  interpretGmxRevertData,
+  interpretGmxViemError,
+  formatGmxInterpretedError,
+  type GmxInterpretedError,
+  type GmxInterpretContext,
+} from "./gmx-error-interpreter";
 
 function rankDiagnostics(a: GmxFailedTxDiagnostics, b: GmxFailedTxDiagnostics): GmxFailedTxDiagnostics {
   const score = (d: GmxFailedTxDiagnostics) => {
@@ -88,7 +97,8 @@ export function needsForcedCallTrace(best?: GmxFailedTxDiagnostics): boolean {
 }
 
 function traceHintToDiagnostics(hint: GmxTraceRevertHint, rpcUrl: string, source: GmxFailedTxDiagnostics["source"]): GmxFailedTxDiagnostics {
-  const decodedError = hint.rawData ? decodeGmxRevertData(hint.rawData) ?? undefined : undefined;
+  const interpreted = hint.rawData ? interpretGmxRevertData(hint.rawData) : undefined;
+  const decodedError = interpreted && !interpreted.silent ? interpreted.decoded : undefined;
   const traceHint = hint.hint ?? (hint.callPath ? `revert at ${hint.callPath}` : undefined);
   return buildDiagnostics({
     rawData: hint.rawData,
