@@ -67,6 +67,24 @@ const gateAbi = parseAbi([
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_GMX_MICRO_FILL === "YES"; }
+
+function forceEoaFallbackRequested(): boolean {
+  const v = (process.env.FORCE_EOA_FALLBACK ?? "").trim().toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
+}
+
+async function readUsdcBalance(
+  client: ReturnType<typeof createPublicClient>,
+  owner: Hex,
+): Promise<bigint> {
+  return client.readContract({
+    address: getAddress(GMX_USDC_ARBITRUM),
+    abi: parseAbi(["function balanceOf(address) view returns (uint256)"]),
+    functionName: "balanceOf",
+    args: [owner],
+  });
+}
+
 function resolvePk(): Hex {
   const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
   if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
@@ -183,16 +201,25 @@ async function main(): Promise<void> {
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
   const eoa = privateKeyToAccount(pk).address;
   const now = BigInt(Math.floor(Date.now() / 1000));
+  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
+  const forceEoa = forceEoaFallbackRequested();
+  const eoaUsdcBal = await readUsdcBalance(client, eoa);
+  const useEoa = forceEoa || eoaUsdcBal >= MICRO_FILL_COLLATERAL_USDC || !gateSignerPk;
+  const dispatchOwner = useEoa ? eoa : kernel.address;
   let liveSide = side;
-  let livePayload = applyMicroFillMinPositionSizing(bindGmxOrderReceiver(orderPayload, kernel.address));
-  const usdcBal = await client.readContract({
-    address: getAddress(GMX_USDC_ARBITRUM),
-    abi: parseAbi(["function balanceOf(address) view returns (uint256)"]),
-    functionName: "balanceOf",
-    args: [kernel.address],
-  });
-  if (usdcBal < MICRO_FILL_COLLATERAL_USDC) {
-    throw new Error(`GMX_USDC_INSUFFICIENT: kernel needs $${MICRO_FILL_COLLATERAL_USD} USDC, have=${usdcBal}`);
+  let livePayload = applyMicroFillMinPositionSizing(bindGmxOrderReceiver(orderPayload, dispatchOwner));
+  if (useEoa) {
+    if (eoaUsdcBal < MICRO_FILL_COLLATERAL_USDC) {
+      throw new Error(`GMX_USDC_INSUFFICIENT: EOA needs $${MICRO_FILL_COLLATERAL_USD} USDC, have=${eoaUsdcBal}`);
+    }
+    console.log("[gmx-micro-fill] EOA dispatch path", {
+      owner: eoa, usdc: eoaUsdcBal.toString(), forceEoa, gateSigner: gateSignerPk !== null,
+    });
+  } else {
+    const kernelUsdcBal = await readUsdcBalance(client, kernel.address);
+    if (kernelUsdcBal < MICRO_FILL_COLLATERAL_USDC) {
+      throw new Error(`GMX_USDC_INSUFFICIENT: kernel needs $${MICRO_FILL_COLLATERAL_USD} USDC, have=${kernelUsdcBal}`);
+    }
   }
   let acceptablePrice: bigint;
   try {
@@ -222,18 +249,18 @@ async function main(): Promise<void> {
   });
   const collateralToken = getAddress(livePayload.addresses.initialCollateralToken as Hex);
   const requiredCollateral = BigInt(livePayload.numbers.initialCollateralDeltaAmount);
-  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
-  const allowanceOwner = gateSignerPk ? kernel.address : eoa;
+  const allowanceOwner = dispatchOwner;
   const allowance = await readGmxCollateralAllowance(client, allowanceOwner, collateralToken);
   console.log("[gmx-micro-fill] USDC allowance preflight", {
     owner: allowanceOwner,
+    dispatch: useEoa ? "eoa" : "kernel",
     spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
     allowance: allowance.toString(),
     required: requiredCollateral.toString(),
     sizeDeltaUsd30: MICRO_FILL_SIZE_DELTA_USD_30.toString(),
     needsApprove: allowance < requiredCollateral,
   });
-  if (!gateSignerPk) {
+  if (useEoa) {
     await ensureGmxCollateralAllowance({
       client, owner: eoa, token: collateralToken, required: requiredCollateral, pk, chain: arbitrum, rpc: RPC,
     });
@@ -242,7 +269,7 @@ async function main(): Promise<void> {
     to: POLICY_GUARD, value: 0n,
     data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(MICRO_FILL_MIN_POSITION_USD * 1e6)), now + 3600n] }),
   }];
-  if (gateSignerPk) {
+  if (gateSignerPk && !useEoa) {
     const att = {
       payloadHash: computeGatedExecutorPayloadHash({
         chainId: CHAIN_ID, executor: GATE, initiator: kernel.address,
@@ -255,19 +282,21 @@ async function main(): Promise<void> {
       to: GATE, value: 0n,
       data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [await signAtt(gateWallet, att)]] }),
     });
+  } else if (!useEoa) {
+    console.warn("[gmx-micro-fill] no Gate signer — proceeding with Kernel-only dispatch");
   } else {
-    console.warn("[gmx-micro-fill] no Gate signer — proceeding with direct GMX Router dispatch (EOA fallback)");
+    console.warn("[gmx-micro-fill] EOA fallback — skipping Gate/Kernel UserOp path");
   }
 
   const projectId = process.env.ZERODEV_PROJECT_ID?.trim();
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
   const { tx, mode } = await dispatchGmxMicroFillLive({
     pk, chain: arbitrum, rpc: RPC, chainId: CHAIN_ID, client, kernel,
-    payload: livePayload, preCalls, projectId, forceEoa: !gateSignerPk,
+    payload: livePayload, preCalls, projectId, forceEoa: useEoa,
   });
   const receipt = await client.waitForTransactionReceipt({ hash: tx });
   console.log("[gmx-micro-fill] broadcast OK", {
-    mode, kernel: kernel.address, tx, status: receipt.status, side: liveSide, sizeUsd, url: arbiscan(tx),
+    mode, owner: dispatchOwner, kernel: kernel.address, tx, status: receipt.status, side: liveSide, sizeUsd, url: arbiscan(tx),
   });
   if (receipt.status !== "success") {
     console.warn("[gmx-micro-fill] router tx mined with revert — Arbiscan hash recorded for audit", { tx, url: arbiscan(tx) });
