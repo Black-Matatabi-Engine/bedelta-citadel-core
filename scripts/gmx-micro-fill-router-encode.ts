@@ -6,6 +6,7 @@ export {
   applyMicroFillOrderPricing,
   bindGmxOrderReceiver,
   computeMicroFillAcceptablePrice,
+  computeGmxAcceptablePriceFromOracleRaw,
   encodeGmxV2RouterCreateOrderMulticall,
   fetchGmxIndexOracleTicker,
   oracleHumanUsdFromTicker,

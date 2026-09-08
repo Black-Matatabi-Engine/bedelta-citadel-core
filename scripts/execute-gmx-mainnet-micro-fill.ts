@@ -34,6 +34,7 @@ import {
   applyMicroFillMinPositionSizing,
   bindGmxOrderReceiver,
   computeMicroFillAcceptablePrice,
+  computeGmxAcceptablePriceFromOracleRaw,
   ensureGmxCollateralAllowance,
   fetchGmxIndexOracleTicker,
   GMX_COLLATERAL_SPENDER_ARBITRUM,
@@ -226,8 +227,8 @@ async function main(): Promise<void> {
   let acceptablePrice: bigint;
   try {
     const ticker = await fetchGmxIndexOracleTicker(registry.longToken);
-    acceptablePrice = computeMicroFillAcceptablePrice(
-      oracleHumanUsdFromTicker(ticker, livePayload.isLong),
+    acceptablePrice = computeGmxAcceptablePriceFromOracleRaw(
+      BigInt(livePayload.isLong ? ticker.maxPrice : ticker.minPrice),
       livePayload.isLong,
     );
   } catch {

@@ -1,7 +1,7 @@
 /** GMX v2 micro-fill router encoder — acceptablePrice (1% slip) + ExchangeRouter multicall. */
 import {
   BaseError, ContractFunctionRevertedError, createWalletClient, decodeAbiParameters, encodeFunctionData, getAddress, http,
-  maxUint256, parseAbi, toHex, type Chain, type Hex, type PublicClient,
+  maxUint256, parseAbi, type Chain, type Hex, type PublicClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
@@ -9,8 +9,15 @@ import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
 import { GMX_MARKET_REGISTRY, GMX_ETH_USD_MARKET_TOKEN } from "../../config/gmx-markets";
 import { GMX_USDC_ARBITRUM, USDC_DECIMALS } from "./gmx-v2-order-payload-constants";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
+import {
+  GMX_MARKET_INCREASE_MULTICALL_METHODS,
+  GMX_ORDER_VAULT_ARBITRUM,
+  buildGmxMarketIncreaseMulticallCalls,
+  encodeGmxExchangeRouterMulticall,
+  gmxRouterAbi,
+} from "./gmx-market-increase-multicall";
 
-export const GMX_ORDER_VAULT_ARBITRUM = getAddress("0x31eF83a530Fde1B38EE9A18093A333D8Bbbc40D5");
+export { GMX_ORDER_VAULT_ARBITRUM, GMX_MARKET_INCREASE_MULTICALL_METHODS };
 /** ExchangeRouter — ERC20 allowance spender for sendTokens → OrderVault. */
 export const GMX_COLLATERAL_SPENDER_ARBITRUM = getAddress(GMX_V2_EXCHANGE_ROUTER_ARBITRUM);
 export { GMX_USDC_ARBITRUM };
@@ -32,14 +39,36 @@ export interface GmxOracleTicker {
   maxPrice: string;
 }
 
-/** Human USD oracle → GMX 30-decimal acceptablePrice (long ×1.01 / short ×0.99). */
-export function computeMicroFillAcceptablePrice(oraclePriceUsd: number, isLong: boolean): bigint {
+/** Apply slippage on GMX oracle 30-decimal index price (gmx-interface `convertToContractPrice` path). */
+export function computeGmxAcceptablePriceFromOracleRaw(
+  oraclePriceRaw: bigint,
+  isLong: boolean,
+  slippageBps: number = MICRO_FILL_SLIPPAGE_BPS,
+): bigint {
+  const bps = BigInt(slippageBps);
+  const factor = isLong ? 10_000n + bps : 10_000n - bps;
+  return (oraclePriceRaw * factor) / 10_000n;
+}
+
+function humanUsdToGmxOraclePriceRaw(humanUsd: number, indexDecimals = ETH_INDEX_DECIMALS): bigint {
+  const [whole, frac = ""] = humanUsd.toFixed(6).split(".");
+  const micro = BigInt(whole + (frac + "000000").slice(0, 6));
+  return micro * 10n ** BigInt(24 - indexDecimals);
+}
+
+/** Human USD index price → acceptablePrice (30-dec oracle encoding + slippage). */
+export function computeMicroFillAcceptablePrice(
+  oraclePriceUsd: number,
+  isLong: boolean,
+  indexDecimals = ETH_INDEX_DECIMALS,
+): bigint {
   if (!Number.isFinite(oraclePriceUsd) || oraclePriceUsd <= 0) {
     throw new Error("computeMicroFillAcceptablePrice: invalid oraclePriceUsd");
   }
-  const priceMicro = BigInt(Math.round(oraclePriceUsd * 1_000_000));
-  const factor = isLong ? 10100n : 9900n;
-  return (priceMicro * factor * 10n ** 24n) / 10000n;
+  return computeGmxAcceptablePriceFromOracleRaw(
+    humanUsdToGmxOraclePriceRaw(oraclePriceUsd, indexDecimals),
+    isLong,
+  );
 }
 
 export function oracleHumanUsdFromTicker(ticker: GmxOracleTicker, isLong: boolean, indexDecimals = ETH_INDEX_DECIMALS): number {
@@ -192,13 +221,6 @@ export async function readGmxCollateralAllowance(
     args: [owner, GMX_COLLATERAL_SPENDER_ARBITRUM],
   }) as Promise<bigint>;
 }
-
-const gmxRouterAbi = parseAbi([
-  "function multicall(bytes[] data) payable returns (bytes[])",
-  "function sendWnt(address receiver, uint256 amount) payable",
-  "function sendTokens(address token, address receiver, uint256 amount) payable",
-  "function createOrder(((address receiver, address cancellationReceiver, address callbackContract, address uiFeeReceiver, address market, address initialCollateralToken, address[] swapPath) addresses, (uint256 sizeDeltaUsd, uint256 initialCollateralDeltaAmount, uint256 triggerPrice, uint256 acceptablePrice, uint256 executionFee, uint256 callbackGasLimit, uint256 minOutputAmount, uint256 validFromTime) numbers, uint8 orderType, uint8 decreasePositionSwapType, bool isLong, bool shouldUnwrapNativeToken, bool autoCancel, bytes32 referralCode, bytes[] dataList) params) payable returns (bytes32)",
-]);
 
 export function bindGmxOrderReceiver(
   payload: GmxV2UnsignedOrderPayload,
@@ -368,50 +390,14 @@ export function buildGmxRouterMulticall(payload: GmxV2UnsignedOrderPayload): {
   executionFee: bigint;
   collateral: bigint;
 } {
-  const executionFee = BigInt(payload.numbers.executionFee);
-  const collateral = BigInt(payload.numbers.initialCollateralDeltaAmount);
-  const collateralToken = getAddress(payload.addresses.initialCollateralToken as Hex);
   const market = normalizeMicroFillMarketToken(payload.addresses.market);
-  const orderArgs = {
-    addresses: {
-      receiver: payload.addresses.receiver as Hex,
-      cancellationReceiver: payload.addresses.cancellationReceiver as Hex,
-      callbackContract: payload.addresses.callbackContract as Hex,
-      uiFeeReceiver: payload.addresses.uiFeeReceiver as Hex,
-      market,
-      initialCollateralToken: collateralToken,
-      swapPath: payload.addresses.swapPath as Hex[],
-    },
-    numbers: {
-      sizeDeltaUsd: BigInt(payload.numbers.sizeDeltaUsd),
-      initialCollateralDeltaAmount: collateral,
-      triggerPrice: 0n,
-      acceptablePrice: BigInt(payload.numbers.acceptablePrice),
-      executionFee,
-      callbackGasLimit: BigInt(payload.numbers.callbackGasLimit),
-      minOutputAmount: 0n,
-      validFromTime: BigInt(payload.numbers.validFromTime),
-    },
-    orderType: payload.orderType,
-    decreasePositionSwapType: payload.decreasePositionSwapType,
-    isLong: payload.isLong,
-    shouldUnwrapNativeToken: payload.shouldUnwrapNativeToken,
-    autoCancel: payload.autoCancel,
-    referralCode: payload.referralCode as Hex,
-    dataList: payload.dataList.map((item) => toHex(item)),
-  };
-  const calls = [
-    encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendWnt", args: [GMX_ORDER_VAULT_ARBITRUM, executionFee] }),
-    encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendTokens", args: [collateralToken, GMX_ORDER_VAULT_ARBITRUM, collateral] }),
-    encodeFunctionData({ abi: gmxRouterAbi, functionName: "createOrder", args: [orderArgs] }),
-  ] as Hex[];
-  return {
-    calls,
-    data: encodeFunctionData({ abi: gmxRouterAbi, functionName: "multicall", args: [calls] }),
-    value: executionFee,
-    executionFee,
-    collateral,
-  };
+  const { calls, msgValue, executionFee, collateral } = buildGmxMarketIncreaseMulticallCalls({
+    payload,
+    market,
+    orderVault: GMX_ORDER_VAULT_ARBITRUM,
+  });
+  const { data, value } = encodeGmxExchangeRouterMulticall(calls, msgValue);
+  return { calls, data, value, executionFee, collateral };
 }
 
 /** eth_call preflight via simulateContract — logs revert reason on failure. */
