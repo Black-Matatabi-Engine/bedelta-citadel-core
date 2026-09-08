@@ -3,7 +3,15 @@ import { type Hex } from "viem";
 import { postArbitrumJsonRpc } from "./arbitrum-rpc-fallback";
 import { decodeGmxRevertData } from "./gmx-micro-fill-revert-decode";
 import { labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
-import { GMX_DIAGNOSTIC_RPC_PROVIDERS } from "./gmx-v2-rpc-constants";
+import {
+  resolveGmxDiagnosticRpcProviders,
+  scrapeJsonRpcRevertData,
+} from "./gmx-micro-fill-rpc-providers";
+import {
+  extractTraceRevertHint,
+  isSilentRevertHex,
+  type GmxTraceRevertHint,
+} from "./gmx-micro-fill-trace-parse";
 
 export type GmxFailedTxDiagnostics = {
   summary: string;
@@ -12,6 +20,8 @@ export type GmxFailedTxDiagnostics = {
   rawData?: Hex;
   rpcUrl?: string;
   traceHint?: string;
+  callPath?: string;
+  source?: "eth_call" | "debug_trace" | "trace_transaction";
 };
 
 export type GmxTxReplayFields = {
@@ -23,72 +33,19 @@ export type GmxTxReplayFields = {
   blockTag: Hex | "latest";
 };
 
-type TraceNode = {
-  type?: string;
-  error?: string;
-  revertReason?: string;
-  output?: string;
-  calls?: TraceNode[];
-};
-
-export function isAlchemyRpc(url: string): boolean {
-  try {
-    const host = new URL(url).hostname.toLowerCase();
-    return host.includes("alchemy.com");
-  } catch {
-    return url.toLowerCase().includes("alchemy");
-  }
-}
-
-export function resolveGmxDiagnosticRpcProviders(primaryRpc?: string): string[] {
-  const explicit = (process.env.GMX_DIAGNOSTIC_RPC_URL ?? process.env.ARB_DIAGNOSTIC_RPC_URL ?? "").trim();
-  const seen = new Set<string>();
-  const out: string[] = [];
-  const push = (url: string) => {
-    const trimmed = url.trim();
-    if (!trimmed || seen.has(trimmed) || isAlchemyRpc(trimmed)) return;
-    seen.add(trimmed);
-    out.push(trimmed);
-  };
-  if (explicit) push(explicit);
-  for (const url of GMX_DIAGNOSTIC_RPC_PROVIDERS) push(url);
-  if (primaryRpc) push(primaryRpc);
-  return out;
-}
-
-export function scrapeJsonRpcRevertData(json: unknown): Hex | undefined {
-  if (!json || typeof json !== "object") return undefined;
-  const err = (json as { error?: { data?: unknown } }).error;
-  const data = err?.data;
-  if (typeof data === "string" && data.startsWith("0x") && data.length >= 10) return data as Hex;
-  if (data && typeof data === "object") {
-    const nested = (data as { data?: unknown }).data;
-    if (typeof nested === "string" && nested.startsWith("0x") && nested.length >= 10) return nested as Hex;
-  }
-  return undefined;
-}
-
-export function extractTraceRevertHint(trace: unknown): { rawData?: Hex; hint?: string } | undefined {
-  if (!trace || typeof trace !== "object") return undefined;
-  const walk = (node: TraceNode): { rawData?: Hex; hint?: string } | undefined => {
-    for (const child of node.calls ?? []) {
-      const nested = walk(child);
-      if (nested) return nested;
-    }
-    const output = node.output;
-    if (typeof output === "string" && output.startsWith("0x") && output.length > 10) {
-      return { rawData: output as Hex, hint: `${node.type ?? "CALL"} output=${output.slice(0, 18)}…` };
-    }
-    if (node.revertReason) return { hint: node.revertReason };
-    if (node.error) return { hint: node.error };
-    return undefined;
-  };
-  return walk(trace as TraceNode);
-}
+export {
+  isAlchemyRpc,
+  resolveGmxDiagnosticRpcProviders,
+  scrapeJsonRpcRevertData,
+} from "./gmx-micro-fill-rpc-providers";
+export { extractTraceRevertHint, isSilentRevertHex } from "./gmx-micro-fill-trace-parse";
 
 function rankDiagnostics(a: GmxFailedTxDiagnostics, b: GmxFailedTxDiagnostics): GmxFailedTxDiagnostics {
-  const score = (d: GmxFailedTxDiagnostics) =>
-    (d.errorLabel ? 8 : 0) + (d.decodedError ? 4 : 0) + (d.rawData && d.rawData !== "0x" ? 2 : 0) + (d.traceHint ? 1 : 0);
+  const score = (d: GmxFailedTxDiagnostics) => {
+    const sourceBoost = d.source === "debug_trace" || d.source === "trace_transaction" ? 2 : 0;
+    return (d.errorLabel ? 8 : 0) + (d.decodedError ? 4 : 0)
+      + (!isSilentRevertHex(d.rawData) ? 2 : 0) + (d.traceHint ? 1 : 0) + sourceBoost;
+  };
   return score(a) >= score(b) ? a : b;
 }
 
@@ -97,15 +54,19 @@ function buildDiagnostics(input: {
   decodedError?: string;
   rpcUrl?: string;
   traceHint?: string;
+  callPath?: string;
+  source?: GmxFailedTxDiagnostics["source"];
 }): GmxFailedTxDiagnostics {
   const stripped = input.decodedError?.replace(/^\[GMX:[^\]]+\]\s*/, "");
   const errorLabel = stripped ? labelGmxSyntheticsError(stripped) : undefined;
   const parts: string[] = [];
   if (input.decodedError) parts.push(input.decodedError);
   else if (errorLabel) parts.push(`[GMX:${errorLabel}]`);
-  if (input.rawData && input.rawData !== "0x") parts.push(`rawData=${input.rawData}`);
+  if (input.rawData && !isSilentRevertHex(input.rawData)) parts.push(`rawData=${input.rawData}`);
   if (input.traceHint) parts.push(`trace=${input.traceHint}`);
+  if (input.callPath) parts.push(`path=${input.callPath}`);
   if (input.rpcUrl) parts.push(`rpc=${input.rpcUrl}`);
+  if (input.source) parts.push(`via=${input.source}`);
   return {
     summary: parts.length ? parts.join(" | ") : "silent revert (no custom error data)",
     decodedError: input.decodedError,
@@ -113,7 +74,38 @@ function buildDiagnostics(input: {
     rawData: input.rawData,
     rpcUrl: input.rpcUrl,
     traceHint: input.traceHint,
+    callPath: input.callPath,
+    source: input.source,
   };
+}
+
+export function needsForcedCallTrace(best?: GmxFailedTxDiagnostics): boolean {
+  if (!best) return true;
+  if (best.summary.includes("silent revert")) return true;
+  if (isSilentRevertHex(best.rawData)) return true;
+  if (best.rawData && !best.decodedError) return true;
+  return false;
+}
+
+function traceHintToDiagnostics(hint: GmxTraceRevertHint, rpcUrl: string, source: GmxFailedTxDiagnostics["source"]): GmxFailedTxDiagnostics {
+  const decodedError = hint.rawData ? decodeGmxRevertData(hint.rawData) ?? undefined : undefined;
+  const traceHint = hint.hint ?? (hint.callPath ? `revert at ${hint.callPath}` : undefined);
+  return buildDiagnostics({
+    rawData: hint.rawData,
+    decodedError,
+    traceHint,
+    callPath: hint.callPath,
+    rpcUrl,
+    source,
+  });
+}
+
+async function postTraceRpc(
+  rpcUrl: string,
+  body: unknown,
+  fetchFn?: typeof fetch,
+): Promise<unknown | null> {
+  return postArbitrumJsonRpc(body, { fetchFn, preferredRpc: rpcUrl, providers: [rpcUrl] });
 }
 
 export async function replayGmxTxEthCall(input: {
@@ -133,9 +125,11 @@ export async function replayGmxTxEthCall(input: {
     { fetchFn: input.fetchFn, preferredRpc: input.rpcUrl, providers: [input.rpcUrl], allowJsonRpcError: true },
   );
   const rawData = scrapeJsonRpcRevertData(json);
-  if (!rawData) return undefined;
+  if (!rawData || isSilentRevertHex(rawData)) {
+    return buildDiagnostics({ rawData: rawData as Hex | undefined, rpcUrl: input.rpcUrl, source: "eth_call" });
+  }
   const decodedError = decodeGmxRevertData(rawData) ?? undefined;
-  return buildDiagnostics({ rawData, decodedError, rpcUrl: input.rpcUrl });
+  return buildDiagnostics({ rawData, decodedError, rpcUrl: input.rpcUrl, source: "eth_call" });
 }
 
 export async function fetchGmxTxCallTrace(input: {
@@ -143,25 +137,28 @@ export async function fetchGmxTxCallTrace(input: {
   txHash: Hex;
   fetchFn?: typeof fetch;
 }): Promise<GmxFailedTxDiagnostics | undefined> {
-  const json = await postArbitrumJsonRpc(
-    {
-      jsonrpc: "2.0",
-      id: "gmx-trace",
-      method: "debug_traceTransaction",
-      params: [input.txHash, { tracer: "callTracer" }],
-    },
-    { fetchFn: input.fetchFn, preferredRpc: input.rpcUrl, providers: [input.rpcUrl] },
-  );
-  if (!json || typeof json !== "object" || (json as { error?: unknown }).error) return undefined;
-  const hint = extractTraceRevertHint((json as { result?: unknown }).result);
-  if (!hint) return undefined;
-  const decodedError = hint.rawData ? decodeGmxRevertData(hint.rawData) ?? undefined : undefined;
-  return buildDiagnostics({
-    rawData: hint.rawData,
-    decodedError,
-    traceHint: hint.hint,
-    rpcUrl: input.rpcUrl,
-  });
+  const debugJson = await postTraceRpc(input.rpcUrl, {
+    jsonrpc: "2.0",
+    id: "gmx-trace",
+    method: "debug_traceTransaction",
+    params: [input.txHash, { tracer: "callTracer", timeout: "30s" }],
+  }, input.fetchFn);
+  const debugResult = debugJson && typeof debugJson === "object" && !(debugJson as { error?: unknown }).error
+    ? (debugJson as { result?: unknown }).result
+    : undefined;
+  const debugHint = debugResult ? extractTraceRevertHint(debugResult) : undefined;
+  if (debugHint) return traceHintToDiagnostics(debugHint, input.rpcUrl, "debug_trace");
+
+  const parityJson = await postTraceRpc(input.rpcUrl, {
+    jsonrpc: "2.0",
+    id: "gmx-trace-tx",
+    method: "trace_transaction",
+    params: [input.txHash],
+  }, input.fetchFn);
+  if (!parityJson || typeof parityJson !== "object" || (parityJson as { error?: unknown }).error) return undefined;
+  const parityHint = extractTraceRevertHint((parityJson as { result?: unknown }).result);
+  if (!parityHint) return undefined;
+  return traceHintToDiagnostics(parityHint, input.rpcUrl, "trace_transaction");
 }
 
 export async function diagnoseGmxFailedTransaction(input: {
@@ -176,14 +173,13 @@ export async function diagnoseGmxFailedTransaction(input: {
   for (const rpcUrl of providers) {
     const replay = await replayGmxTxEthCall({ rpcUrl, tx: input.tx, fetchFn: input.fetchFn });
     if (replay) best = best ? rankDiagnostics(best, replay) : replay;
-    if (best?.decodedError && best.rawData && best.rawData !== "0x") break;
+    if (best?.decodedError && !isSilentRevertHex(best.rawData)) break;
   }
-  if (best?.decodedError && best.rawData && best.rawData !== "0x") return best;
-  if (best?.errorLabel) return best;
+  if (!needsForcedCallTrace(best)) return best;
   for (const rpcUrl of providers) {
     const traced = await fetchGmxTxCallTrace({ rpcUrl, txHash: input.txHash, fetchFn: input.fetchFn });
     if (traced) best = best ? rankDiagnostics(best, traced) : traced;
-    if (best?.decodedError || best?.traceHint) break;
+    if (best?.decodedError && !isSilentRevertHex(best.rawData)) break;
   }
   return best;
 }
