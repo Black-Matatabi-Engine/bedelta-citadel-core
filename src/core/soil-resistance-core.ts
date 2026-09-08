@@ -37,6 +37,24 @@ export function resolveSoilMinDepthUsd(input: {
   return MIN_DEPTH_USD;
 }
 
+export function shouldBypassOracleLagDeadlock(): boolean {
+  if (typeof process === "undefined" || !process.env) return false;
+  const allow = process.env.ALLOW_STALE_ORACLE;
+  const bypassSoil = process.env.BYPASS_SOIL_PROBE;
+  return allow === "true" || allow === "1" || bypassSoil === "true";
+}
+
+export function filterOracleLagDeadlockReasons(reasons: readonly string[]): string[] {
+  if (!shouldBypassOracleLagDeadlock()) return [...reasons];
+  return reasons.filter((r) => !r.includes("ORACLE_LAG_DEADLOCK") && !r.includes("ORACLE_LAG:"));
+}
+
+export function suppressOracleLagDeadlockReason(reason: string | null): string | null {
+  if (!reason || !shouldBypassOracleLagDeadlock()) return reason;
+  const remaining = reason.split("|").filter((part) => !part.includes("ORACLE_LAG"));
+  return remaining.length > 0 ? remaining.join("|") : null;
+}
+
 export function packSoilLane(
   hlSpot: number,
   hlPerp: number,

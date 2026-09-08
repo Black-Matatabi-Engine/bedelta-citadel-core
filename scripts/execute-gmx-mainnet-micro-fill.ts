@@ -31,7 +31,7 @@ import {
 } from "./gmx-micro-fill-calibration";
 import { computeGmxPoolImbalanceRatio } from "../src/adapters/gmx/gmx-v2-invariants";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
-import { resolveSoilMinDepthUsd } from "../src/core/soil-resistance-core";
+import { resolveSoilMinDepthUsd, shouldBypassOracleLagDeadlock } from "../src/core/soil-resistance-core";
 
 const allowStaleOracle = (argv: string[]): boolean =>
   argv.includes("--allow-stale-oracle") || process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
@@ -94,7 +94,7 @@ async function main(): Promise<void> {
   try { loadEnvProduction(); } catch { /* optional */ }
   const minDepthUsd = resolveSoilMinDepthUsd({});
   const argv = process.argv.slice(2);
-  const staleOracleOk = allowStaleOracle(argv);
+  const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock();
   const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true";
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
   const sizeUsd = parseMicroFillSize(argv);
@@ -105,6 +105,9 @@ async function main(): Promise<void> {
   await Promise.all([refreshSequencerGuard(), refreshArbitrumGasGuard({ targetYieldUsd: sizeUsd * 0.001 })]);
   const guardVerdict = validateGmxExecutionGuards(staleOracleOk);
   if (!guardVerdict.ok) throw new Error(`GUARD_BLOCKED:${guardVerdict.reasons.join("|")}`);
+  if (staleOracleOk) {
+    console.warn("[gmx-micro-fill] ORACLE_LAG_DEADLOCK bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
+  }
 
   const market = await loadMarketSnapshot(symbol);
   const preferredSide = resolveMicroFillSide(argv, market.pool);
@@ -147,7 +150,8 @@ async function main(): Promise<void> {
   });
   console.log("[gmx-micro-fill] preflight OK", {
     sizeUsd, side, preferredSide, balanced: side !== preferredSide ? "flipped" : "kept",
-    minDepthUsd, imbalanceOk: guard.imbalanceOk, soilOk: guard.soilOk, policyGuard: POLICY_GUARD, payloadHash,
+    minDepthUsd, oracleLagBypass: staleOracleOk, imbalanceOk: guard.imbalanceOk, soilOk: guard.soilOk,
+    policyGuard: POLICY_GUARD, payloadHash,
   });
 
   if (!armed()) {
