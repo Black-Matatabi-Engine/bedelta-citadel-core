@@ -1,6 +1,6 @@
 /** Arbitrum One Stylus deploy + activate via viem (no cargo-stylus deploy subprocess). */
 import {
-  createPublicClient, createWalletClient, http, parseAbi, parseEther, parseGwei, type Hex, type PublicClient,
+  createPublicClient, createWalletClient, http, maxUint256, parseAbi, parseEther, parseGwei, type Hex, type PublicClient,
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
@@ -9,7 +9,9 @@ import { loadWasmInitcode } from "./stylus-wasm-initcode";
 export const ARB_WASM = "0x0000000000000000000000000000000000000071" as const;
 const DATA_FEE_BUMP_NUM = 120n;
 const DATA_FEE_BUMP_DEN = 100n;
-const MIN_MAX_FEE = parseGwei("1.5");
+const GAS_BUFFER_NUM = 150n;
+const GAS_BUFFER_DEN = 100n;
+const ACTIVATION_PROBE_VALUE = parseEther("0.0001");
 const PRIORITY_FEE = parseGwei("0.1");
 
 const arbWasmAbi = parseAbi([
@@ -19,10 +21,14 @@ const arbWasmAbi = parseAbi([
 export async function resolveStylusDeployFees(
   client: PublicClient,
 ): Promise<{ maxFeePerGas: bigint; maxPriorityFeePerGas: bigint }> {
-  const fees = await client.estimateFeesPerGas();
-  const rpcMax = fees.maxFeePerGas ?? 0n;
-  const buffered = rpcMax * 2n;
-  const maxFeePerGas = buffered > MIN_MAX_FEE ? buffered : MIN_MAX_FEE;
+  const [block, fees] = await Promise.all([
+    client.getBlock({ blockTag: "latest" }),
+    client.estimateFeesPerGas(),
+  ]);
+  const baseFee = block.baseFeePerGas ?? fees.maxFeePerGas ?? 1n;
+  const buffered = (baseFee * GAS_BUFFER_NUM) / GAS_BUFFER_DEN;
+  const rpcMax = fees.maxFeePerGas ?? buffered;
+  const maxFeePerGas = buffered > rpcMax ? buffered : (rpcMax * GAS_BUFFER_NUM) / GAS_BUFFER_DEN;
   return { maxFeePerGas, maxPriorityFeePerGas: PRIORITY_FEE };
 }
 
@@ -37,10 +43,11 @@ async function estimateActivationDataFee(
     functionName: "activateProgram",
     args: [program],
     account: from,
-    value: parseEther("1"),
+    value: ACTIVATION_PROBE_VALUE,
+    stateOverride: [{ address: from, balance: maxUint256 }],
   });
-  const dataFee = result[1] as bigint;
-  return (dataFee * DATA_FEE_BUMP_NUM) / DATA_FEE_BUMP_DEN;
+  const quotedFee = result[1] as bigint;
+  return (quotedFee * DATA_FEE_BUMP_NUM) / DATA_FEE_BUMP_DEN;
 }
 
 export type StylusDeployResult = { contractAddress: Hex; deployTxHash: Hex; activateTxHash: Hex };
