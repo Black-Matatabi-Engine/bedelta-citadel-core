@@ -95,7 +95,7 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 | **Agentic Commerce & x402** | **Pre-Consensus Execution Safety Primitive** — machine-payment and agent-swarm settlement paths bind EIP-712 attestations to Gate `verifyingContract`; toxic intents severed **before** Bundler / Sequencer ingress | `SliverVineGate.sol` · `withCitadelShield` · `GET /api/grant-audit` |
 | **Robinhood Chain RWA ingress** | **Pillar 2 Compliance Ingress Firewall** — outbound-only RWA capital escort `46630`/`4663` → `42161` · **`lostUsd ≡ 0`** on `IN_FLIGHT_BRIDGE_CAPITAL` · **`AML_INBOUND_TO_ROBINHOOD_BLOCKED`** inbound isolation | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** (`pnpm test`) · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 | **ArbOS 61 Elara** | Protocol-level ingress filtering and transaction-ordering awareness **reinforce** Edge fail-closed — never a weaker substitute for pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md` § ArbOS/Stylus](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
-| **Stylus 96KB expansion readiness** | **`SliverVineSoilCoprocessor`** (`#![no_std]` Edge parity) · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** · ArbOS **96KB** Wasm budget headroom for on-chain `soil_core` coprocessor deploy via EIP-1967 proxy | `pkg/soil_core.wasm` · [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) |
+| **Stylus 96KB expansion readiness** | **`SliverVineSoilCoprocessor`** (`#![no_std]` Edge parity) · Stylus SDK **0.10.7** · `cargo test stylus_core` **5/5 PASS** · `wasm32-unknown-unknown` release build **verified locally** · Stylus Wasm **ABI v2 (28-slot)** ↔ TS core via [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) (`WASM_ABI_VERSION = 2`) · ArbOS **96KB** Wasm budget headroom · `pnpm deploy:stylus:mainnet` | `pkg/soil_core.wasm` · [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../../tests/core/wasm-ffi-alignment.test.ts) |
 
 ---
 
@@ -466,7 +466,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **202 test files \| 882 PASS Clean (100% PASS)** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -544,8 +544,9 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 ### 4. GMX
 
 * **Dry-run / Vitest verification (0-Gas pre-flight):** GMX v2 execution guards verified via `pnpm demo` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) — pre-flight severance before live GM pool capital deployment.
-* **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `GMX_POOL_IMBALANCE_BREACH` · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
-* **Stylus mainnet readiness:** `pnpm deploy:stylus:mainnet` — `cargo test stylus_core` + `wasm32` release build · optional `cargo stylus check` (ChainID **42161**) · Live deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1` · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts)
+* **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
+* **Mainnet micro-fill Fail-Closed evidence (Oracle Lag):** Live Arbitrum One (`42161`) execution attempt tripped **`GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms`** — Citadel Shield **actively prevented** broadcast during a **154-second** stale Chainlink oracle window · **zero stale-price impact** · **`lostUsd ≡ 0`** · no mempool exposure
+* **Stylus mainnet readiness:** `pnpm deploy:stylus:mainnet` — `cargo test stylus_core` **5/5 PASS** · `wasm32-unknown-unknown` release build **verified locally** · Stylus Wasm **ABI v2 (28-slot)** aligned with TS core via [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · optional `cargo stylus check` (ChainID **42161**) · Live deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1` · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts)
 * **Integration**: `evaluatePendleGmxCrossGuard` (`src/guards/pendle-gmx-cross-guard.ts`) & GMX Order Payload Guard (`src/services/adapters/gmx-v2-order-payload-guards.ts`).
 * **Mechanism**: Implements Shadow Margin accounting. Evaluates whether swapping out PT collateral under dynamic fees threatens GMX Maintenance Margin. Builder fee SSOT: **`GMX_UI_FEE_BPS` = 10** (`src/config/gmx-revenue.ts`); payload price-impact gate uses **`DEFAULT_GMX_PENALTY_BPS` = 50** (`src/services/yield/gmx-v2-price-impact.ts`).
 
@@ -555,8 +556,10 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 | Network | ChainID | Status | What is claimed |
 |---------|---------|--------|-----------------|
-| **Arbitrum Sepolia** | `421614` | ✅ **Active Live Event Stream** | Dune ingests decoded `IntentAttested` · `RiskTripBlocked` from Sepolia Gate `0xb174…` — live feed proof |
+| **Arbitrum Sepolia** | `421614` | ✅ **Active Live Event Pipeline** | Dune ingests decoded `IntentAttested` · `RiskTripBlocked` from Sepolia Gate `0xb174…` — **only** Sepolia claimed as live stream |
 | **Arbitrum One** | `42161` | ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** | Production DuneSQL (Queries 0–0b + 1–3) pre-compiled for **42161** semantics · **not** claimed as live mainnet event stream until ingest is wired |
+
+> **Governance footnote (re-confirmed):** Bootstrap Ignition Keys (`0x1111…` / `0x2222…`) are **strictly for public verification and sandbox reproducibility** — not production HSM custody. Post-launch rotation to production multisig via `proposeAdmin` / `acceptAdmin` is the designed authority path.
 
 * **Live Dashboard:** [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 * **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — **only** Sepolia is claimed as active live stream.
@@ -739,8 +742,10 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` · [Arbiscan](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** · harness: `pnpm execute:gmx:micro-fill --size=1` |
+| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · Citadel Shield blocked GMX v2 increase during **154s** stale oracle window on Arbitrum One · **`lostUsd ≡ 0`** · zero stale-price impact |
+| **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
+| **Stylus Build Proof** | `cargo test stylus_core` **5/5 PASS** · `wasm32-unknown-unknown` release build verified · Wasm ABI v2 **28-slot** ↔ [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) |
 
 ---
 

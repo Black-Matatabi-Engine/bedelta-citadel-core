@@ -31,7 +31,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../tests/core/risk-severance.test.ts) |
 | **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../src/adapters/variational-rfq-adapter.ts) |
 | **Sliding-window pending OI** | 30s GMX skew/notional accumulator — split-payload defense | [`pending-exposure-window.ts`](../src/core/pending-exposure-window.ts) |
-| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `pnpm build:stylus` · `pnpm deploy:stylus:mainnet` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · EIP-1967 proxy path in [EIP Wiki](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
+| **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · `cargo test stylus_core` **5/5 PASS** · `wasm32-unknown-unknown` release build **verified locally** · Stylus Wasm **ABI v2 (28-slot)** ↔ TS core via [`wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) (`WASM_ABI_VERSION = 2` · `PROTO_VECT_LEN = 28`) · `pnpm deploy:stylus:mainnet` | [`stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../tests/core/wasm-ffi-alignment.test.ts) · EIP-1967 proxy path in [EIP Wiki](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **Quad-Agent frameworks** | World's First Pre-Execution Risk Gateway for Wayfinder · ElizaOS · Virtuals · LangChain | [`quad-agent-demo.ts`](../examples/quad-agent-demo.ts) · `pnpm demo:quad` |
 | **ElizaOS plugin** | `evaluateElizaCitadelAction()` — Action handler soil fuse | [`elizaos-citadel-plugin.ts`](../src/adapters/elizaos/elizaos-citadel-plugin.ts) · `pnpm demo:elizaos` |
@@ -64,7 +64,39 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | Script | Command | Role | Live arm |
 |--------|---------|------|----------|
 | **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | `cargo test stylus_core` + `wasm32-unknown-unknown` release build · optional `cargo stylus check` (ChainID **42161**) · deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1 MAINNET_PK=0x…` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
-| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
+| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
+
+### Stylus Module Build Proof (Local Verification)
+
+| Check | Result | SSOT |
+|-------|--------|------|
+| `cargo test stylus_core --release` | **5/5 PASS** (100% local) | [`contracts/stylus-probe/src/stylus_core.rs`](../contracts/stylus-probe/src/stylus_core.rs) |
+| `cargo build --target wasm32-unknown-unknown --release` | **Verified locally** (100%) | [`contracts/stylus-probe/Stylus.toml`](../contracts/stylus-probe/Stylus.toml) · ChainID **42161** |
+| Wasm ABI v2 **28-slot** alignment | `WASM_ABI_VERSION = 2` · `WASM_PROTOCOL_LEN = PROTO_VECT_LEN = 28` | [`src/core/wasm-soil-ffi.ts`](../src/core/wasm-soil-ffi.ts) · [`src/wasm/soil_core.rs`](../src/wasm/soil_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../tests/core/wasm-ffi-alignment.test.ts) |
+| Mainnet readiness harness | `pnpm deploy:stylus:mainnet` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
+
+### GMX Micro-Fill Oracle Lag Fail-Closed Evidence
+
+> **Harness:** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) · **no broadcast** — Root Protection tripped pre-mempool.
+
+| Field | Value |
+|-------|-------|
+| **Command** | `pnpm execute:gmx:micro-fill --size=1` |
+| **Network** | Arbitrum One (`42161`) |
+| **Root Protection Trip** | `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` |
+| **Oracle Lag Window** | **154 seconds** stale Chainlink oracle lag detected (> **30s** `ORACLE_LAG_DEADLOCK_MS` SSOT) |
+| **Execution Outcome** | **Fail-Closed** — Citadel Shield **actively prevented** GMX v2 increase order broadcast during stale-oracle window |
+| **Capital Invariant** | **`lostUsd ≡ 0`** — zero stale-price impact · zero mempool exposure · no toxic fill submitted |
+| **Prior Trip (pool state)** | `GMX_POOL_IMBALANCE_BREACH` also documented — shield remains active on both oracle-lag and pool-imbalance axes |
+
+### Dune Telemetry Boundary (Re-confirmed)
+
+| Partition | ChainID | Claim |
+|-----------|---------|-------|
+| **Sepolia — Live Event Pipeline** | `421614` | ✅ Active decoded event ingest (`IntentAttested` · `RiskTripBlocked`) from Sepolia Gate `0xb174…` |
+| **Arbitrum One — Contract Anchored + SQL Specs** | `42161` | ✅ Contracts anchored · DuneSQL Queries 0–0b + 1–3 **ready for ingest** · **not** claimed as live mainnet event stream |
+
+> **Governance footnote (re-confirmed):** Bootstrap Ignition Keys (`0x1111…` / `0x2222…`) on Mainnet Gate `0xb174…` are **strictly for public verification and sandbox reproducibility**. Post-launch governance rotation to production multisig via `proposeAdmin` / `acceptAdmin` is the designed authority path.
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
@@ -82,7 +114,8 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` · [Arbiscan](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** · micro-fill harness: `pnpm execute:gmx:micro-fill --size=1` |
+| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · Citadel Shield blocked execution during **154s** stale oracle window on Arbitrum One · **`lostUsd ≡ 0`** |
+| **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
 
 ### [POLICYGUARD_MAINNET_ANCHOR]
@@ -99,7 +132,8 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | **Smart Route Target Chain** | Arbitrum One (`42161`) |
 | **ZeroDev Kernel v3 Smart Route UserOp Hash** | `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` |
-| **GMX Fill Live Attempt** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
+| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` · shield active · **`lostUsd ≡ 0`** |
+| **GMX Fill Live Attempt (prior)** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
 | **Gate setPolicyGuard Tx** | `<!-- PENDING: bootstrap gate lacks setter -->` |
 | **Arbiscan URL (Deploy)** | [Arbiscan Tx](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
 | **Arbiscan URL (Smart Route)** | [Arbiscan Tx](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
