@@ -19,6 +19,49 @@
 
 Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` — [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts).
 
+### Production Workflow SSOT (Live Mainnet · 42161)
+
+> **三平面架構：** Edge 預廣播（0-Gas `checkSoilResistance`）→ **雙錢包執行平面** → **鏈上結算平面（Phase A+B+C · Verified @ `ed485ba`）**
+
+#### 1. Wallet B — GM LP Yield Vault（專用 · 僅 GM I/O）
+
+| 欄位 | SSOT |
+|------|------|
+| **地址** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` |
+| **職責** | **僅** GMX v2 ETH/USDC GM Pool **deposit / withdraw** · `uiFeeReceiver` · **零** HL session-key · **零** GMX perp short |
+| **CLI** | `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` |
+| **Live Arbiscan（三證閉環）** | Deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Approve [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
+
+#### 2. Wallet A — Hedge Engine（HL 主路徑 · GMX Fallback）
+
+| 欄位 | SSOT |
+|------|------|
+| **地址** | `0xef0752df6387248B897F3A59A180af42D801960d` |
+| **Primary** | **Hyperliquid L1** EIP-712 session-key **1× perp short** · 0-Gas · sub-ms preflight · `executeHlSessionKeyOrder` |
+| **Fallback** | Arbitrum GMX v2 **Synthetic Short** · USDC 抵押 · [`gmx-v2-wallet-a-short-builder.ts`](../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) · `pnpm execute:gmx:wallet-a-short-fallback` · **simulate only**（Wallet A USDC=0 · 禁止 live 宣稱） |
+| **隔離** | `auditGmxWalletAShortWire` **fail-closed** 拒絕 Wallet B 地址 |
+
+#### 3. On-Chain Settlement Plane（Phase A+B+C · Mainnet Verified）
+
+| 合約 | 地址 | 備註 |
+|------|------|------|
+| **SliverVineAgentPolicyGuardV2** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** · 100% fail-closed · **無需** 獨立 Stylus 主網激活 |
+| **GmxSoilMatrixSwitch** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | single **SLOAD** · bound to RiskOracleV2 |
+| **SliverVineRiskOracleV2** | [`0xfadb14759a3d3c7e976697de61bf62627f14ec93`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | `defenseState` bitmap · SLO window **300s** |
+| **Deploy bundle** | Blocks **503074231–503074255** | `pnpm deploy:policy-guard-v2` · [`deploy-policy-guard-v2-mainnet.ts`](../scripts/deploy-policy-guard-v2-mainnet.ts) |
+
+```text
+[Edge] checkSoilResistance() p50 ~106µs
+    │
+    ├─ Wallet B ──► GM deposit/withdraw (0xe315… / 0x30ec… / 0xfd36…)
+    │
+    └─ Wallet A ──► HL session short (primary)
+                 └─► GMX synth short builder (fallback · simulate)
+    │
+    ▼
+[Settlement] PolicyGuardV2 (Solidity fallback) + MatrixSwitch + RiskOracleV2
+```
+
 **Layout:** **Express Entry → Three Pillars Inside (Core) → Three Pillars Outside (Extended)**. Open this document first — each zone is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
 
 ### Absolute SSOT Lock (Evaluator Copy-Paste)
@@ -27,7 +70,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **Vitest baseline** | **215 test files \| 958 PASS Clean (100% PASS)** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Verified commit** | `main` @ **`bbcd6bb`** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
+| **Verified commit** | `main` @ **`ed485ba`** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
 | **Phase B — GmxSoilMatrixSwitch** | Single **SLOAD** defense bitmap · **47 LOC** + `DefenseMatrixBitmap` **66 LOC** | [`GmxSoilMatrixSwitch.sol`](../contracts/GmxSoilMatrixSwitch.sol) · Forge **8/8** |
 | **Phase C — citadel_invariants** | Stylus/Wasm coprocessor `evaluate_packed` · TS/Rust parity · **PolicyGuardV2** Stylus staticcall + `GmxRiskInvariantLib` fallback | [`contracts/citadel_invariants/`](../contracts/citadel_invariants/) · `pnpm build:citadel-invariants` · [`stylus-gmx-parity.test.ts`](../tests/wasm/stylus-gmx-parity.test.ts) **6/6** · Cargo **2/2** |

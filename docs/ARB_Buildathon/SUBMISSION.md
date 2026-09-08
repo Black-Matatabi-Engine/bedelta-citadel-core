@@ -59,7 +59,7 @@
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`bbcd6bb`** — Phase A+B+C GMX invariant stack · **215/958** Vitest · **Cargo citadel_invariants 2/2** · **50.94 KiB gzip** |
+| **Verified Commit** | `main` @ **`ed485ba`** — Phase A+B+C **mainnet deploy** · dual-wallet workflow SSOT · **215/958** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -445,10 +445,27 @@ Full derivations: [Technical Specification §3.1](../architecture/03_DEFENSE_MAT
 
 SliverVine's **production delta-neutral envelope** is not a single-wallet abstraction. Two specialized wallets cooperate across venues with **zero key coupling**; the **cross-wallet hedge SSOT** ([`gmx-cross-wallet-hedge.ts`](../../src/services/gmx-cross-wallet-hedge.ts)) matches **GMX ETH long delta (Wallet B)** to **Hyperliquid ETH perp shorts (Wallet A)** until **Δ_net ≡ 0**. Live Worker logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]`. HL session-key execution is **exclusively** via `executeHlSessionKeyOrder` (legacy stubs blocked when `IS_MAINNET=true`).
 
+#### Production Workflow (Live Mainnet SSOT)
+
+| Plane | Wallet / Contract | Role |
+|-------|-------------------|------|
+| **Wallet B — GM LP Yield Vault** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | **Dedicated exclusively** to GM LP deposit/withdraw · **no** HL keys · **no** GMX perp |
+| **Wallet A — Hedge Engine (Primary)** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid session-key **perp short** · 0-Gas · low latency |
+| **Wallet A — Hedge Engine (Fallback)** | same | GMX v2 synthetic short via [`gmx-v2-wallet-a-short-builder.ts`](../../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) · USDC collateral · simulate only |
+| **On-Chain Settlement** | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Phase A+B+C **Verified Live** @ `ed485ba` · **`stylusCoprocessor=0`** → Pure Solidity fallback · 100% fail-closed without separate Stylus mainnet activation |
+
+**Wallet B — Verified GM I/O (triple-proof Arbiscan):**
+
+| Event | Tx |
+|-------|-----|
+| GM Deposit Multicall | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) |
+| GM LP → Router Approve | [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) |
+| GM Withdraw Multicall | [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
+
 | Lane | Default address | Venue | Responsibilities |
 |------|-----------------|-------|------------------|
-| **Wallet A — Hyperliquid Short Lane** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid L1 | Perp margin · scoped **session keys** · 1× short IOC execution · cron via `runScheduledGmxHedgeCron` |
-| **Wallet B — Arbitrum Vault / GMX GM Lane** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | Arbitrum One | **$2,500** ingress vault · **$2,400** GMX v2 GM LP · **$100** HL margin routing · **+10 bps `uiFeeReceiver`** treasury rebate (separate from user principal) |
+| **Wallet A — Hyperliquid Short Lane** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid L1 | Perp margin · scoped **session keys** · 1× short IOC execution · cron via `runScheduledGmxHedgeCron` · GMX short **fallback builder** (simulate) |
+| **Wallet B — Arbitrum Vault / GMX GM Lane** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | Arbitrum One | **GM LP I/O only** · **$2,500** ingress vault · **$2,400** GMX v2 GM LP · **+10 bps `uiFeeReceiver`** treasury rebate |
 
 **Capital flow (Grant Happy Path narrative):**
 
