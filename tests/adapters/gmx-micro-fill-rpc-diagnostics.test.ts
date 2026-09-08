@@ -49,8 +49,12 @@ describe("gmx-micro-fill-rpc-diagnostics", () => {
     expect(hint?.hint).toContain("DELEGATECALL");
   });
 
-  it("replayGmxTxEthCall decodes revert data from fallback RPC eth_call", async () => {
-    const revertData = encodeErrorResult({ abi: GMX_SYNTHETICS_ERRORS_ABI, errorName: "EmptyOrder", args: [] });
+  it("replayGmxTxEthCall decodes and labels InsufficientExecutionFee from fallback RPC", async () => {
+    const revertData = encodeErrorResult({
+      abi: GMX_SYNTHETICS_ERRORS_ABI,
+      errorName: "InsufficientExecutionFee",
+      args: [2n, 1n],
+    });
     const fetchFn = vi.fn(async () =>
       new Response(JSON.stringify({ jsonrpc: "2.0", id: 1, error: { code: 3, message: "execution reverted", data: revertData } })),
     );
@@ -59,7 +63,9 @@ describe("gmx-micro-fill-rpc-diagnostics", () => {
       tx: TX,
       fetchFn,
     });
-    expect(result?.decodedError).toBe("EmptyOrder");
+    expect(result?.errorLabel).toBe("InsufficientExecutionFee");
+    expect(result?.decodedError).toBe("[GMX:InsufficientExecutionFee] InsufficientExecutionFee(2, 1)");
+    expect(result?.summary).toContain("[GMX:InsufficientExecutionFee]");
     expect(result?.rpcUrl).toBe("https://arb1.arbitrum.io/rpc");
   });
 

@@ -4,14 +4,21 @@ import { decodeErrorResult, parseAbi, type Hex } from "viem";
 export const GMX_SYNTHETICS_ERRORS_ABI = parseAbi([
   "error InsufficientExecutionFee(uint256 minExecutionFee, uint256 executionFee)",
   "error InsufficientWntAmountForExecutionFee(uint256 wntAmount, uint256 executionFee)",
+  "error InsufficientCollateralUsd(int256 remainingCollateralUsd)",
+  "error InsufficientCollateralAmount(uint256 collateralAmount, int256 collateralDeltaAmount)",
+  "error MinPositionSize(uint256 positionSizeInUsd, uint256 minPositionSizeUsd)",
   "error EmptyOrder()",
   "error OrderTypeCannotBeCreated(uint256 orderType)",
   "error UnexpectedMarket()",
+  "error InvalidPositionMarket(address market)",
+  "error MarketNotFound(address key)",
+  "error DisabledMarket(address market)",
+  "error EmptyMarket()",
+  "error InvalidSwapMarket(address market)",
   "error InvalidReceiver(address receiver)",
   "error UnexpectedValidFromTime(uint256 orderType)",
   "error Unauthorized(address msgSender, string role)",
   "error InvalidOrderPrices(uint256 indexTokenPrice, uint256 acceptablePrice)",
-  "error MarketNotFound(address key)",
   "error DisabledFeature(bytes32 key)",
 ]);
 

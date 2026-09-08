@@ -9,6 +9,7 @@ import {
   isSilentGmxSimulateRevert,
   simulateGmxMicroFillOrder,
 } from "./gmx-micro-fill-router-encode";
+import { MICRO_FILL_COLLATERAL_USD } from "./gmx-micro-fill-constants";
 import {
   diagnoseGmxFailedTransaction,
   type GmxFailedTxDiagnostics,
@@ -114,8 +115,14 @@ function buildSuggestions(cause: unknown, ctx: GmxMicroFillExecutionContext): st
   const details = extractGmxSimulateRevertDetails(cause);
   const tips: string[] = [];
   const decoded = ctx.decodedOnChainRevert ?? details.decodedError ?? "";
-  if (decoded.includes("InsufficientExecutionFee")) {
+  if (details.errorLabel === "InsufficientExecutionFee" || decoded.includes("InsufficientExecutionFee")) {
     tips.push("Raise executionFee — use dynamic GMX DataStore estimate (gasLimit × gasPrice + 30% buffer)");
+  }
+  if (details.errorLabel === "MinCollateralUsd" || decoded.includes("InsufficientCollateralUsd") || decoded.includes("MinPositionSize")) {
+    tips.push(`Raise initialCollateralDeltaAmount — GMX min collateral/position threshold; micro-fill uses $${MICRO_FILL_COLLATERAL_USD} USDC`);
+  }
+  if (details.errorLabel === "InvalidMarket" || decoded.includes("MarketNotFound") || decoded.includes("InvalidPositionMarket")) {
+    tips.push("Confirm marketToken matches gmxinfra markets/info ETH/USDC SSOT");
   }
   if (decoded.includes("InsufficientWntAmountForExecutionFee")) {
     tips.push("Ensure multicall msg.value matches executionFee and sendWnt deposits WNT to OrderVault first");
@@ -127,7 +134,7 @@ function buildSuggestions(cause: unknown, ctx: GmxMicroFillExecutionContext): st
     tips.push("Set GMX_DIAGNOSTIC_RPC_URL to a non-Alchemy Arbitrum RPC (e.g. https://arb1.arbitrum.io/rpc) to recover custom error data");
   }
   if (msg.includes("USDC_INSUFFICIENT") || msg.includes("COLLATERAL_INSUFFICIENT")) {
-    tips.push(`Fund owner ${ctx.owner ?? "EOA/Kernel"} with at least ${ctx.collateralUsd ?? "$2"} USDC`);
+    tips.push(`Fund owner ${ctx.owner ?? "EOA/Kernel"} with at least ${ctx.collateralUsd ?? `$${MICRO_FILL_COLLATERAL_USD}`} USDC`);
   }
   if (msg.includes("allowance") || msg.includes("approve")) {
     tips.push(`Approve USDC for ExchangeRouter spender ${GMX_COLLATERAL_SPENDER_ARBITRUM}`);
@@ -135,8 +142,8 @@ function buildSuggestions(cause: unknown, ctx: GmxMicroFillExecutionContext): st
   if (msg.includes("GUARD_BLOCKED") || msg.includes("CRI_HARDLOCK")) {
     tips.push("Check oracle lag / gas guard; probe-only: ALLOW_STALE_ORACLE=1 or BYPASS_SOIL_PROBE=true");
   }
-  if (msg.includes("MARKET")) {
-    tips.push("Confirm marketToken matches gmxinfra markets/info ETH/USDC SSOT");
+  if (ctx.decodedOnChainRevert?.includes("[GMX:")) {
+    tips.push(`GMX labeled revert: ${ctx.decodedOnChainRevert}`);
   }
   if (details.decodedError?.includes("Error(")) {
     tips.push(`GMX contract revert: ${details.decodedError}`);

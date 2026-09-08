@@ -3,6 +3,7 @@ import {
   BaseError, ContractFunctionRevertedError, decodeAbiParameters, type Hex,
 } from "viem";
 import { decodeGmxSyntheticsError } from "./gmx-synthetics-errors";
+import { formatGmxLabeledError, labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
 
 const ERROR_STRING_SELECTOR = "0x08c379a0";
 const PANIC_SELECTOR = "0x4e487b71";
@@ -13,6 +14,7 @@ export type GmxSimulateRevertDetails = {
   signature?: string;
   rawData?: Hex;
   decodedError?: string;
+  errorLabel?: GmxSyntheticsErrorLabel;
   causeData?: string;
 };
 
@@ -43,7 +45,7 @@ function formatDecodedContractError(data: unknown): string | undefined {
 export function decodeGmxRevertData(data: Hex): string | null {
   const selector = data.slice(0, 10).toLowerCase();
   const gmxDecoded = decodeGmxSyntheticsError(data);
-  if (gmxDecoded) return gmxDecoded;
+  if (gmxDecoded) return formatGmxLabeledError(gmxDecoded);
   try {
     if (selector === ERROR_STRING_SELECTOR) {
       const [msg] = decodeAbiParameters([{ type: "string" }], `0x${data.slice(10)}` as Hex);
@@ -59,12 +61,20 @@ export function decodeGmxRevertData(data: Hex): string | null {
   }
 }
 
+function attachErrorLabel(decoded?: string): { decodedError?: string; errorLabel?: GmxSyntheticsErrorLabel } {
+  if (!decoded) return {};
+  const stripped = decoded.replace(/^\[GMX:[^\]]+\]\s*/, "");
+  const label = labelGmxSyntheticsError(stripped);
+  return { decodedError: decoded, errorLabel: label };
+}
+
 export function extractGmxSimulateRevertDetails(err: unknown): GmxSimulateRevertDetails {
   const parts: string[] = [];
   let reason: string | undefined;
   let signature: string | undefined;
   let rawData: Hex | undefined;
   let decodedError: string | undefined;
+  let errorLabel: GmxSyntheticsErrorLabel | undefined;
   const causeData = scrapeRevertData(err);
 
   if (err instanceof BaseError) {
@@ -79,13 +89,17 @@ export function extractGmxSimulateRevertDetails(err: unknown): GmxSimulateRevert
       if (rawData) {
         parts.push(`rawData=${rawData}`);
         decodedError = decodedError ?? decodeGmxRevertData(rawData) ?? undefined;
+        if (decodedError) ({ errorLabel } = attachErrorLabel(decodedError));
       }
       if (decodedError) parts.push(`decoded=${decodedError}`);
+      if (errorLabel) parts.push(`label=${errorLabel}`);
     }
     if (causeData && causeData !== rawData) {
       parts.push(`causeData=${causeData}`);
       if (!decodedError) decodedError = decodeGmxRevertData(causeData) ?? undefined;
+      if (decodedError) ({ errorLabel } = attachErrorLabel(decodedError));
       if (decodedError && !parts.some((p) => p.startsWith("decoded="))) parts.push(`decoded=${decodedError}`);
+      if (errorLabel && !parts.some((p) => p.startsWith("label="))) parts.push(`label=${errorLabel}`);
     }
     if (parts.length === 0) parts.push(err.shortMessage ?? err.message);
   } else {
@@ -93,11 +107,13 @@ export function extractGmxSimulateRevertDetails(err: unknown): GmxSimulateRevert
     if (causeData) {
       rawData = causeData;
       decodedError = decodeGmxRevertData(causeData) ?? undefined;
+      ({ errorLabel } = attachErrorLabel(decodedError));
       parts.push(`causeData=${causeData}`);
       if (decodedError) parts.push(`decoded=${decodedError}`);
+      if (errorLabel) parts.push(`label=${errorLabel}`);
     }
   }
-  return { message: parts.join(" | "), reason, signature, rawData, decodedError, causeData };
+  return { message: parts.join(" | "), reason, signature, rawData, decodedError, errorLabel, causeData };
 }
 
 export function formatGmxSimulateRevert(err: unknown): string {

@@ -2,11 +2,13 @@
 import { type Hex } from "viem";
 import { postArbitrumJsonRpc } from "./arbitrum-rpc-fallback";
 import { decodeGmxRevertData } from "./gmx-micro-fill-revert-decode";
+import { labelGmxSyntheticsError, type GmxSyntheticsErrorLabel } from "./gmx-synthetics-error-labels";
 import { GMX_DIAGNOSTIC_RPC_PROVIDERS } from "./gmx-v2-rpc-constants";
 
 export type GmxFailedTxDiagnostics = {
   summary: string;
   decodedError?: string;
+  errorLabel?: GmxSyntheticsErrorLabel;
   rawData?: Hex;
   rpcUrl?: string;
   traceHint?: string;
@@ -86,7 +88,7 @@ export function extractTraceRevertHint(trace: unknown): { rawData?: Hex; hint?: 
 
 function rankDiagnostics(a: GmxFailedTxDiagnostics, b: GmxFailedTxDiagnostics): GmxFailedTxDiagnostics {
   const score = (d: GmxFailedTxDiagnostics) =>
-    (d.decodedError ? 4 : 0) + (d.rawData && d.rawData !== "0x" ? 2 : 0) + (d.traceHint ? 1 : 0);
+    (d.errorLabel ? 8 : 0) + (d.decodedError ? 4 : 0) + (d.rawData && d.rawData !== "0x" ? 2 : 0) + (d.traceHint ? 1 : 0);
   return score(a) >= score(b) ? a : b;
 }
 
@@ -96,14 +98,18 @@ function buildDiagnostics(input: {
   rpcUrl?: string;
   traceHint?: string;
 }): GmxFailedTxDiagnostics {
+  const stripped = input.decodedError?.replace(/^\[GMX:[^\]]+\]\s*/, "");
+  const errorLabel = stripped ? labelGmxSyntheticsError(stripped) : undefined;
   const parts: string[] = [];
   if (input.decodedError) parts.push(input.decodedError);
+  else if (errorLabel) parts.push(`[GMX:${errorLabel}]`);
   if (input.rawData && input.rawData !== "0x") parts.push(`rawData=${input.rawData}`);
   if (input.traceHint) parts.push(`trace=${input.traceHint}`);
   if (input.rpcUrl) parts.push(`rpc=${input.rpcUrl}`);
   return {
     summary: parts.length ? parts.join(" | ") : "silent revert (no custom error data)",
     decodedError: input.decodedError,
+    errorLabel,
     rawData: input.rawData,
     rpcUrl: input.rpcUrl,
     traceHint: input.traceHint,
@@ -173,6 +179,7 @@ export async function diagnoseGmxFailedTransaction(input: {
     if (best?.decodedError && best.rawData && best.rawData !== "0x") break;
   }
   if (best?.decodedError && best.rawData && best.rawData !== "0x") return best;
+  if (best?.errorLabel) return best;
   for (const rpcUrl of providers) {
     const traced = await fetchGmxTxCallTrace({ rpcUrl, txHash: input.txHash, fetchFn: input.fetchFn });
     if (traced) best = best ? rankDiagnostics(best, traced) : traced;
