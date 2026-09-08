@@ -8,9 +8,9 @@
  * @see https://github.com/gmx-io/gmx-interface/blob/master/sdk/src/utils/orderTransactions/utils.ts
  * @see https://github.com/gmx-io/gmx-synthetics/blob/main/contracts/router/BaseRouter.sol
  */
-import { encodeFunctionData, getAddress, parseAbi, type Hex } from "viem";
+import { decodeFunctionData, encodeFunctionData, getAddress, parseAbi, type Hex } from "viem";
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
-import { GMX_ZERO_ADDRESS } from "./gmx-v2-order-payload-constants";
+import { GMX_USDC_ARBITRUM, GMX_ZERO_ADDRESS } from "./gmx-v2-order-payload-constants";
 import { buildGmxCreateOrderWireParams, encodeGmxCreateOrderCalldata, GMX_CREATE_ORDER_ABI_FRAGMENT } from "./gmx-create-order-encode";
 
 export const GMX_ORDER_VAULT_ARBITRUM = getAddress("0x31eF83a530Fde1B38EE9A18093A333D8Bbbc40D5");
@@ -53,6 +53,73 @@ export function buildGmxMarketIncreaseTokenTransfers(input: {
   };
 }
 
+export type GmxMarketIncreaseMulticallLegs = {
+  sendWnt: { receiver: Hex; amount: bigint };
+  sendTokens: { token: Hex; receiver: Hex; amount: bigint };
+  createOrder: Hex;
+};
+
+/** Decode and assert sendWnt → sendTokens → createOrder leg order (gmx-interface wire). */
+export function decodeGmxMarketIncreaseMulticallLegs(calls: readonly Hex[]): GmxMarketIncreaseMulticallLegs {
+  if (calls.length !== GMX_MARKET_INCREASE_MULTICALL_METHODS.length) {
+    throw new Error(`GMX_MULTICALL_LEG_COUNT: expected ${GMX_MARKET_INCREASE_MULTICALL_METHODS.length}, got ${calls.length}`);
+  }
+  const sendWnt = decodeFunctionData({ abi: gmxRouterAbi, data: calls[0] });
+  const sendTokens = decodeFunctionData({ abi: gmxRouterAbi, data: calls[1] });
+  const createOrder = decodeFunctionData({ abi: gmxRouterAbi, data: calls[2] });
+  if (sendWnt.functionName !== "sendWnt" || sendTokens.functionName !== "sendTokens" || createOrder.functionName !== "createOrder") {
+    throw new Error(
+      `GMX_MULTICALL_METHOD_ORDER: expected sendWnt→sendTokens→createOrder, got ${sendWnt.functionName}→${sendTokens.functionName}→${createOrder.functionName}`,
+    );
+  }
+  const [wntReceiver, wntAmount] = sendWnt.args as [Hex, bigint];
+  const [token, tokenReceiver, tokenAmount] = sendTokens.args as [Hex, Hex, bigint];
+  return {
+    sendWnt: { receiver: getAddress(wntReceiver), amount: wntAmount },
+    sendTokens: { token: getAddress(token), receiver: getAddress(tokenReceiver), amount: tokenAmount },
+    createOrder: calls[2],
+  };
+}
+
+export function assertGmxMarketIncreaseMulticallLegs(input: {
+  calls: readonly Hex[];
+  orderVault: Hex;
+  executionFee: bigint;
+  collateralToken: Hex;
+  collateralAmount: bigint;
+}): GmxMarketIncreaseMulticallLegs {
+  const legs = decodeGmxMarketIncreaseMulticallLegs(input.calls);
+  const vault = getAddress(input.orderVault);
+  const collateralToken = getAddress(input.collateralToken);
+  if (legs.sendWnt.receiver !== vault) {
+    throw new Error(`GMX_SENDWNT_RECEIVER: expected OrderVault ${vault}, got ${legs.sendWnt.receiver}`);
+  }
+  if (legs.sendWnt.amount !== input.executionFee) {
+    throw new Error(`GMX_SENDWNT_AMOUNT: expected ${input.executionFee}, got ${legs.sendWnt.amount}`);
+  }
+  if (legs.sendTokens.token !== collateralToken) {
+    throw new Error(`GMX_SENDTOKENS_TOKEN: expected ${collateralToken}, got ${legs.sendTokens.token}`);
+  }
+  if (legs.sendTokens.receiver !== vault) {
+    throw new Error(`GMX_SENDTOKENS_RECEIVER: expected OrderVault ${vault}, got ${legs.sendTokens.receiver}`);
+  }
+  if (legs.sendTokens.amount !== input.collateralAmount) {
+    throw new Error(`GMX_SENDTOKENS_AMOUNT: expected ${input.collateralAmount}, got ${legs.sendTokens.amount}`);
+  }
+  return legs;
+}
+
+/** Arbitrum micro-fill SSOT — USDC collateral must match sendTokens leg exactly. */
+export function assertGmxMicroFillUsdcTransferLegs(legs: GmxMarketIncreaseMulticallLegs, collateralAmount: bigint): void {
+  const usdc = getAddress(GMX_USDC_ARBITRUM);
+  if (legs.sendTokens.token !== usdc) {
+    throw new Error(`GMX_MICRO_FILL_USDC: sendTokens token must be ${usdc}, got ${legs.sendTokens.token}`);
+  }
+  if (legs.sendTokens.amount !== collateralAmount) {
+    throw new Error(`GMX_MICRO_FILL_USDC_AMOUNT: expected ${collateralAmount}, got ${legs.sendTokens.amount}`);
+  }
+}
+
 export function buildGmxMarketIncreaseOrderArgs(payload: GmxV2UnsignedOrderPayload, market: Hex) {
   return buildGmxCreateOrderWireParams(payload, market);
 }
@@ -82,6 +149,13 @@ export function buildGmxMarketIncreaseMulticallCalls(input: {
     );
   }
   calls.push(encodeGmxCreateOrderCalldata(input.payload, input.market));
+  assertGmxMarketIncreaseMulticallLegs({
+    calls,
+    orderVault,
+    executionFee,
+    collateralToken,
+    collateralAmount: collateral,
+  });
   return { calls, msgValue, executionFee, collateral };
 }
 
