@@ -72,6 +72,22 @@ export {
 } from "./gmx-v2-order-payload";
 
 export {
+  assertGmxGmDepositWire,
+  auditGmxGmDepositWireParams,
+  buildGmxGmDepositFromLegacyInput,
+  buildGmxGmDepositRouterMulticall,
+  buildGmxGmDepositUnsignedPayload,
+  buildGmxGmDualTokenDepositPayload,
+  buildGmxGmUsdcOnlyDepositPayload,
+  encodeGmxCreateDepositCalldata,
+  GMX_CREATE_DEPOSIT_ABI_FRAGMENT,
+  GMX_DEPOSIT_VAULT_ARBITRUM,
+  GMX_GM_ETH_USDC_MARKET,
+  type GmxGmDepositUnsignedPayload,
+  type GmxGmDepositWireParams,
+} from "./gmx-gm-deposit-router-encode";
+
+export {
   fetchSplitBorrowRates,
   hashData,
   hashString,
