@@ -41,6 +41,7 @@
     "build:stylus": "cd contracts/stylus-probe && cargo test stylus_core --release && cargo build --target wasm32-unknown-unknown --release",
     "deploy:stylus:mainnet": "tsx scripts/deploy-stylus-mainnet.ts",
     "execute:gmx:micro-fill": "tsx scripts/execute-gmx-mainnet-micro-fill.ts",
+    "execute:gmx:gm-deposit": "tsx scripts/execute-gmx-mainnet-gm-deposit.ts",
     "build": "pnpm run build:worker",
     "build:assets": "mkdir -p dist && cp index.html dist/index.html",
     "build:worker": "pnpm run build:assets && pnpm exec tsc --noEmit && WRANGLER_WRITE_LOGS=false wrangler deploy --dry-run --minify --outdir=dist-worker",
