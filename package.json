@@ -39,6 +39,7 @@
     "telemetry:96h": "tsx scripts/live-96h-telemetry-daemon.ts",
     "build:wasm": "cargo build --manifest-path src/wasm/Cargo.toml --release --target wasm32-unknown-unknown && mkdir -p pkg && cp src/wasm/target/wasm32-unknown-unknown/release/soil_core.wasm pkg/soil_core.wasm",
     "build:stylus": "cd contracts/stylus-probe && cargo test stylus_core --release && cargo build --target wasm32-unknown-unknown --release",
+    "build:citadel-invariants": "cargo build --manifest-path contracts/citadel_invariants/Cargo.toml --release --target wasm32-unknown-unknown --no-default-features --features host-export && mkdir -p pkg && cp contracts/citadel_invariants/target/wasm32-unknown-unknown/release/citadel_invariants.wasm pkg/citadel_invariants.wasm",
     "deploy:stylus:mainnet": "tsx scripts/deploy-stylus-mainnet.ts",
     "execute:gmx:micro-fill": "tsx scripts/execute-gmx-mainnet-micro-fill.ts",
     "execute:gmx:gm-deposit": "tsx scripts/execute-gmx-mainnet-gm-deposit.ts",

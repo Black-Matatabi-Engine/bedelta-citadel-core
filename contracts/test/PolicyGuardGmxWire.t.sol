@@ -18,7 +18,7 @@ contract PolicyGuardGmxWireTest is Test {
 
     function setUp() public {
         vm.warp(1_700_000_000);
-        guard = new SliverVineAgentPolicyGuardV2(guardian);
+        guard = new SliverVineAgentPolicyGuardV2(guardian, address(0));
     }
 
     function _loadFixture() internal returns (bytes memory multicallData, GmxRiskInvariantLib.GmxWireContext memory ctx) {

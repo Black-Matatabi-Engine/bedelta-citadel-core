@@ -2,12 +2,15 @@
 pragma solidity 0.8.28;
 
 import {SliverVineAgentPolicyGuard} from "./SliverVineAgentPolicyGuard.sol";
+import {CitadelInvariantsPackLib} from "./libs/CitadelInvariantsPackLib.sol";
+import {CitadelInvariantsStylusLib} from "./libs/CitadelInvariantsStylusLib.sol";
 import {GmxMulticallDecodeLib} from "./libs/GmxMulticallDecodeLib.sol";
 import {GmxRiskInvariantLib} from "./libs/GmxRiskInvariantLib.sol";
 
 /**
  * @title  SliverVineAgentPolicyGuardV2
  * @notice ERC-8196 pre-screen + on-chain GMX ExchangeRouter.multicall wire invariants.
+ *         Optional Stylus coprocessor staticcall with Solidity fallback.
  */
 contract SliverVineAgentPolicyGuardV2 is SliverVineAgentPolicyGuard {
     error GmxInvariantTripped(uint256 errMask);
@@ -16,7 +19,11 @@ contract SliverVineAgentPolicyGuardV2 is SliverVineAgentPolicyGuard {
         bytes32 indexed digest, bytes32 indexed agentId, uint8 wireKind, uint256 errMask
     );
 
-    constructor(address guardian_) SliverVineAgentPolicyGuard(guardian_) {}
+    address public immutable stylusCoprocessor;
+
+    constructor(address guardian_, address stylusCoprocessor_) SliverVineAgentPolicyGuard(guardian_) {
+        stylusCoprocessor = stylusCoprocessor_;
+    }
 
     /// @notice View pre-screen: V1 policy + parsed GMX multicall pure invariants.
     function checkAgentPolicyWithGmxWire(
@@ -45,10 +52,12 @@ contract SliverVineAgentPolicyGuardV2 is SliverVineAgentPolicyGuard {
 
     function _enforceGmxWire(bytes calldata routerMulticallData, GmxRiskInvariantLib.GmxWireContext calldata ctx)
         private
-        pure
+        view
     {
         GmxMulticallDecodeLib.ParsedGmxWire memory wire = _parseWire(routerMulticallData);
-        uint256 errMask = GmxRiskInvariantLib.collectWireErrors(wire, ctx);
+        bytes memory packed = CitadelInvariantsPackLib.packWireEval(wire, ctx);
+        (bool invoked, uint256 errMask) = CitadelInvariantsStylusLib.tryEvaluatePacked(stylusCoprocessor, packed);
+        if (!invoked) errMask = GmxRiskInvariantLib.collectWireErrors(wire, ctx);
         if (errMask != 0) revert GmxInvariantTripped(errMask);
     }
 
