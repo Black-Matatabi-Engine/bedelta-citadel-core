@@ -3,3 +3,8 @@
 [contract.deployments.arbitrum-sepolia]
 network = "arbitrum-sepolia"
 no_activate = false
+
+[contract.deployments.arbitrum-one]
+network = "arbitrum-one"
+chain_id = 42161
+no_activate = false

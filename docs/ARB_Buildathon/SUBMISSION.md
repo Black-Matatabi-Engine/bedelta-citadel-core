@@ -58,7 +58,7 @@
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
-| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Sepolia (`0xb174…`) live event ingest operational**; **Arbitrum One (`42161`) dashboard = pre-compiled DuneSQL specification** awaiting mainnet Gate business-event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`e9a0197`** — Core Sinking Phase 1–2 · Solidity Custom Errors · **199/868** · **50.94 KiB gzip** |
 
 ### Core Sinking SSOT (`src/core/`)
@@ -84,7 +84,7 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 
 > **Telemetry tags (unchanged):** `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[CLOCK_SSOT_VERIFIED]`
 
-> **Note:** Initial mainnet deployment utilizes **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) on Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
+> **Governance footnote (Bootstrap Ignition Keys):** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Bootstrap Ignition Keys** (`0x1111…` / `0x2222…`) — **strictly for public verification and sandbox reproducibility**, not production HSM custody. Governance authority is designed for **post-launch rotation** to production multisig via native `proposeAdmin` / `acceptAdmin` functions.
 
 > **Core Pitch:** **SliverVine Citadel Shield** intercepts toxic payloads at sub-ms (**p50 ~106µs** TypeScript Gateway + Wasm Edge reflex — **not** L1/L2 block confirmation time) **before** Arbitrum Sequencer queues — 0-Gas fail-closed severance via `checkSoilResistance()` plus immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
@@ -101,17 +101,17 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **199 test files \| 868 PASS Clean (100% PASS)**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` — **202 test files \| 882 PASS Clean (100% PASS)**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
-| **1** | Ephemeral Ignition Signers | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** on Mainnet Gate `0xb174…` — public auditability without production HSM exposure. Gate shape = consume-once EIP-712; production rotation via native governance. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
-| **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet GM fill scheduled post-Grant M6. → [§4 GMX](#4-gmx) |
+| **1** | Ephemeral Ignition Signers | `0x1111…`/`0x2222…` are **Ephemeral Verification Signers** on Mainnet Gate `0xb174…` — **public verification + sandbox reproducibility only**; production HSM custody excluded by design. Gate shape = consume-once EIP-712; **post-launch governance rotation** via native `proposeAdmin` / `acceptAdmin`. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
+| **2** | GMX v2 Pre-Flight Guards | GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** (`pnpm demo` · `gmx-v2-agent-flow.demo.test.ts` · `gmx-v2-order-payload-guards.ts`) — **0-Gas pre-flight** severance before live GM pool capital deployment. Mainnet micro-fill harness: `pnpm execute:gmx:micro-fill --size=1` (balanced low-OI side calibration). → [§4 GMX](#4-gmx) |
 | **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered SaaS Request Credits launch in **V1.1**. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
-| **4** | Telemetry Infrastructure | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. Sepolia live stream and One production SQL documented separately. → [§5 Dune](#5-dune-analytics) |
+| **4** | Telemetry Infrastructure | **Sepolia (`421614`): Active Live Event Stream** · **Arbitrum One (`42161`): Contracts Anchored + SQL Query Specs Ready for Ingest** — zero misleading cross-chain claims; partitions documented separately. → [§5 Dune](#5-dune-analytics) |
 | **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **199 test files \| 868 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
-| **7** | Dune Analytics | **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**. → [§5 Dune](#5-dune-analytics) |
+| **7** | Dune Analytics | **Sepolia: Active Live Event Stream** · **Arbitrum One: Contracts Anchored + SQL Specs Ready for Ingest** (not live mainnet stream). → [§5 Dune](#5-dune-analytics) |
 | **8** | Commercial Model | **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public`) · **V1.1 = 4-Tier SaaS** (Milestone 1) · **V2.0 = Institutional CaaS & Orbit Shield**. → [Business Model](#business-model--gtm-strategy) |
 
 ---
@@ -543,16 +543,24 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 ### 4. GMX
 
-* **Dry-run / Vitest verification (0-Gas pre-flight):** GMX v2 execution guards verified via `pnpm demo` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) — pre-flight severance before live GM pool capital deployment; mainnet fill is a post-Grant milestone.
+* **Dry-run / Vitest verification (0-Gas pre-flight):** GMX v2 execution guards verified via `pnpm demo` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) — pre-flight severance before live GM pool capital deployment.
+* **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `GMX_POOL_IMBALANCE_BREACH` · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
+* **Stylus mainnet readiness:** `pnpm deploy:stylus:mainnet` — `cargo test stylus_core` + `wasm32` release build · optional `cargo stylus check` (ChainID **42161**) · Live deploy: `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1` · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts)
 * **Integration**: `evaluatePendleGmxCrossGuard` (`src/guards/pendle-gmx-cross-guard.ts`) & GMX Order Payload Guard (`src/services/adapters/gmx-v2-order-payload-guards.ts`).
 * **Mechanism**: Implements Shadow Margin accounting. Evaluates whether swapping out PT collateral under dynamic fees threatens GMX Maintenance Margin. Builder fee SSOT: **`GMX_UI_FEE_BPS` = 10** (`src/config/gmx-revenue.ts`); payload price-impact gate uses **`DEFAULT_GMX_PENALTY_BPS` = 50** (`src/services/yield/gmx-v2-price-impact.ts`).
 
 ### 5. Dune Analytics
 
-* **Telemetry infrastructure:** **Live Event Telemetry actively streams on Sepolia Testnet**; **Arbitrum One (42161) SQL Query Indexers fully pre-compiled for production event ingestion**.
+> **Telemetry boundary partition (zero misleading claims):** Sepolia and Arbitrum One are **explicitly separated** — live streaming vs. contracts-anchored SQL specs.
+
+| Network | ChainID | Status | What is claimed |
+|---------|---------|--------|-----------------|
+| **Arbitrum Sepolia** | `421614` | ✅ **Active Live Event Stream** | Dune ingests decoded `IntentAttested` · `RiskTripBlocked` from Sepolia Gate `0xb174…` — live feed proof |
+| **Arbitrum One** | `42161` | ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** | Production DuneSQL (Queries 0–0b + 1–3) pre-compiled for **42161** semantics · **not** claimed as live mainnet event stream until ingest is wired |
+
 * **Live Dashboard:** [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
-* **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — live feed proof for judges.
-* **Arbitrum One production SQL (`42161`):** Matching production DuneSQL queries (Queries 0–0b feed + chart; Queries 1–3 reconciliation panels) target **Arbitrum One mainnet** semantics — [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
+* **Sepolia event streaming (verified):** Dune engine ingests **decoded events** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`IntentAttested` · `RiskTripBlocked`) — **only** Sepolia is claimed as active live stream.
+* **Arbitrum One production SQL (`42161`):** Matching production DuneSQL queries (Queries 0–0b feed + chart; Queries 1–3 reconciliation panels) target **Arbitrum One mainnet** contract semantics — **SQL specs ready for ingest**; mainnet Gate business-event stream is a post-ingest milestone — [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
 * **Live Telemetry Feed (Query 0):** `arbitrum.blocks` 12h window · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · `RiskTripBlocked` / `IntentAttested` / heartbeat status.
 * **Telemetry Activity Chart (Query 0b):** 1h minute-bucket toxic-flow distribution (`BLOCKED` / `PASS` / `HEARTBEAT`).
 * **Integration**: [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) · Live `/api/grant-audit` `duneTelemetry` JSON.
@@ -711,13 +719,13 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 |----------|------|----------------------------|-------|
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · [`DeployArbitrumOneGate.s.sol`](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) |
 
-> **Note:** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Ephemeral Verification Signers** — Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) — for **deliberate public auditability without exposing production HSM infrastructure**. Key rotation to production multisig is executed via native governance functions.
+> **Governance footnote (Bootstrap Ignition Keys):** Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` deploys with **Bootstrap Ignition Keys** (`0x1111…` / `0x2222…`) — **strictly for public verification and sandbox reproducibility**, not production HSM custody. Governance authority is designed for **post-launch rotation** to production multisig via native `proposeAdmin` / `acceptAdmin` functions.
 
 > **0-Gas Off-Chain Severance architecture:** Arbitrum One Gate (`0xb174…`) **is engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **Arbitrum L2 state space cleanliness** — toxic paths never consume Sequencer gas; on-chain Gate anchors consume-once attestations only for cleared intents.
 
 ### [MAINNET_LIVE_EXECUTION_EVIDENCE]
 
-> **Harness:** `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1` · Default ingress: Robinhood Mainnet `4663` (`SMART_ROUTE_SOURCE_CHAIN_ID` override supported)
+> **Harness:** `pnpm deploy:stylus:mainnet` · `pnpm execute:gmx:micro-fill --size=1` · `pnpm tsx scripts/deploy-policy-guard-and-live-fill.ts` · ZeroDev AA: `pnpm tsx scripts/execute-zerodev-mainnet-test.ts` · Smart Route: `pnpm tsx scripts/execute-smart-route-live-demo.ts` · Live: `CONFIRM_SMART_ROUTE_DEMO=YES BROADCAST=1` · Default ingress: Robinhood Mainnet `4663` (`SMART_ROUTE_SOURCE_CHAIN_ID` override supported)
 
 | Field | Value |
 |-------|-------|
@@ -731,8 +739,8 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` · [Arbiscan](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
-| **Notional (USD)** | `$10–$20` |
+| **GMX Fill Live Attempt** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** · harness: `pnpm execute:gmx:micro-fill --size=1` |
+| **Notional (USD)** | `$1–$20` (CLI `--size`; default **$1** micro-fill) |
 
 ---
 
