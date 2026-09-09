@@ -1,91 +1,45 @@
 #!/usr/bin/env tsx
-/**
- * Morpho Blue Demo — Oracle freshness & market liquidity pre-flight.
- * Usage: pnpm demo:morpho
- * Trip:  pnpm demo:morpho -- --trip
- */
-import {
-  MORPHO_ARBITRUM_CHAIN_ID,
-  evaluateMorphoBlueGuard,
-} from "../src/adapters/morpho/morpho-blue-adapter";
-import {
-  hudBlocked,
-  hudChannelOpen,
-  hudDispatched,
-  hudIntent,
-  hudSevered,
-  hudSoilFuse,
-  printBanner,
-  printMode,
-  printResult,
-  R,
-  RED,
-} from "./adapters/citadel-ansi-hud";
+/** Morpho Blue Demo — Usage: pnpm demo:morpho · Trip: pnpm demo:morpho -- --trip */
+import { MORPHO_ARBITRUM_CHAIN_ID, evaluateMorphoBlueGuard } from "../src/adapters/morpho/morpho-blue-adapter";
+import { HEALTHY_SOIL, printPillarSetYVenueBanner } from "./adapters/citadel-ansi-hud";
+import { captureSoilBenchmark } from "./lib/demo-benchmark";
 import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
-import { formatGuardTime, measureSync, resolveLatency } from "./lib/demo-timing";
+import { collectMorphoBreachLines, withMatrixHudMute } from "./lib/matrix-demo-hud";
+import { finalizeVenueHappy, finalizeVenueTrip, printVenuePreflightHeader, printVenueRow } from "./lib/venue-demo-hud";
 
-function runHealthy(nowMs: number): number {
-  hudIntent("morpho-demo", "Morpho Blue", "MARKET_SUPPLY", "WETH/USDC · Arbitrum One");
-  const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateMorphoBlueGuard({
-      chainId: MORPHO_ARBITRUM_CHAIN_ID,
-      marketId: "WETH/USDC",
-      action: "SUPPLY",
-      amountUsd: 50_000,
-      marketLiquidityUsd: 5_000_000,
-      oraclePriceUsd: 3500,
-      referencePriceUsd: 3500,
-      oracleTimestampMs: nowMs - 120_000,
-      refPriceUsd: 3500,
-      spotPriceUsd: 3500,
-      depthUsd: 400_000,
-      nowMs,
-    }),
-  );
-  const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  oracleAgeMs=${result.oracleAgeMs} · oracleOk=${result.oracleOk}${R}`);
-  hudSoilFuse(result.soilOk, latencyUs, result.reasons);
-  hudChannelOpen();
-  hudDispatched("Morpho Blue WETH/USDC supply", latencyUs);
-  return latencyUs;
-}
-
-function runTrip(nowMs: number): number {
-  hudIntent("morpho-demo", "Morpho Blue", "STALE_ORACLE", "WETH/USDC · toxic oracle age");
-  const { value: result, latencyUs: measuredUs } = measureSync(() =>
-    evaluateMorphoBlueGuard({
-      chainId: MORPHO_ARBITRUM_CHAIN_ID,
-      marketId: "WETH/USDC",
-      action: "BORROW",
-      amountUsd: 200_000,
-      marketLiquidityUsd: 80_000,
-      oraclePriceUsd: 3650,
-      referencePriceUsd: 3500,
-      oracleTimestampMs: nowMs - 5_000_000,
-      refPriceUsd: 3500,
-      spotPriceUsd: 3500,
-      depthUsd: 6_000,
-      nowMs,
-    }),
-  );
-  const latencyUs = resolveLatency(measuredUs, result.latencyUs);
-  console.log(`${R}  oracleAgeMs=${result.oracleAgeMs} · oracleOk=${result.oracleOk}${R}`);
-  hudSoilFuse(false, latencyUs, result.reasons);
-  hudSevered("MORPHO_ORACLE_STALE");
-  hudBlocked();
-  if (!result.reasons.includes("SOIL_RESISTANCE_TRIP")) {
-    console.error(`${RED}Expected SOIL_RESISTANCE_TRIP in reasons${R}`);
-  }
-  return latencyUs;
+function runGuard(nowMs: number, trip: boolean): string {
+  const r = evaluateMorphoBlueGuard({
+    chainId: MORPHO_ARBITRUM_CHAIN_ID,
+    marketId: "WETH/USDC",
+    action: trip ? "BORROW" : "SUPPLY",
+    amountUsd: trip ? 200_000 : 50_000,
+    marketLiquidityUsd: trip ? 80_000 : 5_000_000,
+    oraclePriceUsd: trip ? 3650 : 3500,
+    referencePriceUsd: 3500,
+    oracleTimestampMs: trip ? nowMs - 5_000_000 : nowMs - 120_000,
+    refPriceUsd: 3500,
+    spotPriceUsd: 3500,
+    depthUsd: trip ? 6_000 : 400_000,
+    nowMs,
+  });
+  return trip ? "oracle stale / deviation breach" : `oracle age ${r.oracleAgeMs}ms nominal`;
 }
 
 wrapDemoExecution(({ nowMs }) => {
   const trip = isDemoTripArgv();
   ensureDemoWasmSoft();
-  printBanner("Morpho Blue Oracle Guard Demo");
-  printMode(trip);
-  const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Morpho guard · ${formatGuardTime(latencyUs)}${R}\n`);
-  printResult(!trip);
-  if (trip) return { tripped: true, reason: "MORPHO_ORACLE_STALE" };
+  const soil = { ...HEALTHY_SOIL, at: new Date(nowMs) };
+  const benchmark = captureSoilBenchmark(soil, () => withMatrixHudMute(() => runGuard(nowMs, false)));
+  printPillarSetYVenueBanner("Morpho Blue", benchmark);
+  printVenuePreflightHeader(!trip);
+  let detail = "";
+  withMatrixHudMute(() => {
+    detail = runGuard(nowMs, trip);
+  });
+  printVenueRow("Morpho Blue", !trip, detail);
+  if (trip) {
+    finalizeVenueTrip(collectMorphoBreachLines(nowMs), benchmark);
+    return { tripped: true, reason: "MORPHO_FAIL_CLOSED" };
+  }
+  finalizeVenueHappy(benchmark);
 });

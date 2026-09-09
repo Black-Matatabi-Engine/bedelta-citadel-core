@@ -3,15 +3,13 @@
  * Adapters normalize external feeds; all invariant checks live here.
  */
 import {
-  evaluateUsdAiFlagsFromLane,
   FLAG_USDAI_ORACLE_STALE,
   FLAG_USDAI_PEG_DRIFT,
   FLAGS_CLEAR,
   FLAGS_SEVERED,
-  packProtocolLane,
-  PROTO_USDAI,
-  PROTO_VECT_LEN,
-} from "./risk-engine-core";
+} from "./risk-flags";
+import { evaluateUsdAiFlagsFromLane } from "./risk-engine-flag-alt";
+import { packProtocolLane, PROTO_USDAI, PROTO_VECT_LEN } from "./risk-engine-protocol-slots";
 
 const USDAI_PROTO_VEC = new Float64Array(PROTO_VECT_LEN);
 

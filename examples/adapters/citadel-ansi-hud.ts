@@ -61,6 +61,17 @@ export function printPillarSetYFrameworkLine(): void {
   console.log(`${BOLD}${CYAN}${PILLAR_SET_Y_FRAMEWORK_LINE}${R}\n`);
 }
 
+export function printPillarSetYVenueBanner(venueName: string, benchmark?: DemoBenchmarkSnapshot): void {
+  const line1 = "🛡️  SliverVine Citadel Shield · [PILLAR SET Y: Pre-Consensus Firewall]";
+  const line2 = `Venue: ${venueName}`;
+  const w = Math.max(PILLAR_BOX_W_MIN, line1.length + 4, line2.length + 4);
+  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
+  console.log(`${CYAN}│${R}${BOLD}${padBanner(line1, w)}${R}${CYAN}│${R}`);
+  console.log(`${CYAN}│${R}${padBanner(line2, w)}${R}${CYAN}│${R}`);
+  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+  printBenchmarkBanner(benchmark ?? captureSoilBenchmark(HEALTHY_SOIL));
+}
+
 export function printPillarSetYStrategyBanner(
   basket: "perp" | "spot" | "all",
   benchmark?: DemoBenchmarkSnapshot,

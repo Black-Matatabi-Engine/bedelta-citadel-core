@@ -1,9 +1,5 @@
 #!/usr/bin/env tsx
-/**
- * GMX v2 Demo — Shadow Margin, Cross-Venue Slippage & Position Cap pre-flight.
- * Usage: pnpm demo:gmx
- * Trip:  pnpm demo:gmx -- --trip
- */
+/** GMX v2 Demo — Usage: pnpm demo:gmx · Trip: pnpm demo:gmx -- --trip */
 import {
   assertGmxPayloadFailClosed,
   GMX_PAYLOAD_PRICE_IMPACT_TRIP,
@@ -18,36 +14,23 @@ import {
   evaluateGmxPriceImpactSoilGate,
   gmxPriceImpactForSoil,
 } from "../src/services/yield/gmx-v2-price-impact";
-import {
-  hudBlocked,
-  hudChannelOpen,
-  hudDispatched,
-  hudIntent,
-  hudSevered,
-  hudSoilFuse,
-  printBanner,
-  printMode,
-  printResult,
-  R,
-  RED,
-} from "./adapters/citadel-ansi-hud";
-import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
+import { HEALTHY_SOIL, printPillarSetYVenueBanner } from "./adapters/citadel-ansi-hud";
+import { captureSoilBenchmark } from "./lib/demo-benchmark";
 import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
+import { withMatrixHudMute } from "./lib/matrix-demo-hud";
+import {
+  finalizeVenueHappy,
+  finalizeVenueTrip,
+  GMX_TRIP_BREACHES,
+  printVenuePreflightHeader,
+  printVenueRow,
+} from "./lib/venue-demo-hud";
 
 const ETH_GM = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 const TOXIC_POOL = { longTokenUsd: 3_000_000, shortTokenUsd: 1_000_000 };
 
-function runHealthy(at: Date): number {
-  hudIntent("gmx-demo", "GMX v2", "MarketIncrease", "ETH/USD GM · Arbitrum One");
-  const { value: payload, latencyUs: buildUs } = measureSync(() =>
-    buildGmxV2UnsignedOrderPayload({
-      side: "long",
-      sizeUsd: 100,
-      marketToken: ETH_GM,
-      midPriceUsd: 3500,
-    }),
-  );
-  const t1 = hrtimeStart();
+function runHealthy(at: Date): void {
+  buildGmxV2UnsignedOrderPayload({ side: "long", sizeUsd: 100, marketToken: ETH_GM, midPriceUsd: 3500 });
   assertGmxPayloadFailClosed({
     sizeUsd: 100,
     isLong: true,
@@ -55,50 +38,18 @@ function runHealthy(at: Date): number {
     pool: { longTokenUsd: 5_000_000, shortTokenUsd: 2_500_000 },
     collateralReserveRatio: 1.08,
   });
-  const guardUs = hrtimeElapsedUs(t1);
-  const soil = measureSync(() =>
-    checkSoilResistance({
-      symbol: "ETH",
-      hlSpot: 3500,
-      hlPerp: 3500,
-      dydxPerp: 3500,
-      depthUsd: 200_000,
-      disableThresholdJitter: true,
-      at,
-    }),
-  );
-  const totalUs = buildUs + guardUs + soil.latencyUs;
-  console.log(`${R}  Payload orderType=${payload.orderType} isLong=${payload.isLong} · sizeUsd=$100`);
-  hudSoilFuse(soil.value.ok, soil.latencyUs, soil.value.reasons);
-  hudChannelOpen();
-  hudDispatched("GMX v2 MarketIncrease · payload build", totalUs);
-  return totalUs;
+  checkSoilResistance({ ...HEALTHY_SOIL, at, disableThresholdJitter: true });
 }
 
-function runTrip(at: Date): number {
-  hudIntent("gmx-demo", "GMX v2", "TOXIC_PRICE_IMPACT", "ETH/USD GM · skewed pool");
-  const impact = estimatePreliminaryImpact({
-    orderSizeUsd: 2_000_000,
-    isLong: true,
-    pool: TOXIC_POOL,
-  });
-  const t0 = hrtimeStart();
-  const gate = evaluateGmxPriceImpactSoilGate(gmxPriceImpactForSoil(impact));
-  const soil = checkSoilResistance({
-    symbol: "ETH",
-    hlSpot: 3500,
-    hlPerp: 3500,
-    dydxPerp: 3500,
-    depthUsd: 200_000,
+function runTrip(at: Date): void {
+  const impact = estimatePreliminaryImpact({ orderSizeUsd: 2_000_000, isLong: true, pool: TOXIC_POOL });
+  evaluateGmxPriceImpactSoilGate(gmxPriceImpactForSoil(impact));
+  checkSoilResistance({
+    ...HEALTHY_SOIL,
     disableThresholdJitter: true,
     gmxPriceImpact: gmxPriceImpactForSoil(impact),
     at,
   });
-  const latencyUs = hrtimeElapsedUs(t0);
-  console.log(`${R}  Price-impact penalty=${impact.priceImpactPenaltyBps.toFixed(1)}bps · gate triggered=${gate.triggered}`);
-  hudSoilFuse(false, latencyUs, soil.reasons);
-  hudSevered("GMX_PRICE_IMPACT_TRIP");
-  hudBlocked();
   try {
     buildGmxV2UnsignedOrderPayload({
       side: "long",
@@ -108,21 +59,24 @@ function runTrip(at: Date): number {
       pool: { longTokenUsd: 1_000_000, shortTokenUsd: 500_000 },
     });
   } catch (err) {
-    const msg = err instanceof RiskLimitExceeded ? err.message : String(err);
-    if (msg.includes(GMX_PAYLOAD_PRICE_IMPACT_TRIP)) {
-      console.log(`${RED}  Payload builder: ${GMX_PAYLOAD_PRICE_IMPACT_TRIP}${R}`);
+    if (!(err instanceof RiskLimitExceeded) || !String(err.message).includes(GMX_PAYLOAD_PRICE_IMPACT_TRIP)) {
+      throw err;
     }
   }
-  return latencyUs;
 }
 
 wrapDemoExecution(({ at }) => {
   const trip = isDemoTripArgv();
   ensureDemoWasmSoft();
-  printBanner("GMX v2 Shadow Margin Demo");
-  printMode(trip);
-  const latencyUs = trip ? runTrip(at) : runHealthy(at);
-  console.log(`\n${R}GMX guard · ${formatGuardTime(latencyUs)}${R}\n`);
-  printResult(!trip);
-  if (trip) return { tripped: true, reason: GMX_PAYLOAD_PRICE_IMPACT_TRIP };
+  const soil = { ...HEALTHY_SOIL, at };
+  const benchmark = captureSoilBenchmark(soil, () => withMatrixHudMute(() => runHealthy(at)));
+  printPillarSetYVenueBanner("GMX v2", benchmark);
+  printVenuePreflightHeader(!trip);
+  withMatrixHudMute(() => (trip ? runTrip(at) : runHealthy(at)));
+  printVenueRow("GMX v2", !trip, trip ? "price impact trip · pool skew breach" : "shadow margin ok · cross-venue slippage clear");
+  if (trip) {
+    finalizeVenueTrip(GMX_TRIP_BREACHES, benchmark);
+    return { tripped: true, reason: "GMX_FAIL_CLOSED" };
+  }
+  finalizeVenueHappy(benchmark);
 });

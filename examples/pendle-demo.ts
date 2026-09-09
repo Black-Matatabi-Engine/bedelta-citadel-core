@@ -1,44 +1,20 @@
 #!/usr/bin/env tsx
-/**
- * Pendle Demo — PT/YT Safety Sentinel & Guarded Pool Factory.
- * Usage: pnpm demo:pendle
- * Trip:  pnpm demo:pendle -- --trip
- */
-import {
-  __resetPendleMarketOracleForTests,
-  pendleMarketOracle,
-} from "../src/adapters/pendle/pendle-market-oracle-adapter";
-import {
-  PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD,
-  PENDLE_POOL_YIELD_DRIFT_BREACH,
-  validateAIPoolSelection,
-} from "../src/adapters/pendle/pendle-pool-factory-adapter";
+/** Pendle Demo — Usage: pnpm demo:pendle · Trip: pnpm demo:pendle -- --trip */
+import { __resetPendleMarketOracleForTests, pendleMarketOracle } from "../src/adapters/pendle/pendle-market-oracle-adapter";
+import { PENDLE_POOL_MIN_INITIAL_LIQUIDITY_USD, validateAIPoolSelection } from "../src/adapters/pendle/pendle-pool-factory-adapter";
 import { PENDLE_PT_MARKET_PT_EETH } from "../src/adapters/pendle/pendle-pt-registry";
 import { checkSoilResistance } from "../src/services/risk-control";
-import {
-  hudBlocked,
-  hudChannelOpen,
-  hudDispatched,
-  hudIntent,
-  hudSevered,
-  hudSoilFuse,
-  printBanner,
-  printMode,
-  printResult,
-  R,
-  RED,
-} from "./adapters/citadel-ansi-hud";
+import { HEALTHY_SOIL, printPillarSetYVenueBanner } from "./adapters/citadel-ansi-hud";
+import { captureSoilBenchmark } from "./lib/demo-benchmark";
 import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
-import { formatGuardTime, hrtimeElapsedUs, hrtimeStart, measureSync } from "./lib/demo-timing";
-
-const HEALTHY_SOIL = {
-  symbol: "ETH",
-  hlSpot: 3500,
-  hlPerp: 3500,
-  dydxPerp: 3500,
-  depthUsd: 200_000,
-  disableThresholdJitter: true,
-};
+import { withMatrixHudMute } from "./lib/matrix-demo-hud";
+import {
+  finalizeVenueHappy,
+  finalizeVenueTrip,
+  pendleTripBreaches,
+  printVenuePreflightHeader,
+  printVenueRow,
+} from "./lib/venue-demo-hud";
 
 function ingestOracle(nowMs: number): void {
   const nowSec = Math.floor(nowMs / 1000);
@@ -65,59 +41,35 @@ function selection(nowMs: number, trip: boolean) {
   };
 }
 
-function runHealthy(nowMs: number): number {
-  hudIntent("pendle-demo", "Pendle", "PENDLE_CREATE_POOL", "Guarded Pool Factory · eETH PT");
-  ingestOracle(nowMs);
-  const sel = selection(nowMs, false);
-  const { value: verdict, latencyUs: validateUs } = measureSync(() => validateAIPoolSelection(sel));
-  const t1 = hrtimeStart();
-  const soil = checkSoilResistance({
+function runGuard(nowMs: number, trip: boolean): void {
+  if (!trip) ingestOracle(nowMs);
+  const sel = selection(nowMs, trip);
+  validateAIPoolSelection(sel);
+  checkSoilResistance({
     ...HEALTHY_SOIL,
+    disableThresholdJitter: true,
     pendlePoolFactory: {
       selection: sel,
       marketKeyOrAddress: PENDLE_PT_MARKET_PT_EETH,
-      useOracle: true,
+      useOracle: !trip,
       nowMs,
     },
   });
-  const soilUs = hrtimeElapsedUs(t1);
-  const totalUs = validateUs + soilUs;
-  console.log(
-    `${R}  validateAIPoolSelection=${verdict.passed} · yieldDrift=${verdict.yieldDriftBps.toFixed(0)}bps`,
-  );
-  hudSoilFuse(soil.ok, soilUs, soil.reasons);
-  hudChannelOpen();
-  hudDispatched("Pendle guarded pool · validateAIPoolSelection", totalUs);
-  return totalUs;
 }
 
-function runTrip(nowMs: number): number {
-  hudIntent("pendle-demo", "Pendle", "YIELD_DRIFT_TRIP", "Guarded Pool Factory · MEV fuse");
-  const sel = selection(nowMs, true);
-  const { value: verdict } = measureSync(() => validateAIPoolSelection(sel));
-  const t0 = hrtimeStart();
-  const soil = checkSoilResistance({
-    ...HEALTHY_SOIL,
-    pendlePoolFactory: { selection: sel, marketKeyOrAddress: PENDLE_PT_MARKET_PT_EETH, nowMs },
-  });
-  const latencyUs = hrtimeElapsedUs(t0);
-  console.log(
-    `${R}  yieldDrift=${verdict.yieldDriftBps.toFixed(0)}bps · breach=${verdict.reasons.includes(PENDLE_POOL_YIELD_DRIFT_BREACH)}`,
-  );
-  hudSoilFuse(false, latencyUs, soil.reasons);
-  hudSevered(PENDLE_POOL_YIELD_DRIFT_BREACH);
-  hudBlocked();
-  return latencyUs;
-}
-
-wrapDemoExecution(async ({ nowMs }) => {
+wrapDemoExecution(({ nowMs }) => {
   const trip = isDemoTripArgv();
   ensureDemoWasmSoft();
   __resetPendleMarketOracleForTests();
-  printBanner("Pendle Institutional Shield Demo");
-  printMode(trip);
-  const latencyUs = trip ? runTrip(nowMs) : runHealthy(nowMs);
-  console.log(`\n${R}Pendle guard · ${formatGuardTime(latencyUs)}${R}\n`);
-  printResult(!trip);
-  if (trip) return { tripped: true, reason: "PENDLE_POOL_YIELD_DRIFT_BREACH" };
+  const soil = { ...HEALTHY_SOIL, at: new Date(nowMs) };
+  const benchmark = captureSoilBenchmark(soil, () => withMatrixHudMute(() => runGuard(nowMs, false)));
+  printPillarSetYVenueBanner("Pendle", benchmark);
+  printVenuePreflightHeader(!trip);
+  withMatrixHudMute(() => runGuard(nowMs, trip));
+  printVenueRow("Pendle", !trip, trip ? "yield shock trip" : "yield farming clear");
+  if (trip) {
+    finalizeVenueTrip(pendleTripBreaches(), benchmark);
+    return { tripped: true, reason: "PENDLE_FAIL_CLOSED" };
+  }
+  finalizeVenueHappy(benchmark);
 });
