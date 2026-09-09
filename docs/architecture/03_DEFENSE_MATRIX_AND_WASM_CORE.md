@@ -1,6 +1,11 @@
 # Defense Matrix (R01–R20) & Wasm Soil Core
 
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Primary Highlights (Direction B — The Shield):**
+> - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **<14µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
+> - **Wasm Soil Core** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · Shield **p50 ~106 µs** · warm **< 60 µs**
+> - **Physical Deadlock** — toxic intent severed in **<14µs** before EIP-712 broadcast · **0-Gas** fail-closed
+>
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **217 test files | 967 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar 3 audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## 3. Cross-Venue Risk Engine & Defense Matrix (R01–R20)
@@ -60,7 +65,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **199 test files \| 868 PASS Clean (100% PASS)** · coexists with Shield **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **217 test files | 967 PASS clean** · coexists with Shield **p50 ~106µs** budget.
 
 #### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar 3)
 
@@ -131,12 +136,14 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 
 **Status:** **17 Active | 2 Refactored | 1 Deprecated** · Full rule table: [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md#defense-matrix-r01r20).
 
+**Bitmask SSOT:** All R01–R20 rules compile into a single defense bitmask evaluated atomically by `checkSoilResistance()` — any trip bit set → **FAIL-CLOSED** in **<14µs** via `rootProtection()` / `severSigningChannel()` before EIP-712 signing channel release.
+
 | Tier | Rules | Role |
 |------|-------|------|
 | **Pre-execution soil** | R01 · R03 · R04 · R05† | Wasm soil fuse · L2 stale book · Pgate latency |
 | **Session / AA** | R06 · R07 · R08 · R14 | Scoped keys · notional cap · nonce heal · re-auth |
 | **Saga / flatten** | R09 · R10 · R12 · R13 | 2PC ledger · auto-flatten · leverage scaling · black-swan halt |
-| **Severance** | R17 · R20 · R02 | Daily loss cutoff · physical deadlock · `rootProtection()` |
+| **Severance** | R17 · R20 · R02 | Daily loss cutoff · **<14µs physical deadlock** · `rootProtection()` |
 | **Anchors / infra** | R11 · R15 · R16 · R18 · R19 | Dynamic SL · CCXT harness · 5-TX provenance · KV hardlock |
 
 † R05 SpoofBuster — **Deprecated** (superseded by soil / depth gate).
@@ -159,6 +166,8 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 5. **State** — unidirectional `SystemState`; 2PC intent ledger → KV.
 
 ### 3.5 Wasm Soil Core (M4) — Summary
+
+> **Wasm Budget SSOT:** `pkg/soil_core.wasm` **< 28 KiB** · hot-path exec **< 60 µs** · Shield p50 **~106 µs** · fail path **< 14 µs** physical deadlock.
 
 > **Full Wasm / latency specification:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md#wasm-soil-core-engine-no_std).
 

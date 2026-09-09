@@ -1,6 +1,8 @@
-# SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
+# 🛡️ The Shield & Cerebellum Reflex Arc
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum** · SilverVine Labs
+**SliverVine Citadel — Pre-Consensus Intent Execution Calibration Layer & Cerebellum Reflex Arc for AI Agents** · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs
+
+> **Buildathon Direction B (The Shield):** Sub-ms **p50 ~106µs** Edge/Wasm inspection · **<14µs** physical deadlock (`rootProtection`) · **0-Gas fail-closed** protection against LLM hallucinations and prompt injection · multi-framework support via **`pnpm demo:quad`** (ElizaOS · Wayfinder · Virtuals · LangChain).
 
 ## ⚡ 3-Second TL;DR for Judges (Neuromorphic Security)
 
@@ -38,7 +40,7 @@
 **Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
-[![Vitest](https://img.shields.io/badge/Vitest-964%20PASS%20%28216%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-967%20PASS%20%28217%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -67,7 +69,8 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **217 test files | 967 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** |
+| **Canonical HEAD** | **`572e5cd`** · `git rev-parse HEAD` |
 | **Wasm ABI v2** | `pkg/soil_core.wasm` · `soil_core_abi_version() = 2` · **28-protocol-slot** FFI (`PROTO_VECT_LEN=28`) — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` · slots **28–35** = soil math input |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Shield **p50 ~106 µs** · warm **< 60 µs** |
@@ -237,12 +240,13 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 
 ## ⚡ 30-Second Express Audit
 
-### Flagship Demos
+### Flagship Demos (Tier 1 — AI Agent Shield)
 
 ```bash
-pnpm demo:matrix   # Full 7-Protocol Cross-Venue Matrix
-pnpm demo:quad     # Full 4 AI Agent Frameworks Pre-Flight Shield
-pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
+pnpm demo:quad                  # Tier 1 — Full 4 AI Agent Frameworks Pre-Flight Shield
+pnpm demo:matrix -- --trip      # Tier 1 — 7-Protocol matrix · R20 physical deadlock severance
+pnpm demo:wayfinder -- --trip   # Tier 1 — Wayfinder 0-Gas fail-closed soil trip
+pnpm demo:escort                # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 ```
 
 → **Granular protocol & framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
@@ -253,7 +257,7 @@ pnpm demo:escort   # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
-pnpm test       # Full System Regression Suite (216 test files | 964 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 ```
 
 ### Path 2: Isolated Docker
@@ -270,7 +274,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** · Chaos **255/255** fail-closed |
+| **Vitest SSOT** | **217 test files | 967 PASS clean** · Chaos **255/255** fail-closed |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · **ABI v2** · 28-protocol-slot FFI · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 | **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
@@ -285,7 +289,7 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 |-----------|--------|-----------|
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
-| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **964 PASS** · **50.94 KiB gzip** |
+| **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **967 PASS** · **50.94 KiB gzip** |
 | **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |
