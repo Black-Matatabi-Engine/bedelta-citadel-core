@@ -27,16 +27,16 @@
 
 ```bash
 pnpm install
-pnpm demo:wayfinder                      # Default 8-venue rotation · p50 ~106µs — ALLOW
+pnpm demo:wayfinder                      # Default 7+1 venue rotation · p50 ~106µs — ALLOW
 pnpm demo:langchain -- --venue=pendle    # Manual venue lock — Pendle lane
 pnpm demo:wayfinder -- --trip            # Fail-closed · <14µs rootProtection()
-pnpm demo:matrix -- --trip               # 7-protocol R20 severance
+pnpm demo:matrix -- --trip               # 7+1 Cross-Chain Execution Matrix R20 severance
 pnpm test -- --run                       # 217 test files | 967 PASS clean
 ```
 
 | Command | Proves |
 |---------|--------|
-| `pnpm demo:wayfinder` | Independent agent guard · **default 8-venue rotation** · HUD `VENUE` + `INVARIANT` |
+| `pnpm demo:wayfinder` | Independent agent guard · **default 7+1 venue rotation** · HUD `VENUE` + `INVARIANT` |
 | `pnpm demo:<framework> -- --venue=<protocol>` | Manual protocol lane lock across all 4 frameworks |
 | `pnpm demo:<framework> -- --trip` | Toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
 | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
@@ -51,7 +51,7 @@ All four demos — `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` — share:
 
 | Flag | Effect |
 |------|--------|
-| *(default)* | Auto-rotates across **8-Protocol Execution Matrix**: GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Hyperliquid · Variational Omni RFQ |
+| *(default)* | Auto-rotates across **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)**: GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ · Hyperliquid L1 |
 | `--venue=<protocol>` | Locks venue (`gmx` · `pendle` · `uniswap` · `aave` · `morpho` · `usdai` · `hyperliquid`/`hl` · `variational`/`var`) |
 | `--trip` | Simulated toxic intent → **<14.0µs** Wasm `rootProtection()` deadlock |
 
@@ -106,7 +106,7 @@ Full harness specs · `[MAINNET_LIVE_EXECUTION_EVIDENCE]` → [`04_LIVE_FIRE_EVI
 | **Zone A** | 30-second express · Tier 1–3 demo suite | [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) § Zone A |
 | **Zone A.1** | Security audit · bundle gates | same § Zone A.1 |
 | **Zone B** | Hybrid Pillar Sets X & Y inside (GMX · Pendle · Dune) | same § Zone B |
-| **Zone C** | Agent adapters · 7-protocol matrix | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
+| **Zone C** | Agent adapters · 7+1 Cross-Chain Execution Matrix | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
 
 ---
 

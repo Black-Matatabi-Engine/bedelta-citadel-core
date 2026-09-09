@@ -2,7 +2,7 @@
 
 > **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
 > **Performance SSOT:** Each independent agent guard achieves **p50 ~106µs** Edge Wasm reflex — real agents operate in isolation without concurrent queue overhead.  
-> **Venue SSOT:** Default **8-Protocol Execution Matrix rotation** · manual `--venue=<protocol>` lock · `--trip` fail-closed.  
+> **Venue SSOT:** Default **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) rotation** · manual `--venue=<protocol>` lock · `--trip` fail-closed.  
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
@@ -14,7 +14,7 @@
 pnpm demo:wayfinder                      # Default: 8-venue rotation · p50 ~106µs guard — ALLOW
 pnpm demo:langchain -- --venue=pendle    # Manual lock: Pendle PT/YT lane — ALLOW
 pnpm demo:virtuals -- --trip             # Fail-closed: toxic intent → <14µs rootProtection()
-pnpm demo:matrix -- --trip               # Full 7-protocol matrix · R20 physical deadlock severance
+pnpm demo:matrix -- --trip               # Full 7+1 Cross-Chain Execution Matrix · R20 physical deadlock severance
 ```
 
 | Command | Scope |
@@ -25,7 +25,7 @@ pnpm demo:matrix -- --trip               # Full 7-protocol matrix · R20 physica
 | `pnpm demo:langchain` | LangGraph · **State Transition Guard** · default **8-venue rotation** |
 | `pnpm demo:<framework> -- --venue=<protocol>` | Lock a specific protocol lane (e.g. `--venue=aave`, `--venue=hl`) |
 | `pnpm demo:<framework> -- --trip` | Simulated toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
-| `pnpm demo:matrix -- --trip` | Full **7-protocol** cross-venue matrix · R20 trip + severance |
+| `pnpm demo:matrix -- --trip` | Full **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** · R20 trip + severance |
 
 ---
 
@@ -33,8 +33,8 @@ pnpm demo:matrix -- --trip               # Full 7-protocol matrix · R20 physica
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:matrix -- --trip` | Independent framework guards · 8-venue rotation · 7-protocol matrix R20 severance |
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
+| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:matrix -- --trip` | Independent framework guards · 7+1 venue rotation · 7+1 Cross-Chain Execution Matrix R20 severance |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7+1 Cross-Chain Execution Matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain (each **p50 ~106µs** in isolation) |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -77,18 +77,20 @@ Each framework demo runs **one agent guard in isolation** — demonstrating **p5
 
 | Mode | Flag | Behavior |
 |------|------|----------|
-| **Default (rotated)** | *(none)* | Auto-selects a venue from the **8-Protocol Execution Matrix** on each run. HUD prints `VENUE: <protocol> · rotated` plus the active `INVARIANT` check and protocol-specific intent. |
+| **Default (rotated)** | *(none)* | Auto-selects a venue from the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** on each run. HUD prints `VENUE: <protocol> · rotated` plus the active `INVARIANT` check and protocol-specific intent. |
 | **Manual lock** | `--venue=<protocol>` | Locks a specific protocol lane. Example: `pnpm demo:langchain -- --venue=pendle` → HUD prints `VENUE: Pendle · locked`. |
 | **Fail-closed trip** | `--trip` | Forces simulated toxic intent / market invariant breach → **<14.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** pre-broadcast intercept. |
 
 ```bash
-pnpm demo:wayfinder                      # Default 8-venue rotation
+pnpm demo:wayfinder                      # Default 7+1 venue rotation
 pnpm demo:elizaos -- --venue=morpho      # Manual lock — Morpho Blue vault lane
 pnpm demo:virtuals -- --venue=variational # Manual lock — Variational Omni RFQ
 pnpm demo:langchain -- --trip            # Fail-closed soil trip
 ```
 
-### 8-Protocol Execution Matrix (`--venue` keys)
+### 7+1 Cross-Chain Execution Matrix (`--venue` keys)
+
+**7 Arbitrum One natives** (GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ) **+ 1 Hyperliquid L1** cross-chain HF orderbook defense.
 
 | `--venue` key | Protocol | Chain / venue | HUD invariant (sample) |
 |---------------|----------|---------------|------------------------|
@@ -150,7 +152,7 @@ pnpm demo:e2e -- --trip           # Step 1 soil-trip stress intercept
 
 ```bash
 pnpm install
-pnpm demo:wayfinder                      # Primary judge entry — 8-venue rotation
+pnpm demo:wayfinder                      # Primary judge entry — 7+1 venue rotation
 pnpm demo:langchain -- --venue=pendle    # Manual venue lock smoke test
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)

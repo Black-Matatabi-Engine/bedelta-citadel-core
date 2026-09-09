@@ -60,7 +60,7 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & C
 ```bash
 pnpm demo:quad              # All four AI frameworks → ALLOW
 pnpm demo:quad -- --trip    # Hallucination / soil trip → FAIL_CLOSED (<14µs deadlock)
-pnpm demo:matrix -- --trip  # 7-protocol matrix R20 severance
+pnpm demo:matrix -- --trip  # 7+1 Cross-Chain Execution Matrix R20 severance
 ```
 
 **Threat classes blocked at 0-Gas:**
@@ -150,7 +150,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · **217/967** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
-> **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 7-protocol invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
+> **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 7+1 Cross-Chain Execution Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
 
 **Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [Headless Audit](https://bedeltawater.slivervine.xyz/api/grant-audit) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md)
 

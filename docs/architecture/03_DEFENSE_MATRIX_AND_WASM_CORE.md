@@ -1,12 +1,58 @@
 # Defense Matrix (R01–R20) & Wasm Soil Core
 
 > **Primary Highlights (Direction B — The Shield):**
+> - **Pure-Math Risk Engine** — **~1.0µs** pure invariant evaluation · zero async on the hot path · 28-protocol-slot bitmask vectoring
 > - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **<14µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
 > - **Wasm Soil Core** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · Shield **p50 ~106 µs** · warm **< 60 µs**
 > - **Physical Deadlock** — toxic intent severed in **<14µs** before EIP-712 broadcast · **0-Gas** fail-closed
 >
 > **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **217 test files | 967 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
+
+## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
+
+Institutional-grade technical moat: Citadel Shield evaluates the full **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** as a **single parallel vector** — not a sequential per-venue RPC loop. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
+
+### Pure-Math Invariant Evaluation (~1.0µs)
+
+| Property | Implementation | Why it matters |
+|----------|----------------|----------------|
+| **Zero async on critical path** | [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | No `await`, no I/O, no network probes inside `checkSoilResistance()` pure evaluation — eliminates event-loop jitter during reflex arcs |
+| **Pre-allocated scratch** | Module-level `Float64Array` / `Uint8Array` lanes (`PROTO_VECT_LEN=28`) | Zero per-intent heap allocation · GC-stable hot path |
+| **Measured pure invariant** | CLI harness `Pure Invariant Time` row (`examples/lib/demo-timing.ts`) | **~1.0µs** isolated soil math — invariant evaluation only, excluding harness I/O |
+
+$$
+\mathrm{AllowedToSign} = f_{\mathrm{pure}}(\mathbf{v}_{28}) \in \{0,1\} \quad \text{where } t_{\mathrm{pure}} \sim 1.0\,\mu\mathrm{s}
+$$
+
+### Bitwise Bitmask FFI Vectoring (28-Protocol-Slot ABI v2)
+
+| Layer | SSOT module | Parallelism model |
+|-------|-------------|-------------------|
+| **TS bitmask compiler** | [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | All R01–R20 + protocol lanes compile to **`protocolMask` / `tripFlags`** — evaluated in one bitwise pass |
+| **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` |
+| **8-venue matrix coverage** | Agent demos · `pnpm demo:matrix` | Entire **7+1** lane set evaluated simultaneously via bitmask — no sequential venue bottleneck |
+
+```text
+Intent → pack Float64Array[28] → Wasm bitmask eval → tripFlags (u64) → severSigningChannel()
+         └─ single FFI hop ─┘     └─ parallel OR across all protocol bits ─┘
+```
+
+### Zero-Latency Fail-Closed Parallelism
+
+Parallel vector checking is what makes **simultaneous multi-venue R20 physical deadlock** possible without N× sequential guard latency:
+
+| Stage | Latency budget | Mechanism |
+|-------|----------------|-----------|
+| **Pure invariant kernel** | **~1.0µs** | Pure-math soil resistance · no async |
+| **Full matrix + Wasm FFI** | **p50 ~106µs** | End-to-end Shield reflex (TS Gateway + `soil_core.wasm`) |
+| **R20 severance envelope** | **<15µs** | `rootProtection()` · `severSigningChannel()` on any trip bit — **9/9** matrix legs (8 protocol venues + aggregated soil fuse) trip **FAIL_CLOSED** in `pnpm demo:matrix -- --trip` without per-leg queueing |
+
+**Proof command:** `pnpm demo:matrix -- --trip` — reproduces **9/9 FAIL_CLOSED** severance across the full cross-chain matrix in a single HUD pass.
+
+→ Deep dive: [§3.1 Microsecond Moats (Summary)](#31-microsecond-moats-summary) · [§3.3 Defense Matrix (R01–R20)](#33-defense-matrix-r01-r20-summary)
+
+---
 
 ## 3. Cross-Venue Risk Engine & Defense Matrix (R01–R20)
 

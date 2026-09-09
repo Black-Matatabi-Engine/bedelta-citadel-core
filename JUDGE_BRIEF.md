@@ -85,7 +85,9 @@ SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc 
 
 **Production highlights:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Gate · GMX v2 **0-Gas pre-flight** (`pnpm demo`) · Pendle Institutional Sentinel + AI Guarded Pool Factory · **V1.0 agent integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Sepolia Dune live + 42161 SQL pre-compiled · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
 
-### 7-Protocol Matrix (Physical Boundaries)
+### 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)
+
+**7 Arbitrum One natives:** GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ · **+1 Hyperliquid L1** cross-chain HF orderbook defense.
 
 | Protocol | Venue | Physical Boundary | Demo |
 |----------|-------|-------------------|------|
@@ -124,7 +126,7 @@ pnpm demo:e2e               # 5-step macro lifecycle · Robinhood escort · lost
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` | 7-protocol cross-venue matrix |
+| **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` | 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) |
 | **Tier 2 — Agents** | `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` | Four AI frameworks + quad |
 | **Tier 2 — Ingress** | `pnpm demo:escort` | Pillar Set X multi-route escort · `--trip` timeout fail-closed |
 | **Tier 3 — E2E** | `pnpm demo:{stabilizer,e2e}` | Sepolia sandbox · 5-step macro |

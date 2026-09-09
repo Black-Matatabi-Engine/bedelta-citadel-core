@@ -41,9 +41,9 @@ This document is **invariant-first** (Yellow Paper style): topology, thresholds,
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with full native multi-protocol coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue), plus **Hyperliquid** — an **Independent L1 High-Frequency Orderbook AppChain** that originated alongside Arbitrum's perp liquidity ecosystem — as the cross-chain session-key hedge leg. Pillar Set Y Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** — seven Arbitrum One natives (GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ) plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pillar Set Y Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
 
-**Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
+**Primary Execution Boundary — 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1):** 7 Arbitrum One natives (GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ) + 1 cross-chain HF orderbook defense (Hyperliquid L1 Session Key Adapter).
 
 ```text
 [ Optional Permissioned Ingress (e.g. Robinhood Chain 46630 / 4663) ]
