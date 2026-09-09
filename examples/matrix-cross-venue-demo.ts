@@ -1,17 +1,17 @@
 #!/usr/bin/env tsx
 /**
- * Cross-Venue Matrix Demo — flexible capital loops across 7 protocols.
+ * Strategy loop harness — Loop A (perp) and Loop B (spot) cross-venue guards.
  * Usage:
- *   pnpm demo:matrix                      # --loop=all (default)
- *   pnpm demo:matrix -- --loop=perp       # Pendle → GMX → HL + Variational (both hedges)
- *   pnpm demo:matrix -- --loop=perp --hedge=variational
- *   pnpm demo:matrix -- --loop=perp --hedge=hyperliquid
- *   pnpm demo:matrix -- --loop=spot       # Uniswap V3 → Aave V3 → Morpho Blue → USD.ai
- *   pnpm demo:matrix -- --loop=spot --aave
- *   pnpm demo:matrix -- --loop=spot --usdai
- *   pnpm demo:matrix -- --healthy-only
- * Trip:  pnpm demo:matrix -- --trip --gmx
- * Live:  pnpm demo:matrix -- --livingwater
+ *   pnpm demo:perp-loop                   # Loop A: GMX / Pendle / Hyperliquid (+ Variational hedge default)
+ *   pnpm demo:perp-loop -- --trip         # Loop A FAIL_CLOSED · p50 ~15µs rootProtection()
+ *   pnpm demo:perp-loop -- --hedge=variational
+ *   pnpm demo:perp-loop -- --hedge=hyperliquid
+ *   pnpm demo:spot-loop                   # Loop B: Morpho / Aave / USD.ai / Uniswap
+ *   pnpm demo:spot-loop -- --trip         # Loop B FAIL_CLOSED · p50 ~15µs rootProtection()
+ *   pnpm demo:spot-loop -- --aave         # Spot anomaly variant
+ *   pnpm demo:spot-loop -- --usdai
+ *   pnpm demo:perp-loop -- --healthy-only # Nominal PASS (no R20 sever)
+ * Live:  pnpm demo:perp-loop -- --livingwater
  */
 import {
   AAVE_ARBITRUM_CHAIN_ID,

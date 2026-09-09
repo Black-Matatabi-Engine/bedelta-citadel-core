@@ -28,15 +28,21 @@
 
 ```bash
 pnpm install
-# 4 Framework Guards — p50 ~106µs E2E Edge Shield
-pnpm demo:wayfinder                      # Default 7+1 venue rotation
-pnpm demo:langchain -- --venue=pendle    # Manual Pendle lane lock
-pnpm demo:langchain -- --trip            # Framework FAIL_CLOSED · p50 ~15µs reflex core
-# Standalone Matrix — p50 ~15µs Wasm rootProtection (no framework overhead)
-pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
-# Tier 0 Docker (no pnpm/Node)
+# === Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (PRIMARY FLAGSHIP) ===
+pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E Edge Shield)
+pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
+pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME Guard (Manual lock to Pendle PT/YT)
+pnpm demo:langchain -- --trip            # LangChain AI Guard (p50 ~15µs Physical Deadlock)
+pnpm demo:perp-loop -- --trip            # Standalone Perp/Yield Stack Guard (Loop A: GMX/Pendle/HL)
+pnpm demo:spot-loop -- --trip            # Standalone Spot/Lending Vault Guard (Loop B: Morpho/USD.ai)
+
+# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+
+# === Tier 0 & Regression Verification ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # 217 test files | 967 PASS clean
+pnpm test -- --run                       # Full Regression Suite (217 test files | 967 PASS clean)
 ```
 
 | Command | Proves |
@@ -44,7 +50,8 @@ pnpm test -- --run                       # 217 test files | 967 PASS clean
 | `pnpm demo:wayfinder` | **E2E Edge Shield p50 ~106µs** · 7+1 venue rotation · HUD `VENUE` + `INVARIANT` |
 | `pnpm demo:<framework> -- --venue=<protocol>` | E2E Edge Shield · manual protocol lane lock |
 | `pnpm demo:<framework> -- --trip` | **p50 ~15µs reflex core** · toxic intent → **0-Gas FAIL_CLOSED** |
-| `pnpm demo:matrix -- --trip` | **p50 ~15µs reflex core** · canonical 9/9 matrix R20 severance proof |
+| `pnpm demo:perp-loop -- --trip` | **p50 ~15µs reflex core** · Loop A perp/yield stack R20 severance |
+| `pnpm demo:spot-loop -- --trip` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
 | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |

@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
-> **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
+> **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip`  
 > **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).  
 > **Performance SSOT:** Each independent agent guard runs in isolation — ALLOW paths measure E2E Edge Shield; `--trip` paths measure reflex-core severance.  
 > **Venue SSOT:** Default **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) rotation** · manual `--venue=<protocol>` lock · `--trip` fail-closed.  
@@ -12,12 +12,21 @@
 ## Tier 1 — AI Agent Shield (Primary)
 
 ```bash
-# 4 Framework Guards — p50 ~106µs E2E Edge Shield
-pnpm demo:wayfinder                      # Default 7+1 venue rotation
-pnpm demo:langchain -- --venue=pendle    # Manual Pendle lane lock
-pnpm demo:langchain -- --trip            # Framework FAIL_CLOSED · p50 ~15µs reflex core
-# Standalone Matrix — p50 ~15µs Wasm rootProtection (no framework overhead)
-pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
+# === Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (PRIMARY FLAGSHIP) ===
+pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E Edge Shield)
+pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
+pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME Guard (Manual lock to Pendle PT/YT)
+pnpm demo:langchain -- --trip            # LangChain AI Guard (p50 ~15µs Physical Deadlock)
+pnpm demo:perp-loop -- --trip            # Standalone Perp/Yield Stack Guard (Loop A: GMX/Pendle/HL)
+pnpm demo:spot-loop -- --trip            # Standalone Spot/Lending Vault Guard (Loop B: Morpho/USD.ai)
+
+# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+
+# === Tier 0 & Regression Verification ===
+docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
+pnpm test                                # Full Regression Suite (217 test files | 967 PASS clean)
 ```
 
 | Command | Scope |
@@ -28,7 +37,8 @@ pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
 | `pnpm demo:langchain` | LangGraph · **State Transition Guard** · default **8-venue rotation** |
 | `pnpm demo:<framework> -- --venue=<protocol>` | Lock a specific protocol lane (e.g. `--venue=aave`, `--venue=hl`) |
 | `pnpm demo:<framework> -- --trip` | Simulated toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
-| `pnpm demo:matrix -- --trip` | **Standalone** pure-math matrix reflex core (**p50 ~15µs** · no AI framework overhead) · 9/9 R20 severance |
+| `pnpm demo:perp-loop -- --trip` | **Loop A** perp/yield stack reflex core (**p50 ~15µs** · GMX / Pendle / HL) |
+| `pnpm demo:spot-loop -- --trip` | **Loop B** spot/lending vault reflex core (**p50 ~15µs** · Morpho / Aave / USD.ai / Uniswap) |
 
 ---
 
@@ -36,8 +46,8 @@ pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:matrix -- --trip` | Independent framework guards · 7+1 venue rotation · 7+1 Cross-Chain Execution Matrix R20 severance |
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7+1 Cross-Chain Execution Matrix** |
+| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` | Independent framework guards · 7+1 venue rotation · strategy-loop R20 severance |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:perp-loop` · `pnpm demo:spot-loop` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **Loop A / Loop B** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain (each **p50 ~106µs** in isolation) |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
@@ -56,16 +66,16 @@ pnpm demo:morpho        # Morpho Blue vault share-price & sandwich guard
 pnpm demo:variational   # Variational Omni RFQ stale quote & OLP depth guard
 ```
 
-### Matrix loop variants
+### Strategy loop guards (Loop A / Loop B)
 
 ```bash
-pnpm demo:matrix              # Full cross-venue matrix (--loop=all, default)
-pnpm demo:matrix -- --loop=perp                    # Pendle → GMX → dual perp hedge (HL + Variational)
-pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
-pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
-pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
-pnpm demo:matrix -- --loop=spot                    # Uniswap V3 → Aave V3 → Morpho Blue spot loop
-# Append -- --healthy-only for nominal PASS; default runs R20 trip + severance
+pnpm demo:perp-loop                              # Loop A: GMX / Pendle / Hyperliquid (+ Variational hedge default)
+pnpm demo:perp-loop -- --trip                    # Loop A FAIL_CLOSED · p50 ~15µs rootProtection()
+pnpm demo:perp-loop -- --hedge=variational       # Variational Omni RFQ hedge leg only
+pnpm demo:perp-loop -- --hedge=hyperliquid       # Hyperliquid L1 hedge leg only
+pnpm demo:spot-loop                              # Loop B: Morpho / Aave / USD.ai / Uniswap
+pnpm demo:spot-loop -- --trip                    # Loop B FAIL_CLOSED · p50 ~15µs rootProtection()
+pnpm demo:perp-loop -- --healthy-only            # Nominal PASS (no R20 sever)
 ```
 
 Append `-- --trip` to any Tier 1 command for **FAIL_CLOSED** demonstration.

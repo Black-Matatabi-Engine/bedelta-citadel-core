@@ -42,7 +42,8 @@ pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E E
 pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
 pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME Guard (Manual lock to Pendle PT/YT)
 pnpm demo:langchain -- --trip            # LangChain AI Guard (p50 ~15µs Physical Deadlock)
-pnpm demo:matrix -- --trip              # Standalone Pure-Math Engine (9/9 Matrix R20 Severance)
+pnpm demo:perp-loop -- --trip            # Standalone Perp/Yield Stack Guard (Loop A: GMX/Pendle/HL)
+pnpm demo:spot-loop -- --trip            # Standalone Spot/Lending Vault Guard (Loop B: Morpho/USD.ai)
 
 # === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
@@ -62,7 +63,7 @@ Citadel Shield reports **three statistical latency tiers** — judges should map
 | Tier | Metric | Scope (what is measured) | Canonical demo |
 |------|--------|--------------------------|----------------|
 | **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` pure-math kernel — no async · no harness I/O | CLI HUD `Pure Invariant Time` row |
-| **Wasm Reflex Core** | **p50 ~15µs** (**<20µs warm path**) | `rootProtection()` physical deadlock · `severSigningChannel()` — standalone pure-math engine (no AI framework overhead) | `pnpm demo:matrix -- --trip` (canonical) · `pnpm demo:<framework> -- --trip` |
+| **Wasm Reflex Core** | **p50 ~15µs** (**<20µs warm path**) | `rootProtection()` physical deadlock · `severSigningChannel()` — standalone pure-math engine (no AI framework overhead) | `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` · `pnpm demo:<framework> -- --trip` |
 | **E2E Edge Shield** | **p50 ~106µs** | Cloudflare Worker + TypeScript Gateway + Wasm FFI — full pre-broadcast guard path | `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` |
 
 > **Excluded from all tiers:** L1/L2 block confirmation · sequencer finality · on-chain inclusion time.
@@ -166,7 +167,7 @@ curl -s https://bedeltawater.slivervine.xyz/api/grant-audit | jq .provenanceVeri
 |-------|--------|
 | **Vitest SSOT** | **217 test files | 967 PASS clean** · Chaos **255/255** fail-closed |
 | **E2E Edge Shield** | **p50 ~106µs** — Worker + TS Gateway + Wasm FFI |
-| **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) · `pnpm demo:matrix -- --trip` |
+| **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 
 **Protocol:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/citadel-sdk`](./src/sdk/README.md) (Apache-2.0) · **BUSL-1.1** root license → [LICENSE](./LICENSE)
