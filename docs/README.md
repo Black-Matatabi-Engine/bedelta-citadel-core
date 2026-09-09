@@ -6,7 +6,7 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **217 test files | 967 PASS clean** · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **217 test files | 967 PASS clean** · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Dual Pillar Set X & Y scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
 
@@ -40,7 +40,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 |---|----------|------|
 | 1 | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Citadel-Armor Sovereign Vault SSOT** — near-zero drawdown · maximum Sharpe · dual-wallet workflow |
 | 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Express verification hub** — CLI Tier 0–5 entry · decoupled proof index |
-| 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
+| 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (`00`–`05`)** — topology · Hybrid Pillar Sets X & Y · R01–R20 · ERC/EIP wiki · risk framework |
 | 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
 | 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · **10 bps builder** + referral rebate model |
 
@@ -51,8 +51,8 @@ pnpm test                             # 217 test files | 967 PASS clean
 | Audience | Document | Role |
 |----------|----------|------|
 | **Risk mitigation & disclaimer framework** | [`architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Fail-closed boundaries · **88% / 12% risk spectrum** · **80/20 Pareto** · force majeure · AI attack vectors · 60 invariants · V1.0 vs V1.5/V2.0 roadmap |
-| **Compliance Ingress Firewall (Pillar 2)** | [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Venue-agnostic unidirectional AML escort · Robinhood Chain as inaugural reference adapter · 6/6 tests |
-| **Edge Shield Wasm Core (Pillar 3)** | [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | `checkSoilResistance()` · p50 ~106µs · Tri-Sensor · R01–R20 defense matrix |
+| **Compliance Ingress Firewall (Pillar Set X)** | [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Venue-agnostic unidirectional AML escort · Robinhood Chain as inaugural reference adapter · 6/6 tests |
+| **Edge Shield Wasm Core (Pillar Set Y)** | [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | `checkSoilResistance()` · p50 ~106µs · Tri-Sensor · R01–R20 defense matrix |
 | **Security audit snapshot** | [`audit/05_PRINCIPAL_AUDIT_REPORT.md`](./audit/05_PRINCIPAL_AUDIT_REPORT.md) | Principal review · Gate / survival matrix |
 | **Grant submissions** | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (Shield-first) |
 | **Grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones · deep tables |

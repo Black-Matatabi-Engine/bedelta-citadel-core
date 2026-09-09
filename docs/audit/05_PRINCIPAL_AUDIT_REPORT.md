@@ -26,7 +26,7 @@
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (Mainnet + Sepolia CREATE2 same-address) | [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | `DeployArbitrumOneGate.s.sol` |
 | **Chaos matrix** | **255 / 255** toxic scenarios blocked · `failClosedRate: 100.00%` · `capitalLossUsd: 0` | [`chaos-blackswan-metrics.json`](./chaos-blackswan-metrics.json) |
-| **Risk spectrum (modeled)** | **88%** pre-broadcast interception mesh · **12%** insurmountable systemic residuals (`88% + 12% = 100%`) | [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) |
+| **Risk spectrum (modeled)** | **88%** pre-broadcast interception mesh · **12%** insurmountable systemic residuals (`88% + 12% = 100%`) | [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) |
 
 **Single regression phrase (all audit prose):**
 `199 test files | 868 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail) · **50.94 KiB gzip** · Gate `0xb174118b…` · p50 ~106 µs.

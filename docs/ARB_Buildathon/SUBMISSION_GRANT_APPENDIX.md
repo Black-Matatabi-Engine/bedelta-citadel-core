@@ -8,13 +8,13 @@
 
 | Judge pointer | SSOT document |
 |---------------|---------------|
-| Three Pillars · R01–R20 | [Architecture index §01–03](../architecture/README.md) · [Three Pillars](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [Defense Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) |
+| Hybrid Pillar Sets X & Y · R01–R20 | [Architecture index §01–03](../architecture/README.md) · [Hybrid Pillar Sets X & Y](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [Defense Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) |
 | CLI Tier 0–5 verification | [Verification Matrix](../VERIFICATION_MATRIX.md) |
 | Dune telemetry · SQL panels | [Dune Dashboard Specification](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | Pendle × GMX cross-guard | [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) |
-| [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent policy | [Technical Specification §0.1](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10--erc-7715--post-grant-design-spec) |
+| [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent policy | [Technical Specification §0.1](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec) |
 | Institutional DD / Basel mapping | [Due Diligence Memorandum](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
-| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) · [§ 88% Defense Mesh](#88-defense-mesh--12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
+| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
 Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/citadel-sdk`](../../src/sdk/README.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Sponsor Integration Matrix](#sponsor-integration-matrix).
 
@@ -69,7 +69,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 
 ## 88% Defense Mesh & 12% Post-Grant R&D Roadmap
 
-> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
+> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
 
 ### Industry Baseline (~80% or Below)
 
@@ -85,7 +85,7 @@ Traditional DeFi / Agent risk checks rely on **post-hoc analytics** or **mutable
 | 🟢 **Session Key Blast-Radius Isolation** | Scoped `ORDER_EXECUTE` + **$5,000** notional cap · **v0.95 replay guard** — consume-once nonce + `expiresAt` (`5829e9a`) | `executeHlSessionKeyOrder` |
 | 🟢 **Oracle & RPC Resilience** | **30s** oracle-lag fail-closed (`ORACLE_LAG_DEADLOCK` / `ORACLE_LAG_DEADLOCK_MS = 30_000`) + **Honeypot trap RPC** defense (`evaluateRpcDefenseGate()` · 99% synthetic slippage decoy) |
 
-> **Engineering scope boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee).
+> **Engineering scope boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee).
 
 ### The Remaining **12%** (Why We Need This Foundation Grant)
 
@@ -104,10 +104,10 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 ## Architectural SSOT & Hardened Metrics
 
 * **Test Suite**: **217 test files | 967 PASS clean** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
-* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Tri-Pillar ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
-* **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
+* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Dual Pillar Set X & Y ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
+* **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#3-cross-venue-risk-engine-defense-matrix-r01-r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
-* **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification--arbitrum-one-42161) · [Sepolia](#on-chain-verification--arbitrum-sepolia-421614).
+* **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification-arbitrum-one-42161) · [Sepolia](#on-chain-verification-arbitrum-sepolia-421614).
 * **0-Gas off-chain severance:** Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**.
 
 ### Core Risk Invariants (Judge Quick Reference)
@@ -177,7 +177,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
-Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters** — they do not define product identity. Aave/Morpho APY figures are *(Hurdle-rate probe only — not a yield-stacking product track)*.
+Optional bridges (Robinhood / Across) are **Pillar Set X Reference Escort Adapters** — they do not define product identity. Aave/Morpho APY figures are *(Hurdle-rate probe only — not a yield-stacking product track)*.
 
 ---
 
@@ -186,13 +186,13 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 | Ecosystem | Role for SliverVine | Why they win together | SSOT |
 |-----------|---------------------|----------------------|------|
 | **Arbitrum** | Pre-consensus execution primitive on **42161** | Live immutable Gate + Edge clearing before Sequencer ingress | Mainnet Tx · `SliverVineGate.sol` |
-| **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Core Pillar 3) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free · SaaS credits in V1.1 | `src/adapters/pendle/pendle-market-oracle-adapter.ts` · `src/adapters/pendle/pendle-pool-factory-adapter.ts` · `src/guards/pendle-gmx-cross-guard.ts` |
+| **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Pillar Set Y) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free · SaaS credits in V1.1 | `src/adapters/pendle/pendle-market-oracle-adapter.ts` · `src/adapters/pendle/pendle-pool-factory-adapter.ts` · `src/guards/pendle-gmx-cross-guard.ts` |
 | **Dune** | **PEV** + `RiskTripBlocked` telemetry | Indexes off-chain blocked attacks; Sepolia live · One SQL spec | `DUNE_DASHBOARD_SPECIFICATION.md` |
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `src/services/adapters/gmx-v2-order-payload.ts` |
 | **Wayfinder** | Native pre-execution risk firewall on **42161** | `wayfinderCitadelShieldHook` · soil fuse + 8-dimension intent gate · 0-Gas fail-closed | `src/adapters/wayfinder/wayfinder-shield.ts` · `pnpm demo:wayfinder` |
 | **Stabilizer** | Universal Sepolia sandbox & cross-pass layer on **421614** | Stabilizer → GMX v2 → Pendle routing · identical `checkSoilResistance()` gates | `src/adapters/stabilizer/stabilizer-adapter.ts` · `pnpm demo:stabilizer` |
 | **Virtuals / ElizaOS / LangChain** | Full quad-framework pre-consensus firewall | `evaluateVirtualsGameTask()` · `evaluateElizaCitadelAction()` · `CitadelRiskGuardTool` | `src/adapters/virtuals/virtuals-game-adapter.ts` · `src/adapters/elizaos/elizaos-citadel-plugin.ts` · `src/adapters/langchain/langchain-citadel-tool.ts` · `pnpm demo:virtuals` · `pnpm demo:elizaos` · `pnpm demo:langchain` |
-| **Robinhood** | Pillar 2 RWA ingress firewall | Outbound-only `46630/4663 → 42161` · **`lostUsd ≡ 0`** · inbound AML BLOCK · ArbOS Elara compatible | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` |
+| **Robinhood** | Pillar Set X RWA ingress firewall | Outbound-only `46630/4663 → 42161` · **`lostUsd ≡ 0`** · inbound AML BLOCK · ArbOS Elara compatible | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` |
 
 ---
 
@@ -203,14 +203,14 @@ Optional bridges (Robinhood / Across) are **Pillar 2 Reference Escort Adapters**
 * **Lean On-Chain Gate by Design**: On-chain logic is strictly **immutable and non-custodial** (no proxy, no ETH custody) so the hot path stays on Cloudflare Edge — `checkSoilResistance()` **p50 ~106µs**. Dual-contract core: `SliverVineGate.sol` (consume-once attestation, Mainnet + Sepolia `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent-policy validation).
 * **Mechanism**: Intercepts AI Trade Intents in the sub-millisecond off-chain pipeline (`src/core/agent-citadel-guard.ts`), validating soil fuse + deadman switch before settlement-layer EIP-712 (`SliverVineCitadel` domain) (0-Gas Fail-Closed).
 
-### 2. Robinhood Chain (Chain ID: 46630 / 4663) — Pillar 2 RWA Ingress Firewall
+### 2. Robinhood Chain (Chain ID: 46630 / 4663) — Pillar Set X RWA Ingress Firewall
 
-* **Arbitrum H1 2026 alignment:** Permissioned **RWA capital escort** from Robinhood Chain (`46630` testnet · `4663` **production mainnet ingress**) into **Arbitrum One (`42161`)** via Pillar 2 Compliance Ingress Firewall — institutional treasuries ingress without naked delta or phantom loss booking.
+* **Arbitrum H1 2026 alignment:** Permissioned **RWA capital escort** from Robinhood Chain (`46630` testnet · `4663` **production mainnet ingress**) into **Arbitrum One (`42161`)** via Pillar Set X Compliance Ingress Firewall — institutional treasuries ingress without naked delta or phantom loss booking.
 * **Live Mainnet Smart Route (4663 → 42161):** ZeroDev Kernel v3 UserOp Hash `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` · Verified Tx [`0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · Harness `pnpm tsx scripts/execute-smart-route-live-demo.ts`
-* **Integration**: Pillar 2 Ingress Bridge Adapter (`src/adapters/across-ingress-bridge.ts`) & R20 Circuit Breaker Sever Pipeline (`src/services/root-protection-lib/circuit-breaker-sever.ts`) · on-chain **`IngressSafetySwitch.sol`** AML oracle flush.
-* **Mechanism**: **Optional Pillar 2 Reference Escort Adapter** (not the protocol identity). Outbound `46630`/`4663` → `42161` only; inbound `42161` → Robinhood → **`AML_INBOUND_TO_ROBINHOOD_BLOCKED`**. **Pending-Capital Recognition Invariant:** **`lostUsd ≡ 0`** on `IN_FLIGHT_BRIDGE_CAPITAL` until explicit `SETTLED` or `BRIDGE_TIMEOUT_FAIL_CLOSED` (>1h). When deadlock condition R20 is triggered, `severSigningChannel()` immediately severs hot-key signature pipelines, locking the engine into read-only observer mode.
+* **Integration**: Pillar Set X Ingress Bridge Adapter (`src/adapters/across-ingress-bridge.ts`) & R20 Circuit Breaker Sever Pipeline (`src/services/root-protection-lib/circuit-breaker-sever.ts`) · on-chain **`IngressSafetySwitch.sol`** AML oracle flush.
+* **Mechanism**: **Optional Pillar Set X Reference Escort Adapter** (not the protocol identity). Outbound `46630`/`4663` → `42161` only; inbound `42161` → Robinhood → **`AML_INBOUND_TO_ROBINHOOD_BLOCKED`**. **Pending-Capital Recognition Invariant:** **`lostUsd ≡ 0`** on `IN_FLIGHT_BRIDGE_CAPITAL` until explicit `SETTLED` or `BRIDGE_TIMEOUT_FAIL_CLOSED` (>1h). When deadlock condition R20 is triggered, `severSigningChannel()` immediately severs hot-key signature pipelines, locking the engine into read-only observer mode.
 
-### 3. Pendle Finance (V1.0 Live · Core Pillar 3)
+### 3. Pendle Finance (V1.0 Live · Pillar Set Y)
 
 V1.0 ships **two complementary Pendle integrations** — institutional safety layer, not a yield product:
 
@@ -475,7 +475,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | **Deployer / Admin / Signer** | OpSec-isolated Forge broadcast signer | `0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F` | [`scripts/deploy-sepolia-gate.sol`](../../scripts/deploy-sepolia-gate.sol) |
 | `SliverVineGate` | Consume-once EIP-712 attestation anchor | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [`SliverVineGate/src/SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) |
 | `SliverVineRiskOracle` | EIP-712 offline risk report · `STATUS_SHUTDOWN` flush | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` | [`contracts/SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) |
-| `IngressSafetySwitch` | Pillar 2 compliance filter | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` | [`contracts/IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) |
+| `IngressSafetySwitch` | Pillar Set X compliance filter | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` | [`contracts/IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) |
 | `SliverVineSoilCoprocessor` (Stylus) | On-chain `soil_core` coprocessor · ArbOS 61 **96KB** Wasm expansion ready · `check_soil_resistance_stylus` dual-execution | **Code-Verified** (Cargo 9/9 · Stylus SDK **0.10.7** · `pnpm build:stylus` · EIP-1967 proxy path) | [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) |
 
 ---
@@ -490,7 +490,7 @@ pnpm demo:pendle  # Tier 1 — Pendle guarded pool factory (ALLOW)
 pnpm demo:uniswap # Tier 1 — Uniswap V3 spot liquidity (ALLOW)
 pnpm demo:aave # Tier 1 — Aave V3 HF guard (ALLOW)
 pnpm demo:morpho   # Tier 1 — Morpho Blue vault guard (ALLOW)
-pnpm demo       # Vitest Tri-Pillar matrix (12 scenarios)
+pnpm demo       # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
@@ -500,7 +500,7 @@ cd SliverVineGate && forge test --gas-report && cd ..
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 ```
 
-**Tri-Pillar micro demo** (`pnpm demo` — `tests/demo/`):
+**Dual Pillar Set X & Y micro demo** (`pnpm demo` — `tests/demo/`):
 
 | File | Venue | Scenarios |
 |------|-------|-----------|
@@ -548,7 +548,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 | [`../grants/arbitrum/GRANT_PROPOSAL.md`](../grants/arbitrum/GRANT_PROPOSAL.md) | Scope & roadmap |
 | [`../grants/gmx/GMX_BUILDERS_PITCH.md`](../grants/gmx/GMX_BUILDERS_PITCH.md) | GMX builder economics |
 | [`../pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md`](../pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md) | 180s Pitch + 120s Demo dual-video scripts |
-| [§ Threat Model Appendix](#appendix-real-world-threat-model--market-landscape) | Agentic web metrics · case studies · competitive matrix |
+| [§ Threat Model Appendix](#appendix-real-world-threat-model-market-landscape) | Agentic web metrics · case studies · competitive matrix |
 
 ---
 

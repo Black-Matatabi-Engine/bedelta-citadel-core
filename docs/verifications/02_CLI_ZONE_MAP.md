@@ -12,7 +12,7 @@
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
-| **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
+| **Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
 
@@ -20,14 +20,14 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 
 ```bash
 pnpm install
-pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
+pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 ```
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo` | Tri-Pillar micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
+| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -104,7 +104,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 
 ---
 
-## Zone A.1 — Dual-Demo Architecture (Tri-Pillar Showcase)
+## Zone A.1 — Dual-Demo Architecture (Dual Pillar Set X & Y Showcase)
 
 Cloudflare Edge **SaaS gateway** positioning: sub-ms **zero-I/O sync** `checkSoilResistance()` hot-path (**p50 ~106µs**) — independent of AA bundler latency.
 
@@ -125,7 +125,7 @@ pnpm demo
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo` | Tri-Pillar micro E2E matrix | **12/12 PASS** · colorful ANSI console output |
+| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix | **12/12 PASS** · colorful ANSI console output |
 
 ### (b) Macro Lifecycle E2E Suite — `pnpm demo:e2e`
 
@@ -143,9 +143,9 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 
 ---
 
-## Zone B — Inside Three Pillars (Core Protocol Invariants)
+## Zone B — Inside Hybrid Pillar Sets X & Y (Core Protocol Invariants)
 
-### Pillar 1 — Gatehouse (Opt-In Account Abstraction & Scoped Auth)
+### Pillar Set X — Gatehouse (Opt-In Account Abstraction & Scoped Auth)
 
 **Command:** `pnpm test:zerodev`
 
@@ -157,7 +157,7 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 | Session scope + Risk Oracle Gate fail-closed | ✅ Offline / mock bundler |
 | Mainnet UserOp broadcast | ✅ **Verified Live** — Robinhood Mainnet Smart Route `4663` → `42161` · UserOp [`0x7b72ee9f…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 
-**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar 1 Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar 3 Wasm Soil Core** (`pkg/soil_core.wasm` · p50 ~106 µs) and **Pillar 2 Arbitrum Native Ingress** operate **100% independently** of ZeroDev. `zerodev-aa-gate.ts` provides pre-bundler UserOp validation when AA is enabled.
+**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar Set Y Wasm Soil Core** (`pkg/soil_core.wasm` · p50 ~106 µs) and **Pillar Set X Arbitrum Native Ingress** operate **100% independently** of ZeroDev. `zerodev-aa-gate.ts` provides pre-bundler UserOp validation when AA is enabled.
 
 **v1.0 AA scope:** Stage ① Sign-in · ③ Gas · ④ Authorize · ⑤ Execute (Sepolia verified). Stage ② Smart Routing = Reference Harness. Stages ⑥⑦ = Post-Grant Roadmap.
 
@@ -173,7 +173,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 ---
 
-### Pillar 2 — Compliance Ingress Firewall (Escort Accounting & AML)
+### Pillar Set X — Compliance Ingress Firewall (Escort Accounting & AML)
 
 **Command:**
 
@@ -187,13 +187,13 @@ pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 | Escort invariant | `lostUsd ≡ 0` |
 | AML isolation | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` — unidirectional 42161→46630 outbound only |
 
-**Narrative:** Robinhood Chain (`46630`/`4663`) Across ingress is a **Pillar 2 Reference Escort Adapter** — not product identity. Inbound AML block enforces fail-closed unidirectional isolation before capital reaches Arbitrum deployable NAV.
+**Narrative:** Robinhood Chain (`46630`/`4663`) Across ingress is a **Pillar Set X Reference Escort Adapter** — not product identity. Inbound AML block enforces fail-closed unidirectional isolation before capital reaches Arbitrum deployable NAV.
 
-Related: [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md)
+Related: [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md)
 
 ---
 
-### Pillar 3 — SliverVine Citadel Shield (Pre-Consensus Wasm Risk Engine)
+### Pillar Set Y — SliverVine Citadel Shield (Pre-Consensus Wasm Risk Engine)
 
 | Command | Proves | Expected |
 |---------|--------|----------|
@@ -236,14 +236,14 @@ pnpm audit:nightly
 | **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · `src/adapters/hl/websocket/websocket-health.ts` |
 | **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · `src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts` |
 
-Related: [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · [`audit/05_PRINCIPAL_AUDIT_REPORT.md`](./audit/05_PRINCIPAL_AUDIT_REPORT.md)
+Related: [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · [`audit/05_PRINCIPAL_AUDIT_REPORT.md`](../audit/05_PRINCIPAL_AUDIT_REPORT.md)
 
-#### Pendle Institutional Shield (V1.0 Live · Core Pillar 3)
+#### Pendle Institutional Shield (V1.0 Live · Pillar Set Y)
 
 Zero-I/O sync oracle + fail-closed soil wiring within the existing Shield **p50 ~106µs** budget.
 
 ```bash
-pnpm demo   # 12 Tri-Pillar ANSI scenarios (recommended first)
+pnpm demo   # 12 Dual Pillar Set X & Y ANSI scenarios (recommended first)
 pnpm exec vitest run tests/adapters/pendle-market-oracle.test.ts
 pnpm exec vitest run tests/adapters/pendle-pt-registry.test.ts
 pnpm exec vitest run tests/risk-control/pendle-soil-guard.test.ts

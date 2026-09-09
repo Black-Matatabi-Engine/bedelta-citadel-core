@@ -1,11 +1,11 @@
-# Three Pillars & Institutional Ingress Pipeline
+# Hybrid Pillar Sets X & Y & Institutional Ingress Pipeline
 
-> **Document:** Pillar 1 Gatehouse (ZeroDev AA) · Pillar 2 Compliance Ingress · Pillar 3 Shield routing · agent adapters · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · **Wasm Core:** `<28kb` · **p50 ~106 µs**
+> **Document:** Pillar Set X Gatehouse (ZeroDev AA) · Pillar Set X Compliance Ingress · Pillar Set Y Shield routing · agent adapters · **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · **Wasm Core:** `<28kb` · **p50 ~106 µs**
 > **Topology SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md)
 
 ### 0.1 Bytecode Predicate Verification (v1.0) & ERC-7715 (⏳ Post-Grant Design Spec)
 
-SliverVine does not interpret natural-language LLM prompts. The Shield enforces **Asymmetric Predicate Bytecode Hard Assertions** against ERC-4337 UserOp calldata inside the sub-ms Wasm core (p50 ~106 μs) — **powered 100% by `pkg/soil_core.wasm`**, independent of Account Abstraction. ZeroDev Kernel v3 is an **opt-in Pillar 1 delivery adapter** for scoped session keys when institutions enable AA (`USE_ZERODEV_AA`); it does **not** provide or power sub-ms latency.
+SliverVine does not interpret natural-language LLM prompts. The Shield enforces **Asymmetric Predicate Bytecode Hard Assertions** against ERC-4337 UserOp calldata inside the sub-ms Wasm core (p50 ~106 μs) — **powered 100% by `pkg/soil_core.wasm`**, independent of Account Abstraction. ZeroDev Kernel v3 is an **opt-in Pillar Set X delivery adapter** for scoped session keys when institutions enable AA (`USE_ZERODEV_AA`); it does **not** provide or power sub-ms latency.
 
 > **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (AI Agent Wallet Policy):** Aligned with the **Finalized ERC-8196 Standard** ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · Ethereum Standard · co-authored by Virtuals Protocol).
 
@@ -15,7 +15,7 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 |-----------|-----------|--------|
 | **Receiver Invariant** | Decode GMX v2 parameters from UserOp bytecode; assert `sender ≡ receiver` before any L2 broadcast. | ✅ v1.0 Delivered (Sepolia verified) |
 | **Parameter Invariant** | Bound-check `acceptablePrice` (and related execution params) against oracle-lag sensors; fail-closed on drift. | ✅ v1.0 Delivered (Sepolia verified) |
-| **Unidirectional Outbound Escort** | Pillar 2 enforces venue-agnostic outbound-only escort into Arbitrum `42161`; inbound AML contamination is blocked at the Compliance Ingress Firewall. Robinhood Chain (`46630`/`4663`) is the inaugural reference adapter. | ✅ v1.0 Delivered (Sepolia verified) |
+| **Unidirectional Outbound Escort** | Pillar Set X enforces venue-agnostic outbound-only escort into Arbitrum `42161`; inbound AML contamination is blocked at the Compliance Ingress Firewall. Robinhood Chain (`46630`/`4663`) is the inaugural reference adapter. | ✅ v1.0 Delivered (Sepolia verified) |
 
 ### 0.2 v1.0 Delivered Scope vs Post-Grant Roadmap
 
@@ -24,11 +24,11 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 | **v1.0 Delivered (Sepolia + Arbitrum One)** | ✅ Code-Verified Live | **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall · GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **Pendle Institutional Shield** (sync oracle · `PENDLE_ORACLE_STALE` soil fuse · cross-guard) · **Stabilizer Sepolia Cross-Pass Sandbox** (`421614`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) **`SliverVineAgentPolicyGuard` live on 42161** [`0x3e4298e2…`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · ZeroDev Smart Route UserOp [`0xe12714a7…`](https://arbiscan.io/tx/0xe12714a7b26d8983c32e471180e640dfb2ff000b4e1530a34cee02169f11e816) · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **Arbitrum One Mainnet Ignition** [`0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Dune + SHA-256 `GET /api/grant-audit` · **199 test files \| 869 PASS Clean (100% PASS)** |
 | **v1.0 Active Target** | ✅ Mainnet Ignition Delivered | Single blue-chip anchor: **GMX v2 ETH/USDC GM Pool** + Hyperliquid **1× short** hedge · Gate live on **42161** |
 | **v1.0 Partial — HL Orderbook Gap Guard** | ✅ Code-Verified | `evaluateHlOrderbookGapGuard()` in [`hl-orderbook-gap-guard.ts`](../../src/services/risk-control-lib/hl-orderbook-gap-guard.ts) · wired via [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) — gap-window leverage scale-down + 2× depth floor |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar Set Y Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **199 test files \| 868 PASS Clean (100% PASS)** |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
-**ZeroDev AA v1.0 active scope (Opt-In Pillar 1):** **Native Integration** with **ZeroDev Kernel v3 (ERC-7579)** + **Ultra-Relay Intent Network** — Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579 TYPE 1 validator) · ⑤ Execution — `SliverVineRiskOracle` = **ERC-7579 Pre-Execution Hook (TYPE 4)** · Sepolia dry-run verified (`pnpm test:zerodev`). **v0.95 SSOT (`5829e9a`):** HL session-key consume-once nonce + `expiresAt` replay guard · USD.ai `[CLOCK_SSOT_VERIFIED]`. Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar 3 Wasm Shield and Pillar 2 Arbitrum Native Ingress operate **100% independently** of ZeroDev.
+**ZeroDev AA v1.0 active scope (Opt-In Pillar Set X):** **Native Integration** with **ZeroDev Kernel v3 (ERC-7579)** + **Ultra-Relay Intent Network** — Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579 TYPE 1 validator) · ⑤ Execution — `SliverVineRiskOracle` = **ERC-7579 Pre-Execution Hook (TYPE 4)** · Sepolia dry-run verified (`pnpm test:zerodev`). **v0.95 SSOT (`5829e9a`):** HL session-key consume-once nonce + `expiresAt` replay guard · USD.ai `[CLOCK_SSOT_VERIFIED]`. Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar Set Y Wasm Shield and Pillar Set X Arbitrum Native Ingress operate **100% independently** of ZeroDev.
 
 #### 2.4.6 v0.95 SSOT — ZeroDev AA Security Audit Closure
 
@@ -38,7 +38,7 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 | Session key replay (50.94 KiB Worker path) | **Resolved in v0.95 SSOT** — `auditSessionKeyNonceState` + `verifySessionKeyValidity` before broadcast | `execute-order.ts` · commit `5829e9a` |
 | `SliverVineRiskOracle` hook classification | **ERC-7579 Pre-Execution Hook** — gate binds oracle status before Ultra-Relay UserOp ingress | `SliverVineRiskOracle.sol` · `zerodev-aa-gate-types.ts` |
 
-**Demo:** `pnpm demo` — 12 Tri-Pillar ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
+**Demo:** `pnpm demo` — 12 Dual Pillar Set X & Y ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
 
 ### 0.3 Agent Ecosystem Adapters (V1.0 Live · Native Integrations)
 
@@ -55,7 +55,7 @@ Production-native adapters in [`src/adapters/`](../../src/adapters/) — each fr
 | **Quad-Agent (combined)** | ✅ V1.0 Live | [`quad-agent-demo.ts`](../../examples/quad-agent-demo.ts) | All four AI frameworks | `pnpm demo:quad` | — |
 | **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
 
-**Regression bar:** **199 test files | 868 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
+**Regression bar:** **217 test files | 967 PASS clean
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -93,9 +93,9 @@ Agent Cross-Pass Route (Sepolia 421614)
   FAIL_CLOSED (0-Gas)  or  ALLOW → Mainnet-identical bytecode path
 ```
 
-**Verification bar:** **199 test files | 868 PASS Clean (100% PASS)** · `pnpm demo:stabilizer` · `pnpm demo` (Tri-Pillar GMX/HL/Pendle harness).
+**Verification bar:** **217 test files | 967 PASS clean
 
-### 2.2 Traditional Bridge vs SilverVine Pillar 2 Compliance Escort
+### 2.2 Traditional Bridge vs SilverVine Pillar Set X Compliance Escort
 
 ```text
 Traditional Omnichain Bridge (bidirectional · loss opaque)
@@ -105,7 +105,7 @@ Traditional Omnichain Bridge (bidirectional · loss opaque)
 └──────────────┘   timeout → stuck / social   └──────────────┘
                    recovery · lostUsd > 0 risk
 
-SilverVine Pillar 2 Compliance Escort (unidirectional · fail-closed)
+SilverVine Pillar Set X Compliance Escort (unidirectional · fail-closed)
 ┌─────────────────────┐  Across reference   ┌─────────────────────┐
 │ Robinhood Chain     │  escort state mach. │ Arbitrum One 42161  │
 │ 46630 / 4663 USDG   │ ──────────────────► │ GMX v2 · Pendle PT  │
@@ -115,7 +115,7 @@ SilverVine Pillar 2 Compliance Escort (unidirectional · fail-closed)
          └── inbound 42161→46630/4663 AML BLOCKED · lostUsd ≡ 0
 ```
 
-| Dimension | Traditional Bridge | SilverVine Pillar 2 Escort |
+| Dimension | Traditional Bridge | SilverVine Pillar Set X Escort |
 |-----------|-------------------|----------------------------|
 | **Ingress direction** | Bidirectional pools · any-chain routing | **Unidirectional outbound-only** — Robinhood `46630`/`4663` → Arbitrum `42161` |
 | **In-flight timeout shield** | Capital may appear lost · manual recovery | **>3600s** Across timeout → `BRIDGE_TIMEOUT_FAIL_CLOSED` · **0-Gas severance** |
@@ -124,38 +124,38 @@ SilverVine Pillar 2 Compliance Escort (unidirectional · fail-closed)
 
 **CLI:** `pnpm demo:escort` — multi-route HUD (Route A RH→42161 · Route B HL L1 probe · Route C Arb→Base) · `pnpm demo:escort -- --trip` — timeout fail-closed + `lostUsd ≡ 0` check.
 
-### 2.3 ZeroDev Smart Route Calldata Binding (Pillar 2 Reference Harness — Demo Spec)
+### 2.3 ZeroDev Smart Route Calldata Binding (Pillar Set X Reference Harness — Demo Spec)
 
 > **Status:** **Reference Harness & Spec** — Dry-run verified via Vitest (`tests/adapters/gmx-smart-route-payload-binding.test.ts`). This serves as an evaluator-reproducible reference adapter. Production execution baseline defaults to **Arbitrum One Native Ingress**.
 
-**Pillar 2 context:** This section documents a **reference harness surface** of the Compliance Ingress Firewall — ZeroDev Kernel UserOp calldata binding from permissioned ingress (Robinhood `46630`/`4663` **USDG** as inaugural reference adapter) to Arbitrum GMX execution. **`GMX_V2_EXCHANGE_ROUTER_ARBITRUM`** (`ZERODEV_SMART_ROUTE_TARGETS` · `gmx-revenue.ts`) → **`GM_ETH_USDC`** pool — single-click cross-chain deposit/swap calldata spec, no hot-wallet custody.
+**Pillar Set X context:** This section documents a **reference harness surface** of the Compliance Ingress Firewall — ZeroDev Kernel UserOp calldata binding from permissioned ingress (Robinhood `46630`/`4663` **USDG** as inaugural reference adapter) to Arbitrum GMX execution. **`GMX_V2_EXCHANGE_ROUTER_ARBITRUM`** (`ZERODEV_SMART_ROUTE_TARGETS` · `gmx-revenue.ts`) → **`GM_ETH_USDC`** pool — single-click cross-chain deposit/swap calldata spec, no hot-wallet custody.
 
 **Payload binding (calldata-level, Gate struct unchanged):** `buildGmxSmartRoutePayloadBinding()` encodes smart-route calldata → `computeGatedExecutorPayloadHash()` mirrors on-chain `GatedExecutor.payloadHash(initiator, target, keccak256(data), nonce)`. The digest fills the existing `RiskAttestation.payloadHash` field — **`SliverVineGate.sol` `ATTESTATION_TYPEHASH` and struct layout are not modified**.
 
 Anchors: [`gmx-smart-route-payload-binding.ts`](../../src/services/adapters/gmx-smart-route-payload-binding.ts) · [`gated-executor-payload.ts`](../../src/sdk/gated-executor-payload.ts) · [`r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) · [`GatedExecutor.sol`](../../SliverVineGate/src/GatedExecutor.sol).
 
-### 2.4 Pillar 1 — Opt-In ZeroDev Account Abstraction (Integration Summary)
+### 2.4 Pillar Set X — Opt-In ZeroDev Account Abstraction (Integration Summary)
 
-> **Full Pillar 1 specification:** [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) — ZeroDev Kernel v3 session keys, EIP-7702 comparative analysis, `sessionOk` / `allowedToSign` dry-run scope (`pnpm run demo:e2e`), and `pnpm test:zerodev` harness. This section retains integration anchors only.
+> **Full Pillar Set X specification:** [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) — ZeroDev Kernel v3 session keys, EIP-7702 comparative analysis, `sessionOk` / `allowedToSign` dry-run scope (`pnpm run demo:e2e`), and `pnpm test:zerodev` harness. This section retains integration anchors only.
 
 > **Status:** v1.0 production SSOT = **Kernel v3** (`ZERODEV_KERNEL_VERSION` v0.3.1 · EntryPoint v0.7); **Kernel v4** = post-grant V1.5 alignment path (Gatehouse adapter upgrade only — **no rewrite** of Shield / Wasm / EIP-712 Gate).
 
-> **Boundary:** ZeroDev Kernel v3 is an **opt-in Pillar 1 AA layer** (`USE_ZERODEV_AA` default-off). ZeroDev infrastructure failure, bundler outage, or Paymaster exhaustion **never** impairs the **Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs) or **Arbitrum Native Ingress** — institutions fall back to EOA / native signing paths with identical pre-broadcast protection.
+> **Boundary:** ZeroDev Kernel v3 is an **opt-in Pillar Set X AA layer** (`USE_ZERODEV_AA` default-off). ZeroDev infrastructure failure, bundler outage, or Paymaster exhaustion **never** impairs the **Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs) or **Arbitrum Native Ingress** — institutions fall back to EOA / native signing paths with identical pre-broadcast protection.
 
-#### 2.4.1 Role of ZeroDev: Scoped Session Keys & Gas Sponsorship (Pillar 1 Opt-In AA Layer)
+#### 2.4.1 Role of ZeroDev: Scoped Session Keys & Gas Sponsorship (Pillar Set X Opt-In AA Layer)
 
-SliverVine Protocol separates **pre-broadcast risk enforcement** from **account delivery**. ZeroDev Kernel v3 is an **opt-in Pillar 1 layer** — institutions may enable scoped session keys and Paymaster gas sponsorship; the protocol does **not** require ZeroDev for core Citadel protection or bridge accounting.
+SliverVine Protocol separates **pre-broadcast risk enforcement** from **account delivery**. ZeroDev Kernel v3 is an **opt-in Pillar Set X layer** — institutions may enable scoped session keys and Paymaster gas sponsorship; the protocol does **not** require ZeroDev for core Citadel protection or bridge accounting.
 
 | Layer | Role | SSOT | Dependency on ZeroDev |
 |-------|------|------|------------------------|
 | **Pre-Broadcast Risk Core (p50 ~106 µs)** | Sub-ms soil fuse · R01–R20 · fail-closed severance | `pkg/soil_core.wasm` · `checkSoilResistance()` on Cloudflare Edge | **None** — runs 100% independently of AA |
-| **ZeroDev Kernel v3 (Pillar 1)** | Opt-in smart-account delivery plane · scoped **30s** session keys · Paymaster sponsorship | `src/adapters/arbitrum/zerodev-aa/` · `pnpm test:zerodev` | **Opt-in** — `USE_ZERODEV_AA` default-off |
+| **ZeroDev Kernel v3 (Pillar Set X)** | Opt-in smart-account delivery plane · scoped **30s** session keys · Paymaster sponsorship | `src/adapters/arbitrum/zerodev-aa/` · `pnpm test:zerodev` | **Opt-in** — `USE_ZERODEV_AA` default-off |
 | **Baseline ingress (no AA)** | Direct Arbitrum Native Ingress · Across bridge escort | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · native GMX/HL adapters · Unit-Verified Vitest **6/6** | **Independent** — `lostUsd ≡ 0` guaranteed by bridge state machine, not AA |
 
 **Separation of powers:**
 
 - **Pre-Broadcast Risk Core (p50 ~106 µs):** Powered 100% independently by SliverVine Edge Wasm (`pkg/soil_core.wasm`). Every intent — EOA, Kernel UserOp, or bridge escort — is evaluated by `checkSoilResistance()` **before** any broadcast path.
-- **ZeroDev Kernel v3 (Pillar 1):** Serves as an **Opt-In Smart Account Delivery Plane** for scoped 30s session keys and Paymaster gas sponsorship. Citadel never holds user keys or principal — capital remains in the Kernel `sender` smart account when AA is enabled (R06–R07 · ERC-7579).
+- **ZeroDev Kernel v3 (Pillar Set X):** Serves as an **Opt-In Smart Account Delivery Plane** for scoped 30s session keys and Paymaster gas sponsorship. Citadel never holds user keys or principal — capital remains in the Kernel `sender` smart account when AA is enabled (R06–R07 · ERC-7579).
 - **Baseline Fallback:** Direct **Arbitrum One Native Ingress** and **Across Bridge** adapters operate smoothly with or without ZeroDev enabled. The `lostUsd ≡ 0` invariant is guaranteed by the bridge state machine and escort accounting — **not** by Account Abstraction.
 
 When ZeroDev **is** enabled, it provides three delivery-plane capabilities SliverVine does not replicate in-house:
@@ -193,7 +193,7 @@ The Shield decides **before broadcast** on every path; ZeroDev handles **non-cus
 
 #### 2.4.3 Paymaster Gas Sponsorship (Sponsorship & Circuit Breakers)
 
-> **Scope:** Paymaster sponsorship is **opt-in** (Pillar 1). Daily cap exhaustion falls back to `sponsored: false` — UserOp drafting continues on self-funded gas; **Edge Wasm Shield and Arbitrum Native Ingress are unaffected**.
+> **Scope:** Paymaster sponsorship is **opt-in** (Pillar Set X). Daily cap exhaustion falls back to `sponsored: false` — UserOp drafting continues on self-funded gas; **Edge Wasm Shield and Arbitrum Native Ingress are unaffected**.
 
 | Parameter | Value | SSOT |
 |-----------|-------|------|
@@ -248,12 +248,12 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 ### 2.5 Strategic Blue-Chip Ecosystem & Settlement Roadmap (V1.0 Core + V1.5 / V2.0)
 
-> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** is a **v1.0 Live Core Pillar 3** pre-execution firewall (not a fee-capture path). **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Uniswap V3 and Variational remain modular post-grant settlement extensions.
+> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** is a **v1.0 Live Pillar Set Y** pre-execution firewall (not a fee-capture path). **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Uniswap V3 and Variational remain modular post-grant settlement extensions.
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
-| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Core Pillar 3 · **199 test files \| 868 PASS Clean (100% PASS)** |
-| **USD.ai** (AI-Compute RWA Yield Collateral) | Yield-bearing sUSDai collateral tier for AI agent treasury — GPU oracle · peg drift · NAV vs mark · depth fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `evaluateUsdAiCollateralGuard()` · `usdai` → `collectExternalSoilFlags()` · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Core Pillar 3 · `pnpm demo:usdai` |
+| **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Pillar Set Y · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **USD.ai** (AI-Compute RWA Yield Collateral) | Yield-bearing sUSDai collateral tier for AI agent treasury — GPU oracle · peg drift · NAV vs mark · depth fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `evaluateUsdAiCollateralGuard()` · `usdai` → `collectExternalSoilFlags()` · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Pillar Set Y · `pnpm demo:usdai` |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
 | **Uniswap V3 DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Uniswap V3 API on RPC allowlist (`api.uniswap.org`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
 | **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
@@ -262,8 +262,8 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 v1.0 Active Triangle (42161)
   GMX v2 GM Yield ──1× Δ-neutral──► Hyperliquid Short
          │
-         ├──► V1.0: Pendle Institutional Shield (Pillar 3 · sync oracle · soil fuse)
-         ├──► V1.0: USD.ai AI-Compute Yield Collateral (Pillar 3 · `USD_AI_DEPEG_ORACLE_TRIP`)
+         ├──► V1.0: Pendle Institutional Shield (Pillar Set Y · sync oracle · soil fuse)
+         ├──► V1.0: USD.ai AI-Compute Yield Collateral (Pillar Set Y · `USD_AI_DEPEG_ORACLE_TRIP`)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
          └──► V1.5+: Uniswap V3 zero-slippage settle
          └──► V2.0: Variational native perp hedge (HL complement/alternative)
@@ -303,7 +303,7 @@ AI Agent Intent (seconds)
  Paymaster → Bundler → EntryPoint → GMX / HL
 ```
 
-### 6.2 ZeroDev Kernel v3 Validator Module (Pillar 1)
+### 6.2 ZeroDev Kernel v3 Validator Module (Pillar Set X)
 
 | Hook point | ERC-7579 module role | SliverVine Citadel Shield invariant |
 |------------|---------------------|----------------|
@@ -314,7 +314,7 @@ AI Agent Intent (seconds)
 
 **Code anchors:** `src/adapters/arbitrum/zerodev-aa/` · `src/core/agent-citadel-guard.ts` · `src/sdk/agent-intent.ts` · §2.4.2 Kernel v3 / v4 Session Keys.
 
-### 6.3 Stylus Wasm Soil Hook (Pillar 3 Reinforcement)
+### 6.3 Stylus Wasm Soil Hook (Pillar Set Y Reinforcement)
 
 | Property | Edge Wasm (`pkg/soil_core.wasm`) | Stylus Coprocessor (`contracts/stylus-probe/src/lib.rs`) |
 |----------|----------------------------------|----------------------------------------------------------|
@@ -349,14 +349,14 @@ allowedToSign =
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
 | **Third-party dApps** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withCitadelShield` | Apache-2.0 · sub-ms soil gate |
-| **ElizaOS** | ✅ V1.0 Live Native Integration — [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `evaluateElizaCitadelAction()` · `checkSoilResistance()` |
-| **Virtuals GAME** | ✅ V1.0 Live Native Integration — [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `evaluateVirtualsGameTask()` · `checkSoilResistance()` |
-| **LangChain** | ✅ V1.0 Live Native Integration — [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `CitadelRiskGuardTool` · `checkSoilResistance()` |
-| **Wayfinder** | ✅ V1.0 Live Native Integration — [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live--native-integrations) | `wayfinderCitadelShieldHook` · `verifyAgentIntent()` |
-| **Stabilizer** | ✅ V1.0 Live Native Integration — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia--universal-testnet-sandbox--cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
-| **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · [`crewai-autogen-adapter.py`](../../examples/adapters/crewai-autogen-adapter.py) · [§0.3](#03-agent-ecosystem-adapters-v15-roadmap) | `checkSoilResistance()` · Pillar 2 AML escort boundary |
+| **ElizaOS** | ✅ V1.0 Live Native Integration — [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `evaluateElizaCitadelAction()` · `checkSoilResistance()` |
+| **Virtuals GAME** | ✅ V1.0 Live Native Integration — [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `evaluateVirtualsGameTask()` · `checkSoilResistance()` |
+| **LangChain** | ✅ V1.0 Live Native Integration — [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `CitadelRiskGuardTool` · `checkSoilResistance()` |
+| **Wayfinder** | ✅ V1.0 Live Native Integration — [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `wayfinderCitadelShieldHook` · `verifyAgentIntent()` |
+| **Stabilizer** | ✅ V1.0 Live Native Integration — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
+| **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · [`crewai-autogen-adapter.py`](../../examples/adapters/crewai-autogen-adapter.py) · [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20) | `checkSoilResistance()` · Pillar Set X AML escort boundary |
 | **Institutional vaults** | ZeroDev Kernel + Citadel Worker BUSL payload path | ERC-7579 session + 106µs Shield |
-| **Grant audit / Dune / PEV** | `GET /api/grant-audit` · **PEV (Prevented Exploit Volume)** · [Dune dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · production DuneSQL feed + chart ([`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md)) | Pillar 2 ingress · Pillar 3 intercepts · 10 bps builder revenue |
+| **Grant audit / Dune / PEV** | `GET /api/grant-audit` · **PEV (Prevented Exploit Volume)** · [Dune dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · production DuneSQL feed + chart ([`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md)) | Pillar Set X ingress · Pillar Set Y intercepts · 10 bps builder revenue |
 
 **Migration safety:** Kernel v3 → v4 adapter swap (Gatehouse only) — **Shield, Wasm, Stylus coprocessor, and EIP-712 Gate require zero rewrite** (§2.4.2 migration rule).
 
@@ -461,7 +461,7 @@ Evaluator-facing comparison of SliverVine Protocol versus legacy execution, agen
 
 ### 6.9 Strategic Blue-Chip Ecosystem & Settlement Integrations (V1.0 Core + V1.5 / V2.0)
 
-> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Uniswap V3 and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem--settlement-roadmap-v10-core--v15--v20) and [§5.1.1](#511-strategic-settlement-extensions-v10-core--v15--v20).
+> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Uniswap V3 and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem-settlement-roadmap-v10-core-v15-v20) and [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20).
 
 | Venue | Integration surface | Reflex hook | Horizon |
 |-------|-------------------|-------------|---------|

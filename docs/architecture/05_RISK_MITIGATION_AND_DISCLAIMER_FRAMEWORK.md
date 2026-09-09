@@ -26,13 +26,13 @@
 | **Arbitrum Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 
-### Three Pillars — Independent Audit Specs
+### Hybrid Pillar Sets X & Y — Independent Audit Specs
 
 | Pillar | Role | Spec |
 |--------|------|------|
-| **Pillar 1 — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **Pillar 2 — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
-| **Pillar 3 — SliverVine Citadel Shield** | `checkSoilResistance()` · Wasm · R01–R20 | [`../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
+| **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **Pillar Set Y — SliverVine Citadel Shield** | `checkSoilResistance()` · Wasm · R01–R20 | [`../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 
 ---
 
@@ -50,16 +50,16 @@ SliverVine models the **100% Total On-Chain Risk Surface** — the complete set 
 
 | Partition | Share | Definition | Citadel behavior |
 |-----------|-------|------------|------------------|
-| **Pre-Broadcast Interception Mesh** (SliverVine Citadel Shield coverage) | **88%** | The proportion of **operational hazards interceptable at the pre-mempool boundary** at **p50 ~106 µs** via Wasm Soil Core (`checkSoilResistance()` · `pkg/soil_core.wasm`): MEV sandwiches, illiquid depth spikes **>10 bps**, oracle lag (`ORACLE_LAG_DEADLOCK`), unauthorized session usage (R06/R07), prompt-injection / rogue-LLM calldata, AML ingress violations (Pillar 2), cross-venue slippage anomalies, and honeypot RPC traps | **100% fail-closed severance** — `signingChannelOpen: false`; payload never reaches mempool / bundler |
+| **Pre-Broadcast Interception Mesh** (SliverVine Citadel Shield coverage) | **88%** | The proportion of **operational hazards interceptable at the pre-mempool boundary** at **p50 ~106 µs** via Wasm Soil Core (`checkSoilResistance()` · `pkg/soil_core.wasm`): MEV sandwiches, illiquid depth spikes **>10 bps**, oracle lag (`ORACLE_LAG_DEADLOCK`), unauthorized session usage (R06/R07), prompt-injection / rogue-LLM calldata, AML ingress violations (Pillar Set X), cross-venue slippage anomalies, and honeypot RPC traps | **100% fail-closed severance** — `signingChannelOpen: false`; payload never reaches mempool / bundler |
 | **Insurmountable Systemic Residuals** | **12%** | Structural crypto-systemic risks that **no pre-execution software can code-erase**: total L2 sequencer halts **>600 s**, protocol-level 0-day smart-contract exploits on third-party venues, network-level RPC disconnections beyond quorum, TEE supply-chain compromise, bridge counterparty insolvency | **Fail-Closed posture** on sensor breach — `signingChannelOpen: false`; **no claim of principal protection** against these tail events |
 
 **Mathematical closure:** `88% + 12% = 100%` of the modeled on-chain risk surface. The **88%** is derived from the **255-case chaos matrix** and **R01–R20 Defense Matrix** — coverage of **known, sensor-addressable pre-broadcast vectors** — not a guarantee against all future loss.
 
-> **Evaluator SSOT:** All grant, DDIP, audit, and submission prose citing **88%** or **12%** must reference this section: [`§0.1`](#01-what-slivervine-citadel-shield-does--and-does-not--guarantee).
+> **Evaluator SSOT:** All grant, DDIP, audit, and submission prose citing **88%** or **12%** must reference this section: [`§0.1`](#01-what-slivervine-citadel-shield-does-and-does-not-guarantee).
 
 #### Pareto Rule — 80% / 20% (Microstructure Loss Concentration)
 
-Where referenced in Pillar 3 and technical specs, the **80/20 Pareto rule** is a **distinct, orthogonal microstructure statistic** — not additive to the 88/12 spectrum:
+Where referenced in Pillar Set Y and technical specs, the **80/20 Pareto rule** is a **distinct, orthogonal microstructure statistic** — not additive to the 88/12 spectrum:
 
 - **~80%** of acute toxic execution loss (sandbox replay · Monte Carlo substrate) stems from **~20%** of microsecond-scale depth / slippage anomalies (illiquidity spikes, cross-venue decoupling, sub-block MEV windows).
 - **Pillar 3** (`checkSoilResistance()` · R03 depth fuse · R04 slippage fuse · PGATE latency fuse) **targets this 20% acute tail** directly at sub-ms Edge evaluation — the highest-leverage interception band within the broader **88% mesh**.
@@ -96,16 +96,16 @@ $$
 | **MEV / sandwich / toxic flow** | Block-builder reordering · liquidity extraction | Soil slippage fuse · TWAP path slicing · PGATE latency fuse | Tail-event MEV beyond modeled depth · private order-flow wars |
 | **Bridge / cross-chain** | Across settlement delay · escort path compromise | `IN_FLIGHT_BRIDGE_CAPITAL` · `lostUsd ≡ 0` · 1h timeout fail-closed | Bridge smart-contract exploit · counterparty insolvency |
 | **Basis / funding drift** | GMX GM vs HL short divergence | Dual-leg Δ tracking · Citadel Safety Buffer · hurdle gate | Persistent negative funding · venue-specific insolvency |
-| **AI-specific attack surface** | **Prompt injection** · rogue LLM intent generation · agent credential drift | Pillar 1 scoped session keys · R20 physical deadlock · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy pre-validation · V1.5 prompt-injection circuit (roadmap) | Novel adversarial ML · compromised upstream agent orchestrator · social-engineering of operator keys |
+| **AI-specific attack surface** | **Prompt injection** · rogue LLM intent generation · agent credential drift | Pillar Set X scoped session keys · R20 physical deadlock · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy pre-validation · V1.5 prompt-injection circuit (roadmap) | Novel adversarial ML · compromised upstream agent orchestrator · social-engineering of operator keys |
 
 ### 0.3 Interceptor Mesh Coverage (88% Pre-Broadcast)
 
-See **[§0.1 Formal Risk Spectrum Definition](#01-what-slivervine-citadel-shield-does--and-does-not--guarantee)** for the authoritative **88% / 12%** partition. In summary: the **88%** reflects modeled coverage of **known toxic pre-broadcast vectors** in the 255-case chaos matrix and R01–R20 Defense Matrix; the residual **12%** comprises unmodeled tail events, third-party venue failures, governance upgrades, key compromise outside session scope, and force majeure beyond sensor thresholds (§0.2).
+See **[§0.1 Formal Risk Spectrum Definition](#01-what-slivervine-citadel-shield-does-and-does-not-guarantee)** for the authoritative **88% / 12%** partition. In summary: the **88%** reflects modeled coverage of **known toxic pre-broadcast vectors** in the 255-case chaos matrix and R01–R20 Defense Matrix; the residual **12%** comprises unmodeled tail events, third-party venue failures, governance upgrades, key compromise outside session scope, and force majeure beyond sensor thresholds (§0.2).
 
 ```text
-User / AI intent → Pillar 1 Gatehouse (session scope)
- → Pillar 2 optional escort (AML · bridge accounting)
- → Pillar 3 SliverVine Citadel Shield (88% interceptor mesh · sub-ms Wasm)
+User / AI intent → Pillar Set X Gatehouse (session scope)
+ → Pillar Set X optional escort (AML · bridge accounting)
+ → Pillar Set Y SliverVine Citadel Shield (88% interceptor mesh · sub-ms Wasm)
  → [ PASS ] → venue broadcast
  → [ TRIP ] → severSigningChannel() · no broadcast · lostUsd ≡ 0 on pending bridge
 ```
@@ -124,10 +124,10 @@ SliverVine Citadel Shield evaluates every intent at the **Edge** via `checkSoilR
 
 | Trip class | Example reason codes | When evaluated | On-chain / gas impact |
 |------------|---------------------|----------------|---------------------|
-| **Soil / microstructure** | `SOIL_RESISTANCE_TRIP` · `ARBITRUM_SEQUENCER_PROBE_MISSING` · cross-venue slippage fuse | Pillar 3 Edge · Wasm + TS orchestration | **No tx submitted** · **0 gas** · `tradeAllowed: false` |
+| **Soil / microstructure** | `SOIL_RESISTANCE_TRIP` · `ARBITRUM_SEQUENCER_PROBE_MISSING` · cross-venue slippage fuse | Pillar Set Y Edge · Wasm + TS orchestration | **No tx submitted** · **0 gas** · `tradeAllowed: false` |
 | **GMX pool invariant** | `GMX_POOL_IMBALANCE_BREACH` · `GMX_COLLATERAL_RESERVE_BREACH` | Pre-payload in `gmx-v2-order-payload-guards.ts` / `gmx-v2-invariants.ts` | **No GMX router call** · **0 gas** on rejected intent |
-| **AA / bundler path** | `RiskLimitExceeded` · oracle fail-closed · soil trip propagated to ZeroDev gate | Pillar 1 `zerodev-aa-gate.ts` **before** `sendUserOperation` | **UserOp never reaches bundler** · **0 sponsorship gas** on rejected simulation |
-| **Session / policy** | R06/R07 scope breach · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy inactive | Pillar 1 Gatehouse + `SliverVineAgentPolicyGuard` | **No Gate `verifyAndConsume`** · signing channel severed |
+| **AA / bundler path** | `RiskLimitExceeded` · oracle fail-closed · soil trip propagated to ZeroDev gate | Pillar Set X `zerodev-aa-gate.ts` **before** `sendUserOperation` | **UserOp never reaches bundler** · **0 sponsorship gas** on rejected simulation |
+| **Session / policy** | R06/R07 scope breach · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy inactive | Pillar Set X Gatehouse + `SliverVineAgentPolicyGuard` | **No Gate `verifyAndConsume`** · signing channel severed |
 
 **Fund safety mechanics:**
 
@@ -147,7 +147,7 @@ Operator intent
 
 #### 0.5.2 In-Flight & Cross-Chain Escort Handling (`lostUsd ≡ 0`)
 
-Pillar 2 Compliance Ingress Firewall enforces **honest bridge accounting** — pending escort capital is **labeled, not lost**.
+Pillar Set X Compliance Ingress Firewall enforces **honest bridge accounting** — pending escort capital is **labeled, not lost**.
 
 | State | `capitalLabel` | `deployable` | `lostUsd` | Operator action |
 |-------|----------------|--------------|-----------|-----------------|
@@ -155,12 +155,12 @@ Pillar 2 Compliance Ingress Firewall enforces **honest bridge accounting** — p
 | **Bridge settled** | `DEPLOYABLE` (post-escort) | `true` | `0` | Citadel re-runs soil + venue guards before venue broadcast |
 | **Bridge timeout (>1h)** | `BRIDGE_TIMEOUT_FAIL_CLOSED` | `false` | `0` | Fail-closed — no delta-neutral open; capital remains on source chain or Kernel account |
 
-**State machine (Pillar 2 reference escort):**
+**State machine (Pillar Set X reference escort):**
 
 ```text
 IN_FLIGHT_BRIDGE_CAPITAL
   ├─ settled within DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS (3_600_000 ms = 1h)
-  │    → escort OK · lostUsd ≡ 0 · proceed to Pillar 3 soil gate
+  │    → escort OK · lostUsd ≡ 0 · proceed to Pillar Set Y soil gate
   └─ elapsed > 1h without settlement
        → BRIDGE_TIMEOUT_FAIL_CLOSED
        → refuse naked positions · lostUsd ≡ 0
@@ -169,7 +169,7 @@ IN_FLIGHT_BRIDGE_CAPITAL
 
 **Capital location on trip:** Funds stay in the **user's Kernel AA account** (Arbitrum) or **source-chain wallet** (e.g. Robinhood `46630` outbound escort). SliverVine Protocol does not sweep principal into protocol-owned contracts on fail-closed paths.
 
-**Code SSOT:** `src/adapters/across-ingress-bridge.ts` · `src/sdk/unidirectional-bridge.ts` · `src/core/capital-invariant-ledger.ts` (`lostUsd` hard-assert = 0) · Pillar 2 audit [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) §2.4.
+**Code SSOT:** `src/adapters/across-ingress-bridge.ts` · `src/sdk/unidirectional-bridge.ts` · `src/core/capital-invariant-ledger.ts` (`lostUsd` hard-assert = 0) · Pillar Set X audit [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) §2.4.
 
 #### 0.5.3 User Feedback & Notification Flow (HUD · SDK · Operator Console)
 
@@ -202,7 +202,7 @@ Rejected intents surface as **structured, actionable errors** — never silent d
 
 **SliverVine Protocol** acknowledges a fundamental law of distributed systems: **Cross-chain risk, bridge latency, and basis drift cannot be magically erased by software; they must be quantified, isolated, and economically absorbed.**
 
-This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — from the **code-verified V1.0 AI Agent Citadel on Arbitrum**, through **V1.5 sub-ms agentic security / [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarms**, to **V2.0 institutional Citadel-as-a-Service (CaaS) & Orbit Shield** — plus **60 Reflective Architectural Invariants**, each status-badged as **✅ Code-Verified** (v1.0 baseline) or **⏳ Roadmap Spec** (V1.5/V2.0). Aave/Morpho APY figures, where mentioned, are *(Hurdle-rate probe only — not a yield-stacking product track)*. Optional bridges are **Pillar 2 Reference Escort Adapters**.
+This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — from the **code-verified V1.0 AI Agent Citadel on Arbitrum**, through **V1.5 sub-ms agentic security / [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarms**, to **V2.0 institutional Citadel-as-a-Service (CaaS) & Orbit Shield** — plus **60 Reflective Architectural Invariants**, each status-badged as **✅ Code-Verified** (v1.0 baseline) or **⏳ Roadmap Spec** (V1.5/V2.0). Aave/Morpho APY figures, where mentioned, are *(Hurdle-rate probe only — not a yield-stacking product track)*. Optional bridges are **Pillar Set X Reference Escort Adapters**.
 
 ---
 
@@ -218,7 +218,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 │ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation                          │
 │ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1           │
 │ · Mainnet Ignition Tx 0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6 │
-│ · Vitest SSOT: 199 test files | 868 PASS Clean (100% PASS)                      │
+│ · Vitest SSOT: 217 test files | 967 PASS clean
 └────────────────────────────────────────┬────────────────────────────────────────┘
                                          │
                                          ▼
@@ -255,7 +255,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 | **AA / onboarding** | ZeroDev Kernel v3 · Paymaster · Smart Routing | **EIP-7702** EOA → Agent Smart Account (no token migration) · Kernel v4 adapter | Single-chain Intent Compose across Orbit L3s |
 | **Prompt injection** | R20 physical deadlock on signed-intent violation | Dedicated **Prompt Injection Defense Circuit** (pipe sever before broadcast) | Mesh-wide channel lock + CaaS tenant isolation |
 | **Hedge / venue** | GMX v2 GM + HL 1× short (Δnet ≡ 0) | HL retained · **Variational Perp native hedge PoC** (less cross-L1 RPC) | Same-chain GM + native perp · optional escort |
-| **Bridge / ingress** | Pillar 2 Reference Escort Adapter (Robinhood 46630 outbound) · `lostUsd ≡ 0` | Same escort semantics · no yield-stacking identity | **Eliminated** as default path · Robinhood opt-in escort |
+| **Bridge / ingress** | Pillar Set X Reference Escort Adapter (Robinhood 46630 outbound) · `lostUsd ≡ 0` | Same escort semantics · no yield-stacking identity | **Eliminated** as default path · Robinhood opt-in escort |
 | **Monetization** | GMX +10 bps `uiFeeReceiver` (builder lane) | Design-partner PoV · no new fee surface required | Institutional CaaS SDK licensing · pre-execution risk-check APIs |
 | **AML / compliance** | Outbound-only Robinhood escort · reverse path blocked | Stronger fleet policy + segregated RWA tranche (planned) | Tenant CaaS policy packs · Robinhood opt-in |
 | **Oracle / sequencer** | <30s oracle lag fail-closed · 600s sequencer grace | Same sensors + storm fallback (planned) | Cross-L2 synchronized telemetry |
@@ -285,7 +285,7 @@ During market storms, an **optional** accounting fallback to Aave v3 / Morpho Bl
 
 | Tier | Mechanism | Cap / Rule |
 |------|-----------|------------|
-| **Robinhood (Pillar 2 Reference Escort Adapter)** | Optional outbound compliance channel (`46630`/`4663` → `42161`) · `lostUsd ≡ 0` | Not a yield product · does not raise TVL cap |
+| **Robinhood (Pillar Set X Reference Escort Adapter)** | Optional outbound compliance channel (`46630`/`4663` → `42161`) · `lostUsd ≡ 0` | Not a yield product · does not raise TVL cap |
 | **Citadel Safety Buffer** | GMX v2 builder fee (**+10 bps `uiFeeReceiver`** via `GMX_UI_FEE_BPS`) + skew arbitrage surplus | Absorbs bridge fees, basis risk, and MEV slippage |
 | **Hurdle Gate** | Rebalance / performance fee crystallization | `FRICTION_BUFFER_APY = 0.005` — deploy only above friction-adjusted excess |
 
@@ -299,7 +299,7 @@ Even in a V2.0 CaaS / Orbit Shield setup, ZeroDev remains the Gatehouse engine:
 | **Scoped Security** | 30s TTL Session Keys · `ORDER_EXECUTE` only | Zero withdrawal scope preserved |
 | **Atomic Composition** | 1-click GM + HL hedge under Citadel gates | EOA → Agent Smart Account · CaaS tenant UserOps |
 
-**Spec SSOT:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md` §2.4](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-1--opt-in-zerodev-account-abstraction-integration-summary)
+**Spec SSOT:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md` §2.4](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary)
 
 ### 2.5 Economic Sustainability Philosophy: Why Low Fees Without Depth Destroy Yield
 
@@ -357,7 +357,7 @@ export const FRICTION_BUFFER_APY = 0.005 as const; // 0.5% friction buffer
 
 **Design rule:** Citadel Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
 
-**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **199 test files | 868 PASS Clean (100% PASS)** regression bar.
+**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **217 test files | 967 PASS clean
 
 ### 2.6 Real Yield vs. Toxic Inflation
 
@@ -448,7 +448,7 @@ Real yield stack (conceptual):
 
 ## 3. The 60 Reflective Architectural Invariants (Summary Matrix)
 
-> **Defense Matrix (R01–R20):** 17 Active · 2 Refactored · 1 Deprecated — see [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` §3.3](./03_DEFENSE_MATRIX_AND_WASM_CORE.md#33-defense-matrix-r01r20--summary)
+> **Defense Matrix (R01–R20):** 17 Active · 2 Refactored · 1 Deprecated — see [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` §3.3](./03_DEFENSE_MATRIX_AND_WASM_CORE.md#33-defense-matrix-r01-r20-summary)
 > **Status legend:** **✅ Code-Verified** = v1.0 baseline with code/test anchor · **⏳ Roadmap Spec** = V1.5/V2.0 design — not claimed as shipped
 
 ### I. Honest Accounting & Cross-Chain Physics (1–10)
@@ -485,7 +485,7 @@ Real yield stack (conceptual):
 
 | # | Status | Invariant | Mechanism |
 |---|--------|-----------|-----------|
-| 21 | ⏳ | **Two-Tiered Yield** | Robinhood (**Pillar 2 Reference Escort Adapter**) capped at +2% boost; excess yield → Safety Buffer |
+| 21 | ⏳ | **Two-Tiered Yield** | Robinhood (**Pillar Set X Reference Escort Adapter**) capped at +2% boost; excess yield → Safety Buffer |
 | 22 | ⏳ | **Hurdle-rate probe (optional)** | Aave/Morpho APY as probe floor *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | 23 | ⏳ | **Aave Cap Isolation** | Aave USDC 100% supply cap → Morpho Blue probe fallback *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | 24 | ⏳ | **Dynamic Hurdle Rate** | Optional performance fee only on yield exceeding Aave probe + 1.5% *(Hurdle-rate probe only — not a yield-stacking product track)* |
@@ -618,13 +618,13 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 ---
 
-## 5. Comparative Analysis: Arbitrum Native vs. Pillar 2 Reference Escort Adapter
+## 5. Comparative Analysis: Arbitrum Native vs. Pillar Set X Reference Escort Adapter
 
-V1.0 operates two **distinct capital ingress modes**. They share the same Citadel pre-execution envelope. Robinhood / Across is a **Pillar 2 Reference Escort Adapter** — not product identity.
+V1.0 operates two **distinct capital ingress modes**. They share the same Citadel pre-execution envelope. Robinhood / Across is a **Pillar Set X Reference Escort Adapter** — not product identity.
 
 ### 5.1 Capacity Limits
 
-| Dimension | **Arbitrum Native Ingress** | **Pillar 2 Reference Escort Adapter (Robinhood)** |
+| Dimension | **Arbitrum Native Ingress** | **Pillar Set X Reference Escort Adapter (Robinhood)** |
 |-----------|----------------------------|------------------------------|
 | **V1.0 Alpha Vault TVL cap** | **$100,000** hard ceiling (roadmap spec) | Same envelope — escort does not raise TVL cap |
 | **Single-order notional (v1.0 live)** | `SESSION_KEY_NOTIONAL_CAP_USD` = **$5,000** | N/A until bridge settles on `42161` |
@@ -721,12 +721,12 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 
 ### 6.5 ArbOS Elara Compliance Alignment & Dynamic Target Range
 
-> **V1.0 Design Spec (on-chain reinforcement plane).** Edge (Cloudflare) remains the pre-broadcast SSOT; **ArbOS Elara upgrade** natively aligns **Pillar 2 AML Firewall** with protocol-level compliance filtering and **transaction-ordering awareness** — never a weaker substitute for Edge fail-closed gates.
+> **V1.0 Design Spec (on-chain reinforcement plane).** Edge (Cloudflare) remains the pre-broadcast SSOT; **ArbOS Elara upgrade** natively aligns **Pillar Set X AML Firewall** with protocol-level compliance filtering and **transaction-ordering awareness** — never a weaker substitute for Edge fail-closed gates.
 
 | Layer | Compliance function | Transaction-ordering awareness | Status |
 |-------|---------------------|-------------------------------|--------|
 | **Edge Citadel (SSOT)** | `checkSoilResistance()` · R01–R20 · signing channel severance | Pre-broadcast intent ordering · UserOp gate before bundler | ✅ v1.0 Delivered (Sepolia verified) |
-| **Pillar 2 AML Firewall + ArbOS Elara** | Outbound-only Robinhood escort · `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · Elara ingress drops non-compliant / blacklisted senders before GM payload construction | Sequencer / ArbOS ordering sensor alignment · complements **`IngressSafetySwitch.sol`** | ⏳ V1.0 Design Spec ([`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor)) |
+| **Pillar Set X AML Firewall + ArbOS Elara** | Outbound-only Robinhood escort · `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · Elara ingress drops non-compliant / blacklisted senders before GM payload construction | Sequencer / ArbOS ordering sensor alignment · complements **`IngressSafetySwitch.sol`** | ⏳ V1.0 Design Spec ([`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor)) |
 | **UI reactive HUD** | `LivingWaterShieldCard` · `AMLShieldCard` · `SmartRoutingDepositCard` tranche switcher | Trip banners · Tranche A native vs Tranche B bridge state machine | ✅ v1.0 UI SSOT |
 
 **Dynamic Target Range (non-guaranteed yield band):**
@@ -780,7 +780,7 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | Bridge invariants | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 PASS** |
 | Live audit | `GET /api/grant-audit` | `lostUsd: 0` · guard states exposed |
 
-> **Full verification matrix:** [`docs/VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) — Express → Three Pillars Inside → Outside
+> **Full verification matrix:** [`docs/VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) — Express → Hybrid Pillar Sets X & Y Inside → Outside
 
 | Document | Purpose |
 |----------|---------|
@@ -789,5 +789,5 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Yellow Paper — Triangle Liquidity Loop · settlement |
 | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | R01–R20 Defense Matrix · Wasm soil core |
 | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC/EIP alignment · ArbOS Elara compliance |
-| [`../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 Compliance Ingress Firewall Audit |
+| [`../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X Compliance Ingress Firewall Audit |
 | [`../sdk/CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) | `@slivervine/citadel-sdk` integration |

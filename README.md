@@ -1,23 +1,44 @@
-# 🛡️ The Shield & Citadel-Armor Sovereign Vault
+# 🛡️ SliverVine Protocol (BeΔ) — Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive & 0-Gas Physical Deadlock for AI Agents on Arbitrum
 
-**SliverVine Citadel — Pre-Consensus Intent Execution Calibration Layer for AI Agents** · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️
+**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️**
 
-> **Buildathon Primary (The Shield):** Sub-ms **p50 ~106µs** Edge/Wasm inspection · **<14µs** physical deadlock (`rootProtection`) · **0-Gas fail-closed** protection against LLM hallucinations and prompt injection · multi-framework support via **`pnpm demo:quad`** (ElizaOS · Wayfinder · Virtuals · LangChain).
+> ⚡ **0-Gas Fail-Closed Physical Deadlock (`rootProtection`):** Instantly severs EIP-712 signing channels in **<14.0µs** on Cloudflare Edge before toxic payloads ever reach Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
 >
-> **Financial thesis (Citadel-Armor Sovereign Vault):** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — live MVP proving GMX v2 Real Yield with **Δ_net ≡ 0** hedging on Arbitrum One (`42161`).
+> 🧠 **Block AI Hallucinations & Prompt Injection:** Microsecond edge bitmask evaluation (**p50 ~106µs**) halting out-of-scope calldata and cross-chain intent drift in real-time.
+>
+> 🔒 **Unidirectional Escort & Single-Pass Pipeline:** Hardened execution boundaries across Arbitrum Native 7-Protocol Matrix with zero capital leakage (`lostUsd ≡ 0`).
+>
+> 🚀 **Instant Quad-Agent Verification:** One command to verify 4 AI Agent Frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) via `pnpm demo:quad`.
 
-## ⚡ 3-Second TL;DR for Judges (Neuromorphic Security)
+---
 
-**Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
+## ⚡ 30-Second Judge Action Box
 
-**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** is collision-avoidance — it slams the brakes in **<14µs** before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). No gas burned on blocked paths; the EIP-712 signing channel is severed while the intent is still in the cabin.
+```bash
+# Tier 1 — Instant Quad-Agent Framework Shield
+pnpm demo:quad
 
-| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
-|---|-------------------------------------------|-------------------------------------|
+# Tier 1 — 7-Protocol Matrix Physical Deadlock Severance (<14.0µs)
+pnpm demo:matrix -- --trip
+
+# Tier 1 — Full Regression Suite (217 test files | 967 PASS clean)
+pnpm test
+```
+
+---
+
+## ⚡ Neuromorphic Security Architecture (AEB Analogy)
+
+**Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents** (**Pillar Set Y** · *Pre-Consensus Firewall & Reflex Defense*).
+
+**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **<14µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). The EIP-712 signing channel is severed while the intent is still in the cabin.
+
+| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Cerebellum Reflex Arc (Citadel Shield)** |
+|---|-------------------------------------------|---------------------------------------------|
 | **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
-| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (0.014ms–0.106ms) |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (<0.1ms · 0.014ms–0.106ms) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
-| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough---cerebrum-hallucination)) | **<14.0µs** reflex — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough-cerebrum-hallucination)) | **<14.0µs** reflex — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -39,9 +60,10 @@
 
 **Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**.
 
-**Prove it in 30 seconds:** `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
-
 ---
+
+## 📌 Live SSOT Anchors & Verification Badges
+
 [![Vitest](https://img.shields.io/badge/Vitest-967%20PASS%20%28217%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
@@ -54,34 +76,27 @@
 
 <p align="center"><img src="public/brand/Detox_Sanctuary_wm.webp" alt="SliverVine Citadel Gate - Detox Sanctuary" width="600" style="border-radius: 8px;"></p>
 
-> **⚡ Pre-Consensus Intent Firewall:** Sub-ms intent clearing at **p50 ~106 μs** — toxic payloads are severed **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools (0-Gas fail-closed).
->
 > **Latency scope:** **p50 ~106 µs** measures **TypeScript Gateway + Wasm `checkSoilResistance()` interception** on Cloudflare Edge — **not** L1/L2 block confirmation, sequencer finality, or on-chain inclusion time.
->
-> *Sub-ms End-to-End Shield Path (Pure-Math Kernel: 200 ns / 0.0002 ms) · < 1.0ms SLO Session Key verification · **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter) + optional Arbitrum-native RFQ OLP hedging.*
-
-**Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing that conforms to venue constraints without breaking invariants. **Δ (Delta)** denotes **market delta-neutrality** — neutralizing directional exposure through the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive that binds both.
-
-**Protocol:** SliverVine · **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com` · **B2B:** `hello@silvervinelabs.com`  
-**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) · **Package:** [`@slivervine/citadel-sdk`](./src/sdk/README.md) (Apache-2.0)
-
----
-
-## 📌 Live SSOT Anchors
 
 | Anchor | Value |
 |--------|-------|
 | **Vitest baseline** | **217 test files | 967 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** |
 | **Canonical HEAD** | **`572e5cd`** (Phase A+B+C mainnet) · **`3f26efa`** (Citadel-Armor SSOT) · `git rev-parse HEAD` |
+| **PolicyGuardV2 (42161 · current)** | [Arbiscan · `0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · Deploy [Tx `0xcd520602…`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
 | **Wasm ABI v2** | `pkg/soil_core.wasm` · `soil_core_abi_version() = 2` · **28-protocol-slot** FFI (`PROTO_VECT_LEN=28`) — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` · slots **28–35** = soil math input |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Shield **p50 ~106 µs** · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
-| **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
-| **Stylus Soil Coprocessor (42161)** | `0xc23587d6573dd134f95b02b0202ffbf84686625e` · [Arbiscan](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · Activation Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** |
-| **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| **Arbitrum One Gate** | [Arbiscan · `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **Stylus Soil Coprocessor (42161)** | [Arbiscan · `0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · Activation [Tx `0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** |
+| **Mainnet Ignition Tx** | [Arbiscan · `0x54c153e9…1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Sepolia live ingest** · **42161 = pre-compiled SQL spec** awaiting mainnet event ingest → [`DUNE_DASHBOARD_SPECIFICATION.md`](./docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
+
+**Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing that conforms to venue constraints without breaking invariants. **Δ (Delta)** denotes **market delta-neutrality** — neutralizing directional exposure through the GMX v2 GM + Hyperliquid 1× short envelope. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive that binds both.
+
+**Protocol:** SliverVine · **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com` · **B2B:** `hello@silvervinelabs.com`  
+**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water) · **Package:** [`@slivervine/citadel-sdk`](./src/sdk/README.md) (Apache-2.0)
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -97,16 +112,16 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 
 > **Solidity ingress:** [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](./contracts/IngressSafetySwitch.sol) use **Solidity Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants remain for telemetry.
 
-> **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **mainnet deployed & activated** at `0xc23587d6573dd134f95b02b0202ffbf84686625e` (Nitro Prover JIT via ArbWasm `0x71`). → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
+> **On-chain vs off-chain SSOT:** Live **EIP-712 `SliverVineGate`** on Arbitrum One (`42161`) — [Gate `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) + Cloudflare Edge `pkg/soil_core.wasm` (**< 28 KiB** · `checkSoilResistance()` **p50 ~106 µs** · **Pillar Set Y**). **Arbitrum Stylus** [`SliverVineSoilCoprocessor`](./contracts/stylus-probe/) — **mainnet deployed & activated** at [Arbiscan · `0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) (Nitro Prover JIT via ArbWasm `0x71`). → [Technical Specification §0](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#0-unified-institutional-pre-execution-pipeline)
 
 ### Arbitrum Ecosystem Alignment (H1 2026)
 
 | Alignment | SliverVine role | SSOT |
 |-----------|-----------------|------|
-| **Agentic Commerce** | Pre-consensus execution safety primitive for AI agent swarms & machine-payment rails (x402-ready) | `checkSoilResistance()` · `SliverVineGate.sol` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) |
-| **Robinhood Chain (`46630`/`4663`)** | Pillar 2 RWA ingress — outbound-only USDG escort → Arbitrum One · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** — [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) · [`03_PILLAR_2` audit](./docs/audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
-| **ArbOS 61 Elara** | Protocol ingress filtering reinforces Edge fail-closed — never a weaker substitute for pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) |
-| **ZeroDev Kernel v3 (v0.95 SSOT)** | **Pillar 1 Native Integration** — ERC-7579 Modular Account Hook · Ultra-Relay Intent Network · proprietary Citadel adapter (`src/adapters/arbitrum/zerodev-aa/`) | `pnpm test:zerodev` · [`02_THREE_PILLARS` §2.4](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-1--opt-in-zerodev-account-abstraction-integration-summary) |
+| **Agentic Commerce** | **Pillar Set Y** (*Pre-Consensus Firewall & Reflex Defense*) — execution safety primitive for AI agent swarms & machine-payment rails (x402-ready) | `checkSoilResistance()` · `rootProtection()` · `SliverVineGate.sol` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) |
+| **Robinhood Chain (`46630`/`4663`)** | **Pillar Set X** (*Liquidity & Ingress Infrastructure*) — outbound-only USDG escort → Arbitrum One · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** — [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) · [`03_PILLAR_2` audit](./docs/audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **ArbOS 61 Elara** | **Pillar Set Y** (*Pre-Consensus Firewall & Reflex Defense*) — protocol ingress filtering reinforces Edge fail-closed; never a weaker substitute for pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor) |
+| **ZeroDev Kernel v3 (v0.95 SSOT)** | **Pillar Set X** ingress hook — ERC-7579 Modular Account · Ultra-Relay Intent Network · proprietary Citadel adapter (`src/adapters/arbitrum/zerodev-aa/`) | `pnpm test:zerodev` · [`02_THREE_PILLARS` §2.4](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary) |
 
 ### v0.95 SSOT Security Patches (Commit `5829e9a`)
 
@@ -116,60 +131,13 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
 | **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) |
 
-> **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification. Production multisig rotation via native governance.
+> **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.
 
 ---
 
-## 📚 English SSOT Hub — Start Here
+## 🎯 7-Protocol Matrix & Unidirectional Bridge Escort
 
-| Priority | Document | Role |
-|----------|----------|------|
-| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | 30-second Buildathon brief · neuromorphic security · Arbitrum H1 2026 alignment |
-| **2** | [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) | Express verification hub — role routing · decoupled proof index |
-| **3** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) | Full Buildathon submission pack |
-| **4** | [`docs/architecture/README.md`](./docs/architecture/README.md) | Yellow Paper · R01–R20 · Three Pillars · adapter deep dives |
-| **5** | [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md) | Granular `pnpm demo:*` command reference |
-| **6** | [`docs/README.md`](./docs/README.md) | Full documentation index · audit · grants · SDK blueprint |
-
-**Core product:** **SliverVine Citadel Shield** is a **Pre-Consensus Intent Firewall & Execution Safety Primitive** for AI Agents on Arbitrum — not a standalone Wasm risk check. Off-chain Edge reflex (`checkSoilResistance()`) + on-chain **EIP-712 consume-once `SliverVineGate`** form a protocol-grade execution safety layer. → [§1 Product Identity](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#1-core-product-identity)
-
----
-
-## 🏛️ Citadel-Armor Sovereign Vault (Live MVP · Sovereign Delta Pool)
-
-SilverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** is our live MVP proving that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio** — **100% active** routing to GMX v2 GM Pools (ETH/USDC) + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.
-
-| Lane | Wallet | Venue | Role |
-|------|--------|-------|------|
-| **Wallet A — Hyperliquid Short Lane** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
-| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One GMX v2 | GM LP deposit/withdraw only · **+10 bps builder fee** treasury lane |
-
-**Protocol revenue:** `GMX_UI_FEE_BPS = 10` — every unsigned GMX v2 payload injects **+10 bps** to Wallet B as `uiFeeReceiver` ([`gmx-revenue.ts`](./src/config/gmx-revenue.ts)).
-
-**Cold-start safety:** `INSUFFICIENT_WALLETA_HEDGE_MARGIN` fail-closed guard blocks HL hedge broadcast when Wallet A margin cushion is below JIT threshold — operators must **pre-fund Seed Margin** before scaling Wallet B GM deposits. → [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md)
-
-**Grant E2E capital routing:** **$2,500 USDC** → **$2,400** GMX GM LP (+$2.40 treasury rebate) → **$100** HL margin → Wallet A matching short · **`lostUsd ≡ $0`**.
-
-```bash
-pnpm demo:e2e:arb-native              # Tier 1 — Arbitrum Native USDC direct GM deposit (42161 simulate)
-pnpm demo:e2e:arb-native -- --gm-amount=10
-pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
-pnpm execute:gmx:gm-withdraw          # Wallet B live GM withdraw multicall
-pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
-pnpm demo:e2e -- --unwind             # + Step 5 Citadel Shield R20 exercise
-```
-
-→ **Full production workflow SSOT:** [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
-
----
-
-## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
-
-Production delta-neutral execution splits **venue-specific custody** across two wallets. The cross-wallet hedge engine ([`gmx-cross-wallet-hedge.ts`](./src/services/gmx-cross-wallet-hedge.ts) · [`scheduled-gmx-hedge-cron.ts`](./src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-cron.ts)) reads **live GMX GM delta on Wallet B** and sizes **Hyperliquid session-key shorts on Wallet A** until **Δ_net ≡ 0**.
-
----
-
-## 🎯 7-Protocol Execution Matrix
+**Hybrid Pillar Architecture:** **Pillar Set X** (*Liquidity & Ingress Infrastructure*) — GMX v2 GM / Hyperliquid cross-wallet liquidity · Robinhood unidirectional escort · bridge ingress. **Pillar Set Y** (*Pre-Consensus Firewall & Reflex Defense*) — Wasm `rootProtection()` · Edge `checkSoilResistance()` · 0-Gas fail-closed reflex.
 
 **Primary Execution Boundary:** Full Arbitrum Native Multi-Protocol Coverage (GMX v2, Pendle, Uniswap V3, Aave V3, Morpho Blue, **Variational Omni RFQ**) + Cross-Chain High-Frequency Orderbook Defense (Hyperliquid L1 Session Key Adapter).
 
@@ -186,10 +154,10 @@ Production delta-neutral execution splits **venue-specific custody** across two 
 
 **Quad-Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:quad` · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
-### Pillar 2 Escort — Traditional Bridge vs SilverVine Compliance Escort
+### Pillar Set X — Unidirectional Bridge Escort (*Liquidity & Ingress Infrastructure*)
 
 ```text
-Traditional Bridge                SilverVine Pillar 2 Escort
+Traditional Bridge                SilverVine Pillar Set X Escort
 (any ↔ any · loss opaque)         (46630/4663 → 42161 only · lostUsd ≡ 0)
  Source ═══════► Dest              RH Chain ──escort──► Arbitrum GMX/Pendle
        ◄═══════                         ▲ inbound AML BLOCKED
@@ -203,9 +171,57 @@ Traditional Bridge                SilverVine Pillar 2 Escort
 | Accounting | Opaque pending | `IN_FLIGHT` → `SETTLED` |
 | Loss | Social / insurance | **`lostUsd ≡ 0`** |
 
-**Interactive demo:** `pnpm demo:escort` · timeout trip: `pnpm demo:escort -- --trip` · → [`02_THREE_PILLARS`](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#22-traditional-bridge-vs-silvervine-pillar-2-compliance-escort)
+**Interactive demo:** `pnpm demo:escort` · timeout trip: `pnpm demo:escort -- --trip` · → [`02_THREE_PILLARS`](./docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#22-traditional-bridge-vs-silvervine-pillar-set-x-compliance-escort)
 
 Full adapter tables, Stabilizer Sepolia sandbox, and architectural hardening (R20 auto-severance · sliding-window OI · Stylus coprocessor) → [`docs/architecture/README.md`](./docs/architecture/README.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
+
+---
+
+## 🏛️ Live Proof MVP: Citadel-Armor Sovereign Vault (GMX v2 Real Yield)
+
+A live proof-of-concept demonstrating how Citadel Shield's microsecond circuit breaking enables risk-free delta-neutral capital deployment.
+
+The **Citadel-Armor Sovereign Vault** proves that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio** — **100% active** routing to GMX v2 GM Pools (ETH/USDC) + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.
+
+| Lane | Wallet Address | Venue | Role & OpSec Boundaries |
+|------|----------------|-------|-------------------------|
+| **Wallet A — HL Short Lane** | [Arbiscan · `0xef0752…960d`](https://arbiscan.io/address/0xef0752df6387248B897F3A59A180af42D801960d) *(OpSec Rotation Pending)* | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
+| **Wallet B — GM LP Yield Vault** | [Arbiscan · `0xbd65d7…EC7F`](https://arbiscan.io/address/0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F) | Arbitrum One GMX v2 | **Principal Capital Custody** · GM LP deposit/withdraw execution lane |
+| **Protocol Treasury — UI Fee Vault** | [Arbiscan · `0xc9BddA…546f`](https://arbiscan.io/address/0xc9BddABD80982d2201376195DD9B85fb7951546f) (`uiFeeReceiver`) | Arbitrum One Treasury | **Protocol Revenue Collection** · Recipient of +10 bps GMX v2 builder rebate |
+
+**Protocol revenue stream:** `GMX_UI_FEE_BPS = 10` — every unsigned GMX v2 payload injects **+10 bps** directly to the dedicated Protocol Treasury ([Arbiscan · `0xc9BddA…546f`](https://arbiscan.io/address/0xc9BddABD80982d2201376195DD9B85fb7951546f)) as `uiFeeReceiver`, completely segregated from Wallet B principal capital ([Arbiscan · `0xbd65d7…EC7F`](https://arbiscan.io/address/0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F)). SSOT: [`gmx-revenue.ts`](./src/config/gmx-revenue.ts).
+
+**Cold-start safety:** `INSUFFICIENT_WALLETA_HEDGE_MARGIN` fail-closed guard blocks HL hedge broadcast when Wallet A margin cushion is below JIT threshold — operators must **pre-fund Seed Margin** before scaling Wallet B GM deposits. → [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md)
+
+**Grant E2E capital routing:** **$2,500 USDC** → **$2,400** GMX GM LP (+$2.40 treasury rebate) → **$100** HL margin → Wallet A matching short · **`lostUsd ≡ $0`**.
+
+Production delta-neutral execution splits **venue-specific custody** across three specialized wallets (Wallet A hedge · Wallet B principal · Protocol Treasury fee collection). The cross-wallet hedge engine ([`gmx-cross-wallet-hedge.ts`](./src/services/gmx-cross-wallet-hedge.ts) · [`scheduled-gmx-hedge-cron.ts`](./src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-cron.ts)) reads **live GMX GM delta on Wallet B** and sizes **Hyperliquid session-key shorts on Wallet A** until **Δ_net ≡ 0**.
+
+```bash
+pnpm demo:e2e:arb-native              # Tier 1 — Arbitrum Native USDC direct GM deposit (42161 simulate)
+pnpm demo:e2e:arb-native -- --gm-amount=10
+pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
+pnpm execute:gmx:gm-withdraw          # Wallet B live GM withdraw multicall
+pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
+pnpm demo:e2e -- --unwind             # + Step 5 Citadel Shield R20 exercise
+```
+
+→ **Full production workflow SSOT:** [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
+
+---
+
+## 📚 English SSOT Hub — Start Here
+
+| Priority | Document | Role |
+|----------|----------|------|
+| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | 30-second Buildathon brief · neuromorphic security · Arbitrum H1 2026 alignment |
+| **2** | [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) | Express verification hub — role routing · decoupled proof index |
+| **3** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) | Full Buildathon submission pack |
+| **4** | [`docs/architecture/README.md`](./docs/architecture/README.md) | Yellow Paper · R01–R20 · Hybrid Pillar Sets X & Y · adapter deep dives |
+| **5** | [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md) | Granular `pnpm demo:*` command reference |
+| **6** | [`docs/README.md`](./docs/README.md) | Full documentation index · audit · grants · SDK blueprint |
+
+**Core product:** **SliverVine Citadel Shield** is a **Pre-Consensus Intent Firewall & Execution Safety Primitive** for AI Agents on Arbitrum — not a standalone Wasm risk check. Off-chain Edge reflex (`checkSoilResistance()`) + on-chain **EIP-712 consume-once `SliverVineGate`** form a protocol-grade execution safety layer. → [§1 Product Identity](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#1-core-product-identity)
 
 ---
 
@@ -225,7 +241,7 @@ $$
 
 Derivations & R01–R20 bounds: [Technical Specification §3.1](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary) · [Verification Matrix](./docs/VERIFICATION_MATRIX.md) · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md).
 
-**Risk spectrum (88% / 12%):** [Risk Mitigation Framework §0.1](./docs/architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does--and-does-not--guarantee)
+**Risk spectrum (88% / 12%):** [Risk Mitigation Framework §0.1](./docs/architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee)
 
 ---
 
@@ -254,7 +270,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 
 ---
 
-## ⚡ 30-Second Express Audit
+## ⚡ Extended Express Audit
 
 ### Flagship Demos (Tier 1 — AI Agent Shield)
 
@@ -262,7 +278,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 pnpm demo:quad                  # Tier 1 — Full 4 AI Agent Frameworks Pre-Flight Shield
 pnpm demo:matrix -- --trip      # Tier 1 — 7-Protocol matrix · R20 physical deadlock severance
 pnpm demo:wayfinder -- --trip   # Tier 1 — Wayfinder 0-Gas fail-closed soil trip
-pnpm demo:escort                # Pillar 2 multi-route compliance escort · lostUsd ≡ 0
+pnpm demo:escort                # Pillar Set X multi-route compliance escort · lostUsd ≡ 0
 ```
 
 → **Granular protocol & framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
@@ -271,7 +287,7 @@ pnpm demo:escort                # Pillar 2 multi-route compliance escort · lost
 
 ```bash
 pnpm install
-pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
+pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 ```
@@ -306,10 +322,10 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 | **M0: Operational Foundation** | ✅ Delivered | Monorepo · Cloudflare Edge · CI/CD |
 | **M1: On-Chain Citadel Gate** | ✅ Delivered | `SliverVineGate.sol` · deep fuzz · 25k gas bounds |
 | **M2: Pre-Execution Radar** | ✅ Delivered | `checkSoilResistance()` · **967 PASS** · **50.94 KiB gzip** |
-| **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar 1 (`USE_ZERODEV_AA` default-off) |
+| **M3: Dual-Chain & ZeroDev AA** | ✅ Dry-Run Verified | Opt-In Pillar Set X ingress (`USE_ZERODEV_AA` default-off) |
 | **M4: WASM Engine & SDK** | ✅ Delivered | `pkg/soil_core.wasm` · `@slivervine/citadel-sdk` |
 | **M5: TCA & Hyperliquid** | ✅ Delivered | Grant-audit surfaces · HL testnet provenance |
-| **M6: Grant Submission** | ✅ Mainnet Ignition | Gate `0xb174118b…` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| **M6: Grant Submission** | ✅ Mainnet Ignition | Gate [Arbiscan · `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 
 Commercial model (V1.0 open gateway · V1.1 SaaS tiers · V2.0 CaaS) → [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) · [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)
 
@@ -323,19 +339,19 @@ Commercial model (V1.0 open gateway · V1.1 SaaS tiers · V2.0 CaaS) → [`JUDGE
 # Zone A — Express (recommended first pass)
 pnpm demo && pnpm demo:e2e && pnpm test
 
-# Zone B — Inside Three Pillars
+# Zone B — Inside Pillar Sets X & Y
 pnpm test:zerodev
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 cd SliverVineGate && forge test && cd ..
 pnpm audit:fast && pnpm audit:security
 
-# Zone C — Outside Three Pillars
+# Zone C — Outside Pillar Sets X & Y
 pnpm demo:gmx && pnpm demo:hl && pnpm demo:pendle
 pnpm demo:wayfinder -- --trip
 curl -s https://bedeltawater.slivervine.xyz/api/grant-audit | jq .provenanceVerified
 ```
 
-Three Pillars pipeline ASCII · Tri-Sensor matrix · competitive positioning → [`docs/architecture/README.md`](./docs/architecture/README.md)
+Hybrid Pillar Sets X & Y pipeline ASCII · Tri-Sensor matrix · competitive positioning → [`docs/architecture/README.md`](./docs/architecture/README.md)
 
 ---
 

@@ -58,7 +58,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 | # | Arbitrum H1 2026 alignment | SliverVine deliverable | Judge proof |
 |---|----------------------------|------------------------|-------------|
 | **1** | **AI Agent Execution Primitive** | Pre-consensus safety layer for **Agentic Commerce & Swarm Trading** — `checkSoilResistance()` + consume-once Gate | `pnpm demo:wayfinder` · `pnpm demo:quad` |
-| **2** | **Robinhood Chain RWA Escort** | Pillar 2 unidirectional Across bridge guard — USDG/RWA `46630`/`4663` → `42161` · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** · optional `pnpm demo:e2e` Step 2 |
+| **2** | **Robinhood Chain RWA Escort** | Pillar Set X unidirectional Across bridge guard — USDG/RWA `46630`/`4663` → `42161` · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** · optional `pnpm demo:e2e` Step 2 |
 | **3** | **ArbOS 61 Elara & Stylus** | Rust Wasm `pkg/soil_core.wasm` + **`SliverVineSoilCoprocessor`** — **96KB** Stylus budget ready · SDK **0.10.7** · Cargo **9/9 PASS** | `pnpm build:stylus` · [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) § H1 2026 |
 
 ---
@@ -98,7 +98,7 @@ SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc 
 | **Hyperliquid** | L1 HF Orderbook | Spread > **20 bps** · rate limits | `pnpm demo:hl` |
 | **Variational** | Arbitrum One RFQ | Stale **>500ms** · drift **>30 bps** | `pnpm demo:matrix -- --loop=perp` |
 
-**Pillar 2 Escort:** `pnpm demo:escort` · `pnpm demo:escort -- --trip` — Across timeout · **`lostUsd ≡ 0`**
+**Pillar Set X Escort:** `pnpm demo:escort` · `pnpm demo:escort -- --trip` — Across timeout · **`lostUsd ≡ 0`**
 
 **Agents:** `pnpm demo:quad` · Append `--trip` for **FAIL-CLOSED** severance demos.
 
@@ -118,7 +118,7 @@ $$
 pnpm test -- --run          # 217 test files | 967 PASS clean
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
-pnpm demo                   # Primary showcase (12 Tri-Pillar scenarios)
+pnpm demo                   # Primary showcase (12 Dual Pillar Set X & Y scenarios)
 pnpm demo:e2e               # 5-step macro lifecycle · Robinhood escort · lostUsd ≡ 0
 ```
 
@@ -126,7 +126,7 @@ pnpm demo:e2e               # 5-step macro lifecycle · Robinhood escort · lost
 |------|----------|-------|
 | **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` | 7-protocol cross-venue matrix |
 | **Tier 2 — Agents** | `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` | Four AI frameworks + quad |
-| **Tier 2 — Ingress** | `pnpm demo:escort` | Pillar 2 multi-route escort · `--trip` timeout fail-closed |
+| **Tier 2 — Ingress** | `pnpm demo:escort` | Pillar Set X multi-route escort · `--trip` timeout fail-closed |
 | **Tier 3 — E2E** | `pnpm demo:{stabilizer,e2e}` | Sepolia sandbox · 5-step macro |
 
 Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) · [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)

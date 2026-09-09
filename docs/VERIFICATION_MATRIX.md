@@ -35,7 +35,7 @@ pnpm test -- --run          # 217 test files | 967 PASS clean
 
 | Command | Proves |
 |---------|--------|
-| `pnpm demo` | 12 Tri-Pillar ANSI scenarios |
+| `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
@@ -43,12 +43,13 @@ pnpm test -- --run          # 217 test files | 967 PASS clean
 
 ---
 
-## Dual-Wallet Sovereign Vault (Grant SSOT Summary)
+## 3-Tier Sovereign Vault (Grant SSOT Summary)
 
 | Lane | Address | Role |
 |------|---------|------|
-| **Wallet B — GMX GM Vault** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | GM deposit/withdraw · `uiFeeReceiver` |
 | **Wallet A — HL Hedge** | `0xef0752df6387248B897F3A59A180af42D801960d` | EIP-712 session-key 1× perp short |
+| **Wallet B — GMX GM Vault** | `0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F` | Principal capital custody · GM deposit/withdraw |
+| **Protocol Treasury — UI Fee Vault** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | `uiFeeReceiver` · +10 bps builder rebate (segregated from Wallet B) |
 
 Full workflow → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md)
 
@@ -88,7 +89,7 @@ Full harness specs · `[MAINNET_LIVE_EXECUTION_EVIDENCE]` → [`04_LIVE_FIRE_EVI
 |------|-------|----------|
 | **Zone A** | 30-second express · Tier 1–3 demo suite | [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) § Zone A |
 | **Zone A.1** | Security audit · bundle gates | same § Zone A.1 |
-| **Zone B** | Three Pillars inside (GMX · Pendle · Dune) | same § Zone B |
+| **Zone B** | Hybrid Pillar Sets X & Y inside (GMX · Pendle · Dune) | same § Zone B |
 | **Zone C** | Agent adapters · 7-protocol matrix | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
 
 ---

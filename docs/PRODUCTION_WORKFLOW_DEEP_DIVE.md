@@ -13,10 +13,11 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for
 
 | Plane | Wallet | Venue | Responsibility |
 |-------|--------|-------|----------------|
-| **Yield vault** | Wallet B `0xc9Bdd…546f` | Arbitrum One · GMX v2 GM | GM LP **deposit / withdraw only** · **`uiFeeReceiver`** treasury lane |
 | **Hedge engine** | Wallet A `0xef0752…960d` | Hyperliquid L1 (primary) · GMX v2 (fallback) | Perp **short** hedge until **Δ_net ≡ 0** |
+| **Yield vault** | Wallet B `0xbd65d7…EC7F` | Arbitrum One · GMX v2 GM | **Principal capital custody** · GM LP **deposit / withdraw only** |
+| **Protocol Treasury** | `0xc9BddA…546f` (`uiFeeReceiver`) | Arbitrum One Treasury | **Protocol revenue collection** · +10 bps GMX v2 builder rebate (segregated from Wallet B principal) |
 
-**Protocol revenue:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) to Wallet B as `uiFeeReceiver` — SSOT [`gmx-revenue.ts`](../src/config/gmx-revenue.ts) · [`gmx-v2-order-payload.ts`](../src/services/adapters/gmx-v2-order-payload.ts).
+**Protocol revenue stream:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) directly to the dedicated Protocol Treasury (`0xc9BddA...546f`) as `uiFeeReceiver`, completely segregated from Wallet B principal capital (`0xbd65d7...EC7F`) — SSOT [`gmx-revenue.ts`](../src/config/gmx-revenue.ts) · [`gmx-v2-order-payload.ts`](../src/services/adapters/gmx-v2-order-payload.ts).
 
 Cross-wallet sizing SSOT: [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts).  
 Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[COLD_START_GUARD]`.
@@ -54,7 +55,8 @@ Production GM I/O uses GMX v2 `ExchangeRouter` multicall on Arbitrum One:
 | Field | SSOT |
 |-------|------|
 | **Fee rate** | `GMX_UI_FEE_BPS = 10` (+10 bps on GM pool flows) |
-| **Treasury wallet** | Wallet B `0xc9BddABD80982d2201376195DD9B85fb7951546f` (`uiFeeReceiver`) |
+| **Treasury wallet** | Protocol Treasury `0xc9BddABD80982d2201376195DD9B85fb7951546f` (`uiFeeReceiver`) — **not** Wallet B principal |
+| **Principal vault** | Wallet B `0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F` — GM LP custody only |
 | **Injection point** | Unsigned GMX v2 payload builder — pre-broadcast, non-custodial |
 | **Grant narrative** | $2,400 GM deposit → **+$2.40** protocol treasury rebate (not user principal) |
 

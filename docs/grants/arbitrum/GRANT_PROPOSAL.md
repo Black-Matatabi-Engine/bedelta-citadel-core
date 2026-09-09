@@ -24,9 +24,9 @@
 
 | H1 2026 directive | SliverVine Citadel Shield response | SSOT |
 |-----------------|-----------------------------------|------|
-| **Agentic Commerce & AI Agents** | **Sub-ms pre-broadcast safety primitive** — `checkSoilResistance()` intercepts toxic agent intents **before** Sequencer mempools or MEV bots observe calldata; `severSigningChannel()` fail-closed for prompt-injection / policy drift | `pkg/soil_core.wasm` · `checkSoilResistance()` · [Technical Specification §6](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#6-erc-7579-pre-execution-hook-alignment--ai-agent-reflex-architecture) |
+| **Agentic Commerce & AI Agents** | **Sub-ms pre-broadcast safety primitive** — `checkSoilResistance()` intercepts toxic agent intents **before** Sequencer mempools or MEV bots observe calldata; `severSigningChannel()` fail-closed for prompt-injection / policy drift | `pkg/soil_core.wasm` · `checkSoilResistance()` · [Technical Specification §6](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#6-erc-7579-pre-execution-hook-alignment-ai-agent-reflex-architecture) |
 | **x402 Ecosystem alignment** | Machine-to-machine commerce rails require **0-Gas pre-broadcast risk gates** on agent-initiated Arbitrum txs — Citadel binds EIP-712 attestations to Gate `verifyingContract` so x402 settlement paths cannot bypass soil / depth / slippage fuses | `SliverVineGate.sol` · `gated-executor-payload.ts` · `GET /api/grant-audit` |
-| **ArbOS 61 Elara compliance** | **Elara ingress compatibility** — protocol-level compliance filtering and transaction-ordering awareness **reinforce** Edge fail-closed (`signingChannelOpen: false`) without replacing pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md` § ArbOS/Stylus](../../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos--stylus-alignment--code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` |
+| **ArbOS 61 Elara compliance** | **Elara ingress compatibility** — protocol-level compliance filtering and transaction-ordering awareness **reinforce** Edge fail-closed (`signingChannelOpen: false`) without replacing pre-broadcast SSOT | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md` § ArbOS/Stylus](../../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` |
 | **Stylus coprocessor readiness** | **Rust Wasm soil core** (`#![no_std]` Edge) + **`SliverVineSoilCoprocessor`** (Stylus SDK **0.10.7** · `cargo test` **9/9 PASS**) — on-chain auditable parity with Edge semantics; deploy path via EIP-1967 proxy (additive to immutable Gate) | `pkg/soil_core.wasm` · [`contracts/stylus-probe/src/lib.rs`](../../../contracts/stylus-probe/src/lib.rs) |
 
 ---
@@ -86,7 +86,7 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 |-------|-------|--------|
 | Open House / Buildathon | Live HUD · Gate · Sepolia proof · **199 test files | 868 PASS Clean (100% PASS)** · **4-step Happy Path** E2E (`pnpm run demo:e2e`; `--unwind` · `--trip` optional) | ✅ Submitted |
 | Security Grant pack | Cold audit pack · R01–R20 + Slither/Echidna narrative | ⏳ Planned |
-| Institutional AA | Kernel v3 Session Key — [ZeroDev Comparative Analysis](../../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) · [Technical Specification §2.4](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-1--opt-in-zerodev-account-abstraction-integration-summary) | ✅ Delivered in v1.0 |
+| Institutional AA | Kernel v3 Session Key — [ZeroDev Comparative Analysis](../../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) · [Technical Specification §2.4](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary) | ✅ Delivered in v1.0 |
 
 ---
 
