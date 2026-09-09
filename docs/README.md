@@ -19,9 +19,10 @@
 | Step | Document | What you verify |
 |------|----------|-----------------|
 | **1** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Citadel-Armor Sovereign Vault SSOT** — Sovereign Delta Pool · Wallet B GM vault · Wallet A HL hedge · near-zero drawdown thesis |
-| **2** | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Production Workflow SSOT (Live Mainnet 42161)** · CLI Tier 0–5 · settlement contracts · live Arbiscan proofs |
-| **3** | On-Chain Settlement Contracts (in Verification Matrix §3) | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` · GatePolicyLink `0xe4ef5350…` |
-| **4** | `execute:gmx:*` CLI commands (in Verification Matrix) | `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:e2e:arb-native` |
+| **2** | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Express verification hub** — role routing · 30-second commands · links to decoupled proofs |
+| **2a** | [`verifications/`](./verifications/) | **Decoupled SSOT** — on-chain anchors · CLI zones · adapters · live-fire evidence |
+| **3** | [`verifications/01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) | PolicyGuardV2 · MatrixSwitch · RiskOracleV2 · Phase A+B+C |
+| **4** | [`verifications/04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md) | GM I/O Arbiscan proofs · micro-fill fail-closed |
 
 ```bash
 # Grant evaluator quick-start (Citadel-Armor Sovereign Vault)
@@ -38,7 +39,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 | # | Document | Role |
 |---|----------|------|
 | 1 | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Citadel-Armor Sovereign Vault SSOT** — near-zero drawdown · maximum Sharpe · dual-wallet workflow |
-| 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **CLI Tier 0–5 Verification Entry** — reproducible PASS bars · mainnet settlement plane |
+| 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Express verification hub** — CLI Tier 0–5 entry · decoupled proof index |
 | 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
 | 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
 | 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · **10 bps builder** + referral rebate model |
@@ -53,7 +54,9 @@ pnpm test                             # 217 test files | 967 PASS clean
 | **Compliance Ingress Firewall (Pillar 2)** | [`audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Venue-agnostic unidirectional AML escort · Robinhood Chain as inaugural reference adapter · 6/6 tests |
 | **Edge Shield Wasm Core (Pillar 3)** | [`audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | `checkSoilResistance()` · p50 ~106µs · Tri-Sensor · R01–R20 defense matrix |
 | **Security audit snapshot** | [`audit/05_PRINCIPAL_AUDIT_REPORT.md`](./audit/05_PRINCIPAL_AUDIT_REPORT.md) | Principal review · Gate / survival matrix |
-| **Grant submissions** | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Buildathon main submission pack |
+| **Grant submissions** | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (Shield-first) |
+| **Grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones · deep tables |
+| **Verification proofs** | [`verifications/`](./verifications/) | On-chain · CLI zones · adapters · live-fire |
 | **HackQuest dual-video scripts** | [`pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md`](./pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md) | Pitch 180s (rainstorm) · Demo 120s (live CLI) |
 | **Arbitrum grant scope** | [`grants/arbitrum/GRANT_PROPOSAL.md`](./grants/arbitrum/GRANT_PROPOSAL.md) | DAO proposal · milestone scope |
 | **GMX Builders** | [`grants/gmx/GMX_BUILDERS_PITCH.md`](./grants/gmx/GMX_BUILDERS_PITCH.md) | GMX v2 integration pitch · **10 bps uiFeeReceiver** |
@@ -68,7 +71,8 @@ pnpm test                             # 217 test files | 967 PASS clean
 docs/
  README.md ← you are here
  PRODUCTION_WORKFLOW_DEEP_DIVE.md ← Citadel-Armor Sovereign Vault SSOT (start here)
- VERIFICATION_MATRIX.md Tier 0–5 CLI map (evaluators · mainnet settlement)
+ VERIFICATION_MATRIX.md Express hub (evaluators · role routing)
+ verifications/ Decoupled on-chain · CLI · adapter · live-fire proofs
  architecture/ Yellow Paper · standards wiki · risk mitigation & disclaimer framework
  audit/ DDIP · ZeroDev analysis · Robinhood gate · principal audit
  sdk/ Citadel SDK integration blueprint

@@ -2,7 +2,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **199 test files | 869 PASS Clean (100% PASS)** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI · Shield **p50 ~106µs**
+> **SSOT Lock:** **217 test files | 967 PASS clean** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI · Shield **p50 ~106µs**
 
 ---
 
@@ -70,12 +70,12 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest** | **199 test files \| 869 PASS Clean (100% PASS)** · `pnpm test -- --run` |
+| **Vitest** | **217 test files \| 967 PASS clean** · `pnpm test -- --run` |
 | **Security** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Worker bundle** | **50.94 KiB gzip** · 143.77 KiB raw (`pnpm bundle:measure` · pass · limit 150 KiB) |
 | **Dune Telemetry** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · PEV on Sepolia Gate |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
-| **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`README.md`](./docs/architecture/README.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
+| **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) · [`verifications/`](./docs/verifications/) |
 
 ---
 
@@ -115,7 +115,7 @@ $$
 ## Judge Quickstart (60s Verification)
 
 ```bash
-pnpm test -- --run          # 199 test files | 869 PASS Clean (100% PASS)
+pnpm test -- --run          # 217 test files | 967 PASS clean
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 pnpm demo                   # Primary showcase (12 Tri-Pillar scenarios)
