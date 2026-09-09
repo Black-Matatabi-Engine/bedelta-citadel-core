@@ -8,7 +8,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **215 test files | 958 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo `citadel_invariants` **2/2** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
+> **Vitest SSOT:** **216 test files | 964 PASS Clean (100% PASS)** on `pnpm test -- --run`. Forge **60/60** · Cargo `citadel_invariants` **2/2** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
 ### Dual-Wallet Cross-Venue SSOT (Wallet A × Wallet B)
 
@@ -21,7 +21,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 ### Production Workflow SSOT (Live Mainnet · 42161)
 
-> **Three-Tier Architecture:** Edge pre-broadcast (0-Gas `checkSoilResistance`) → **Dual-Wallet Execution Plane** → **On-Chain Settlement Plane (Phase A+B+C · Verified @ `ed485ba`)**
+> **Three-Tier Architecture:** Edge pre-broadcast (0-Gas `checkSoilResistance`) → **Dual-Wallet Execution Plane** → **On-Chain Settlement Plane (Phase A+B+C · Verified @ `abd8518`)** · Production workflow: [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md)
 
 #### 1. Wallet B — GM LP Yield Vault (Dedicated · GM I/O Only)
 
@@ -69,8 +69,8 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **215 test files \| 958 PASS Clean (100% PASS)** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Verified commit** | `main` @ **`ed485ba`** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
+| **Vitest baseline** | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Verified commit** | `main` @ **`abd8518`** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
 | **Phase B — GmxSoilMatrixSwitch** | Single **SLOAD** defense bitmap · **47 LOC** + `DefenseMatrixBitmap` **66 LOC** | [`GmxSoilMatrixSwitch.sol`](../contracts/GmxSoilMatrixSwitch.sol) · Forge **8/8** |
 | **Phase C — citadel_invariants** | Stylus/Wasm coprocessor `evaluate_packed` · TS/Rust parity · **PolicyGuardV2** Stylus staticcall + `GmxRiskInvariantLib` fallback | [`contracts/citadel_invariants/`](../contracts/citadel_invariants/) · `pnpm build:citadel-invariants` · [`stylus-gmx-parity.test.ts`](../tests/wasm/stylus-gmx-parity.test.ts) **6/6** · Cargo **2/2** |
@@ -113,7 +113,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 | Script | Command | Role | Live arm |
 |--------|---------|------|----------|
 | **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | **Deployed & activated** `0xc23587d6573dd134f95b02b0202ffbf84686625e` · Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + ArbWasm `0x71` | [`scripts/deploy-stylus-mainnet.ts`](../scripts/deploy-stylus-mainnet.ts) |
-| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
+| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuardV2 `0xfd98cadb…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
 | **GMX GM Pool deposit** | `pnpm execute:gmx:gm-deposit` | **Verified Live** — `sendWnt → sendTokens → createDeposit` · ExchangeRouter `0x7dE39…83f1` · ETH/USDC GM `0x70d955…6336` | [`scripts/execute-gmx-mainnet-gm-deposit.ts`](../scripts/execute-gmx-mainnet-gm-deposit.ts) · Live: `CONFIRM_GMX_GM_DEPOSIT=YES BROADCAST=1 MAINNET_PK=0x…` |
 | **GMX GM Pool withdraw** | `pnpm execute:gmx:gm-withdraw` | **Verified Live** — GM LP approve → GMX v2 Router `0x7452c558…` · `sendWnt → sendTokens(GM) → createWithdrawal` | [`scripts/execute-gmx-mainnet-gm-withdraw.ts`](../scripts/execute-gmx-mainnet-gm-withdraw.ts) · Live: `CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x…` |
 | **GMX Phase A+B+C deploy** | `pnpm tsx scripts/deploy-policy-guard-v2-mainnet.ts` | **Verified Live @ block 503074231–503074255** — PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Live: `CONFIRM_POLICY_GUARD_V2_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x…` |
@@ -146,7 +146,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 ### Phase A+B+C — GMX On-Chain Invariant Stack (Solidity · Stylus · Wasm)
 
-> **Status:** **100% delivered @ `bbcd6bb`** — three-layer GMX wire audit path from pure Solidity fallback through single-SLOAD soil matrix to optional Stylus coprocessor.
+> **Status:** **100% delivered @ `abd8518`** — three-layer GMX wire audit path from pure Solidity fallback through single-SLOAD soil matrix to optional Stylus coprocessor.
 
 | Layer | SSOT module | Role | LOC | Verification |
 |-------|-------------|------|-----|--------------|
@@ -206,9 +206,10 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Field | Value |
 |-------|-------|
-| **PolicyGuard Contract (current)** | `SliverVineAgentPolicyGuard` · [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
-| **PolicyGuard Deployment Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` · [Arbiscan](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
-| **PolicyGuard Contract (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **PolicyGuardV2 (current)** | `SliverVineAgentPolicyGuardV2` · [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0` |
+| **PolicyGuardV2 Deployment Tx** | [`0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
+| **PolicyGuard v1 (superseded)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) · Deploy [`0xeabd5fd1…`](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
+| **PolicyGuard (legacy v0)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` · [Arbiscan](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
 | **Smart Route Source Chain** | Robinhood Mainnet (`4663`) |
 | **Smart Route Target Chain** | Arbitrum One (`42161`) |
@@ -230,9 +231,10 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Field | Value |
 |-------|-------|
-| **PolicyGuard Address (current)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
-| **PolicyGuard Deploy Tx** | `0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c` |
-| **PolicyGuard Address (legacy v1)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
+| **PolicyGuardV2 Address (current)** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
+| **PolicyGuardV2 Deploy Tx** | [`0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
+| **PolicyGuard v1 (superseded)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) |
+| **PolicyGuard (legacy v0)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) |
 | **ZeroDev Kernel v3 AA Proof Tx** | `0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad` |
 | **Smart Route Source Chain** | Robinhood Mainnet (`4663`) |
 | **Smart Route Target Chain** | Arbitrum One (`42161`) |
@@ -285,7 +287,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (215 test files | 958 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (216 test files | 964 PASS Clean (100% PASS))
 ```
 
 | Command | Proves | Expected |
@@ -320,7 +322,7 @@ pnpm test       # Full System Regression Suite (215 test files | 958 PASS Clean 
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
 | `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
-| `pnpm test` | Full Vitest regression bar | **215 test files \| 958 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest regression bar | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -361,7 +363,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **215 test files \| 958 PASS Clean (100% PASS)** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 
@@ -759,7 +761,7 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
 | `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm test` | Full Vitest + coverage | **215 test files \| 958 PASS Clean (100% PASS)** |
+| `pnpm test` | Full Vitest + coverage | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |
 | `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix | **5/0/0 PASS** (security tier) |
@@ -804,4 +806,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 215 test files | 958 PASS Clean (100% PASS) · HEAD `bbcd6bb`*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 216 test files | 964 PASS Clean (100% PASS) · HEAD `abd8518`*

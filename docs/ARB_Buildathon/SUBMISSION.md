@@ -54,12 +54,12 @@
 | **Buildathon** | Arbitrum Open House Singapore Online Buildathon |
 | **Live Gate (Sepolia)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest baseline** | **215 test files \| 958 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`ed485ba`** — Phase A+B+C **mainnet deploy** · dual-wallet workflow SSOT · **215/958** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
+| **Verified Commit** | `main` @ **`abd8518`** — Phase A+B+C **mainnet deploy** · dual-wallet workflow SSOT · **216/964** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -103,7 +103,7 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 
 ## Production Architecture Declarations
 
-> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` @ **`bbcd6bb`** — **215 test files \| 958 PASS Clean (100% PASS)** · `tsc --noEmit` **0 errors** · Cargo `citadel_invariants` **2/2**.
+> Authoritative v1.0 production scope for SliverVine Citadel Shield. **Baseline:** `main` @ **`abd8518`** — **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** · `tsc --noEmit` **0 errors** · Cargo `citadel_invariants` **2/2**.
 
 | # | Domain | Production declaration |
 |---|--------|------------------------|
@@ -111,7 +111,7 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 | **2** | GMX v2 Pre-Flight Guards | **Phase A+B+C invariant stack** (`GmxRiskInvariantLib` · `GmxSoilMatrixSwitch` single-SLOAD · `citadel_invariants` Stylus coprocessor + PolicyGuardV2 Solidity fallback). GMX v2 execution guards verified via **Vitest CLI + dry-run pipelines** — **0-Gas pre-flight** severance. **GM Pool I/O channel CLOSED** on `42161`: deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · approve [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410). → [§4 GMX](#4-gmx) |
 | **3** | Pendle Core Pillar 3 | **V1.0 dual deliverable:** (1) **Pendle Institutional Safety Sentinel** — 60s TTL Oracle Fuse & 200bps Jitter Guard · (2) **Pendle AI Guarded Pool Factory** — 5 Invariants via `validateAIPoolSelection()` · **150 bps** implied-yield shock fuse. AI pool creation/validation is **protocol-tax-free**; metered SaaS Request Credits launch in **V1.1**. → [§3 Pendle](#3-pendle-finance-v10-live--core-pillar-3) |
 | **4** | Telemetry Infrastructure | **Sepolia (`421614`): Active Live Event Stream** · **Arbitrum One (`42161`): Contracts Anchored + SQL Query Specs Ready for Ingest** — zero misleading cross-chain claims; partitions documented separately. → [§5 Dune](#5-dune-analytics) |
-| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **215 test files \| 958 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
+| **5** | Agent Integration | **V1.0 Live Native Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` · [`src/adapters/`](../../src/adapters/) · **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** → [Four Major AI Agent Frameworks](#four-major-ai-agent-frameworks-v10-live--full-quad-coverage) |
 | **6** | 0-Gas Off-Chain Severance | Arbitrum One Gate (`0xb174…`) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**. → [On-Chain Verification — Arbitrum One](#on-chain-verification--arbitrum-one-42161) |
 | **7** | Dune Analytics | **Sepolia: Active Live Event Stream** · **Arbitrum One: Contracts Anchored + SQL Specs Ready for Ingest** (not live mainnet stream). → [§5 Dune](#5-dune-analytics) |
 | **8** | Commercial Model | **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public`) · **V1.1 = 4-Tier SaaS** (Milestone 1) · **V2.0 = Institutional CaaS & Orbit Shield**. → [Business Model](#business-model--gtm-strategy) |
@@ -153,7 +153,7 @@ Legacy paths in `src/adapters/` and `src/services/` maintain **100% backward com
 
 | Criterion | Evidence (CLI / code) |
 |-----------|------------------------|
-| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **215 test files \| 958 PASS Clean (100% PASS)** |
+| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
 | **Product-Market Fit** | GMX v2 +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Core Pillar 3 (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
@@ -241,7 +241,7 @@ pnpm demo                         # GMX v2 + HL + Pendle Tri-Pillar Vitest matri
 ```
 
 - **Cross-Pass routing:** Stabilizer stablecoin rebalance → GMX v2 shadow-margin leg → Pendle guarded pool intent → Uniswap V3 spot liquidity — each hop gated by `checkSoilResistance()` before broadcast
-- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · [`tests/adapters/uniswap-v3-adapter.test.ts`](../../tests/adapters/uniswap-v3-adapter.test.ts) · **215 test files | 958 PASS Clean (100% PASS)**
+- **Tests:** [`tests/adapters/stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) · [`tests/adapters/uniswap-v3-adapter.test.ts`](../../tests/adapters/uniswap-v3-adapter.test.ts) · **216 test files | 964 PASS Clean (100% PASS)**
 
 #### Uniswap V3 (V1.0 Live · Arbitrum Native Spot Liquidity)
 
@@ -308,7 +308,7 @@ pnpm demo:matrix -- --loop=spot     # Uniswap V3 → Aave V3 → Morpho Blue spo
 pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
 ```
 
-- **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · **215 test files | 958 PASS Clean (100% PASS)**
+- **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · **216 test files | 964 PASS Clean (100% PASS)**
 
 #### Supplementary Agent Demos
 
@@ -418,7 +418,7 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 
 ## Architectural SSOT & Hardened Metrics
 
-* **Test Suite**: **215 test files | 958 PASS Clean (100% PASS)** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
+* **Test Suite**: **216 test files | 964 PASS Clean (100% PASS)** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
 * **Dual-Demo Architecture**: **`pnpm demo`** — 12 Tri-Pillar ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#3-cross-venue-risk-engine--defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
@@ -452,7 +452,7 @@ SliverVine's **production delta-neutral envelope** is not a single-wallet abstra
 | **Wallet B — GM LP Yield Vault** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | **Dedicated exclusively** to GM LP deposit/withdraw · **no** HL keys · **no** GMX perp |
 | **Wallet A — Hedge Engine (Primary)** | `0xef0752df6387248B897F3A59A180af42D801960d` | Hyperliquid session-key **perp short** · 0-Gas · low latency |
 | **Wallet A — Hedge Engine (Fallback)** | same | GMX v2 synthetic short via [`gmx-v2-wallet-a-short-builder.ts`](../../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) · USDC collateral · simulate only |
-| **On-Chain Settlement** | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Phase A+B+C **Verified Live** @ `ed485ba` · **`stylusCoprocessor=0`** → Pure Solidity fallback · 100% fail-closed without separate Stylus mainnet activation |
+| **On-Chain Settlement** | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Phase A+B+C **Verified Live** @ `abd8518` · **`stylusCoprocessor=0`** → Pure Solidity fallback · 100% fail-closed without separate Stylus mainnet activation |
 | **Gate ↔ PolicyGuardV2 Link** | `SliverVineGatePolicyLink` `0xe4ef5350…` → Gate `0xb174…` | **Verified Live** — setPolicyGuard [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · deploy [`0x7ce414b7…`](https://arbiscan.io/tx/0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9) |
 | **Wallet B Perp Isolation** | [`wallet-isolation-guard.ts`](../../src/core/wallet-isolation-guard.ts) | Global `WALLET_B_PERP_FORBIDDEN` on all GMX createOrder builders |
 
@@ -487,7 +487,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **215 test files \| 958 PASS Clean (100% PASS)** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -564,7 +564,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 
 ### 4. GMX
 
-* **Phase A+B+C on-chain invariant stack (@ `bbcd6bb`):**
+* **Phase A+B+C on-chain invariant stack (@ `abd8518`):**
   * **Phase A — [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol)** (**83 LOC**): pure Solidity GMX wire invariants (executionFee floor · slippage floor · pool imbalance) — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts).
   * **Phase B — [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol)** (**47 LOC**) + [`DefenseMatrixBitmap.sol`](../../contracts/libs/DefenseMatrixBitmap.sol) (**66 LOC**): defense matrix **single SLOAD** bitmap switch · Forge **8/8**.
   * **Phase C — [`citadel_invariants`](../../contracts/citadel_invariants/)** Rust/Stylus coprocessor: 96-byte packed `evaluate_packed` · GMX errMask + soil flags · host wasm parity via `pnpm build:citadel-invariants` · Cargo **2/2** · Vitest [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6**.
@@ -575,7 +575,7 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
   * **Deposit multicall:** [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** · `pnpm execute:gmx:gm-deposit`
   * **GM LP → GMX v2 Router approve:** [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Block **503051738** · spender `0x7452c558…`
   * **Withdraw multicall:** [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · Block **503051752** · `pnpm execute:gmx:gm-withdraw`
-* **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuard `0xc66f9661…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
+* **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuardV2 `0xfd98cadb…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
 * **Mainnet micro-fill Fail-Closed evidence (Live Interception Payload):** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) — harness intelligently selected **`"short"`** side to balance GM pool (**$71 Long** vs **$58 Short**) · Soil Resistance + Root Protection **successfully intercepted** execution: `DEPTH_USD = $129 < $100,000` min requirement · `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` (**154s** stale oracle) · **`lostUsd ≡ 0`** · **0 slippage loss** · no mempool exposure
 * **Stylus mainnet (verified):** `SliverVineSoilCoprocessor` **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** · activation tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** · `pnpm deploy:stylus:mainnet` · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts)
 * **Integration**: `evaluatePendleGmxCrossGuard` (`src/guards/pendle-gmx-cross-guard.ts`) & GMX Order Payload Guard (`src/services/adapters/gmx-v2-order-payload-guards.ts`).
@@ -738,7 +738,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | ID | Unlock condition (objective) | Sponsor / track | Status |
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in `/api/grant-audit` | Arbitrum | ✅ Delivered |
-| **M-CLI** | Vitest **215 test files \| 958 PASS Clean (100% PASS)** | All | ✅ Delivered |
+| **M-CLI** | Vitest **216 test files | 964 PASS\|216 test files | 964 PASS Clean (100% PASS)** | All | ✅ Delivered |
 | **M-RH-Demo** | `4663` → `42161` outbound Smart Route **Verified Live** · UserOp `0x7b72ee9f…` · Tx [`0x4c4ca136…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Live-verified |
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
@@ -809,7 +809,7 @@ pnpm demo       # Vitest Tri-Pillar matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
 pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
-pnpm test       # Full System Regression Suite (215 test files | 958 PASS Clean (100% PASS))
+pnpm test       # Full System Regression Suite (216 test files | 964 PASS Clean (100% PASS))
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 cd SliverVineGate && forge test --gas-report && cd ..
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
@@ -845,7 +845,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **215 test files | 958 PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
+**Regression bar:** Vitest **216 test files | 964 PASS Clean (100% PASS)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
 
 ---
 
@@ -856,6 +856,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 | [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 1-page executive brief for Buildathon evaluators |
 | [`../../README.md`](../../README.md) | English SSOT landing page |
 | [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
+| [`../PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) | Dual-wallet production workflow SSOT |
 | [`../architecture/README.md`](../architecture/README.md) | R01–R20 Defense Matrix · latency benchmarks |
 | [`../telemetry/DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Production DuneSQL feed + activity chart (Queries 0–0b) + 3 reconciliation panels · [live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | [`../grants/arbitrum/ARBITRUM_ONE_PAGER.md`](../grants/arbitrum/ARBITRUM_ONE_PAGER.md) | One-pager |
