@@ -14,6 +14,12 @@ import { refreshSoilArbitrumProbesWithFallback } from "./risk-control-lib/soil-a
 import { buildLiveHedgeSoilInput } from "./gmx-cross-wallet-hedge-lib/build-hedge-soil-input";
 import { emitDualWalletHedgeTelemetry } from "./gmx-cross-wallet-hedge-lib/dual-wallet-structured-log";
 import { fetchWalletAEthShortSize, HL_WALLET_A_DEFAULT } from "./gmx-cross-wallet-hedge-fetch";
+import {
+  assertWalletAMarginSufficiency,
+  computeJitRebalanceRequiredMarginUsd,
+  fetchWalletAMarginBalanceUsd,
+  INSUFFICIENT_WALLETA_HEDGE_MARGIN,
+} from "./cross-wallet-cold-start-guard";
 import type { GmxCrossWalletHedgeInput, GmxCrossWalletHedgeResult } from "./gmx-cross-wallet-hedge.types";
 
 export async function runGmxCrossWalletEthHedge(input: GmxCrossWalletHedgeInput): Promise<GmxCrossWalletHedgeResult> {
@@ -73,6 +79,28 @@ export async function runGmxCrossWalletEthHedge(input: GmxCrossWalletHedgeInput)
     };
   }
   const { orderEthSize, orderUsd } = sizing;
+  if (!reduceOnly) {
+    try {
+      const walletABalanceUsd = await fetchWalletAMarginBalanceUsd(walletA, input.fetchFn);
+      assertWalletAMarginSufficiency(
+        walletABalanceUsd,
+        computeJitRebalanceRequiredMarginUsd(orderUsd),
+      );
+    } catch (err) {
+      const reason = err instanceof Error ? err.message : String(err);
+      if (reason !== INSUFFICIENT_WALLETA_HEDGE_MARGIN) throw err;
+      return {
+        ok: false,
+        dryRun: input.dryRun !== false,
+        ethDeltaSize: delta.ethDeltaSize,
+        ethDeltaUsd: delta.ethDeltaUsd,
+        orderEthSize: 0,
+        orderUsd: 0,
+        reason: INSUFFICIENT_WALLETA_HEDGE_MARGIN,
+        delta,
+      };
+    }
+  }
   const signer = createViemEip712Signer(input.sessionPk as Hex);
   const leg: IntentLeg = {
     venue: "HL",
