@@ -52,7 +52,6 @@ Production-native adapters in [`src/adapters/`](../../src/adapters/) — each fr
 | **LangChain / LangGraph** | ✅ V1.0 Live | [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` | [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) |
 | **Stabilizer Protocol** | ✅ V1.0 Live | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` | [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) |
 | **USD.ai** | ✅ V1.0 Live | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `evaluateUsdAiCollateralGuard()` | `pnpm demo:usdai` | [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) |
-| **Quad-Agent (combined)** | ✅ V1.0 Live | [`quad-agent-demo.ts`](../../examples/quad-agent-demo.ts) | All four AI frameworks | `pnpm demo:quad` | — |
 | **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
 
 **Regression bar:** **217 test files | 967 PASS clean
