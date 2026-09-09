@@ -168,6 +168,21 @@ export function printVerificationLatencyBlock(us: number, indent = "      "): vo
   console.log(`${indent}${formatVerificationLatency(us)}`);
 }
 
+/** Wasm reflex core — Full Matrix Execution (microseconds). */
+export function printReflexCoreDeadlockBlock(us: number, indent = "  "): void {
+  console.log(`${indent}${CORE_BRIGHT_CYAN}${BOLD}⚡ Reflex Core Deadlock: ${formatLatencyLabel(us)}${R}`);
+}
+
+/** Node.js CLI wall-clock — includes console I/O overhead (milliseconds). */
+export function printTotalCliHarnessRuntimeBlock(us: number, indent = "  "): void {
+  console.log(`${indent}${EXEC_BRIGHT_YELLOW}${BOLD}⚡ Total CLI Harness Runtime: ${formatLatencyLabel(us)}${R}`);
+}
+
+export function printMatrixLatencySummary(reflexCoreUs: number, totalHarnessUs: number, indent = "  "): void {
+  printReflexCoreDeadlockBlock(reflexCoreUs, indent);
+  printTotalCliHarnessRuntimeBlock(totalHarnessUs, indent);
+}
+
 export function printExecutionLatencyBlock(us: number, indent = "      "): void {
   console.log(`${indent}${formatExecutionLatency(us)}`);
 }

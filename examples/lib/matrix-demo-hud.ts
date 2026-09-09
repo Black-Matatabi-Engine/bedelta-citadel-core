@@ -90,14 +90,31 @@ export function printR20DeadlockBanner(state: SystemState): void {
   );
 }
 
+const R20_CASCADE_VENUES = new Set(["Uniswap V3", "Aave V3", "USD.ai"]);
+const R20_CASCADE_TAG = `${YELLOW}${BOLD}[R20 CASCADING DEADLOCK]${R}`;
+
 export function printTripVenueRows(
   rows: { venue: string; status: string; detail: string }[],
 ): void {
   for (const row of rows) {
+    const cascade =
+      R20_CASCADE_VENUES.has(row.venue) && row.detail.includes("R20_DEADLOCK") ? ` ${R20_CASCADE_TAG}` : "";
     console.log(
-      `  ${RED}${row.venue.padEnd(14)} ${STATUS_REJECT}${row.status.padEnd(12)}${R} ${GRAY}${row.detail}${R}`,
+      `  ${RED}${row.venue.padEnd(14)} ${STATUS_REJECT}${row.status.padEnd(12)}${R} ${GRAY}${row.detail}${R}${cascade}`,
     );
   }
+}
+
+export function collectCrossVenueSlippageLine(reasons: string[]): BreachLine | null {
+  const raw = reasons.find((r) => r.includes("CROSS_VENUE_SLIPPAGE"));
+  if (!raw) return null;
+  const match = raw.match(/CROSS_VENUE_SLIPPAGE=([0-9.]+)%>([0-9.]+)%/);
+  if (!match) return null;
+  return {
+    label: "Cross-Venue Slippage",
+    value: `${parseFloat(match[1]).toFixed(2)}%`,
+    limit: `LIMIT: >${parseFloat(match[2]).toFixed(2)}%`,
+  };
 }
 
 export function collectMorphoBreachLines(nowMs: number): BreachLine[] {
@@ -110,14 +127,14 @@ export function collectMorphoBreachLines(nowMs: number): BreachLine[] {
   const lines: BreachLine[] = [];
   if (deviationBps > MORPHO_PRICE_DEVIATION_MAX_BPS) {
     lines.push({
-      label: "Morpho Deviation",
+      label: "Morpho Oracle Deviation",
       value: `${deviationBps.toFixed(1)} bps`,
       limit: `LIMIT: >${MORPHO_PRICE_DEVIATION_MAX_BPS}.0 bps`,
     });
   }
   if (depthUsd < MORPHO_MIN_MARKET_LIQUIDITY_USD || marketLiquidityUsd < MORPHO_MIN_MARKET_LIQUIDITY_USD) {
     lines.push({
-      label: "Pool Liquidity",
+      label: "Morpho Liquidity",
       value: `$${depthUsd.toLocaleString("en-US")} USD`,
       limit: `MIN: $${MORPHO_MIN_MARKET_LIQUIDITY_USD.toLocaleString("en-US")} USD`,
     });

@@ -64,12 +64,13 @@ import {
   hrtimeElapsedUs,
   hrtimeStart,
   GUARD_BRIGHT_GREEN,
-  printExecutionLatencyBlock,
-  printVerificationLatencyBlock,
+  printMatrixLatencySummary,
+  type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
 import {
   type BreachLine,
   collectAaveBreachLines,
+  collectCrossVenueSlippageLine,
   collectGmxBreachLines,
   collectMorphoBreachLines,
   collectPendleBreachLines,
@@ -439,6 +440,9 @@ function evaluateLoop(
   });
 }
 
+const SPOT_DISPATCH_TARGETS = "[Uniswap V3 | Aave V3 | Morpho Blue | USD.ai]";
+const PERP_DISPATCH_TARGETS = "[GMX v2 | Pendle | Hyperliquid L1 | Variational RFQ]";
+
 function printHappyMatrix(title: string, result: LoopEvalResult, opts: PrintMatrixOpts): void {
   console.log(`\n${YELLOW}${title}${R}`);
   for (const row of result.rows) {
@@ -446,21 +450,10 @@ function printHappyMatrix(title: string, result: LoopEvalResult, opts: PrintMatr
     console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)}${R} ${GRAY}${row.detail}${R}`);
   }
   const dispatchTag = `${GUARD_BRIGHT_GREEN}${BOLD}[DISPATCH]${R}`;
-  if (opts.loop === "spot") {
-    console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
-    console.log(
-      `      ${GRAY}target:${R} Morpho Blue / Aave V3 Liquidity Gateway ${GRAY}→${R} lending/swap clearance ok`,
-    );
-  } else if (opts.loop === "perp") {
-    if (opts.hedge === "variational" || opts.hedge === "both") {
-      console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
-      console.log(`      ${GRAY}target:${R} Variational Omni RFQ ${GRAY}→${R} OLP depth ok`);
-    } else {
-      console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
-      console.log(`      ${GRAY}target:${R} GMX v2 Execution Vault ${GRAY}→${R} shadow margin ok`);
-    }
-  }
-  printVerificationLatencyBlock(result.soilLatencyUs, "  ");
+  const targets = opts.loop === "spot" ? SPOT_DISPATCH_TARGETS : PERP_DISPATCH_TARGETS;
+  console.log(
+    `  ${dispatchTag} ${GREEN}ALLOWED${R} ${GRAY}|${R} targets: ${targets} ${GRAY}->${R} pre-broadcast clearance ok`,
+  );
 }
 
 function resetState(): void {
@@ -495,6 +488,19 @@ function tripSuccess(rows: VenueRow[], hedge: PerpHedge, loop: MatrixLoop): bool
   return rows.every((r) => r.status === "FAIL_CLOSED");
 }
 
+function appendBreachLines(
+  matrixLoop: "perp" | "spot",
+  nowMs: number,
+  spotAnomaly: SpotAnomaly,
+  perpAnomaly: PerpAnomaly,
+  soilReasons: string[],
+): BreachLine[] {
+  const lines = collectBreachForTrip(matrixLoop, nowMs, spotAnomaly, perpAnomaly);
+  const crossVenue = collectCrossVenueSlippageLine(soilReasons);
+  if (crossVenue) lines.push(crossVenue);
+  return lines;
+}
+
 function runTripInterception(
   label: string,
   keys: VenueKey[],
@@ -505,29 +511,27 @@ function runTripInterception(
   spotAnomaly: SpotAnomaly,
   perpAnomaly: PerpAnomaly,
   t0: bigint,
+  benchmark: DemoBenchmarkSnapshot,
 ): boolean {
   resetState();
   const tripCtx = buildTripContext(matrixLoop, true, gmxTrip, spotAnomaly, perpAnomaly);
   console.log(`\n${RED}${BOLD}${label} — Invariant Breach Interception${R}`);
 
   const soil = soilForStep(nowMs, tripCtx);
-  const tSoil = hrtimeStart();
-  withMatrixHudMute(() => checkSoilResistance(soil));
-  const soilLatencyUs = hrtimeElapsedUs(tSoil);
+  const soilProbe = withMatrixHudMute(() => checkSoilResistance(soil));
 
   printTripSoilReject();
-  printBreachBreakdown(collectBreachForTrip(matrixLoop, nowMs, spotAnomaly, perpAnomaly));
+  printBreachBreakdown(appendBreachLines(matrixLoop, nowMs, spotAnomaly, perpAnomaly, soilProbe.reasons));
   printR20DeadlockBanner(readActiveSystemState());
 
   const finalResult = evaluateLoop(keys, nowMs, tripCtx, readActiveSystemState());
   printTripVenueRows(finalResult.rows);
-  printExecutionLatencyBlock(soilLatencyUs, "  ");
 
   const ok = tripSuccess(finalResult.rows, hedge, matrixLoop);
   if (ok) {
     const n = finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length;
     console.log(`\n${RED}${BOLD}${label} — ${n}/${finalResult.rows.length} venues FAIL_CLOSED${R}`);
-    printVerificationLatencyBlock(hrtimeElapsedUs(t0), "  ");
+    printMatrixLatencySummary(benchmark.fullMatrixUs, hrtimeElapsedUs(t0));
   } else {
     console.log(`${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`);
   }
@@ -593,7 +597,7 @@ function main(): void {
       console.log(`\n${RED}${BOLD}🔴 HAPPY PATH INCOMPLETE — expected universal ALLOW${R}`);
       process.exitCode = 1;
     }
-    printVerificationLatencyBlock(hrtimeElapsedUs(t0), "  ");
+    printMatrixLatencySummary(benchmark.fullMatrixUs, hrtimeElapsedUs(t0));
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
@@ -611,6 +615,7 @@ function main(): void {
         spotAnomaly,
         perpAnomaly,
         t0,
+        benchmark,
       ) && allOk;
   }
   if (loop === "spot" || loop === "all") {
@@ -625,6 +630,7 @@ function main(): void {
         spotAnomaly,
         perpAnomaly,
         t0,
+        benchmark,
       ) && allOk;
   }
 
