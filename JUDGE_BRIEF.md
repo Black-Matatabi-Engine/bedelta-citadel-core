@@ -2,7 +2,8 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **217 test files | 967 PASS clean** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI · Shield **p50 ~106µs**
+> **SSOT Lock:** **217 test files | 967 PASS clean** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI  
+> **Latency hierarchy:** **p50 ~106µs** = E2E Edge Shield (Worker + TS Gateway + Wasm FFI) · **<15.0µs** = Wasm `rootProtection()` reflex core (`pnpm demo:matrix -- --trip`)
 
 ---
 
@@ -12,9 +13,9 @@
 
 | | **Cerebrum (LLM / Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
 |---|----------------------------------|-------------------------------------|
-| **Latency** | **~1.0s–10.0s** (CoT & tool calls) | **14.0µs–106.0µs** (0.014–0.106ms) |
+| **Latency** | **~1.0s–10.0s** (CoT & tool calls) | **E2E p50 ~106µs** (ALLOW) · **Reflex core <15.0µs** (FAIL_CLOSED) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
-| **On threat** | Out-of-scope calldata (Base / Aerodrome drift) | **<14.0µs** — severs EIP-712 channel · **$0 Gas** |
+| **On threat** | Out-of-scope calldata (Base / Aerodrome drift) | **<15.0µs** — severs EIP-712 channel · **$0 Gas** |
 
 **One-liner:** LLM emits toxic intent → Citadel severs signing **before** Sequencer queues → `pnpm demo:quad -- --trip`
 
@@ -42,7 +43,8 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
                                     │ (only if Layer 3 PASS)
 ┌─────────────────────────────────────────────────────────────────────────┐
 │ Layer 3 — SilverVine Pre-Broadcast Intent Firewall (Citadel Shield)   │
-│ Timescale: 14µs – 106µs (Edge Gateway + Wasm checkSoilResistance())   │
+│ E2E Edge Shield: p50 ~106µs (Worker + TS Gateway + Wasm FFI)          │
+│ Reflex core: <15.0µs rootProtection() physical deadlock severance      │
 │ Role: Microsecond FAIL-CLOSED reflex · severSigningChannel() · 0-Gas    │
 │ Position: BEFORE Layer 2 ingress — the involuntary safety reflex      │
 └─────────────────────────────────────────────────────────────────────────┘
@@ -81,7 +83,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 
 ## 30-Second Identity
 
-SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc risk dashboard. Edge `checkSoilResistance()` (**p50 ~106µs** · `pkg/soil_core.wasm` · ABI **v2**) + immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. Toxic AI Agent intents severed **before** Sequencer / Bundler ingress — **0-Gas** on blocked paths. ZeroDev AA = **opt-in Pillar 1** only (`USE_ZERODEV_AA` default-off).
+SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc risk dashboard. E2E Edge Shield **`checkSoilResistance()`** (**p50 ~106µs** · Worker + TS Gateway + Wasm FFI) + reflex-core **`rootProtection()`** (**<15.0µs** on `--trip`) + immutable **EIP-712 consume-once `SliverVineGate`** on Arbitrum One. Toxic AI Agent intents severed **before** Sequencer / Bundler ingress — **0-Gas** on blocked paths. ZeroDev AA = **opt-in Pillar 1** only (`USE_ZERODEV_AA` default-off).
 
 **Production highlights:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Gate · GMX v2 **0-Gas pre-flight** (`pnpm demo`) · Pendle Institutional Sentinel + AI Guarded Pool Factory · **V1.0 agent integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Sepolia Dune live + 42161 SQL pre-compiled · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
 

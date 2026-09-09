@@ -43,23 +43,23 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
                          │ (Intent Payload)
                          ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 15.0µs - 106.0µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
-     [ PASS: <106µs ]            [ FAIL: <14µs ]
+     [ PASS: <106µs ]            [ FAIL: <15µs ]
     Signature Released          Reflex Deadlock Severed
 ```
 
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Role** | Transport relay | Involuntary safety reflex |
-| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** (0.014ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
+| **Latency** | 50–300ms+ RTT (transport) | **15.0µs–106.0µs** (0.015ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
-| **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **<14.0µs** |
+| **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **<15.0µs** |
 
-**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **<14.0µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:quad -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **<15.0µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:quad -- --trip`.
 
 ### Legal & Regulatory Positioning
 

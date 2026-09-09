@@ -1,7 +1,8 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
 > **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
-> **Performance SSOT:** Each independent agent guard achieves **p50 ~106µs** Edge Wasm reflex — real agents operate in isolation without concurrent queue overhead.  
+> **Latency hierarchy:** **p50 ~106µs** = E2E Edge Shield (Cloudflare Worker + TS Gateway + Wasm FFI) · **<15.0µs** = Wasm `rootProtection()` reflex core (`pnpm demo:matrix -- --trip`).  
+> **Performance SSOT:** Each independent agent guard runs in isolation — ALLOW paths measure E2E Edge Shield; `--trip` paths measure reflex-core severance.  
 > **Venue SSOT:** Default **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) rotation** · manual `--venue=<protocol>` lock · `--trip` fail-closed.  
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
@@ -11,10 +12,12 @@
 ## Tier 1 — AI Agent Shield (Primary)
 
 ```bash
-pnpm demo:wayfinder                      # Default: 8-venue rotation · p50 ~106µs guard — ALLOW
-pnpm demo:langchain -- --venue=pendle    # Manual lock: Pendle PT/YT lane — ALLOW
-pnpm demo:virtuals -- --trip             # Fail-closed: toxic intent → <14µs rootProtection()
-pnpm demo:matrix -- --trip               # Full 7+1 Cross-Chain Execution Matrix · R20 physical deadlock severance
+# 4 Framework Guards — p50 ~106µs E2E Edge Shield
+pnpm demo:wayfinder                      # Default 7+1 venue rotation
+pnpm demo:langchain -- --venue=pendle    # Manual Pendle lane lock
+pnpm demo:langchain -- --trip            # Framework FAIL_CLOSED · <15.0µs reflex core
+# Standalone Matrix — <15.0µs Wasm rootProtection (no framework overhead)
+pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
 ```
 
 | Command | Scope |
@@ -25,7 +28,7 @@ pnpm demo:matrix -- --trip               # Full 7+1 Cross-Chain Execution Matrix
 | `pnpm demo:langchain` | LangGraph · **State Transition Guard** · default **8-venue rotation** |
 | `pnpm demo:<framework> -- --venue=<protocol>` | Lock a specific protocol lane (e.g. `--venue=aave`, `--venue=hl`) |
 | `pnpm demo:<framework> -- --trip` | Simulated toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
-| `pnpm demo:matrix -- --trip` | Full **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** · R20 trip + severance |
+| `pnpm demo:matrix -- --trip` | **Standalone** pure-math matrix reflex core (**<15.0µs** · no AI framework overhead) · 9/9 R20 severance |
 
 ---
 
@@ -71,7 +74,7 @@ Append `-- --trip` to any Tier 1 command for **FAIL_CLOSED** demonstration.
 
 ## Tier 2 — Agent Frameworks
 
-Each framework demo runs **one agent guard in isolation** — demonstrating **p50 ~106µs** Edge Wasm reflex without multi-agent concurrent queue overhead. All four demos (`wayfinder` · `elizaos` · `virtuals` · `langchain`) share identical CLI flags.
+Each framework demo runs **one agent guard in isolation** — **p50 ~106µs E2E Edge Shield** on ALLOW paths, **<15.0µs reflex core** on `--trip` — without multi-agent concurrent queue overhead. All four demos (`wayfinder` · `elizaos` · `virtuals` · `langchain`) share identical CLI flags.
 
 ### Demo modes
 
@@ -79,7 +82,7 @@ Each framework demo runs **one agent guard in isolation** — demonstrating **p5
 |------|------|----------|
 | **Default (rotated)** | *(none)* | Auto-selects a venue from the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** on each run. HUD prints `VENUE: <protocol> · rotated` plus the active `INVARIANT` check and protocol-specific intent. |
 | **Manual lock** | `--venue=<protocol>` | Locks a specific protocol lane. Example: `pnpm demo:langchain -- --venue=pendle` → HUD prints `VENUE: Pendle · locked`. |
-| **Fail-closed trip** | `--trip` | Forces simulated toxic intent / market invariant breach → **<14.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** pre-broadcast intercept. |
+| **Fail-closed trip** | `--trip` | Forces simulated toxic intent / market invariant breach → **<15.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** pre-broadcast intercept. |
 
 ```bash
 pnpm demo:wayfinder                      # Default 7+1 venue rotation

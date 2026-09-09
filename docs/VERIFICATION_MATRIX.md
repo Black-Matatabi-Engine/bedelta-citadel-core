@@ -6,6 +6,7 @@
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
 > **Vitest SSOT:** **217 test files | 967 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
+> **Latency hierarchy:** **p50 ~106µs** = E2E Edge Shield (Worker + TS Gateway + Wasm FFI) · **<15.0µs** = Wasm `rootProtection()` reflex core (`pnpm demo:matrix -- --trip`)  
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
@@ -27,18 +28,23 @@
 
 ```bash
 pnpm install
-pnpm demo:wayfinder                      # Default 7+1 venue rotation · p50 ~106µs — ALLOW
-pnpm demo:langchain -- --venue=pendle    # Manual venue lock — Pendle lane
-pnpm demo:wayfinder -- --trip            # Fail-closed · <14µs rootProtection()
-pnpm demo:matrix -- --trip               # 7+1 Cross-Chain Execution Matrix R20 severance
+# 4 Framework Guards — p50 ~106µs E2E Edge Shield
+pnpm demo:wayfinder                      # Default 7+1 venue rotation
+pnpm demo:langchain -- --venue=pendle    # Manual Pendle lane lock
+pnpm demo:langchain -- --trip            # Framework FAIL_CLOSED · <15.0µs reflex core
+# Standalone Matrix — <15.0µs Wasm rootProtection (no framework overhead)
+pnpm demo:matrix -- --trip               # 9/9 R20 severance · pure-math engine
+# Tier 0 Docker (no pnpm/Node)
+docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 pnpm test -- --run                       # 217 test files | 967 PASS clean
 ```
 
 | Command | Proves |
 |---------|--------|
-| `pnpm demo:wayfinder` | Independent agent guard · **default 7+1 venue rotation** · HUD `VENUE` + `INVARIANT` |
-| `pnpm demo:<framework> -- --venue=<protocol>` | Manual protocol lane lock across all 4 frameworks |
-| `pnpm demo:<framework> -- --trip` | Toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
+| `pnpm demo:wayfinder` | **E2E Edge Shield p50 ~106µs** · 7+1 venue rotation · HUD `VENUE` + `INVARIANT` |
+| `pnpm demo:<framework> -- --venue=<protocol>` | E2E Edge Shield · manual protocol lane lock |
+| `pnpm demo:<framework> -- --trip` | **Reflex core <15.0µs** · toxic intent → **0-Gas FAIL_CLOSED** |
+| `pnpm demo:matrix -- --trip` | **Reflex core <15.0µs** · canonical 9/9 matrix R20 severance proof |
 | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
@@ -53,7 +59,7 @@ All four demos — `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` — share:
 |------|--------|
 | *(default)* | Auto-rotates across **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)**: GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ · Hyperliquid L1 |
 | `--venue=<protocol>` | Locks venue (`gmx` · `pendle` · `uniswap` · `aave` · `morpho` · `usdai` · `hyperliquid`/`hl` · `variational`/`var`) |
-| `--trip` | Simulated toxic intent → **<14.0µs** Wasm `rootProtection()` deadlock |
+| `--trip` | Simulated toxic intent → **<15.0µs** Wasm `rootProtection()` deadlock |
 
 → Full tables & framework interception points: [`DEMO_GUIDE.md`](./DEMO_GUIDE.md)
 

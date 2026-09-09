@@ -2,27 +2,32 @@
 
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️**
 
-> ⚡ **0-Gas Fail-Closed Physical Deadlock (`rootProtection`):** Instantly severs EIP-712 signing channels in **<14.0µs** on Cloudflare Edge before toxic payloads ever reach Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
+> **Latency hierarchy (do not conflate):** **p50 ~106µs** = End-to-End **Edge Shield** path (Cloudflare Worker + TypeScript Gateway + Wasm FFI) · **<15.0µs** = Wasm **`rootProtection()` Reflex Core** & physical deadlock severance (`pnpm demo:matrix -- --trip`).
 >
-> 🧠 **Block AI Hallucinations & Prompt Injection:** Microsecond edge bitmask evaluation (**p50 ~106µs**) halting out-of-scope calldata and cross-chain intent drift in real-time.
+> ⚡ **0-Gas Fail-Closed Physical Deadlock (`rootProtection`):** Wasm reflex core severs EIP-712 signing channels in **<15.0µs** before toxic payloads reach Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
+>
+> 🧠 **Block AI Hallucinations & Prompt Injection:** Full Edge Shield bitmask evaluation (**p50 ~106µs** E2E) halting out-of-scope calldata and cross-chain intent drift in real-time.
 >
 > 🔒 **Unidirectional Escort & Single-Pass Pipeline:** Hardened execution boundaries across the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** with zero capital leakage (`lostUsd ≡ 0`).
 >
-> 🚀 **Independent Framework Guards:** Each AI agent runtime (Wayfinder · ElizaOS · Virtuals · LangChain) runs its own **p50 ~106µs** Edge Wasm reflex — **default 7+1 venue rotation** across the full Cross-Chain Execution Matrix, or lock a lane with `--venue=<protocol>`. Start with `pnpm demo:wayfinder`.
+> 🚀 **Independent Framework Guards:** Each AI agent runtime (Wayfinder · ElizaOS · Virtuals · LangChain) — **p50 ~106µs E2E Edge Shield** on ALLOW · **<15.0µs reflex core** on `--trip` — **default 7+1 venue rotation** or `--venue=<protocol>` lock. Start with `pnpm demo:wayfinder`.
 
 ---
 
 ## ⚡ 30-Second Judge Action Box
 
 ```bash
-# Tier 1 — Independent AI Agent Framework Guards (p50 ~106µs Wasm reflex each)
-pnpm demo:wayfinder                      # Wayfinder (Auto-rotates across 7+1 Cross-Chain Execution Matrix)
+# Tier 1 — 4 Independent AI Agent Framework Guards (p50 ~106µs E2E Edge Shield)
+pnpm demo:wayfinder                      # Wayfinder (Default: auto-rotates across 7+1 Matrix)
 pnpm demo:elizaos -- --venue=gmx         # ElizaOS (Manual lock to GMX v2 GM lane)
 pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME (Manual lock to Pendle PT/YT lane)
-pnpm demo:langchain -- --trip            # LangChain/LangGraph (Fail-closed: toxic intent -> <14µs rootProtection())
+pnpm demo:langchain -- --trip            # LangChain (Fail-closed: toxic intent -> <15.0µs deadlock)
 
-# Tier 1 — 7+1 Cross-Chain Execution Matrix Physical Deadlock Severance (<14.0µs)
-pnpm demo:matrix -- --trip
+# Tier 1 — Pure Standalone Matrix Reflex Core (<15.0µs Wasm rootProtection)
+pnpm demo:matrix -- --trip              # Standalone Pure-Math Engine (No AI Framework Overhead · 9/9 R20 Severance)
+
+# Tier 0 — Zero-Dependency Isolated Docker (For environments without pnpm/Node)
+docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 
 # Tier 1 — Full Regression Suite (217 test files | 967 PASS clean)
 pnpm test
@@ -30,18 +35,31 @@ pnpm test
 
 ---
 
+## ⚡ Latency Hierarchy (Judge SSOT)
+
+Citadel Shield reports **two distinct latency tiers** — judges should map each demo command to the correct tier:
+
+| Tier | Metric | Scope (what is measured) | Canonical demo |
+|------|--------|--------------------------|----------------|
+| **E2E Edge Shield** | **p50 ~106µs** | Cloudflare Worker + TypeScript Gateway + Wasm FFI (`checkSoilResistance()`) — full pre-broadcast guard path | `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` |
+| **Wasm Reflex Core** | **<15.0µs** | `rootProtection()` physical deadlock · `severSigningChannel()` — standalone pure-math engine (no AI framework overhead) | `pnpm demo:matrix -- --trip` (canonical) · `pnpm demo:<framework> -- --trip` |
+
+> **Excluded from both tiers:** L1/L2 block confirmation · sequencer finality · on-chain inclusion time.
+
+---
+
 ## ⚡ Neuromorphic Security Architecture (AEB Analogy)
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents** (**Pillar Set Y** · *Pre-Consensus Firewall & Reflex Defense*).
 
-**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **<14µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). The EIP-712 signing channel is severed while the intent is still in the cabin.
+**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **<15µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). The EIP-712 signing channel is severed while the intent is still in the cabin.
 
 | | **Cerebrum (LLM Reasoning & Agent Loop)** | **Cerebellum Reflex Arc (Citadel Shield)** |
 |---|-------------------------------------------|---------------------------------------------|
 | **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
-| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **14.0µs–106.0µs** (<0.1ms · 0.014ms–0.106ms) |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **E2E p50 ~106µs** (ALLOW) · **Reflex core <15.0µs** (FAIL_CLOSED) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
-| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough-cerebrum-hallucination)) | **<14.0µs** reflex — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to [Base / Aerodrome](#fail-closed-walkthrough-cerebrum-hallucination)) | **<15.0µs** reflex — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -52,16 +70,16 @@ pnpm test
                          │ (Intent Payload)
                          ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 14.0µs - 106.0µs)     │  <-- 0.014ms-0.106ms / Deterministic Fail-Closed
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 15.0µs - 106.0µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
-     [ PASS: <106µs ]            [ FAIL: <14µs ]
+     [ PASS: <106µs ]            [ FAIL: <15µs ]
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<14.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**.
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<15.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**.
 
 ---
 
@@ -71,7 +89,7 @@ pnpm test
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
-[![Benchmark Latency](https://img.shields.io/badge/Benchmark-p50_106%CE%BCs_E2E_Shield_(Kernel_200ns)-blueviolet?logo=speedtest)](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary)
+[![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_%3C15%CE%BCs-blueviolet?logo=speedtest)](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary)
 [![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)](./tsconfig.json)
 [![License](https://img.shields.io/badge/License-BUSL--1.1-orange)](./LICENSE)
 [![Foundry Citadel Gate](https://img.shields.io/badge/Foundry-Forge_Test_Passed-brightgreen?logo=solidity)](./SliverVineGate)
@@ -79,7 +97,7 @@ pnpm test
 
 <p align="center"><img src="public/brand/Detox_Sanctuary_wm.webp" alt="SliverVine Citadel Gate - Detox Sanctuary" width="600" style="border-radius: 8px;"></p>
 
-> **Latency scope:** **p50 ~106 µs** measures **TypeScript Gateway + Wasm `checkSoilResistance()` interception** on Cloudflare Edge — **not** L1/L2 block confirmation, sequencer finality, or on-chain inclusion time.
+> **Latency scope:** **p50 ~106µs** = E2E Edge Shield (Cloudflare Worker + TypeScript Gateway + Wasm FFI). **<15.0µs** = Wasm `rootProtection()` reflex-core severance only. Neither tier measures L1/L2 block time, sequencer finality, or on-chain inclusion.
 
 | Anchor | Value |
 |--------|-------|
@@ -257,19 +275,19 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 | Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
 |-----------|-------------------|-----------------------------|
 | **Cognitive role** | Transport relay (no reflex) | **Involuntary safety reflex** (pre-signature deadlock) |
-| **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** Edge Gateway + Wasm reflex (**not** block time) vs LLM **~1.0s–10.0s** reasoning loop |
+| **Latency** | 50–300ms+ RTT (transport) | **p50 ~106µs** E2E Edge Shield · **<15.0µs** reflex core (**not** block time) vs LLM **~1.0s–10.0s** reasoning loop |
 | **Determinism** | N/A | **100% deterministic** bitmask evaluation |
 | **On hallucination** | Forwards opaque calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
-| **Demo proof** | N/A | `pnpm demo:wayfinder` (7+1 venue rotation) · `--venue=pendle` lock · `--trip` FAIL_CLOSED |
+| **Demo proof** | N/A | E2E: `pnpm demo:wayfinder` · Reflex core: `pnpm demo:matrix -- --trip` |
 
 ### Fail-Closed Walkthrough — Cerebrum Hallucination
 
 **Scenario:** The LLM **Cerebrum** drifts into a **cross-chain intent hallucination** — routing a swap to **Aerodrome** (a legitimate Base-native protocol) while policy strictly authorizes only the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)**.
 
-> **Clarification:** Aerodrome is **out-of-scope**, not malicious. Citadel's Cerebellum triggers **<14.0µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution.
+> **Clarification:** Aerodrome is **out-of-scope**, not malicious. Citadel's Cerebellum triggers **<15.0µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution.
 
 1. **Cerebrum emits out-of-scope cross-chain calldata** (`~2,000ms` Chain-of-Thought).
-2. **Cerebellum reflex** — Base/Aerodrome outside Arbitrum allowlist → **FAIL-CLOSED** in **<14.0µs**.
+2. **Cerebellum reflex** — Base/Aerodrome outside Arbitrum allowlist → **FAIL-CLOSED** in **<15.0µs**.
 3. **`severSigningChannel()`** — **0-Gas**, no Sequencer queue entry.
 4. **Judge reproduction:** `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`
 
@@ -277,13 +295,13 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 
 ## ⚡ Agent Framework Demo Modes (Wayfinder · ElizaOS · Virtuals · LangChain)
 
-All four independent agent framework demos share the same CLI surface — each runs **one guard in isolation** with **p50 ~106µs** Edge Wasm reflex (no concurrent multi-agent queue overhead).
+All four independent agent framework demos share the same CLI surface — each runs **one guard in isolation** with **p50 ~106µs E2E Edge Shield** on ALLOW paths and **<15.0µs reflex core** on `--trip` (no concurrent multi-agent queue overhead).
 
 | Mode | Command pattern | Behavior |
 |------|-----------------|----------|
 | **Default (rotated)** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Auto-selects a venue from the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** (rotates per harness clock). HUD prints `VENUE` · `INVARIANT` · protocol-specific intent. |
 | **Manual lock** | `pnpm demo:<framework> -- --venue=<protocol>` | Locks a specific protocol lane. Example: `pnpm demo:langchain -- --venue=pendle` |
-| **Fail-closed trip** | `pnpm demo:<framework> -- --trip` | Simulates toxic intent / market invariant breach → **<14.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** |
+| **Fail-closed trip** | `pnpm demo:<framework> -- --trip` | Simulates toxic intent / market invariant breach → **<15.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** |
 
 **7+1 Cross-Chain Execution Matrix venues** (7 Arbitrum Native + 1 Hyperliquid L1 · accepted `--venue` keys):
 
@@ -307,10 +325,12 @@ All four independent agent framework demos share the same CLI surface — each r
 ### Flagship Demos (Tier 1 — AI Agent Shield)
 
 ```bash
-pnpm demo:wayfinder                        # Default 7+1 venue rotation · p50 ~106µs Wasm reflex
-pnpm demo:langchain -- --venue=aave        # Manual lock — Aave V3 supply lane
-pnpm demo:elizaos -- --trip                # Fail-closed soil trip · any framework supports --trip
-pnpm demo:matrix -- --trip                 # 7+1 Cross-Chain Execution Matrix · R20 physical deadlock severance
+# 4 Framework Guards — p50 ~106µs E2E Edge Shield
+pnpm demo:wayfinder                        # Default 7+1 venue rotation
+pnpm demo:langchain -- --venue=aave        # Manual Aave V3 lane lock
+pnpm demo:elizaos -- --trip                # Framework FAIL_CLOSED · <15.0µs reflex core
+# Standalone Matrix — <15.0µs Wasm rootProtection (no framework overhead)
+pnpm demo:matrix -- --trip                 # 9/9 R20 severance · pure-math engine
 pnpm demo:escort                           # Pillar Set X multi-route compliance escort · lostUsd ≡ 0
 ```
 
@@ -325,7 +345,9 @@ pnpm demo:e2e   # 5-Step Macro Lifecycle CLI
 pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 ```
 
-### Path 2: Isolated Docker
+### Tier 0 — Zero-Dependency Isolated Docker
+
+Same command as the [30-Second Judge Action Box](#-30-second-judge-action-box) — for environments without `pnpm`/Node:
 
 ```bash
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
@@ -340,9 +362,10 @@ Full dual-axis verification (Zone A → B → C), `demo:e2e` diff output, and bu
 | Layer | Metric |
 |-------|--------|
 | **Vitest SSOT** | **217 test files | 967 PASS clean** · Chaos **255/255** fail-closed |
-| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · **ABI v2** · 28-protocol-slot FFI · Shield **p50 ~106 µs** · warm **< 60 µs** |
+| **E2E Edge Shield** | **p50 ~106µs** — Cloudflare Worker + TS Gateway + Wasm FFI (`checkSoilResistance()`) |
+| **Wasm reflex core** | **<15.0µs** — `rootProtection()` physical deadlock · `pnpm demo:matrix -- --trip` |
+| **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · **ABI v2** · 28-protocol-slot FFI · warm **< 60 µs** |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
-| **Edge latency** | p50 ~106 μs Shield path · pure-math kernel **200 ns** |
 | **Foundry Gate** | **60/60** unit tests · **327,675** deep fuzz (`pnpm audit:nightly`) · **95.51%** line coverage |
 | **Deep fuzz (standard)** | **5,120** = 5×1,024 (`forge test`) |
 

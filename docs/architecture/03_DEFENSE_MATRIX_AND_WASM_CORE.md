@@ -2,9 +2,9 @@
 
 > **Primary Highlights (Direction B — The Shield):**
 > - **Pure-Math Risk Engine** — **~1.0µs** pure invariant evaluation · zero async on the hot path · 28-protocol-slot bitmask vectoring
-> - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **<14µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
+> - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **<15µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
 > - **Wasm Soil Core** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · Shield **p50 ~106 µs** · warm **< 60 µs**
-> - **Physical Deadlock** — toxic intent severed in **<14µs** before EIP-712 broadcast · **0-Gas** fail-closed
+> - **Physical Deadlock** — toxic intent severed in **<15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 >
 > **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **217 test files | 967 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
@@ -182,14 +182,14 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 
 **Status:** **17 Active | 2 Refactored | 1 Deprecated** · Full rule table: [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md#defense-matrix-r01-r20).
 
-**Bitmask SSOT:** All R01–R20 rules compile into a single defense bitmask evaluated atomically by `checkSoilResistance()` — any trip bit set → **FAIL-CLOSED** in **<14µs** via `rootProtection()` / `severSigningChannel()` before EIP-712 signing channel release.
+**Bitmask SSOT:** All R01–R20 rules compile into a single defense bitmask evaluated atomically by `checkSoilResistance()` — any trip bit set → **FAIL-CLOSED** in **<15µs** via `rootProtection()` / `severSigningChannel()` before EIP-712 signing channel release.
 
 | Tier | Rules | Role |
 |------|-------|------|
 | **Pre-execution soil** | R01 · R03 · R04 · R05† | Wasm soil fuse · L2 stale book · Pgate latency |
 | **Session / AA** | R06 · R07 · R08 · R14 | Scoped keys · notional cap · nonce heal · re-auth |
 | **Saga / flatten** | R09 · R10 · R12 · R13 | 2PC ledger · auto-flatten · leverage scaling · black-swan halt |
-| **Severance** | R17 · R20 · R02 | Daily loss cutoff · **<14µs physical deadlock** · `rootProtection()` |
+| **Severance** | R17 · R20 · R02 | Daily loss cutoff · **<15µs physical deadlock** · `rootProtection()` |
 | **Anchors / infra** | R11 · R15 · R16 · R18 · R19 | Dynamic SL · CCXT harness · 5-TX provenance · KV hardlock |
 
 † R05 SpoofBuster — **Deprecated** (superseded by soil / depth gate).
