@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
-> **Flagship demos (Tier 1 — AI Agent Shield):** `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
+> **Buildathon Primary (The Shield):** `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 

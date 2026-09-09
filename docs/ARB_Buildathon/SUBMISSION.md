@@ -45,7 +45,7 @@
 
 ---
 
-## 🛡️ AI Agent Pre-Consensus Firewall (Direction B — The Shield)
+## 🛡️ AI Agent Pre-Consensus Firewall (The Shield — Buildathon Primary)
 
 SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & Cerebellum Reflex Arc for AI Agents** — not a passive RPC relay. It intercepts toxic agent intents at **p50 ~106µs** (TypeScript Gateway + Wasm `checkSoilResistance()`) **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
 
@@ -111,6 +111,29 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 
 ---
 
+## 🏛️ Citadel-Armor Sovereign Vault (Live MVP Strategy)
+
+SilverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** (Sovereign Delta Pool) is the live mainnet MVP demonstrating that **active microsecond circuit breaking** unlocks GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
+
+| Lane | Wallet | Venue | Role |
+|------|--------|-------|------|
+| **Wallet A — Hedge Engine** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
+| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One GMX v2 | GM LP deposit/withdraw only · **+10 bps builder fee** treasury lane |
+
+**Financial thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — `checkSoilResistance()` severs toxic paths at **p50 ~106µs** before they impact vault NAV; cross-wallet hedge cron maintains **Δ_net ≡ 0**.
+
+**Live mainnet proofs:** GM deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · approve [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md)
+
+```bash
+pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate (42161)
+pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
+pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
+```
+
+> **Buildathon evaluators:** Start with **The Shield** sections above (`pnpm demo:quad` · `pnpm demo:matrix -- --trip`). Sovereign Vault workflow is supplementary live-MVP evidence for grant due diligence.
+
+---
+
 ## Submission Metadata
 
 | Field | Value |
@@ -125,7 +148,7 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
 | **Worker bundle (hot-path)** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`572e5cd`** — Direction B Shield-first SSOT · dual-wallet workflow · **217/967** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
+| **Verified Commit** | `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · **217/967** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
 ### Core Sinking SSOT (`src/core/`)
 

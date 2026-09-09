@@ -14,17 +14,17 @@
 
 ## Start Here — Grant Reviewers & Institutional Auditors
 
-**Direction A (The Spear) — Recommended reading path for Grant Evaluators:**
+**Citadel-Armor Sovereign Vault — Recommended reading path for Grant Evaluators:**
 
 | Step | Document | What you verify |
 |------|----------|-----------------|
-| **1** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Primary Grant Technical SSOT** — dual-wallet Δ-neutral yield engine · Wallet B GM vault · Wallet A HL hedge · cold-start margin guard |
+| **1** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Citadel-Armor Sovereign Vault SSOT** — Sovereign Delta Pool · Wallet B GM vault · Wallet A HL hedge · near-zero drawdown thesis |
 | **2** | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Production Workflow SSOT (Live Mainnet 42161)** · CLI Tier 0–5 · settlement contracts · live Arbiscan proofs |
 | **3** | On-Chain Settlement Contracts (in Verification Matrix §3) | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` · GatePolicyLink `0xe4ef5350…` |
 | **4** | `execute:gmx:*` CLI commands (in Verification Matrix) | `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:e2e:arb-native` |
 
 ```bash
-# Grant evaluator quick-start (Direction A)
+# Grant evaluator quick-start (Citadel-Armor Sovereign Vault)
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate
 pnpm execute:gmx:gm-deposit           # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
 pnpm demo:e2e                         # 4-step Happy Path macro lifecycle HUD
@@ -37,7 +37,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 
 | # | Document | Role |
 |---|----------|------|
-| 1 | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Primary Grant Technical SSOT** — Δ-neutral yield engine · dual-wallet workflow · cold-start guard |
+| 1 | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Citadel-Armor Sovereign Vault SSOT** — near-zero drawdown · maximum Sharpe · dual-wallet workflow |
 | 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **CLI Tier 0–5 Verification Entry** — reproducible PASS bars · mainnet settlement plane |
 | 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
 | 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
@@ -67,7 +67,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 ```text
 docs/
  README.md ← you are here
- PRODUCTION_WORKFLOW_DEEP_DIVE.md ← Grant Technical SSOT (Direction A · start here)
+ PRODUCTION_WORKFLOW_DEEP_DIVE.md ← Citadel-Armor Sovereign Vault SSOT (start here)
  VERIFICATION_MATRIX.md Tier 0–5 CLI map (evaluators · mainnet settlement)
  architecture/ Yellow Paper · standards wiki · risk mitigation & disclaimer framework
  audit/ DDIP · ZeroDev analysis · Robinhood gate · principal audit

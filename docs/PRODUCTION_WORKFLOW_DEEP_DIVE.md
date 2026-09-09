@@ -1,15 +1,15 @@
-# 🏹 SliverVine Citadel — Production Workflow Deep Dive (Grant Technical SSOT)
+# 🏛️ SliverVine Citadel — Production Workflow Deep Dive (Citadel-Armor Sovereign Vault SSOT)
 
-**Document role:** **Primary Grant Technical SSOT** — authoritative English reference for the dual-wallet **Delta-Neutral Yield Engine** on Arbitrum One (`42161`).  
-**Direction A (The Spear):** High-efficiency, **non-custodial** yield routing — **100% active** GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
-**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `94ce3e3` (Direction B Shield SSOT) · **217 test files | 967 PASS clean**  
+**Document role:** **Citadel-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`).  
+**Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
+**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (Citadel-Armor SSOT) · **217 test files | 967 PASS clean**  
 **Related:** [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) · [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md)
 
 ---
 
 ## Executive Summary
 
-SliverVine Citadel is a **High-Efficiency, Non-Custodial Delta-Neutral Yield Engine** for institutional funds and AI Agents. Capital earns **GMX v2 GM Pool Real Yield** on Arbitrum while directional exposure is neutralized by a **1× perp short** on Hyperliquid L1 — locked at **Δ_net ≡ 0**.
+SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** (Sovereign Delta Pool) is our live MVP proving that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
 
 | Plane | Wallet | Venue | Responsibility |
 |-------|--------|-------|----------------|
@@ -247,4 +247,4 @@ pnpm demo:e2e -- --unwind           # + Step 5 R20 exercise
 
 ---
 
-*SilverVine Labs · Production Workflow SSOT · HEAD `94ce3e3` · 217 test files | 967 PASS clean*
+*SilverVine Labs · Citadel-Armor Sovereign Vault SSOT · HEAD `3f26efa` · 217 test files | 967 PASS clean*

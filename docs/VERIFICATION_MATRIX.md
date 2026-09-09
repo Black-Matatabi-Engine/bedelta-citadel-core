@@ -10,7 +10,7 @@
 
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`. Forge **60/60** · Cargo `citadel_invariants` **2/2** · Cargo Stylus **9/9** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Opt-In Pillar 1 · Dry-Run Harness Verified** (Kernel v3 / EntryPoint v0.7 · `USE_ZERODEV_AA` default-off).
 
-> **🏹 Grant Evaluators (Direction A — The Spear):** Start with [**Production Workflow SSOT**](#production-workflow-ssot-live-mainnet--42161) below, then [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) for the full dual-wallet Δ-neutral yield engine narrative.
+> **🏛️ Grant Evaluators — Citadel-Armor Sovereign Vault:** Start with [**Production Workflow SSOT**](#production-workflow-ssot-live-mainnet--42161) below, then [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) for the full Sovereign Delta Pool narrative. **Buildathon primary:** The Shield — `pnpm demo:quad` · `pnpm demo:matrix -- --trip`.
 
 ### Dual-Wallet Cross-Venue SSOT (Wallet A × Wallet B)
 
@@ -23,7 +23,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 ### Production Workflow SSOT (Live Mainnet · 42161) — Grant Evaluator Entry Point
 
-> **Direction A (The Spear):** High-efficiency, non-custodial **Δ-neutral yield engine** — GMX v2 GM Real Yield (Wallet B) + Hyperliquid 1× short hedge (Wallet A) · **Δ_net ≡ 0** · **+10 bps `uiFeeReceiver`** protocol revenue.
+> **Citadel-Armor Sovereign Vault:** High-efficiency, non-custodial **Sovereign Delta Pool** — GMX v2 GM Real Yield (Wallet B) + Hyperliquid 1× short hedge (Wallet A) · **Δ_net ≡ 0** · **Near-Zero Drawdown, Maximum Sharpe Ratio** · **+10 bps `uiFeeReceiver`** protocol revenue.
 >
 > **Three-Tier Architecture:** Edge pre-broadcast (0-Gas `checkSoilResistance`) → **Dual-Wallet Execution Plane** → **On-Chain Settlement Plane (Phase A+B+C · Verified @ `572e5cd`)** · Full workflow: [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md)
 
@@ -84,7 +84,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **Vitest baseline** | **217 test files | 967 PASS clean** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Verified commit** | `main` @ **`94ce3e3`** (Direction A+B SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
+| **Verified commit** | `main` @ **`3f26efa`** (Citadel-Armor SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
 | **Phase B — GmxSoilMatrixSwitch** | Single **SLOAD** defense bitmap · **47 LOC** + `DefenseMatrixBitmap` **66 LOC** | [`GmxSoilMatrixSwitch.sol`](../contracts/GmxSoilMatrixSwitch.sol) · Forge **8/8** |
 | **Phase C — citadel_invariants** | Stylus/Wasm coprocessor `evaluate_packed` · TS/Rust parity · **PolicyGuardV2** Stylus staticcall + `GmxRiskInvariantLib` fallback | [`contracts/citadel_invariants/`](../contracts/citadel_invariants/) · `pnpm build:citadel-invariants` · [`stylus-gmx-parity.test.ts`](../tests/wasm/stylus-gmx-parity.test.ts) **6/6** · Cargo **2/2** |
@@ -160,7 +160,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 ### Phase A+B+C — GMX On-Chain Invariant Stack (Solidity · Stylus · Wasm)
 
-> **Status:** **100% delivered @ `94ce3e3`** — three-layer GMX wire audit path from pure Solidity fallback through single-SLOAD soil matrix to optional Stylus coprocessor.
+> **Status:** **100% delivered @ `572e5cd`** — three-layer GMX wire audit path from pure Solidity fallback through single-SLOAD soil matrix to optional Stylus coprocessor.
 
 | Layer | SSOT module | Role | LOC | Verification |
 |-------|-------------|------|-----|--------------|
@@ -288,7 +288,7 @@ Production hedge logs: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROS
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Mainnet GM I/O (Direction A)** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:matrix` | Arbitrum Native USDC GM deposit · live Wallet B multicall · GMX · HL · **7-protocol matrix** |
+| **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:matrix` | Arbitrum Native USDC GM deposit · live Wallet B multicall · GMX · HL · **7-protocol matrix** |
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
@@ -821,4 +821,4 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · 217 test files | 967 PASS clean · HEAD `94ce3e3`*
+*SilverVine Labs · BUSL-1.1 · Verification Matrix · 217 test files | 967 PASS clean · HEAD `3f26efa`*

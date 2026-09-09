@@ -1,8 +1,10 @@
-# 🛡️ The Shield & Cerebellum Reflex Arc
+# 🛡️ The Shield & Citadel-Armor Sovereign Vault
 
-**SliverVine Citadel — Pre-Consensus Intent Execution Calibration Layer & Cerebellum Reflex Arc for AI Agents** · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs
+**SliverVine Citadel — Pre-Consensus Intent Execution Calibration Layer for AI Agents** · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️
 
-> **Buildathon Direction B (The Shield):** Sub-ms **p50 ~106µs** Edge/Wasm inspection · **<14µs** physical deadlock (`rootProtection`) · **0-Gas fail-closed** protection against LLM hallucinations and prompt injection · multi-framework support via **`pnpm demo:quad`** (ElizaOS · Wayfinder · Virtuals · LangChain).
+> **Buildathon Primary (The Shield):** Sub-ms **p50 ~106µs** Edge/Wasm inspection · **<14µs** physical deadlock (`rootProtection`) · **0-Gas fail-closed** protection against LLM hallucinations and prompt injection · multi-framework support via **`pnpm demo:quad`** (ElizaOS · Wayfinder · Virtuals · LangChain).
+>
+> **Financial thesis (Citadel-Armor Sovereign Vault):** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — live MVP proving GMX v2 Real Yield with **Δ_net ≡ 0** hedging on Arbitrum One (`42161`).
 
 ## ⚡ 3-Second TL;DR for Judges (Neuromorphic Security)
 
@@ -70,7 +72,7 @@
 | Anchor | Value |
 |--------|-------|
 | **Vitest baseline** | **217 test files | 967 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** |
-| **Canonical HEAD** | **`572e5cd`** · `git rev-parse HEAD` |
+| **Canonical HEAD** | **`572e5cd`** (Phase A+B+C mainnet) · **`3f26efa`** (Citadel-Armor SSOT) · `git rev-parse HEAD` |
 | **Wasm ABI v2** | `pkg/soil_core.wasm` · `soil_core_abi_version() = 2` · **28-protocol-slot** FFI (`PROTO_VECT_LEN=28`) — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` · slots **28–35** = soil math input |
 | **Security scorecard** | **3-Tier Security Scorecard: 5/0/0 PASS** · `pnpm run audit:security` |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Shield **p50 ~106 µs** · warm **< 60 µs** |
@@ -133,9 +135,9 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 
 ---
 
-## 🏹 The Spear — Delta-Neutral Yield Engine (Direction A · Grant SSOT)
+## 🏛️ Citadel-Armor Sovereign Vault (Live MVP · Sovereign Delta Pool)
 
-SliverVine Citadel is a **High-Efficiency, Non-Custodial Delta-Neutral Yield Engine** — **100% active** routing to GMX v2 GM Pools (ETH/USDC) for **Real Yield**, combined with **1× Hyperliquid perp short** hedging via session keys until **Δ_net ≡ 0**.
+SilverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** is our live MVP proving that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio** — **100% active** routing to GMX v2 GM Pools (ETH/USDC) + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.
 
 | Lane | Wallet | Venue | Role |
 |------|--------|-------|------|
