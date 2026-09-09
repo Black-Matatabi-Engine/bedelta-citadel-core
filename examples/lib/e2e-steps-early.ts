@@ -53,8 +53,8 @@ import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 
 export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
   logE2eStep(1, "Citadel Pre-Execution Gatehouse & Sub-ms Wasm Shield", [
-    "[Pillar 1: Gatehouse] ZeroDev Kernel v3 AA Session Keys · 0-Gas Paymaster",
-    "[Pillar 3: Citadel Shield] checkSoilResistance() sub-ms Wasm Intent Clearing",
+    "[Pillar Set Y: Pre-Consensus Firewall] checkSoilResistance() sub-ms Wasm Intent Clearing",
+    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA Session Keys",
   ]);
   e2eLog(`Vault Capital: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN} | Asset Pair: ETH/USDC`);
   ensureSoilWasm();
@@ -128,7 +128,7 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
 }
 
 export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
-  logE2eStep(2, "Unidirectional Compliance Escort — AML Inbound Firewall", "[Pillar 2: Compliance Ingress Firewall] Across Intent-Based Unidirectional Escort");
+  logE2eStep(2, "Unidirectional Compliance Escort — AML Inbound Firewall", "[Pillar Set X: Compliance Escort] Across Intent-Based Unidirectional Escort");
   const outbound = assertUnidirectionalBridge({
     sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
     destChainId: ARBITRUM_ONE_CHAIN_ID,
@@ -157,7 +157,7 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
   if (inbound.ok || inbound.capitalLabel !== AML_INBOUND_TO_ROBINHOOD_BLOCKED) {
     throw new Error("STEP2_AML_INBOUND_NOT_BLOCKED");
   }
-  e2eLog(`RESULT: 🟢 Pillar 2 Ingress PASS — Outbound Escort Active · Inbound AML Blocked · ${E2E_LOST_USD_INVARIANT}`);
+  e2eLog(`RESULT: 🟢 Pillar Set X Ingress PASS — Outbound Escort Active · Inbound AML Blocked · ${E2E_LOST_USD_INVARIANT}`);
   return { outboundOk: true, inboundBlocked: true, capitalLabel: inbound.capitalLabel };
 }
 

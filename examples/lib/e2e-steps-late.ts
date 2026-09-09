@@ -137,7 +137,7 @@ export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
   logE2eStep(
     5,
     "Citadel Shield Exercise — R20 Physical Deadlock & Panic Flash Unwind",
-    "[Pillar 3: Citadel Shield] Always-On Circuit Breaker · Demonstrating Emergency 0-Gas Unwind",
+    "[Pillar Set Y: Pre-Consensus Firewall] Always-On Circuit Breaker · Demonstrating Emergency 0-Gas Unwind",
   );
   __resetCircuitBreakerSeverForTests();
   const toxicSoil = checkSoilResistance({

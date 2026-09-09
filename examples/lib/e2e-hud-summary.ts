@@ -38,14 +38,14 @@ export function printE2eSummaryHud(
   e2eLog("[ PIPELINE EXECUTION ]");
   e2eLog(
     fmtSummaryRow(
-      "Step 1: Pre-Execution Gatehouse & Wasm Shield",
+      "Step 1: Pillar Set Y Firewall & Pillar Set X Ingress",
       s1.ok && s1.deadmanOk,
       fmtWasmHotPath(s1.wasmHotPathUs),
     ),
   );
   e2eLog(
     fmtSummaryRow(
-      "Step 2: Pillar 2 Compliance Ingress Escort",
+      "Step 2: Pillar Set X Compliance Escort",
       s2.ok,
       `Robinhood -> Arbitrum · ${E2E_LOST_USD_INVARIANT}`,
     ),

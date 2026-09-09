@@ -17,20 +17,20 @@
 ## ⚡ 30-Second Judge Action Box
 
 ```bash
-# Tier 1 — 4 Independent AI Agent Framework Guards (p50 ~106µs E2E Edge Shield)
-pnpm demo:wayfinder                      # Wayfinder (Default: auto-rotates across 7+1 Matrix)
-pnpm demo:elizaos -- --venue=gmx         # ElizaOS (Manual lock to GMX v2 GM lane)
-pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME (Manual lock to Pendle PT/YT lane)
-pnpm demo:langchain -- --trip            # LangChain (Fail-closed: toxic intent -> p50 ~15µs deadlock)
+# === Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (PRIMARY FLAGSHIP) ===
+pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E Edge Shield)
+pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
+pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME Guard (Manual lock to Pendle PT/YT)
+pnpm demo:langchain -- --trip            # LangChain AI Guard (p50 ~15µs Physical Deadlock)
+pnpm demo:matrix -- --trip              # Standalone Pure-Math Engine (9/9 Matrix R20 Severance)
 
-# Tier 1 — Pure Standalone Matrix Reflex Core (p50 ~15µs Wasm rootProtection)
-pnpm demo:matrix -- --trip              # Standalone Pure-Math Engine (No AI Framework Overhead · 9/9 R20 Severance)
+# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 
-# Tier 0 — Zero-Dependency Isolated Docker (For environments without pnpm/Node)
+# === Tier 0 & Regression Verification ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-
-# Tier 1 — Full Regression Suite (217 test files | 967 PASS clean)
-pnpm test
+pnpm test                                # Full Regression Suite (217 test files | 967 PASS clean)
 ```
 
 ---

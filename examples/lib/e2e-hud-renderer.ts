@@ -50,8 +50,8 @@ function highlight(line: string): string {
   out = out.replace(/0-Gas Sponsored|0-Gas Verified/g, `${YELLOW}$&${RESET}`);
   out = out.replace(/\[ ACTIVE \]|\[ PASSED \]|\[ ALLOWED \]|\[ VERIFIED \]/g, `${GREEN}$&${RESET}`);
   out = out.replace(/\[ REJECTED \]/g, `${RED_BOLD}[ REJECTED ]${RESET}`);
-  out = out.replace(/Step [1345].*PASS|Pillar 2 Ingress PASS/g, `${GREEN}$&${RESET}`);
-  out = out.replace(/Pillar [123]/g, (m) => `${BRIGHT_CYAN}${m}${RESET}`);
+  out = out.replace(/Step [1345].*PASS|Pillar Set X Ingress PASS/g, `${GREEN}$&${RESET}`);
+  out = out.replace(/Pillar Set [XY]/g, (m) => `${BRIGHT_CYAN}${m}${RESET}`);
   out = out.replace(/Architecture:/g, `${CYAN}Architecture:${RESET}`);
   out = out.replace(/\b(IN_BAND|FAST_LOCAL|SETTLED)\b/g, `${GREEN}$&${RESET}`);
   out = out.replace(/\bOUT_OF_BAND\b/g, `${RED_BOLD}OUT_OF_BAND${RESET}`);
