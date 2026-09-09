@@ -3,6 +3,7 @@
  * Wayfinder Route Interception Demo — Citadel Shield on Arbitrum & Stabilizer Sepolia.
  * Usage: pnpm demo:wayfinder
  * Trip:  pnpm demo:wayfinder -- --trip
+ * Venue: pnpm demo:wayfinder -- --venue=gmx
  * Stabilizer: pnpm demo:wayfinder -- --stabilizer
  * Stabilizer trip: pnpm demo:wayfinder -- --stabilizer --trip
  */
@@ -16,7 +17,6 @@ import {
   type WayfinderRouteIntent,
 } from "../src/adapters/wayfinder/wayfinder-shield";
 import {
-  HEALTHY_SOIL,
   hudBackoff,
   hudBlocked,
   hudChannelOpen,
@@ -33,18 +33,28 @@ import {
   printResult,
   R,
   RED,
-  TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 import { isDemoTripArgv, withDemoSoil, wrapDemoExecution } from "./lib/demo-harness";
+import {
+  buildAgentIntent,
+  parseDemoVenueArgv,
+  printAgentVenueHud,
+  resolveAgentVenue,
+  type AgentVenueContext,
+} from "./lib/agent-venue-matrix";
 
-async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Promise<void> {
+async function runArbitrumDemo(
+  payload: WayfinderRouteIntent,
+  trip: boolean,
+  venue: AgentVenueContext,
+): Promise<void> {
   const agentId = payload.agentId ?? "wayfinder-demo";
   const chainId = payload.chainId ?? 42161;
-  const intent = payload.intent ?? "WAYFINDER_ONCHAIN_INTENT";
+  const intent = payload.intent ?? buildAgentIntent(venue, trip);
 
-  hudIntent(agentId, "Wayfinder", intent, `Arbitrum ${chainId} · GMX v2 ETH/USDC GM`);
+  hudIntent(agentId, "Wayfinder", intent, `${venue.chainLabel} · ${venue.hudVenue}`);
 
   const t0 = hrtimeStart();
   const soilProbe = checkSoilResistance({
@@ -61,7 +71,7 @@ async function runArbitrumDemo(payload: WayfinderRouteIntent, trip: boolean): Pr
 
   if (result.success && result.status === "ALLOW") {
     hudChannelOpen();
-    hudDispatched(`Wayfinder Agent Engine → Arbitrum ${chainId}`, result.latencyUs ?? 0);
+    hudDispatched(`Wayfinder Agent Engine → ${venue.label} · Arbitrum ${chainId}`, result.latencyUs ?? 0);
     printResult(true);
     return;
   }
@@ -159,8 +169,12 @@ wrapDemoExecution(async ({ nowMs, at }) => {
   const trip = isDemoTripArgv();
   const stabilizer = process.argv.includes("--stabilizer");
 
+  const venue = resolveAgentVenue(nowMs);
+  const venueLocked = parseDemoVenueArgv() !== undefined;
+
   printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
   printMode(trip);
+  if (!stabilizer) printAgentVenueHud(venue, venueLocked);
 
   if (stabilizer) {
     const swap: StabilizerSwapInput = trip
@@ -190,9 +204,10 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     return;
   }
 
+  const intent = buildAgentIntent(venue, trip);
   const payload: WayfinderRouteIntent = trip
-    ? { ...withDemoSoil(TOXIC_SOIL, at), nowMs, intent: "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN", agentId: "wayfinder-demo", chainId: 42161 }
-    : { ...withDemoSoil(HEALTHY_SOIL, at), nowMs, intent: "DELTA_NEUTRAL_GM_DEPOSIT", agentId: "wayfinder-demo", chainId: 42161 };
+    ? { ...withDemoSoil(venue.toxicSoil, at), nowMs, intent, agentId: "wayfinder-demo", chainId: 42161 }
+    : { ...withDemoSoil(venue.healthySoil, at), nowMs, intent, agentId: "wayfinder-demo", chainId: 42161 };
 
-  await runArbitrumDemo(payload, trip);
+  await runArbitrumDemo(payload, trip, venue);
 });
