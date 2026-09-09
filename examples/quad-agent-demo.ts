@@ -1,19 +1,14 @@
 #!/usr/bin/env tsx
 /**
- * Quad-Agent Framework Demo — all four major AI agent runtimes protected by Citadel.
- * Usage: pnpm demo:quad
- * Trip:  pnpm demo:quad -- --trip
+ * Multi-AI Framework Demo — four major agent runtimes protected by Citadel.
+ * Usage: pnpm demo:multi-ai-framework
+ * Legacy: pnpm demo:quad
+ * Trip:   pnpm demo:multi-ai-framework -- --trip
  */
-import { evaluateElizaCitadelAction } from "../src/adapters/elizaos/elizaos-citadel-plugin";
-import { CitadelRiskGuardTool } from "../src/adapters/langchain/langchain-citadel-tool";
-import { evaluateVirtualsGameTask } from "../src/adapters/virtuals/virtuals-game-adapter";
-import { wayfinderCitadelShieldHook } from "../src/adapters/wayfinder/wayfinder-shield";
 import {
-  HEALTHY_SOIL,
   hudBlocked,
   hudChannelOpen,
   hudDispatched,
-  hudIntent,
   hudSevered,
   hudSoilFuse,
   printBanner,
@@ -21,132 +16,30 @@ import {
   printResult,
   R,
   RED,
-  TOXIC_SOIL,
 } from "./adapters/citadel-ansi-hud";
 import {
   formatExecutionLatency,
   formatGuardTime,
-  hrtimeStart,
-  hrtimeElapsedUs,
-  resolveLatency,
   printDynamicBenchmarkBreakdown,
   printIntentLayerBanner,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
 import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
+import { printFrameworkBoundary } from "./lib/framework-boundary-hud";
+import { QUAD_FRAMEWORKS, type FrameworkResult } from "./lib/quad-framework-runs";
+
+const GRAY = "\x1b[90m";
+const BOLD = "\x1b[1m";
 
 const SESSION_BASE = {
   agentAddress: "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
   maxOrderClipUsd: 30,
 };
 
-type FrameworkResult = {
-  framework: string;
-  status: string;
-  ok: boolean;
-  latencyUs: number;
-  detail?: string;
-};
-
-async function runWayfinder(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
-  const agentId = "quad-wayfinder";
-  hudIntent(agentId, "Wayfinder", trip ? "TOXIC_ROUTE" : "DELTA_NEUTRAL_GM_DEPOSIT", "Arbitrum 42161");
-  const t0 = hrtimeStart();
-  const result = await wayfinderCitadelShieldHook.execute({
-    ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(nowMs),
-    agentId,
-    chainId: 42161,
-    nowMs: nowMs,
-    sessionKey: session,
-  });
-  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
-  return {
-    framework: "Wayfinder Agent Engine",
-    status: result.status,
-    ok: result.success,
-    latencyUs,
-    detail: result.reasons?.join("; "),
-  };
-}
-
-async function runElizaOS(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
-  const agentId = "quad-elizaos";
-  hudIntent(agentId, "ElizaOS", trip ? "TOXIC_ACTION" : "CITADEL_SOIL_GUARD", "GMX v2 ETH/USDC GM");
-  const t0 = hrtimeStart();
-  const result = await evaluateElizaCitadelAction(
-    { agentId },
-    {
-      soil: { ...(trip ? TOXIC_SOIL : HEALTHY_SOIL), at: new Date(nowMs) },
-      intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-      nowMs,
-      chainId: 42161,
-      sessionKey: session,
-    },
-  );
-  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
-  return {
-    framework: "ElizaOS Framework",
-    status: result.status,
-    ok: result.success,
-    latencyUs,
-    detail: result.reasons?.join("; ") ?? result.text,
-  };
-}
-
-async function runVirtuals(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
-  const agentId = "quad-virtuals";
-  hudIntent(agentId, "Virtuals GAME", trip ? "TOXIC_TASK" : "GAME_TRADE_INTENT", "GMX v2 ETH/USDC GM");
-  const t0 = hrtimeStart();
-  const result = await evaluateVirtualsGameTask({
-    ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(nowMs),
-    agentId,
-    chainId: 42161,
-    taskId: "game-quad-001",
-    intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-    nowMs,
-    sessionKey: session,
-  });
-  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
-  return {
-    framework: "Virtuals Protocol (GAME)",
-    status: result.status,
-    ok: result.success,
-    latencyUs,
-    detail: result.reasons?.join("; ") ?? result.message,
-  };
-}
-
-async function runLangChain(trip: boolean, nowMs: number, session: typeof SESSION_BASE & { expiresAtMs: number; approvedAtMs: number }): Promise<FrameworkResult> {
-  const agentId = "quad-langchain";
-  hudIntent(agentId, "LangChain", trip ? "TOXIC_TOOL_CALL" : "TRADE_INTENT", "LangGraph state node");
-  const t0 = hrtimeStart();
-  const result = await CitadelRiskGuardTool.invoke({
-    ...(trip ? TOXIC_SOIL : HEALTHY_SOIL),
-    at: new Date(nowMs),
-    agentId,
-    chainId: 42161,
-    intent: trip ? "PROMPT_INJECTION_HIGH_SLIPPAGE_OPEN" : "DELTA_NEUTRAL_GM_DEPOSIT",
-    nowMs,
-    sessionKey: session,
-  });
-  const latencyUs = resolveLatency(hrtimeElapsedUs(t0), result.latencyUs);
-  return {
-    framework: "LangChain / LangGraph",
-    status: result.status,
-    ok: result.success,
-    latencyUs,
-    detail: result.reasons?.join("; ") ?? result.output,
-  };
-}
-
 function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
   const color = trip ? (r.ok ? "\x1b[33;1m" : "\x1b[32;1m") : r.ok ? "\x1b[32;1m" : "\x1b[31;1m";
   const mark = trip ? (r.ok ? "⚠" : "✓") : r.ok ? "✓" : "✗";
-  console.log(
-    `${color}  ${mark} ${r.framework}${R} → ${r.status} · ${formatExecutionLatency(r.latencyUs)}`,
-  );
+  console.log(`${color}  ${mark} ${r.framework}${R} → ${r.status} · ${formatExecutionLatency(r.latencyUs)}`);
   if (!r.ok && r.detail) {
     console.log(`${GRAY}    ${r.detail}${R}`);
     hudSoilFuse(false, r.latencyUs, r.detail.split("; "));
@@ -160,25 +53,22 @@ function printFrameworkResult(r: FrameworkResult, trip: boolean): void {
   console.log();
 }
 
-const GRAY = "\x1b[90m";
-const BOLD = "\x1b[1m";
-
 wrapDemoExecution(async ({ nowMs }) => {
   const trip = isDemoTripArgv();
   const session = { ...SESSION_BASE, expiresAtMs: nowMs + 86_400_000, approvedAtMs: nowMs - 1_000 };
-  printBanner("Quad-Agent Framework Demo");
+  printBanner("Multi-AI Framework Demo");
   printIntentLayerBanner();
   printMode(trip);
 
   console.log(`${BOLD}Citadel Pre-Execution Risk Gateway — Four Major AI Agent Frameworks${R}\n`);
 
   const results: FrameworkResult[] = [];
-  for (const run of [runWayfinder, runElizaOS, runVirtuals, runLangChain]) {
-    results.push(await run(trip, nowMs, session));
+  for (const fw of QUAD_FRAMEWORKS) {
+    printFrameworkBoundary(fw);
+    const result = await fw.run(trip, nowMs, session);
+    printFrameworkResult(result, trip);
+    results.push(result);
   }
-
-  console.log(`${BOLD}── Per-Framework Benchmark ──${R}\n`);
-  for (const r of results) printFrameworkResult(r, trip);
 
   const latencies = results.map((r) => r.latencyUs);
   const avgUs = latencies.reduce((a, b) => a + b, 0) / latencies.length;
@@ -211,6 +101,6 @@ wrapDemoExecution(async ({ nowMs }) => {
   }
 
   printResult(false);
-  console.error(`${RED}Quad demo: ${passCount}/4 ${trip ? "unexpected ALLOW" : "FAIL_CLOSED"}${R}`);
+  console.error(`${RED}Multi-AI framework demo: ${passCount}/4 ${trip ? "unexpected ALLOW" : "FAIL_CLOSED"}${R}`);
   process.exit(1);
 });

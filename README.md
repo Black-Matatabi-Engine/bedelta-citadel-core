@@ -8,7 +8,7 @@
 >
 > 🔒 **Unidirectional Escort & Single-Pass Pipeline:** Hardened execution boundaries across Arbitrum Native 7-Protocol Matrix with zero capital leakage (`lostUsd ≡ 0`).
 >
-> 🚀 **Instant Quad-Agent Verification:** One command to verify 4 AI Agent Frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) via `pnpm demo:quad`.
+> 🚀 **Instant Quad-Agent Verification:** One command to verify 4 AI Agent Frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) via `pnpm demo:multi-ai-framework`.
 
 ---
 
@@ -16,7 +16,7 @@
 
 ```bash
 # Tier 1 — Instant Quad-Agent Framework Shield
-pnpm demo:quad
+pnpm demo:multi-ai-framework
 
 # Tier 1 — 7-Protocol Matrix Physical Deadlock Severance (<14.0µs)
 pnpm demo:matrix -- --trip
@@ -152,7 +152,7 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · 120/min · spread > **20 bps** | `hyperliquid-session-guard.ts` · `pnpm demo:hl` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** · drift **>30 bps** · OLP **>15%** | `variational-rfq-adapter.ts` · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
-**Quad-Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:quad` · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
+**Quad-Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:multi-ai-framework` · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
 ### Pillar Set X — Unidirectional Bridge Escort (*Liquidity & Ingress Infrastructure*)
 
@@ -255,7 +255,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 | **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** Edge Gateway + Wasm reflex (**not** block time) vs LLM **~1.0s–10.0s** reasoning loop |
 | **Determinism** | N/A | **100% deterministic** bitmask evaluation |
 | **On hallucination** | Forwards opaque calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
-| **Demo proof** | N/A | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` |
+| **Demo proof** | N/A | `pnpm demo:multi-ai-framework` · `pnpm demo:wayfinder -- --trip` |
 
 ### Fail-Closed Walkthrough — Cerebrum Hallucination
 
@@ -266,7 +266,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 1. **Cerebrum emits out-of-scope cross-chain calldata** (`~2,000ms` Chain-of-Thought).
 2. **Cerebellum reflex** — Base/Aerodrome outside Arbitrum allowlist → **FAIL-CLOSED** in **<14.0µs**.
 3. **`severSigningChannel()`** — **0-Gas**, no Sequencer queue entry.
-4. **Judge reproduction:** `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+4. **Judge reproduction:** `pnpm demo:multi-ai-framework -- --trip` · `pnpm demo:matrix -- --trip`
 
 ---
 
@@ -275,7 +275,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 ### Flagship Demos (Tier 1 — AI Agent Shield)
 
 ```bash
-pnpm demo:quad                  # Tier 1 — Full 4 AI Agent Frameworks Pre-Flight Shield
+pnpm demo:multi-ai-framework                  # Tier 1 — Full 4 AI Agent Frameworks Pre-Flight Shield
 pnpm demo:matrix -- --trip      # Tier 1 — 7-Protocol matrix · R20 physical deadlock severance
 pnpm demo:wayfinder -- --trip   # Tier 1 — Wayfinder 0-Gas fail-closed soil trip
 pnpm demo:escort                # Pillar Set X multi-route compliance escort · lostUsd ≡ 0

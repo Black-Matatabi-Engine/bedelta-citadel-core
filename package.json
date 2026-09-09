@@ -31,6 +31,7 @@
     "demo:elizaos": "tsx examples/elizaos-agent-demo.ts",
     "demo:virtuals": "tsx examples/virtuals-agent-demo.ts",
     "demo:langchain": "tsx examples/langchain-agent-demo.ts",
+    "demo:multi-ai-framework": "tsx examples/quad-agent-demo.ts",
     "demo:quad": "tsx examples/quad-agent-demo.ts",
     "demo:agent": "tsx examples/agent-interceptor-demo.ts",
     "demo:stabilizer": "tsx examples/stabilizer-demo.ts",

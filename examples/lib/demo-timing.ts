@@ -1,8 +1,13 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
 export const EDGE_TARGET_US = 106;
-export const BENCH_BOX_W = 61;
-export const BAR_INNER_WIDTH = 22;
+export const BENCH_BOX_W = 76;
+export const BAR_INNER_WIDTH = 14;
+export const INTENT_BOX_W = 72;
+const BENCH_LABEL_W = 20;
+
+const SLOW_LAYER = "\x1b[31;2m";
+const SLOW_DIM = "\x1b[90m";
 
 export const R = "\x1b[0m";
 export const BOLD = "\x1b[1m";
@@ -77,17 +82,19 @@ function asciiBar(pct: number): string {
   return `[${"█".repeat(filled)}${" ".repeat(BAR_INNER_WIDTH - filled)}]`;
 }
 
-function formatBenchmarkBarLine(
+function formatBenchmarkBarLines(
   label: string,
   us: number,
   pct: number,
   color: string,
   opts?: { pass?: boolean; force100?: boolean },
-): string {
+): [string, string] {
   const pctLabel = opts?.force100 ? "100%" : `${pct.toFixed(1)}%`;
   const passTag = opts?.pass ? ` ${GUARD_BRIGHT_GREEN}${BOLD}(PASS)${R}` : "";
   const bar = asciiBar(opts?.force100 ? 100 : pct);
-  return `${color}${BOLD}${label.padEnd(22)}${R} ${bar} ${color}${BOLD}${pctLabel}${R}${passTag} ${GRAY}${formatLatencyLabel(us)}${R}`;
+  const barRow = `${color}${BOLD}${label.padEnd(BENCH_LABEL_W)}${R} ${bar} ${color}${BOLD}${pctLabel}${R}${passTag}`;
+  const latencyRow = `${" ".repeat(BENCH_LABEL_W + 1)}${GRAY}${formatLatencyLabel(us)}${R}`;
+  return [barRow, latencyRow];
 }
 
 export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
@@ -96,16 +103,17 @@ export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot):
   const matrixPct = benchmarkPct(snapshot.fullMatrixUs, e2e);
   const matrixPass = snapshot.fullMatrixUs <= EDGE_TARGET_US;
   const title = `${BOLD}[BENCHMARK]${R} Runtime: Node.js CLI Harness ${CORE_BRIGHT_CYAN}${BOLD}(Edge Target: <${EDGE_TARGET_US.toFixed(1)}µs)${R}`;
-  const rows = [
-    formatBenchmarkBarLine("Pure Invariant Time", snapshot.pureInvariantUs, purePct, GUARD_BRIGHT_GREEN),
-    formatBenchmarkBarLine("Full Matrix Execution", snapshot.fullMatrixUs, matrixPct, CORE_BRIGHT_CYAN, { pass: matrixPass }),
-    formatBenchmarkBarLine("E2E Harness Overhead", snapshot.e2eHarnessUs, 100, EXEC_BRIGHT_YELLOW, { force100: true }),
+  const rowPairs = [
+    formatBenchmarkBarLines("Pure Invariant Time", snapshot.pureInvariantUs, purePct, GUARD_BRIGHT_GREEN),
+    formatBenchmarkBarLines("Full Matrix Execution", snapshot.fullMatrixUs, matrixPct, CORE_BRIGHT_CYAN, { pass: matrixPass }),
+    formatBenchmarkBarLines("E2E Harness Overhead", snapshot.e2eHarnessUs, 100, EXEC_BRIGHT_YELLOW, { force100: true }),
   ];
   const innerW = BENCH_BOX_W - 2;
   console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(BENCH_BOX_W)}┐${R}`);
   console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${title}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
-  for (const row of rows) {
-    console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${row}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
+  for (const [barRow, latencyRow] of rowPairs) {
+    console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${barRow}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
+    console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${latencyRow}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
   }
   console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(BENCH_BOX_W)}┘${R}`);
 }
@@ -118,14 +126,23 @@ export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {
   console.log(`${BOLD}[BENCHMARK]${R} Runtime: Node.js CLI Harness · probing…`);
 }
 
+function intentBoxLine(content: string): void {
+  const innerW = INTENT_BOX_W - 2;
+  console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${content}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
+}
+
 export function printIntentLayerBanner(): void {
-  console.log(`${CORE_BRIGHT_CYAN}┌─ Intent Layer Architecture ─────────────────────────────────┐${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R} ${GRAY}[LLM Reasoning Layer: ~1000ms–5000ms]${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R}          ${BOLD}↓${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R} ${GUARD_BRIGHT_GREEN}${BOLD}[Citadel Intent Layer: ~14.0µs (FAIL-CLOSED)]${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R}          ${BOLD}↓${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R} ${EXEC_BRIGHT_YELLOW}[EIP-712 Sign / Chain]${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}└─────────────────────────────────────────────────────────────┘${R}`);
+  const slowBar = `${SLOW_LAYER}▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓${R}`;
+  const reflexBar = `${GUARD_BRIGHT_GREEN}██████████████${R}`;
+  console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(INTENT_BOX_W)}┐${R}`);
+  intentBoxLine(`${SLOW_LAYER}${BOLD}🧠 LLM Cerebrum (Reasoning)${R}  ${slowBar}  ${SLOW_DIM}~1.0s–10.0s${R}`);
+  intentBoxLine(`${SLOW_DIM}          ↓ intent payload (untrusted)${R}`);
+  intentBoxLine(
+    `${GUARD_BRIGHT_GREEN}${BOLD}⚡ Citadel Cerebellum (Wasm Reflex)${R}  ${reflexBar}  ${CORE_BRIGHT_CYAN}${BOLD}<14µs FAIL-CLOSED${R}`,
+  );
+  intentBoxLine(`${GRAY}          ↓ cleared signatures only${R}`);
+  intentBoxLine(`${EXEC_BRIGHT_YELLOW}🔗 EIP-712 Sign / Chain Settlement${R}  ${GRAY}(post-shield)${R}`);
+  console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(INTENT_BOX_W)}┘${R}`);
 }
 
 /** Per-line soil fuse / execution telemetry (Node harness E2E). */

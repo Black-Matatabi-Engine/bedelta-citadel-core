@@ -1,6 +1,7 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
-> **Buildathon Primary (The Shield):** `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
+> **Buildathon Primary (The Shield):** `pnpm demo:multi-ai-framework` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
+> Legacy alias: `pnpm demo:quad` (same harness)  
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
@@ -9,15 +10,15 @@
 ## Tier 1 — AI Agent Shield (Primary)
 
 ```bash
-pnpm demo:quad                  # All four AI frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) — ALLOW
-pnpm demo:quad -- --trip        # Quad-framework toxic soil / hallucination trip → FAIL_CLOSED
+pnpm demo:multi-ai-framework                  # All four AI frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) — ALLOW
+pnpm demo:multi-ai-framework -- --trip        # Quad-framework toxic soil / hallucination trip → FAIL_CLOSED
 pnpm demo:wayfinder -- --trip   # Wayfinder 0-Gas fail-closed soil trip on Arbitrum 42161
 pnpm demo:matrix -- --trip      # Full 7-protocol matrix · R20 physical deadlock severance (FAIL_CLOSED all legs)
 ```
 
 | Command | Scope |
 |---------|-------|
-| `pnpm demo:quad` | Full **4 AI Agent frameworks** pre-flight shield (Wayfinder · ElizaOS · Virtuals · LangChain) |
+| `pnpm demo:multi-ai-framework` | Full **4 AI Agent frameworks** pre-flight shield (Wayfinder · ElizaOS · Virtuals · LangChain) |
 | `pnpm demo:wayfinder -- --trip` | Wayfinder route interception → **0-Gas FAIL_CLOSED** soil trip |
 | `pnpm demo:matrix -- --trip` | Full **7-protocol** cross-venue matrix · R20 trip + severance |
 
@@ -27,9 +28,9 @@ pnpm demo:matrix -- --trip      # Full 7-protocol matrix · R20 physical deadloc
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — AI Agent Shield** | `pnpm demo:quad` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip` | Quad-framework pre-flight · Wayfinder fail-closed · 7-protocol matrix R20 severance |
+| **Tier 1 — AI Agent Shield** | `pnpm demo:multi-ai-framework` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip` | Quad-framework pre-flight · Wayfinder fail-closed · 7-protocol matrix R20 severance |
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
-| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
+| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:multi-ai-framework` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad run |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
 
@@ -70,7 +71,7 @@ pnpm demo:wayfinder     # Wayfinder route interception on Arbitrum 42161
 pnpm demo:elizaos       # ElizaOS Action handler guard
 pnpm demo:virtuals      # Virtuals GAME worker guard
 pnpm demo:langchain     # LangChain CitadelRiskGuardTool
-pnpm demo:quad          # All four AI frameworks (combined)
+pnpm demo:multi-ai-framework          # All four AI frameworks (combined)
 ```
 
 Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.

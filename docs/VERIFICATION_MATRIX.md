@@ -14,9 +14,9 @@
 
 | Audience | First read | Then verify |
 |----------|------------|-------------|
-| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:quad` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
+| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:multi-ai-framework` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md) |
-| **Agent / adapter integrators** | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` |
+| **Agent / adapter integrators** | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:{wayfinder,elizaos,virtuals,langchain,multi-ai-framework}` |
 | **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
 
 **Decoupled SSOT index:** [`verifications/README.md`](./verifications/README.md)
@@ -27,8 +27,8 @@
 
 ```bash
 pnpm install
-pnpm demo:quad              # Four AI frameworks → ALLOW
-pnpm demo:quad -- --trip    # Hallucination / soil trip → FAIL_CLOSED
+pnpm demo:multi-ai-framework              # Four AI frameworks → ALLOW
+pnpm demo:multi-ai-framework -- --trip    # Hallucination / soil trip → FAIL_CLOSED
 pnpm demo:matrix -- --trip  # 7-protocol R20 severance
 pnpm test -- --run          # 217 test files | 967 PASS clean
 ```
