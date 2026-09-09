@@ -64,7 +64,8 @@ import {
   hrtimeElapsedUs,
   hrtimeStart,
   GUARD_BRIGHT_GREEN,
-  printMatrixLatencySummary,
+  printE2eShieldLatencyBlock,
+  printReflexCoreDeadlockBlock,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
 import {
@@ -510,7 +511,6 @@ function runTripInterception(
   gmxTrip: boolean,
   spotAnomaly: SpotAnomaly,
   perpAnomaly: PerpAnomaly,
-  t0: bigint,
   benchmark: DemoBenchmarkSnapshot,
 ): boolean {
   resetState();
@@ -531,7 +531,7 @@ function runTripInterception(
   if (ok) {
     const n = finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length;
     console.log(`\n${RED}${BOLD}${label} — ${n}/${finalResult.rows.length} venues FAIL_CLOSED${R}`);
-    printMatrixLatencySummary(benchmark.fullMatrixUs, hrtimeElapsedUs(t0));
+    printReflexCoreDeadlockBlock(benchmark.fullMatrixUs);
   } else {
     console.log(`${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`);
   }
@@ -549,8 +549,6 @@ function main(): void {
   const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
   const perpKeys = perpKeysForHedge(hedge);
   const allKeys = allKeysForHedge(hedge);
-  const t0 = hrtimeStart();
-
   const strategyBasket: "perp" | "spot" | "all" =
     loop === "perp" ? "perp" : loop === "spot" ? "spot" : "all";
   resetState();
@@ -597,7 +595,7 @@ function main(): void {
       console.log(`\n${RED}${BOLD}🔴 HAPPY PATH INCOMPLETE — expected universal ALLOW${R}`);
       process.exitCode = 1;
     }
-    printMatrixLatencySummary(benchmark.fullMatrixUs, hrtimeElapsedUs(t0));
+    printE2eShieldLatencyBlock(benchmark.fullMatrixUs);
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
@@ -614,7 +612,6 @@ function main(): void {
         gmxTrip,
         spotAnomaly,
         perpAnomaly,
-        t0,
         benchmark,
       ) && allOk;
   }
@@ -629,7 +626,6 @@ function main(): void {
         gmxTrip,
         spotAnomaly,
         perpAnomaly,
-        t0,
         benchmark,
       ) && allOk;
   }
