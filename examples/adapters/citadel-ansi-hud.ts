@@ -18,6 +18,15 @@ export const GRAY = "\x1b[90m";
 export const BOLD = "\x1b[1m";
 
 const BOX_W = 63;
+const PILLAR_BOX_W_MIN = 92;
+
+export const PILLAR_SET_Y_FRAMEWORK_LINE =
+  "[PILLAR SET Y] Pre-Consensus Edge Shield & Wasm Reflex Guard";
+
+const PERP_STRATEGY_BASKET =
+  "Parallel Perp & Yield Matrix [Pendle | GMX v2 | Hyperliquid L1 | Variational RFQ]";
+const SPOT_STRATEGY_BASKET =
+  "Parallel Spot & Lending Matrix [Uniswap V3 | Aave V3 | Morpho Blue | USD.ai]";
 
 export const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
@@ -42,10 +51,33 @@ export function seedAdapterProbes(nowMs: number = Date.now()): void {
   seedSafeArbitrumProbes(nowMs);
 }
 
-function padBanner(text: string): string {
+function padBanner(text: string, width = BOX_W): string {
   const inner = ` ${text} `;
-  const pad = Math.max(0, BOX_W - inner.length);
+  const pad = Math.max(0, width - inner.length);
   return `${"─".repeat(Math.floor(pad / 2))}${inner}${"─".repeat(Math.ceil(pad / 2))}`;
+}
+
+export function printPillarSetYFrameworkLine(): void {
+  console.log(`${BOLD}${CYAN}${PILLAR_SET_Y_FRAMEWORK_LINE}${R}\n`);
+}
+
+export function printPillarSetYStrategyBanner(
+  basket: "perp" | "spot" | "all",
+  benchmark?: DemoBenchmarkSnapshot,
+): void {
+  const line1 = "🛡️  SliverVine Citadel Shield · [PILLAR SET Y: Pre-Consensus Firewall]";
+  const line2 =
+    basket === "perp"
+      ? `Strategy Basket: ${PERP_STRATEGY_BASKET}`
+      : basket === "spot"
+        ? `Strategy Basket: ${SPOT_STRATEGY_BASKET}`
+        : `Strategy Basket: ${PERP_STRATEGY_BASKET} · ${SPOT_STRATEGY_BASKET}`;
+  const w = Math.max(PILLAR_BOX_W_MIN, line1.length + 4, line2.length + 4);
+  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
+  console.log(`${CYAN}│${R}${BOLD}${padBanner(line1, w)}${R}${CYAN}│${R}`);
+  console.log(`${CYAN}│${R}${padBanner(line2, w)}${R}${CYAN}│${R}`);
+  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+  printBenchmarkBanner(benchmark ?? captureSoilBenchmark(HEALTHY_SOIL));
 }
 
 export function printBanner(subtitle: string, benchmark?: DemoBenchmarkSnapshot): void {

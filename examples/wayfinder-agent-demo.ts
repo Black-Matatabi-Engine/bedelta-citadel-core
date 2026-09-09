@@ -29,6 +29,7 @@ import {
   printBackoffDivider,
   printBackoffResult,
   printBanner,
+  printPillarSetYFrameworkLine,
   printMode,
   printResult,
   R,
@@ -173,6 +174,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
   const venueLocked = parseDemoVenueArgv() !== undefined;
 
   printBanner(stabilizer ? "Wayfinder · Stabilizer Sepolia Demo" : "Wayfinder Agent Demo");
+  if (!stabilizer) printPillarSetYFrameworkLine();
   printMode(trip);
   if (!stabilizer) printAgentVenueHud(venue, venueLocked);
 

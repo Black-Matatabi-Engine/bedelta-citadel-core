@@ -61,7 +61,7 @@ import {
   R,
   YELLOW,
   BOLD,
-  printBanner,
+  printPillarSetYStrategyBanner,
 } from "./adapters/citadel-ansi-hud";
 import {
   hrtimeElapsedUs,
@@ -583,12 +583,6 @@ function runCircuitBreaker(
   return ok;
 }
 
-function perpLoopTitle(hedge: PerpHedge): string {
-  if (hedge === "variational") return "Delta-Neutral Perp Stack (Pendle → GMX → Variational Omni RFQ)";
-  if (hedge === "hyperliquid") return "Delta-Neutral Perp Stack (Pendle → GMX → Hyperliquid L1)";
-  return "Delta-Neutral Perp Stack (Pendle → GMX → HL + Variational)";
-}
-
 function main(): void {
   wrapDemoExecution(({ nowMs, livingwater }) => {
   const argv = process.argv.slice(2);
@@ -602,12 +596,8 @@ function main(): void {
   const allKeys = allKeysForHedge(hedge);
   const t0 = hrtimeStart();
 
-  const loopTitle =
-    loop === "perp"
-      ? perpLoopTitle(hedge)
-      : loop === "spot"
-        ? "Spot & Lending Vault Loop (Uniswap V3 → Aave V3 → Morpho Blue → USD.ai)"
-        : "Full Cross-Venue Matrix (Dual Perp Hedge + 7-Venue Spot)";
+  const strategyBasket: "perp" | "spot" | "all" =
+    loop === "perp" ? "perp" : loop === "spot" ? "spot" : "all";
   resetState();
 
   if (livingwater) {
@@ -620,7 +610,7 @@ function main(): void {
   const benchmark = captureSoilBenchmark(benchSoil, () => {
     evaluateLoop(benchKeys, nowMs, benchCtx, readActiveSystemState());
   });
-  printBanner(`Cross-Venue Matrix · ${loopTitle}`, benchmark);
+  printPillarSetYStrategyBanner(strategyBasket, benchmark);
   resetState(); // benchmark harness may sever signing channel via checkSoilResistance()
 
   const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge });

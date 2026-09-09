@@ -10,6 +10,7 @@ import {
   printBackoffDivider,
   printBackoffResult,
   printBanner,
+  printPillarSetYFrameworkLine,
   printMode,
   printResult,
   R,
@@ -87,6 +88,7 @@ export function runAgentFrameworkDemo(config: AgentFrameworkDemoConfig): void {
     const chainId = venue.key === "hyperliquid" ? 42161 : 42161;
 
     printBanner(config.bannerTitle);
+    printPillarSetYFrameworkLine();
     printMode(trip);
     printAgentVenueHud(venue, locked);
 
