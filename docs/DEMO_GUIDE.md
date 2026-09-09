@@ -21,8 +21,13 @@ pnpm demo:perp-loop -- --trip            # Standalone Perp/Yield Stack Guard (Lo
 pnpm demo:spot-loop -- --trip            # Standalone Spot/Lending Vault Guard (Loop B: Morpho/USD.ai)
 
 # === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
-pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:e2e                            # Pillar Set X — 4-Step Happy Path Capital Lifecycle (GMX + HL)
+pnpm demo:e2e -- --unwind                # Pillar Set X — 5-Step Emergency Capital Unwind & Recovery
 pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+
+# === Pillar Set Y — Pre-Consensus Intent Guards (separate from --unwind capital recovery) ===
+pnpm demo:spot-loop                      # Loop B spot/lending pre-broadcast guards (Morpho / Aave / USD.ai / Uniswap)
+pnpm demo:perp-loop                      # Loop A perp/yield pre-broadcast guards (GMX / Pendle / HL / Variational)
 
 # === Tier 0 & Regression Verification ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
@@ -49,7 +54,7 @@ pnpm test                                # Full Regression Suite (217 test files
 | **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` | Independent framework guards · 7+1 venue rotation · strategy-loop R20 severance |
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:perp-loop` · `pnpm demo:spot-loop` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **Loop A / Loop B** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain (each **p50 ~106µs** in isolation) |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` · `pnpm demo:e2e -- --unwind` | **Pillar Set X** Sovereign Vault macro lifecycle — 4-step Happy Path · optional 5-step `--unwind` capital recovery (`--trip` stress-tests Step 1) |
 | **Vitest matrix** | `pnpm demo` | 12 Tri-Pillar ANSI scenarios (`tests/demo/`) |
 
 ---
@@ -129,6 +134,17 @@ Implementation SSOT: [`examples/lib/agent-venue-matrix.ts`](../examples/lib/agen
 
 ---
 
+## Pillar Set X vs Pillar Set Y — Command Boundary
+
+| Pillar | CLI entry | Scope | What `--unwind` means here |
+|--------|-----------|-------|----------------------------|
+| **Pillar Set X** | `pnpm demo:e2e` | Sovereign Vault **capital lifecycle** — Robinhood escort → GMX GM deposit → HL delta-neutral hedge | **`pnpm demo:e2e -- --unwind`** appends **Step 5: Citadel Shield R20 Emergency Unwind Lifecycle** — soil trip → `severSigningChannel()` → panic flash unwind → principal recovery (`RESULT: E2E OK (5/5)`). Harness SSOT: [`scripts/grant-e2e-citadel-demo.ts`](../scripts/grant-e2e-citadel-demo.ts) |
+| **Pillar Set Y** | `pnpm demo:spot-loop` · `pnpm demo:perp-loop` | **Pre-consensus intent guards** — zero-gas FAIL_CLOSED interception *before* broadcast | **No `--unwind` flag.** Use `--trip` to demonstrate reflex-core physical deadlock (`pnpm demo:spot-loop -- --trip` · `pnpm demo:perp-loop -- --trip`). Separate from Pillar Set X capital recovery. |
+
+> **Audit note (2026-09):** `--unwind` lifecycle logic remains intact in the grant E2E orchestrator (`runE2ePipeline({ includeUnwind: true })` → `runStep5R20PanicFlash`). It is **not** invoked by strategy-loop demos.
+
+---
+
 ## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
 
 Production hedging uses **two wallets on two venues**. Wallet B holds Arbitrum/GMX exposure; Wallet A executes Hyperliquid shorts via session keys. The engine [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts) sizes shorts from **live GMX ETH delta** until **Δ_net ≡ 0**. Worker/cron logs emit `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` for auditability.
@@ -141,9 +157,15 @@ Production hedging uses **two wallets on two venues**. Wallet B holds Arbitrum/G
 **`pnpm demo:e2e`** renders this **cross-wallet orchestration as one unified terminal HUD** — judges see the full 4-step Happy Path (and optional `--unwind` / `--trip`) without switching between Arbitrum and Hyperliquid CLIs. Same capital invariant SSOT as [`src/core/capital-invariant-ledger.ts`](../src/core/capital-invariant-ledger.ts).
 
 ```bash
-pnpm demo:e2e                     # 4-step Happy Path — multi-wallet narrative in one HUD
-pnpm demo:e2e -- --unwind         # + Step 5 Citadel Shield R20 unwind
-pnpm demo:e2e -- --trip           # Step 1 soil-trip fail-closed intercept
+pnpm demo:e2e                     # Pillar Set X — 4-Step Happy Path (Intent → Escort → GMX → HL hedge)
+pnpm demo:e2e -- --unwind         # Pillar Set X — 5-Step Emergency Capital Unwind & Recovery (Step 5 R20)
+pnpm demo:e2e -- --trip           # Pillar Set X — Step 1 soil-trip fail-closed intercept (4-step abort)
+
+# Pillar Set Y — pre-consensus guards (independent of --unwind)
+pnpm demo:spot-loop               # Loop B spot/lending vault pre-flight
+pnpm demo:perp-loop               # Loop A perp/yield stack pre-flight
+pnpm demo:spot-loop -- --trip     # Loop B zero-gas FAIL_CLOSED reflex demo
+pnpm demo:perp-loop -- --trip     # Loop A zero-gas FAIL_CLOSED reflex demo
 ```
 
 ---
@@ -154,9 +176,11 @@ pnpm demo:e2e -- --trip           # Step 1 soil-trip fail-closed intercept
 pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
 pnpm demo:wayfinder -- --stabilizer   # Stabilizer harness via Wayfinder adapter
-pnpm demo:e2e                     # 4-step Happy Path macro lifecycle ANSI HUD
-pnpm demo:e2e -- --unwind         # Optional Step 5 Citadel Shield R20 unwind (5/5)
-pnpm demo:e2e -- --trip           # Step 1 soil-trip stress intercept
+
+# Pillar Set X — Sovereign Vault macro lifecycle (scripts/grant-e2e-citadel-demo.ts)
+pnpm demo:e2e                     # 4-Step Happy Path Lifecycle (RESULT: E2E OK 4/4)
+pnpm demo:e2e -- --unwind         # 5-Step Emergency Capital Unwind & Recovery (RESULT: E2E OK 5/5)
+pnpm demo:e2e -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
 ```
 
 ---
@@ -168,7 +192,9 @@ pnpm install
 pnpm demo:wayfinder                      # Primary judge entry — 7+1 venue rotation
 pnpm demo:langchain -- --venue=pendle    # Manual venue lock smoke test
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
-pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
+pnpm demo:e2e                     # Pillar Set X — 4-Step Happy Path (--unwind · --trip optional)
+pnpm demo:spot-loop               # Pillar Set Y — Loop B pre-consensus guards
+pnpm demo:perp-loop               # Pillar Set Y — Loop A pre-consensus guards
 pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 ```
 

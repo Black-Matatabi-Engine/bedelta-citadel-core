@@ -1,16 +1,16 @@
 {
   "event": "GRANT_E2E_CITADEL_DEMO",
   "mode": "dry-run",
-  "pipelineSteps": 4,
+  "pipelineSteps": 5,
   "steps": {
     "1_verifyAgentIntent": {
       "ok": true,
       "wasmUsed": true,
       "deadmanOk": true,
-      "wasmHotPathUs": 2.13,
-      "wasmP50Us": 4.37,
+      "wasmHotPathUs": 2.14,
+      "wasmP50Us": 2.33,
       "wasmP50BandStatus": "FAST_LOCAL",
-      "nodeE2eRttUs": 2788.92
+      "nodeE2eRttUs": 3017.16
     },
     "2_robinhoodUnidirectionalEscort": {
       "ok": true,
@@ -25,7 +25,7 @@
       "underweightSide": "short",
       "uiFeeBps": 10,
       "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
-      "payloadRef": "sha256:df08edd67e410d81"
+      "payloadRef": "sha256:e363a45edab1ff29"
     },
     "4_hlSessionKeyHedge": {
       "ok": true,
@@ -34,6 +34,13 @@
       "ethShortSize": "0.3463",
       "oid": null,
       "detail": "SIMULATED_SESSION_KEY_HEDGE"
+    },
+    "5_r20PanicFlash": {
+      "ok": true,
+      "severTarget": "R20",
+      "cancelCount": 1,
+      "closeCount": 1,
+      "withinBudget": true
     }
   },
   "capitalInvariant": {
@@ -51,5 +58,5 @@
     "protocolTreasuryReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
     "deltaNetEth": "0.0000"
   },
-  "timestamp": "2026-09-09T05:59:18.066Z"
+  "timestamp": "2026-09-09T08:55:36.166Z"
 }
