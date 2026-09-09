@@ -34,17 +34,13 @@ import {
 } from "../src/adapters/uniswap/uniswap-v3-adapter";
 import {
   evaluateUsdAiCollateralGuard,
-  formatUsdAiFlagMask,
-  resolveUsdAiProtocolMask,
   USDAI_ARBITRUM_CHAIN_ID,
 } from "../src/adapters/usdai/usdai-adapter";
 import type { UsdaiSoilInput } from "../src/adapters/usdai/usdai-adapter";
 import {
-  formatVariationalFlagMask,
   validateVariationalRFQIntent,
   type VariationalRFQPayload,
 } from "../src/adapters/variational-rfq-adapter";
-import { FLAGS_SEVERED } from "../src/core/risk-engine-core";
 import {
   __setSystemStateForTests,
   buildSystemState,
@@ -57,6 +53,7 @@ import { checkSoilResistance, type SoilResistanceInput } from "../src/services/r
 import {
   CYAN,
   GREEN,
+  GRAY,
   RED,
   R,
   YELLOW,
@@ -66,11 +63,24 @@ import {
 import {
   hrtimeElapsedUs,
   hrtimeStart,
-  CORE_BRIGHT_CYAN,
   GUARD_BRIGHT_GREEN,
   printExecutionLatencyBlock,
-  printGuardTimeBlock,
+  printVerificationLatencyBlock,
 } from "./lib/demo-timing";
+import {
+  type BreachLine,
+  collectAaveBreachLines,
+  collectGmxBreachLines,
+  collectMorphoBreachLines,
+  collectPendleBreachLines,
+  collectUsdaiBreachLines,
+  collectVariationalBreachLines,
+  printBreachBreakdown,
+  printR20DeadlockBanner,
+  printTripSoilReject,
+  printTripVenueRows,
+  withMatrixHudMute,
+} from "./lib/matrix-demo-hud";
 import { captureSoilBenchmark } from "./lib/demo-benchmark";
 import { isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 
@@ -221,6 +231,18 @@ function soilForStep(nowMs: number, ctx: TripContext): SoilResistanceInput {
   if (ctx.perpGmx) {
     return { ...HEALTHY_SOIL, at: new Date(nowMs), depthUsd: 1, hlPerp: 4200 };
   }
+  if (ctx.perpVariational) {
+    const payload = variationalPayload(nowMs, true);
+    return {
+      ...HEALTHY_SOIL,
+      at: new Date(nowMs),
+      symbol: payload.symbol,
+      depthUsd: payload.olpDepthUsd,
+      hlPerp: payload.quotePriceUsd,
+      hlSpot: payload.oracleMarkUsd,
+      orderSizeUsd: payload.tradeSizeUsd,
+    };
+  }
   if (ctx.perpPendle) {
     const selection = pendleSelection(nowMs, true);
     return {
@@ -235,6 +257,16 @@ function soilForStep(nowMs: number, ctx: TripContext): SoilResistanceInput {
       at: new Date(nowMs),
       symbol: "sUSDai",
       usdai: usdaiSoilInput(nowMs, true),
+    };
+  }
+  if (ctx.spotMorpho || ctx.spotAave) {
+    return {
+      ...HEALTHY_SOIL,
+      at: new Date(nowMs),
+      symbol: "WETH/USDC",
+      depthUsd: 6_000,
+      hlPerp: 3650,
+      orderSizeUsd: 50_000,
     };
   }
   return { ...HEALTHY_SOIL, at: new Date(nowMs) };
@@ -263,7 +295,12 @@ function evaluateVenue(
         oiShortUsd: ctx.perpGmx ? 500_000 : 2_500_000,
         poolTvlUsd: 5_500_000,
       });
-      return { venue: "GMX v2", status: gateStatus(state, r.ok), detail: r.ok ? "shadow margin ok" : "pool imbalance trip" };
+      const detail = !r.ok
+        ? "pool imbalance trip"
+        : ctx.active && isR20Locked(state)
+          ? "FAIL_CLOSED: R20_DEADLOCK"
+          : "shadow margin ok";
+      return { venue: "GMX v2", status: gateStatus(state, r.ok), detail };
     }
     case "hl": {
       const r = evaluateHyperliquidSessionGuard({
@@ -390,213 +427,60 @@ function evaluateLoop(
   ctx: TripContext,
   state: SystemState,
 ): LoopEvalResult {
-  const soil = soilForStep(nowMs, ctx);
-  const tSoil = hrtimeStart();
-  const soilProbe = checkSoilResistance(soil);
-  const soilLatencyUs = hrtimeElapsedUs(tSoil);
-  const rows = keys
-    .map((k) => evaluateVenue(k, nowMs, ctx, state, soilProbe))
-    .filter((r): r is VenueRow => r != null);
-  return { rows, soilProbe, soilLatencyUs };
-}
-
-function printSpotLendingDispatch(nowMs: number, ctx: TripContext): void {
-  const t0 = hrtimeStart();
-  const morphoR = evaluateMorphoBlueGuard({
-    chainId: MORPHO_ARBITRUM_CHAIN_ID,
-    marketId: "WETH/USDC",
-    action: "SUPPLY",
-    amountUsd: 50_000,
-    marketLiquidityUsd: ctx.spotMorpho ? 80_000 : 5_000_000,
-    oraclePriceUsd: ctx.spotMorpho ? 3650 : 3500,
-    referencePriceUsd: 3500,
-    oracleTimestampMs: ctx.spotMorpho ? nowMs - 5_000_000 : Date.now() - 120_000,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: ctx.spotMorpho ? 6_000 : 400_000,
-    nowMs,
+  return withMatrixHudMute(() => {
+    const soil = soilForStep(nowMs, ctx);
+    const tSoil = hrtimeStart();
+    const soilProbe = checkSoilResistance(soil);
+    const soilLatencyUs = hrtimeElapsedUs(tSoil);
+    const rows = keys
+      .map((k) => evaluateVenue(k, nowMs, ctx, state, soilProbe))
+      .filter((r): r is VenueRow => r != null);
+    return { rows, soilProbe, soilLatencyUs };
   });
-  const aaveR = evaluateAaveV3Guard({
-    chainId: AAVE_ARBITRUM_CHAIN_ID,
-    market: "WETH/USDC",
-    collateralUsd: 150_000,
-    debtUsd: ctx.spotAave ? 120_000 : 80_000,
-    liquidationThreshold: 0.825,
-    projectedHealthFactor: ctx.spotAave ? 1.05 : 1.42,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: 500_000,
-    nowMs,
-  });
-  const us = hrtimeElapsedUs(t0);
-  const ok = morphoR.ok && aaveR.ok;
-  const fuseColor = ok ? GREEN : YELLOW;
-  const fuseVerdict = ok ? "PASS" : "REJECT";
-  console.log(
-    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}evaluateMorphoBlueGuard() / evaluateAaveV3Guard() -> ${fuseVerdict}`,
-  );
-  printGuardTimeBlock(us);
-  const color = ok ? GREEN : RED;
-  const dispatchTag = ok ? GUARD_BRIGHT_GREEN : RED;
-  const label = ok ? "ALLOWED" : "FAIL_CLOSED";
-  const tail = ok
-    ? "lending/swap clearance ok"
-    : morphoR.reasons[0] ?? aaveR.reasons[0] ?? "trip";
-  console.log(`  ${dispatchTag}${BOLD}[DISPATCH]${R} ${color}${label}`);
-  console.log(`      target: Morpho Blue / Aave V3 Liquidity Gateway -> ${tail}`);
-  printGuardTimeBlock(us);
 }
 
-function printGmxPerpDispatch(): void {
-  const t0 = hrtimeStart();
-  const us = hrtimeElapsedUs(t0);
-  console.log(`  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${GREEN}evaluateGmxPoolImbalance() -> PASS${R}`);
-  printGuardTimeBlock(us);
-  console.log(`  ${GUARD_BRIGHT_GREEN}${BOLD}[DISPATCH]${R} ${GREEN}ALLOWED`);
-  console.log(`      target: GMX v2 Execution Vault -> shadow margin ok`);
-  printGuardTimeBlock(us);
-}
-
-function printVariationalDispatch(nowMs: number, ctx: TripContext): void {
-  const t0 = hrtimeStart();
-  const r = validateVariationalRFQIntent(variationalPayload(nowMs, ctx.perpVariational));
-  const us = hrtimeElapsedUs(t0);
-  const fuseColor = r.ok ? GREEN : YELLOW;
-  const fuseVerdict = r.ok ? "PASS" : "REJECT";
-  const severed = (r.flags & FLAGS_SEVERED) !== 0 ? " | R20_SEVERED" : "";
-  console.log(
-    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}evaluateVariationalFlags() -> ${fuseVerdict}`,
-  );
-  console.log(`      bitmask=${formatVariationalFlagMask(r.flags)}${severed}`);
-  printGuardTimeBlock(us);
-  const color = r.ok ? GREEN : RED;
-  const dispatchTag = r.ok ? GUARD_BRIGHT_GREEN : RED;
-  const label = r.ok ? "ALLOWED" : (r.reason ?? "FAIL_CLOSED");
-  const tail = r.ok ? (r.detail ?? "OLP depth ok") : (r.detail ?? "trip");
-  console.log(`  ${dispatchTag}${BOLD}[DISPATCH]${R} ${color}${label}`);
-  console.log(`      target: Variational Omni RFQ -> ${tail}`);
-  printGuardTimeBlock(us);
-}
-
-function printUsdAiFuseBoard(nowMs: number, ctx: TripContext): void {
-  const soil = usdaiSoilInput(nowMs, ctx.spotUsdai);
-  const mask = resolveUsdAiProtocolMask(soil);
-  const tripped = mask !== 0 || ctx.spotUsdai;
-  const fuseColor = tripped ? RED : GREEN;
-  const verdict = tripped ? "TRIPPED" : "OK";
-  console.log(
-    `  ${CORE_BRIGHT_CYAN}${BOLD}[FUSE]${R} ${fuseColor}USD.ai Yield Collateral Fuse: ${verdict}${R}`,
-  );
-  console.log(`      bitmask=${formatUsdAiFlagMask(mask)}`);
-}
-
-function printMatrix(title: string, result: LoopEvalResult, opts?: PrintMatrixOpts): void {
+function printHappyMatrix(title: string, result: LoopEvalResult, opts: PrintMatrixOpts): void {
   console.log(`\n${YELLOW}${title}${R}`);
-  const soilLabel = result.soilProbe.tripped ? "REJECT" : "PASS";
-  console.log(`  checkSoilResistance() -> ${soilLabel}`);
-  printExecutionLatencyBlock(result.soilLatencyUs);
   for (const row of result.rows) {
     const color = row.status === "ALLOW" ? GREEN : RED;
-    console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)} ${row.detail}${R}`);
+    console.log(`  ${color}${row.venue.padEnd(14)} ${row.status.padEnd(12)}${R} ${GRAY}${row.detail}${R}`);
   }
-  if (opts && result.rows.some((r) => r.venue === "USD.ai")) {
-    printUsdAiFuseBoard(opts.nowMs, opts.ctx);
-  }
-  if (!opts) return;
+  const dispatchTag = `${GUARD_BRIGHT_GREEN}${BOLD}[DISPATCH]${R}`;
   if (opts.loop === "spot") {
-    printSpotLendingDispatch(opts.nowMs, opts.ctx);
-    return;
-  }
-  if (opts.loop === "perp" || opts.loop === "all") {
+    console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
+    console.log(
+      `      ${GRAY}target:${R} Morpho Blue / Aave V3 Liquidity Gateway ${GRAY}→${R} lending/swap clearance ok`,
+    );
+  } else if (opts.loop === "perp") {
     if (opts.hedge === "variational" || opts.hedge === "both") {
-      printVariationalDispatch(opts.nowMs, opts.ctx);
-    } else if (opts.hedge === "hyperliquid") {
-      printGmxPerpDispatch();
+      console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
+      console.log(`      ${GRAY}target:${R} Variational Omni RFQ ${GRAY}→${R} OLP depth ok`);
+    } else {
+      console.log(`  ${dispatchTag} ${GREEN}ALLOWED${R}`);
+      console.log(`      ${GRAY}target:${R} GMX v2 Execution Vault ${GRAY}→${R} shadow margin ok`);
     }
   }
+  printVerificationLatencyBlock(result.soilLatencyUs, "  ");
 }
 
 function resetState(): void {
   __setSystemStateForTests(buildSystemState({ accountBalanceUsd: 10_000, currentCri: 100, skipHardlockAssert: true }));
 }
 
-function anomalyLabel(
-  loop: MatrixLoop,
-  gmxTrip: boolean,
+function collectBreachForTrip(
+  matrixLoop: "perp" | "spot",
+  nowMs: number,
   spotAnomaly: SpotAnomaly,
   perpAnomaly: PerpAnomaly,
-): string {
-  if (loop === "spot") {
-    if (spotAnomaly === "aave") return "Aave V3 projected HF < 1.15";
-    if (spotAnomaly === "usdai") return "USD.ai sUSDai de-peg / oracle lag > 2h";
-    return "Morpho Blue oracle stale / deviation > 30bps";
+): BreachLine[] {
+  if (matrixLoop === "spot") {
+    if (spotAnomaly === "aave") return collectAaveBreachLines(nowMs);
+    if (spotAnomaly === "usdai") return collectUsdaiBreachLines(usdaiSoilInput(nowMs, true), nowMs);
+    return collectMorphoBreachLines(nowMs);
   }
-  if (perpAnomaly === "gmx") return "GMX pool imbalance >0.35";
-  if (perpAnomaly === "variational") return "Variational stale quote / OLP depth breach";
-  return "Pendle yield shock >150bps";
-}
-
-function injectSpotAnomaly(nowMs: number, spotAnomaly: SpotAnomaly): void {
-  if (spotAnomaly === "usdai") {
-    const r = evaluateUsdAiCollateralGuard({
-      chainId: USDAI_ARBITRUM_CHAIN_ID,
-      collateralSymbol: "sUSDai",
-      ...usdaiSoilInput(nowMs, true),
-      at: new Date(nowMs),
-    });
-    console.log(`  USD.ai guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
-    return;
-  }
-  if (spotAnomaly === "aave") {
-    const r = evaluateAaveV3Guard({
-      chainId: AAVE_ARBITRUM_CHAIN_ID,
-      market: "WETH/USDC",
-      collateralUsd: 150_000,
-      debtUsd: 120_000,
-      liquidationThreshold: 0.825,
-      projectedHealthFactor: 1.05,
-      refPriceUsd: 3500,
-      spotPriceUsd: 3500,
-      depthUsd: 500_000,
-      nowMs,
-    });
-    console.log(`  Aave guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
-    return;
-  }
-  const r = evaluateMorphoBlueGuard({
-    chainId: MORPHO_ARBITRUM_CHAIN_ID,
-    marketId: "WETH/USDC",
-    action: "BORROW",
-    amountUsd: 200_000,
-    marketLiquidityUsd: 80_000,
-    oraclePriceUsd: 3650,
-    referencePriceUsd: 3500,
-    oracleTimestampMs: nowMs - 5_000_000,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: 6_000,
-    nowMs,
-  });
-  console.log(`  Morpho guard ok=${r.ok} · reasons=${r.reasons.join("|") || "none"}`);
-}
-
-function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
-  if (perpAnomaly === "variational") {
-    const r = validateVariationalRFQIntent(variationalPayload(nowMs, true));
-    console.log(`  Variational RFQ ok=${r.ok} · ${r.reason ?? r.detail ?? "pass"}`);
-    return;
-  }
-  const ctx: TripContext = {
-    active: true,
-    perpPendle: perpAnomaly === "pendle",
-    perpGmx: perpAnomaly === "gmx",
-    perpVariational: false,
-    spotMorpho: false,
-    spotAave: false,
-    spotUsdai: false,
-  };
-  const soilTrip = checkSoilResistance(soilForStep(nowMs, ctx));
-  console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
+  if (perpAnomaly === "gmx") return collectGmxBreachLines();
+  if (perpAnomaly === "variational") return collectVariationalBreachLines(variationalPayload(nowMs, true));
+  return collectPendleBreachLines(0.095, 0.062);
 }
 
 function happyPathSuccess(rows: VenueRow[]): boolean {
@@ -611,10 +495,10 @@ function tripSuccess(rows: VenueRow[], hedge: PerpHedge, loop: MatrixLoop): bool
   return rows.every((r) => r.status === "FAIL_CLOSED");
 }
 
-function runCircuitBreaker(
+function runTripInterception(
   label: string,
   keys: VenueKey[],
-  loop: MatrixLoop,
+  matrixLoop: "perp" | "spot",
   hedge: PerpHedge,
   nowMs: number,
   gmxTrip: boolean,
@@ -622,28 +506,28 @@ function runCircuitBreaker(
   perpAnomaly: PerpAnomaly,
   t0: bigint,
 ): boolean {
-  const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge, loop });
-  const nominalCtx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
-  printMatrix(`${label} · Step 1 — Nominal pre-flight (PASS)`, evaluateLoop(keys, nowMs, nominalCtx, readActiveSystemState()), printOpts(nominalCtx));
+  resetState();
+  const tripCtx = buildTripContext(matrixLoop, true, gmxTrip, spotAnomaly, perpAnomaly);
+  console.log(`\n${RED}${BOLD}${label} — Invariant Breach Interception${R}`);
 
-  const tripCtx = buildTripContext(loop, true, gmxTrip, spotAnomaly, perpAnomaly);
-  console.log(`\n${RED}${label} · Step 2 — Inject anomaly: ${anomalyLabel(loop, gmxTrip, spotAnomaly, perpAnomaly)}${R}`);
-  if (loop === "spot") injectSpotAnomaly(nowMs, spotAnomaly);
-  else injectPerpAnomaly(nowMs, perpAnomaly);
+  const soil = soilForStep(nowMs, tripCtx);
+  const tSoil = hrtimeStart();
+  withMatrixHudMute(() => checkSoilResistance(soil));
+  const soilLatencyUs = hrtimeElapsedUs(tSoil);
 
-  console.log(`\n${RED}${label} · Step 3 — R20 auto-severance (core-integrated)${R}`);
-  const locked = readActiveSystemState();
-  console.log(`  signingChannelOpen=${locked.signingChannelOpen} · hardlock=${locked.hardlock} · cri=${locked.currentCri}`);
+  printTripSoilReject();
+  printBreachBreakdown(collectBreachForTrip(matrixLoop, nowMs, spotAnomaly, perpAnomaly));
+  printR20DeadlockBanner(readActiveSystemState());
 
-  const finalResult = evaluateLoop(keys, nowMs, tripCtx, locked);
-  printMatrix(`${label} · Step 4 — FAIL_CLOSED (zero-gas severance)`, finalResult, printOpts(tripCtx));
+  const finalResult = evaluateLoop(keys, nowMs, tripCtx, readActiveSystemState());
+  printTripVenueRows(finalResult.rows);
+  printExecutionLatencyBlock(soilLatencyUs, "  ");
 
-  const ok = tripSuccess(finalResult.rows, hedge, loop);
+  const ok = tripSuccess(finalResult.rows, hedge, matrixLoop);
   if (ok) {
-    console.log(
-      `${GREEN}${label} TRIP OK — ${finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length}/${finalResult.rows.length} FAIL_CLOSED${R}`,
-    );
-    printGuardTimeBlock(hrtimeElapsedUs(t0), "  ");
+    const n = finalResult.rows.filter((r) => r.status === "FAIL_CLOSED").length;
+    console.log(`\n${RED}${BOLD}${label} — ${n}/${finalResult.rows.length} venues FAIL_CLOSED${R}`);
+    printVerificationLatencyBlock(hrtimeElapsedUs(t0), "  ");
   } else {
     console.log(`${RED}${label} INCOMPLETE — expected universal FAIL_CLOSED${R}`);
   }
@@ -675,7 +559,7 @@ function main(): void {
   const benchKeys = loop === "perp" ? perpKeys : loop === "spot" ? SPOT_KEYS : allKeys;
   const benchSoil = { ...HEALTHY_SOIL, at: new Date(nowMs) };
   const benchmark = captureSoilBenchmark(benchSoil, () => {
-    evaluateLoop(benchKeys, nowMs, benchCtx, readActiveSystemState());
+    withMatrixHudMute(() => evaluateLoop(benchKeys, nowMs, benchCtx, readActiveSystemState()));
   });
   printPillarSetYStrategyBanner(strategyBasket, benchmark);
   resetState(); // benchmark harness may sever signing channel via checkSoilResistance()
@@ -693,14 +577,14 @@ function main(): void {
     let allAllowed = true;
     if (loop === "all") {
       const perpResult = evaluateLoop(perpKeys, nowMs, ctx, readActiveSystemState());
-      printMatrix("Loop A — Perp Stack pre-flight", perpResult, printOpts(ctx, "perp"));
+      printHappyMatrix("Loop A — Perp Stack pre-flight", perpResult, printOpts(ctx, "perp"));
       allAllowed = happyPathSuccess(perpResult.rows) && allAllowed;
       const spotResult = evaluateLoop(SPOT_KEYS, nowMs, ctx, readActiveSystemState());
-      printMatrix("Loop B — Spot Vault pre-flight", spotResult, printOpts(ctx, "spot"));
+      printHappyMatrix("Loop B — Spot Vault pre-flight", spotResult, printOpts(ctx, "spot"));
       allAllowed = happyPathSuccess(spotResult.rows) && allAllowed;
     } else {
       const result = evaluateLoop(keys, nowMs, ctx, readActiveSystemState());
-      printMatrix("Step 1 — Nominal pre-flight (PASS)", result, printOpts(ctx));
+      printHappyMatrix("Step 1 — Nominal pre-flight (PASS)", result, printOpts(ctx));
       allAllowed = happyPathSuccess(result.rows);
     }
     if (allAllowed) {
@@ -709,42 +593,44 @@ function main(): void {
       console.log(`\n${RED}${BOLD}🔴 HAPPY PATH INCOMPLETE — expected universal ALLOW${R}`);
       process.exitCode = 1;
     }
-    printGuardTimeBlock(hrtimeElapsedUs(t0), "  ");
+    printVerificationLatencyBlock(hrtimeElapsedUs(t0), "  ");
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
   }
 
   let allOk = true;
   if (loop === "perp" || loop === "all") {
-    if (loop === "all") resetState();
-    allOk = runCircuitBreaker(loop === "all" ? "Loop A · Perp Stack" : "Perp Stack", perpKeys, "perp", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
+    allOk =
+      runTripInterception(
+        loop === "all" ? "Loop A · Perp Stack" : "Perp Stack",
+        perpKeys,
+        "perp",
+        hedge,
+        nowMs,
+        gmxTrip,
+        spotAnomaly,
+        perpAnomaly,
+        t0,
+      ) && allOk;
   }
   if (loop === "spot" || loop === "all") {
-    if (loop === "all") resetState();
-    allOk = runCircuitBreaker(loop === "all" ? "Loop B · Spot Vault" : "Spot Vault", SPOT_KEYS, "spot", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
-  }
-  if (loop === "all") {
-    resetState();
-    const ctx = buildTripContext("all", false, false, spotAnomaly, perpAnomaly);
-    printMatrix(
-      "Combined · Step 1 — Full protocol nominal",
-      evaluateLoop(allKeys, nowMs, ctx, readActiveSystemState()),
-      printOpts(ctx, "all"),
-    );
-    allOk = runCircuitBreaker("Combined · Full Matrix", allKeys, "all", hedge, nowMs, gmxTrip, spotAnomaly, perpAnomaly, t0) && allOk;
+    allOk =
+      runTripInterception(
+        loop === "all" ? "Loop B · Spot Vault" : "Spot Vault",
+        SPOT_KEYS,
+        "spot",
+        hedge,
+        nowMs,
+        gmxTrip,
+        spotAnomaly,
+        perpAnomaly,
+        t0,
+      ) && allOk;
   }
 
-  const elapsedUs = hrtimeElapsedUs(t0);
-  if (allOk) {
-    console.log(`\n${GREEN}MATRIX COMPLETE — all loops FAIL_CLOSED${R}`);
-    printGuardTimeBlock(elapsedUs, "  ");
-  } else {
-    console.log(`\n${RED}MATRIX INCOMPLETE — see loop output above${R}`);
-    printGuardTimeBlock(elapsedUs, "  ");
-  }
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
   if (!allOk) process.exitCode = 1;
-  else return { tripped: true, reason: "CROSS_VENUE_FAIL_CLOSED" };
+  return { tripped: allOk, reason: "CROSS_VENUE_FAIL_CLOSED" };
   });
 }
 

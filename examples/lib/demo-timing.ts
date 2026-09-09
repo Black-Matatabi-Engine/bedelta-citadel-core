@@ -159,6 +159,15 @@ export function printGuardTimeBlock(us: number, indent = "      "): void {
   console.log(`${indent}${formatGuardTime(us)}`);
 }
 
+/** Happy-path verification telemetry — replaces Guard Time on ALLOWED paths. */
+export function formatVerificationLatency(us: number): string {
+  return `${GUARD_BRIGHT_GREEN}${BOLD}⚡ Verification Latency: ${formatLatencyLabel(us)}${R}`;
+}
+
+export function printVerificationLatencyBlock(us: number, indent = "      "): void {
+  console.log(`${indent}${formatVerificationLatency(us)}`);
+}
+
 export function printExecutionLatencyBlock(us: number, indent = "      "): void {
   console.log(`${indent}${formatExecutionLatency(us)}`);
 }
