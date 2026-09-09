@@ -6,7 +6,7 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **216 test files | 964 PASS Clean (100% PASS)** · `pnpm exec tsc --noEmit` **0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **217 test files | 967 PASS clean** · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Tri-Pillar scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
 
@@ -14,9 +14,22 @@
 
 ## Start Here — Grant Reviewers & Institutional Auditors
 
-**Step 1:** [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) — Tier 0–5 CLI verification (Docker · Vitest · Forge · ZeroDev · live telemetry).
+**Direction A (The Spear) — Recommended reading path for Grant Evaluators:**
 
-**Step 2:** Read the **Top 5 Core Grant Documents** below in order.
+| Step | Document | What you verify |
+|------|----------|-----------------|
+| **1** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Primary Grant Technical SSOT** — dual-wallet Δ-neutral yield engine · Wallet B GM vault · Wallet A HL hedge · cold-start margin guard |
+| **2** | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Production Workflow SSOT (Live Mainnet 42161)** · CLI Tier 0–5 · settlement contracts · live Arbiscan proofs |
+| **3** | On-Chain Settlement Contracts (in Verification Matrix §3) | PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` · GatePolicyLink `0xe4ef5350…` |
+| **4** | `execute:gmx:*` CLI commands (in Verification Matrix) | `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:e2e:arb-native` |
+
+```bash
+# Grant evaluator quick-start (Direction A)
+pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate
+pnpm execute:gmx:gm-deposit           # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
+pnpm demo:e2e                         # 4-step Happy Path macro lifecycle HUD
+pnpm test                             # 217 test files | 967 PASS clean
+```
 
 ---
 
@@ -24,12 +37,11 @@
 
 | # | Document | Role |
 |---|----------|------|
-| 1 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **CLI Tier 0–5 Verification Entry** — reproducible PASS bars for evaluators |
-| 2 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
-| 2b | [`architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | **ERC/EIP Standards Wiki** — compliance posture · ArbOS/Stylus · RPC/WSS |
-| 3 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
-| 4 | [`audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | **ZeroDev AA vs. Pre-execution Wasm Risk Substrate** — Kernel v3 institutional differentiation |
-| 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · 10 bps builder + referral rebate model |
+| 1 | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | **Primary Grant Technical SSOT** — Δ-neutral yield engine · dual-wallet workflow · cold-start guard |
+| 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **CLI Tier 0–5 Verification Entry** — reproducible PASS bars · mainnet settlement plane |
+| 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (5 files)** — topology · Three Pillars · R01–R20 · ERC/EIP wiki · risk framework |
+| 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
+| 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · **10 bps builder** + referral rebate model |
 
 ---
 
@@ -44,7 +56,7 @@
 | **Grant submissions** | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Buildathon main submission pack |
 | **HackQuest dual-video scripts** | [`pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md`](./pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md) | Pitch 180s (rainstorm) · Demo 120s (live CLI) |
 | **Arbitrum grant scope** | [`grants/arbitrum/GRANT_PROPOSAL.md`](./grants/arbitrum/GRANT_PROPOSAL.md) | DAO proposal · milestone scope |
-| **GMX Builders** | [`grants/gmx/GMX_BUILDERS_PITCH.md`](./grants/gmx/GMX_BUILDERS_PITCH.md) | GMX v2 integration pitch |
+| **GMX Builders** | [`grants/gmx/GMX_BUILDERS_PITCH.md`](./grants/gmx/GMX_BUILDERS_PITCH.md) | GMX v2 integration pitch · **10 bps uiFeeReceiver** |
 | **SDK package README** | [`../src/sdk/README.md`](../src/sdk/README.md) | In-repo SDK quick reference |
 | **Sidecar / B2B ops** | [`../docker/README.md`](../docker/README.md) | Telemetry sidecar · Docker Tier 5 |
 
@@ -55,7 +67,8 @@
 ```text
 docs/
  README.md ← you are here
- VERIFICATION_MATRIX.md Tier 0–5 CLI map (evaluators start here)
+ PRODUCTION_WORKFLOW_DEEP_DIVE.md ← Grant Technical SSOT (Direction A · start here)
+ VERIFICATION_MATRIX.md Tier 0–5 CLI map (evaluators · mainnet settlement)
  architecture/ Yellow Paper · standards wiki · risk mitigation & disclaimer framework
  audit/ DDIP · ZeroDev analysis · Robinhood gate · principal audit
  sdk/ Citadel SDK integration blueprint

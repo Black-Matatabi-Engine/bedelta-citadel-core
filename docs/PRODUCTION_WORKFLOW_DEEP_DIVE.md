@@ -1,22 +1,25 @@
-# SliverVine Citadel Shield — Production Workflow Deep Dive
+# 🏹 SliverVine Citadel — Production Workflow Deep Dive (Grant Technical SSOT)
 
-**Document role:** Authoritative English SSOT for the dual-wallet delta-neutral execution plane on Arbitrum One (`42161`).  
-**Verified commit:** `main` @ **`abd8518`** · **216 test files | 964 PASS Clean (100% PASS)**  
+**Document role:** **Primary Grant Technical SSOT** — authoritative English reference for the dual-wallet **Delta-Neutral Yield Engine** on Arbitrum One (`42161`).  
+**Direction A (The Spear):** High-efficiency, **non-custodial** yield routing — **100% active** GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
+**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `94ce3e3` (Direction B Shield SSOT) · **217 test files | 967 PASS clean**  
 **Related:** [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) · [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md)
 
 ---
 
 ## Executive Summary
 
-SliverVine's production envelope splits capital across **two specialized wallets with zero key coupling**:
+SliverVine Citadel is a **High-Efficiency, Non-Custodial Delta-Neutral Yield Engine** for institutional funds and AI Agents. Capital earns **GMX v2 GM Pool Real Yield** on Arbitrum while directional exposure is neutralized by a **1× perp short** on Hyperliquid L1 — locked at **Δ_net ≡ 0**.
 
 | Plane | Wallet | Venue | Responsibility |
 |-------|--------|-------|----------------|
-| **Yield vault** | Wallet B `0xc9Bdd…546f` | Arbitrum One · GMX v2 GM | GM LP **deposit / withdraw only** · `uiFeeReceiver` treasury lane |
+| **Yield vault** | Wallet B `0xc9Bdd…546f` | Arbitrum One · GMX v2 GM | GM LP **deposit / withdraw only** · **`uiFeeReceiver`** treasury lane |
 | **Hedge engine** | Wallet A `0xef0752…960d` | Hyperliquid L1 (primary) · GMX v2 (fallback) | Perp **short** hedge until **Δ_net ≡ 0** |
 
+**Protocol revenue:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) to Wallet B as `uiFeeReceiver` — SSOT [`gmx-revenue.ts`](../src/config/gmx-revenue.ts) · [`gmx-v2-order-payload.ts`](../src/services/adapters/gmx-v2-order-payload.ts).
+
 Cross-wallet sizing SSOT: [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts).  
-Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]`.
+Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[COLD_START_GUARD]`.
 
 ---
 
@@ -24,7 +27,7 @@ Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE
 
 ### 1.1 Scope boundary
 
-Wallet B is **exclusively** the Arbitrum GM LP vault. It must **never** sign GMX perp `createOrder` payloads.
+Wallet B is **exclusively** the Arbitrum GM LP yield vault. It must **never** sign GMX perp `createOrder` payloads.
 
 | Allowed | Forbidden |
 |---------|-----------|
@@ -34,22 +37,28 @@ Wallet B is **exclusively** the Arbitrum GM LP vault. It must **never** sign GMX
 
 **Enforcement:** global `assertWalletBPerpIsolation()` in [`wallet-isolation-guard.ts`](../src/core/wallet-isolation-guard.ts) — throws `WALLET_B_PERP_FORBIDDEN` on all GMX `createOrder` builder paths.
 
-### 1.2 Three-leg GM I/O multicall (verified live)
+### 1.2 Three-leg GM I/O multicall (verified live on 42161)
 
 Production GM I/O uses GMX v2 `ExchangeRouter` multicall on Arbitrum One:
 
-| Leg | Action | SSOT CLI |
-|-----|--------|----------|
-| **1 — Deposit** | `sendWnt` → `sendTokens` → `createDeposit` | `pnpm execute:gmx:gm-deposit` |
-| **2 — Approve** | GM LP token → GMX v2 Router spender | Part of withdraw prep · live tx [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) |
-| **3 — Withdraw** | `sendWnt` → `sendTokens(GM)` → `createWithdrawal` | `pnpm execute:gmx:gm-withdraw` |
-
-**Verified deposit tx:** [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774)  
-**Verified withdraw tx:** [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410)
+| Leg | Action | Live Tx | SSOT CLI |
+|-----|--------|---------|----------|
+| **1 — Deposit** | `sendWnt` → `sendTokens` → `createDeposit` | [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | `pnpm execute:gmx:gm-deposit` |
+| **2 — Approve** | GM LP token → GMX v2 Router spender | [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) | Part of withdraw prep |
+| **3 — Withdraw** | `sendWnt` → `sendTokens(GM)` → `createWithdrawal` | [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) | `pnpm execute:gmx:gm-withdraw` |
 
 **Code SSOT:** [`gmx-gm-deposit-multicall.ts`](../src/services/adapters/gmx-gm-deposit-multicall.ts) · [`gmx-gm-withdraw-multicall.ts`](../src/services/adapters/gmx-gm-withdraw-multicall.ts)
 
-### 1.3 Pre-flight pipeline (every leg)
+### 1.3 Builder fee revenue model (+10 bps `uiFeeReceiver`)
+
+| Field | SSOT |
+|-------|------|
+| **Fee rate** | `GMX_UI_FEE_BPS = 10` (+10 bps on GM pool flows) |
+| **Treasury wallet** | Wallet B `0xc9BddABD80982d2201376195DD9B85fb7951546f` (`uiFeeReceiver`) |
+| **Injection point** | Unsigned GMX v2 payload builder — pre-broadcast, non-custodial |
+| **Grant narrative** | $2,400 GM deposit → **+$2.40** protocol treasury rebate (not user principal) |
+
+### 1.4 Pre-flight pipeline (every leg)
 
 ```
 User intent
@@ -65,12 +74,12 @@ GMX keeper settlement remains protocol-native two-stage semantics; **user-side I
 
 ## Section 2 — Wallet A: Hedge Engine (HL Primary · GMX Fallback)
 
-### 2.1 Primary path — Hyperliquid L1 perp short
+### 2.1 Primary path — Hyperliquid L1 perp short (0-Gas)
 
 | Field | SSOT |
 |-------|------|
 | **Wallet** | `0xef0752df6387248B897F3A59A180af42D801960d` (`HL_WALLET_A_DEFAULT`) |
-| **Execution** | `executeHlSessionKeyOrder` — EIP-712 session-key IOC short |
+| **Execution** | `executeHlSessionKeyOrder` — EIP-712 session-key IOC **1× short** |
 | **Sizing** | `computeDeltaNeutralHedgeOrder()` from live GMX Wallet B ETH delta |
 | **Cron** | `runScheduledGmxHedgeCron` → `executeGmxCrossWalletHedge` |
 | **CLI** | `pnpm tsx scripts/hedge-gmx.ts` (`--live` for broadcast) |
@@ -105,7 +114,7 @@ $$
 
 ---
 
-## Section 3 — Dual-Wallet Cold Start & Capital Model
+## Section 3 — Dual-Wallet Cold-Start & Capital Model
 
 ### 3.1 Seed pre-funding / margin cushion (Wallet A)
 
@@ -113,33 +122,45 @@ $$
 
 | Layer | Mechanism | SSOT |
 |-------|-----------|------|
-| **HL margin cushion** | Pre-seed Wallet A with USDC margin on Hyperliquid L1 | Grant narrative: **$100 HL margin** backs ~$1,200 notional short (see `SUBMISSION.md` capital flow) |
+| **HL margin cushion** | Pre-seed Wallet A with USDC margin on Hyperliquid L1 | Grant narrative: **$100 HL margin** backs ~$1,200 notional short |
 | **5% cross-MMR buffer** | `DEFAULT_CROSS_MMR = 0.05` — liquidation distance floor | [`margin-buffer.test.ts`](../tests/risk-control/margin-buffer.test.ts) |
 | **5–10% NAV buffer** | `evaluateBufferHealth()` — pre-hedged liquidity target | [`buffer-engine.ts`](../src/core/buffer-engine.ts) · `DEFAULT_BUFFER_MIN_PCT = 0.05` · `DEFAULT_BUFFER_MAX_PCT = 0.10` |
 
 **Cold-start sequence:**
 
 ```
-1. Seed Wallet A HL margin (manual / treasury ops)
+1. Seed Wallet A HL margin (manual / treasury ops — Seed Margin Cushion)
 2. Verify [WALLET_A_HL_STATE] shows free buffer > 5% cross-MMR
 3. Wallet B GM deposit (3-leg multicall)
 4. Cron reads GMX delta → HL short until [CROSS_VENUE_MATCH] action = SKIP
 ```
 
-### 3.2 In-flight JIT bridge / pending settlement buffer
+### 3.2 `INSUFFICIENT_WALLETA_HEDGE_MARGIN` — JIT Margin Fail-Closed Guard
 
-When Wallet A margin is **unsettled or zero**, the hedge engine **fail-closed**:
+When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engine **fail-closed** before any HL IOC broadcast:
+
+| Field | SSOT |
+|-------|------|
+| **Error code** | `INSUFFICIENT_WALLETA_HEDGE_MARGIN` |
+| **Module** | [`cross-wallet-cold-start-guard.ts`](../src/services/cross-wallet-cold-start-guard.ts) |
+| **Trigger** | `assertWalletAMarginSufficiency()` — Wallet A `perpsMarginUsd` < `computeJitRebalanceRequiredMarginUsd(orderUsd)` |
+| **Margin formula** | `requiredMarginUsd = orderUsd × DEFAULT_CROSS_MMR (0.05)` |
+| **Telemetry** | `[COLD_START_GUARD] { walletABalanceUsd, requiredMarginUsd, status: "FAIL_CLOSED_PENDING_BRIDGE" }` |
+| **Cron behavior** | `executeGmxCrossWalletHedge` catches guard · logs skip · **no unhedged GM delta added** |
+
+**Rationale:** Citadel never opens an HL short without settled margin cushion. Operators must **re-seed Wallet A** before scaling Wallet B GM deposits — preventing naked delta exposure during cold-start or bridge-pending windows.
+
+### 3.3 In-flight JIT bridge / pending settlement buffer
 
 | Condition | System behavior |
 |-----------|-----------------|
 | Wallet A USDC = 0 (GMX fallback) | `execute:gmx:wallet-a-short-fallback` → **simulate only** · no broadcast |
 | HL session PK missing | `runScheduledGmxHedgeCron` → `CRON_SKIP: CIRCUIT_TRIP` · no hedge broadcast |
+| `INSUFFICIENT_WALLETA_HEDGE_MARGIN` | Hedge skipped · `[COLD_START_GUARD]` emitted · GM deposit may proceed but delta remains uncovered until margin seeded |
 | Soil trip on hedge probe | Flash unwind plan + `CRON_FLASH_UNWIND` · signing channel severed |
 | Bridge capital in-flight | `lostUsd ≡ 0` on `IN_FLIGHT_BRIDGE_CAPITAL` until `SETTLED` (Pillar 2 escort SSOT) |
 
-**Rationale:** JIT bridges introduce **seconds-to-minutes** settlement latency. Citadel sizes hedges from **settled** HL margin and live GMX delta — never from optimistic in-flight bridge receipts.
-
-### 3.3 Cron drift rebalance (`CRON_DRIFT_MIN_USD = 10`)
+### 3.4 Cron drift rebalance (`CRON_DRIFT_MIN_USD = 10`)
 
 [`scheduled-gmx-hedge-drift.ts`](../src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-drift.ts):
 
@@ -166,41 +187,52 @@ fetch HL Wallet A ETH short (USD)
     └─ else ──► CRON_SKIP_BALANCED (within ±$10 deadband)
 ```
 
-Micro-deposits below the **$10 aggregate drift threshold** are **batched implicitly** by the cron deadband — multiple small Wallet B GM deposits do not trigger a hedge tick until cumulative uncovered delta exceeds `CRON_DRIFT_MIN_USD`.
+Micro-deposits below the **$10 aggregate drift threshold** are **batched implicitly** by the cron deadband.
 
-### 3.4 Unwind & emergency freeze
+### 3.5 Unwind & emergency freeze
 
 | Trigger | Wallet A (HL) | Wallet B (GM) | Global |
 |---------|---------------|---------------|--------|
 | **Soil trip** (`checkSoilResistance`) | No new shorts · flash unwind dispatch | `emitGmxDecreaseSignal()` unsigned delever signal | `severSigningChannel()` · `CRON_FLASH_UNWIND` |
 | **R20 / FLAGS trip** | Session-key pipeline severed | GM I/O blocked at Edge pre-flight | `applyAutoSeveranceOnFlags()` |
 | **Over-hedge** | Reduce-only HL cover via `executeGmxCrossWalletUnwind` | No new deposit until balanced | `[CROSS_VENUE_MATCH] action=COVER` |
-| **Wallet A margin exhausted** | `needsSoilRebalance=true` in liquidation meter | **Freeze further unhedged GM deposits** at policy layer (operator must re-seed HL buffer before scaling Wallet B) |
+| **Wallet A margin exhausted** | `INSUFFICIENT_WALLETA_HEDGE_MARGIN` · hedge skipped | **Freeze further unhedged GM deposits** at policy layer | `[COLD_START_GUARD]` FAIL_CLOSED |
 
-**Emergency freeze semantics:** When Wallet A trips (margin buffer below 5% cross-MMR or soil severance), Citadel enters **read-only observer mode** — `tradeAllowed: false` until soil, sequencer, and `rootProtection` gates clear. Wallet B cannot safely add GM long delta without a matched HL short; the Edge firewall blocks toxic broadcast paths **before** mempool ingress (**0-Gas fail-closed**).
+**Emergency freeze semantics:** When Wallet A trips (margin buffer below 5% cross-MMR or soil severance), Citadel enters **read-only observer mode** — `tradeAllowed: false` until soil, sequencer, and `rootProtection` gates clear.
 
-### 3.5 On-chain settlement plane (Phase A+B+C)
+### 3.6 On-chain settlement plane (Phase A+B+C · Live Mainnet 42161)
 
 | Contract | Address | Role |
 |----------|---------|------|
-| **SliverVineAgentPolicyGuardV2** (current) | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` | GMX wire invariants · `stylusCoprocessor=0` → pure Solidity fallback |
-| **GmxSoilMatrixSwitch** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` | Single-SLOAD defense bitmap |
-| **SliverVineRiskOracleV2** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` | `defenseState` bitmap · 300s SLO window |
-| **PolicyGuard v1** (superseded) | `0xc66f96611a737c4e58706d0955594456eab88959` | Historical reference only |
+| **SliverVineAgentPolicyGuardV2** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | GMX wire invariants · `stylusCoprocessor=0` → pure Solidity fallback |
+| **GmxSoilMatrixSwitch** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | Single-SLOAD defense bitmap |
+| **SliverVineRiskOracleV2** | [`0xfadb14759a3d3c7e976697de61bf62627f14ec93`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | `defenseState` bitmap · 300s SLO window |
+| **SliverVineGatePolicyLink** | [`0xe4ef5350963241c49a29e72a4cf093208cd19af0`](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) | Bootstrap Gate `0xb174…` ↔ PolicyGuardV2 binding · setPolicyGuard [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
 
 ---
 
 ## Verification Commands
 
 ```bash
+# Unit tests — cold-start guard + dual-wallet telemetry
+pnpm exec vitest run tests/services/cross-wallet-cold-start-guard.test.ts
 pnpm exec vitest run tests/core/wallet-isolation-guard.test.ts
 pnpm exec vitest run tests/services/dual-wallet-telemetry.test.ts
 pnpm exec vitest run tests/services/scheduled-gmx-hedge.test.ts
-pnpm execute:gmx:gm-deposit      # Wallet B deposit (live arm: CONFIRM_GMX_GM_DEPOSIT=YES)
-pnpm execute:gmx:gm-withdraw     # Wallet B withdraw
-pnpm execute:gmx:wallet-a-short-fallback   # Wallet A GMX fallback (simulate)
-pnpm tsx scripts/hedge-gmx.ts    # Cross-wallet hedge dry-run
-pnpm demo:e2e                    # 4-step Happy Path macro lifecycle
+
+# Tier 1 — Mainnet native GM deposit demonstrations
+pnpm demo:e2e:arb-native              # Arbitrum One USDC direct GM deposit simulate (Wallet B probe)
+pnpm demo:e2e:arb-native -- --gm-amount=10
+pnpm execute:gmx:gm-deposit         # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
+pnpm execute:gmx:gm-withdraw        # Wallet B live withdraw
+
+# Hedge engine
+pnpm execute:gmx:wallet-a-short-fallback   # Wallet A GMX fallback (simulate only)
+pnpm tsx scripts/hedge-gmx.ts              # Cross-wallet hedge dry-run
+
+# Macro lifecycle HUD
+pnpm demo:e2e                       # 4-step Happy Path (Robinhood escort narrative)
+pnpm demo:e2e -- --unwind           # + Step 5 R20 exercise
 ```
 
 ---
@@ -209,10 +241,10 @@ pnpm demo:e2e                    # 4-step Happy Path macro lifecycle
 
 | Document | Role |
 |----------|------|
-| [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
+| [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub · on-chain settlement contracts |
 | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Grant submission SSOT |
 | [`architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Topology · Δ-neutral loop |
 
 ---
 
-*SilverVine Labs · Production Workflow SSOT · HEAD `abd8518` · 216 test files | 964 PASS Clean (100% PASS)*
+*SilverVine Labs · Production Workflow SSOT · HEAD `94ce3e3` · 217 test files | 967 PASS clean*

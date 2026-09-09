@@ -133,23 +133,37 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 
 ---
 
-## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+## 🏹 The Spear — Delta-Neutral Yield Engine (Direction A · Grant SSOT)
 
-Production delta-neutral execution splits **venue-specific custody** across two wallets. The cross-wallet hedge engine ([`gmx-cross-wallet-hedge.ts`](./src/services/gmx-cross-wallet-hedge.ts) · [`scheduled-gmx-hedge-cron.ts`](./src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-cron.ts)) reads **live GMX GM delta on Wallet B** and sizes **Hyperliquid session-key shorts on Wallet A** until **Δ_net ≡ 0**.
+SliverVine Citadel is a **High-Efficiency, Non-Custodial Delta-Neutral Yield Engine** — **100% active** routing to GMX v2 GM Pools (ETH/USDC) for **Real Yield**, combined with **1× Hyperliquid perp short** hedging via session keys until **Δ_net ≡ 0**.
 
 | Lane | Wallet | Venue | Role |
 |------|--------|-------|------|
-| **Wallet A — Hyperliquid Short Lane** | `0xef0752…960d` (default master) | Hyperliquid L1 Perps | Perp margin · EIP-712 **session keys** · 1× ETH short hedge execution · `executeGmxCrossWalletHedge` |
-| **Wallet B — Arbitrum Vault / GMX GM Lane** | `0xc9Bdd…546f` (default · also `uiFeeReceiver`) | Arbitrum One GMX v2 | User capital ingress · **$2,500** vault narrative · **$2,400** → ETH/USDC GM pool · **$100** → HL margin gateway |
+| **Wallet A — Hyperliquid Short Lane** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
+| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One GMX v2 | GM LP deposit/withdraw only · **+10 bps builder fee** treasury lane |
 
-**Grant E2E capital routing (Happy Path SSOT):** Robinhood/Arbitrum escort settles **$2,500 USDC** → **$2,400** GMX GM LP deposit (+10 bps builder fee to Protocol Treasury on Wallet B) → **$100** HL L1 margin bridge → Wallet A opens the matching short. User principal remains **$2,500** (`lostUsd ≡ $0`).
+**Protocol revenue:** `GMX_UI_FEE_BPS = 10` — every unsigned GMX v2 payload injects **+10 bps** to Wallet B as `uiFeeReceiver` ([`gmx-revenue.ts`](./src/config/gmx-revenue.ts)).
 
-**`pnpm demo:e2e`** presents this **multi-wallet orchestration in a single unified terminal HUD** (Steps 1–4 Happy Path · optional `--unwind` / `--trip`) — same invariant math as production [`computeCapitalInvariantLedger()`](./src/core/capital-invariant-ledger.ts), without requiring judges to watch two separate CLIs.
+**Cold-start safety:** `INSUFFICIENT_WALLETA_HEDGE_MARGIN` fail-closed guard blocks HL hedge broadcast when Wallet A margin cushion is below JIT threshold — operators must **pre-fund Seed Margin** before scaling Wallet B GM deposits. → [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md)
+
+**Grant E2E capital routing:** **$2,500 USDC** → **$2,400** GMX GM LP (+$2.40 treasury rebate) → **$100** HL margin → Wallet A matching short · **`lostUsd ≡ $0`**.
 
 ```bash
-pnpm demo:e2e              # 4-step cross-wallet Happy Path HUD
-pnpm demo:e2e -- --unwind  # + Step 5 Citadel Shield R20 exercise
+pnpm demo:e2e:arb-native              # Tier 1 — Arbitrum Native USDC direct GM deposit (42161 simulate)
+pnpm demo:e2e:arb-native -- --gm-amount=10
+pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
+pnpm execute:gmx:gm-withdraw          # Wallet B live GM withdraw multicall
+pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
+pnpm demo:e2e -- --unwind             # + Step 5 Citadel Shield R20 exercise
 ```
+
+→ **Full production workflow SSOT:** [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
+
+---
+
+## Multi-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
+
+Production delta-neutral execution splits **venue-specific custody** across two wallets. The cross-wallet hedge engine ([`gmx-cross-wallet-hedge.ts`](./src/services/gmx-cross-wallet-hedge.ts) · [`scheduled-gmx-hedge-cron.ts`](./src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-cron.ts)) reads **live GMX GM delta on Wallet B** and sizes **Hyperliquid session-key shorts on Wallet A** until **Δ_net ≡ 0**.
 
 ---
 
