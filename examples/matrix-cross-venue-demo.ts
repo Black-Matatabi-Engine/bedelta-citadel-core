@@ -203,9 +203,11 @@ function pendleSelection(nowMs: number, trip: boolean) {
 }
 
 function usdaiSoilInput(nowMs: number, trip: boolean): UsdaiSoilInput {
+  const wallMs = Date.now();
+  const clockMs = trip ? nowMs : wallMs;
   return {
-    oracleTimestampMs: trip ? nowMs - 9_000_000 : nowMs - 300_000,
-    nowMs,
+    oracleTimestampMs: trip ? clockMs - 9_000_000 : wallMs - 300_000,
+    ...(trip ? { nowMs: clockMs } : {}),
     susdaiPriceUsd: trip ? 0.992 : 1,
     navUsd: trip ? 95_000 : 102_500,
     gpuMarkUsd: 102_500,
@@ -268,6 +270,7 @@ function evaluateVenue(
         spreadBps: ctx.perpPendle ? 25 : 10,
         sessionKeyValid: !isR20Locked(state),
         requestsInLastMinute: 5,
+        skipSoilProbe: !ctx.active,
       });
       return { venue: "Hyperliquid", status: gateStatus(state, r.ok), detail: r.status };
     }
@@ -529,6 +532,10 @@ function injectPerpAnomaly(nowMs: number, perpAnomaly: PerpAnomaly): void {
   console.log(`  checkSoilResistance() -> ${soilTrip.tripped ? "REJECT" : "PASS"} | Layer-1 reasons=${soilTrip.reasons.join("|") || "none"}`);
 }
 
+function happyPathSuccess(rows: VenueRow[]): boolean {
+  return rows.length > 0 && rows.every((r) => r.status === "ALLOW");
+}
+
 function tripSuccess(rows: VenueRow[], hedge: PerpHedge, loop: MatrixLoop): boolean {
   if (loop !== "spot" && hedge === "variational") {
     const v = rows.find((r) => r.venue === "Variational RFQ");
@@ -588,8 +595,7 @@ function main(): void {
   const loop = parseLoop(argv);
   const hedge = parseHedge(argv);
   const spotAnomaly = parseSpotAnomaly(argv);
-  const healthyOnly = argv.includes("--healthy-only") && !isDemoTripArgv(argv);
-  const trip = isDemoTripArgv(argv) || !healthyOnly;
+  const isTrip = isDemoTripArgv(argv);
   const gmxTrip = argv.includes("--gmx");
   const perpAnomaly = parsePerpAnomaly(argv, gmxTrip, hedge);
   const perpKeys = perpKeysForHedge(hedge);
@@ -615,19 +621,32 @@ function main(): void {
     evaluateLoop(benchKeys, nowMs, benchCtx, readActiveSystemState());
   });
   printBanner(`Cross-Venue Matrix · ${loopTitle}`, benchmark);
+  resetState(); // benchmark harness may sever signing channel via checkSoilResistance()
 
   const printOpts = (ctx: TripContext): PrintMatrixOpts => ({ nowMs, ctx, hedge });
 
-  if (healthyOnly || !trip) {
+  if (!isTrip) {
     const keys = loop === "perp" ? perpKeys : loop === "spot" ? SPOT_KEYS : allKeys;
     const ctx = buildTripContext(loop, false, false, spotAnomaly, perpAnomaly);
+    let allAllowed = true;
     if (loop === "all") {
-      printMatrix("Loop A — Perp Stack pre-flight", evaluateLoop(perpKeys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
-      printMatrix("Loop B — Spot Vault pre-flight", evaluateLoop(SPOT_KEYS, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
+      const perpResult = evaluateLoop(perpKeys, nowMs, ctx, readActiveSystemState());
+      printMatrix("Loop A — Perp Stack pre-flight", perpResult, printOpts(ctx));
+      allAllowed = happyPathSuccess(perpResult.rows) && allAllowed;
+      const spotResult = evaluateLoop(SPOT_KEYS, nowMs, ctx, readActiveSystemState());
+      printMatrix("Loop B — Spot Vault pre-flight", spotResult, printOpts(ctx));
+      allAllowed = happyPathSuccess(spotResult.rows) && allAllowed;
     } else {
-      printMatrix("Step 1 — Nominal pre-flight (PASS)", evaluateLoop(keys, nowMs, ctx, readActiveSystemState()), printOpts(ctx));
+      const result = evaluateLoop(keys, nowMs, ctx, readActiveSystemState());
+      printMatrix("Step 1 — Nominal pre-flight (PASS)", result, printOpts(ctx));
+      allAllowed = happyPathSuccess(result.rows);
     }
-    console.log(`\n${GREEN}Nominal matrix PASS${R}`);
+    if (allAllowed) {
+      console.log(`\n${GREEN}${BOLD}🟢 ALL INVARIANTS CLEAR — Signature Released (Pre-Broadcast Allowed)${R}`);
+    } else {
+      console.log(`\n${RED}${BOLD}🔴 HAPPY PATH INCOMPLETE — expected universal ALLOW${R}`);
+      process.exitCode = 1;
+    }
     printGuardTimeBlock(hrtimeElapsedUs(t0), "  ");
     if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
     return;
@@ -659,7 +678,7 @@ function main(): void {
   }
   if (!ensureSoilWasm()) console.log(`${YELLOW}Wasm: offline (TS soil path)${R}`);
   if (!allOk) process.exitCode = 1;
-  else if (trip) return { tripped: true, reason: "CROSS_VENUE_FAIL_CLOSED" };
+  else return { tripped: true, reason: "CROSS_VENUE_FAIL_CLOSED" };
   });
 }
 
