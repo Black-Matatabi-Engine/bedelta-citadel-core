@@ -1,7 +1,8 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Citadel CLI Demo Guide
 
-> **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:matrix -- --trip`  
+> **Buildathon Primary (The Shield):** `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`  
 > **Performance SSOT:** Each independent agent guard achieves **p50 ~106µs** Edge Wasm reflex — real agents operate in isolation without concurrent queue overhead.  
+> **Venue SSOT:** Default **8-Protocol Execution Matrix rotation** · manual `--venue=<protocol>` lock · `--trip` fail-closed.  
 > **Vitest SSOT:** **217 test files | 967 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
@@ -10,21 +11,20 @@
 ## Tier 1 — AI Agent Shield (Primary)
 
 ```bash
-pnpm demo:wayfinder             # Wayfinder route interception · p50 ~106µs guard — ALLOW
-pnpm demo:elizaos               # ElizaOS action handler guard — ALLOW
-pnpm demo:virtuals              # Virtuals GAME worker guard — ALLOW
-pnpm demo:langchain             # LangChain CitadelRiskGuardTool — ALLOW
-pnpm demo:wayfinder -- --trip   # Wayfinder 0-Gas fail-closed soil trip on Arbitrum 42161
-pnpm demo:matrix -- --trip      # Full 7-protocol matrix · R20 physical deadlock severance (FAIL_CLOSED all legs)
+pnpm demo:wayfinder                      # Default: 8-venue rotation · p50 ~106µs guard — ALLOW
+pnpm demo:langchain -- --venue=pendle    # Manual lock: Pendle PT/YT lane — ALLOW
+pnpm demo:virtuals -- --trip             # Fail-closed: toxic intent → <14µs rootProtection()
+pnpm demo:matrix -- --trip               # Full 7-protocol matrix · R20 physical deadlock severance
 ```
 
 | Command | Scope |
 |---------|-------|
-| `pnpm demo:wayfinder` | Wayfinder autonomous pathfinding · **Pre-Routing Intent Gate** · sub-ms Wasm reflex |
-| `pnpm demo:elizaos` | ElizaOS plugin action execution · **Action-to-UserOp Dispatch Hook** |
-| `pnpm demo:virtuals` | Virtuals GAME protocol task loop · **On-Chain Task Execution Boundary** |
-| `pnpm demo:langchain` | LangGraph state node · **State Transition Guard** |
-| `pnpm demo:wayfinder -- --trip` | Any framework + `--trip` → **0-Gas FAIL_CLOSED** soil trip |
+| `pnpm demo:wayfinder` | Wayfinder · **Pre-Routing Intent Gate** · default **8-venue rotation** |
+| `pnpm demo:elizaos` | ElizaOS · **Action-to-UserOp Dispatch Hook** · default **8-venue rotation** |
+| `pnpm demo:virtuals` | Virtuals GAME · **On-Chain Task Execution Boundary** · default **8-venue rotation** |
+| `pnpm demo:langchain` | LangGraph · **State Transition Guard** · default **8-venue rotation** |
+| `pnpm demo:<framework> -- --venue=<protocol>` | Lock a specific protocol lane (e.g. `--venue=aave`, `--venue=hl`) |
+| `pnpm demo:<framework> -- --trip` | Simulated toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
 | `pnpm demo:matrix -- --trip` | Full **7-protocol** cross-venue matrix · R20 trip + severance |
 
 ---
@@ -33,7 +33,7 @@ pnpm demo:matrix -- --trip      # Full 7-protocol matrix · R20 physical deadloc
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:matrix -- --trip` | Independent framework guards · 7-protocol matrix R20 severance |
+| **Tier 1 — AI Agent Shield** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--venue` · `--trip` · `pnpm demo:matrix -- --trip` | Independent framework guards · 8-venue rotation · 7-protocol matrix R20 severance |
 | **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:variational` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · Variational RFQ · **7-protocol cross-venue matrix** |
 | **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain (each **p50 ~106µs** in isolation) |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer 1:1 guard · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
@@ -71,16 +71,37 @@ Append `-- --trip` to any Tier 1 command for **FAIL_CLOSED** demonstration.
 
 ## Tier 2 — Agent Frameworks
 
-Each framework demo runs **one agent guard in isolation** — demonstrating **p50 ~106µs** Edge Wasm reflex without multi-agent concurrent queue overhead.
+Each framework demo runs **one agent guard in isolation** — demonstrating **p50 ~106µs** Edge Wasm reflex without multi-agent concurrent queue overhead. All four demos (`wayfinder` · `elizaos` · `virtuals` · `langchain`) share identical CLI flags.
+
+### Demo modes
+
+| Mode | Flag | Behavior |
+|------|------|----------|
+| **Default (rotated)** | *(none)* | Auto-selects a venue from the **8-Protocol Execution Matrix** on each run. HUD prints `VENUE: <protocol> · rotated` plus the active `INVARIANT` check and protocol-specific intent. |
+| **Manual lock** | `--venue=<protocol>` | Locks a specific protocol lane. Example: `pnpm demo:langchain -- --venue=pendle` → HUD prints `VENUE: Pendle · locked`. |
+| **Fail-closed trip** | `--trip` | Forces simulated toxic intent / market invariant breach → **<14.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** pre-broadcast intercept. |
 
 ```bash
-pnpm demo:wayfinder     # Wayfinder route interception on Arbitrum 42161
-pnpm demo:elizaos       # ElizaOS Action handler guard
-pnpm demo:virtuals      # Virtuals GAME worker guard
-pnpm demo:langchain     # LangChain CitadelRiskGuardTool
+pnpm demo:wayfinder                      # Default 8-venue rotation
+pnpm demo:elizaos -- --venue=morpho      # Manual lock — Morpho Blue vault lane
+pnpm demo:virtuals -- --venue=variational # Manual lock — Variational Omni RFQ
+pnpm demo:langchain -- --trip            # Fail-closed soil trip
 ```
 
-Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.
+### 8-Protocol Execution Matrix (`--venue` keys)
+
+| `--venue` key | Protocol | Chain / venue | HUD invariant (sample) |
+|---------------|----------|---------------|------------------------|
+| `gmx` | GMX v2 | Arbitrum One 42161 | OI skew / reserve cap · cross-venue slippage fuse |
+| `pendle` | Pendle | Arbitrum One 42161 | \|Yield_current − Yield_oracle\| ≤ 150 bps |
+| `uniswap` / `uni` | Uniswap V3 | Arbitrum One 42161 | Tick depth · slippage ≤ 50 bps |
+| `aave` | Aave V3 | Arbitrum One 42161 | Health Factor HF ≥ 1.15 |
+| `morpho` | Morpho Blue | Arbitrum One 42161 | NAV deviation ≤ 30 bps |
+| `usdai` / `usd` | USD.ai | Arbitrum One 42161 | Peg drift ≤ 30 bps · oracle age ≤ 2h |
+| `hyperliquid` / `hl` | Hyperliquid | Hyperliquid L1 Perps | Spread ≤ 20 bps · session-key rate cap |
+| `variational` / `var` | Variational Omni RFQ | Arbitrum One 42161 | Quote stale ≤ 500ms · OLP ≤ 15% |
+
+Implementation SSOT: [`examples/lib/agent-venue-matrix.ts`](../examples/lib/agent-venue-matrix.ts)
 
 | Framework | Abstraction layer | Citadel interception point |
 |-----------|-------------------|---------------------------|
@@ -88,6 +109,8 @@ Append `-- --trip` for 0-Gas Fail-Closed soil trip on any framework demo.
 | **ElizaOS** | Plugin / Character Action Execution | Action-to-UserOp Dispatch Hook |
 | **Virtuals (GAME)** | Protocol-Level Agent Task Loop | On-Chain Task Execution Boundary |
 | **LangChain / LangGraph** | State Node & Multi-Step Reasoning | State Transition Guard |
+
+> **Note:** `pnpm demo:wayfinder -- --stabilizer` uses the Sepolia Stabilizer sandbox and ignores `--venue` rotation.
 
 ---
 
@@ -127,7 +150,8 @@ pnpm demo:e2e -- --trip           # Step 1 soil-trip stress intercept
 
 ```bash
 pnpm install
-pnpm demo:wayfinder   # Primary judge entry — independent p50 ~106µs guard
+pnpm demo:wayfinder                      # Primary judge entry — 8-venue rotation
+pnpm demo:langchain -- --venue=pendle    # Manual venue lock smoke test
 pnpm demo       # Primary Judge Showcase (12 Tri-Pillar Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)

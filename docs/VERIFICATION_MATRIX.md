@@ -14,7 +14,7 @@
 
 | Audience | First read | Then verify |
 |----------|------------|-------------|
-| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:wayfinder` · `pnpm demo:langchain -- --trip` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
+| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:wayfinder` · `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md) |
 | **Agent / adapter integrators** | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` |
 | **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
@@ -27,19 +27,35 @@
 
 ```bash
 pnpm install
-pnpm demo:wayfinder           # Wayfinder guard · p50 ~106µs Wasm reflex — ALLOW
-pnpm demo:langchain -- --trip # LangGraph soil trip → FAIL_CLOSED
-pnpm demo:matrix -- --trip    # 7-protocol R20 severance
-pnpm test -- --run            # 217 test files | 967 PASS clean
+pnpm demo:wayfinder                      # Default 8-venue rotation · p50 ~106µs — ALLOW
+pnpm demo:langchain -- --venue=pendle    # Manual venue lock — Pendle lane
+pnpm demo:wayfinder -- --trip            # Fail-closed · <14µs rootProtection()
+pnpm demo:matrix -- --trip               # 7-protocol R20 severance
+pnpm test -- --run                       # 217 test files | 967 PASS clean
 ```
 
 | Command | Proves |
 |---------|--------|
+| `pnpm demo:wayfinder` | Independent agent guard · **default 8-venue rotation** · HUD `VENUE` + `INVARIANT` |
+| `pnpm demo:<framework> -- --venue=<protocol>` | Manual protocol lane lock across all 4 frameworks |
+| `pnpm demo:<framework> -- --trip` | Toxic intent / invariant breach → **0-Gas FAIL_CLOSED** |
 | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
 | `pnpm run audit:security` | 3-Tier Security Matrix **5/0/0 PASS** |
+
+### Agent Framework CLI Flags (SSOT)
+
+All four demos — `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` — share:
+
+| Flag | Effect |
+|------|--------|
+| *(default)* | Auto-rotates across **8-Protocol Execution Matrix**: GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Hyperliquid · Variational Omni RFQ |
+| `--venue=<protocol>` | Locks venue (`gmx` · `pendle` · `uniswap` · `aave` · `morpho` · `usdai` · `hyperliquid`/`hl` · `variational`/`var`) |
+| `--trip` | Simulated toxic intent → **<14.0µs** Wasm `rootProtection()` deadlock |
+
+→ Full tables & framework interception points: [`DEMO_GUIDE.md`](./DEMO_GUIDE.md)
 
 ---
 

@@ -8,7 +8,7 @@
 >
 > 🔒 **Unidirectional Escort & Single-Pass Pipeline:** Hardened execution boundaries across Arbitrum Native 7-Protocol Matrix with zero capital leakage (`lostUsd ≡ 0`).
 >
-> 🚀 **Independent Framework Guards:** Each AI agent runtime (Wayfinder · ElizaOS · Virtuals · LangChain) runs its own **p50 ~106µs** Edge Wasm reflex — no concurrent queue overhead. Start with `pnpm demo:wayfinder`.
+> 🚀 **Independent Framework Guards:** Each AI agent runtime (Wayfinder · ElizaOS · Virtuals · LangChain) runs its own **p50 ~106µs** Edge Wasm reflex — **default 8-venue rotation** across the full Execution Matrix, or lock a lane with `--venue=<protocol>`. Start with `pnpm demo:wayfinder`.
 
 ---
 
@@ -16,10 +16,9 @@
 
 ```bash
 # Tier 1 — Independent AI Agent Framework Guards (p50 ~106µs Wasm reflex each)
-pnpm demo:wayfinder    # Autonomous pathfinding & intent routing
-pnpm demo:elizaos      # Plugin / character action execution
-pnpm demo:virtuals     # Virtuals GAME protocol task loop
-pnpm demo:langchain    # LangGraph state-node guard
+pnpm demo:wayfinder                      # Default: auto-rotates across 8-Protocol Execution Matrix
+pnpm demo:langchain -- --venue=pendle    # Manual lock: Pendle PT/YT lane
+pnpm demo:wayfinder -- --trip            # Fail-closed: toxic intent → <14µs rootProtection()
 
 # Tier 1 — 7-Protocol Matrix Physical Deadlock Severance (<14.0µs)
 pnpm demo:matrix -- --trip
@@ -155,7 +154,7 @@ Pure risk invariants are sunk into five core modules; legacy paths under `src/ad
 | **Hyperliquid** | L1 HF Orderbook AppChain | MaxSizePerOrder · 120/min · spread > **20 bps** | `hyperliquid-session-guard.ts` · `pnpm demo:hl` |
 | **Variational** | Arbitrum One (Omni RFQ) | Quote stale **>500ms** · drift **>30 bps** · OLP **>15%** | `variational-rfq-adapter.ts` · `pnpm demo:matrix -- --loop=perp --hedge=variational` |
 
-**AI Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` — each guard **p50 ~106µs** in isolation · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
+**AI Agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain):** `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` — **default 8-venue rotation** · `--venue=<protocol>` lock · `--trip` fail-closed · → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
 ### Pillar Set X — Unidirectional Bridge Escort (*Liquidity & Ingress Infrastructure*)
 
@@ -258,7 +257,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 | **Latency** | 50–300ms+ RTT (transport) | **14.0µs–106.0µs** Edge Gateway + Wasm reflex (**not** block time) vs LLM **~1.0s–10.0s** reasoning loop |
 | **Determinism** | N/A | **100% deterministic** bitmask evaluation |
 | **On hallucination** | Forwards opaque calldata | **FAIL-CLOSED** · `severSigningChannel()` · **0-Gas** |
-| **Demo proof** | N/A | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `--trip` for FAIL_CLOSED |
+| **Demo proof** | N/A | `pnpm demo:wayfinder` (8-venue rotation) · `--venue=pendle` lock · `--trip` FAIL_CLOSED |
 
 ### Fail-Closed Walkthrough — Cerebrum Hallucination
 
@@ -269,7 +268,34 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 1. **Cerebrum emits out-of-scope cross-chain calldata** (`~2,000ms` Chain-of-Thought).
 2. **Cerebellum reflex** — Base/Aerodrome outside Arbitrum allowlist → **FAIL-CLOSED** in **<14.0µs**.
 3. **`severSigningChannel()`** — **0-Gas**, no Sequencer queue entry.
-4. **Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:langchain -- --trip` · `pnpm demo:matrix -- --trip`
+4. **Judge reproduction:** `pnpm demo:langchain -- --venue=pendle` · `pnpm demo:wayfinder -- --trip` · `pnpm demo:matrix -- --trip`
+
+---
+
+## ⚡ Agent Framework Demo Modes (Wayfinder · ElizaOS · Virtuals · LangChain)
+
+All four independent agent framework demos share the same CLI surface — each runs **one guard in isolation** with **p50 ~106µs** Edge Wasm reflex (no concurrent multi-agent queue overhead).
+
+| Mode | Command pattern | Behavior |
+|------|-----------------|----------|
+| **Default (rotated)** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Auto-selects a venue from the **8-Protocol Execution Matrix** (rotates per harness clock). HUD prints `VENUE` · `INVARIANT` · protocol-specific intent. |
+| **Manual lock** | `pnpm demo:<framework> -- --venue=<protocol>` | Locks a specific protocol lane. Example: `pnpm demo:langchain -- --venue=pendle` |
+| **Fail-closed trip** | `pnpm demo:<framework> -- --trip` | Simulates toxic intent / market invariant breach → **<14.0µs** Wasm `rootProtection()` physical deadlock · **0-Gas** |
+
+**8-Protocol Execution Matrix venues** (accepted `--venue` keys):
+
+| `--venue` key | Protocol | Sample invariant (HUD) |
+|---------------|----------|--------------------------|
+| `gmx` | GMX v2 | OI skew / reserve cap · cross-venue slippage fuse |
+| `pendle` | Pendle | \|Yield_current − Yield_oracle\| ≤ 150 bps |
+| `uniswap` | Uniswap V3 | Tick depth · slippage ≤ 50 bps |
+| `aave` | Aave V3 | Health Factor HF ≥ 1.15 |
+| `morpho` | Morpho Blue | NAV deviation ≤ 30 bps |
+| `usdai` | USD.ai | Peg drift ≤ 30 bps · oracle age ≤ 2h |
+| `hyperliquid` / `hl` | Hyperliquid | Spread ≤ 20 bps · session-key rate cap |
+| `variational` / `var` | Variational Omni RFQ | Quote stale ≤ 500ms · OLP ≤ 15% |
+
+→ Full CLI reference: [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md) · [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)
 
 ---
 
@@ -278,13 +304,11 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — not a passive JSON-RPC for
 ### Flagship Demos (Tier 1 — AI Agent Shield)
 
 ```bash
-pnpm demo:wayfinder             # Tier 1 — Wayfinder guard · p50 ~106µs Wasm reflex
-pnpm demo:elizaos               # Tier 1 — ElizaOS action dispatch guard
-pnpm demo:virtuals              # Tier 1 — Virtuals GAME on-chain task guard
-pnpm demo:langchain             # Tier 1 — LangGraph state-transition guard
-pnpm demo:wayfinder -- --trip   # Tier 1 — 0-Gas fail-closed soil trip (any framework + --trip)
-pnpm demo:matrix -- --trip      # Tier 1 — 7-Protocol matrix · R20 physical deadlock severance
-pnpm demo:escort                # Pillar Set X multi-route compliance escort · lostUsd ≡ 0
+pnpm demo:wayfinder                        # Default 8-venue rotation · p50 ~106µs Wasm reflex
+pnpm demo:langchain -- --venue=aave        # Manual lock — Aave V3 supply lane
+pnpm demo:elizaos -- --trip                # Fail-closed soil trip · any framework supports --trip
+pnpm demo:matrix -- --trip                 # 7-Protocol matrix · R20 physical deadlock severance
+pnpm demo:escort                           # Pillar Set X multi-route compliance escort · lostUsd ≡ 0
 ```
 
 → **Granular protocol & framework demos:** [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
