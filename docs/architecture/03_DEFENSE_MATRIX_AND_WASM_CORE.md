@@ -1,10 +1,10 @@
 # Defense Matrix (R01–R20) & Wasm Soil Core
 
 > **Primary Highlights (Direction B — The Shield):**
-> - **Pure-Math Risk Engine** — **~1.0µs** pure invariant evaluation · zero async on the hot path · 28-protocol-slot bitmask vectoring
-> - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **<15µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
+> - **Pure-Math Risk Engine** — **~0.5µs–1.1µs** pure invariant evaluation · zero async on the hot path · 28-protocol-slot bitmask vectoring
+> - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **p50 ~15µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
 > - **Wasm Soil Core** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · Shield **p50 ~106 µs** · warm **< 60 µs**
-> - **Physical Deadlock** — toxic intent severed in **<15µs** before EIP-712 broadcast · **0-Gas** fail-closed
+> - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 >
 > **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **217 test files | 967 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
@@ -13,16 +13,16 @@
 
 Institutional-grade technical moat: Citadel Shield evaluates the full **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** as a **single parallel vector** — not a sequential per-venue RPC loop. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
 
-### Pure-Math Invariant Evaluation (~1.0µs)
+### Pure-Math Invariant Evaluation (~0.5µs–1.1µs)
 
 | Property | Implementation | Why it matters |
 |----------|----------------|----------------|
 | **Zero async on critical path** | [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | No `await`, no I/O, no network probes inside `checkSoilResistance()` pure evaluation — eliminates event-loop jitter during reflex arcs |
 | **Pre-allocated scratch** | Module-level `Float64Array` / `Uint8Array` lanes (`PROTO_VECT_LEN=28`) | Zero per-intent heap allocation · GC-stable hot path |
-| **Measured pure invariant** | CLI harness `Pure Invariant Time` row (`examples/lib/demo-timing.ts`) | **~1.0µs** isolated soil math — invariant evaluation only, excluding harness I/O |
+| **Measured pure invariant** | CLI harness `Pure Invariant Time` row (`examples/lib/demo-timing.ts`) | **~0.5µs–1.1µs** isolated soil math — invariant evaluation only, excluding harness I/O |
 
 $$
-\mathrm{AllowedToSign} = f_{\mathrm{pure}}(\mathbf{v}_{28}) \in \{0,1\} \quad \text{where } t_{\mathrm{pure}} \sim 1.0\,\mu\mathrm{s}
+\mathrm{AllowedToSign} = f_{\mathrm{pure}}(\mathbf{v}_{28}) \in \{0,1\} \quad \text{where } t_{\mathrm{pure}} \sim 0.5\text{–}1.1\,\mu\mathrm{s}
 $$
 
 ### Bitwise Bitmask FFI Vectoring (28-Protocol-Slot ABI v2)
@@ -44,9 +44,9 @@ Parallel vector checking is what makes **simultaneous multi-venue R20 physical d
 
 | Stage | Latency budget | Mechanism |
 |-------|----------------|-----------|
-| **Pure invariant kernel** | **~1.0µs** | Pure-math soil resistance · no async |
-| **Full matrix + Wasm FFI** | **p50 ~106µs** | End-to-end Shield reflex (TS Gateway + `soil_core.wasm`) |
-| **R20 severance envelope** | **<15µs** | `rootProtection()` · `severSigningChannel()` on any trip bit — **9/9** matrix legs (8 protocol venues + aggregated soil fuse) trip **FAIL_CLOSED** in `pnpm demo:matrix -- --trip` without per-leg queueing |
+| **Pure invariant kernel** | **~0.5µs–1.1µs** | Pure-math soil resistance · no async |
+| **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) | `rootProtection()` · `severSigningChannel()` on any trip bit |
+| **E2E Edge Shield** | **p50 ~106µs** | End-to-end Shield path (TS Gateway + `soil_core.wasm`) — **9/9** matrix legs trip **FAIL_CLOSED** in `pnpm demo:matrix -- --trip` without per-leg queueing |
 
 **Proof command:** `pnpm demo:matrix -- --trip` — reproduces **9/9 FAIL_CLOSED** severance across the full cross-chain matrix in a single HUD pass.
 
@@ -182,14 +182,14 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 
 **Status:** **17 Active | 2 Refactored | 1 Deprecated** · Full rule table: [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md#defense-matrix-r01-r20).
 
-**Bitmask SSOT:** All R01–R20 rules compile into a single defense bitmask evaluated atomically by `checkSoilResistance()` — any trip bit set → **FAIL-CLOSED** in **<15µs** via `rootProtection()` / `severSigningChannel()` before EIP-712 signing channel release.
+**Bitmask SSOT:** All R01–R20 rules compile into a single defense bitmask evaluated atomically by `checkSoilResistance()` — any trip bit set → **FAIL-CLOSED** in **p50 ~15µs** via `rootProtection()` / `severSigningChannel()` before EIP-712 signing channel release.
 
 | Tier | Rules | Role |
 |------|-------|------|
 | **Pre-execution soil** | R01 · R03 · R04 · R05† | Wasm soil fuse · L2 stale book · Pgate latency |
 | **Session / AA** | R06 · R07 · R08 · R14 | Scoped keys · notional cap · nonce heal · re-auth |
 | **Saga / flatten** | R09 · R10 · R12 · R13 | 2PC ledger · auto-flatten · leverage scaling · black-swan halt |
-| **Severance** | R17 · R20 · R02 | Daily loss cutoff · **<15µs physical deadlock** · `rootProtection()` |
+| **Severance** | R17 · R20 · R02 | Daily loss cutoff · **p50 ~15µs physical deadlock** · `rootProtection()` |
 | **Anchors / infra** | R11 · R15 · R16 · R18 · R19 | Dynamic SL · CCXT harness · 5-TX provenance · KV hardlock |
 
 † R05 SpoofBuster — **Deprecated** (superseded by soil / depth gate).

@@ -19,9 +19,9 @@
 | | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
 |---|-------------------------------------------|-------------------------------------|
 | **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
-| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **15.0µs–106.0µs** (0.015ms–0.106ms) |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **p50 ~15µs – p50 ~106µs** (0.015ms–0.106ms) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
-| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **<15.0µs** reflex — severs EIP-712 channel |
+| **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **p50 ~15µs** reflex — severs EIP-712 channel |
 
 ### Neuromorphic Workflow
 
@@ -32,16 +32,16 @@
                          │ (Intent Payload)
                          ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [Citadel Reflex Arc] Cerebellum Shield (⚡ 15.0µs - 106.0µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
+│ [Citadel Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
            ▼                           ▼
-     [ PASS: <106µs ]            [ FAIL: <15µs ]
+     [ PASS: p50 ~106µs ]            [ FAIL: p50 ~15µs ]
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**<15.0µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
 
 ---
 
@@ -52,14 +52,14 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & C
 | Layer | Mechanism | Latency | Gas |
 |-------|-----------|---------|-----|
 | **Edge Gateway** | TS + Wasm `checkSoilResistance()` bitmask evaluation | **p50 ~106µs** | **0** |
-| **Physical Deadlock** | `rootProtection()` · `severSigningChannel()` on R20 / soil trip | **<15µs** | **0** |
+| **Physical Deadlock** | `rootProtection()` · `severSigningChannel()` on R20 / soil trip | **p50 ~15µs** | **0** |
 | **On-Chain Anchor** | EIP-712 consume-once `SliverVineGate` attestation | Post-clearance only | Minimal |
 
 **Multi-framework coverage (V1.0 Live):** Wayfinder · ElizaOS · Virtuals · LangChain — prove in one command:
 
 ```bash
 pnpm demo:quad              # All four AI frameworks → ALLOW
-pnpm demo:quad -- --trip    # Hallucination / soil trip → FAIL_CLOSED (<15µs deadlock)
+pnpm demo:quad -- --trip    # Hallucination / soil trip → FAIL_CLOSED (p50 ~15µs deadlock)
 pnpm demo:matrix -- --trip  # 7+1 Cross-Chain Execution Matrix R20 severance
 ```
 
@@ -70,7 +70,7 @@ pnpm demo:matrix -- --trip  # 7+1 Cross-Chain Execution Matrix R20 severance
 
 ---
 
-## ⚡ Physical Deadlock — <15µs `rootProtection()` Reflex Arc
+## ⚡ Physical Deadlock — p50 ~15µs `rootProtection()` Reflex Arc
 
 When any R01–R20 bitmask trip fires, Citadel executes an involuntary **physical deadlock** — severing the EIP-712 signing channel before broadcast:
 
@@ -79,7 +79,7 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
                       │
           ┌───────────┴───────────┐
           ▼                       ▼
-    [ PASS: <106µs ]        [ FAIL: <15µs ]
+    [ PASS: p50 ~106µs ]        [ FAIL: p50 ~15µs ]
    Signature Released    rootProtection()
                          severSigningChannel()
                          0-Gas · no Sequencer entry
@@ -88,7 +88,7 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | Reflex | Module | Spec |
 |--------|--------|------|
 | **Soil fuse** | `checkSoilResistance()` · `pkg/soil_core.wasm` | R01–R20 bitmask · **< 28 KiB** Wasm |
-| **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **<15µs** EIP-712 pipe severance |
+| **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
 | **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED |
 
 **Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`

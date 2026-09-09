@@ -127,7 +127,7 @@ v1.0 is intentionally restricted to **ETH/USDC** so oracle reliability holds dur
 
 ### 1.3 Cross-Isolate `protocolMask` KV Synchronization
 
-Multi-Worker Cloudflare Edge isolates do not share in-memory state. When one isolate trips a protocol lane (e.g. USD.ai de-peg), sibling isolates must inherit the same bitmask without blocking the **<15µs** hot path.
+Multi-Worker Cloudflare Edge isolates do not share in-memory state. When one isolate trips a protocol lane (e.g. USD.ai de-peg), sibling isolates must inherit the same bitmask without blocking the **p50 ~15µs** hot path.
 
 | Concern | SSOT | Hot-path behavior |
 |---------|------|-------------------|
