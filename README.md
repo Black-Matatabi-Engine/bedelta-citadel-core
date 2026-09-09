@@ -16,9 +16,10 @@
 
 ```bash
 # Tier 1 — Independent AI Agent Framework Guards (p50 ~106µs Wasm reflex each)
-pnpm demo:wayfinder                      # Default: auto-rotates across 8-Protocol Execution Matrix
-pnpm demo:langchain -- --venue=pendle    # Manual lock: Pendle PT/YT lane
-pnpm demo:wayfinder -- --trip            # Fail-closed: toxic intent → <14µs rootProtection()
+pnpm demo:wayfinder                      # Wayfinder (Auto-rotates across 8-Protocol Matrix)
+pnpm demo:elizaos -- --venue=gmx         # ElizaOS (Manual lock to GMX v2 GM lane)
+pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME (Manual lock to Pendle PT/YT lane)
+pnpm demo:langchain -- --trip            # LangChain/LangGraph (Fail-closed: toxic intent -> <14µs rootProtection())
 
 # Tier 1 — 7-Protocol Matrix Physical Deadlock Severance (<14.0µs)
 pnpm demo:matrix -- --trip
