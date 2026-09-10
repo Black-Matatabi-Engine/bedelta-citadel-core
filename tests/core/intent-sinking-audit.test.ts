@@ -1,24 +1,44 @@
+import { spawnSync } from "node:child_process";
+import { fileURLToPath } from "node:url";
+import path from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   allocIntentCoreHeap,
   checkVenueDriftPure,
   encodeVenueMaskPure,
   evaluateIntentGatePure,
+  hashKeyToSlotIndex,
   INTENT_CORE_HEAP_BYTES,
   INTENT_CORE_HEAP_WORDS,
+  INTENT_RING_U32,
+  INTENT_RING_SLOT_COUNT,
   INTENT_SLOT_ATTEMPTS,
   INTENT_SLOT_ALLOWED_MASK,
   INTENT_SLOT_FLAGS,
   INTENT_SLOT_TARGET_BIT,
   INTENT_WASM_ABI_VERSION,
+  resetIntentRingSlab,
+  slotBaseOffset,
   trackAttemptBudgetPure,
   venueKeyToBitPure,
 } from "../../src/core/intent-core";
 import {
   INTENT_CORE_HEAP_BYTES as FFI_HEAP_BYTES,
   INTENT_CORE_HEAP_WORDS as FFI_HEAP_WORDS,
+  INTENT_RING_SLOT_COUNT as FFI_RING_SLOTS,
   INTENT_WASM_ABI_VERSION as FFI_ABI_VERSION,
 } from "../../src/core/wasm-intent-ffi";
+
+describe("intent-core — zero-allocation hot path", () => {
+  it("reuses pre-allocated ring slab without per-iteration heap churn (<16 KiB / 10k)", () => {
+    const worker = path.join(path.dirname(fileURLToPath(import.meta.url)), "intent-zero-alloc.worker.ts");
+    const result = spawnSync(process.execPath, ["--expose-gc", "--import", "tsx", worker], {
+      encoding: "utf8",
+    });
+    expect(result.status).toBe(0);
+    expect(result.stdout).toContain("PASS");
+  });
+});
 
 describe("intent-core — pure state machine determinism", () => {
   it("checkVenueDriftPure is deterministic for mask / bit inputs", () => {
@@ -63,6 +83,8 @@ describe("intent-core — Wasm C-ABI memory layout parity", () => {
     expect(INTENT_CORE_HEAP_BYTES).toBe(FFI_HEAP_BYTES);
     expect(INTENT_CORE_HEAP_WORDS).toBe(4);
     expect(INTENT_CORE_HEAP_BYTES).toBe(32);
+    expect(INTENT_RING_SLOT_COUNT).toBe(FFI_RING_SLOTS);
+    expect(INTENT_RING_SLOT_COUNT).toBe(256);
   });
 
   it("packs mandate fields into fixed slots 2–3", () => {
@@ -75,21 +97,22 @@ describe("intent-core — Wasm C-ABI memory layout parity", () => {
   });
 });
 
-describe("intent-core — zero-allocation hot path", () => {
-  it("reuses pre-allocated heap without per-iteration object churn", () => {
-    const heap = allocIntentCoreHeap();
-    const allowed = encodeVenueMaskPure([0]);
-    const target = venueKeyToBitPure(0);
-    const before = process.memoryUsage().heapUsed;
+describe("intent-core — ring slab slot indexing", () => {
+  it("maps digest keys to slot index via bitwise mask (0–255)", () => {
+    const digest =
+      "0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789";
+    const slot = hashKeyToSlotIndex(digest);
+    expect(slot).toBeGreaterThanOrEqual(0);
+    expect(slot).toBeLessThan(INTENT_RING_SLOT_COUNT);
+    expect(slot).toBe(hashKeyToSlotIndex(digest));
+  });
 
-    for (let i = 0; i < 5_000; i += 1) {
-      checkVenueDriftPure(allowed, target);
-      heap[INTENT_SLOT_ATTEMPTS] = 0n;
-      heap[INTENT_SLOT_FLAGS] = 0n;
-      trackAttemptBudgetPure(heap, 0);
-    }
-
-    const after = process.memoryUsage().heapUsed;
-    expect(after - before).toBeLessThan(512 * 1024);
+  it("resetIntentRingSlab clears all pre-allocated slots", () => {
+    const offset = slotBaseOffset(hashKeyToSlotIndex("agent:test-reset"));
+    INTENT_RING_U32[offset + INTENT_SLOT_ATTEMPTS] = 3;
+    INTENT_RING_U32[offset + INTENT_SLOT_FLAGS] = 1;
+    resetIntentRingSlab();
+    expect(INTENT_RING_U32[offset + INTENT_SLOT_ATTEMPTS]).toBe(0);
+    expect(INTENT_RING_U32[offset + INTENT_SLOT_FLAGS]).toBe(0);
   });
 });

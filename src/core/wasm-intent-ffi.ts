@@ -16,6 +16,10 @@ export const INTENT_FLAG_VENUE_DRIFT = 2;
 
 export const INTENT_MAX_ATTEMPTS_DEFAULT = 3;
 
+/** Ring slab: 256 intent slots × 4 i64 words (pre-allocated at module load). */
+export const INTENT_RING_SLOT_COUNT = 256;
+export const INTENT_RING_SLOT_MASK = INTENT_RING_SLOT_COUNT - 1;
+
 /** 7+1 venue matrix bit positions (u64 mask). */
 export const VENUE_BIT_GMX = 1n << 0n;
 export const VENUE_BIT_PENDLE = 1n << 1n;

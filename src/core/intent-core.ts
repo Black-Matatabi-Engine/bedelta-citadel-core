@@ -1,17 +1,32 @@
 /**
  * Pure intent mandate state machine — Wasm-ready, zero ambient I/O.
- * Memory layout matches `src/wasm/intent_core.rs` C-ABI (4 × i64).
+ * Hot path delegates to u32 ring slab (`intent-core-ring.ts`).
  */
 import {
   INTENT_CORE_HEAP_WORDS,
   INTENT_FLAG_SEVER_CHANNEL,
   INTENT_FLAG_VENUE_DRIFT,
   INTENT_MAX_ATTEMPTS_DEFAULT,
+  INTENT_RING_SLOT_COUNT,
   INTENT_SLOT_ALLOWED_MASK,
   INTENT_SLOT_ATTEMPTS,
   INTENT_SLOT_FLAGS,
   INTENT_SLOT_TARGET_BIT,
 } from "./wasm-intent-ffi";
+import type { AttemptBudgetResult, IntentGateResult } from "./intent-core-types";
+import { INTENT_RING_U32 } from "./intent-core-buffers";
+
+export type { AttemptBudgetResult, IntentGateResult } from "./intent-core-types";
+export { INTENT_RING_SLAB, INTENT_RING_U32 } from "./intent-core-buffers";
+export {
+  checkVenueDriftU32Pure,
+  evaluateIntentGateU32Pure,
+  hashKeyToSlotIndex,
+  resetIntentRingSlab,
+  slotBaseOffset,
+  syncIntentSlotToWasmSlab,
+  trackAttemptBudgetU32Pure,
+} from "./intent-core-ring";
 
 export {
   INTENT_CORE_HEAP_BYTES,
@@ -19,6 +34,8 @@ export {
   INTENT_FLAG_SEVER_CHANNEL,
   INTENT_FLAG_VENUE_DRIFT,
   INTENT_MAX_ATTEMPTS_DEFAULT,
+  INTENT_RING_SLOT_COUNT,
+  INTENT_RING_SLOT_MASK,
   INTENT_SLOT_ATTEMPTS,
   INTENT_SLOT_ALLOWED_MASK,
   INTENT_SLOT_FLAGS,
@@ -34,24 +51,28 @@ export {
   VENUE_BIT_VARIATIONAL,
 } from "./wasm-intent-ffi";
 
-export interface AttemptBudgetResult {
-  readonly allowed: boolean;
-  readonly severChannel: boolean;
-  readonly nextAttempts: number;
-}
+const ATTEMPT_BUDGET_SCRATCH: AttemptBudgetResult = {
+  allowed: true,
+  severChannel: false,
+  nextAttempts: 0,
+};
 
-/** Allocate zeroed C-ABI heap (4 × i64). */
+const GATE_RESULT_SCRATCH: IntentGateResult = {
+  ok: true,
+  venueDrift: false,
+  severChannel: false,
+  attempts: 0,
+};
+
 export function allocIntentCoreHeap(): BigInt64Array {
   return new BigInt64Array(INTENT_CORE_HEAP_WORDS);
 }
 
-/** Map venue matrix index (0–7) to single-bit mask. */
 export function venueKeyToBitPure(venueIndex: number): bigint {
   if (!Number.isInteger(venueIndex) || venueIndex < 0 || venueIndex > 63) return 0n;
   return 1n << BigInt(venueIndex);
 }
 
-/** OR-combine venue indices into allowed mask. */
 export function encodeVenueMaskPure(venueIndices: readonly number[]): bigint {
   let mask = 0n;
   for (let i = 0; i < venueIndices.length; i += 1) {
@@ -60,75 +81,118 @@ export function encodeVenueMaskPure(venueIndices: readonly number[]): bigint {
   return mask;
 }
 
-/**
- * Returns true when target venue is authorized (no drift).
- * Mask 0 or target bit 0 → mandate not armed → pass.
- */
+export function encodeVenueMaskU32Pure(venueIndices: readonly number[]): number {
+  let mask = 0;
+  for (let i = 0; i < venueIndices.length; i += 1) {
+    const idx = venueIndices[i]!;
+    if (idx >= 0 && idx <= 7) mask |= 1 << idx;
+  }
+  return mask;
+}
+
 export function checkVenueDriftPure(allowedVenuesMask: bigint, targetVenueBit: bigint): boolean {
   if (allowedVenuesMask === 0n || targetVenueBit === 0n) return true;
+  const allowedNum = Number(allowedVenuesMask);
+  const targetNum = Number(targetVenueBit);
+  if (allowedNum <= 0xff && targetNum <= 0xff) return (allowedNum & targetNum) !== 0;
   return (allowedVenuesMask & targetVenueBit) !== 0n;
 }
 
-/**
- * Increment attempt counter in heap slot 0; fail-closed on budget exhaust.
- * `currentAttempts` optional — when omitted, reads slot 0.
- */
 export function trackAttemptBudgetPure(
   memoryBuffer: BigInt64Array,
   currentAttempts?: number,
   maxAttempts: number = INTENT_MAX_ATTEMPTS_DEFAULT,
+  baseOffset: number = 0,
 ): AttemptBudgetResult {
+  const attemptsIdx = baseOffset + INTENT_SLOT_ATTEMPTS;
+  const flagsIdx = baseOffset + INTENT_SLOT_FLAGS;
   const base =
-    currentAttempts !== undefined
-      ? currentAttempts
-      : Number(memoryBuffer[INTENT_SLOT_ATTEMPTS] ?? 0n);
+    currentAttempts !== undefined ? currentAttempts : Number(memoryBuffer[attemptsIdx]);
   const next = base + 1;
-  memoryBuffer[INTENT_SLOT_ATTEMPTS] = BigInt(next);
+  memoryBuffer[attemptsIdx] = BigInt(next);
 
   if (next > maxAttempts) {
-    memoryBuffer[INTENT_SLOT_FLAGS] =
-      (memoryBuffer[INTENT_SLOT_FLAGS] ?? 0n) | BigInt(INTENT_FLAG_SEVER_CHANNEL);
-    return { allowed: false, severChannel: true, nextAttempts: next };
+    memoryBuffer[flagsIdx] = BigInt(Number(memoryBuffer[flagsIdx]) | INTENT_FLAG_SEVER_CHANNEL);
+    ATTEMPT_BUDGET_SCRATCH.allowed = false;
+    ATTEMPT_BUDGET_SCRATCH.severChannel = true;
+    ATTEMPT_BUDGET_SCRATCH.nextAttempts = next;
+    return ATTEMPT_BUDGET_SCRATCH;
   }
 
-  return { allowed: true, severChannel: false, nextAttempts: next };
+  ATTEMPT_BUDGET_SCRATCH.allowed = true;
+  ATTEMPT_BUDGET_SCRATCH.severChannel = false;
+  ATTEMPT_BUDGET_SCRATCH.nextAttempts = next;
+  return ATTEMPT_BUDGET_SCRATCH;
 }
 
-/** Pack mandate snapshot into heap slots 2–3 (read-only for Wasm FFI export). */
 export function packIntentMandateHeap(
   memoryBuffer: BigInt64Array,
   allowedVenuesMask: bigint,
   targetVenueBit: bigint,
+  baseOffset: number = 0,
 ): void {
-  memoryBuffer[INTENT_SLOT_ALLOWED_MASK] = allowedVenuesMask;
-  memoryBuffer[INTENT_SLOT_TARGET_BIT] = targetVenueBit;
+  memoryBuffer[baseOffset + INTENT_SLOT_ALLOWED_MASK] = allowedVenuesMask;
+  memoryBuffer[baseOffset + INTENT_SLOT_TARGET_BIT] = targetVenueBit;
 }
 
-/** Pure combined gate — venue drift then attempt budget. Mutates heap in-place. */
 export function evaluateIntentGatePure(
   memoryBuffer: BigInt64Array,
   allowedVenuesMask: bigint,
   targetVenueBit: bigint,
   maxAttempts: number = INTENT_MAX_ATTEMPTS_DEFAULT,
-): { ok: boolean; venueDrift: boolean; severChannel: boolean; attempts: number } {
-  packIntentMandateHeap(memoryBuffer, allowedVenuesMask, targetVenueBit);
+  baseOffset: number = 0,
+): IntentGateResult {
+  const isRingSlab = memoryBuffer.length === INTENT_CORE_HEAP_WORDS * INTENT_RING_SLOT_COUNT;
+  if (isRingSlab) {
+    const attemptsIdx = baseOffset + INTENT_SLOT_ATTEMPTS;
+    const flagsIdx = baseOffset + INTENT_SLOT_FLAGS;
+    const allowedNum = INTENT_RING_U32[baseOffset + INTENT_SLOT_ALLOWED_MASK];
+    const targetNum = INTENT_RING_U32[baseOffset + INTENT_SLOT_TARGET_BIT];
+    if (allowedNum !== 0 && targetNum !== 0 && (allowedNum & targetNum) === 0) {
+      INTENT_RING_U32[flagsIdx] |= INTENT_FLAG_VENUE_DRIFT;
+      GATE_RESULT_SCRATCH.ok = false;
+      GATE_RESULT_SCRATCH.venueDrift = true;
+      GATE_RESULT_SCRATCH.severChannel = false;
+      GATE_RESULT_SCRATCH.attempts = INTENT_RING_U32[attemptsIdx];
+      return GATE_RESULT_SCRATCH;
+    }
 
-  if (!checkVenueDriftPure(allowedVenuesMask, targetVenueBit)) {
-    memoryBuffer[INTENT_SLOT_FLAGS] =
-      (memoryBuffer[INTENT_SLOT_FLAGS] ?? 0n) | BigInt(INTENT_FLAG_VENUE_DRIFT);
-    return {
-      ok: false,
-      venueDrift: true,
-      severChannel: false,
-      attempts: Number(memoryBuffer[INTENT_SLOT_ATTEMPTS] ?? 0n),
-    };
+    const next = INTENT_RING_U32[attemptsIdx] + 1;
+    INTENT_RING_U32[attemptsIdx] = next;
+
+    if (next > maxAttempts) {
+      INTENT_RING_U32[flagsIdx] |= INTENT_FLAG_SEVER_CHANNEL;
+      GATE_RESULT_SCRATCH.ok = false;
+      GATE_RESULT_SCRATCH.venueDrift = false;
+      GATE_RESULT_SCRATCH.severChannel = true;
+      GATE_RESULT_SCRATCH.attempts = next;
+      return GATE_RESULT_SCRATCH;
+    }
+
+    GATE_RESULT_SCRATCH.ok = true;
+    GATE_RESULT_SCRATCH.venueDrift = false;
+    GATE_RESULT_SCRATCH.severChannel = false;
+    GATE_RESULT_SCRATCH.attempts = next;
+    return GATE_RESULT_SCRATCH;
   }
 
-  const budget = trackAttemptBudgetPure(memoryBuffer, undefined, maxAttempts);
-  return {
-    ok: budget.allowed,
-    venueDrift: false,
-    severChannel: budget.severChannel,
-    attempts: budget.nextAttempts,
-  };
+  packIntentMandateHeap(memoryBuffer, allowedVenuesMask, targetVenueBit, baseOffset);
+
+  if (!checkVenueDriftPure(allowedVenuesMask, targetVenueBit)) {
+    memoryBuffer[baseOffset + INTENT_SLOT_FLAGS] = BigInt(
+      Number(memoryBuffer[baseOffset + INTENT_SLOT_FLAGS]) | INTENT_FLAG_VENUE_DRIFT,
+    );
+    GATE_RESULT_SCRATCH.ok = false;
+    GATE_RESULT_SCRATCH.venueDrift = true;
+    GATE_RESULT_SCRATCH.severChannel = false;
+    GATE_RESULT_SCRATCH.attempts = Number(memoryBuffer[baseOffset + INTENT_SLOT_ATTEMPTS]);
+    return GATE_RESULT_SCRATCH;
+  }
+
+  const budget = trackAttemptBudgetPure(memoryBuffer, undefined, maxAttempts, baseOffset);
+  GATE_RESULT_SCRATCH.ok = budget.allowed;
+  GATE_RESULT_SCRATCH.venueDrift = false;
+  GATE_RESULT_SCRATCH.severChannel = budget.severChannel;
+  GATE_RESULT_SCRATCH.attempts = budget.nextAttempts;
+  return GATE_RESULT_SCRATCH;
 }

@@ -1,11 +1,15 @@
-/** Host adapter — wires SoilResistanceInput into pure `intent-core` state machine. */
+/** Host adapter — wires SoilResistanceInput into pure `intent-core` u32 ring slab. */
 import { hashAbiString } from "../utils/abi-keccak";
 import {
-  allocIntentCoreHeap,
   checkVenueDriftPure,
-  encodeVenueMaskPure,
+  hashKeyToSlotIndex,
   INTENT_MAX_ATTEMPTS_DEFAULT,
-  trackAttemptBudgetPure,
+  INTENT_RING_U32,
+  INTENT_SLOT_ALLOWED_MASK,
+  INTENT_SLOT_TARGET_BIT,
+  resetIntentRingSlab,
+  slotBaseOffset,
+  trackAttemptBudgetU32Pure,
   venueKeyToBitPure,
 } from "./intent-core";
 import { FLAGS_SEVERED } from "./risk-flags";
@@ -38,10 +42,8 @@ const VENUE_KEY_INDEX: Record<string, number> = {
   var: 7,
 };
 
-const attemptHeaps = new Map<string, BigInt64Array>();
-
 export function __resetIntentAttemptTrackerForTests(): void {
-  attemptHeaps.clear();
+  resetIntentRingSlab();
 }
 
 export function normalizeVenueKey(venue: string): string {
@@ -53,12 +55,12 @@ export function venueKeyToIndex(venueKey: string): number | undefined {
 }
 
 export function venueKeysToMask(venueKeys: readonly string[]): bigint {
-  const indices: number[] = [];
+  let mask = 0n;
   for (let i = 0; i < venueKeys.length; i += 1) {
     const idx = venueKeyToIndex(venueKeys[i]!);
-    if (idx !== undefined) indices.push(idx);
+    if (idx !== undefined) mask |= venueKeyToBitPure(idx);
   }
-  return encodeVenueMaskPure(indices);
+  return mask;
 }
 
 export function buildIntentDigest(input: IntentDigestInput): `0x${string}` {
@@ -86,13 +88,8 @@ function resolveAttemptKey(input: SoilResistanceInput): string | null {
   return null;
 }
 
-function resolveAttemptHeap(key: string): BigInt64Array {
-  let heap = attemptHeaps.get(key);
-  if (!heap) {
-    heap = allocIntentCoreHeap();
-    attemptHeaps.set(key, heap);
-  }
-  return heap;
+function resolveAttemptSlotOffset(key: string): number {
+  return slotBaseOffset(hashKeyToSlotIndex(key));
 }
 
 function mandateTrip(reasons: string[], sever = true): SoilResistanceResult {
@@ -138,8 +135,12 @@ export function evaluateIntentMandateGate(input: SoilResistanceInput): SoilResis
   const attemptKey = resolveAttemptKey(input);
   if (!attemptKey) return null;
 
-  const heap = resolveAttemptHeap(attemptKey);
-  const budget = trackAttemptBudgetPure(heap);
+  const offset = resolveAttemptSlotOffset(attemptKey);
+  if (allowedMask !== 0n && targetIdx !== undefined) {
+    INTENT_RING_U32[offset + INTENT_SLOT_ALLOWED_MASK] = Number(allowedMask);
+    INTENT_RING_U32[offset + INTENT_SLOT_TARGET_BIT] = 1 << targetIdx;
+  }
+  const budget = trackAttemptBudgetU32Pure(offset, MAX_ATTEMPTS_PER_INTENT);
   if (!budget.allowed) {
     severSigningChannel();
     return mandateTrip(
