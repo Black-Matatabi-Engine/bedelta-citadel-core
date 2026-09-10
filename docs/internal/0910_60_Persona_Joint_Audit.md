@@ -234,7 +234,7 @@
 
 ##### 4.5.1 Venue Drift & Intent Mandate Enforcement (`VENUE_DRIFT_REJECTED`)
 
-- **SSOT:** `src/core/intent-mandate.ts` · `buildIntentDigest({ chainId, venueKey, action })`
+- **SSOT:** `src/core/intent-core.ts` (pure state machine) · `src/core/intent-mandate.ts` (host adapter) · `buildIntentDigest({ chainId, venueKey, action })`
 - **Pre-soil gate:** `evaluateIntentMandateGate()` runs before bitmask math in `checkSoilResistance()`
 - **Whitelist:** `allowedVenues[]` + `targetVenue` / `venueKey` — unauthorized switch → **`VENUE_DRIFT_REJECTED`**
 - **Cryptographic bind:** venue swap invalidates digest → **`INTENT_DIGEST_MISMATCH`** + **`VENUE_DRIFT_REJECTED`**
@@ -242,12 +242,30 @@
 
 ##### 4.5.2 Max Attempt Budget & Channel Severing (`MAX_ATTEMPTS_EXCEEDED_SEVERED`)
 
-- **`IntentAttemptTracker`:** per `intentDigest` (or `agentId` fallback) · **`MAX_ATTEMPTS_PER_INTENT = 3`**
+- **`trackAttemptBudgetPure()`:** `BigInt64Array` heap slot 0 · per `intentDigest` (or `agentId` fallback) · **`MAX_ATTEMPTS_PER_INTENT = 3`**
 - **4th attempt:** immediate `severSigningChannel()` · `FLAGS_SEVERED` · **`MAX_ATTEMPTS_EXCEEDED_SEVERED`**
 - **Decorator:** `withCitadelShield` passes `agentId` · post-trip **60s** `MANDATORY_COOLDOWN_ACTIVE`
 - **Vitest:** 4th attempt asserts `signingChannelOpen=false` · `hardlock=true`
 
 **Goldfeder addendum (4.5):** Intent drift across **Bundlers / AA UserOps** is only safe if the signing channel sever is **physically upstream** of any relayer — Citadel's `severSigningChannel()` satisfies this for **integrated** agents; **unintegrated third-party bundlers operating entirely outside the Citadel hook are explicitly DISCLOSED OUT OF SCOPE.**
+
+#### Core Sinking Audit: Pure Intent State Machine & Wasm Readiness
+
+| Item | SSOT |
+|------|------|
+| **Pure core** | `src/core/intent-core.ts` — zero `Date.now()` · zero network · in-place `BigInt64Array` |
+| **C-ABI layout** | 4 × `i64` (32 bytes): `[attempts, flags, allowed_mask, target_bit]` |
+| **Venue drift** | `checkVenueDriftPure(allowedMask, targetBit)` — u64 bitmask · 7+1 venue matrix |
+| **Attempt budget** | `trackAttemptBudgetPure(heap)` — in-place increment · sever on 4th |
+| **Rust parity** | `src/wasm/intent_core.rs` — `intent_core_check_venue_drift` · `intent_core_track_attempt_budget` · `intent_core_evaluate_gate` |
+| **FFI constants** | `src/core/wasm-intent-ffi.ts` — `INTENT_WASM_ABI_VERSION = 1` |
+| **Vitest** | `tests/core/intent-sinking-audit.test.ts` — determinism · heap layout · hot-path allocation guard |
+
+```text
+SoilResistanceInput → intent-mandate (host) → intent-core (pure TypedArray)
+                              ↓ fail-closed
+                    VENUE_DRIFT_REJECTED | MAX_ATTEMPTS_EXCEEDED_SEVERED
+```
 
 #### 4.6 — Latency Bands & Hardware Variance (SSOT · Range Bands)
 

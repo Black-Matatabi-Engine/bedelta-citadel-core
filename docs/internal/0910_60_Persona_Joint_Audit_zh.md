@@ -221,7 +221,7 @@
 
 ##### 4.5.1 Venue Drift & Intent Mandate Enforcement（`VENUE_DRIFT_REJECTED`）
 
-- **實作 SSOT：** `src/core/intent-mandate.ts` · `buildIntentDigest({ chainId, venueKey, action })`
+- **實作 SSOT：** `src/core/intent-core.ts`（pure state machine）· `src/core/intent-mandate.ts`（host adapter）· `buildIntentDigest({ chainId, venueKey, action })`
 - **Soil 前置 gate：** `checkSoilResistance()` 於 bitmask 數學前執行 `evaluateIntentMandateGate()`
 - **白名單：** `allowedVenues[]` + `targetVenue` / `venueKey` — 未授權切換即 **`VENUE_DRIFT_REJECTED`**
 - **密碼學 bind：** 換 venue 令 digest 失效 → **`INTENT_DIGEST_MISMATCH`** + **`VENUE_DRIFT_REJECTED`**
@@ -229,12 +229,30 @@
 
 ##### 4.5.2 Max Attempt Budget & Channel Severing（`MAX_ATTEMPTS_EXCEEDED_SEVERED`）
 
-- **`IntentAttemptTracker`：** 每 `intentDigest`（或 `agentId` fallback）計數 · **`MAX_ATTEMPTS_PER_INTENT = 3`**
+- **`trackAttemptBudgetPure()`：** `BigInt64Array` heap slot 0 · 每 `intentDigest`（或 `agentId` fallback）計數 · **`MAX_ATTEMPTS_PER_INTENT = 3`**
 - **第 4 次：** 即時 `severSigningChannel()` · `FLAGS_SEVERED` · status **`MAX_ATTEMPTS_EXCEEDED_SEVERED`**
 - **Decorator 整合：** `withCitadelShield` 傳入 `agentId` · trip 後 **60s** `MANDATORY_COOLDOWN_ACTIVE`
 - **Vitest：** 第 4 次 attempt 驗證 `signingChannelOpen=false` · `hardlock=true`
 
 **Goldfeder 補述（4.5）：** 跨 **Bundler / AA UserOp** 的 intent drift 僅在 signing channel sever **物理上位於** relayer 時才安全 — Citadel 的 `severSigningChannel()` 對 **已整合** agent 滿足此條；**完全在 Citadel hook 外運作的未整合第三方 bundler 明確披露為 OUT OF SCOPE。**
+
+#### Core Sinking Audit：Pure Intent State Machine & Wasm Readiness
+
+| 項目 | SSOT |
+|------|------|
+| **Pure core** | `src/core/intent-core.ts` — zero `Date.now()` · zero network · in-place `BigInt64Array` |
+| **C-ABI layout** | 4 × `i64`（32 bytes）：`[attempts, flags, allowed_mask, target_bit]` |
+| **Venue drift** | `checkVenueDriftPure(allowedMask, targetBit)` — u64 bitmask · 7+1 venue matrix |
+| **Attempt budget** | `trackAttemptBudgetPure(heap)` — in-place increment · sever on 4th |
+| **Rust parity** | `src/wasm/intent_core.rs` — `intent_core_check_venue_drift` · `intent_core_track_attempt_budget` · `intent_core_evaluate_gate` |
+| **FFI constants** | `src/core/wasm-intent-ffi.ts` — `INTENT_WASM_ABI_VERSION = 1` |
+| **Vitest** | `tests/core/intent-sinking-audit.test.ts` — determinism · heap layout · hot-path allocation guard |
+
+```text
+SoilResistanceInput → intent-mandate (host) → intent-core (pure TypedArray)
+                              ↓ fail-closed
+                    VENUE_DRIFT_REJECTED | MAX_ATTEMPTS_EXCEEDED_SEVERED
+```
 
 #### 4.6 — 延遲 Band 與硬件差異（SSOT · Range Bands）
 

@@ -59,6 +59,7 @@ export function isGatewayNominalFastPath(soil: SoilResistanceInput): boolean {
   soilRef = soil; soilFast = ok; return ok;
 }
 
+/** Mandate gate runs in `checkSoilResistanceBase` via `intent-core` when fast path is bypassed. */
 export function checkSoilResistance(input: SoilResistanceInput): SoilResistanceResult {
   const result =
     !hasIntentMandateFields(input) && isGatewayNominalFastPath(input)

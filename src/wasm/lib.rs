@@ -8,4 +8,5 @@ fn panic(_: &core::panic::PanicInfo) -> ! {
 }
 
 mod clock_core;
+mod intent_core;
 mod soil_core;

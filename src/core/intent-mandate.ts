@@ -1,5 +1,13 @@
-/** P0 intent mandate — venue drift lock + per-digest attempt budget SSOT. */
+/** Host adapter — wires SoilResistanceInput into pure `intent-core` state machine. */
 import { hashAbiString } from "../utils/abi-keccak";
+import {
+  allocIntentCoreHeap,
+  checkVenueDriftPure,
+  encodeVenueMaskPure,
+  INTENT_MAX_ATTEMPTS_DEFAULT,
+  trackAttemptBudgetPure,
+  venueKeyToBitPure,
+} from "./intent-core";
 import { FLAGS_SEVERED } from "./risk-flags";
 import { severSigningChannel } from "./state-store";
 import type { SoilResistanceInput, SoilResistanceResult } from "./soil-resistance-types";
@@ -7,7 +15,7 @@ import type { SoilResistanceInput, SoilResistanceResult } from "./soil-resistanc
 export const VENUE_DRIFT_REJECTED = "VENUE_DRIFT_REJECTED" as const;
 export const MAX_ATTEMPTS_EXCEEDED_SEVERED = "MAX_ATTEMPTS_EXCEEDED_SEVERED" as const;
 export const INTENT_DIGEST_MISMATCH = "INTENT_DIGEST_MISMATCH" as const;
-export const MAX_ATTEMPTS_PER_INTENT = 3 as const;
+export const MAX_ATTEMPTS_PER_INTENT = INTENT_MAX_ATTEMPTS_DEFAULT;
 
 export interface IntentDigestInput {
   chainId: number;
@@ -15,17 +23,44 @@ export interface IntentDigestInput {
   action: string;
 }
 
-const attemptCounts = new Map<string, number>();
+const VENUE_KEY_INDEX: Record<string, number> = {
+  gmx: 0,
+  pendle: 1,
+  uniswap: 2,
+  uni: 2,
+  aave: 3,
+  morpho: 4,
+  usdai: 5,
+  usd: 5,
+  hyperliquid: 6,
+  hl: 6,
+  variational: 7,
+  var: 7,
+};
+
+const attemptHeaps = new Map<string, BigInt64Array>();
 
 export function __resetIntentAttemptTrackerForTests(): void {
-  attemptCounts.clear();
+  attemptHeaps.clear();
 }
 
 export function normalizeVenueKey(venue: string): string {
   return venue.trim().toLowerCase();
 }
 
-/** Cryptographic bind: chainId + venueKey + action — venue swap invalidates digest. */
+export function venueKeyToIndex(venueKey: string): number | undefined {
+  return VENUE_KEY_INDEX[normalizeVenueKey(venueKey)];
+}
+
+export function venueKeysToMask(venueKeys: readonly string[]): bigint {
+  const indices: number[] = [];
+  for (let i = 0; i < venueKeys.length; i += 1) {
+    const idx = venueKeyToIndex(venueKeys[i]!);
+    if (idx !== undefined) indices.push(idx);
+  }
+  return encodeVenueMaskPure(indices);
+}
+
 export function buildIntentDigest(input: IntentDigestInput): `0x${string}` {
   const chainId = Math.trunc(input.chainId);
   if (!Number.isFinite(chainId) || chainId <= 0) {
@@ -51,6 +86,15 @@ function resolveAttemptKey(input: SoilResistanceInput): string | null {
   return null;
 }
 
+function resolveAttemptHeap(key: string): BigInt64Array {
+  let heap = attemptHeaps.get(key);
+  if (!heap) {
+    heap = allocIntentCoreHeap();
+    attemptHeaps.set(key, heap);
+  }
+  return heap;
+}
+
 function mandateTrip(reasons: string[], sever = true): SoilResistanceResult {
   if (sever) severSigningChannel();
   return {
@@ -66,11 +110,12 @@ function mandateTrip(reasons: string[], sever = true): SoilResistanceResult {
 export function evaluateIntentMandateGate(input: SoilResistanceInput): SoilResistanceResult | null {
   const targetVenue = resolveTargetVenue(input);
   const allowed = input.allowedVenues;
-  if (targetVenue && allowed && allowed.length > 0) {
-    const ok = allowed.some((v) => normalizeVenueKey(v) === targetVenue);
-    if (!ok) {
-      return mandateTrip([`${VENUE_DRIFT_REJECTED}:target=${targetVenue}`]);
-    }
+  const targetIdx = targetVenue ? venueKeyToIndex(targetVenue) : undefined;
+  const targetBit = targetIdx !== undefined ? venueKeyToBitPure(targetIdx) : 0n;
+  const allowedMask = allowed && allowed.length > 0 ? venueKeysToMask(allowed) : 0n;
+
+  if (targetVenue && allowedMask !== 0n && !checkVenueDriftPure(allowedMask, targetBit)) {
+    return mandateTrip([`${VENUE_DRIFT_REJECTED}:target=${targetVenue}`]);
   }
 
   const chainId = input.chainId;
@@ -93,12 +138,15 @@ export function evaluateIntentMandateGate(input: SoilResistanceInput): SoilResis
   const attemptKey = resolveAttemptKey(input);
   if (!attemptKey) return null;
 
-  const next = (attemptCounts.get(attemptKey) ?? 0) + 1;
-  attemptCounts.set(attemptKey, next);
-  if (next > MAX_ATTEMPTS_PER_INTENT) {
+  const heap = resolveAttemptHeap(attemptKey);
+  const budget = trackAttemptBudgetPure(heap);
+  if (!budget.allowed) {
     severSigningChannel();
     return mandateTrip(
-      [`${MAX_ATTEMPTS_EXCEEDED_SEVERED}:attempt=${next}:limit=${MAX_ATTEMPTS_PER_INTENT}`, `FLAGS_SEVERED=${FLAGS_SEVERED}`],
+      [
+        `${MAX_ATTEMPTS_EXCEEDED_SEVERED}:attempt=${budget.nextAttempts}:limit=${MAX_ATTEMPTS_PER_INTENT}`,
+        `FLAGS_SEVERED=${FLAGS_SEVERED}`,
+      ],
       true,
     );
   }
