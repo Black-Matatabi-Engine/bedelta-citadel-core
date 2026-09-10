@@ -312,7 +312,7 @@ pnpm exec vitest run tests/adapters/langchain-tool.test.ts
 
 | Scope | Detail |
 |-------|--------|
-| Primary SSOT | **V1.0 Live Native Integrations** in [`src/adapters/`](../../src/adapters/) — use `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}` |
+| Primary SSOT | **V1.0 Live Native Integrations** in [`src/adapters/`](../../src/adapters/) — use `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer}` |
 | Supplementary | [`agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) · [`examples/adapters/`](../../examples/adapters/) (TS + Python evaluator scripts) |
 
 ---
@@ -341,7 +341,7 @@ pnpm tsx scripts/generate-survival-report.ts
 | Sidecar health | [`docker/README.md`](../../docker/README.md) | `curl -sS http://localhost:8080/health \| jq .` |
 | Live grant audit | Network required | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
 | 5-TX testnet proof | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet anchor in `verified_5tx_results.json` |
-| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · 12-scenario Vitest matrix · **4-step Happy Path** ANSI HUD (`--unwind` · `--trip` optional) |
+| Demo pipeline | `pnpm demo` · `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho}` · `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` · `pnpm demo:{stabilizer,e2e}` | 3-Tier CLI suite · per-venue `--trip` proofs · **4-step Happy Path** ANSI HUD (`--unwind` · `--trip` optional) |
 
 **Sidecar build:**
 

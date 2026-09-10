@@ -175,7 +175,7 @@ Orthogonal layers — Citadel is NOT a replacement AA wallet; it is a Pre-execut
 | **策略執行點** | `checkSoilResistance()` **廣播前** | Action handler 內（依插件） | Task evaluation 前 |
 | **Policy Guard** | `SliverVineAgentPolicyGuard.sol` · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) | 社群 plugin 品質不一 | GAME SDK 約定 |
 | **統一風控** | 28-lane soil · 7 venue matrix | 依 plugin 實作 | 依 integration |
-| **CLI 可複現** | `pnpm demo:{elizaos,virtuals,quad}` | 依社群範例 | 依官方 doc |
+| **CLI 可複現** | `pnpm demo:{elizaos,virtuals,wayfinder,langchain}` | 依社群範例 | 依官方 doc |
 | **npm 官方套件** | **未閉環**（V1.1 Open PR Spec） | **已上架** | **已上架** |
 
 ### 5.2 框架路徑比較
@@ -204,7 +204,7 @@ Citadel path:
 | Virtuals GAME | 2 | 2 | 5 | **3.0** |
 | Gelato + Agent（執行向） | 1 | 1 | 4 | **2.0** |
 
-**Citadel 優勢：** **Native Agent Policy Guard** + 四框架 **同構** `checkSoilResistance()` — 評委可用 **單一 CLI 矩陣** 驗證。  
+**Citadel 優勢：** **Native Agent Policy Guard** + 多框架 **同構** `checkSoilResistance()` — 評委可用 **精準 per-venue `--trip` demo** 驗證（`pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl`）。  
 **Citadel 劣勢：** **無官方 npm**；ElizaOS / Virtuals 審計官會問「為何不用現成 plugin」— 需 V1.1 Open PR 閉環。
 
 ---

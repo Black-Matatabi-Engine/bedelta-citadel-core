@@ -23,7 +23,7 @@ SliverVine Citadel Shield is positioned as a **Pre-Consensus Intent Firewall** �
 | **Latency / Reflex Gate** | Edge Wasm **p50 ~106 µs** · 0-Gas off-chain severance | Gelato Keeper **2–15 s** RPC polling + on-chain execution latency |
 | **Risk Model** | **28-lane** `PROTO_VECT_LEN` bitmask · Soil R01–R20 · Clock SSOT 30s hard trip | Standard Stop-Loss / HF Oracle **reacts post-fill or next block** |
 | **AA Integration** | ZeroDev Kernel **ERC-7579 TYPE(4) Pre-execution Hook** narrative + decoupled off-chain Shield | Biconomy / Safe **multisig and post-hoc validation**, not sub-ms intent fuse |
-| **AI Agent** | In-repo Native Guard · `evaluateAgentCitadelGuard()` · quad-framework demo CLI | ElizaOS / Virtuals **plugin ecosystem**, no unified 28-lane soil fuse |
+| **AI Agent** | In-repo Native Guard · `evaluateAgentCitadelGuard()` · per-framework demo CLI (`pnpm demo:{wayfinder,elizaos,virtuals,langchain}`) | ElizaOS / Virtuals **plugin ecosystem**, no unified 28-lane soil fuse |
 
 **R&D Conclusion:** Citadel holds a structural advantage in **latency magnitude (10⁴–10⁵×)** and **pre-intent fuse semantics**; competitors retain moats in **on-chain composability (AVS)**, **Keeper network effects (Gelato)**, and **Agent distribution (npm ecosystem)**. Highest marginal score this season comes from **on-chain evidence (GM fill · Dune 42161)**, not from adding more adapters.
 
@@ -175,7 +175,7 @@ Orthogonal layers — Citadel is NOT a replacement AA wallet; it is a Pre-execut
 | **Strategy Execution Point** | `checkSoilResistance()` **pre-broadcast** | Action handler (plugin-dependent) | Before task evaluation |
 | **Policy Guard** | `SliverVineAgentPolicyGuard.sol` · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) | Community plugin quality varies | GAME SDK conventions |
 | **Unified Risk Control** | 28-lane soil · 7 venue matrix | Plugin-dependent | Integration-dependent |
-| **CLI Reproducibility** | `pnpm demo:{elizaos,virtuals,quad}` | Community examples | Official docs |
+| **CLI Reproducibility** | `pnpm demo:{elizaos,virtuals,wayfinder,langchain}` | Community examples | Official docs |
 | **Official npm Package** | **OPEN** (V1.1 Open PR Spec) | **Published** | **Published** |
 
 ### 5.2 Framework Path Comparison
@@ -204,7 +204,7 @@ Citadel path:
 | Virtuals GAME | 2 | 2 | 5 | **3.0** |
 | Gelato + Agent (execution-oriented) | 1 | 1 | 4 | **2.0** |
 
-**Citadel Strength:** **Native Agent Policy Guard** + quad-framework **isomorphic** `checkSoilResistance()` — judges can verify via **single CLI matrix**.  
+**Citadel Strength:** **Native Agent Policy Guard** + multi-framework **isomorphic** `checkSoilResistance()` — judges can verify via **targeted per-venue `--trip` demos** (`pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl`).  
 **Citadel Weakness:** **No official npm**; ElizaOS / Virtuals auditors ask "why not use existing plugins" — requires V1.1 Open PR closure.
 
 ---
