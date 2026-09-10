@@ -41,3 +41,4 @@
 | [`BUILDATHON_30_JUDGES_SIMULATION_V1_ZH.md`](./BUILDATHON_30_JUDGES_SIMULATION_V1_ZH.md) | 30-judge v1.0 simulation |
 | [`BUILDATHON_30_JUDGES_SIMULATION_ZH.md`](./BUILDATHON_30_JUDGES_SIMULATION_ZH.md) | 30-judge v0.8 simulation |
 | [`BLACK_HAT_MEV_ADVERSARY_ATTACK_AUDIT_ZH.md`](./BLACK_HAT_MEV_ADVERSARY_ATTACK_AUDIT_ZH.md) | Red-team 9-vector audit |
+| [`0910_Grok_lunch_zh.md`](./0910_Grok_lunch_zh.md) | **0910 lunch red team** · Goldfeder / GMX / memory auditor · HEAD `056c125` · **9.05 / 10** |
