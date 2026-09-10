@@ -1,170 +1,85 @@
-# 🛡️ SliverVine Protocol (BeΔ) — Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive & 0-Gas Physical Deadlock for AI Agents on Arbitrum
+# 🛡️ SliverVine Protocol (BeΔ) — Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️ · `v0.95 Santenmoku Core`**
+**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️ ·** `v0.95 Santenmoku Core`
 
-> **Latency hierarchy (do not conflate):** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).
->
-> ⚡ **0-Gas Fail-Closed Physical Deadlock (`rootProtection`):** Wasm reflex core severs EIP-712 signing channels at **p50 ~15µs** before toxic payloads reach Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
->
-> 🧠 **Block AI Hallucinations & Prompt Injection:** Full Edge Shield bitmask evaluation (**p50 ~106µs** E2E) halting out-of-scope calldata and cross-chain intent drift in real-time.
->
-> 🔒 **Unidirectional Escort & Single-Pass Pipeline:** Hardened execution boundaries across the **5-Core Venue Matrix** (GMX v2 · Pendle · USD.ai · Hyperliquid · Variational) with zero capital leakage (`lostUsd ≡ 0`).
->
-> 🛡️ **Universal EIP-1193 Retail Guard SDK:** `@slivervine/robinhood-agentic-retail-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` pre-consensus with **0-Gas** on rejection. → [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md)
+> **An Edge Wasm-powered, Pre-Consensus 0-Gas Security Firewall & Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware for Autonomous AI Agents and Retail Wallets on Arbitrum.**[cite: 1, 3]
 
-[![Vitest](https://img.shields.io/badge/Vitest-1032%20PASS%20%28218%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
-[![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
-[![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
-[![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
-[![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
-[![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_p50_15%CE%BCs-blueviolet?logo=speedtest)](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary)
-[![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)](./tsconfig.json)
-[![License](https://img.shields.io/badge/License-BUSL--1.1-orange)](./LICENSE)
-[![Foundry Citadel Gate](https://img.shields.io/badge/Foundry-Forge_Test_Passed-brightgreen?logo=solidity)](./SliverVineGate)
-[![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Live_42161-28A0F0?logo=arbitrum)](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1)
+![Vitest](https://img.shields.io/badge/Vitest-1032%20PASS%20%28218%20files%29-brightgreen?logo=vitest)[cite: 5]
+![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)[cite: 5]
+![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)[cite: 5]
+![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)[cite: 5]
+![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)[cite: 5]
+![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_p50_15%CE%BCs-blueviolet?logo=speedtest)[cite: 5]
+![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)[cite: 5]
+![License](https://img.shields.io/badge/License-BUSL--1.1-orange)[cite: 5]
+![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Live_42161-28A0F0?logo=arbitrum)[cite: 5]
 
-<p align="center"><img src="public/brand/Detox_Sanctuary_wm.webp" alt="SliverVine Citadel Gate - Detox Sanctuary" width="600" style="border-radius: 8px;"></p>
+![SliverVine Citadel Gate - Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
-> **Latency scope:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield. None of these tiers measure L1/L2 block time, sequencer finality, or on-chain inclusion.
-
-> **Operational boundaries:** Edge latency bands are **not** Nitro/Stylus opcode times. Shield scope is **pre-broadcast** (before EIP-712 release) — **not** post-ALLOW private-mempool MEV protection, Chainlink CCIP native verification, or Robinhood Chain integration. Dune: **Sepolia (`421614`) live event stream** · **Arbitrum One (`42161`) contracts anchored + SQL spec only** (not claimed as live mainnet ingest). Ring-slab heap gate: **&lt;16 KiB** over 10k iterations (not absolute zero bytes).
-
-| Anchor | Value |
-|--------|-------|
-| **Vitest baseline** | **`218 test files | 1032 PASS clean`** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Zero-GC heap gate** | **`<16 KiB` / 10,000 iterations** · `npx vitest run tests/core/intent-sinking-audit.test.ts` → **9 passed (9)** |
-| **Arbitrum One Gate** | [Arbiscan · `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
+[cite: 5]
 
 ---
 
-## Core Architectural Innovations & Safety Invariants
 
-| # | Security Pillar | System Guarantees & Technical Defense | Verification Protocol |
-|---|-----------------|---------------------------------------|----------------------|
-| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified intents rejected at Edge isolates before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
-| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus · **100% fail-closed** when `stylusCoprocessor=0` | Stylus [`0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
-| **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic L1 primary hedge → Arbitrum-native GMX GM fallback; **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
-| **4** | **Physical Clock Monotonicity** | Edge Wasm fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
-| **5** | **Robinhood Agentic & Retail Wallet Guard SDK** | Apache-2.0 EIP-1193 C-end middleware · 0-Gas pre-consensus intercept · AI agent retry severance · EIP-6963 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
 
-→ Technical specification: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · Wallet Guard blueprint: [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md)
+## 🚀 Standards Moat — How SilverVine Solves Next-Gen EIPs
 
----
-
-## EVM Standards Compliance (Active v1.0 Matrix)
-
-| # | Standard | Citadel binding | Source anchor |
-|---|----------|-----------------|---------------|
-| **1** | **EIP-1193** | `withRetailGuardProvider()` — pre-consensus `eth_sendTransaction` / `eth_signTypedData_v4` intercept | [`provider.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) |
-| **2** | **EIP-6963** | `announceGuardedProvider()` — multi-wallet discovery announcer | [`provider.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) |
-| **3** | **EIP-712** | Typed-data pre-sign severance · consume-once Gate attestation | [`risk-evaluator.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/risk-evaluator.ts) · [`SliverVineGate.sol`](./contracts/SliverVineGate.sol) |
-| **4** | **ERC-4337 / ERC-7579** | Agentic modular AA on-chain policy guard | [`SliverVineAgentPolicyGuardV2.sol`](./contracts/src/SliverVineAgentPolicyGuardV2.sol) |
-| **5** | **ERC-2612 / Permit2** | Zero-gas allowance extraterritorial defense | [`calldata-parser.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/calldata-parser.ts) |
-
-Full wiki → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · Verify: `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35**
-
----
-
-## Standards Moat — How SilverVine Solves Next-Gen EIPs
-
-> **Industry's first EIP-1193 Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — ERC-8196 · ERC-8226 · EIP-8079.
+> **Industry's First [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).[cite: 5]
 >
-> **Pre-Consensus Edge-Wasm Firewall** · **218 test files \| 1032 PASS clean (100%)** · Edge Wasm executes **before** Arbitrum Sequencer ingress — **0-Gas** on rejection.
->
-> | Standard | Problem | SilverVine breakthrough | Proof |
-> |----------|---------|-------------------------|-------|
-> | **ERC-8196 / ERC-8118** | On-chain policy burns Gas · cannot catch prompt-injection pre-execution | EIP-1193 `withRetailGuardProvider()` · sub-10ms Wasm calldata gate | `npx vitest run tests/sdk/` **48/48** |
-> | **ERC-7715 / ERC-8226** | No zero-gas spend-cap enforcement at RPC layer | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) severs before signing | `pendle-shield.test.ts` **7/7** |
-> | **EIP-8079 / EIP-8105** | Blind mempool ingress · no 0-Gas abort | Client-side Preconf Gateway · [`soil-resistance-core.ts`](./src/core/soil-resistance-core.ts) local Wasm simulation | `protocol-mask-sync.test.ts` **6/6** |
->
-> Wiki → [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105)
+> SilverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.[cite: 1, 5]
+
+
+| Standard / EIP                                             | The Architectural Limitation (The Problem)                                                              | SilverVine Breakthrough (How We Solve It)                                                                                                                                                    | Code & Test Proof Anchor                                                                                          |
+| ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
+| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118)** *(AI Authenticated Policy Engine)* | On-chain policy checks burn Gas and cannot catch prompt-injection intent drifts pre-execution.[cite: 1] | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware (**`withRetailGuardProvider`**)** intercepts `eth_sendTransaction`, running **sub-10ms, 0-Gas** Wasm calldata validation.[cite: 1]                                     | `src/sdk/robinhood-agentic-retail-wallet-guard/` `tests/sdk/retail-guard-provider.test.ts` **(35 PASS)**[cite: 5] |
+| **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** *(Attenuated Session Mandates)*    | Lack of zero-gas enforcement for multi-agent delegation decay and cumulative spend caps.[cite: 1]       | `INTENT_RING_U32` + `[agentic-auto-roll-gate.ts](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts)` real-time spend attempt tracking; severs channel prior to signing.[cite: 1, 5] | `src/services/api/pendle-shield/` `tests/services/api/pendle-shield.test.ts` **(7/7 PASS)**[cite: 1, 5]           |
+| **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) / [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** *(Pre-Consensus 0-Gas Gateway)*    | Blind mempool ingress without a 0-Gas transaction withdrawal mechanism against MEV.[cite: 1]            | **Client-Side Preconf Gateway** in Wasm (`[soil-resistance-core.ts](./src/core/soil-resistance-core.ts)`) simulates execution and aborts locally before broadcast.[cite: 1, 5]               | `src/core/soil-resistance-core.ts` `tests/core/protocol-mask-sync.test.ts` **(6 PASS)**[cite: 5]                  |
+
+
+→ Wiki: `[04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105)`[cite: 5]
 
 ---
 
-## Performance Verification — Zero-GC Memory Isolation
 
-Pre-allocated **256×4 ring slab** intent mandate engine — **O(1)** slot hashing · **zero `Map` churn** · **C-ABI parity** with Rust `intent_core.rs`.
 
-```bash
-# Verify Zero-GC Hot-Path Memory Isolation (<16 KiB Heap Delta / 10,000 iterations)
-npx vitest run tests/core/intent-sinking-audit.test.ts
-```
+## ⚡ Key Architectural Innovations & Invariants
 
-**Expected output:**
-
-```text
- Tests  8 passed (8)
-```
-
-**Invariant coverage:** zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab indexing).
-
-→ Architecture SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Ring Slab](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
+- **0-Gas Pre-Consensus Sequencer Defense:** Unverified intents are rejected at Edge isolates before Arbitrum Sequencer queues — **0-Gas on fail-closed paths**.[cite: 5]
+- **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.[cite: 5]
+- **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).[cite: 5]
+- **Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK:** `@slivervine/robinhood-agentic-retail-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` pre-consensus.[cite: 5]
 
 ---
 
-## Verification Command Reference
 
-```bash
-# Zero-GC memory isolation (<16 KiB heap delta / 10,000 iterations)
-npx vitest run tests/core/intent-sinking-audit.test.ts   # expect: 8 passed (8)
 
-# Per-venue FAIL_CLOSED severance proofs
-pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
-pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
-pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
+## 🎯 5-Core Venue Execution Matrix
 
-# Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (5-Core Venues)
-pnpm demo:gmx -- --trip                    # GMX v2 FAIL_CLOSED proof
-pnpm demo:pendle                           # Pendle yield guard ALLOW path
-pnpm demo:usdai -- --trip                  # USD.ai collateral FAIL_CLOSED proof
-pnpm demo:hl -- --trip                     # Hyperliquid session guard FAIL_CLOSED proof
-pnpm demo:variational -- --trip            # Variational RFQ FAIL_CLOSED proof
-pnpm demo:perp-loop -- --trip              # Loop A: GMX / Pendle / HL / Variational
-pnpm demo:spot-loop -- --trip              # Loop B: USD.ai collateral lane
-npx vitest run tests/sdk/retail-guard-provider.test.ts  # EIP-1193 Retail Guard SDK
+All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legacy venues (Uniswap, Aave, Morpho) retain `RESERVED_ABI_V2` bitmask holes to ensure 100% C-ABI binary compatibility.[cite: 5]
 
-# Pillar Set X — Liquidity & Ingress Infrastructure
-pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
-pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 
-# Regression verification
-docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test                                # Full Regression Suite (218 test files | 1032 PASS clean)
-```
+| Venue         | Protocol            | Physical Boundary Guard                           | CLI Demo Command                  |
+| ------------- | ------------------- | ------------------------------------------------- | --------------------------------- |
+| `gmx`         | **GMX v2**          | OI skew / PoolTVL > **0.35** · reserve < **105%** | `pnpm demo:gmx -- --trip`         |
+| `pendle`      | **Pendle**          | |Yield − oracle| > **150 bps** · Auto-Roll Gate   | `pnpm demo:pendle`                |
+| `usdai`       | **USD.ai**          | Peg drift > **30 bps** · oracle age > **2h**      | `pnpm demo:usdai -- --trip`       |
+| `hyperliquid` | **Hyperliquid L1**  | Spread > **20 bps** · session-key rate cap        | `pnpm demo:hl -- --trip`          |
+| `variational` | **Variational RFQ** | Quote stale > **500ms** · OLP > **15%**           | `pnpm demo:variational -- --trip` |
+
+
+→ SSOT Guide: `[docs/DEMO_GUIDE.md](./docs/DEMO_GUIDE.md)` · Architecture: `[docs/architecture/README.md](./docs/architecture/README.md)`[cite: 5]
 
 ---
 
-## Latency Hierarchy (Measurement SSOT)
 
-Citadel Shield reports **three statistical latency tiers**. Map each verification command to the tier it exercises:
-
-| Tier | Metric | Scope (what is measured) | Canonical demo |
-|------|--------|--------------------------|----------------|
-| **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` pure-math kernel — no async · no harness I/O | CLI HUD `Pure Invariant Time` row |
-| **Wasm Reflex Core** | **p50 ~15µs** (**<20µs warm path**) | `rootProtection()` physical deadlock · `severSigningChannel()` — standalone pure-math engine | `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` · `pnpm demo:gmx -- --trip` |
-| **E2E Edge Shield** | **p50 ~106µs** | Cloudflare Worker + TypeScript Gateway + Wasm FFI — full pre-broadcast guard path | `pnpm demo:gmx` · `pnpm demo:variational -- --trip` |
-
-> **Excluded from all tiers:** L1/L2 block confirmation · sequencer finality · on-chain inclusion time.
-
----
 
 ## ⚡ Neuromorphic Security Architecture (AEB Analogy)
 
-**Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents** (**Pillar Set Y** · *Pre-Consensus Firewall & Reflex Defense*).
+**Citadel Shield acts as the involuntary reflex arc for autonomous AI agents (Pillar Set Y).**[cite: 5]
 
-**AEB analogy:** Think of Citadel Shield like **AEB (Automated Emergency Braking)** in a car. The LLM **Cerebrum** is the driver planning the route (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **p50 ~15µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before the vehicle ever reaches the intersection (Sequencer queue, Bundler ingress, or mempool). The EIP-712 signing channel is severed while the intent is still in the cabin.
+**AEB Analogy:** Think of Citadel Shield like **Automated Emergency Braking (AEB)** in a vehicle. The LLM **Cerebrum** plans the trading strategy (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **p50 ~15µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before reaching the Sequencer queue or mempool.[cite: 5]
 
-| | **Cerebrum (LLM Reasoning & Agent Loop)** | **Cerebellum Reflex Arc (Citadel Shield)** |
-|---|-------------------------------------------|---------------------------------------------|
-| **Stack** | DeepSeek-R1 / GPT-4 + any EIP-1193 wallet host | Wasm `checkSoilResistance()` reflex kernel · `withRetailGuardProvider()` |
-| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **E2E p50 ~106µs** (ALLOW) · **p50 ~15µs reflex core** (FAIL_CLOSED) |
-| **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
-| **On threat** | May emit out-of-scope calldata (e.g. cross-chain hallucination to Base / Aerodrome) | **p50 ~15µs** reflex — severs EIP-712 channel |
-
-### Neuromorphic Workflow
-
-```
+```text
 ┌────────────────────────────────────────────────────────────────┐
 │ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
 └────────────────────────────────────────────────────────────────┘
@@ -178,73 +93,65 @@ Citadel Shield reports **three statistical latency tiers**. Map each verificatio
            ▼                           ▼
      [ PASS: p50 ~106µs ]            [ FAIL: p50 ~15µs ]
     Signature Released          Reflex Deadlock Severed
+```[cite: 5]
+
+---
 ```
 
-**Fail-closed behavior:** Out-of-scope calldata triggers physical deadlock (**p50 ~15µs**) via `severSigningChannel()` before EIP-712 broadcast — zero on-chain gas on rejected paths. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
+
+
+## ⏱️ Performance Verification & Latency Hierarchy
+
+Citadel Shield reports three statistical latency tiers:[cite: 5]
+
+
+| Tier                    | Metric           | Scope (What is Measured)                                                                  | Canonical Verification Command             |
+| ----------------------- | ---------------- | ----------------------------------------------------------------------------------------- | ------------------------------------------ |
+| **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` pure-math kernel — no async I/O.[cite: 5]                | CLI HUD `Pure Invariant Time` row[cite: 5] |
+| **Wasm Reflex Core**    | **p50 ~15µs**    | `rootProtection()` physical deadlock · `severSigningChannel()` pure Wasm engine.[cite: 5] | `pnpm demo:gmx -- --trip`                  |
+| **E2E Edge Shield**     | **p50 ~106µs**   | Cloudflare Worker + TypeScript Gateway + Wasm FFI path.[cite: 5]                          | `pnpm demo:gmx`                            |
+
+
+*Zero-GC Memory Isolation Benchmark:* Pre-allocated **256×4 ring slab** intent engine achieves `<16 KiB` **Heap Delta over 10,000 iterations** (`npx vitest run tests/core/intent-sinking-audit.test.ts`).[cite: 5]
 
 ---
 
-## 🎯 5-Core Venue Matrix
 
-**Pillar Set Y** guards all production lanes via Wasm `checkSoilResistance()`. Pruned venues (Uniswap · Aave · Morpho) retain **RESERVED_ABI_V2** bitmask holes — see [`docs/SSOT_VOCABULARY.md`](./docs/SSOT_VOCABULARY.md).
 
-| Venue | Protocol | Physical boundary | Demo |
-|-------|----------|-------------------|------|
-| `gmx` | GMX v2 | OI skew / PoolTVL > **0.35** · reserve < **105%** | `pnpm demo:gmx` |
-| `pendle` | Pendle | \|Yield − oracle\| > **150 bps** | `pnpm demo:pendle` |
-| `usdai` | USD.ai | Peg drift > **30 bps** · oracle age > **2h** | `pnpm demo:usdai` |
-| `hyperliquid` / `hl` | Hyperliquid L1 | Spread > **20 bps** · session-key rate cap | `pnpm demo:hl` |
-| `variational` / `var` | Variational Omni RFQ | Quote stale > **500ms** · OLP > **15%** | `pnpm demo:variational` |
-
-→ Adapter deep dives · bridge escort mechanics · R20 matrix → [`docs/architecture/README.md`](./docs/architecture/README.md) · CLI flags → [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
-
----
-
-## 🏛️ Live Proof MVP: Sovereign Vault (Pillar Set X)
-
-The **Citadel-Armor Sovereign Vault** is a live PoC that **Pillar Set X** capital routing works under **Pillar Set Y** microsecond circuit breaking: GMX v2 GM Pools (ETH/USDC) Real Yield on Wallet B, paired with a **1× Hyperliquid perp short** on Wallet A until **Δ_net ≡ 0**, with **`lostUsd ≡ $0`** across the grant E2E lifecycle (`pnpm demo:e2e`).
-
-Wallet segregation (Wallet A hedge · Wallet B principal · Protocol Treasury +10 bps builder rebate), cold-start margin guards, and production deposit/withdraw multicalls → [`docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./docs/PRODUCTION_WORKFLOW_DEEP_DIVE.md).
-
----
-
-## 📚 English SSOT Hub & Extended Audit
-
-| Priority | Document | Role |
-|----------|----------|------|
-| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | Executive protocol summary · dual-layer validation architecture |
-| **2** | [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) | Verification hub — CLI Tier 0–5 · decoupled proof index |
-| **3** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) | Technical specification · v0.95 patch log |
-| **4** | [`docs/architecture/README.md`](./docs/architecture/README.md) | Yellow Paper · R01–R20 · Hybrid Pillar Sets X & Y |
-| **5** | [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md) | Granular `pnpm demo:*` command reference |
-| **6** | [`docs/README.md`](./docs/README.md) | Full documentation index · audit · grants · SDK blueprint |
-
-**Core product:** **SliverVine Citadel Shield** is a **Pre-Consensus Intent Firewall & Execution Safety Primitive** for AI Agents on Arbitrum — off-chain Edge reflex (`checkSoilResistance()`) + on-chain **EIP-712 consume-once `SliverVineGate`**. Pure `src/core/` module map → [`01_SYSTEM_TOPOLOGY`](./docs/architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#core-sinking-ssot-srccore).
-
-### Extended Express Audit
+## 🛠️ Quick Verification Reference
 
 ```bash
-# Zone A — Primary verification commands
-pnpm demo:gmx -- --trip && pnpm demo:variational -- --trip && pnpm demo:hl -- --trip
+# 1-Line 5-Venue Trip Verification (0-Gas Pre-Consensus Interceptions)
+pnpm demo:gmx -- --trip           # GMX v2 FAIL_CLOSED proof
+pnpm demo:pendle                  # Pendle Yield Guard ALLOW path
+pnpm demo:usdai -- --trip         # USD.ai Collateral FAIL_CLOSED proof
+pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
+pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
-# Zone B — Inside Pillar Sets X & Y
-pnpm test -- --run && pnpm demo:e2e
-pnpm test:zerodev
-pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
-cd SliverVineGate && forge test && cd ..
-pnpm audit:fast && pnpm audit:security
+# Strategy Loops & SDK Verification
+pnpm demo:perp-loop -- --trip     # Loop A: GMX / Pendle / HL / Variational
+pnpm demo:spot-loop -- --trip     # Loop B: USD.ai Collateral Lane
+npx vitest run tests/sdk/retail-guard-provider.test.ts # EIP-1193 Retail Guard SDK (35 PASS)
 
-# Zone C — Supplementary protocol & agent proofs
-pnpm demo:gmx && pnpm demo:hl && pnpm demo:variational
-npx vitest run tests/sdk/retail-guard-provider.test.ts
-curl -s https://bedeltawater.slivervine.xyz/api/grant-audit | jq .provenanceVerified
+# Full Regression Test Suite (218 Test Files | 1032 PASS Clean)
+pnpm test -- --run
+```[cite: 5]
+
+---
 ```
 
-| Layer | Metric |
-|-------|--------|
-| **Vitest SSOT** | **218 test files | 1032 PASS clean** · Zero-GC gate **8/8** · Chaos **255/255** fail-closed |
-| **E2E Edge Shield** | **p50 ~106µs** — Worker + TS Gateway + Wasm FFI |
-| **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` |
-| **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |
 
-**Protocol:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/citadel-sdk`](./src/sdk/README.md) (Apache-2.0) · **BUSL-1.1** root license → [LICENSE](./LICENSE)
+
+## 📚 English SSOT Documentation Hub
+
+
+| Priority | Document                      | Purpose & Link                                                                                                                                                  |
+| -------- | ----------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **1**    | **Judge Brief**               | Executive Protocol Summary → `[JUDGE_BRIEF.md](./JUDGE_BRIEF.md)`[cite: 5]                                                                                      |
+| **2**    | **Verification Matrix**       | Complete Command & Proof Index → `[docs/VERIFICATION_MATRIX.md](./docs/VERIFICATION_MATRIX.md)`[cite: 5]                                                        |
+| **3**    | **Buildathon Submission**     | Technical Specification & Patch Log → `[docs/ARB_Buildathon/SUBMISSION.md](./docs/ARB_Buildathon/SUBMISSION.md)`[cite: 5]                                       |
+| **4**    | **Architecture Yellow Paper** | R01–R20 Defense Matrix & Yellow Paper → `[docs/architecture/README.md](./docs/architecture/README.md)`[cite: 5]                                                 |
+| **5**    | **EIP Standards Wiki**        | EVM & AI Standard Alignment → `[docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md)`[cite: 5] |
+
+
+**Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · `[@slivervine/citadel-sdk](./src/sdk/README.md)` (Apache-2.0) · **BUSL-1.1 Root License** → [LICENSE](./LICENSE)[cite: 5]
