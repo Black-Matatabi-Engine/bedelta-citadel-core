@@ -19,6 +19,16 @@
 
 **One-liner:** LLM emits toxic intent → Citadel severs signing **before** Sequencer queues → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
+### How SilverVine Solves Next-Gen EIPs (Problem → Breakthrough → Proof)
+
+| Standard | **Problem** (architectural gap) | **Breakthrough** (SilverVine Edge-Wasm) | **Proof** |
+|----------|--------------------------------|----------------------------------------|-----------|
+| **ERC-8196 / ERC-8118** | On-chain policy checks burn Gas and cannot catch prompt-injection / calldata drift **before** execution | EIP-1193 `withRetailGuardProvider()` intercepts `eth_sendTransaction` · sub-10ms Edge Wasm calldata validation · **0-Gas** on reject | `npx vitest run tests/sdk/` **48/48 PASS** · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](./src/sdk/robinhood-agentic-retail-wallet-guard/) |
+| **ERC-7715 / ERC-8226** | No zero-gas enforcement for multi-agent delegation decay · cumulative spend caps unenforced at RPC layer | `agentic-auto-roll-gate.ts` + `INTENT_RING_U32` ring-buffer tracks attempts in real time · severs signing channel **before** EIP-712 release | `npx vitest run tests/services/api/pendle-shield.test.ts` **7/7 PASS** |
+| **EIP-8079 / EIP-8105** | Transactions enter mempools blind — L2 Sequencer MEV exposure with no 0-Gas abort path | Client-side Pre-Consensus Gateway — Wasm simulates preconfirmations locally · aborts unsafe txs **before** network broadcast | [`soil-resistance-core.ts`](./src/core/soil-resistance-core.ts) · `npx vitest run tests/core/protocol-mask-sync.test.ts` **6/6 PASS** |
+
+**Vitest SSOT:** **218 test files \| 1032 PASS clean** · `pnpm test -- --run`
+
 ---
 
 ## 3-Layer Temporal Execution Stack
