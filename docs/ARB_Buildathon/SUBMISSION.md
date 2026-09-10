@@ -18,6 +18,7 @@
 |-------|------------|-----------|
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
+| **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in Wasm bytecode · `BigInt64Array` / i64 pointer parity · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` |
 | **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 
 > **Bootstrap keys:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.
@@ -64,6 +65,7 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & C
 | Layer | Mechanism | Latency | Gas |
 |-------|-----------|---------|-----|
 | **Edge Gateway** | TS + Wasm `checkSoilResistance()` bitmask evaluation | **p50 ~106µs** | **0** |
+| **Clock Monotonicity Matrix** | Wasm `clock_core` + TS `monotonic-time.ts` — leap-second / RPC regression fail-closed | **&lt;1µs** pure path | **0** |
 | **Physical Deadlock** | `rootProtection()` · `severSigningChannel()` on R20 / soil trip | **p50 ~15µs** | **0** |
 | **On-Chain Anchor** | EIP-712 consume-once `SliverVineGate` attestation | Post-clearance only | Minimal |
 

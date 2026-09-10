@@ -70,7 +70,39 @@ Parallel vector checking is what makes **simultaneous multi-venue R20 physical d
 | **Core Sinking SSOT** | `src/core/*` (5 modules) | Pure invariants sunk from adapters/services · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
 | **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
 
-**Core modules (`src/core/`):** [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
+**Core modules (`src/core/`):** [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
+
+### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku)
+
+Citadel Shield does **not** require HKG, SIN, NTP, or RPC clocks to agree. **Immunity** means: when any physical clock lies (leap second, NTP step, RPC `block.timestamp` regression, multi-PoP drift), the pre-consensus firewall produces **no negative intervals**, **no fake-fresh oracle ages**, and **no silent state rollback** — untrusted time states **fail-closed**.
+
+| Layer | SSOT | Role |
+|-------|------|------|
+| **Edge host** | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock-wasm.ts`](../../src/sdk/clock-wasm.ts) | TypeScript typed-array adapter · seamless fallback when Wasm asset absent |
+| **Wasm bytecode** | [`clock_core.rs`](../../src/wasm/clock_core.rs) in `pkg/soil_core.wasm` | **Obfuscated proprietary math** — saturating arithmetic + leap guards compiled to Wasm (not exposed as TS source) |
+| **Stylus (Nitro)** | [`contracts/stylus-probe`](../../contracts/stylus-probe/) | On-chain coprocessor verification path · `cargo stylus check` |
+
+**Dual-layer execution:**
+
+```text
+Cloudflare Edge (performance.now / injected nowMs)
+        │ C-ABI FFI (i64 pointer parity)
+        ▼
+pkg/soil_core.wasm — clock_core_read · clock_core_rpc_ingest · clock_core_resolve_wall_age
+        │ optional Nitro path
+        ▼
+Arbitrum Stylus (contracts/stylus-probe) — cargo stylus check / deploy
+```
+
+**Memory layout parity (zero-allocation):** Host `BigInt64Array(2)` ↔ Rust `*mut i64` slots `[lastWallMs, offsetMs]`. RPC watermark: `[blockNumber, timestampSec]`. Bitwise `saturatingSub` — no `Math.max()` on the hot path.
+
+| C-ABI export | Behavior |
+|--------------|----------|
+| `clock_core_read` | Virtual monotonic wall — NTP step-back does not regress virtual time; **sticky** `CLOCK_NEGATIVE_LEAP_DETECTED` |
+| `clock_core_rpc_ingest` | High-watermark hold when `block_N.timestamp < block_{N-1}.timestamp` |
+| `clock_core_resolve_wall_age` | Negative delta → **LEAP** (fail-closed STALE) — never `age=0` fake-freshness |
+
+**Build:** `pnpm run build:wasm` · **Tests:** [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) · **Internal audit:** [`0910_60_Persona_Joint_Audit.md`](../internal/0910_60_Persona_Joint_Audit.md) §4.7
 
 **Formal risk equations (SSOT):**
 
@@ -221,9 +253,9 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 
 > **Dual-Engine Soil Topology:** SliverVine Citadel Shield enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native `pkg/soil_core.wasm` execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
 
-- Artifact: `pkg/soil_core.wasm` (`#![no_std]`)
-- Budget: **&lt;28kb** Cloudflare · hot-path exec **&lt;60µs** · Shield p50 **~106µs**
-- Wire: `src/sdk/soil-wasm.ts` (production); TS sim fallback for dev
+- Artifact: `pkg/soil_core.wasm` (`#![no_std]`) — **soil_core** + **clock_core** C-ABI exports
+- Budget: **&lt;28kb** Cloudflare · hot-path exec **&lt;60µs** · Shield p50 **~106µs** · clock_core **~1.5 KiB** additive
+- Wire: `src/sdk/soil-wasm.ts` + `src/sdk/clock-wasm.ts` (production); TS sim fallback for dev
 
 #### 3.5.1 Stylus Nitro Opcode Gas Benchmark (Layer 2)
 

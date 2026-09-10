@@ -79,6 +79,19 @@
 | Wasm ABI v2 **28-slot** alignment | `WASM_ABI_VERSION = 2` · `WASM_PROTOCOL_LEN = PROTO_VECT_LEN = 28` | [`src/core/wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · [`src/wasm/soil_core.rs`](../../src/wasm/soil_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../../tests/core/wasm-ffi-alignment.test.ts) |
 | Mainnet readiness harness | `pnpm deploy:stylus:mainnet` | [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts) |
 
+### Clock Core Wasm + Stylus Check Anchors (2026-09-10)
+
+| Field | Value |
+|-------|-------|
+| **Repo commit** | `24bcd20` (clock_core sink) · host adapter `monotonic-time.ts` + `clock-wasm.ts` |
+| **`pkg/soil_core.wasm` SHA-256** | `67f8fcc70563fec84727036b6c36607733114fb30577a58490584247f8010b14` |
+| **`pkg/soil_core.wasm` size** | **1,557 bytes** (soil + clock_core combined · &lt;28 KiB budget) |
+| **Clock C-ABI exports** | `clock_core_read` · `clock_core_rpc_ingest` · `clock_core_resolve_wall_age` · `clock_core_abi_version` = **1** |
+| **`cargo stylus check`** (stylus-probe) | **Build PASS** · contract **7.1 KB** (7122 bytes) · deployment metadata hash `955b67a82cd3bd16066ee85b5b44ffe96d7be9e25e0842586481a294ec720ee7` |
+| **Runtime RPC simulation** | **SKIPPED** — no local Nitro node (`localhost:8547` connection refused); compile + size check only |
+| **`pnpm run deploy:stylus:testnet`** | **NOT EXECUTED** — deploy requires funded RPC + deployer key; check artifact recorded above |
+| **Vitest clock parity** | `npx vitest run tests/clock-monotonicity.test.ts` — **14/14 PASS** (TS + Wasm FFI) |
+
 ### Stylus Mainnet Deployment (Arbitrum One · 42161) — Verified
 
 | Field | Value |
