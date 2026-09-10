@@ -52,7 +52,7 @@ export const PENDLE_PT_REGISTRY: Record<PendlePtMarketKey, PendlePtRegistryEntry
     symbol: "PT-USDC",
     chainId: PENDLE_PT_REGISTRY_CHAIN_ID,
     marketAddress: "0x156291C6e10E8a1B9f95475A9C0c5E3eCe1d1e44",
-    expirySec: REF_EXPIRY_SEC,
+    expirySec: REF_EXPIRY_SEC + 365 * 86_400,
     impliedYield: 0.058,
     historicalYield24h: 0.059,
     ptPriceInAsset: 0.97,

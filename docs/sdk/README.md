@@ -6,7 +6,7 @@
 
 ---
 
-## Reading Order (01 → 04)
+## Reading Order (01 → 05)
 
 | # | Document | Audience | Summary |
 |---|----------|----------|---------|
@@ -14,6 +14,7 @@
 | **02** | [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Grant reviewers · GTM · strategy | Competitive matrix · AI threats · Robinhood Chain fit · grant pitch |
 | **03** | [`03_ARCHITECTURE_AND_MOAT.md`](./03_ARCHITECTURE_AND_MOAT.md) | Architects · technical leads | Server sim vs Edge Wasm · moat · integration surfaces |
 | **04** | [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md) | AI wallet · agent framework teams | LLM hallucination threat model · scratch buffer SSOT |
+| **05** | [`05_PENDLE_YIELD_SHIELD_API_SPEC.md`](./05_PENDLE_YIELD_SHIELD_API_SPEC.md) | Pendle integrators · agent teams | Shadow margin guard · agentic auto-roll gate · Options 4–XXX roadmap |
 
 ---
 
