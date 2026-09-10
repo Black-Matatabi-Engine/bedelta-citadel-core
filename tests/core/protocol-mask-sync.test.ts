@@ -22,9 +22,10 @@ describe("protocol-mask-sync", () => {
   });
 
   it("merges global state adapter on hot-path read", () => {
-    bindProtocolMaskGlobalState(() => 1 << 4);
-    expect(readProtocolMaskSync()).toBe(1 << 4);
-    expect(mergeProtocolMaskLocal(1 << 2)).toBe((1 << 4) | (1 << 2));
+    const reservedAbiBit4 = 1 << 4; // RESERVED_ABI_V2 hole — arbitrary mask probe
+    bindProtocolMaskGlobalState(() => reservedAbiBit4);
+    expect(readProtocolMaskSync()).toBe(reservedAbiBit4);
+    expect(mergeProtocolMaskLocal(1 << 2)).toBe(reservedAbiBit4 | (1 << 2));
   });
 
   it("prefetchProtocolMaskKv warms isolate cache from KV port", async () => {
@@ -60,9 +61,10 @@ describe("protocol-mask-sync", () => {
     const scratch = { protocolMask: 0 };
     const before = seedProtocolMaskScratch(scratch);
     expect(before).toBe(1 << 1);
-    scratch.protocolMask |= 1 << 5;
+    const reservedAbiBit5 = 1 << 5; // RESERVED_ABI_V2 hole — arbitrary mask probe
+    scratch.protocolMask |= reservedAbiBit5;
     commitProtocolMaskScratch(scratch, before);
-    expect(scratch.protocolMask).toBe((1 << 1) | (1 << 5));
+    expect(scratch.protocolMask).toBe((1 << 1) | reservedAbiBit5);
     expect(put).toHaveBeenCalled();
   });
 

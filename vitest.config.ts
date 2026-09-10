@@ -39,6 +39,11 @@ export default defineConfig({
     pool: "forks",
     fileParallelism: true,
     maxWorkers: "50%",
+    poolOptions: {
+      forks: {
+        execArgv: ["--expose-gc"],
+      },
+    },
     coverage,
     projects: [
       {

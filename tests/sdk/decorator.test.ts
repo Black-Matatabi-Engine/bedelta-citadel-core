@@ -21,7 +21,7 @@ const healthyIntent = {
   hlPerp: 3500,
   dydxPerp: 3500,
   depthUsd: 200_000,
-  agentId: "virtuals-agent-0xbeef",
+  agentId: "citadel-agent-0xbeef",
 };
 
 describe("withCitadelShield", () => {
@@ -38,7 +38,10 @@ describe("withCitadelShield", () => {
     const result = await shielded(healthyIntent);
     expect(result).toBe("ok");
     expect(executionFn).toHaveBeenCalledWith(healthyIntent);
-    expect(riskControl.checkSoilResistance).toHaveBeenCalledWith(healthyIntent);
+    expect(riskControl.checkSoilResistance).toHaveBeenCalledWith({
+      ...healthyIntent,
+      agentId: healthyIntent.agentId,
+    });
   });
 
   it("blocks execution and throws [Citadel Shield Trip] when soil resistance fails", async () => {
@@ -95,7 +98,7 @@ describe("withCitadelShield", () => {
     await expect(shielded(healthyIntent)).rejects.toThrow("[Citadel Shield Trip]");
     await expect(shielded(healthyIntent)).rejects.toThrow("MANDATORY_COOLDOWN_ACTIVE");
     await expect(shielded(healthyIntent)).rejects.toThrow(
-      "Agent 'virtuals-agent-0xbeef' tripped soil fuse recently",
+      "Agent 'citadel-agent-0xbeef' tripped soil fuse recently",
     );
     expect(executionFn).not.toHaveBeenCalled();
     expect(soilSpy).toHaveBeenCalledTimes(1);
