@@ -169,7 +169,7 @@
 
 ### 5. Cat Mulligan — Across Bridge
 
-- **說服：** Pillar 2 `lostUsd ≡ 0` 方程未因 Core Sinking 改動；`IngressSafetySwitch.sol` Custom Errors ** bytecode 更小**。
+- **說服：** Pillar Set X · Component 2 `lostUsd ≡ 0` 方程未因 Core Sinking 改動；`IngressSafetySwitch.sol` Custom Errors ** bytecode 更小**。
 - **Nit：** Wallet B GMX 入金仍 **unsigned preview**；Across live fill **未閉環**。
 - **分數：** 8.64 · 邊際 −0.07 vs AM 帶。
 

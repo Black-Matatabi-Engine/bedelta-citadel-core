@@ -35,7 +35,7 @@
 | 測試基線 | 192/834 | **194/845** |
 | Worker Bundle | 70.16 KiB gzip | **70.88 KiB gzip** |
 | 架構文件 | 單一 `01_TECHNICAL_SPECIFICATION.md` | **五檔模組化**（01–05 + README + redirect） |
-| 協議面 | 六協議 + `demo:matrix` | **七協議 · USD.ai Array-ified · `demo:matrix` 7-venue spot loop** |
+| 協議面 | 六協議 + `per-venue demos` | **七協議 · USD.ai Array-ified · `per-venue demos` 7-venue spot loop** |
 | 公開文件 SSOT | 部分同步 | **全量同步**（無過時 CaaS 費、無孤兒 Halmos 引用） |
 
 ### 殘餘 nit（會進個人評語）— 閉環狀態
@@ -43,7 +43,7 @@
 | Nit（09-05 → 09-06） | 09-06 狀態 |
 |----------------------|------------|
 | `withCitadelShield` 零測試 | **已閉環** · `tests/sdk/decorator.test.ts` 單元覆蓋 |
-| USD.ai 獨立 adapter、未進 matrix / bitmask | **已閉環** · `PROTO_USDAI` TypedArray lane · bits 18–19 · `demo:matrix` 第 7 venue · LaTeX 方程入 `03_DEFENSE_MATRIX` |
+| USD.ai 獨立 adapter、未進 matrix / bitmask | **已閉環** · `PROTO_USDAI` TypedArray lane · bits 18–19 · `per-venue demos` 第 7 venue · LaTeX 方程入 `03_DEFENSE_MATRIX` |
 | 主網 receipt 只有 Gate，無 PolicyGuard | **未閉環** |
 | Dune 事件流 Sepolia live；One 是 SQL spec | **部分閉環** · 42161 仍無業務事件 ingest |
 | Decorator 不是官方 Virtuals/ElizaOS plugin | **未閉環** · V1.1 Open PR Spec |
@@ -134,7 +134,7 @@
 | 女（多樣化） | 10 | 8.58 | 8.52 | 8.31 | 8.59 | **8.53** | 8.50 | +0.03 |
 | **全團 30** | **30** | **8.66** | **8.48** | **8.36** | **8.68** | **8.58** | **8.52** | **+0.06** |
 
-產業組仍比內部 20 人模擬 **更嚴**（−0.08），缺口維持。最大單日贏家：**Pendle Core +0.05**（USD.ai 對齊 Pillar 3 敘事）。最大張力：**GMX Core ≈ 持平**（USD.ai 不是 GMX fill）。
+產業組仍比內部 20 人模擬 **更嚴**（−0.08），缺口維持。最大單日贏家：**Pendle Core +0.05**（USD.ai 對齊 Pillar Set Y 敘事）。最大張力：**GMX Core ≈ 持平**（USD.ai 不是 GMX fill）。
 
 **四維解讀**
 - **SC +0.03：** 194/845 + 架構模組化 + 公開文件 SSOT；鏈上未變，**仍進不了 8.7+**。
@@ -160,7 +160,7 @@
 
 ### 3. Pendle Finance Core Engineer
 
-- **說服（新）：** USD.ai 寫成 **Pillar 3 AI-compute RWA yield collateral tier**，與 Pendle Sentinel / Factory 同構。`USD_AI_DEPEG_ORACLE_TRIP` 是 **可執行不變量**，不是口號。
+- **說服（新）：** USD.ai 寫成 **Pillar Set Y · USD.ai Collateral Module**，與 Pendle Sentinel / Factory 同構。`USD_AI_DEPEG_ORACLE_TRIP` 是 **可執行不變量**，不是口號。
 - **Nit（仍在）：** Registry 仍兩條 PT；Pitch 若把 USD.ai 講成「我們在做 AI yield」會打回 6 分帶。
 - **分數驅動：** 8.43 → **8.48**。離開地板，仍不是產業組冠軍。
 
@@ -190,7 +190,7 @@
 
 ### 8. Robinhood Crypto Institutional
 
-- **說服：** Pillar 2 Reference Adapter 維持；密鑰敘事較不像「已過委員會」。
+- **說服：** Pillar Set X · Component 2 Reference Adapter 維持；密鑰敘事較不像「已過委員會」。
 - **Nit：** 機構不會用 0x1111 過會；Across ≠ RH 官方。
 - **分數驅動：** 0.00 全是文件。
 
@@ -350,7 +350,7 @@ Flashbots 已經給本日 Inno 天花板。GMX / Pendle Owner **戰略上想要 
 | HackQuest | 8.55 | **8.60** | 文件模組化加分 |
 | 測試 | 192/834 | **194/845** | USD.ai 5 tests |
 | Bundle | 70.16 KiB | **70.88 KiB** | +0.72 KiB，仍 < 75 KiB |
-| 協議面 | 六協議 | **七協議 + USD.ai** | Pillar 3 RWA collateral tier |
+| 協議面 | 六協議 | **七協議 + USD.ai** | Pillar Set Y · USD.ai Collateral Module |
 | 架構文件 | 單一巨檔 | **五檔模組化** | 文件疲勞緩解 |
 | 最大新雷 | 無 live fill | **無 live fill** | 不變 |
 

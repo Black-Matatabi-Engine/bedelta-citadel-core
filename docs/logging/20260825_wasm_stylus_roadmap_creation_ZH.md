@@ -13,7 +13,7 @@
 
 | 檔案 | 動作 | 說明 |
 |------|------|------|
-| `docs/internal/WASM_STYLUS_DUAL_ENGINE_ROADMAP.md` | **新增** | Pillar 3 Rust/Wasm 算式化 + Arbitrum Stylus 雙引擎路線圖（繁體中文） |
+| `docs/internal/WASM_STYLUS_DUAL_ENGINE_ROADMAP.md` | **新增** | Pillar Set Y Rust/Wasm 算式化 + Arbitrum Stylus 雙引擎路線圖（繁體中文） |
 | `docs/logging/20260825_wasm_stylus_roadmap_creation.md` | **新增** | 本建立日誌 |
 
 ---
@@ -22,7 +22,7 @@
 
 ### 文件結構
 
-1. **戰術目標** — Pillar 3 核心算式與 R01–R20 防禦矩陣 Rust 算式化；Edge SSOT + Stylus reinforcement 雙平面
+1. **戰術目標** — Pillar Set Y 核心算式與 R01–R20 防禦矩陣 Rust 算式化；Edge SSOT + Stylus reinforcement 雙平面
 2. **方向一：多項式張力算式化**
    - GMX v2 Skew Moment · 非對稱滑點 · Oracle Variance → `#[wasm_bindgen]` Rust crate
    - 目標：Pure Math 200 ns → < 50 ns；Edge p50 106 µs → < 60 µs

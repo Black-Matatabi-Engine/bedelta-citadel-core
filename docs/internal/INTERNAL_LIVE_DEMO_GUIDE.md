@@ -9,20 +9,14 @@ Append `--livingwater` or `--live` after the demo script arguments (pnpm require
 ```bash
 pnpm demo:e2e -- --livingwater
 pnpm demo:escort -- --livingwater
-pnpm demo:matrix -- --healthy-only --livingwater
+pnpm demo:gmx -- --trip
 pnpm demo:usdai -- --livingwater
 pnpm demo:gmx -- --livingwater
 pnpm demo:hl -- --livingwater
 pnpm demo:pendle -- --livingwater
-pnpm demo:uniswap -- --livingwater
-pnpm demo:aave -- --livingwater
-pnpm demo:morpho -- --livingwater
 pnpm demo:variational -- --livingwater
-pnpm demo:wayfinder -- --livingwater
-pnpm demo:elizaos -- --livingwater
-pnpm demo:virtuals -- --livingwater
-pnpm demo:langchain -- --livingwater
-pnpm demo:quad -- --livingwater
+pnpm demo:perp-loop -- --livingwater
+pnpm demo:spot-loop -- --livingwater
 pnpm demo:agent -- --livingwater
 pnpm demo:stabilizer -- --livingwater
 ```

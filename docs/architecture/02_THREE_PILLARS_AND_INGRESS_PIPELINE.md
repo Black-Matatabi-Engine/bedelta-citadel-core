@@ -40,21 +40,17 @@ SliverVine does not interpret natural-language LLM prompts. The Shield enforces 
 
 **Demo:** `pnpm demo` — 12 Dual Pillar Set X & Y ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
 
-### 0.3 Agent Ecosystem Adapters (V1.0 Live · Native Integrations)
+### 0.3 C-End & B-End Integration (v1.1 SSOT)
 
-Production-native adapters in [`src/adapters/`](../../src/adapters/) — each framework has an **isolated module**, dedicated CLI demo, and Vitest suite. All validate agent intent, session key bounds, and `checkSoilResistance()` before transaction dispatch.
+| Surface | Status | Module SSOT | Entry point | Verify |
+|---------|--------|-------------|-------------|--------|
+| **EIP-1193 Retail Guard (C-End)** | ✅ V1.0 Live | [`provider.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) | `withRetailGuardProvider()` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withCitadelShield()` · `verifyAgentIntent()` | `pnpm demo:agent` |
+| **5-Core Venue Guards** | ✅ V1.0 Live | [`src/adapters/{gmx,pendle,usdai,hl,variational*}`](../../src/adapters/) | Per-venue evaluators | `pnpm demo:{gmx,pendle,usdai,hl,variational}` |
+| **Stabilizer Protocol** | ✅ V1.0 Live (Sepolia) | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
+| **Deprecated v1.0 harnesses** | 🗑️ Pruned v1.1 | Wayfinder · ElizaOS · Virtuals · LangChain | Replaced by EIP-1193 Retail Guard + B2B decorator | **RESERVED_ABI_V2** holes preserved |
 
-| Framework | Status | Module SSOT | Entry point | CLI | Test |
-|-----------|--------|-----------|-------------|-----|------|
-| **Wayfinder** | ✅ V1.0 Live | [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) | `wayfinderCitadelShieldHook` | `pnpm demo:wayfinder` | [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) |
-| **ElizaOS** | ✅ V1.0 Live | [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) | `evaluateElizaCitadelAction()` | `pnpm demo:elizaos` | [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) |
-| **Virtuals (GAME)** | ✅ V1.0 Live | [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) | `evaluateVirtualsGameTask()` | `pnpm demo:virtuals` | [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) |
-| **LangChain / LangGraph** | ✅ V1.0 Live | [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) | `CitadelRiskGuardTool` | `pnpm demo:langchain` | [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) |
-| **Stabilizer Protocol** | ✅ V1.0 Live | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` | [`stabilizer-adapter.test.ts`](../../tests/adapters/stabilizer-adapter.test.ts) |
-| **USD.ai** | ✅ V1.0 Live | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `evaluateUsdAiCollateralGuard()` | `pnpm demo:usdai` | [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) |
-| **CrewAI / AutoGen** | ⏳ V1.5 Roadmap Spec | Python `BaseTool` / Citadel REST Client | `SlivervineCrewAIGuardTool` | `examples/adapters/crewai-autogen-adapter.py` | — |
-
-**Regression bar:** **217 test files | 967 PASS clean
+**Regression bar:** **218 test files | 1032 PASS clean**
 
 ### Core Sinking SSOT (`src/core/`)
 
@@ -92,7 +88,7 @@ Agent Cross-Pass Route (Sepolia 421614)
   FAIL_CLOSED (0-Gas)  or  ALLOW → Mainnet-identical bytecode path
 ```
 
-**Verification bar:** **217 test files | 967 PASS clean
+**Verification bar:** **218 test files | 1032 PASS clean**
 
 ### 2.2 Traditional Bridge vs SilverVine Pillar Set X Compliance Escort
 
@@ -247,15 +243,14 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 
 ### 2.5 Strategic Blue-Chip Ecosystem & Settlement Roadmap (V1.0 Core + V1.5 / V2.0)
 
-> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** is a **v1.0 Live Pillar Set Y** pre-execution firewall (not a fee-capture path). **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Uniswap V3 and Variational remain modular post-grant settlement extensions.
+> **Scope honesty:** v1.0 active execution and fee capture remain **GMX v2 ETH/USDC GM + Hyperliquid 1× short** on Arbitrum One (§2 triangle). **Pendle Institutional Shield** and **Variational Omni RFQ** are **v1.0 Live Pillar Set Y** pre-execution firewalls. **Stabilizer Sepolia Cross-Pass Sandbox** is **v1.0 Live** on `421614`. Pruned Uniswap V3 venue adapter retains generic DEX calldata parsing in Retail Guard SDK only.
 
 | Partner / Venue | Strategic role | Citadel integration | Horizon | Status |
 |-----------------|----------------|---------------------|---------|--------|
 | **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Pillar Set Y · **199 test files \| 868 PASS Clean (100% PASS)** |
 | **USD.ai** (AI-Compute RWA Yield Collateral) | Yield-bearing sUSDai collateral tier for AI agent treasury — GPU oracle · peg drift · NAV vs mark · depth fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `evaluateUsdAiCollateralGuard()` · `usdai` → `collectExternalSoilFlags()` · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Pillar Set Y · `pnpm demo:usdai` |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
-| **Uniswap V3 DEX** (Native Liquidity) | Arbitrum-native `GRAIL` liquidity depth for delta-neutral rebalance friction reduction | Uniswap V3 API on RPC allowlist (`api.uniswap.org`) · rebalance leg optimizer · `FRICTION_BUFFER_APY` absorption in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) | **V1.5** | ⏳ Roadmap Spec |
-| **Variational** (Next-Gen Perps & Cross-Venue Alternative) | Future-proof integration for advanced decentralized perps and cross-chain margin routing — extensible complement/alternative to Hyperliquid hedge leg | `buildVariationalShortOrder()` · `evaluateVariationalOrderbookDepth()` PoC · same-chain Arbitrum hedge extension | **V2.0** | ⏳ PoC Spec ([`docs/logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md`](../logging/20260827_v1.5_aave_variational_adapter_poc_ZH.md)) |
+| **Variational** (Omni RFQ) | Protocol-agnostic RFQ firewall · stale quote · OLP depth · oracle drift | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · `validateVariationalRFQIntent()` · Bits 12–13 | **V1.0** | ✅ Live · `pnpm demo:variational` |
 
 ```text
 v1.0 Active Triangle (42161)
@@ -264,8 +259,7 @@ v1.0 Active Triangle (42161)
          ├──► V1.0: Pendle Institutional Shield (Pillar Set Y · sync oracle · soil fuse)
          ├──► V1.0: USD.ai AI-Compute Yield Collateral (Pillar Set Y · `USD_AI_DEPEG_ORACLE_TRIP`)
          └──► V1.0: Stabilizer Sepolia Cross-Pass Sandbox (421614 · Stabilizer→GMX→Pendle)
-         └──► V1.5+: Uniswap V3 zero-slippage settle
-         └──► V2.0: Variational native perp hedge (HL complement/alternative)
+         └──► V1.0: Variational Omni RFQ (Pillar Set Y · stale quote / OLP fuse)
 ```
 
 ## 6. ERC-7579 Pre-Execution Hook Alignment — AI Agent Reflex Architecture
@@ -347,12 +341,10 @@ allowedToSign =
 
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
-| **Third-party dApps** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withCitadelShield` | Apache-2.0 · sub-ms soil gate |
-| **ElizaOS** | ✅ V1.0 Live Native Integration — [`elizaos-citadel-plugin.ts`](../../src/adapters/elizaos/elizaos-citadel-plugin.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `evaluateElizaCitadelAction()` · `checkSoilResistance()` |
-| **Virtuals GAME** | ✅ V1.0 Live Native Integration — [`virtuals-game-adapter.ts`](../../src/adapters/virtuals/virtuals-game-adapter.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `evaluateVirtualsGameTask()` · `checkSoilResistance()` |
-| **LangChain** | ✅ V1.0 Live Native Integration — [`langchain-citadel-tool.ts`](../../src/adapters/langchain/langchain-citadel-tool.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `CitadelRiskGuardTool` · `checkSoilResistance()` |
-| **Wayfinder** | ✅ V1.0 Live Native Integration — [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · [§0.3](#03-agent-ecosystem-adapters-v10-live-native-integrations) | `wayfinderCitadelShieldHook` · `verifyAgentIntent()` |
-| **Stabilizer** | ✅ V1.0 Live Native Integration — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
+| **Wallet / dApp (C-End)** | `@slivervine/robinhood-agentic-retail-wallet-guard` · `withRetailGuardProvider()` · [§0.3](#03-c-end--b-end-integration-v11-ssot) | EIP-1193 pre-consensus intercept · 0-Gas on reject |
+| **B2B agents** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withCitadelShield` | Apache-2.0 · sub-ms soil gate |
+| **5-Core venues** | GMX · Pendle · USD.ai · Variational · HL guards · [§0.3](#03-c-end--b-end-integration-v11-ssot) | Per-venue `checkSoilResistance()` |
+| **Stabilizer** | ✅ V1.0 Live (Sepolia) — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
 | **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · [`crewai-autogen-adapter.py`](../../examples/adapters/crewai-autogen-adapter.py) · [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20) | `checkSoilResistance()` · Pillar Set X AML escort boundary |
 | **Institutional vaults** | ZeroDev Kernel + Citadel Worker BUSL payload path | ERC-7579 session + 106µs Shield |
 | **Grant audit / Dune / PEV** | `GET /api/grant-audit` · **PEV (Prevented Exploit Volume)** · [Dune dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · production DuneSQL feed + chart ([`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md)) | Pillar Set X ingress · Pillar Set Y intercepts · 10 bps builder revenue |
@@ -460,13 +452,12 @@ Evaluator-facing comparison of SliverVine Protocol versus legacy execution, agen
 
 ### 6.9 Strategic Blue-Chip Ecosystem & Settlement Integrations (V1.0 Core + V1.5 / V2.0)
 
-> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield** and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls. Uniswap V3 and Variational extend the settlement plane — see [§2.5](#25-strategic-blue-chip-ecosystem-settlement-roadmap-v10-core-v15-v20) and [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20).
+> **Commercial boundary:** v1.0 fee capture and liquidity routing are bound to **GMX v2 GM + HL delta-neutral** execution. **Pendle Institutional Shield**, **Variational Omni RFQ**, and **Stabilizer Sepolia Cross-Pass Sandbox** are **v1.0 Live** pre-execution firewalls — see [§2.5](#25-strategic-blue-chip-ecosystem-settlement-roadmap-v10-core-v15-v20).
 
 | Venue | Integration surface | Reflex hook | Horizon |
 |-------|-------------------|-------------|---------|
 | **Pendle Finance** | PT/YT registry + sync oracle + cross-guard · soil-wired | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` · `PENDLE_ORACLE_STALE` · `evaluatePendleGmxCrossGuard()` · maturity &lt;7d + jitter &gt;200 bps fail-closed | **V1.0** |
-| **Uniswap V3 DEX** | Arbitrum-native `GRAIL` liquidity depth for rebalance routing | Soil fuse on Uniswap V3 pool depth · RPC allowlist `api.uniswap.org` | **V1.5** |
 | **Stabilizer** | Sepolia universal sandbox · zero-slippage stablecoin cross-pass routing | `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as Mainnet | **V1.0** ✅ Live · Sepolia `421614` |
-| **Variational** | Next-gen decentralized perps · cross-venue margin routing (HL complement) | `checkSoilResistance()` on Variational orderbook depth · session-key clip (R06/R07) | **V2.0** |
+| **Variational** | Omni RFQ stale quote · OLP depth · oracle drift | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · Bits 12–13 | **V1.0** ✅ Live · `pnpm demo:variational` |
 
 ---

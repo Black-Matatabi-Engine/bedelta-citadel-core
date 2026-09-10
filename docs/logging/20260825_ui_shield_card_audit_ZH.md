@@ -8,7 +8,7 @@
 
 ## 摘要
 
-新增 Pillar 3「Pre-Execution Living Water Shield」終端風格卡片。市場狀態、Edge Engine、Skew Premium 與即時 log 行皆經 props 注入，元件內不模擬 API 回應。
+新增 Pillar Set Y「Pre-Execution Living Water Shield」終端風格卡片。市場狀態、Edge Engine、Skew Premium 與即時 log 行皆經 props 注入，元件內不模擬 API 回應。
 
 ## 結構
 

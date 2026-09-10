@@ -59,7 +59,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
-| **0:30–0:40** | Three Pillars schematic | *"0-Gas Citadel: soil trips **before** Bundler gas. No broadcast, no fee, no sandwich surface."* | Pillar 3 Shield |
+| **0:30–0:40** | Pillar Set X & Y schematic | *"0-Gas Citadel: soil trips **before** Bundler gas. No broadcast, no fee, no sandwich surface."* | Pillar Set Y Shield |
 | **0:40–0:52** | Rust `#![no_std]` · `pkg/soil_core.wasm` size badge | *"Rust `#![no_std]` Wasm on Cloudflare Edge. `checkSoilResistance()` — p50 ~106 microseconds."* | `<28kb` · warm `&lt;60µs` |
 | **0:52–1:04** | Arbiscan Sepolia · Gate address | *"EIP-712 consume-once Gate `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1`. Replay is `Replayed()`."* | `SliverVineGate.sol` |
 | **1:04–1:15** | Foundry invariant file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Foundry Invariant & Fuzzing Verification (327,675 Property Fuzz runs). Consume-once lemmas in-repo. Policy alignment: ERC-8196 (Final) Sub-ms Policy Gate."* | `SliverVineGate/test/SliverVineGate.invariant.t.sol` |
@@ -70,14 +70,14 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 |------|--------|----------------|--------|
 | **1:15–1:30** | Score strip: V0.9 **5.2** → V1.0 **7.7** (internal 20-judge panel) | *"Same 14 audit dimensions. Leaving the yield-vault rain for an Agent Citadel is the score jump — not a louder APY."* | Internal 14-dim comparison (do not flash OpSec filenames) |
 | **1:30–1:45** | GMX payload JSON · `uiFeeReceiver` · **+10 bps** | *"GMX v2 builder lane: `uiFeeReceiver` plus ten basis points on every qualified GM payload."* | `gmx-v2-order-payload.ts` · `GMX_UI_FEE_BPS` |
-| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Unit-Verified Vitest **6/6** |
+| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar Set X · Component 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Unit-Verified Vitest **6/6** |
 
 ### A.4 `120s–150s` — Quant Monte Carlo + Pendle Institutional Shield (V1.0 Live)
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
 | **2:00–2:16** | 10,000-run histogram · **87.39%** trip rate | *"Monte Carlo: 10,000 shock-plus-sandwich runs. Citadel intercepts **87.39%** of toxic legs. **$9.88 million is nominal simulated LP protection** — not live TVL."* | `docs/telemetry/game_theory_simulation_results.json` |
-| **2:16–2:30** | Pendle clock · oracle TTL · 7d / 200 bps | *"Pendle Institutional Shield — V1.0 live on Pillar 3. Sync oracle, sixty-second TTL, `PENDLE_ORACLE_STALE` fail-closed into soil. Expiry under seven days **and** yield jitter over 200 bps → block. A refusal gate — not a PT market."* | `pendle-market-oracle-adapter.ts` · `pendle-pt-expiry-guard.ts` |
+| **2:16–2:30** | Pendle clock · oracle TTL · 7d / 200 bps | *"Pendle Institutional Shield — V1.0 live on Pillar Set Y. Sync oracle, sixty-second TTL, `PENDLE_ORACLE_STALE` fail-closed into soil. Expiry under seven days **and** yield jitter over 200 bps → block. A refusal gate — not a PT market."* | `pendle-market-oracle-adapter.ts` · `pendle-pt-expiry-guard.ts` |
 
 ### A.5 `150s–180s` — Milestone Roadmap & Proof Bar
 
@@ -114,7 +114,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 | Time | Action | On-screen proof |
 |------|--------|-----------------|
 | **0:50–0:65** | Run / show bridge test or adapter snapshot: inbound `4663` / reverse path. | **AML inbound BLOCK** |
-| **0:65–0:80** | Highlight `capitalLabel: IN_FLIGHT_BRIDGE_CAPITAL` · `deployable: false` · `lostUsd === 0`. | Pillar 2 Reference Escort Adapter — not product identity |
+| **0:65–0:80** | Highlight `capitalLabel: IN_FLIGHT_BRIDGE_CAPITAL` · `deployable: false` · `lostUsd === 0`. | Pillar Set X · Component 2 Reference Escort Adapter — not product identity |
 
 ```bash
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts

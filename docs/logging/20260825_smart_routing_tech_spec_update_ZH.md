@@ -10,7 +10,7 @@
 
 ## 變更摘要
 
-將 ZeroDev Smart Routing Address 整合寫入 Pillar 2（Firewall）架構描述。
+將 ZeroDev Smart Routing Address 整合寫入 Pillar Set X · Component 2（Compliance Ingress Firewall）架構描述。
 
 | 區段 | 更新 |
 |------|------|

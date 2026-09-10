@@ -62,7 +62,7 @@ SliverVine models the **100% Total On-Chain Risk Surface** — the complete set 
 Where referenced in Pillar Set Y and technical specs, the **80/20 Pareto rule** is a **distinct, orthogonal microstructure statistic** — not additive to the 88/12 spectrum:
 
 - **~80%** of acute toxic execution loss (sandbox replay · Monte Carlo substrate) stems from **~20%** of microsecond-scale depth / slippage anomalies (illiquidity spikes, cross-venue decoupling, sub-block MEV windows).
-- **Pillar 3** (`checkSoilResistance()` · R03 depth fuse · R04 slippage fuse · PGATE latency fuse) **targets this 20% acute tail** directly at sub-ms Edge evaluation — the highest-leverage interception band within the broader **88% mesh**.
+- **Pillar Set Y** (`checkSoilResistance()` · R03 depth fuse · R04 slippage fuse · PGATE latency fuse) **targets this 20% acute tail** directly at sub-ms Edge evaluation — the highest-leverage interception band within the broader **88% mesh**.
 
 #### Core Physical Invariants (Judge Quick Reference)
 
@@ -218,7 +218,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 │ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation                          │
 │ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1           │
 │ · Mainnet Ignition Tx 0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6 │
-│ · Vitest SSOT: 217 test files | 967 PASS clean
+│ · Vitest SSOT: 218 test files | 1032 PASS clean
 └────────────────────────────────────────┬────────────────────────────────────────┘
                                          │
                                          ▼
@@ -271,13 +271,11 @@ When funds cross via Across Bridge, SliverVine Protocol labels capital as `IN_FL
 
 **Code SSOT:** `src/adapters/across-ingress-bridge.ts` · Vitest 6/6 PASS (`tests/adapters/across-ingress-bridge.test.ts`)
 
-### 2.2 Hurdle-Rate Probe (Aave v3 / Morpho — Not Product Identity)
+### 2.2 Yield Ingress Probe (Pendle PT Fallback — Not Product Identity)
 
-> **v1.0 today:** Aave APY is used as a hurdle-rate probe when GMX markets wire is unavailable *(Hurdle-rate probe only — not a yield-stacking product track)* — **not** automatic capital redeployment and **not** the V1.5 Citadel roadmap (V1.5 = [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarms / EIP-7702 / prompt-injection circuit).
+> **v1.0 today:** When GMX markets wire is unavailable, yield ingress falls back to **Pendle PT base APY** (`DEFAULT_PENDLE_BASE_APY`) *(Hurdle-rate probe only — not a yield-stacking product track)* — **not** automatic capital redeployment.
 
-During market storms, an **optional** accounting fallback to Aave v3 / Morpho Blue USDC on Arbitrum One may be used as a risk-free **probe floor** *(Hurdle-rate probe only — not a yield-stacking product track)*. This does **not** redefine SliverVine Protocol as a yield-stacking vault.
-
-**Code SSOT (v1.0 probe only):** `src/adapters/arbitrum/arbitrum-yield-ingress.ts` · `src/services/yield/rebalance-rules.ts` (`FRICTION_BUFFER_APY`)
+**Code SSOT:** [`arbitrum-yield-ingress-ops.ts`](../../src/adapters/arbitrum/arbitrum-yield-ingress-lib/arbitrum-yield-ingress-ops.ts) · `src/services/yield/rebalance-rules.ts` (`FRICTION_BUFFER_APY`)
 
 ### 2.3 Two-Tiered Yield System & Citadel Safety Buffer
 
@@ -357,7 +355,7 @@ export const FRICTION_BUFFER_APY = 0.005 as const; // 0.5% friction buffer
 
 **Design rule:** Citadel Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
 
-**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **217 test files | 967 PASS clean
+**Code anchors:** `src/services/yield/rebalance-rules.ts` · `src/services/adapters/gmx-v2-order-payload.ts` · `src/services/risk-control-lib/soil-resistance.ts` · Vitest **218 test files | 1032 PASS clean
 
 ### 2.6 Real Yield vs. Toxic Inflation
 
@@ -616,6 +614,24 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 > Production soil fuse on Edge remains **`checkSoilResistance()`** — dry-run harnesses validate adjacent paths without replacing the Worker SSOT.
 
+### 4.4 Multi-Leg Portfolio Cascade Replay (Black Swan Resiliency)
+
+Gauntlet-style **multi-leg cascade replay** simulates correlated shocks across the GMX · Hyperliquid · USD.ai collateral triangle — validating fail-closed halts before any live broadcast.
+
+```bash
+# Verify Multi-Leg Cascade Replay & HF Breach Defense (4/4 PASS)
+npx vitest run tests/core/portfolio-cascade-replay.test.ts
+```
+
+| Scenario | Shock profile | Expected trip code |
+|----------|---------------|-------------------|
+| **Benign shock** | −0.3% ETH · 10% depth drop · 0.5% slippage | `totalBlocked = 0` · healthy HF |
+| **HF breach (deep crash)** | ETH −30% · 75% depth drop · 3% slippage · GM pool 70/30 imbalance | `HF_BREACH` · `BLACK_SWAN_HALT` · or `GMX_IMBALANCE` |
+| **HF velocity cascade** | Two-step ETH collapse (−6.7% → −21%) · `hfCascadeDeltaPerStep = 0.08` | `cascadeVelocityTripped` or blocked steps · `finalHf < COLLATERAL_HF_MIN + 0.5` |
+| **Delta drift** | Missing HL hedge leg · mild ETH dip | `DELTA_DRIFT` · `blocked = true` |
+
+**SSOT modules:** [`portfolio-cascade-core.ts`](../../src/core/portfolio-cascade-core.ts) · [`portfolio-cascade-replay.test.ts`](../../tests/core/portfolio-cascade-replay.test.ts) · venue legs: **GMX_GM** · **HL_SHORT** · **USDAI_COLLATERAL**.
+
 ---
 
 ## 5. Comparative Analysis: Arbitrum Native vs. Pillar Set X Reference Escort Adapter
@@ -709,6 +725,7 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 | **Historical simulation** | Survival Benchmark 30D HL funding + L2 book | On-demand (`generate-survival-report.ts`) |
 | **Stress scenarios** | $100k canonical + **$1M** stress notional (`STRESS_NOTIONAL_USD`) | Same report |
 | **Reverse stress** | Negative proofs — depth breach, soil trip, bridge timeout | `pnpm verify:negative` |
+| **Multi-leg cascade replay** | HF breach · velocity spike · GM LP imbalance · delta drift (GMX · HL · AAVE) | `npx vitest run tests/core/portfolio-cascade-replay.test.ts` **4/4** |
 | **Model validation** | Vitest **199 test files \| 868 PASS Clean (100% PASS)** full regression | CI / pre-release |
 
 ### 6.4 Three Lines of Defense Mapping
@@ -790,4 +807,4 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | R01–R20 Defense Matrix · Wasm soil core |
 | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC/EIP alignment · ArbOS Elara compliance |
 | [`../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X Compliance Ingress Firewall Audit |
-| [`../sdk/CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) | `@slivervine/citadel-sdk` integration |
+| [`../sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) | `@slivervine/robinhood-agentic-retail-wallet-guard` integration |

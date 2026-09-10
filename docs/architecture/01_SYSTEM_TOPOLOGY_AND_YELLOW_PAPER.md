@@ -1,6 +1,6 @@
 # SliverVine Citadel Shield — System Topology & Yellow Paper
 
-> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **217 test files | 967 PASS clean** · Security-tier `5/0/0 PASS` · **Wasm Core:** ABI **v2** · 28-protocol-slot FFI · `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
+> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **218 test files | 1032 PASS clean** · Security-tier `5/0/0 PASS` · **Wasm Core:** ABI **v2** · 28-protocol-slot FFI · `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
 > **Architecture index:** [`README.md`](./README.md) · **Hybrid Pillar Sets X & Y:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **Standards:** [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Risk framework:** [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md)
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive.  
@@ -35,15 +35,36 @@ Five pure invariant modules are the TypeScript SSOT; legacy import paths under `
 
 **Solidity ingress:** [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) — **Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants preserved for Dune/telemetry.
 
+### System Architecture — Layer Import Boundaries
+
+Citadel enforces a **machine-verified single-direction gateway boundary** inside `src/core/` — pure invariant modules must not penetrate orchestration layers (`services/` · `adapters/` · `routes/` · `workers/`). Gateway files (`state.ts` · `risk.ts` · `agent-citadel-guard.ts`) remain **zero-layer penetration** surfaces; only **five documented orchestration sinks** may import `services/`:
+
+| Allowlisted orchestration sink | Role |
+|-------------------------------|------|
+| [`risk-engine-soil.ts`](../../src/core/risk-engine-soil.ts) | Soil fuse orchestration bridge |
+| [`risk-engine-policy.ts`](../../src/core/risk-engine-policy.ts) | Policy matrix orchestration |
+| [`risk-engine-lib/risk-engine-types.ts`](../../src/core/risk-engine-lib/risk-engine-types.ts) | Shared risk-engine type sink |
+| [`intent-ledger/flatten-hardlock.ts`](../../src/core/intent-ledger/flatten-hardlock.ts) | Intent ledger flatten orchestration |
+| [`black-swan-guard-lib/black-swan-guard-flatten.ts`](../../src/core/black-swan-guard-lib/black-swan-guard-flatten.ts) | Black-swan guard flatten orchestration |
+
+**Verification protocol** — static import scan across all `src/core/**/*.ts`:
+
+```bash
+# Verify Zero-Layer Penetration & Gateway Allowlist Boundaries (3/3 PASS)
+npx vitest run tests/core/core-import-boundary.test.ts
+```
+
+**SSOT:** [`core-import-boundary.ts`](../../src/core/core-import-boundary.ts) · [`core-import-boundary.test.ts`](../../tests/core/core-import-boundary.test.ts).
+
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
 This document is **invariant-first** (Yellow Paper style): topology, thresholds, and fail-closed semantics. Monetization pitches live under `docs/grants/`.
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** — seven Arbitrum One natives (GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ) plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pillar Set Y Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Variational Omni RFQ on Arbitrum One, plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pruned venues (Uniswap V3 · Aave V3 · Morpho Blue) retain **RESERVED_ABI_V2** Wasm bitmask holes (protocol bits 4–6). Pillar Set Y Wasm Shield is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
 
-**Primary Execution Boundary — 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1):** 7 Arbitrum One natives (GMX v2 · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational Omni RFQ) + 1 cross-chain HF orderbook defense (Hyperliquid L1 Session Key Adapter).
+**Primary Execution Boundary — 5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Variational (Arbitrum One) + Hyperliquid L1 Session Key Adapter (cross-chain hedge).
 
 ```text
 [ Optional Permissioned Ingress (e.g. Robinhood Chain 46630 / 4663) ]
@@ -74,11 +95,11 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 | Pillar | Role | SSOT / Mechanism | Dedicated specification |
 |--------|------|------------------|-------------------------|
-| **[Pillar 1: The Gatehouse (Auth)]** | **Opt-In** ZeroDev scoped session keys · EIP-712 intent scopes | Kernel v3 · `ORDER_EXECUTE` bounds · Paymaster ($0.50/op · $10/day) · R06 / R07 · `USE_ZERODEV_AA` default-off | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **[Pillar 2: Compliance Ingress Firewall]** | Venue-agnostic unidirectional AML escort · honest `IN_FLIGHT_BRIDGE_CAPITAL` / `lostUsd ≡ 0` | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Robinhood / Across = **optional reference adapters** · Unit-Verified Vitest **6/6** | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
-| **[Pillar 3: Shield (CORE MOAT)]** | Sub-ms Wasm pre-execution armor — **primary technical moat** | `checkSoilResistance()` p50 ~106 μs · Wasm warm &lt;60µs · R01–R20 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
+| **[Pillar Set X · Component 1 — The Gatehouse (Auth)]** | **Opt-In** ZeroDev scoped session keys · EIP-712 intent scopes | Kernel v3 · `ORDER_EXECUTE` bounds · Paymaster ($0.50/op · $10/day) · R06 / R07 · `USE_ZERODEV_AA` default-off | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| **[Pillar Set X · Component 2 — Compliance Ingress Firewall]** | Venue-agnostic unidirectional AML escort · honest `IN_FLIGHT_BRIDGE_CAPITAL` / `lostUsd ≡ 0` | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Robinhood / Across = **optional reference adapters** · Unit-Verified Vitest **6/6** | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](../audit/03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **[Pillar Set Y — Shield (CORE MOAT)]** | Sub-ms Wasm pre-execution armor — **primary technical moat** | `checkSoilResistance()` p50 ~106 μs · Wasm warm &lt;60µs · R01–R20 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 
-> **Hybrid Pillar Sets X & Y routing:** Pillar Set X (Gatehouse) and Pillar Set X (optional ingress) are summarized inline below; **exhaustive audit-grade specifications** live in the dedicated Pillar 1–3 documents above. This file retains cross-pillar topology, settlement bounds, and integration anchors.
+> **Hybrid Pillar Sets X & Y routing:** Pillar Set X (Gatehouse) and Pillar Set X (optional ingress) are summarized inline below; **exhaustive audit-grade specifications** live in the dedicated Pillar Set X & Y component specification documents above. This file retains cross-pillar topology, settlement bounds, and integration anchors.
 
 > *While single components like `checkSoilResistance()` formulas are kept standard and open for seamless `@slivervine/citadel-sdk` adoption across Arbitrum, our core moat lies in the production integration complexity—stitching Rust `#![no_std]` Wasm, Edge Worker execution, and EIP-712 Gate into a sub-ms, fail-closed system.*
 
@@ -103,11 +124,10 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 |----------|-------|-------------------------|-------------|
 | **GMX v2** | Arbitrum One | Pool Imbalance Ratio: \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) |
 | **Pendle** | Arbitrum One | Discounted Implied Yield Shock: \|Yield_current − Yield_oracle\| > **150 bps** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
-| **Uniswap V3** | Arbitrum One | Active Tick Liquidity Depth · Dynamic Directional Fee Impact > **0.50%** (**50 bps**) | [`uniswap-v3-adapter.ts`](../../src/adapters/uniswap/uniswap-v3-adapter.ts) |
-| **Aave V3** | Arbitrum One | Cross-chain Health Factor HF < **1.15** (Fail-Closed Buffer) | [`aave-v3-adapter.ts`](../../src/adapters/aave/aave-v3-adapter.ts) |
-| **Morpho Blue** | Arbitrum One | Single-block NAV deviation > **0.30%** (**30 bps**) | `morpho-blue-adapter.ts` |
-| **USD.ai** | Arbitrum One | sUSDai peg drift > **30 bps** · GPU oracle age > **2h** · liquidity depth < **$100k** | `usdai-adapter.ts` · `USD_AI_DEPEG_ORACLE_TRIP` soil fuse |
+| **USD.ai** | Arbitrum One | sUSDai peg drift > **30 bps** · GPU oracle age > **2h** · liquidity depth < **$100k** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `USD_AI_DEPEG_ORACLE_TRIP` soil fuse |
+| **Variational** | Arbitrum One | RFQ quote stale > **500ms** · OLP depth > **15%** · oracle drift > **30 bps** | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
+| **RESERVED_ABI_V2** | Wasm ABI v2 holes | Pruned Uniswap · Aave · Morpho — protocol bits **4–6** frozen | [`risk-flags.ts`](../../src/core/risk-flags.ts) |
 
 | Component | Venue | Role |
 |-----------|-------|------|
@@ -145,7 +165,7 @@ TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in `pkg/so
 
 | Field | Offset (f64 index) | Semantics |
 |-------|-------------------|-----------|
-| **Protocol lanes** | `0 … 27` | Reserved per-venue lane vector — GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational |
+| **Protocol lanes** | `0 … 27` | Active: GMX · Pendle · USD.ai · Variational · Hyperliquid · **RESERVED_ABI_V2** holes (bits 4–6 · slots 8–19) for pruned venues |
 | **`protocolMask`** | **27** | Aggregated bitmask; non-zero ⇒ `TRIP_PROTOCOL` (bit 8) |
 | **Soil math input** | `28 … 35` | Legacy 8×f64 slippage / depth fuse (`hlSpot` … `minDepthUsd`) |
 | **Output** | `out_ptr` + 6×f64 | `crossVenue` · `spotPerp` · `tripped` · `soilRiskUsd` · `cappedMaxSlUsd` · `tripFlags` |

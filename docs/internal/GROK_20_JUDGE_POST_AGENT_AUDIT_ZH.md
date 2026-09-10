@@ -170,7 +170,7 @@ CONFIRM_MAINNET_IGNITION=YES BROADCAST=1 PRIVATE_KEY=0x… \
 | 狀態 | 入圍 P | 奪標 P | 關鍵因子 |
 |------|--------|--------|----------|
 | 基線 B | 48% | 22% | 46630/4663 出站護航測試 5/5 |
-| Post-Agent | 52% | 24% | 邊際提升有限 — Robinhood 軸看 Pillar 2 適配器 |
+| Post-Agent | 52% | 24% | 邊際提升有限 — Robinhood 軸看 Pillar Set X · Component 2 適配器 |
 | +M6 Mainnet | **58%** | **30%** | 主網 Gate 證明 Arbitrum One 生產錨點；RH→42161 敘事更可信 |
 
 **Δ 機制：** Mainnet 對 Robinhood 獎的邊際貢獻 **低於** Promising Track，因評審仍看 `across-ingress-bridge.test.ts` 5/5 與 inbound AML BLOCK，而非 Gate 本身。

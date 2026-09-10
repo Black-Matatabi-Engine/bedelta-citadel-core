@@ -78,7 +78,7 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **v1.0 Delivered (Sepolia verified)** | ✅ Live | Sub-ms 0-Gas Pre-Broadcast Safety Citadel for AI Agents on Arbitrum · GMX v2 ETH/USDC GM + HL 1× short · **Pendle Institutional Shield** (Core Pillar 3 · sync oracle · soil fuse) · Wasm Shield p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) · EIP-712 Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **199 test files \| 868 PASS Clean (100% PASS)** · Sepolia / dry-run verified; mainnet ties to M6 |
+| **v1.0 Delivered (Sepolia verified)** | ✅ Live | Sub-ms 0-Gas Pre-Broadcast Safety Citadel for AI Agents on Arbitrum · GMX v2 ETH/USDC GM + HL 1× short · **Pendle Institutional Shield** (Component of Pillar Set Y · sync oracle · soil fuse) · Wasm Shield p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) · EIP-712 Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **199 test files \| 868 PASS Clean (100% PASS)** · Sepolia / dry-run verified; mainnet ties to M6 |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -113,7 +113,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
   - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (EIP-1193 wallet hosts, M2M Treasury Funds).
   - **V2.0 CaaS rail (Design Spec):** `@slivervine/citadel-sdk` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). Live v1.0 builder lane remains GMX **+10 bps `uiFeeReceiver`**.
 
 ---

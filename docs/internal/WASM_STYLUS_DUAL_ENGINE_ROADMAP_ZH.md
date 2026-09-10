@@ -11,7 +11,7 @@
 
 ## 1. 戰術目標
 
-將 **Pillar 3（The Shield）** 的核心算式與 **R01–R20 防禦矩陣（Defense Matrix）** 從「TypeScript 編排 + 單一 `#![no_std]` Wasm 核心」升級為 **Rust 算式化 SSOT + 雙目標編譯（Dual-Target Compilation）** 架構：
+將 **Pillar Set Y（The Shield）** 的核心算式與 **R01–R20 防禦矩陣（Defense Matrix）** 從「TypeScript 編排 + 單一 `#![no_std]` Wasm 核心」升級為 **Rust 算式化 SSOT + 雙目標編譯（Dual-Target Compilation）** 架構：
 
 | 平面 | 執行環境 | 角色 |
 |------|----------|------|

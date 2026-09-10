@@ -1,8 +1,8 @@
-# Pillar 3: Edge Shield — Wasm Soil Core Specification (`checkSoilResistance()`)
+# Pillar Set Y — Edge Shield — Wasm Soil Core Specification (`checkSoilResistance()`)
 
 | Field | Value |
 |-------|-------|
-| **Document** | Pillar 3: Edge Shield — Wasm Soil Core Specification |
+| **Document** | Pillar Set Y — Edge Shield — Wasm Soil Core Specification |
 | **Version** | **v1.0.0** |
 | **Classification** | Public Grant / Institutional Diligence |
 | **Entity** | SilverVine Labs |
@@ -11,7 +11,7 @@
 | **Spec SSOT** | [`docs/architecture/README.md`](../architecture/README.md) |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 
-> **Product identity:** **[Pillar 3: Shield]** is the **core technical moat** of SliverVine Protocol — the **Pre-Consensus Intent Firewall & GMX/HL Execution Safety Primitive**. Pillars 1 (Gatehouse) and 2 (optional ingress adapters) route capital and permissions; **Pillar 3 decides whether any broadcast may proceed** at sub-ms latency.
+> **Product identity:** **[Pillar Set Y — Shield]** is the **core technical moat** of SliverVine Protocol — the **Pre-Consensus Intent Firewall & GMX/HL Execution Safety Primitive**. Pillar Set X · Component 1 (Gatehouse) and Component 2 (optional ingress adapters) route capital and permissions; **Pillar Set Y decides whether any broadcast may proceed** at sub-ms latency.
 
 > **Authority statement:** All quantitative claims are CLI-verifiable via `pnpm test`, `pnpm run demo:e2e`, and targeted soil/Wasm latency suites.
 
@@ -32,15 +32,15 @@
 
 ---
 
-## Three Pillars Context
+## Pillar Set X & Y Context
 
 ```text
-[Pillar 1: The Gatehouse (Auth)] → sessionOk · allowedToSign · EIP-712 scopes
-[Pillar 2: Compliance Ingress Firewall] → optional Robinhood / Across escort · lostUsd ≡ 0
+[Pillar Set X · Component 1 — The Gatehouse (Auth)] → sessionOk · allowedToSign · EIP-712 scopes
+[Pillar Set X · Component 2 — Compliance Ingress Firewall] → optional Robinhood / Across escort · lostUsd ≡ 0
  │
  ▼
 ┌─────────────────────────────────────────────────────────┐
-│ Pillar 3: THE SHIELD (CORE MOAT)                        │
+│ Pillar Set Y — THE SHIELD (CORE MOAT)                        │
 │ checkSoilResistance() · pkg/soil_core.wasm · R01–R20    │
 │ p50 ~106µs Shield path · Wasm warm <60µs                │
 └──────────────────────┬──────────────────────────────────┘
@@ -133,7 +133,7 @@ v1.0 is restricted to **ETH/USDC** so oracle reliability holds during Sequencer 
 
 ---
 
-## Pendle Institutional Shield (V1.0 Live · Core Pillar 3)
+## Pendle Institutional Shield (V1.0 Live · Component of Pillar Set Y)
 
 | Component | SSOT | v1.0 status |
 |-----------|------|-------------|
@@ -225,8 +225,8 @@ pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
 |------|------|
 | [`docs/architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
 | [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Principal audit · SSOT metric lock |
-| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 Gatehouse · ZeroDev Kernel v3 |
-| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 optional ingress adapters |
+| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar Set X · Component 1 Gatehouse · ZeroDev Kernel v3 |
+| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X · Component 2 optional ingress adapters |
 | [`docs/architecture/README.md`](../architecture/README.md) | Cross-pillar topology · settlement · fee bounds |
 | [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | Soil fuse SSOT |
 | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | Wasm soil core artifact |
@@ -234,4 +234,4 @@ pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Pillar 3 Edge Shield Wasm Core Specification v1.0.0*
+*SilverVine Labs · BUSL-1.1 · Pillar Set Y Edge Shield Wasm Core Specification v1.0.0*

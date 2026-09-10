@@ -8,7 +8,7 @@
 
 ## 摘要
 
-新增 Pillar 2「ZeroDev Smart Routing Deposit」機構級存款 widget。送/收金額、代幣、鏈、Smart Route 地址與報價輸出皆經 props 控制；ZeroDev 流程透過 `onDeposit`、`onCopySmartRouteAddress` 等 callback 由父層接線。
+新增 Pillar Set X · Component 2「ZeroDev Smart Routing Deposit」機構級存款 widget。送/收金額、代幣、鏈、Smart Route 地址與報價輸出皆經 props 控制；ZeroDev 流程透過 `onDeposit`、`onCopySmartRouteAddress` 等 callback 由父層接線。
 
 ## 結構
 

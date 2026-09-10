@@ -182,7 +182,7 @@
 
 ### 5. Bee Callahan — Intent Relayer
 
-- **說服：** Pillar 2 `lostUsd ≡ 0` 與 `IngressSafetySwitch` Custom Errors 是完整的 escort **規格**。
+- **說服：** Pillar Set X · Component 2 `lostUsd ≡ 0` 與 `IngressSafetySwitch` Custom Errors 是完整的 escort **規格**。
 - **Nit：** Wallet B GMX 入金仍是 **unsigned preview**；Across live fill **未見**。
 - **分數：** **8.50**
 

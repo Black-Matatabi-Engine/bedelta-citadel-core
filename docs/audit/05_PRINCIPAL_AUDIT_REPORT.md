@@ -31,13 +31,13 @@
 **Single regression phrase (all audit prose):**
 `199 test files | 868 PASS Clean (100% PASS)` · `3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)` · Wasm `<28kb` / `<60µs` (`<150µs` P99 tail) · **50.94 KiB gzip** · Gate `0xb174118b…` · p50 ~106 µs.
 
-### Three Pillars — Independent Audit Specs
+### Pillar Set X & Y — Independent Component Audit Specs
 
 | Pillar | Role | Independent spec |
 |--------|------|------------------|
-| **Pillar 1 — Gatehouse (Auth)** | ZeroDev Kernel v3 session keys · EIP-712 scopes · AA dry-run harness | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **Pillar 2 — Compliance Ingress Firewall** | Venue-agnostic AML escort · outbound-only · `lostUsd ≡ 0` · Robinhood / Across as **reference adapters** | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
-| **Pillar 3 — Edge Shield (CORE MOAT)** | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 · p50 ~106 µs | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
+| **Pillar Set X · Component 1 — Gatehouse (Auth)** | ZeroDev Kernel v3 session keys · EIP-712 scopes · AA dry-run harness | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic AML escort · outbound-only · `lostUsd ≡ 0` · Robinhood / Across as **reference adapters** | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **Pillar Set Y — Edge Shield (CORE MOAT)** | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 · p50 ~106 µs | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 
 ---
 
@@ -45,18 +45,18 @@
 
 | Horizon | Status | Asset / clearing bound |
 |---------|--------|------------------------|
-| **v1.0 Delivered (Sepolia verified)** | ✅ Code-Verified | Strictly **ETH/USDC GM Pool** — eliminates oracle de-peg and FX slippage when escorting treasuries via **Pillar 2 Reference Escort Adapters** (Robinhood Chain `46630` → Arbitrum One `42161`) · Mainnet deployment ties to **M6 Grant distribution** |
-| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar 3 Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **199 test files \| 868 PASS Clean (100% PASS)** |
+| **v1.0 Delivered (Sepolia verified)** | ✅ Code-Verified | Strictly **ETH/USDC GM Pool** — eliminates oracle de-peg and FX slippage when escorting treasuries via **Pillar Set X · Component 2 Reference Escort Adapters** (Robinhood Chain `46630` → Arbitrum One `42161`) · Mainnet deployment ties to **M6 Grant distribution** |
+| **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar Set Y Core** — sync oracle · `PENDLE_ORACLE_STALE` soil fuse · PT/YT safety sentinel (not yield competitor) · **199 test files \| 868 PASS Clean (100% PASS)** |
 | **V1.0 Isomorphic Extension** | ⏳ Planned | **BTC/USDC GM Pool** — config-driven market address mapping; **zero** bytecode / Wasm rewrite |
-| **V1.0 Treasury Routing** | ⏳ Planned | Native **USDG Robinhood Chain Treasury routing** (**Pillar 2 Reference Escort Adapters**) — USDG clearing remains on Robinhood Chain (`46630`) via unidirectional bridge |
+| **V1.0 Treasury Routing** | ⏳ Planned | Native **USDG Robinhood Chain Treasury routing** (**Pillar Set X · Component 2 Reference Escort Adapters**) — USDG clearing remains on Robinhood Chain (`46630`) via unidirectional bridge |
 
 **Off-ramp finality (v1.0 / unwind path):** Arbitrum One supports native **ETH, BTC, and USDC** upon GMX v2 async unwind. Native USDG redemption is **not** an Arbitrum off-ramp — convert from Arbitrum USDC on return to Robinhood Chain to preserve compliance bounds. Inbound AML contamination (reverse path / `4663` inbound block) is fail-closed at the Firewall.
 
 ---
 
-## 2. Four Diagnostic Interrogations (Three Pillars Mapping)
+## 2. Four Diagnostic Interrogations (Pillar Set X & Y Mapping)
 
-### Interrogation I — Pillar 1: Gatehouse (Auth): Can agent credentials drift past session bounds?
+### Interrogation I — Pillar Set X · Component 1 — Gatehouse (Auth): Can agent credentials drift past session bounds?
 
 | Probe | Expected fail-closed posture | SSOT |
 |-------|------------------------------|------|
@@ -66,7 +66,7 @@
 
 **Verdict:** Auth surface is ephemeral-session + EIP-712 intent; no LLM prompt interpretation — predicate / intent hard assertions only. **Spec:** [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md).
 
-### Interrogation II — Pillar 2: Compliance Ingress Firewall: Can inbound AML contaminate Arbitrum GM TVL?
+### Interrogation II — Pillar Set X · Component 2 — Compliance Ingress Firewall: Can inbound AML contaminate Arbitrum GM TVL?
 
 | Probe | Expected fail-closed posture | SSOT |
 |-------|------------------------------|------|
@@ -76,7 +76,7 @@
 
 **Verdict:** Capital flow is unidirectional outbound escort; reverse AML scanning enforces inbound block. **Spec:** [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md).
 
-### Interrogation III — Pillar 3: SliverVine Citadel Shield (CORE MOAT): Can toxic depth / lag / sandwich reach GMX broadcast?
+### Interrogation III — Pillar Set Y — SliverVine Citadel Shield (CORE MOAT): Can toxic depth / lag / sandwich reach GMX broadcast?
 
 | Probe | Expected fail-closed posture | SSOT |
 |-------|------------------------------|------|
@@ -199,9 +199,9 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .
 |----------|---------|
 | [`../architecture/README.md`](../architecture/README.md) | Yellow Paper — R01–R20 · §0.1 scope · §0.4 bytecode predicates |
 | [`../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · force majeure · AI attack vectors |
-| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
-| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 — AML escort · inbound block · bridge accounting |
-| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 — Wasm soil core · `checkSoilResistance()` · latency moats |
+| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar Set X · Component 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
+| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X · Component 2 — AML escort · inbound block · bridge accounting |
+| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y — Wasm soil core · `checkSoilResistance()` · latency moats |
 | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | DDIP — institutional allocator diligence |
 | [`../README.md`](../README.md) | Audience router |
 | [`static-analysis-report.json`](./static-analysis-report.json) | Security-tier 5/0/0 lock |

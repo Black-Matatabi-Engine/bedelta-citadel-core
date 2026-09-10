@@ -33,7 +33,7 @@ This memorandum provides a **transparent, code-verified audit trail** for the Ar
 
 ### R.0 Risk Spectrum — Mathematical Definition (88% / 12%)
 
-SliverVine models the **100% Total On-Chain Risk Surface** as a closed partition: **88%** pre-broadcast hazards intercepted at **p50 ~106 µs** via Wasm Soil Core (MEV, depth spikes **>10 bps**, oracle lag, session abuse, prompt-injection calldata, AML ingress) · **12%** insurmountable systemic residuals (sequencer halts **>600 s**, 0-day venue exploits, RPC disconnections) where Citadel applies **Fail-Closed** posture (`signingChannelOpen: false`). The **80/20 Pareto rule** (orthogonal microstructure statistic) states that **~80%** of acute toxic loss stems from **~20%** of microsecond depth/slippage anomalies — targeted directly by Pillar 3.
+SliverVine models the **100% Total On-Chain Risk Surface** as a closed partition: **88%** pre-broadcast hazards intercepted at **p50 ~106 µs** via Wasm Soil Core (MEV, depth spikes **>10 bps**, oracle lag, session abuse, prompt-injection calldata, AML ingress) · **12%** insurmountable systemic residuals (sequencer halts **>600 s**, 0-day venue exploits, RPC disconnections) where Citadel applies **Fail-Closed** posture (`signingChannelOpen: false`). The **80/20 Pareto rule** (orthogonal microstructure statistic) states that **~80%** of acute toxic loss stems from **~20%** of microsecond depth/slippage anomalies — targeted directly by Pillar Set Y.
 
 > **Formal SSOT:** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee)
 
@@ -43,17 +43,17 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **sophisticated, non
 
 | Layer | Function | SSOT |
 |-------|----------|------|
-| **Pillar 3 — Pre-Execution Shield** | **Fail-Closed** Citadel gate **before** broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` |
+| **Pillar Set Y — Pre-Execution Shield** | **Fail-Closed** Citadel gate **before** broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` |
 | **Wasm Soil Engine** | **p50 ~106 µs** hot-path fuse on Edge | R01–R20 matrix · Vitest regression |
-| **Pillar 1 — Gatehouse** | Scoped Session Keys · EIP-712 · **Opt-In** ZeroDev Kernel v3 AA | `session-key-gates.ts` · independent of Pillar 3 Wasm |
-| **Pillar 2 — Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort & Pending-Capital Recognition Invariant (`IN_FLIGHT_BRIDGE_CAPITAL` · `lostUsd ≡ 0`); inbound AML blocked. **Robinhood Chain / Across are Pillar 2 Reference Escort Adapters** — not the product identity | `src/adapters/across-ingress-bridge.ts` · `IngressSafetySwitch.sol` |
+| **Pillar Set X · Component 1 — Gatehouse** | Scoped Session Keys · EIP-712 · **Opt-In** ZeroDev Kernel v3 AA | `session-key-gates.ts` · independent of Pillar Set Y Wasm |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort & Pending-Capital Recognition Invariant (`IN_FLIGHT_BRIDGE_CAPITAL` · `lostUsd ≡ 0`); inbound AML blocked. **Robinhood Chain / Across are Pillar Set X · Component 2 Reference Escort Adapters** — not the product identity | `src/adapters/across-ingress-bridge.ts` · `IngressSafetySwitch.sol` |
 | **Venue legs** | GMX v2 GM pools (Arbitrum One) + Hyperliquid 1× short hedge | Tech Spec §2 |
 
 **Fail-Closed posture:** When soil, oracle, sequencer, bridge, or session sensors trip, SliverVine Protocol **prefers no action over wrong action** — `signingChannelOpen: false`, UserOp rejected pre-bundler, bridge state `BRIDGE_TIMEOUT_FAIL_CLOSED`. This is a **pre-execution safety layer**, not a guarantee of profit, principal protection, or elimination of market risk.
 
 ```text
 User intent → 106µs Wasm Soil Engine (Fail-Closed · `pkg/soil_core.wasm`) → Gate attestation → Venue broadcast
-  (ZeroDev AA = optional Pillar 1 delivery path only)
+  (ZeroDev AA = optional Pillar Set X · Component 1 delivery path only)
  │
  └── trip → severance (no broadcast) — NOT "zero financial risk"
 ```
@@ -131,11 +131,11 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 
 | Pillar | Posture | Primary evidence |
 |--------|---------|------------------|
-| **Pillar 3 — SliverVine Citadel Shield** | Fail-closed before broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 matrix · [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
+| **Pillar Set Y — SliverVine Citadel Shield** | Fail-closed before broadcast | `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 matrix · [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 | **Capital accounting** | `lostUsd ≡ 0` on pending bridge liquidity | `src/adapters/across-ingress-bridge.ts` · 6/6 Vitest |
-| **Pillar 1 — Gatehouse** | **Opt-In** scoped keys · notional cap · gas ledger | ZeroDev AA gate (`USE_ZERODEV_AA` default-off) · `session-key-gates.ts` · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| **Pillar Set X · Component 1 — Gatehouse** | **Opt-In** scoped keys · notional cap · gas ledger | ZeroDev AA gate (`USE_ZERODEV_AA` default-off) · `session-key-gates.ts` · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 | **Stress & simulation** | 30D Survival Benchmark + **199 test files \| 868 PASS Clean (100% PASS)** regression | `generate-survival-report.ts` · `pnpm test -- --run` |
-| **Pillar 2 — Compliance Ingress Firewall** | Outbound-only escort · AML inbound block · Robinhood Chain as inaugural reference adapter | `IngressSafetySwitch.sol` · [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Outbound-only escort · AML inbound block · Robinhood Chain as inaugural reference adapter | `IngressSafetySwitch.sol` · [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 
 ### 1.2 Locked SSOT Metrics (Evaluator Copy-Paste)
 
@@ -167,8 +167,8 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | 60 architectural invariants | §5.1–§5.2 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) §3 |
 | Robinhood reference adapter audit | §2.3 | [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) |
 | Principal security interrogations | §2 | [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) |
-| Pillar 1 — ZeroDev Gatehouse AA | — | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| Pillar 3 — Edge Shield Wasm core | — | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
+| Pillar Set X · Component 1 — ZeroDev Gatehouse AA | — | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| Pillar Set Y — Edge Shield Wasm core | — | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) |
 | Yellow Paper / R01–R20 | §2.2 | [`README.md`](../architecture/README.md) |
 
 ---
@@ -198,30 +198,30 @@ SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a **pre-execution Cita
 | **5-TX anchor** | SHA-256 verified execution hashes on HL testnet | `pnpm verify:5tx` · `verified-5tx-lib/` |
 | **Telemetry integrity** | 96h rolling daemon · grant-audit SWR fallback never surfaces fabricated loss | `pnpm telemetry:96h` · `GET /api/grant-audit` |
 
-### 2.3 Three Pillars Architecture (Evaluator Mental Model)
+### 2.3 Pillar Set X & Y Architecture (Evaluator Mental Model)
 
-**Pillar 1 — Gatehouse (Auth):** **Opt-In Pillar 1 Account Abstraction Layer** — ZeroDev Kernel v3 session keys · EIP-712 scopes · notional cap · AA dry-run harness (`USE_ZERODEV_AA` default-off). v1.0 active scope: Stage ① Sign-in · ③ Gas · ④ Authorize · ⑤ Execute. Stage ② Smart Routing = Reference Harness. Stages ⑥⑦ = Post-Grant. **Spec:** [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md).
+**Pillar Set X · Component 1 — Gatehouse (Auth):** **Opt-In Pillar Set X · Component 1 (Gatehouse) Account Abstraction Layer** — ZeroDev Kernel v3 session keys · EIP-712 scopes · notional cap · AA dry-run harness (`USE_ZERODEV_AA` default-off). v1.0 active scope: Stage ① Sign-in · ③ Gas · ④ Authorize · ⑤ Execute. Stage ② Smart Routing = Reference Harness. Stages ⑥⑦ = Post-Grant. **Spec:** [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md).
 
-**Pillar 2 — Compliance Ingress Firewall (Reference Escort Adapters):** A **venue-agnostic**, unidirectional AML firewall and escort accounting layer. Capital from permissioned ingress sources is escorted outbound-only into Arbitrum; inbound AML paths are fail-closed at the **Edge ingress adapter** (`src/adapters/across-ingress-bridge.ts`); in-flight bridge capital is honestly labeled via the **Pending-Capital Recognition Invariant** (`IN_FLIGHT_BRIDGE_CAPITAL`, `lostUsd ≡ 0`) until settled. **Robinhood Chain / Across (`46630`/`4663`) are Pillar 2 Reference Escort Adapters** — not the product identity. **Spec:** [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md).
+**Pillar Set X · Component 2 — Compliance Ingress Firewall (Reference Escort Adapters):** A **venue-agnostic**, unidirectional AML firewall and escort accounting layer. Capital from permissioned ingress sources is escorted outbound-only into Arbitrum; inbound AML paths are fail-closed at the **Edge ingress adapter** (`src/adapters/across-ingress-bridge.ts`); in-flight bridge capital is honestly labeled via the **Pending-Capital Recognition Invariant** (`IN_FLIGHT_BRIDGE_CAPITAL`, `lostUsd ≡ 0`) until settled. **Robinhood Chain / Across (`46630`/`4663`) are Pillar Set X · Component 2 Reference Escort Adapters** — not the product identity. **Spec:** [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md).
 
-**Pillar 3 — SliverVine Citadel Shield (Pre-Execution Edge Shield):** The **core technical moat** — `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 Defense Matrix · p50 ~106 µs Shield path. Pillar 3 decides whether any broadcast may proceed. **Spec:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md).
+**Pillar Set Y — SliverVine Citadel Shield (Pre-Execution Edge Shield):** The **core technical moat** — `checkSoilResistance()` · `pkg/soil_core.wasm` · R01–R20 Defense Matrix · p50 ~106 µs Shield path. Pillar Set Y decides whether any broadcast may proceed. **Spec:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md).
 
 ```text
 [ Allocator Capital ]
  │
  ▼
 ┌─────────────────────────────────────┐
-│ Pillar 1: GATEHOUSE (Opt-In AA) │ ZeroDev Kernel v3 · EIP-712 · Session Keys
+│ Pillar Set X · Component 1 — GATEHOUSE (Opt-In AA) │ ZeroDev Kernel v3 · EIP-712 · Session Keys
 └──────────────────┬──────────────────┘
  ▼
 ┌─────────────────────────────────────┐
-│ Pillar 2: COMPLIANCE INGRESS │ Venue-agnostic AML escort & accounting
-│ FIREWALL │ Pillar 2 Reference Escort Adapters (Robinhood / Across)
+│ Pillar Set X · Component 2 — COMPLIANCE INGRESS │ Venue-agnostic AML escort & accounting
+│ FIREWALL │ Pillar Set X · Component 2 Reference Escort Adapters (Robinhood / Across)
 │ │ · outbound-only · AML inbound block
 └──────────────────┬──────────────────┘
  ▼
 ┌─────────────────────────────────────┐
-│ Pillar 3: SLIVERVINE CITADEL SHIELD │ checkSoilResistance() · Wasm · R01–R20
+│ Pillar Set Y — SLIVERVINE CITADEL SHIELD │ checkSoilResistance() · Wasm · R01–R20
 │ (Pre-Execution Edge Shield)         │ 04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md
 └─────────────────────────────────────┘
 ```
@@ -393,13 +393,13 @@ When heartbeat expires, `auditSessionKeyHeartbeat()` sets `revocationLocked: tru
 
 ---
 
-## 4. Capital Capacity & Execution Timing: Arbitrum Native vs. Pillar 2 Reference Escort Adapter
+## 4. Capital Capacity & Execution Timing: Arbitrum Native vs. Pillar Set X · Component 2 Reference Escort Adapter
 
-V1.0 exposes two **capital ingress modes** that converge on the same Citadel pre-execution envelope (`checkSoilResistance()` · R01–R20). Robinhood / Across is a **Pillar 2 Reference Escort Adapter** — not a yield-stacking product. Neither path raises the shared **$100,000 Alpha Vault TVL cap**.
+V1.0 exposes two **capital ingress modes** that converge on the same Citadel pre-execution envelope (`checkSoilResistance()` · R01–R20). Robinhood / Across is a **Pillar Set X · Component 2 Reference Escort Adapter** — not a yield-stacking product. Neither path raises the shared **$100,000 Alpha Vault TVL cap**.
 
 ### 4.1 Structured Comparison Table
 
-| Dimension | **Arbitrum Native Vault** | **Pillar 2 Reference Escort Adapter (Robinhood)** |
+| Dimension | **Arbitrum Native Vault** | **Pillar Set X · Component 2 Reference Escort Adapter (Robinhood)** |
 |-----------|---------------------------|------------------------------|
 | **Primary asset** | USDC on Arbitrum One (`42161`) | USDG on Robinhood Chain (`46630` / `4663`) |
 | **V1.0 Alpha Vault TVL cap** | **$100,000** hard ceiling (roadmap spec) | **$100,000** — escort does not expand capacity |
@@ -602,12 +602,12 @@ pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 
 ### 5.6 ArbOS Elara Compliance Alignment & Dynamic Target Range
 
-> **V1.0 Design Spec.** SliverVine Protocol's **Pillar 2 Compliance Ingress Firewall** natively aligns with the **ArbOS Elara upgrade** — Arbitrum's protocol-level ingress filtering plane — documenting **transaction-ordering awareness** as a reinforcement layer alongside Edge fail-closed gates. See [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor).
+> **V1.0 Design Spec.** SliverVine Protocol's **Pillar Set X · Component 2 — Compliance Ingress Firewall** natively aligns with the **ArbOS Elara upgrade** — Arbitrum's protocol-level ingress filtering plane — documenting **transaction-ordering awareness** as a reinforcement layer alongside Edge fail-closed gates. See [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor).
 
 | Compliance plane | Function | UI / code anchor |
 |------------------|----------|------------------|
 | **Edge SSOT (pre-broadcast)** | Soil matrix · signing channel severance · UserOp gate | `checkSoilResistance()` · `zerodev-aa-gate.ts` |
-| **Pillar 2 Compliance Ingress Firewall + ArbOS Elara** | Venue-agnostic outbound escort · inbound AML block · Robinhood / Across as **Pillar 2 Reference Escort Adapters** · Elara drops non-compliant / blacklisted senders before GM payload construction | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` · `src/adapters/across-ingress-bridge.ts` |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall + ArbOS Elara** | Venue-agnostic outbound escort · inbound AML block · Robinhood / Across as **Pillar Set X · Component 2 Reference Escort Adapters** · Elara drops non-compliant / blacklisted senders before GM payload construction | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` · `src/adapters/across-ingress-bridge.ts` |
 | **Sequencer / ordering sensor** | ArbOS base-fee velocity · sequencer grace — no naked opens during desync | `arbitrum-gas-guard.ts` · `sequencer-guard.ts` |
 | **Multi-tranche demo HUD** | Tranche A native vault vs Tranche B bridge state machine | `SmartRoutingDepositCard` · `deposit-tranche-config.ts` |
 | **Reactive HUD alerts** | Institutional trip copy for allocators | `compliance-trip-alerts.ts` · `LivingWaterShieldCard` · `AMLShieldCard` |
@@ -628,7 +628,7 @@ pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 | **Hurdle Gate friction buffer** | **+0.5%** (`FRICTION_BUFFER_APY = 0.005`) | `rebalance-rules.ts` |
 | **Rebalance predicate** | Deploy only when excess yield exceeds friction buffer | `resolveCapitalAllocation()` · `passesDeltaNeutralHurdle()` |
 
-> **Allocator note:** The 8.2–11.8% band is a **dynamic target range for HUD disclosure**, not a guaranteed return. Performance crystallization remains gated by the Hurdle Gate friction buffer and planned Aave + 1.5% performance hurdle (Invariant #24) *(Hurdle-rate probe only — not a yield-stacking product track)*.
+> **Allocator note:** The 8.2–11.8% band is a **dynamic target range for HUD disclosure**, not a guaranteed return. Performance crystallization remains gated by the Hurdle Gate friction buffer and planned Pendle/GMX yield probe + 1.5% performance hurdle (Invariant #24) *(Hurdle-rate probe only — not a yield-stacking product track)*.
 
 ### 5.7 Three Lines of Defense & Allocator FAQ
 
@@ -682,7 +682,7 @@ Deprecated fixed **$50 SL** is **forbidden** by workspace protocol rules and enf
 
 ### 6.3 Non-Custodial Semantics
 
-- User principal is held in **ZeroDev Kernel Smart Accounts** (when AA opted in) or institutional EOA — not protocol treasury. Pillar 3 Wasm Shield operates independently of AA availability.
+- User principal is held in **ZeroDev Kernel Smart Accounts** (when AA opted in) or institutional EOA — not protocol treasury. Pillar Set Y Wasm Shield operates independently of AA availability.
 - GMX `uiFeeReceiver` (+10 bps native builder fee) and GMX referral rebate (up to **25%** of trading fees) accrue protocol yield — never conflated with user principal. Builder fee injection uses GMX v2 ExchangeRouter parameters only; no change to v1.0 pre-execution safety path.
 - In-flight bridge capital is **labeled, not lent** — no rehypothecation claim in code paths.
 
@@ -716,14 +716,14 @@ Ingress capacity and execution timing are fully specified in **§4**. Basel / ES
 |----------|---------|
 | [`README.md`](../architecture/README.md) | Yellow Paper — R01–R20 · formal risk equations |
 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · disclaimers · 60 invariants · stress harness · Basel mapping |
-| [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Four diagnostic interrogations · Three Pillars mapping |
-| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
-| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar 2 — AML escort · inbound block · bridge accounting |
-| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 — SliverVine Citadel Shield · Wasm soil core |
+| [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Four diagnostic interrogations · Pillar Set X & Y component mapping |
+| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar Set X · Component 1 — ZeroDev Kernel v3 AA · EIP-7702 comparative |
+| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X · Component 2 — AML escort · inbound block · bridge accounting |
+| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y — SliverVine Citadel Shield · Wasm soil core |
 | [`static-analysis-report.json`](./static-analysis-report.json) | 3-Tier security matrix artifact |
 | [`chaos-blackswan-metrics.json`](./chaos-blackswan-metrics.json) | 255-scenario adversarial matrix |
 
 ---
 
 **Prepared by:** SilverVine Labs Risk & Compliance Documentation
-**Last updated:** 2026-09-06 · Branch baseline: `V1.0_b4_Buildaton_Submisson` · **Risk & Disclaimer** · Three Pillars · BeΔ philosophy
+**Last updated:** 2026-09-06 · Branch baseline: `V1.0_b4_Buildaton_Submisson` · **Risk & Disclaimer** · Pillar Set X & Y · BeΔ philosophy

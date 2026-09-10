@@ -15,9 +15,9 @@ SliverVine Protocol (BeDelta-Living-Water) is a pre-execution risk gateway for G
 
 | Pillar | Module | Scope |
 | --- | --- | --- |
-| **Pillar 1 — Core Citadel** | zerodev-aa-gate, risk-control | Soil resistance, gas soft-limit, sequencer/oracle guards |
-| **Pillar 2 — Robinhood Yield** | r-chain-yield-stub | RWA/Idle yield router stub (chain 46630) |
-| **Pillar 3 — Agent Gate** | agent-citadel-guard | EIP-712 intent shield + Deadman Switch |
+| **Pillar Set X · Component 1 — Core Citadel** | zerodev-aa-gate, risk-control | Soil resistance, gas soft-limit, sequencer/oracle guards |
+| **Pillar Set X · Component 2 — Robinhood Yield** | r-chain-yield-stub | RWA/Idle yield router stub (chain 46630) |
+| **Pillar Set Y — Agent Gate** | agent-citadel-guard | EIP-712 intent shield + Deadman Switch |
 
 ## SliverVine vs. Arbitrum Cohort 1 Winners
 

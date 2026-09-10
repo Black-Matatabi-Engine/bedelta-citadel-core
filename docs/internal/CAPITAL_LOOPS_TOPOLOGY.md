@@ -8,15 +8,15 @@
 
 ## 1. Executive Summary & Political Positioning
 
-Publicly, Citadel markets its **Full Arbitrum Native Multi-Protocol Coverage** focusing exclusively on Arbitrum Foundation-supported blue-chip primitives:
+Publicly, Citadel markets the **5-Core Venue Matrix**:
 
-- **Uniswap V3** (Concentrated Liquidity Spot & Slippage Guard)
-- **Aave V3** (Lending Health Factor & Cross-Chain Liquidation Boundary)
-- **Morpho Blue** (Isolated-Market Oracle Freshness & Price Deviation)
 - **GMX v2** (Perp & Shadow Margin)
 - **Pendle** (Yield & Fixed Rates)
+- **USD.ai** (AI-Compute RWA Collateral)
 - **Hyperliquid** (Independent Cross-Chain L1 Orderbook)
-- **Variational** (Arbitrum One Omni RFQ — optional Loop 1 perp hedge target)
+- **Variational** (Arbitrum One Omni RFQ)
+
+Pruned venue adapters (Uniswap V3 · Aave V3 · Morpho Blue) retain Wasm **RESERVED_ABI_V2** holes — not public product surface.
 
 Internally, Citadel maintains a **modular, protocol-agnostic vector risk engine (`src/core/risk-engine-core.ts`)**. This engine is mathematically designed to plug into **any AMM, CDP, or Stablecoin Minting Protocol** via standard `SoilResistanceInput` vector masks without modifying core code.
 
@@ -37,9 +37,9 @@ Citadel classifies all AI Agent chain interactions into four discrete **Capital 
 │ ➔ Mechanism: Pendle PT yield locking + GMX GM Shadow Margin + HL L1 /       │
 │   Variational RFQ OLP hedge (`--hedge=hyperliquid|variational|both`)        │
 │                                                                             │
-│ Loop 2: Spot & Lending Vault Loop                                           │
-│ ➔ Venues: Uniswap V3 + Aave V3 + Morpho Blue                               │
-│ ➔ Mechanism: Uniswap V3 Swap → Aave Collateral/Borrow → Morpho Blue Market  │
+│ Loop 2: Spot & Collateral Vault Loop                                        │
+│ ➔ Venues: USD.ai collateral lane                                            │
+│ ➔ Mechanism: sUSDai peg drift · oracle age · depth fuse pre-broadcast      │
 └─────────────────────────────────────────────────────────────────────────────┘
 
 ┌─────────────────────────────────────────────────────────────────────────────┐
@@ -97,12 +97,12 @@ To ensure zero leak into public Grant materials while maintaining test integrity
 - Frame Citadel as the defender of Arbitrum Native TVL (Uniswap V3, Aave V3, Morpho Blue, GMX, Pendle).
 - Do **NOT** mention Stabilizer, Phase 2 protocols (Spark, Fluid, USD.AI, D2 Finance), or unverified stablecoins in the public Roadmap or Grant Pitch.
 
-### Demo Ergonomics (`pnpm demo:matrix`)
+### Demo Ergonomics (targeted venue proofs)
 
-- Default CLI command runs **Loop 1 + Loop 2** (Pure Arbitrum Mainnet Natives).
-- `--loop=perp` runs Loop 1 (default `--hedge=both`: Hyperliquid + Variational).
-- `--loop=perp --hedge=variational` isolates Variational Omni RFQ OLP pre-flight (`validateVariationalRFQIntent`).
-- `--loop=spot` runs Loop 2.
+- `pnpm demo:perp-loop` runs **Loop 1** (GMX / Pendle / HL / Variational perp stack).
+- `pnpm demo:spot-loop` runs **Loop 2** (Morpho / Aave / USD.ai / Uniswap spot & lending).
+- `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` — judge fast-track single-venue FAIL_CLOSED proofs.
+- `pnpm demo:perp-loop -- --hedge=variational` isolates Variational Omni RFQ OLP pre-flight (`validateVariationalRFQIntent`).
 - Loop 3 remains strictly isolated under `pnpm demo:stabilizer` for Sepolia testing.
 - Loop 5 (Phase 2) has **no public CLI** until adapters land under `src/adapters/{spark,fluid,usd-ai,d2}/`.
 
@@ -199,4 +199,4 @@ $$
 | Reserve bits 14–21 in `risk-flags.ts` | Core | No public doc mention |
 | Add limits to `risk-engine-limits.ts` | Core | Manifest parity CI |
 | Adapter stubs + Vitest per protocol | Adapters | Targeted `vitest run` per file |
-| `pnpm demo:matrix -- --loop=phase2` (internal only) | DX | **Never** in `SUBMISSION.md` |
+| `pnpm demo:perp-loop -- --loop=phase2` (internal only) | DX | **Never** in `SUBMISSION.md` |
