@@ -27,13 +27,10 @@ export interface IntentDigestInput {
   action: string;
 }
 
+/** Core venue indices — bits 2–4 reserved (RESERVED_ABI_V2) for pruned Uniswap/Aave/Morpho. */
 const VENUE_KEY_INDEX: Record<string, number> = {
   gmx: 0,
   pendle: 1,
-  uniswap: 2,
-  uni: 2,
-  aave: 3,
-  morpho: 4,
   usdai: 5,
   usd: 5,
   hyperliquid: 6,

@@ -39,10 +39,7 @@ export {
   GMX_IMBALANCE_MAX,
   GMX_COLLATERAL_MIN,
   PENDLE_YIELD_SHOCK_MAX_BPS,
-  UNISWAP_SLIPPAGE_MAX_BPS,
   AAVE_HF_MIN,
-  MORPHO_ORACLE_MAX_AGE_MS,
-  MORPHO_PRICE_DEVIATION_MAX_BPS,
   HL_SPREAD_MAX_BPS,
   HL_RATE_LIMIT_RPM,
   VARIATIONAL_QUOTE_MAX_AGE_MS,
@@ -58,9 +55,6 @@ export type { VariationalFlagInput, GmxFlagOptions, UsdaiFlagInput } from "./ris
 export {
   evaluateGmxFlags,
   evaluatePendleFlags,
-  evaluateUniswapFlags,
-  evaluateAaveFlags,
-  evaluateMorphoFlags,
   evaluateHlSessionFlags,
   evaluateDepegFlags,
 } from "./risk-engine-flag-evaluators";

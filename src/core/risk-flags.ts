@@ -4,8 +4,11 @@ export const FLAGS_SEVERED = 1 << 0;
 export const FLAGS_IMBALANCE_TRIP = 1 << 1;
 export const FLAGS_COLLATERAL_TRIP = 1 << 2;
 export const FLAGS_YIELD_SHOCK = 1 << 3;
+/** @deprecated RESERVED_ABI_V2 — Uniswap V3 pruned; bit position frozen for Wasm/Stylus parity. */
 export const FLAG_UNISWAP_SLIPPAGE_EXCEEDED = 1 << 4;
+/** @deprecated RESERVED_ABI_V2 — Aave V3 pruned; bit position frozen for Wasm/Stylus parity. */
 export const FLAG_AAVE_HEALTH_FACTOR_LOW = 1 << 5;
+/** @deprecated RESERVED_ABI_V2 — Morpho Blue pruned; bit position frozen for Wasm/Stylus parity. */
 export const FLAG_MORPHO_ORACLE_STALE = 1 << 6;
 export const FLAGS_HL_SESSION = 1 << 7;
 export const FLAGS_HL_SIZE = 1 << 8;
@@ -21,9 +24,6 @@ export const FLAGS_AUTO_SEVER_MASK =
   FLAGS_IMBALANCE_TRIP |
   FLAGS_COLLATERAL_TRIP |
   FLAGS_YIELD_SHOCK |
-  FLAG_UNISWAP_SLIPPAGE_EXCEEDED |
-  FLAG_AAVE_HEALTH_FACTOR_LOW |
-  FLAG_MORPHO_ORACLE_STALE |
   FLAGS_HL_SESSION |
   FLAGS_HL_SIZE |
   FLAGS_HL_SPREAD |

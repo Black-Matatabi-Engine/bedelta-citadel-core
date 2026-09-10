@@ -1,8 +1,5 @@
 /** Per-protocol bitmask evaluators — f64 lane inputs → risk flags. */
 import {
-  FLAG_AAVE_HEALTH_FACTOR_LOW,
-  FLAG_MORPHO_ORACLE_STALE,
-  FLAG_UNISWAP_SLIPPAGE_EXCEEDED,
   FLAGS_CLEAR,
   FLAGS_COLLATERAL_TRIP,
   FLAGS_DEPEG_TRIP,
@@ -14,16 +11,12 @@ import {
   FLAGS_YIELD_SHOCK,
 } from "./risk-flags";
 import {
-  AAVE_HF_MIN,
   GMX_COLLATERAL_MIN,
   GMX_IMBALANCE_MAX,
   HL_RATE_LIMIT_RPM,
   HL_SPREAD_MAX_BPS,
-  MORPHO_ORACLE_MAX_AGE_MS,
-  MORPHO_PRICE_DEVIATION_MAX_BPS,
   PENDLE_YIELD_SHOCK_MAX_BPS,
   STABILIZER_DEPEG_MAX_BPS,
-  UNISWAP_SLIPPAGE_MAX_BPS,
 } from "./risk-engine-limits";
 import { applyAutoSeveranceOnFlags } from "./risk-severance";
 import { isPendingGmxSkewTripped, recordPendingGmxSkew } from "./pending-exposure-window";
@@ -74,29 +67,6 @@ export function evaluateGmxFlags(vec: Float64Array, slot = PROTO_GMX, opts?: Gmx
 export function evaluatePendleFlags(yieldCurrent: number, yieldOracle: number): number {
   const f =
     Math.abs(yieldCurrent - yieldOracle) * 10_000 > PENDLE_YIELD_SHOCK_MAX_BPS ? FLAGS_YIELD_SHOCK : FLAGS_CLEAR;
-  return applyAutoSeveranceOnFlags(f);
-}
-
-export function evaluateUniswapFlags(slippageBps: number, directionalFeeBps: number, maxDirBps: number): number {
-  const f =
-    slippageBps > UNISWAP_SLIPPAGE_MAX_BPS || directionalFeeBps > maxDirBps
-      ? FLAG_UNISWAP_SLIPPAGE_EXCEEDED
-      : FLAGS_CLEAR;
-  return applyAutoSeveranceOnFlags(f);
-}
-
-export function evaluateAaveFlags(hf: number, projected?: number, crossDest?: number): number {
-  let f = FLAGS_CLEAR;
-  if (!Number.isFinite(hf) || hf < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
-  if (projected !== undefined && projected < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
-  if (crossDest !== undefined && crossDest < AAVE_HF_MIN) f |= FLAG_AAVE_HEALTH_FACTOR_LOW;
-  return applyAutoSeveranceOnFlags(f);
-}
-
-export function evaluateMorphoFlags(oracleAgeMs: number, priceDeviationBps: number): number {
-  let f = FLAGS_CLEAR;
-  if (oracleAgeMs > MORPHO_ORACLE_MAX_AGE_MS) f |= FLAG_MORPHO_ORACLE_STALE;
-  if (priceDeviationBps > MORPHO_PRICE_DEVIATION_MAX_BPS) f |= FLAG_MORPHO_ORACLE_STALE;
   return applyAutoSeveranceOnFlags(f);
 }
 
