@@ -82,8 +82,21 @@ export function evaluateRetailRisk(
     const tx = parseTx(params);
     const parsed = tx ? parseTransactionCalldata(tx) : null;
 
-    if (parsed?.kind === "approve") {
-      const approveReject = evaluateRetailApproveGate(parsed, config);
+    if (
+      parsed?.kind === "approve" ||
+      parsed?.kind === "permit2_approve" ||
+      parsed?.kind === "permit2_permit"
+    ) {
+      const approveReject = evaluateRetailApproveGate(
+        {
+          kind: "approve",
+          token: parsed.token,
+          spender: parsed.spender,
+          amountWei: parsed.amountWei,
+          infinite: parsed.infinite,
+        },
+        config,
+      );
       if (approveReject) return approveReject;
     }
 

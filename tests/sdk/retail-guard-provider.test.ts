@@ -1,7 +1,10 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import {
   __resetRetailGuardStateForTests,
+  announceGuardedProvider,
   encodeApproveCalldata,
+  encodePermit2ApproveCalldata,
+  encodePermit2PermitCalldata,
   evaluateRetailApproveGate,
   evaluateRetailRisk,
   evaluateRetailVenueAllowlist,
@@ -10,20 +13,25 @@ import {
   parseTransactionCalldata,
   RetailGuardRejectedError,
   SELECTOR_GMX_MULTICALL,
+  SELECTOR_PERMIT2_APPROVE,
+  SELECTOR_PERMIT2_PERMIT,
   SELECTOR_UNISWAP_V2_SWAP_EXACT,
   SELECTOR_UNISWAP_V3_EXACT_INPUT_SINGLE,
+  UINT160_MAX,
   UINT256_MAX,
   withRetailGuardProvider,
   type EIP1193Provider,
+  type EIP6963EventTarget,
   type RetailGuardConfig,
 } from "../../src/sdk/robinhood-retail-guard";
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX_ROUTER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const UNISWAP_ROUTER = "0xcccccccccccccccccccccccccccccccccccccccc";
-const USDC = "0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f3";
+const USDC = "0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f";
 const MALICIOUS = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 const TRUSTED_SPENDER = "0xdddddddddddddddddddddddddddddddddddddddd";
+const PERMIT2 = "0x000000000022d473030f116ddee9f6b43ac78b6";
 
 function mockProvider(
   handler: (args: { method: string; params?: unknown[] }) => unknown = () => "0xok",
@@ -42,12 +50,18 @@ function baseConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGuardConf
   return {
     walletAddress: WALLET,
     allowedVenueMask: 0b111,
-    allowedVenues: [GMX_ROUTER.toLowerCase(), UNISWAP_ROUTER.toLowerCase(), USDC.toLowerCase()],
+    allowedVenues: [
+      GMX_ROUTER.toLowerCase(),
+      UNISWAP_ROUTER.toLowerCase(),
+      USDC.toLowerCase(),
+      PERMIT2.toLowerCase(),
+    ],
     allowedSpenders: [TRUSTED_SPENDER.toLowerCase()],
     contractVenueIndex: {
       [GMX_ROUTER.toLowerCase()]: 0,
       [UNISWAP_ROUTER.toLowerCase()]: 1,
       [USDC.toLowerCase()]: 2,
+      [PERMIT2.toLowerCase()]: 3,
     },
     maxApprovalUsd: 10_000,
     approvalTokenPriceUsd: 1,
@@ -117,6 +131,34 @@ describe("calldata-parser", () => {
       data: SELECTOR_GMX_MULTICALL + "0".repeat(128),
     });
     expect(parsed?.kind).toBe("swap");
+  });
+
+  it("parses Permit2 approve selector (uint160)", () => {
+    const parsed = parseTransactionCalldata({
+      to: PERMIT2,
+      data: encodePermit2ApproveCalldata(USDC, MALICIOUS, UINT160_MAX),
+    });
+    expect(parsed?.kind).toBe("permit2_approve");
+    if (parsed?.kind === "permit2_approve") {
+      expect(parsed.infinite).toBe(true);
+      expect(parsed.spender).toBe(MALICIOUS.toLowerCase());
+      expect(parsed.token).toBe(USDC.toLowerCase());
+    }
+  });
+
+  it("parses Permit2 permit selector (EIP-7730 surface)", () => {
+    const parsed = parseTransactionCalldata({
+      to: PERMIT2,
+      data: encodePermit2PermitCalldata(WALLET, USDC, MALICIOUS, UINT160_MAX),
+    });
+    expect(parsed?.kind).toBe("permit2_permit");
+    if (parsed?.kind === "permit2_permit") {
+      expect(parsed.infinite).toBe(true);
+      expect(parsed.spender).toBe(MALICIOUS.toLowerCase());
+      expect(parsed.owner).toBe(WALLET.toLowerCase());
+    }
+    expect(SELECTOR_PERMIT2_PERMIT).toBe("0x2a0886f7");
+    expect(SELECTOR_PERMIT2_APPROVE).toBe("0x87517c45");
   });
 });
 
@@ -222,6 +264,42 @@ describe("evaluateRetailRisk — direct evaluator", () => {
   });
 });
 
+describe("announceGuardedProvider — EIP-6963", () => {
+  it("announces guarded provider on requestProvider", () => {
+    const announced: unknown[] = [];
+    const target: EIP6963EventTarget = {
+      dispatchEvent: (event) => {
+        announced.push(event.detail);
+        return true;
+      },
+      addEventListener: () => {},
+    };
+    const base = mockProvider();
+    announceGuardedProvider(base, baseConfig(), {
+      uuid: "test-uuid",
+      target,
+      rdns: "io.slivervine.retailguard",
+    });
+    expect(announced).toHaveLength(1);
+    expect(announced[0]).toMatchObject({
+      info: { uuid: "test-uuid", rdns: "io.slivervine.retailguard" },
+    });
+  });
+
+  it("falls back to guarded wrap when EIP-6963 target unavailable", async () => {
+    const base = mockProvider(() => "0xok");
+    const guarded = announceGuardedProvider(base, baseConfig(), {
+      announce: false,
+      target: {},
+    });
+    const hash = await guarded.request({
+      method: "eth_sendTransaction",
+      params: [{ from: WALLET, to: GMX_ROUTER, value: "0x0" }],
+    });
+    expect(hash).toBe("0xok");
+  });
+});
+
 describe("withRetailGuardProvider — EIP-1193 integration", () => {
   beforeEach(() => __resetRetailGuardStateForTests());
 
@@ -250,6 +328,24 @@ describe("withRetailGuardProvider — EIP-1193 integration", () => {
       ],
     });
     expect(base.calls).toHaveLength(1);
+  });
+
+  it("blocks Permit2 infinite approve for untrusted spender", async () => {
+    const base = mockProvider();
+    const guarded = withRetailGuardProvider(base, baseConfig());
+    await expect(
+      guarded.request({
+        method: "eth_sendTransaction",
+        params: [
+          {
+            from: WALLET,
+            to: PERMIT2,
+            data: encodePermit2ApproveCalldata(USDC, MALICIOUS, UINT160_MAX),
+          },
+        ],
+      }),
+    ).rejects.toMatchObject({ code: "UNAUTHORIZED_SPENDER_REJECTED" });
+    expect(base.calls).toHaveLength(0);
   });
 
   it("blocks infinite ERC20 approve for untrusted spender", async () => {
