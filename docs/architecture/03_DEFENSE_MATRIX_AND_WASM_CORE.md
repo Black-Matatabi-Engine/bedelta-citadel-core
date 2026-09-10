@@ -363,6 +363,43 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 **Reviewer clarification:** p50 ~106µs measures **Layer 1 Edge Gateway + Wasm** — not L1/L2 block confirmation. Layer 2 Nitro protection is proven by Stylus opcode Gas parity (`benchmark-stylus-opcode.ts`) and `SliverVineRiskOracle` STATUS_SHUTDOWN flush — both execute **inside** Arbitrum Sequencer block production.
 
+### 3.7 Robinhood Retail Guard SDK — C-End EIP-1193 Middleware
+
+> **SSOT:** [`src/sdk/robinhood-retail-guard/`](../../src/sdk/robinhood-retail-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
+> **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files) · commits `b7c33d8` · `2216da7`
+
+The **Robinhood Retail Guard SDK** (also **EIP-1193 Retail Guard SDK**) packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** — no Cloudflare Worker required for C-end wallet integrations.
+
+| Layer | Module | Defense role |
+|-------|--------|--------------|
+| **Ingress** | `provider.ts` · `announceGuardedProvider` (EIP-6963) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` |
+| **Health probe** | `livingwater-telemetry.ts` | `evaluateLivingWaterHealth` · `verifyTelemetryWatermark` on `INTENT_RING_U32` sentinel |
+| **Calldata** | `calldata-parser.ts` | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
+| **Policy** | `guard-engine.ts` · `risk-evaluator.ts` | Approve gate · venue allowlist · soil fuse · intent ring budget |
+| **Wasm FFI** | `wasm-adapter.ts` | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
+
+**Reject reason codes (fail-closed · 0-Gas):**
+
+| Code | Trigger |
+|------|---------|
+| `UNAUTHORIZED_SPENDER_REJECTED` | Infinite / over-cap approve · Permit2 · EIP-712 spender |
+| `VENUE_DRIFT_REJECTED` | Contract outside `allowedVenues[]` |
+| `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` | Soil lane honeypot fuse |
+| `MAX_ATTEMPTS_EXCEEDED_SEVERED` / `CHANNEL_SEVERED` | `INTENT_RING_U32` 4th-submit severance |
+| `LIVING_WATER_DRIFT` | Living Water telemetry integrity recovery |
+
+```text
+dApp → withRetailGuardProvider(config)
+     → evaluateLivingWaterGate
+     → parseTransactionCalldata (Permit2 / ERC20 / swap)
+     → evaluateRetailApproveGate | evaluateRetailSoilGate | evaluateRetailIntentGate
+     → [PASS] baseProvider.request()
+     → [FAIL] RetailGuardRejectedError + plainTextWarning
+```
+
+→ Public integration guide: [`src/sdk/robinhood-retail-guard/README.md`](../../src/sdk/robinhood-retail-guard/README.md)  
+→ Competitive moat: [`ARCHITECTURE_AND_MOAT.md`](../../src/sdk/robinhood-retail-guard/ARCHITECTURE_AND_MOAT.md)
+
 ### 3.6 Financial Risk Parameters & Epoch Operations
 
 | Layer | Parameter | Value / Rule | Status |

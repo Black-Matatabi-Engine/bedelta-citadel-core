@@ -20,6 +20,30 @@
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [Physical Clock Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
+| **5** | **Robinhood Retail Guard SDK (C-End Middleware)** | Apache-2.0 EIP-1193 wrapper · 0-Gas pre-consensus intercept for infinite approvals · Permit2 · EIP-712 phishing · AI agent retry severance (`INTENT_RING_U32`) · EIP-6963 multi-provider discovery · Living Water health telemetry | `npx vitest run tests/sdk/` **48/48 PASS** · [`src/sdk/robinhood-retail-guard/README.md`](../../src/sdk/robinhood-retail-guard/README.md) · [Defense Matrix § Retail Guard](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#37-robinhood-retail-guard-sdk--c-end-eip-1193-middleware) |
+
+---
+
+## Robinhood Retail Guard SDK — C-End Middleware Submission
+
+**High-value retail distribution layer** for the same Citadel reflex primitives — packaged as drop-in **EIP-1193 provider middleware** under **Apache-2.0**, with proprietary math optionally accelerated via `pkg/soil_core.wasm`.
+
+| Capability | Implementation | User outcome |
+|------------|----------------|--------------|
+| **0-Gas pre-consensus intercept** | `withRetailGuardProvider` · `calldata-parser` (ERC20 · Permit2 `0x2a0886f7` / `0x87517c45`) | Infinite approve / untrusted spender blocked **before** wallet popup |
+| **AI agent intent protection** | `evaluateRetailRisk` · `INTENT_RING_U32` attempt budget | 4th rapid submit severs channel — blocks FOMO / panic retry storms |
+| **EIP-6963 discovery** | `announceGuardedProvider` | Guarded provider discoverable alongside MetaMask / Rabby injectors |
+| **Living Water telemetry** | `livingwater-telemetry.ts` | In-browser health & execution latency monitor; `LIVING_WATER_DRIFT` fail-closed on integrity recovery |
+| **EIP-712 Permit guard** | `eth_signTypedData_v4` venue + spender gates | Anti-phishing for `verifyingContract` drift |
+
+**Verification (commits `b7c33d8` · `2216da7`):**
+
+```bash
+npx vitest run tests/sdk/
+# Expected: Tests  48 passed (48)  ·  5 test files
+```
+
+**SSOT:** [`src/sdk/robinhood-retail-guard/`](../../src/sdk/robinhood-retail-guard/) · [`ARCHITECTURE_AND_MOAT.md`](../../src/sdk/robinhood-retail-guard/ARCHITECTURE_AND_MOAT.md)
 
 ---
 

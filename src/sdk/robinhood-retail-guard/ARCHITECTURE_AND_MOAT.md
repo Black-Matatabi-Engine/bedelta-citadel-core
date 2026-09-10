@@ -131,8 +131,15 @@ if (injected) announceGuardedProvider(injected, config);
 
 ---
 
+## Living Water Telemetry
+
+[`livingwater-telemetry.ts`](./livingwater-telemetry.ts) exposes an in-browser **health and execution performance monitor** (`evaluateLivingWaterHealth`, `verifyTelemetryWatermark`) that runs on every guarded EIP-1193 invocation. When SDK integrity cannot be recovered under sustained load, the gate returns `LIVING_WATER_DRIFT` — a fail-closed recovery path framed for end users as telemetry drift, not a security trap.
+
+---
+
 ## Related Documents
 
+- [`README.md`](./README.md) — public integration guide
 - `AI_INTENT_PROTECTION.md` — LLM / agent threat model
-- `docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md` — Wasm reflex core
+- `docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md` — Wasm reflex core · §3.7 Retail Guard SDK
 - `docs/internal/PERFORMANCE_AND_PARITY_AUDIT.md` — zero-GC audit (2026-09-10)
