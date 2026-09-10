@@ -1,54 +1,54 @@
 /**
- * Core system state — authoritative gate for adapters (Pgate.md / systemState.ts).
+ * Core system state — authoritative gate for adapters (Pgate.md).
  */
-
+import { checkSoilResistance } from "./risk-engine-soil";
+import type { SoilResistanceInput } from "./soil-resistance-types";
 import {
-  checkSoilResistance,
-  type SoilResistanceInput,
-} from "../services/risk-control";
-import { enrichSystemStateVectorEquilibrium } from "../services/vector-equilibrium";
-import {
+  buildBlockedSystemState,
   buildSystemState,
-  resolveHudState,
-  type SystemState,
-} from "../services/systemState";
+  buildSystemStateFromSignals,
+  serializeSystemStateForClient,
+} from "./system-state-build";
+import { deriveCriFromRiskSignals, resolveHudState } from "./system-state-cri";
+import type { SystemState } from "./system-state-types";
+import { enrichSystemStateVectorEquilibrium } from "./vector-equilibrium-core";
 import { isHedgeActive, isR20Locked } from "./risk";
+import {
+  readStateOverride,
+  writeStateOverride,
+  type CoreSystemState,
+} from "./state-store";
 
-export type { SystemState, HudState } from "../services/systemState";
+export type { CoreSystemState } from "./state-store";
+export { severSigningChannel } from "./state-store";
+export type { SystemState, HudState } from "./system-state-types";
 export {
   buildSystemState,
   buildBlockedSystemState,
   buildSystemStateFromSignals,
   deriveCriFromRiskSignals,
   resolveHudState,
-} from "../services/systemState";
+  serializeSystemStateForClient,
+};
 export { isR20Locked, isHedgeActive } from "./risk";
 
-/** Internal R20 / physical deadlock signal used by tactical logs */
 export const R20_LOCKED = "R20_LOCKED" as const;
-
-export interface CoreSystemState extends SystemState {
-  isHedgeActive: boolean;
-}
 
 export interface UpdateSystemStateInput {
   patch?: Partial<SystemState>;
   soil?: SoilResistanceInput;
 }
 
-let activeStateOverride: CoreSystemState | null = null;
-
-/** Read the active system snapshot (overrideable in tests). */
 export function readActiveSystemState(): CoreSystemState {
-  if (activeStateOverride) return activeStateOverride;
-  const base = buildSystemState();
+  const override = readStateOverride();
+  if (override) return override;
+  const base = buildSystemState({ skipHardlockAssert: true });
   return enrichSystemStateVectorEquilibrium(
     { ...base, isHedgeActive: false },
     { isHedgeActive: false },
   );
 }
 
-/** Merge patch (+ optional soil probe) into the active system snapshot. */
 export function updateSystemState(input: UpdateSystemStateInput = {}): CoreSystemState {
   const current = readActiveSystemState();
   const patch = input.patch ?? {};
@@ -102,26 +102,25 @@ export function updateSystemState(input: UpdateSystemStateInput = {}): CoreSyste
     ? checkSoilResistance(input.soil).tripped
     : undefined;
 
-  activeStateOverride = enrichSystemStateVectorEquilibrium(
+  const enriched = enrichSystemStateVectorEquilibrium(
     { ...next, isHedgeActive: hedgeActive },
     { soilTripped, isHedgeActive: hedgeActive },
-  );
-  return activeStateOverride;
+  ) as CoreSystemState;
+  writeStateOverride(enriched);
+  return enriched;
 }
 
-/** @internal Test hook — reset with `null` after each test. */
 export function __setSystemStateForTests(state: CoreSystemState | SystemState | null): void {
   if (state === null) {
-    activeStateOverride = null;
+    writeStateOverride(null);
     return;
   }
-  activeStateOverride = {
+  writeStateOverride({
     ...state,
     isHedgeActive: (state as CoreSystemState).isHedgeActive ?? false,
-  };
+  });
 }
 
-/** Resolve the tactical state label for logging when hedges are blocked. */
 export function resolveRiskLockLabel(state: SystemState): typeof R20_LOCKED | null {
   return isR20Locked(state) ? R20_LOCKED : null;
 }

@@ -1,5 +1,5 @@
 /**
- * Unified cross-chain risk engine — HL policy gate (thin re-export).
+ * Unified cross-chain risk engine — lean core re-export.
  */
 
 export { HardlockError, RiskLimitExceeded } from "./risk";
@@ -15,9 +15,47 @@ export type {
   CitadelRiskGateVerdict,
 } from "./risk-engine-lib/risk-engine-types";
 
-export { checkSoilResistance } from "./risk-engine-lib/risk-engine-soil-fastpath";
 export {
+  FLAGS_CLEAR,
+  FLAGS_SEVERED,
+  FLAGS_IMBALANCE_TRIP,
+  FLAGS_COLLATERAL_TRIP,
+  FLAGS_YIELD_SHOCK,
+  FLAG_UNISWAP_SLIPPAGE_EXCEEDED,
+  FLAG_AAVE_HEALTH_FACTOR_LOW,
+  FLAG_MORPHO_ORACLE_STALE,
+  FLAGS_HL_SESSION,
+  FLAGS_HL_SIZE,
+  FLAGS_HL_SPREAD,
+  FLAGS_HL_RATE,
+  FLAGS_DEPEG_TRIP,
+  FLAG_VARIATIONAL_STALE_QUOTE,
+  FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED,
+  FLAG_USDAI_ORACLE_STALE,
+  FLAG_USDAI_PEG_DRIFT,
+  PROTO_VECT_LEN,
+  PROTO_SLOT,
+  PROTO_GMX,
+  PROTO_PENDLE,
+  PROTO_UNISWAP,
+  PROTO_AAVE,
+  PROTO_MORPHO,
+  PROTO_HL,
+  PROTO_USDAI,
+  packProtocolLane,
+  evaluateGmxFlags,
+  evaluatePendleFlags,
+  evaluateHlSessionFlags,
+  evaluateDepegFlags,
+  evaluateVariationalFlags,
+  evaluateUsdAiFlags,
+  evaluateUsdAiFlagsFromLane,
+  checkSoilResistance,
   evaluateGatewayRules,
   assertCitadelRiskGate,
-} from "./risk-engine-lib/risk-engine-gateway";
-export { evaluateGlobalRiskPolicy } from "./risk-engine-lib/risk-engine-policy";
+  evaluateGlobalRiskPolicy,
+} from "./risk-engine-core";
+
+export type { VariationalFlagInput, UsdaiFlagInput } from "./risk-engine-core";
+
+export { isGatewayNominalFastPath } from "./risk-engine-core";
