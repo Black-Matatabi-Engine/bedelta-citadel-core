@@ -209,6 +209,19 @@
 | 4.4 | "Settlement live" mislabeled as "Hedge live" | **HIGH veto risk** · Wallet A short simulate-only — **do not overclaim in pitch** |
 | 4.5 | **Pre-consensus intent drift** (Goldfeder lens) | **HIGH defense (in-scope)** · venue mandate + retry budget + soil fuse pre-broadcast; **DISCLOSED OUT OF SCOPE:** unintegrated third-party bundlers |
 | 4.6 | CLI harness timing spoofing | **LOW** · `process.hrtime.bigint()` SSOT · latency **bands** (not single-point μs) · Pure Invariant row isolated from Node I/O ms |
+| 4.7 | **Negative Leap Second & Monotonic Clock Immunity** | **LOW residual** · `monotonic-time.ts` TypedArray SSOT · `resolveWallAge()` fail-closed on `CLOCK_NEGATIVE_LEAP_DETECTED` · RPC watermark hold · no fake-fresh `age=0` |
+
+#### 4.7 — Negative Leap Second & Monotonic Clock Immunity (SSOT)
+
+| Layer | Defense | Trip / module |
+|-------|---------|---------------|
+| **Edge / CLI latency** | `process.hrtime.bigint()` / `performance.now()` — never `Date.now()` for μs benches | `demo-timing.ts` |
+| **Wall-clock freshness** | `resolveWallAge(nowMs, tsMs)` → `LEAP` trips STALE flags; **no** `Math.max(0, now−ts)` on oracle age | `risk-engine-flag-alt.ts` · `risk-engine-usdai.ts` |
+| **Virtual monotonic wall** | `MonotonicTimeSSOT` `BigInt64Array` buffer `[lastWall, offset]` — NTP step-back does not regress virtual time; **sticky** `CLOCK_NEGATIVE_LEAP_DETECTED` | `monotonic-time.ts` |
+| **RPC timestamp regression** | `RpcTimestampWatermark` holds high-watermark when `block_N.timestamp < block_{N-1}.timestamp` | `monotonic-time.ts` · soil fast-path |
+| **Wasm/Stylus ABI** | `packClockStateForWasm()` packs i64-compatible slots for `soil_core` parity | `monotonic-time.ts` → `soil_core.rs` |
+
+> *Immunity definition: physical clocks (HKG/SIN/NTP/RPC) need not agree; when any clock lies, the engine produces no negative intervals, fake-fresh ages, or state rollback — untrusted time states fail-closed.*
 
 #### 4.5 — Intent Drift Defense Perimeter (SSOT)
 

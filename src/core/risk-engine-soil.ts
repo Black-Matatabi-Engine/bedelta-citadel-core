@@ -15,6 +15,7 @@ import { isSequencerSafe } from "../services/risk/sequencer-guard";
 import { isArbitrumGasGuardBlocked } from "../services/risk/arbitrum-gas-guard";
 import { isSoftConfirmationSafe } from "../services/risk/soft-confirmation-guard";
 import { applySoilTripSeverance } from "./risk-severance";
+import { getGlobalMonotonicClock, resolveWallAge, saturatingSub } from "./monotonic-time";
 
 const SOIL_CLEAR: SoilResistanceResult = { ok: true, tripped: false, crossVenueSlippage: 0, spotPerpSlippage: 0, reasons: [] };
 let soilRef: SoilResistanceInput | null = null;
@@ -27,8 +28,33 @@ export function isGatewayNominalFastPath(soil: SoilResistanceInput): boolean {
   }
   const lane = packSoilLane(soil.hlSpot, soil.hlPerp, soil.dydxPerp, soil.depthUsd ?? Number.NaN, soil.maxSlippage ?? MAX_SLIPPAGE, resolveSoilMinDepthUsd(soil));
   if (evaluateSoilSlippagePacked(lane).tripFlags !== 0 || isTsunamiShieldWindow(soil.at)) { soilRef = soil; soilFast = false; return false; }
-  const atMs = soil.at?.getTime();
-  const ok = isSequencerSafe(atMs) && isArbitrumStatusSequencerHealthy(atMs) && isRpcRadarSequencerHealthy(atMs) && !isArbitrumGasGuardBlocked() && isSoftConfirmationSafe(atMs);
+  const wallMs = soil.at?.getTime() ?? Date.now();
+  const clockSample = getGlobalMonotonicClock().read(wallMs);
+  if (clockSample.anomaly !== null) {
+    soilRef = soil;
+    soilFast = false;
+    return false;
+  }
+  const refMs = clockSample.virtualWallMs;
+  if (soil.at !== undefined) {
+    const soilLeap = resolveWallAge(refMs, soil.at.getTime());
+    if (soilLeap.kind === "LEAP") {
+      soilRef = soil;
+      soilFast = false;
+      return false;
+    }
+    if (saturatingSub(refMs, soil.at.getTime()) > 86_400_000) {
+      soilRef = soil;
+      soilFast = false;
+      return false;
+    }
+  }
+  const ok =
+    isSequencerSafe(refMs) &&
+    isArbitrumStatusSequencerHealthy(refMs) &&
+    isRpcRadarSequencerHealthy(refMs) &&
+    !isArbitrumGasGuardBlocked() &&
+    isSoftConfirmationSafe(refMs);
   soilRef = soil; soilFast = ok; return ok;
 }
 

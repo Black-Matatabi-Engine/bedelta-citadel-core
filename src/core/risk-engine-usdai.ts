@@ -10,6 +10,12 @@ import {
 } from "./risk-flags";
 import { evaluateUsdAiFlagsFromLane } from "./risk-engine-flag-alt";
 import { packProtocolLane, PROTO_USDAI, PROTO_VECT_LEN } from "./risk-engine-protocol-slots";
+import {
+  CLOCK_EXCESSIVE_FORWARD_STEP,
+  CLOCK_NEGATIVE_LEAP_DETECTED,
+  getGlobalMonotonicClock,
+  resolveWallAge,
+} from "./monotonic-time";
 
 const USDAI_PROTO_VEC = new Float64Array(PROTO_VECT_LEN);
 
@@ -53,12 +59,31 @@ export function resolveUsdAiClockSsotPure<T extends UsdaiSoilInput>(
   wallMs = Date.now(),
 ): UsdaiClockSsotResult<T> {
   const callerProvided = input.nowMs != null;
-  const nowMs = input.nowMs ?? wallMs;
-  const skewMs = callerProvided ? Math.abs(input.nowMs! - wallMs) : 0;
-  const tripped = callerProvided && skewMs > USDAI_CLOCK_SKEW_MAX_MS;
-  const reasons = tripped
-    ? [`${CLOCK_SKEW_EXCEEDED}:skewMs=${skewMs}>${USDAI_CLOCK_SKEW_MAX_MS}`]
-    : [];
+  const clockSample = getGlobalMonotonicClock().read(wallMs);
+  const reasons: string[] = [];
+  let tripped = false;
+
+  if (clockSample.anomaly === CLOCK_NEGATIVE_LEAP_DETECTED) {
+    tripped = true;
+    reasons.push(`${CLOCK_NEGATIVE_LEAP_DETECTED}:wallMs=${wallMs}`);
+  } else if (clockSample.anomaly === CLOCK_EXCESSIVE_FORWARD_STEP) {
+    tripped = true;
+    reasons.push(`${CLOCK_EXCESSIVE_FORWARD_STEP}:virtualWallMs=${clockSample.virtualWallMs}`);
+  }
+
+  const nowMs = input.nowMs ?? clockSample.virtualWallMs;
+  const skewMs = callerProvided ? (input.nowMs! > wallMs ? input.nowMs! - wallMs : wallMs - input.nowMs!) : 0;
+  if (callerProvided && skewMs > USDAI_CLOCK_SKEW_MAX_MS) {
+    tripped = true;
+    reasons.push(`${CLOCK_SKEW_EXCEEDED}:skewMs=${skewMs}>${USDAI_CLOCK_SKEW_MAX_MS}`);
+  }
+
+  const oracleLeap = resolveWallAge(nowMs, input.oracleTimestampMs);
+  if (oracleLeap.kind === "LEAP") {
+    tripped = true;
+    reasons.push(`${CLOCK_NEGATIVE_LEAP_DETECTED}:oracleDeltaMs=${oracleLeap.deltaMs}`);
+  }
+
   return { input: { ...input, nowMs }, skewMs, tripped, reasons };
 }
 
@@ -116,7 +141,9 @@ export function verifyUsdAiOracle(input: UsdaiSoilInput): UsdaiOracleCheckResult
   }
   const clocked = clock.input;
   const reasons: string[] = [];
-  const oracleAgeMs = Math.max(0, clocked.nowMs - clocked.oracleTimestampMs);
+  const oracleAgeResolved = resolveWallAge(clocked.nowMs, clocked.oracleTimestampMs);
+  const oracleAgeMs =
+    oracleAgeResolved.kind === "OK" ? oracleAgeResolved.ageMs : Number.POSITIVE_INFINITY;
   const pegDriftBps = computeUsdAiPegDriftBps(clocked.susdaiPriceUsd);
   const navDeviationBps = computeUsdAiNavDeviationBps(clocked.navUsd, clocked.gpuMarkUsd);
   const mask = resolveUsdAiProtocolMask(clocked, false);
