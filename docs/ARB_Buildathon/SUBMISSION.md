@@ -40,6 +40,13 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
 
 **Invariant coverage:** Zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab slot indexing).
 
+```bash
+# Verify Solidity Ring Slab Invariants & Fuzz Testing (5/5 PASS)
+forge test --match-contract IntentRingSlabTest
+```
+
+**On-chain Foundry proof:** [`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol) invariants — **slot mask** (`hashKeyToSlot & 0xFF`) · **collision-shared attempt budget** (colliding keys share slot counter) · **4th-attempt severing** (`FLAG_SEVER_CHANNEL` on `maxAttempts` exhaust) — **100% verified** via Foundry fuzz (256 runs per fuzz case).
+
 → Deep dive: [Zero-GC Ring Slab Memory Engine](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · SSOT modules: [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts)
 
 ---
@@ -208,6 +215,7 @@ Citadel's intent mandate gate (`evaluateIntentMandateGate`) executes on every AI
 1. **Zero STW GC** — high-frequency intent validation without V8 pause risk; reflex arc within **p50 ~106µs** Edge budget under retry fan-out.
 2. **Bounded isolate memory** — **8 KiB** fixed mandate state (256 × 32 B); no unbounded `Map` growth.
 3. **C-ABI portability** — identical slot layout across TypeScript Edge · `pkg/soil_core.wasm` · Stylus Nitro.
+4. **Solidity parity fuzz** — `IntentRingSlabTest` **5/5 PASS** (`forge test --match-contract IntentRingSlabTest`) — on-chain ring slab semantics match Edge u32 hot path.
 
 → Architecture SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · [Performance Verification](#performance-verification--zero-gc-memory-isolation)
 

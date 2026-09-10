@@ -616,6 +616,24 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 > Production soil fuse on Edge remains **`checkSoilResistance()`** — dry-run harnesses validate adjacent paths without replacing the Worker SSOT.
 
+### 4.4 Multi-Leg Portfolio Cascade Replay (Black Swan Resiliency)
+
+Gauntlet-style **multi-leg cascade replay** simulates correlated shocks across the GMX · Hyperliquid · AAVE triangle — validating fail-closed halts before any live broadcast.
+
+```bash
+# Verify Multi-Leg Cascade Replay & HF Breach Defense (4/4 PASS)
+npx vitest run tests/core/portfolio-cascade-replay.test.ts
+```
+
+| Scenario | Shock profile | Expected trip code |
+|----------|---------------|-------------------|
+| **Benign shock** | −0.3% ETH · 10% depth drop · 0.5% slippage | `totalBlocked = 0` · healthy HF |
+| **HF breach (deep crash)** | ETH −30% · 75% depth drop · 3% slippage · GM pool 70/30 imbalance | `HF_BREACH` · `BLACK_SWAN_HALT` · or `GMX_IMBALANCE` |
+| **HF velocity cascade** | Two-step ETH collapse (−6.7% → −21%) · `hfCascadeDeltaPerStep = 0.08` | `cascadeVelocityTripped` or blocked steps · `finalHf < AAVE_HF_MIN + 0.5` |
+| **Delta drift** | Missing HL hedge leg · mild ETH dip | `DELTA_DRIFT` · `blocked = true` |
+
+**SSOT modules:** [`portfolio-cascade-core.ts`](../../src/core/portfolio-cascade-core.ts) · [`portfolio-cascade-replay.test.ts`](../../tests/core/portfolio-cascade-replay.test.ts) · venue legs: **GMX GM** · **HL short** · **AAVE collateral/debt**.
+
 ---
 
 ## 5. Comparative Analysis: Arbitrum Native vs. Pillar Set X Reference Escort Adapter
@@ -709,6 +727,7 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 | **Historical simulation** | Survival Benchmark 30D HL funding + L2 book | On-demand (`generate-survival-report.ts`) |
 | **Stress scenarios** | $100k canonical + **$1M** stress notional (`STRESS_NOTIONAL_USD`) | Same report |
 | **Reverse stress** | Negative proofs — depth breach, soil trip, bridge timeout | `pnpm verify:negative` |
+| **Multi-leg cascade replay** | HF breach · velocity spike · GM LP imbalance · delta drift (GMX · HL · AAVE) | `npx vitest run tests/core/portfolio-cascade-replay.test.ts` **4/4** |
 | **Model validation** | Vitest **199 test files \| 868 PASS Clean (100% PASS)** full regression | CI / pre-release |
 
 ### 6.4 Three Lines of Defense Mapping

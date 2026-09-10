@@ -106,6 +106,25 @@ $$
 npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · includes <16 KiB worker gate
 ```
 
+### Foundry On-Chain Ring Slab Fuzz Proof (`IntentRingSlabLib.sol`)
+
+Solidity mandate semantics mirror the TypeScript u32 hot path — [`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol) enforces FNV-1a slot hashing · venue drift flags · attempt-budget severance. Foundry fuzz suite **5/5 PASS**:
+
+```bash
+# Verify Solidity Ring Slab Invariants & Fuzz Testing (5/5 PASS)
+forge test --match-contract IntentRingSlabTest
+```
+
+| Fuzz / unit case | Invariant | Assertion |
+|------------------|-----------|-----------|
+| `testFuzz_hashKeyToSlot_alwaysMasked` | **Slot mask** | `hashKeyToSlot(key) ≤ 255` for arbitrary `bytes` keys |
+| `testFuzz_collidingKeysShareAttemptBudget` | **Collision sharing** | Keys mapping to the same slot share one attempt counter |
+| `testFuzz_attemptBudget_seversOnFourth` | **4th-attempt severing** | 4th bump with `maxAttempts=3` → `ok=false` · `severChannel=true` |
+| `testFuzz_venueDrift_doesNotIncrementAttempts` | **Venue drift isolation** | Drift reject does not consume attempt budget |
+| `test_hashKeyToSlot_knownCollisionProbe` | **Mask boundary** | Known collision probe slots ∈ `[0, 255]` |
+
+**SSOT:** [`IntentRingSlab.t.sol`](../../contracts/test/IntentRingSlab.t.sol) · TS parity: [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts).
+
 ### C-ABI Parity — Rust Wasm & Arbitrum Stylus Coprocessors
 
 Host ring slots mirror [`src/wasm/intent_core.rs`](../../src/wasm/intent_core.rs) exports — **100% pointer-aligned** `4 × i64` mandate heap:

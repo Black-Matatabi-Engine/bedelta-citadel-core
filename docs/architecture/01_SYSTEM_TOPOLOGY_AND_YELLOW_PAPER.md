@@ -35,6 +35,27 @@ Five pure invariant modules are the TypeScript SSOT; legacy import paths under `
 
 **Solidity ingress:** [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) — **Custom Errors** (`revert CustomError()`) for bytecode-efficient fail-closed; `ERR_*` bytes32 event constants preserved for Dune/telemetry.
 
+### System Architecture — Layer Import Boundaries
+
+Citadel enforces a **machine-verified single-direction gateway boundary** inside `src/core/` — pure invariant modules must not penetrate orchestration layers (`services/` · `adapters/` · `routes/` · `workers/`). Gateway files (`state.ts` · `risk.ts` · `agent-citadel-guard.ts`) remain **zero-layer penetration** surfaces; only **five documented orchestration sinks** may import `services/`:
+
+| Allowlisted orchestration sink | Role |
+|-------------------------------|------|
+| [`risk-engine-soil.ts`](../../src/core/risk-engine-soil.ts) | Soil fuse orchestration bridge |
+| [`risk-engine-policy.ts`](../../src/core/risk-engine-policy.ts) | Policy matrix orchestration |
+| [`risk-engine-lib/risk-engine-types.ts`](../../src/core/risk-engine-lib/risk-engine-types.ts) | Shared risk-engine type sink |
+| [`intent-ledger/flatten-hardlock.ts`](../../src/core/intent-ledger/flatten-hardlock.ts) | Intent ledger flatten orchestration |
+| [`black-swan-guard-lib/black-swan-guard-flatten.ts`](../../src/core/black-swan-guard-lib/black-swan-guard-flatten.ts) | Black-swan guard flatten orchestration |
+
+**Verification protocol** — static import scan across all `src/core/**/*.ts`:
+
+```bash
+# Verify Zero-Layer Penetration & Gateway Allowlist Boundaries (3/3 PASS)
+npx vitest run tests/core/core-import-boundary.test.ts
+```
+
+**SSOT:** [`core-import-boundary.ts`](../../src/core/core-import-boundary.ts) · [`core-import-boundary.test.ts`](../../tests/core/core-import-boundary.test.ts).
+
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
 This document is **invariant-first** (Yellow Paper style): topology, thresholds, and fail-closed semantics. Monetization pitches live under `docs/grants/`.
