@@ -1,0 +1,98 @@
+{
+  "balances": {
+    "ethWei": 7655717213712907,
+    "gmToken": 1060520094516305839,
+    "gmTokenAmount": 1060520094516305839,
+    "usdc": 8013692,
+    "usdcAllowanceRouter": "115792089237316195423570985008687907853269984665640564039457584007913129639935"
+  },
+  "meta": {
+    "blockNumber": 25933177,
+    "chainId": 42161,
+    "eoa": "0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F",
+    "fixture": "contracts/test/fixtures/gmx-gm-withdraw-multicall.json",
+    "msgValue": 1000000000000000,
+    "router": "0x7dE39FF2e232A2203196788d37e234cF8F1b83f1"
+  },
+  "multicall": {
+    "gasUsed": 120088,
+    "label": "multicall",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: insufficient allowance"
+      },
+      "decoded": "Error(ERC20: insufficient allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001d45524332303a20696e73756666696369656e7420616c6c6f77616e6365000000",
+      "returndataLen": 100,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[0]": {
+    "gasUsed": 98481,
+    "label": "leg sendWnt",
+    "ok": true
+  },
+  "probes[1]": {
+    "gasUsed": 18241,
+    "label": "leg sendTokens",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: insufficient allowance"
+      },
+      "decoded": "Error(ERC20: insufficient allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001d45524332303a20696e73756666696369656e7420616c6c6f77616e6365000000",
+      "returndataLen": 100,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[2]": {
+    "gasUsed": 98439,
+    "label": "leg createWithdrawal",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "selector": "0x01d6f7b1"
+      },
+      "decoded": "CustomError(0x01d6f7b1)",
+      "errorName": "CustomError(0x01d6f7b1)",
+      "returndataHex": "0x01d6f7b1",
+      "returndataLen": 4,
+      "selector": "0x01d6f7b1"
+    }
+  },
+  "probes[3]": {
+    "gasUsed": 120028,
+    "label": "fundMulticall",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: insufficient allowance"
+      },
+      "decoded": "Error(ERC20: insufficient allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000001d45524332303a20696e73756666696369656e7420616c6c6f77616e6365000000",
+      "returndataLen": 100,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[4]": {
+    "gasUsed": 88019,
+    "label": "createWithdrawal after funding",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "wntAmount": "0",
+        "executionFee": "38d7ea4c68000"
+      },
+      "decoded": "InsufficientWntAmountForExecutionFee(0, 38d7ea4c68000)",
+      "errorName": "InsufficientWntAmountForExecutionFee",
+      "returndataHex": "0x3a78cd7e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000038d7ea4c68000",
+      "returndataLen": 68,
+      "selector": "0x3a78cd7e"
+    }
+  }
+}
