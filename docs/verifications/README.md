@@ -1,7 +1,7 @@
 # Verification SSOT Index
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)  
-**Vitest baseline:** **222 test files | 1044 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
+**Vitest baseline:** **225 test files | 1052 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
 
 | # | Document | Role |
 |---|----------|------|

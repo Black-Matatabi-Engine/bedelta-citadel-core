@@ -2,7 +2,7 @@
 
 > **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard` · **License:** Apache-2.0  
 > **Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)  
-> **Vitest SSOT:** **222 test files | 1044 PASS clean (100%)** · `pnpm test -- --run`  
+> **Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · `pnpm test -- --run`  
 > **SDK verification:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` → **35/35 PASS** (retail guard) · full SDK suite via `npx vitest run tests/sdk/`
 
 ---

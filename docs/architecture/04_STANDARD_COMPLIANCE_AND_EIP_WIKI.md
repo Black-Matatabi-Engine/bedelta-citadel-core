@@ -2,12 +2,12 @@
 
 > **Product:** **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
-> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **222 test files | 1044 PASS clean**  
+> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **225 test files | 1052 PASS clean**  
 > **Architecture index:** [`README.md`](./README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **This file**
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
 
-Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
+Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7683** · **ERC-7710** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [next-gen EIP defense matrix](#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
 
 ---
 
@@ -29,7 +29,7 @@ Five standards form the **active C-end / on-chain compliance spine** — each ro
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **222 test files | 1044 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **225 test files | 1052 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Wasm hot path** | `pkg/soil_core.wasm` **< 28 KiB** · warm exec **< 60 µs** · Edge p50 ~106 µs |
 | **Worker bundle** | **143.77 KiB raw** · **50.94 KiB gzip** hot-path (`pnpm bundle:measure` · `limitKiB: 150` · `pass: true`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
@@ -99,6 +99,38 @@ Citadel's **Pre-Consensus Edge-Wasm Reference Implementation Moat** ships produc
 
 > **Moat thesis:** Competitors optimize **post-execution** analytics or **on-chain** governance delays. Citadel's Edge-Wasm RI executes **pre-Sequencer** — the only tier that can sever EIP-712 at **p50 ~15µs** with **$0 gas** on rejection.
 
+### Next-Gen EIP Defense Matrix (ERC-7683, EIP-7702, ERC-7710)
+
+Production guards on `feat/nextgen-eips-moat` extend the Pre-Consensus Edge-Wasm moat into cross-chain intents, EOA delegation, and zero-gas intent expiry — each bound to a dedicated Vitest proof anchor.
+
+| Standard | Architectural gap | Citadel breakthrough | Implementation SSOT | Verification |
+|----------|-------------------|----------------------|---------------------|--------------|
+| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** *(Cross-Chain Intent Standard)* | Solver MEV and slippage exploitation on `CrossChainOrder` fills before signature release | Client-side Edge-Wasm pre-signature simulation — execution delta + solver MEV bps gate (**sub-10ms**) | [`erc7683-intent-guard.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard.ts) | [`tests/sdk/erc7683-intent-guard.test.ts`](../../tests/sdk/erc7683-intent-guard.test.ts) **3/3 PASS** |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** *(Set EOA Account Code)* | Prompt-injected EOA delegation can install malicious implementation bytecode pre-broadcast | Decodes `authorization` tuples · whitelisted implementation invariant matrix · blocked-address denylist | [`eip7702-auth-guard.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/eip7702-auth-guard.ts) | [`tests/sdk/eip7702-auth-guard.test.ts`](../../tests/sdk/eip7702-auth-guard.test.ts) **3/3 PASS** |
+| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** *(Intent Delegations & Expiry)* | No zero-gas cancellation path when soil resistance trips before sequencer inclusion | Couples `rootProtection()` (**p50 ~15µs**) with Permit2 deadline expiry cancellation signal on soil trip | [`erc7710-intent-expiry.ts`](../../src/services/api/pendle-shield/erc7710-intent-expiry.ts) | [`tests/services/api/erc7710-intent-expiry.test.ts`](../../tests/services/api/erc7710-intent-expiry.test.ts) **2/2 PASS** |
+
+```text
+[ CrossChainOrder / EIP-7702 auth / ERC-7710 delegation ]
+        │
+        ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer D — ERC-7683 cross-chain intent guard                 │
+│ erc7683-intent-guard.ts · solver MEV bps · slippage delta  │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer E — EIP-7702 authorization inspector                  │
+│ eip7702-auth-guard.ts · bytecode invariant · whitelist      │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer F — ERC-7710 zero-gas expiry + rootProtection()       │
+│ erc7710-intent-expiry.ts · p50 ~15µs severance on soil trip │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+              [ Arbitrum Sequencer / Bundler ingress ]
+```
+
 ---
 
 ## Standards Summary Table
@@ -113,7 +145,9 @@ Citadel's **Pre-Consensus Edge-Wasm Reference Implementation Moat** ships produc
 | **[OpenZeppelin Contracts v5](https://docs.openzeppelin.com/contracts/5.x/)** | On-chain gate access control & reentrancy guard | `SliverVineGate.sol` · OZ `ECDSA.tryRecover` alignment · `IngressSafetySwitch.sol` is a stateless compliance filter (no OZ import) | Foundry Gate **60 passed** · Forge property fuzz |
 | **Solidity Custom Errors** | Bytecode-efficient fail-closed ingress (`revert CustomError()`) with telemetry-compatible `ERR_*` bytes32 events | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) (`SignerZero` · `SloTimeout` · …) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) (`InvalidSigner` · `ComplianceBlocked` · …) — `ERR_SLO_TIMEOUT` / `ERR_INVALID_SIGNER` event constants unchanged for Dune | Foundry oracle/switch tests · Dune `ERR_*` decoders |
 | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | Modular smart-account modules — session-key permission scopes | ZeroDev Kernel v3 modular session keys · scoped `ORDER_EXECUTE` clip · daily gas sponsorship limits | Gatehouse (Pillar Set X) · agent-intent SDK |
-| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | EOA Account Abstraction via `SetCode` — Agent Smart Account upgrade path (`SliverVineGate.sol` compatible) | Kernel v4 intent composer · [Technical Specification §2.4.5](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#245-zerodev-v4-seven-stages-one-stack-alignment-roadmap-post-grant-spec) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | ✅ v1.0 Delivered (Gate-compatible) · Kernel v4 adapter ⏳ V1.5 |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | EOA Account Abstraction via `SetCode` — `authorization` tuple whitelist + bytecode invariant pre-broadcast | [`eip7702-auth-guard.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/eip7702-auth-guard.ts) · Kernel v4 intent composer · [§2.4.5](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#245-zerodev-v4-seven-stages-one-stack-alignment-roadmap-post-grant-spec) | `npx vitest run tests/sdk/eip7702-auth-guard.test.ts` **3/3** · Kernel v4 adapter ⏳ V1.5 |
+| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** | Cross-chain intent standard — solver MEV / slippage pre-signature gate | [`erc7683-intent-guard.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard.ts) | `npx vitest run tests/sdk/erc7683-intent-guard.test.ts` **3/3** |
+| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | Intent-based delegations & expiry — zero-gas cancellation on soil trip | [`erc7710-intent-expiry.ts`](../../src/services/api/pendle-shield/erc7710-intent-expiry.ts) · `rootProtection()` | `npx vitest run tests/services/api/erc7710-intent-expiry.test.ts` **2/2** |
 | **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715)** | Advanced Wallet Permissions — session-key permission evolution target | [Technical Specification §0.1](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec) · [Compliance Posture](#compliance-posture) · `session-key-gates.ts` · ZeroDev Kernel v3 session adapter | ✅ v1.0 Delivered (Kernel v3) · ERC-7715 universal permissions ⏳ Post-Grant |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final)** | **Factual EIP attribution** — AI Agent Wallet Policy standard (Virtuals Protocol co-author); on-chain policy screen via PolicyGuard lineage | [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol) · [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) · **not** a pruned Virtuals venue adapter | Foundry PolicyGuard suite · live **42161** [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · [§ ERC-8196](#erc-8196--factual-eip-attribution--historical-co-authoring-reference-not-a-venue-adapter) |
 | **[EIP-1559](https://eips.ethereum.org/EIPS/eip-1559)** | Dynamic base-fee congestion sensing on Arbitrum One | Tri-Sensor **BaseFee Velocity** channel · `arbitrum-gas-guard.ts` | Gas-guard tests · Tri-Sensor Matrix |
@@ -241,7 +275,7 @@ Rejected allowance paths throw `RetailGuardRejectedError` **before** RPC broadca
 | **Size budget** | **< 28 KiB** artifact · **50.94 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
 | **Latency** | Warm exec **< 60 µs** · Edge shield p50 **~106 µs** (`checkSoilResistance()`) |
 | **Parity** | Bitmask + six-lane risk vector semantics mirrored by Stylus `check_soil_resistance_stylus()` |
-| **Verification** | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) · `tests/risk-control/*` · Vitest **222 test files | 1044 PASS clean** |
+| **Verification** | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) · `tests/risk-control/*` · Vitest **225 test files | 1052 PASS clean** |
 
 Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain reinforcement — never a weaker substitute for fail-closed Edge gates.
 

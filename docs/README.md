@@ -7,7 +7,7 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **222 test files | 1044 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` · `pnpm demo:e2e` · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` · `pnpm demo:e2e` · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
 
@@ -32,7 +32,7 @@
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate
 pnpm execute:gmx:gm-deposit           # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
 pnpm demo:e2e                         # 4-step Happy Path macro lifecycle HUD
-pnpm test                             # 222 test files | 1044 PASS clean
+pnpm test                             # 225 test files | 1052 PASS clean
 ```
 
 ---

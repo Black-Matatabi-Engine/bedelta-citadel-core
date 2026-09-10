@@ -2,7 +2,7 @@
 
 **Document role:** **Citadel-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`).  
 **Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
-**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (Citadel-Armor SSOT) · **222 test files | 1044 PASS clean**  
+**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (Citadel-Armor SSOT) · **225 test files | 1052 PASS clean**  
 **Related:** [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) · [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md)
 
 ---
@@ -249,4 +249,4 @@ pnpm demo:e2e -- --unwind           # + Step 5 R20 exercise
 
 ---
 
-*SilverVine Labs · Citadel-Armor Sovereign Vault SSOT · HEAD `3f26efa` · 222 test files | 1044 PASS clean*
+*SilverVine Labs · Citadel-Armor Sovereign Vault SSOT · HEAD `3f26efa` · 225 test files | 1052 PASS clean*

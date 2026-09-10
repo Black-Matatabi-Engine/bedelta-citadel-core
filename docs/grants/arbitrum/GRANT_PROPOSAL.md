@@ -6,7 +6,7 @@
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 **Live DApp:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 
-> **Vitest SSOT:** **222 test files | 1044 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)** · Gate **`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`** (Mainnet + Sepolia CREATE2 same-address)
+> **Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)** · Gate **`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`** (Mainnet + Sepolia CREATE2 same-address)
 
 ### Dual-Wallet Cross-Venue Architecture (Wallet A × Wallet B)
 
@@ -78,13 +78,13 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **v1.0 Delivered (Sepolia verified)** | ✅ Live | Sub-ms 0-Gas Pre-Broadcast Safety Citadel for AI Agents on Arbitrum · GMX v2 ETH/USDC GM + HL 1× short · **Pendle Institutional Shield** (Component of Pillar Set Y · sync oracle · soil fuse) · Wasm Shield p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) · EIP-712 Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **222 test files | 1044 PASS clean (100%)** · Sepolia / dry-run verified; mainnet ties to M6 |
+| **v1.0 Delivered (Sepolia verified)** | ✅ Live | Sub-ms 0-Gas Pre-Broadcast Safety Citadel for AI Agents on Arbitrum · GMX v2 ETH/USDC GM + HL 1× short · **Pendle Institutional Shield** (Component of Pillar Set Y · sync oracle · soil fuse) · Wasm Shield p50 ~106µs · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) · EIP-712 Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **225 test files | 1052 PASS clean (100%)** · Sepolia / dry-run verified; mainnet ties to M6 |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
 | Phase | Scope | Status |
 |-------|-------|--------|
-| Open House / Buildathon | Live HUD · Gate · Sepolia proof · **222 test files | 1044 PASS clean (100%)** · **4-step Happy Path** E2E (`pnpm run demo:e2e`; `--unwind` · `--trip` optional) | ✅ Submitted |
+| Open House / Buildathon | Live HUD · Gate · Sepolia proof · **225 test files | 1052 PASS clean (100%)** · **4-step Happy Path** E2E (`pnpm run demo:e2e`; `--unwind` · `--trip` optional) | ✅ Submitted |
 | Security Grant pack | Cold audit pack · R01–R20 + Slither/Echidna narrative | ⏳ Planned |
 | Institutional AA | Kernel v3 Session Key — [ZeroDev Comparative Analysis](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [Technical Specification §2.4](../../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary) | ✅ Delivered in v1.0 |
 
@@ -94,7 +94,7 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 
 | Field | Locked value |
 |-------|--------------|
-| **Vitest baseline** | **222 test files | 1044 PASS clean (100%)** |
+| **Vitest baseline** | **225 test files | 1052 PASS clean (100%)** |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS** |
 | **Arbitrum Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (Mainnet + Sepolia CREATE2 same-address) |
 | **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
@@ -122,7 +122,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ```bash
 pnpm install
-pnpm test # 222 test files | 1044 PASS clean (100%)
+pnpm test # 225 test files | 1052 PASS clean (100%)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS
 pnpm run demo:e2e # 4-step Happy Path Citadel E2E (dry-run; --unwind · --trip optional)
 cd SliverVineGate && forge test && cd ..

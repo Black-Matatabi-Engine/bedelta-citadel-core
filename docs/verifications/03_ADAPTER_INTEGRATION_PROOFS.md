@@ -1,7 +1,7 @@
 # Integration Proofs v2 (5-Core Venues · EIP-1193 Retail Guard · B2B Decorator)
 
 > **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md)  
-> **Vitest baseline:** **222 test files | 1044 PASS clean**
+> **Vitest baseline:** **225 test files | 1052 PASS clean**
 
 ---
 
