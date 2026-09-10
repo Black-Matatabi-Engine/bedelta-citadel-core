@@ -65,6 +65,24 @@ export {
   SELECTOR_PERMIT2_PERMIT,
   SELECTOR_PERMIT2_APPROVE,
 } from "./calldata-parser";
+export {
+  evaluateErc7683CrossChainIntentGuard,
+  computeCrossChainExecutionDeltaBps,
+  computeSolverMevBps,
+  ERC7683_CODES,
+  type CrossChainOrder,
+  type Erc7683GuardVerdict,
+  type Erc7683RejectCode,
+} from "./erc7683-intent-guard";
+export {
+  decodeEip7702Authorization,
+  evaluateEip7702AuthGuard,
+  EIP7702_CODES,
+  type Eip7702Authorization,
+  type Eip7702AuthGuardConfig,
+  type Eip7702AuthVerdict,
+  type Eip7702RejectCode,
+} from "./eip7702-auth-guard";
 export { formatRetailWarning } from "./warnings";
 export type {
   EIP1193Provider,

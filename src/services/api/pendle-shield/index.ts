@@ -25,6 +25,13 @@ export {
   type PendleRollAction,
 } from "./agentic-auto-roll-gate";
 
+export {
+  sinkErc7710IntentOnSoilTrip,
+  type Permit2ExpiryIntent,
+  type Erc7710CancellationSignal,
+  type Erc7710ExpiryVerdict,
+} from "./erc7710-intent-expiry";
+
 export const PENDLE_SHIELD_API = {
   shadowMargin: "/api/pendle-shield/shadow-margin",
   autoRoll: "/api/pendle-shield/auto-roll",
