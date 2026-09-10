@@ -107,7 +107,7 @@ function runViaWasm(input: WasmSoilCoreInput): WasmSoilCoreOutput {
   const ex = exportsRef!;
   const outOffset = WASM_SOIL_INPUT_FLOATS * 8;
   const heap = new Float64Array(ex.memory.buffer, 0, WASM_SOIL_INPUT_FLOATS + 8);
-  heap.set(new Float64Array(encodeWasmSoilInput(input)), 0);
+  heap.set(new Float64Array(encodeWasmSoilInput(input), 0, WASM_SOIL_INPUT_FLOATS), 0);
   const flags = ex.soil_core_eval(0, outOffset);
   const outIdx = WASM_SOIL_INPUT_FLOATS;
   return {

@@ -121,6 +121,6 @@ pnpm audit:fast
 
 ## 相關文件
 
-- 藍圖：[`CITADEL_SDK_BLUEPRINT.md`](../../docs/sdk/CITADEL_SDK_BLUEPRINT.md)
+- 藍圖：[`01_SDK_INTEGRATION_BLUEPRINT.md`](../../docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md)
 - 文件索引：[`docs/README.md`](../../docs/README.md) · [中文參考](../../docs/README_ZH.md)
 - 鏈上：[`SliverVineGate/`](../../SliverVineGate/) · [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol)

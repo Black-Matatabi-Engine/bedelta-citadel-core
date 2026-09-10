@@ -6,6 +6,7 @@
  * agent execution hooks. Wraps `checkSoilResistance()` as the Edge clearing layer before
  * EIP-712 signing or Bundler dispatch (0-Gas fail-closed on trip).
  */
+import { MAX_ATTEMPTS_EXCEEDED_SEVERED } from "../core/intent-mandate";
 import { checkSoilResistance, type SoilResistanceInput } from "../services/risk-control";
 
 export type CitadelShieldIntent = SoilResistanceInput & { agentId?: string };
@@ -54,10 +55,13 @@ export function withCitadelShield<T extends CitadelShieldIntent>(
     const agentId = resolveAgentId(intent);
     assertCooldownClear(agentId);
 
-    const soilResult = checkSoilResistance(intent);
+    const soilResult = checkSoilResistance({ ...intent, agentId });
     if (!soilResult.ok) {
       activateCooldown(agentId);
       const reason = soilResult.reasons.join("; ") || "SOIL_RESISTANCE_TRIP";
+      if (soilResult.reasons.some((r) => r.startsWith(MAX_ATTEMPTS_EXCEEDED_SEVERED))) {
+        throw new Error(`[Citadel Shield Trip] ${MAX_ATTEMPTS_EXCEEDED_SEVERED}: ${reason}`);
+      }
       throw new Error(`[Citadel Shield Trip] Execution blocked pre-broadcast: ${reason}`);
     }
 
