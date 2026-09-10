@@ -21,8 +21,8 @@ export function formatRetailWarning(
       return `ALERT: Too many rapid submit attempts (${detail.attempts ?? 4}) — signing channel severed to prevent panic trading.`;
     case "CHANNEL_SEVERED":
       return "ALERT: Signing channel is severed — wait before retrying (FOMO throttle active).";
-    case "LIVING_WATER_DRIFT":
-      return "ALERT: SDK health telemetry drift detected — transaction blocked for integrity recovery.";
+    case "RPC_TRANSPORT_SYNC_FAILED":
+      return "ALERT: RPC transport stream synchronization anomaly — transaction execution paused to prevent nonce drift.";
     default:
       return `ALERT: Transaction blocked by Retail Guard (${code}).`;
   }

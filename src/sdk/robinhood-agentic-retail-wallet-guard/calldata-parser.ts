@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Zero-dependency calldata parser — u32 bitwise selector dispatch (no string split hot path).
  */
+import { bindTransportStreamScratch } from "./transport-stream";
 
 /** ERC20 / router / Permit2 selectors as u32 big-endian fingerprints. */
 export const SEL_ERC20_APPROVE = 0x095ea7b3;
@@ -198,6 +199,7 @@ export function parseTransactionCalldata(tx: TxCalldataInput): ParsedCalldata | 
   if (!data) return { kind: "unknown", to, selectorU32: 0 };
 
   const byteLen = decodeHexCalldata(data, CALLDATA_SCRATCH);
+  bindTransportStreamScratch(CALLDATA_SCRATCH, byteLen);
   const sel = readSelectorU32(CALLDATA_SCRATCH, byteLen);
 
   if (sel === SEL_ERC20_APPROVE && byteLen >= 4 + 64) {

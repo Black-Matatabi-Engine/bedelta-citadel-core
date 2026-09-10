@@ -373,7 +373,7 @@ The **Robinhood Agentic & Retail Wallet Guard SDK** (`@slivervine/robinhood-agen
 | Layer | Module | Defense role |
 |-------|--------|--------------|
 | **Ingress** | `provider.ts` · `announceGuardedProvider` (EIP-6963) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` |
-| **Health probe** | `livingwater-telemetry.ts` | `evaluateLivingWaterHealth` · `verifyTelemetryWatermark` on `INTENT_RING_U32` sentinel |
+| **Transport sync** | `transport-stream.ts` | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
 | **Calldata** | `calldata-parser.ts` | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
 | **Policy** | `guard-engine.ts` · `risk-evaluator.ts` | Approve gate · venue allowlist · soil fuse · intent ring budget |
 | **Wasm FFI** | `wasm-adapter.ts` | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
@@ -386,11 +386,11 @@ The **Robinhood Agentic & Retail Wallet Guard SDK** (`@slivervine/robinhood-agen
 | `VENUE_DRIFT_REJECTED` | Contract outside `allowedVenues[]` |
 | `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` | Soil lane honeypot fuse |
 | `MAX_ATTEMPTS_EXCEEDED_SEVERED` / `CHANNEL_SEVERED` | `INTENT_RING_U32` 4th-submit severance |
-| `LIVING_WATER_DRIFT` | Living Water telemetry integrity recovery |
+| `RPC_TRANSPORT_SYNC_FAILED` | RPC transport stream sync recovery (nonce-safe pause) |
 
 ```text
 dApp → withRetailGuardProvider(config)
-     → evaluateLivingWaterGate
+     → evaluateRpcTransportProtocol
      → parseTransactionCalldata (Permit2 / ERC20 / swap)
      → evaluateRetailApproveGate | evaluateRetailSoilGate | evaluateRetailIntentGate
      → [PASS] baseProvider.request()

@@ -19,7 +19,7 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 | Provider wrap | `withRetailGuardProvider(baseProvider, config)` |
 | EIP-6963 discovery | `announceGuardedProvider(baseProvider, config, options)` |
 | Risk evaluation | `evaluateRetailRisk(config, method, params)` |
-| Health telemetry | `evaluateLivingWaterHealth()` · `verifyTelemetryWatermark()` |
+| RPC transport sync | `evaluateTransportStreamSync()` · `verifyTransportBitmark()` |
 
 ---
 
@@ -33,7 +33,7 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 ┌─────────────────────────────────────────────────────────────────┐
 │ @slivervine/robinhood-agentic-retail-wallet-guard (Apache-2.0)  │
 │ ├─ withRetailGuardProvider / announceGuardedProvider (EIP-6963) │
-│ ├─ livingwater-telemetry.ts — health & latency monitor          │
+│ ├─ transport-stream.ts — RPC transport stream sync            │
 │ ├─ calldata-parser.ts — ERC20 · Permit2 · router u32 selectors  │
 │ ├─ guard-engine.ts — approve · venue · soil · intent gates      │
 │ └─ wasm-adapter.ts → pkg/soil_core.wasm (optional IP core)      │
@@ -126,9 +126,9 @@ Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt
 
 - `MAX_ATTEMPTS_EXCEEDED_SEVERED` → `CHANNEL_SEVERED`
 
-### 4 — Living Water Telemetry
+### 4 — RPC Transport Stream Sync
 
-In-browser health monitor (`livingwater-telemetry.ts`). Surfaces `LIVING_WATER_DRIFT` when integrity cannot be recovered under load.
+EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT_SYNC_FAILED` when stream synchronization cannot be recovered under load (nonce-safe pause).
 
 ---
 
@@ -140,7 +140,7 @@ In-browser health monitor (`livingwater-telemetry.ts`). Surfaces `LIVING_WATER_D
 | `risk-evaluator.ts` | `evaluateRetailRisk` orchestration |
 | `guard-engine.ts` | Policy gates + Living Water |
 | `calldata-parser.ts` | Zero-alloc selector dispatch |
-| `livingwater-telemetry.ts` | Health & performance telemetry |
+| `transport-stream.ts` | RPC transport stream synchronization |
 | `wasm-adapter.ts` | `pkg/soil_core.wasm` FFI |
 
 ---

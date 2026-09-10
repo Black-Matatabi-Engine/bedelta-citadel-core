@@ -41,7 +41,7 @@ export type RetailGuardReasonCode =
   | "UNAUTHORIZED_SPENDER_REJECTED"
   | "MAX_ATTEMPTS_EXCEEDED_SEVERED"
   | "CHANNEL_SEVERED"
-  | "LIVING_WATER_DRIFT";
+  | "RPC_TRANSPORT_SYNC_FAILED";
 
 export interface RetailGuardRejectPayload {
   code: RetailGuardReasonCode;

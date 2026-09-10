@@ -1,24 +1,20 @@
 import { describe, expect, it, beforeEach } from "vitest";
 import { INTENT_RING_U32 } from "../../src/core/intent-core-buffers";
 import {
-  INTENT_CORE_HEAP_WORDS,
-  INTENT_RING_SLOT_COUNT,
-} from "../../src/core/wasm-intent-ffi";
-import {
   __resetRetailGuardStateForTests,
   announceGuardedProvider,
   encodeApproveCalldata,
   encodePermit2ApproveCalldata,
   encodePermit2PermitCalldata,
-  evaluateLivingWaterGate,
-  evaluateLivingWaterHealth,
+  evaluateRpcTransportProtocol,
+  evaluateTransportStreamSync,
   evaluateRetailApproveGate,
   evaluateRetailRisk,
   evaluateRetailVenueAllowlist,
   formatRetailWarning,
-  isLivingWaterDriftTripped,
+  isRpcTransportSyncFailed,
   isRetailGuardChannelSevered,
-  LIVING_WATER_DRIFT_THRESHOLD,
+  RPC_TRANSPORT_SYNC_FAIL_THRESHOLD,
   parseTransactionCalldata,
   RetailGuardRejectedError,
   SELECTOR_GMX_MULTICALL,
@@ -28,14 +24,13 @@ import {
   SELECTOR_UNISWAP_V3_EXACT_INPUT_SINGLE,
   UINT160_MAX,
   UINT256_MAX,
-  verifyTelemetryWatermark,
+  verifyTransportBitmark,
+  TS_RING_BASE,
   withRetailGuardProvider,
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
 } from "../../src/sdk/robinhood-agentic-retail-wallet-guard";
-
-const LW_RING_BASE = (INTENT_RING_SLOT_COUNT - 1) * INTENT_CORE_HEAP_WORDS;
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX_ROUTER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -521,53 +516,53 @@ describe("withRetailGuardProvider — EIP-1193 integration", () => {
   });
 });
 
-describe("livingwater-telemetry — SilverVine health watermark", () => {
+describe("transport-stream — RPC protocol bitmark", () => {
   beforeEach(() => __resetRetailGuardStateForTests());
 
-  it("initializes and verifies telemetry watermark", () => {
-    expect(verifyTelemetryWatermark()).toBe(true);
-    expect(verifyTelemetryWatermark()).toBe(true);
+  it("initializes and verifies transport bitmark", () => {
+    expect(verifyTransportBitmark()).toBe(true);
+    expect(verifyTransportBitmark()).toBe(true);
   });
 
-  it("reports healthy snapshot for legitimate SDK callers", () => {
-    const health = evaluateLivingWaterHealth(true);
-    expect(health.ok).toBe(true);
-    expect(health.watermarkValid).toBe(true);
-    expect(health.driftScore).toBe(0);
+  it("reports healthy sync for legitimate SDK callers", () => {
+    const sync = evaluateTransportStreamSync(true);
+    expect(sync.ok).toBe(true);
+    expect(sync.bitmarkValid).toBe(true);
+    expect(sync.syncLagScore).toBe(0);
   });
 
-  it("accumulates drift under tampered watermark and fail-closes at threshold", () => {
-    verifyTelemetryWatermark();
-    INTENT_RING_U32[LW_RING_BASE] = 0xdeadbeef;
+  it("accumulates sync lag under tampered bitmark and fail-closes at threshold", () => {
+    verifyTransportBitmark();
+    INTENT_RING_U32[TS_RING_BASE] = 0xdeadbeef;
 
-    for (let i = 0; i < LIVING_WATER_DRIFT_THRESHOLD - 1; i += 1) {
-      const health = evaluateLivingWaterHealth(true);
-      expect(health.ok).toBe(true);
+    for (let i = 0; i < RPC_TRANSPORT_SYNC_FAIL_THRESHOLD - 1; i += 1) {
+      const sync = evaluateTransportStreamSync(true);
+      expect(sync.ok).toBe(true);
     }
 
-    const tripped = evaluateLivingWaterHealth(true);
+    const tripped = evaluateTransportStreamSync(true);
     expect(tripped.ok).toBe(false);
-    expect(isLivingWaterDriftTripped()).toBe(true);
+    expect(isRpcTransportSyncFailed()).toBe(true);
 
-    const reject = evaluateLivingWaterGate(baseConfig());
-    expect(reject?.code).toBe("LIVING_WATER_DRIFT");
-    expect(formatRetailWarning("LIVING_WATER_DRIFT")).toContain("telemetry drift");
+    const reject = evaluateRpcTransportProtocol(baseConfig());
+    expect(reject?.code).toBe("RPC_TRANSPORT_SYNC_FAILED");
+    expect(formatRetailWarning("RPC_TRANSPORT_SYNC_FAILED")).toContain("nonce drift");
   });
 
-  it("blocks guarded provider after living water drift under load", async () => {
-    verifyTelemetryWatermark();
-    INTENT_RING_U32[LW_RING_BASE] = 0xcafebabe;
+  it("blocks guarded provider after RPC transport sync failure under load", async () => {
+    verifyTransportBitmark();
+    INTENT_RING_U32[TS_RING_BASE] = 0xcafebabe;
 
     const base = mockProvider(() => "0x1");
     const guarded = withRetailGuardProvider(base, baseConfig());
     const params = [{ from: WALLET, to: GMX_ROUTER, value: "0x0" }];
 
-    for (let i = 0; i < LIVING_WATER_DRIFT_THRESHOLD - 1; i += 1) {
+    for (let i = 0; i < RPC_TRANSPORT_SYNC_FAIL_THRESHOLD - 1; i += 1) {
       await guarded.request({ method: "eth_sendTransaction", params });
     }
 
     await expect(
       guarded.request({ method: "eth_sendTransaction", params }),
-    ).rejects.toMatchObject({ code: "LIVING_WATER_DRIFT" });
+    ).rejects.toMatchObject({ code: "RPC_TRANSPORT_SYNC_FAILED" });
   });
 });

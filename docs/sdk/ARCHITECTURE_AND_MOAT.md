@@ -76,9 +76,9 @@ announceGuardedProvider(window.ethereum, config, {
 
 ---
 
-## Living Water Telemetry
+## RPC Transport Stream Sync
 
-[`livingwater-telemetry.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/livingwater-telemetry.ts) exposes an in-browser **health and execution performance monitor**. Surfaces `LIVING_WATER_DRIFT` when SDK integrity cannot be recovered under sustained load.
+[`transport-stream.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
 
 ---
 

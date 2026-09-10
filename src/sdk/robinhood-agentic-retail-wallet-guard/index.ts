@@ -22,18 +22,20 @@ export {
   evaluateRetailIntentGate,
   evaluateRetailApproveGate,
   evaluateRetailVenueAllowlist,
-  evaluateLivingWaterGate,
+  evaluateRpcTransportProtocol,
   resolveVenueBitFromContract,
   RETAIL_UNKNOWN_VENUE_BIT,
 } from "./guard-engine";
 export {
-  evaluateLivingWaterHealth,
-  verifyTelemetryWatermark,
-  isLivingWaterDriftTripped,
-  __resetLivingWaterForTests,
-  LIVING_WATER_DRIFT_THRESHOLD,
-} from "./livingwater-telemetry";
-export type { LivingWaterHealthSnapshot } from "./livingwater-telemetry";
+  evaluateTransportStreamSync,
+  verifyTransportBitmark,
+  bindTransportStreamScratch,
+  isRpcTransportSyncFailed,
+  __resetTransportStreamForTests,
+  RPC_TRANSPORT_SYNC_FAIL_THRESHOLD,
+  TS_RING_BASE,
+} from "./transport-stream";
+export type { TransportStreamSyncSnapshot } from "./transport-stream";
 export {
   ensureRetailGuardWasm,
   isRetailGuardWasmReady,

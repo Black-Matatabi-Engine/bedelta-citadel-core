@@ -30,7 +30,7 @@ import {
 } from "../../core/soil-resistance-math";
 import { INTENT_MAX_ATTEMPTS_DEFAULT, INTENT_SLOT_ATTEMPTS } from "../../core/wasm-intent-ffi";
 import type { ParsedApprove } from "./calldata-parser";
-import { evaluateLivingWaterHealth, __resetLivingWaterForTests } from "./livingwater-telemetry";
+import { evaluateTransportStreamSync, __resetTransportStreamForTests } from "./transport-stream";
 import { evaluateIntentGateViaWasm, evaluateSoilViaWasm } from "./wasm-adapter";
 import { formatRetailWarning } from "./warnings";
 import type { RetailGuardConfig, RetailGuardRejectPayload, RetailSoilQuote } from "./types";
@@ -45,19 +45,19 @@ let channelSevered = false;
 export function __resetRetailGuardStateForTests(): void {
   channelSevered = false;
   resetIntentRingSlab();
-  __resetLivingWaterForTests();
+  __resetTransportStreamForTests();
 }
 
-/** SilverVine Living Water telemetry gate — fail-closed on cumulative SDK drift. */
-export function evaluateLivingWaterGate(
+/** RPC transport protocol verification — stream sync before policy gates. */
+export function evaluateRpcTransportProtocol(
   config: RetailGuardConfig,
 ): RetailGuardRejectPayload | null {
-  const health = evaluateLivingWaterHealth(config.preferWasm !== false);
-  if (health.ok) return null;
+  const sync = evaluateTransportStreamSync(config.preferWasm !== false);
+  if (sync.ok) return null;
   return {
-    code: "LIVING_WATER_DRIFT",
-    message: `LIVING_WATER_DRIFT:score=${health.driftScore}:wm=${health.watermarkValid ? 1 : 0}`,
-    plainTextWarning: formatRetailWarning("LIVING_WATER_DRIFT"),
+    code: "RPC_TRANSPORT_SYNC_FAILED",
+    message: `RPC_TRANSPORT_SYNC_FAILED:lag=${sync.syncLagScore}:bm=${sync.bitmarkValid ? 1 : 0}`,
+    plainTextWarning: formatRetailWarning("RPC_TRANSPORT_SYNC_FAILED"),
   };
 }
 

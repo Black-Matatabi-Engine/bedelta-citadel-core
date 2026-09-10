@@ -33,7 +33,7 @@
 | **0-Gas pre-consensus intercept** | `withRetailGuardProvider` · `calldata-parser` (ERC20 · Permit2 `0x2a0886f7` / `0x87517c45`) | Infinite approve / untrusted spender blocked **before** wallet popup |
 | **AI agent intent protection** | `evaluateRetailRisk` · `INTENT_RING_U32` attempt budget | 4th rapid submit severs channel — blocks FOMO / panic retry storms |
 | **EIP-6963 discovery** | `announceGuardedProvider` | Guarded provider discoverable alongside MetaMask / Rabby injectors |
-| **Living Water telemetry** | `livingwater-telemetry.ts` | In-browser health & execution latency monitor; `LIVING_WATER_DRIFT` fail-closed on integrity recovery |
+| **RPC transport stream sync** | `transport-stream.ts` | EIP-1193 transport lane monitor; `RPC_TRANSPORT_SYNC_FAILED` fail-closed on sync recovery |
 | **EIP-712 Permit guard** | `eth_signTypedData_v4` venue + spender gates | Anti-phishing for `verifyingContract` drift |
 
 **Verification (commits `b7c33d8` · `2216da7`):**

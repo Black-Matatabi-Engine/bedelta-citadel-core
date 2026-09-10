@@ -4,7 +4,7 @@
  */
 import { parseTransactionCalldata } from "./calldata-parser";
 import {
-  evaluateLivingWaterGate,
+  evaluateRpcTransportProtocol,
   evaluateRetailApproveGate,
   evaluateRetailIntentGate,
   evaluateRetailSoilGate,
@@ -79,8 +79,8 @@ export function evaluateRetailRisk(
   method: string,
   params: unknown[],
 ): RetailGuardRejectPayload | null {
-  const livingWaterReject = evaluateLivingWaterGate(config);
-  if (livingWaterReject) return livingWaterReject;
+  const transportReject = evaluateRpcTransportProtocol(config);
+  if (transportReject) return transportReject;
 
   if (method === "eth_sendTransaction") {
     const tx = parseTx(params);
