@@ -207,10 +207,31 @@
 | 4.2 | Wallet A/B commingling | **LOW** · `wallet-isolation-guard.ts` · `WALLET_B_PERP_FORBIDDEN` · Vitest sweep PASS |
 | 4.3 | Multicall leg-order griefing | **HIGH defense** · fail-closed ordering preserved |
 | 4.4 | "Settlement live" mislabeled as "Hedge live" | **HIGH veto risk** · Wallet A short simulate-only — **do not overclaim in pitch** |
-| 4.5 | **Pre-consensus intent drift** (Goldfeder lens) | **MED defense** · soil fuse trips before broadcast; **residual:** LLM re-prompt loops outside Citadel scope |
-| 4.6 | CLI harness timing spoofing | **LOW** · `process.hrtime.bigint()` SSOT · Pure Invariant row isolated from Node I/O ms |
+| 4.5 | **Pre-consensus intent drift** (Goldfeder lens) | **HIGH defense (in-scope)** · venue mandate + retry budget + soil fuse pre-broadcast; **DISCLOSED OUT OF SCOPE:** unintegrated third-party bundlers |
+| 4.6 | CLI harness timing spoofing | **LOW** · `process.hrtime.bigint()` SSOT · latency **bands** (not single-point μs) · Pure Invariant row isolated from Node I/O ms |
 
-**Goldfeder addendum (4.5):** Intent drift across **Bundlers / AA UserOps** is only safe if the signing channel sever is **physically upstream** of any relayer — Citadel's `severSigningChannel()` satisfies this for integrated agents; third-party bundlers without hook integration remain **OUT OF SCOPE**.
+#### 4.5 — Intent Drift Defense Perimeter (SSOT)
+
+| Drift class | Enforcement | Trip codes / modules |
+|-------------|-------------|----------------------|
+| **Venue switching (A → B)** | `intentDigest` binds `{chainId, venueKey, action}` at approval time · session-key **`allowedVenues[]`** whitelist | Unauthorized protocol switch → **`ATTESTATION_DIGEST_MISMATCH`** or **`VENUE_DRIFT_REJECTED`** (`verifyAgentIntent` · `evaluateAttestation`) |
+| **Cross-chain hallucination** | Soil fuse + R20 bitmask pre-broadcast | `checkSoilResistance()` · `severSigningChannel()` · 0-Gas |
+| **Retry storms (e.g. 10×)** | `withCitadelShield` **60s** mandatory cooldown · **max 3-attempt** budget per intent digest · immediate `severSigningChannel()` on budget exhaust | `MANDATORY_COOLDOWN_ACTIVE` · blocks further LLM inference / token burn |
+| **Third-party bundlers (unintegrated)** | **DISCLOSED OUT OF SCOPE** — no Citadel hook upstream of relayer | Operators must integrate `withCitadelShield` / `verifyAgentIntent` or accept residual drift risk |
+
+**Goldfeder addendum (4.5):** Intent drift across **Bundlers / AA UserOps** is only safe if the signing channel sever is **physically upstream** of any relayer — Citadel's `severSigningChannel()` satisfies this for **integrated** agents; **unintegrated third-party bundlers operating entirely outside the Citadel hook are explicitly DISCLOSED OUT OF SCOPE.**
+
+#### 4.6 — Latency Bands & Hardware Variance (SSOT)
+
+| Tier | Production band | Measurement context |
+|------|-----------------|---------------------|
+| **Pure Invariant Math** | **~0.5µs – 1.1µs** (warm-path min) | Local Node probe · `evaluateVariationalFlags()` / bitmask math |
+| **Wasm Reflex Core Deadlock** | **p50 ~15µs** (**<20µs** warm path) | `--trip` · `rootProtection()` / `severSigningChannel()` |
+| **E2E Edge Shield** | **p50 ~106µs** | **Production Edge Worker target** · TS Gateway + Wasm FFI |
+
+> *Absolute CLI microseconds vary by host CPU/OS (Mac · Linux · WSL2 · server); production SSOT is anchored on **Edge p50 latency bands**, not a single local benchmark point.*
+
+**Anti-spoofing:** `process.hrtime.bigint()` SSOT · `measureProbe()` warm-min (3 runs) · Pure Invariant / Full Matrix / E2E Harness rows **never conflated** with L1/L2 block time or sequencer finality.
 
 ---
 

@@ -207,10 +207,31 @@
 | 4.2 | Wallet A/B 混用 | **LOW** · `wallet-isolation-guard.ts` · `WALLET_B_PERP_FORBIDDEN` · Vitest sweep PASS |
 | 4.3 | Multicall 腿順序 griefing | **HIGH 防禦** · fail-closed 順序保留 |
 | 4.4 | 「Settlement live」口播成「Hedge live」 | **HIGH 否決風險** · Wallet A short 仍 simulate only — **pitch 勿過度宣稱** |
-| 4.5 | **Pre-consensus intent drift**（Goldfeder 視角） | **MED 防禦** · soil fuse 於廣播前 trip；**殘餘：** Citadel 範圍外的 LLM re-prompt 迴圈 |
-| 4.6 | CLI harness 時間造假 | **LOW** · `process.hrtime.bigint()` SSOT · Pure Invariant 行與 Node I/O ms 隔離 |
+| 4.5 | **Pre-consensus intent drift**（Goldfeder 視角） | **HIGH 防禦（in-scope）** · venue mandate + retry budget + 廣播前 soil fuse；**明確披露 OUT OF SCOPE：** 未整合第三方 bundler |
+| 4.6 | CLI harness 時間造假 | **LOW** · `process.hrtime.bigint()` SSOT · 延遲 **band**（非單點 μs）· Pure Invariant 行與 Node I/O ms 隔離 |
 
-**Goldfeder 補述（4.5）：** 跨 **Bundler / AA UserOp** 的 intent drift 僅在 signing channel sever **物理上位於** relayer 時才安全 — Citadel 的 `severSigningChannel()` 對整合型 agent 滿足此條；未接 hook 的第三方 bundler 仍屬 **OUT OF SCOPE**。
+#### 4.5 — 意圖漂移防禦邊界（SSOT）
+
+| 漂移類型 | 執行機制 | Trip code / 模組 |
+|---------|---------|-----------------|
+| **Venue 切換（A → B）** | `intentDigest` 於批准時 bind `{chainId, venueKey, action}` · session-key **`allowedVenues[]`** 白名單 | 未授權 protocol 切換 → **`ATTESTATION_DIGEST_MISMATCH`** 或 **`VENUE_DRIFT_REJECTED`**（`verifyAgentIntent` · `evaluateAttestation`） |
+| **跨鏈 hallucination** | 廣播前 soil fuse + R20 bitmask | `checkSoilResistance()` · `severSigningChannel()` · 0-Gas |
+| **Retry storm（例如 10 次）** | `withCitadelShield` **60s** 強制 cooldown · 每 intent digest **最多 3 次** attempt budget · 超限即時 `severSigningChannel()` | `MANDATORY_COOLDOWN_ACTIVE` · 阻止 LLM inference / token burn |
+| **第三方 bundler（未整合）** | **明確披露 OUT OF SCOPE** — relayer 上游無 Citadel hook | 運營方須整合 `withCitadelShield` / `verifyAgentIntent`，否則自承殘餘漂移風險 |
+
+**Goldfeder 補述（4.5）：** 跨 **Bundler / AA UserOp** 的 intent drift 僅在 signing channel sever **物理上位於** relayer 時才安全 — Citadel 的 `severSigningChannel()` 對 **已整合** agent 滿足此條；**完全在 Citadel hook 外運作的未整合第三方 bundler 明確披露為 OUT OF SCOPE。**
+
+#### 4.6 — 延遲 Band 與硬件差異（SSOT）
+
+| 層級 | 生產 band | 量度情境 |
+|------|----------|---------|
+| **Pure Invariant Math** | **~0.5µs – 1.1µs**（warm-path min） | 本機 Node probe · `evaluateVariationalFlags()` / bitmask 數學 |
+| **Wasm Reflex Core Deadlock** | **p50 ~15µs**（**<20µs** warm path） | `--trip` · `rootProtection()` / `severSigningChannel()` |
+| **E2E Edge Shield** | **p50 ~106µs** | **生產 Edge Worker 目標** · TS Gateway + Wasm FFI |
+
+> *本機 CLI 絕對微秒數會因 CPU/OS（Mac · Linux · WSL2 · server）而異；生產 SSOT 以 **Edge p50 latency band** 為錨，而非單一 local benchmark 實數。*
+
+**防造假：** `process.hrtime.bigint()` SSOT · `measureProbe()` warm-min（3 次）· Pure Invariant / Full Matrix / E2E Harness 三行 **永不** 與 L1/L2 block time 或 sequencer finality 混為一談。
 
 ---
 

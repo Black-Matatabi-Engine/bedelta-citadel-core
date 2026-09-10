@@ -31,7 +31,7 @@
 | | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
 |---|-------------------------------------------|-------------------------------------|
 | **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
-| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **p50 ~15µs – p50 ~106µs** (0.015ms–0.106ms) |
+| **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **Pure ~0.5–1.1µs** · **Reflex p50 ~15µs (<20µs warm)** · **E2E p50 ~106µs** (Edge target) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
 | **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **p50 ~15µs** reflex — severs EIP-712 channel |
 
@@ -101,9 +101,38 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 |--------|--------|------|
 | **Soil fuse** | `checkSoilResistance()` · `pkg/soil_core.wasm` | R01–R20 bitmask · **< 28 KiB** Wasm |
 | **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
-| **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED |
+| **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED · **max 3-attempt** budget per intent digest |
 
 **Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+
+---
+
+## 🎯 Intent Drift Defense Perimeter (SSOT · §4.5)
+
+Citadel defines **exact in-scope bounds** for AI-agent intent drift — not a generic "AI safety" claim.
+
+| Drift class | Enforcement | Trip / module |
+|-------------|-------------|---------------|
+| **Venue switching (A → B)** | `intentDigest` binds `{chainId, venueKey, action}` · session-key **`allowedVenues[]`** whitelist | **`ATTESTATION_DIGEST_MISMATCH`** · **`VENUE_DRIFT_REJECTED`** |
+| **Cross-chain hallucination** | Soil fuse + R20 pre-broadcast | `checkSoilResistance()` · `severSigningChannel()` · **0-Gas** |
+| **Retry storms (10×)** | `withCitadelShield` **60s** cooldown · **max 3 attempts** per digest · `severSigningChannel()` on exhaust | `MANDATORY_COOLDOWN_ACTIVE` — blocks LLM inference / token burn |
+| **Third-party bundlers** | **DISCLOSED OUT OF SCOPE** if unintegrated | Must wire `withCitadelShield` / `verifyAgentIntent` upstream of relayer |
+
+> **Goldfeder lens:** Signing-channel sever must be **physically upstream** of any Bundler / AA UserOp relayer. Integrated agents satisfy this via `severSigningChannel()`; **unintegrated third-party bundlers operating entirely outside the Citadel hook are explicitly DISCLOSED OUT OF SCOPE.**
+
+---
+
+## ⏱️ Latency Bands & Hardware Variance (SSOT · §4.6)
+
+| Tier | Band | Context |
+|------|------|---------|
+| **Pure Invariant Math** | **~0.5µs – 1.1µs** (warm-path min) | Local Node probe · bitmask math |
+| **Wasm Reflex Core Deadlock** | **p50 ~15µs** (**<20µs** warm path) | `--trip` · `rootProtection()` |
+| **E2E Edge Shield** | **p50 ~106µs** | **Production Edge Worker target** |
+
+> *Absolute CLI microseconds vary by host CPU/OS; production SSOT is anchored on **Edge p50 latency bands**, not a single local benchmark point.*
+
+**Measurement hygiene:** `process.hrtime.bigint()` · Pure Invariant / Full Matrix / E2E Harness rows isolated · **does not** include L1/L2 block time or sequencer finality.
 
 ---
 
