@@ -1,12 +1,6 @@
-//! SliverVine M4 — `#![no_std]` soil resistance + session clip/TTL core.
+//! SliverVine M4 — soil resistance + session clip/TTL core.
 //! SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
 //! Layout: 28×f64 protocol vector + 8×f64 soil input (see TS `encodeWasmSoilInput`).
-#![no_std]
-
-#[panic_handler]
-fn panic(_: &core::panic::PanicInfo) -> ! {
-    loop {}
-}
 
 const PROTO_VECT_LEN: usize = 28;
 const WASM_SOIL_OFFSET: usize = 28;

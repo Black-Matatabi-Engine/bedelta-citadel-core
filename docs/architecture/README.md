@@ -18,6 +18,8 @@
 | **04** | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC-8196 (Final) · ERC-4337 · EIP-712 · Stylus coprocessor · ArbOS alignment |
 | **05** | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | **88% / 12%** risk spectrum · Basel mapping · fail-closed boundaries · disclaimers |
 
+**Public-facing:** [`../public/ARCHITECTURE.md`](../public/ARCHITECTURE.md) — Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku) · Stylus/Wasm dual-layer SSOT.
+
 **Legacy path:** [`01_TECHNICAL_SPECIFICATION.md`](./01_TECHNICAL_SPECIFICATION.md) → [`00_TECHNICAL_SPECIFICATION_REDIRECT.md`](./00_TECHNICAL_SPECIFICATION_REDIRECT.md)
 
 ## Core Sinking SSOT (`src/core/`)
@@ -26,6 +28,7 @@ Five pure invariant modules are the TypeScript SSOT; `src/adapters/` and `src/se
 
 | Module | Responsibility |
 |--------|----------------|
+| [`monotonic-time.ts`](../../src/core/monotonic-time.ts) | Monotonic clock SSOT · Wasm `clock_core` FFI · leap-second fail-closed |
 | [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) | USD.ai clock · oracle · depth · `PROTO_USDAI` lane |
 | [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) | `packSoilLane()` · slippage math · HKT time gates · jitter · `evaluateHlOrderbookGapGuardPure()` |
 | [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) | `verifySessionKeyValidity()` · `resolveOrderNotionalUsd()` |

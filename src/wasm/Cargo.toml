@@ -7,7 +7,7 @@ description = "SliverVine M4 no_std soil + session core for Cloudflare Workers W
 
 [lib]
 crate-type = ["cdylib"]
-path = "soil_core.rs"
+path = "lib.rs"
 
 [profile.release]
 opt-level = "z"

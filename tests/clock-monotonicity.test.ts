@@ -1,4 +1,14 @@
-import { describe, expect, it, beforeEach } from "vitest";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
+import { fileURLToPath } from "node:url";
+import { afterAll, beforeAll, beforeEach, describe, expect, it } from "vitest";
+import {
+  __resetClockWasmForTests,
+  ensureClockWasm,
+  initClockWasm,
+  isClockWasmReady,
+} from "../src/sdk/clock-wasm";
+import { CLOCK_WASM_ABI_VERSION } from "../src/core/wasm-clock-ffi";
 import {
   CLOCK_EXCESSIVE_FORWARD_STEP,
   CLOCK_NEGATIVE_LEAP_DETECTED,
@@ -20,11 +30,38 @@ import {
 } from "../src/core/pending-exposure-window";
 
 const BASE_MS = 1_700_000_000_000;
+const WASM_PATH = join(dirname(fileURLToPath(import.meta.url)), "../pkg/soil_core.wasm");
+
+describe("clock_core.wasm FFI", () => {
+  beforeAll(() => {
+    const bytes = readFileSync(WASM_PATH);
+    initClockWasm(bytes);
+  });
+
+  afterAll(() => {
+    __resetClockWasmForTests();
+  });
+
+  it("binds clock_core exports from soil_core.wasm", () => {
+    expect(isClockWasmReady()).toBe(true);
+    expect(ensureClockWasm()).toBe(true);
+  });
+
+  it("Wasm path mirrors -1000ms NTP step-back", () => {
+    __resetGlobalMonotonicClockForTests();
+    const clock = new MonotonicTimeSSOT(1000);
+    clock.read(BASE_MS + 10_000);
+    const stepped = clock.read(BASE_MS + 9_000);
+    expect(stepped.virtualWallMs).toBe(BASE_MS + 10_000);
+    expect(stepped.anomaly).toBe(CLOCK_NEGATIVE_LEAP_DETECTED);
+  });
+});
 
 describe("MonotonicTimeSSOT", () => {
   let clock: MonotonicTimeSSOT;
 
   beforeEach(() => {
+    __resetClockWasmForTests();
     clock = new MonotonicTimeSSOT(1000);
   });
 
@@ -114,6 +151,7 @@ describe("RpcTimestampWatermark", () => {
 
 describe("risk engine integration", () => {
   beforeEach(() => {
+    __resetClockWasmForTests();
     __resetGlobalMonotonicClockForTests();
     __resetPendingExposureWindowForTests();
   });
