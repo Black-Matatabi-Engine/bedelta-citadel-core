@@ -1,3 +1,5 @@
+/** @module ZeroDev Kernel v3 — ERC-7579 Modular Account Hook typings (Ultra-Relay Intent Network SSOT) */
+
 export interface ZeroDevAAConfigOptions {
   pmKey?: string;
   kernelVersion?: string;
@@ -9,6 +11,25 @@ export interface ZeroDevAAConfigOptions {
 export interface ZeroDevAAEnvConfig extends ZeroDevAAConfigOptions {
   projectId: string;
   bundlerRpc: string;
+}
+
+/** ERC-7579 module type IDs — ZeroDev Kernel v3 Modular Account Hook standard. */
+export const ERC7579_MODULE_TYPE_VALIDATOR = 1 as const;
+export const ERC7579_MODULE_TYPE_HOOK = 4 as const;
+
+/** `SliverVineRiskOracle` — ERC-7579 Pre-Execution Hook (TYPE 4) before Ultra-Relay ingress. */
+export interface Erc7579PreExecutionHookBinding {
+  hookType: typeof ERC7579_MODULE_TYPE_HOOK;
+  riskOracleContract: `0x${string}`;
+  kernelVersion: string;
+  ultraRelayIntentNetwork: boolean;
+}
+
+/** Kernel v3 scoped session validator — ERC-7579 TYPE 1 (`ORDER_EXECUTE`). */
+export interface Erc7579ValidatorModuleBinding {
+  moduleType: typeof ERC7579_MODULE_TYPE_VALIDATOR;
+  sessionPermission: "ORDER_EXECUTE";
+  kernelVersion: string;
 }
 
 export interface UserOpDraftSummary {

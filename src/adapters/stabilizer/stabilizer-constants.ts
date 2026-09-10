@@ -1,0 +1,8 @@
+export const STABILIZER_SEPOLIA_CHAIN_ID = 421614 as const;
+export const STABILIZER_ZERO_SLIPPAGE_ASSETS = ["USDZ", "USDC", "USDT", "USDS"] as const;
+export const STABILIZER_DEFAULT_RESERVE_FLOOR_USD = 100_000;
+export const STABILIZER_MIN_RESERVE_RATIO = 0.15;
+export const STABILIZER_PEG_DRIFT_MAX_BPS = 50;
+export const STABILIZER_COOLDOWN_MS = 60_000;
+
+export type StabilizerAsset = (typeof STABILIZER_ZERO_SLIPPAGE_ASSETS)[number];

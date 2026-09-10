@@ -21,6 +21,7 @@ import {
   buildSessionKeyEip712Stub,
   stubSignSessionKeyPayload,
 } from "../services/session-key-adapter";
+import { isSessionKeyStubAllowed } from "../services/session-key-adapter-lib/session-key-stub-guard";
 import type { SystemState } from "../services/systemState";
 
 export const HL_DRY_RUN_FLAG = "HL_DRY_RUN" as const;
@@ -47,7 +48,9 @@ export function validateSessionKeySignatureFormat(
   return SESSION_SIG_RE.test(signatureHash.trim());
 }
 
-/** Production path — TTL probe + EIP-712 stub signature format */
+/**
+ * @deprecated TTL probe only — live signing must use `executeHlSessionKeyOrder`.
+ */
 export async function validateProductionSessionKeyBridge(
   payload: SessionKeyOrderPayload,
   sessionExpiryTimestamp: number,
@@ -58,6 +61,10 @@ export async function validateProductionSessionKeyBridge(
   const ttl = checkSessionKeyValidity(sessionExpiryTimestamp);
   if (!ttl.valid) {
     return { ok: false, reason: "SESSION_KEY_TTL_EXPIRED" };
+  }
+
+  if (!isSessionKeyStubAllowed()) {
+    return { ok: false, reason: "USE_EXECUTE_HL_SESSION_KEY_ORDER" };
   }
 
   const signatureHash = await stubSignSessionKeyPayload(

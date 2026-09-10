@@ -1,12 +1,12 @@
 import type { IntentLeg } from "../../../core/intent-ledger";
 import {
   ARBITRUM_STABLE_ADDRESSES,
-  DEFAULT_AAVE_BASE_APY,
+  DEFAULT_GMX_BASE_APY,
+  DEFAULT_PENDLE_BASE_APY,
   type ArbitrumStableSymbol,
   type ArbitrumStableYieldSnapshot,
   type ArbitrumYieldIngressOptions,
   type ArbitrumYieldIngressValidation,
-  type ArbitrumYieldSource,
 } from "./arbitrum-yield-ingress-types";
 import {
   fetchGmxMarkets,
@@ -31,14 +31,14 @@ export async function fetchArbitrumStableYield(
     const rawApy = gmxMarketApy(proxyMarket);
     const baseApy =
       normalizeApr(rawApy) ||
-      (stableMarket ? DEFAULT_AAVE_BASE_APY[symbol] : DEFAULT_AAVE_BASE_APY[symbol] * 0.85);
+      (stableMarket ? DEFAULT_GMX_BASE_APY[symbol] : DEFAULT_GMX_BASE_APY[symbol] * 0.85);
     const scaledApy = stableMarket ? baseApy : baseApy * 0.25;
     return {
       symbol,
       address,
-      baseApy: scaledApy > 0 ? scaledApy : DEFAULT_AAVE_BASE_APY[symbol],
+      baseApy: scaledApy > 0 ? scaledApy : DEFAULT_GMX_BASE_APY[symbol],
       depthUsd: Math.max(gmxPoolDepthUsd(proxyMarket), 250_000),
-      source: stableMarket ? "gmx" : "gmx",
+      source: "gmx",
       fetchedAt,
     };
   }
@@ -46,9 +46,9 @@ export async function fetchArbitrumStableYield(
   return {
     symbol,
     address,
-    baseApy: DEFAULT_AAVE_BASE_APY[symbol],
+    baseApy: DEFAULT_PENDLE_BASE_APY[symbol],
     depthUsd: 750_000,
-    source: "aave",
+    source: "pendle",
     fetchedAt,
   };
 }
@@ -116,4 +116,4 @@ export async function fetchAndValidateArbitrumYieldIngress(
   return validateArbitrumYieldIngress(snapshot, opts.minDepthUsd);
 }
 
-export type { ArbitrumYieldSource };
+export type { ArbitrumYieldSource } from "./arbitrum-yield-ingress-types";
