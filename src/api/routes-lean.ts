@@ -19,6 +19,10 @@ import {
 } from "./routes/badge-lean";
 import { handleTelemetryAnalyticsRequestLean } from "./routes/analytics-lean";
 import { handleYieldTriangleRequestLean } from "./routes/yield-lean";
+import {
+  handlePendleShieldRequest,
+  isPendleShieldApiPath,
+} from "../services/api/pendle-shield";
 
 /** Ultra-lean Worker route dispatch — no matrix-pipeline / hl-telemetry / grant-audit-payload. */
 export async function routeRequest(
@@ -75,6 +79,13 @@ export async function routeRequest(
 
     if (url.pathname === "/api/yield/triangle" && request.method === "GET") {
       return applyPublicApiResponseHeaders(handleYieldTriangleRequestLean(request), request);
+    }
+
+    if (isPendleShieldApiPath(url.pathname) && request.method === "POST") {
+      return applyPublicApiResponseHeaders(
+        await handlePendleShieldRequest(request),
+        request,
+      );
     }
 
     if (request.method === "OPTIONS") {
