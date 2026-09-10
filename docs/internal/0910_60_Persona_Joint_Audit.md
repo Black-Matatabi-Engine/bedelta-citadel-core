@@ -6,7 +6,7 @@
 | Protocol / Entity | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | Event | Arbitrum Open House Singapore Online Buildathon |
 | Branch / HEAD | `main` @ **`4e71474`** (CLI HUD SSOT · venue demo alignment · USDAI init fix) |
-| Baseline Comparisons | 09-09 PM Evening [`0909_PM_60_Persona_Audit.md`](../internal/0909_PM_60_Persona_Audit.md) **9.00** · 09-09 AM Joint **8.96** · 09-08 PM **8.93** |
+| Baseline Comparisons | 09-09 PM Evening [`0909_PM_60_Persona_Audit.md`](./0909_PM_60_Persona_Audit.md) **9.00** · 09-09 AM Joint **8.96** · 09-08 PM **8.93** |
 | Test SSOT (Vitest/Cargo/Forge) | **217 test files \| 967 PASS clean** · `tsc` **0 errors** · Cargo `citadel_invariants` **2/2** · Forge PolicyGuard **9/9** · Forge GmxSoilMatrix **8/8** |
 | Theme | **Pillar Set Y CLI HUD SSOT** · 8 venue demos aligned · matrix `perp-loop`/`spot-loop` UX · Pillar Set X vs Y boundary docs · `risk-engine-usdai` circular-init fix |
 | **Panel Arithmetic Mean** | **9.05 / 10** |
