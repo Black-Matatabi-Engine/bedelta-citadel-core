@@ -11,11 +11,15 @@ export type { CitadelAttestation };
 
 export interface AgentIntentInput {
   intentDigest: string;
+  /** Bound into digest via `buildIntentDigest({ chainId, venueKey, action })`. */
+  intentAction?: string;
   sessionKey: {
     agentAddress: string;
     maxOrderClipUsd: number;
     expiresAtMs: number | null;
     approvedAtMs?: number;
+    /** Venue whitelist — unauthorized protocol switch → `VENUE_DRIFT_REJECTED`. */
+    allowedVenues?: readonly string[];
   };
   soil: {
     symbol: string;

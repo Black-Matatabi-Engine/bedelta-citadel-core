@@ -14,7 +14,7 @@ import {
   SLIVERVINE_GATE_ADDRESS,
 } from "./constants";
 import { evaluateAttestation } from "./attestation";
-import { evaluateInjectionAndDigest } from "./agent-intent-lib/agent-intent-injection";
+import { evaluateInjectionAndDigestBind } from "./agent-intent-lib/agent-intent-injection";
 import { evaluateAgentIntentSoil } from "./agent-intent-lib/agent-intent-soil";
 import {
   AGENT_ARMOR_SANDWICH_MAX_BPS,
@@ -36,7 +36,14 @@ export function verifyAgentIntent(input: AgentIntentInput): AgentIntentVerdict {
     (preset === "test" && input.soil.isTestnet === true);
   const requireWasm = !allowDevBypass;
   const reasons: string[] = [
-    ...evaluateInjectionAndDigest(input.intentDigest, input.soil.symbol),
+    ...evaluateInjectionAndDigestBind({
+      intentDigest: input.intentDigest,
+      soilSymbol: input.soil.symbol,
+      chainId: input.gasBurst?.chainId,
+      venueKey: input.soil.symbol,
+      intentAction: input.intentAction,
+      allowedVenues: input.sessionKey.allowedVenues,
+    }),
   ];
 
   const session = auditSessionKeyConstraints({
@@ -71,6 +78,8 @@ export function verifyAgentIntent(input: AgentIntentInput): AgentIntentVerdict {
   const allowedToSign =
     !reasons.includes("PROMPT_INJECTION_REJECTED") &&
     !reasons.includes("INTENT_DIGEST_INVALID") &&
+    !reasons.includes("INTENT_DIGEST_MISMATCH") &&
+    !reasons.includes("VENUE_DRIFT_REJECTED") &&
     soilEval.soilOk &&
     deadman.deadmanOk &&
     armor.armorOk &&
