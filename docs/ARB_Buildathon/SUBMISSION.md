@@ -18,7 +18,8 @@
 |-------|------------|-----------|
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
-| **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in Wasm bytecode · `BigInt64Array` / i64 pointer parity · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` |
+| **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in **Edge** Wasm (`pkg/soil_core.wasm` SHA-256 `67f8fcc7…`) · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
+| **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** · activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
 | **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
 
 > **Bootstrap keys:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.

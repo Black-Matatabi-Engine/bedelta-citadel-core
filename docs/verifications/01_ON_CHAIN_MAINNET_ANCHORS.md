@@ -15,6 +15,7 @@
 | **Auto R20 severance** | `applyAutoSeveranceOnFlags()` — bitmask trips auto-call `severSigningChannel()` | [`risk-severance.ts`](../../src/core/risk-severance.ts) · [`tests/core/risk-severance.test.ts`](../../tests/core/risk-severance.test.ts) |
 | **Variational RFQ core bitmask** | `evaluateVariationalFlags()` — **Bit 12** `FLAG_VARIATIONAL_STALE_QUOTE` · **Bit 13** `FLAG_VARIATIONAL_OLP_DEPTH_EXCEEDED` · both bound to `FLAGS_AUTO_SEVER_MASK` | [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) · [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) |
 | **Sliding-window pending OI** | 30s GMX skew/notional accumulator — split-payload defense | [`pending-exposure-window.ts`](../../src/core/pending-exposure-window.ts) |
+| **Clock Core Wasm (Edge)** | `clock_core.rs` in `pkg/soil_core.wasm` — C-ABI leap / RPC regression fail-closed · SHA-256 `67f8fcc7…` | [`clock_core.rs`](../../src/wasm/clock_core.rs) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · `tests/clock-monotonicity.test.ts` **14/14** |
 | **Stylus dual-execution** | `check_soil_resistance_stylus(flags, risk_vector)` · **Mainnet `0xc23587d6573dd134f95b02b0202ffbf84686625e`** · Activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + **ArbWasm `0x71`** · `cargo test stylus_core` **5/5 PASS** · Wasm **ABI v2 (28-slot)** ↔ TS via [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) | [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts) |
 | **Wayfinder native adapter** | `wayfinderCitadelShieldHook` — soil fuse + 8-dimension intent gate | [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) · `pnpm demo:wayfinder` |
 | **AI Agent frameworks** | Independent pre-execution guards — Wayfinder · ElizaOS · Virtuals · LangChain · **p50 ~106µs** each | [`wayfinder-agent-demo.ts`](../../examples/wayfinder-agent-demo.ts) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` |
@@ -79,18 +80,39 @@
 | Wasm ABI v2 **28-slot** alignment | `WASM_ABI_VERSION = 2` · `WASM_PROTOCOL_LEN = PROTO_VECT_LEN = 28` | [`src/core/wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · [`src/wasm/soil_core.rs`](../../src/wasm/soil_core.rs) · [`tests/core/wasm-ffi-alignment.test.ts`](../../tests/core/wasm-ffi-alignment.test.ts) |
 | Mainnet readiness harness | `pnpm deploy:stylus:mainnet` | [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts) |
 
-### Clock Core Wasm + Stylus Check Anchors (2026-09-10)
+### Arbitrum Stylus Wasm Anchors (Edge vs Nitro)
+
+> **Artifact split (SSOT):** `pkg/soil_core.wasm` (`src/wasm/`) is the **Cloudflare Edge** cdylib (soil + `clock_core` C-ABI). **`contracts/stylus-probe`** is the **Arbitrum Stylus** on-chain coprocessor (`SliverVineSoilCoprocessor`). They are **not** the same binary.
+
+#### Edge Clock + Soil Wasm (`pkg/soil_core.wasm`)
 
 | Field | Value |
 |-------|-------|
-| **Repo commit** | `24bcd20` (clock_core sink) · host adapter `monotonic-time.ts` + `clock-wasm.ts` |
-| **`pkg/soil_core.wasm` SHA-256** | `67f8fcc70563fec84727036b6c36607733114fb30577a58490584247f8010b14` |
-| **`pkg/soil_core.wasm` size** | **1,557 bytes** (soil + clock_core combined · &lt;28 KiB budget) |
-| **Clock C-ABI exports** | `clock_core_read` · `clock_core_rpc_ingest` · `clock_core_resolve_wall_age` · `clock_core_abi_version` = **1** |
-| **`cargo stylus check`** (stylus-probe) | **Build PASS** · contract **7.1 KB** (7122 bytes) · deployment metadata hash `955b67a82cd3bd16066ee85b5b44ffe96d7be9e25e0842586481a294ec720ee7` |
-| **Runtime RPC simulation** | **SKIPPED** — no local Nitro node (`localhost:8547` connection refused); compile + size check only |
-| **`pnpm run deploy:stylus:testnet`** | **NOT EXECUTED** — deploy requires funded RPC + deployer key; check artifact recorded above |
-| **Vitest clock parity** | `npx vitest run tests/clock-monotonicity.test.ts` — **14/14 PASS** (TS + Wasm FFI) |
+| **Status** | `EDGE_ARTIFACT_VERIFIED` — **not** a Stylus `#[entrypoint]` contract |
+| **Wasm SHA-256** | `67f8fcc70563fec84727036b6c36607733114fb30577a58490584247f8010b14` |
+| **Size** | **1,557 bytes** (soil + clock_core · &lt;28 KiB Cloudflare budget) |
+| **C-ABI exports** | `clock_core_read` · `clock_core_rpc_ingest` · `clock_core_resolve_wall_age` · `clock_core_abi_version` = **1** |
+| **`cargo stylus check --wasm-file pkg/soil_core.wasm`** | **FAIL** — `Contract could not be activated as it is missing an entrypoint` (823 B raw cdylib) |
+| **Vitest** | `tests/clock-monotonicity.test.ts` — **14/14 PASS** (TS + Wasm FFI) |
+
+#### Stylus Soil Coprocessor (Nitro · Mainnet) — `DEPLOYED_MAINNET`
+
+| Field | Value |
+|-------|-------|
+| **Status** | `DEPLOYED_MAINNET` |
+| **Contract** | `SliverVineSoilCoprocessor` · **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** |
+| **Explorer** | [https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) |
+| **Activation Tx** | [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) |
+| **Stylus project** | [`contracts/stylus-probe`](../../contracts/stylus-probe/) · metadata hash `955b67a82cd3bd16066ee85b5b44ffe96d7be9e25e0842586481a294ec720ee7` |
+| **`cargo stylus check`** (2026-09-10 · `https://arb1.arbitrum.io/rpc`) | **PASS** · contract **7.1 KB** (7122 bytes) · wasm data fee ~**0.000079 ETH** |
+
+#### Mainnet Redeploy Attempt (2026-09-10) — `BLOCKED`
+
+| Blocker | Detail |
+|---------|--------|
+| **Private key** | `STYLUS_DEPLOYER_PK` / `MAINNET_PK` / `PRIVATE_KEY` **not present** in shell or `.env.production` (RPC `ARB_MAINNET_RPC_URL` only) |
+| **Target mismatch** | User-requested `cargo stylus deploy --wasm-file pkg/soil_core.wasm` is **incompatible** — Edge cdylib lacks Stylus `#[entrypoint]`; use `pnpm tsx scripts/deploy-stylus-mainnet.ts` for Nitro coprocessor redeploy |
+| **Unblock** | Export `MAINNET_PK=0x…` (or `STYLUS_DEPLOYER_PK`) + `CONFIRM_STYLUS_MAINNET=YES BROADCAST=1` → `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
 
 ### Stylus Mainnet Deployment (Arbitrum One · 42161) — Verified
 
