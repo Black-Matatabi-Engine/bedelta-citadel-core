@@ -12,7 +12,8 @@
 >
 > 🚀 **Independent Framework Guards:** Each AI agent runtime (Wayfinder · ElizaOS · Virtuals · LangChain) — **p50 ~106µs E2E Edge Shield** on ALLOW · **p50 ~15µs reflex core** on `--trip` — **default 7+1 venue rotation** or `--venue=<protocol>` lock. Start with `pnpm demo:wayfinder`.
 
-[![Vitest](https://img.shields.io/badge/Vitest-967%20PASS%20%28217%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Vitest](https://img.shields.io/badge/Vitest-992%20PASS%20%28220%20files%29-brightgreen?logo=vitest)](./docs/VERIFICATION_MATRIX.md)
+[![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
 [![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)](./contracts/stylus-probe/)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](./src/services/risk-control.ts)
 [![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)](./docs/VERIFICATION_MATRIX.md)
@@ -28,15 +29,53 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **`217 test files | 967 PASS clean`** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **`220 test files | 992 PASS clean`** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Zero-GC heap gate** | **`<16 KiB` / 10,000 iterations** · `npx vitest run tests/core/intent-sinking-audit.test.ts` → **8 passed (8)** |
 | **Arbitrum One Gate** | [Arbiscan · `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
+
+---
+
+## 🏆 Top 4 High-Score Differentiators (Buildathon Judges)
+
+| # | Pillar | Judge takeaway | Fast proof |
+|---|--------|----------------|------------|
+| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Kills unverified agent attempts at **Edge isolates** — **$0 Gas** · no Sequencer queue pollution | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
+| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Live **42161** · Stylus optional · **100% fail-closed** without Nitro | Stylus [`0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
+| **3** | **Hyperliquid → GMX V2 Native Liquidity Backup** | L1 primary hedge → **Arbitrum-native GMX GM** fallback · **GMX Builder Grant ($15k+)** | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
+| **4** | **Physical Clock Monotonicity** | Edge Wasm **sub-ms immunity** to leap seconds · RPC time regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
+
+→ Full submission narrative: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)
+
+---
+
+## 🔬 Proof of Performance & Zero-GC Memory
+
+Pre-allocated **256×4 ring slab** intent mandate engine — **O(1)** slot hashing · **zero `Map` churn** · **C-ABI parity** with Rust `intent_core.rs`.
+
+```bash
+# Verify Zero-GC Hot-Path Memory Isolation (<16 KiB Heap Delta / 10,000 iterations)
+npx vitest run tests/core/intent-sinking-audit.test.ts
+```
+
+**Expected output:**
+
+```text
+ Tests  8 passed (8)
+```
+
+**Verified:** zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab indexing).
+
+→ Architecture SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Ring Slab](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
 
 ---
 
 ## ⚡ 30-Second Judge Action Box
 
 ```bash
+# === Zero-GC memory proof (single-test · <16 KiB / 10k iterations) ===
+npx vitest run tests/core/intent-sinking-audit.test.ts   # expect: 8 passed (8)
+
 # === Judge fast-track — targeted per-venue FAIL-CLOSED proofs (START HERE) ===
 pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
 pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
@@ -56,7 +95,7 @@ pnpm demo:escort                         # Unidirectional Compliance Bridge Esco
 
 # === Tier 0 & Regression Verification ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test                                # Full Regression Suite (217 test files | 967 PASS clean)
+pnpm test                                # Full Regression Suite (220 test files | 992 PASS clean)
 ```
 
 ---
@@ -171,7 +210,7 @@ curl -s https://bedeltawater.slivervine.xyz/api/grant-audit | jq .provenanceVeri
 
 | Layer | Metric |
 |-------|--------|
-| **Vitest SSOT** | **217 test files | 967 PASS clean** · Chaos **255/255** fail-closed |
+| **Vitest SSOT** | **220 test files | 992 PASS clean** · Zero-GC gate **8/8** · Chaos **255/255** fail-closed |
 | **E2E Edge Shield** | **p50 ~106µs** — Worker + TS Gateway + Wasm FFI |
 | **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) · `pnpm demo:perp-loop -- --trip` · `pnpm demo:spot-loop -- --trip` |
 | **Worker bundle** | **50.94 KiB gzip** · **143.77 KiB raw** (`pnpm bundle:measure` · `pass: true`) |

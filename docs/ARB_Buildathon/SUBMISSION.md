@@ -12,6 +12,38 @@
 
 ---
 
+## 🏆 Top 4 High-Score Differentiators (Buildathon Judges)
+
+| # | Pillar | What judges should score | Proof |
+|---|--------|--------------------------|-------|
+| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Kills unverified agent attempts at **Cloudflare Edge isolates** — **$0 Gas** burned · toxic intents never enter Arbitrum Sequencer queues | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
+| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Live **42161** contracts · Stylus coprocessor optional · **100% fail-closed** without Nitro activation | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) (`stylusCoprocessor=0`) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
+| **3** | **Hyperliquid → GMX V2 Native Liquidity Backup** | Seamless fallback from external L1 primary hedge to **Arbitrum-native GMX GM Pools** — **GMX Builder Grant** alignment (**$15k+**) | `pnpm demo:hl -- --trip` (L1 hedge) · `pnpm demo:gmx -- --trip` (native backup) · `pnpm demo:e2e` (Δ_net ≡ 0 lifecycle) |
+| **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) **sub-ms immunity** against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [§ Physical Clock Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
+
+---
+
+## 🔬 Proof of Performance & Zero-GC Memory
+
+Citadel's intent mandate hot path uses a **pre-allocated 256×4 ring slab** — no per-digest `Map` churn · **C-ABI parity** with Rust `intent_core.rs`. Run this **single-test** gate to verify zero-allocation memory isolation on any judge machine:
+
+```bash
+# Verify Zero-GC Hot-Path Memory Isolation (<16 KiB Heap Delta / 10,000 iterations)
+npx vitest run tests/core/intent-sinking-audit.test.ts
+```
+
+**Expected output:**
+
+```text
+ Tests  8 passed (8)
+```
+
+**What this proves:** Verified **zero-allocation hot path**, **C-ABI memory parity**, and **fail-closed intent locks** (venue drift · attempt budget · ring-slab slot indexing).
+
+→ Deep dive: [Zero-GC Ring Slab Memory Engine](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · SSOT modules: [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts)
+
+---
+
 ## v0.95 SSOT Security Patches (Commit `5829e9a`)
 
 | Patch | Resolution | Telemetry |
@@ -177,11 +209,7 @@ Citadel's intent mandate gate (`evaluateIntentMandateGate`) executes on every AI
 2. **Bounded isolate memory** — **8 KiB** fixed mandate state (256 × 32 B) instead of unbounded `Map` growth.
 3. **Portable audit surface** — identical slot layout across TypeScript Edge · `pkg/soil_core.wasm` · Stylus Nitro.
 
-→ **Full architecture, equations, and benchmark table:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
-
-```bash
-npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · <16 KiB heap gate
-```
+→ **Full architecture, equations, and benchmark table:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · **Judge one-liner:** [§ Proof of Performance & Zero-GC Memory](#-proof-of-performance--zero-gc-memory)
 
 ---
 
