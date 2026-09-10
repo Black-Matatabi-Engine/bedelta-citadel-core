@@ -38,7 +38,10 @@ describe("withCitadelShield", () => {
     const result = await shielded(healthyIntent);
     expect(result).toBe("ok");
     expect(executionFn).toHaveBeenCalledWith(healthyIntent);
-    expect(riskControl.checkSoilResistance).toHaveBeenCalledWith(healthyIntent);
+    expect(riskControl.checkSoilResistance).toHaveBeenCalledWith({
+      ...healthyIntent,
+      agentId: healthyIntent.agentId,
+    });
   });
 
   it("blocks execution and throws [Citadel Shield Trip] when soil resistance fails", async () => {

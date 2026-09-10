@@ -22,6 +22,18 @@ export interface SoilResistanceInput {
   hlSpot: number;
   hlPerp: number;
   dydxPerp: number;
+  /** Approved venue key — must match `allowedVenues` when mandate is armed. */
+  venueKey?: string;
+  /** Alias for `venueKey` — agent-declared execution target. */
+  targetVenue?: string;
+  /** Session-key venue whitelist — unauthorized switch → `VENUE_DRIFT_REJECTED`. */
+  allowedVenues?: readonly string[];
+  /** EIP-712 / UserOp digest — bound to `chainId` + venue + `intentAction`. */
+  intentDigest?: string;
+  intentAction?: string;
+  chainId?: number;
+  /** Per-agent attempt budget key when digest absent. */
+  agentId?: string;
   depthUsd?: number;
   maxSlippage?: number;
   orderSizeUsd?: number;

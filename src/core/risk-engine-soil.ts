@@ -14,6 +14,7 @@ import { isRpcRadarSequencerHealthy } from "../services/adapters/rpc-radar";
 import { isSequencerSafe } from "../services/risk/sequencer-guard";
 import { isArbitrumGasGuardBlocked } from "../services/risk/arbitrum-gas-guard";
 import { isSoftConfirmationSafe } from "../services/risk/soft-confirmation-guard";
+import { hasIntentMandateFields } from "./intent-mandate";
 import { applySoilTripSeverance } from "./risk-severance";
 import { getGlobalMonotonicClock, resolveWallAge, saturatingSub } from "./monotonic-time";
 
@@ -59,7 +60,10 @@ export function isGatewayNominalFastPath(soil: SoilResistanceInput): boolean {
 }
 
 export function checkSoilResistance(input: SoilResistanceInput): SoilResistanceResult {
-  const result = isGatewayNominalFastPath(input) ? SOIL_CLEAR : checkSoilResistanceBase(input);
+  const result =
+    !hasIntentMandateFields(input) && isGatewayNominalFastPath(input)
+      ? SOIL_CLEAR
+      : checkSoilResistanceBase(input);
   if (result.tripped) applySoilTripSeverance(true);
   return result;
 }

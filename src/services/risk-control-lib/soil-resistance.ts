@@ -48,6 +48,7 @@ import {
   type SoilReasonScratch,
 } from "./soil-reason-codes";
 import { resolveJitteredSoilThresholds } from "./soil-threshold-jitter";
+import { evaluateIntentMandateGate } from "../../core/intent-mandate";
 import {
   VINE_SOIL_MAX_SLIPPAGE,
   type SoilResistanceInput,
@@ -125,6 +126,11 @@ function collectExternalSoilFlags(
 export function checkSoilResistance(
   input: SoilResistanceInput,
 ): SoilResistanceResult {
+  const mandateTrip = evaluateIntentMandateGate(input);
+  if (mandateTrip) {
+    applySoilTripSeverance(true);
+    return mandateTrip;
+  }
   const { symbol, depthUsd } = input;
   const { slippageFuse, minDepthUsd } = resolveJitteredSoilThresholds(input);
   const metrics = computeSoilSlippageMetrics(input, {

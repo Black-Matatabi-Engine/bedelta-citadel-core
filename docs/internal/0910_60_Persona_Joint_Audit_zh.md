@@ -216,12 +216,27 @@
 |---------|---------|-----------------|
 | **Venue 切換（A → B）** | `intentDigest` 於批准時 bind `{chainId, venueKey, action}` · session-key **`allowedVenues[]`** 白名單 | 未授權 protocol 切換 → **`ATTESTATION_DIGEST_MISMATCH`** 或 **`VENUE_DRIFT_REJECTED`**（`verifyAgentIntent` · `evaluateAttestation`） |
 | **跨鏈 hallucination** | 廣播前 soil fuse + R20 bitmask | `checkSoilResistance()` · `severSigningChannel()` · 0-Gas |
-| **Retry storm（例如 10 次）** | `withCitadelShield` **60s** 強制 cooldown · 每 intent digest **最多 3 次** attempt budget · 超限即時 `severSigningChannel()` | `MANDATORY_COOLDOWN_ACTIVE` · 阻止 LLM inference / token burn |
+| **Retry storm（例如 10 次）** | `withCitadelShield` **60s** 強制 cooldown · 每 intent digest **最多 3 次** attempt budget · 超限即時 `severSigningChannel()` | `MANDATORY_COOLDOWN_ACTIVE` · **`MAX_ATTEMPTS_EXCEEDED_SEVERED`** |
 | **第三方 bundler（未整合）** | **明確披露 OUT OF SCOPE** — relayer 上游無 Citadel hook | 運營方須整合 `withCitadelShield` / `verifyAgentIntent`，否則自承殘餘漂移風險 |
+
+##### 4.5.1 Venue Drift & Intent Mandate Enforcement（`VENUE_DRIFT_REJECTED`）
+
+- **實作 SSOT：** `src/core/intent-mandate.ts` · `buildIntentDigest({ chainId, venueKey, action })`
+- **Soil 前置 gate：** `checkSoilResistance()` 於 bitmask 數學前執行 `evaluateIntentMandateGate()`
+- **白名單：** `allowedVenues[]` + `targetVenue` / `venueKey` — 未授權切換即 **`VENUE_DRIFT_REJECTED`**
+- **密碼學 bind：** 換 venue 令 digest 失效 → **`INTENT_DIGEST_MISMATCH`** + **`VENUE_DRIFT_REJECTED`**
+- **Vitest：** `tests/core/intent-drift.test.ts` — GMX 批准 vs Pendle 目標
+
+##### 4.5.2 Max Attempt Budget & Channel Severing（`MAX_ATTEMPTS_EXCEEDED_SEVERED`）
+
+- **`IntentAttemptTracker`：** 每 `intentDigest`（或 `agentId` fallback）計數 · **`MAX_ATTEMPTS_PER_INTENT = 3`**
+- **第 4 次：** 即時 `severSigningChannel()` · `FLAGS_SEVERED` · status **`MAX_ATTEMPTS_EXCEEDED_SEVERED`**
+- **Decorator 整合：** `withCitadelShield` 傳入 `agentId` · trip 後 **60s** `MANDATORY_COOLDOWN_ACTIVE`
+- **Vitest：** 第 4 次 attempt 驗證 `signingChannelOpen=false` · `hardlock=true`
 
 **Goldfeder 補述（4.5）：** 跨 **Bundler / AA UserOp** 的 intent drift 僅在 signing channel sever **物理上位於** relayer 時才安全 — Citadel 的 `severSigningChannel()` 對 **已整合** agent 滿足此條；**完全在 Citadel hook 外運作的未整合第三方 bundler 明確披露為 OUT OF SCOPE。**
 
-#### 4.6 — 延遲 Band 與硬件差異（SSOT）
+#### 4.6 — 延遲 Band 與硬件差異（SSOT · Range Bands）
 
 | 層級 | 生產 band | 量度情境 |
 |------|----------|---------|
