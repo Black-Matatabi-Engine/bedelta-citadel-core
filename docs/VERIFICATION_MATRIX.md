@@ -1,206 +1,135 @@
-# SliverVine Citadel — Verification Matrix (Buildathon / Grant Evaluators)
+# SliverVine Protocol (BeΔ) — Verification Matrix (Express Hub)
 
+**Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`  
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Regression bar (locked):** Vitest **164 files / 735 PASS** · Forge **60/60** · Property Fuzz **327,675** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = **5,120** = 5×1,024) · ZeroDev AA **Dry-Run Harness Verified (Kernel v3 / EntryPoint v0.7)**.
-
-Open this document first. Each tier is CLI-reproducible with **zero mainnet signing dependency** unless explicitly noted.
-
----
-
-## Tier 0 — Docker One-Click (Zero Host Node/pnpm)
-
-**No local Node 22 / pnpm / WSL toolchain required.** Builds an isolated verifier image from repo root [`Dockerfile`](../Dockerfile).
-
-```bash
-docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-```
-
-| Command | Proves | Expected |
-|---------|--------|----------|
-| Default `docker run` | 5-step Citadel **`demo:e2e`** dry-run inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression bar (host-free) | **164 files / 735 PASS** |
-| Sidecar (Tier 5) | Telemetry relay · fail-closed `/v1/intent` | [`docker/README.md`](../docker/README.md) |
-
-**Why Tier 0:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
+> **Vitest SSOT:** **222 test files | 1044 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
+> **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)  
+> **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
 
-## Quick Start (≈ 3 minutes)
+## Role Routing (Start Here)
+
+| Audience | First read | Then verify |
+|----------|------------|-------------|
+| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
+| **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md) |
+| **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
+| **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
+
+**Decoupled SSOT index:** [`verifications/README.md`](./verifications/README.md)
+
+---
+
+## 30-Second Express Verification
 
 ```bash
-docker build -t slivervine-citadel . && docker run --rm slivervine-citadel   # Tier 0 — zero host deps
 pnpm install
-pnpm test                 # Tier 1 — 164 files / 735 PASS
-pnpm audit:fast           # Tier 2 — fast security scorecard
-pnpm test:zerodev         # Tier 4 — ZeroDev AA dry-run harness
-curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVerified
+# === Tier 0 — EIP-1193 Retail Guard SDK ===
+npx vitest run tests/sdk/retail-guard-provider.test.ts
+
+# === Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
+pnpm demo:gmx -- --trip
+pnpm demo:variational -- --trip
+pnpm demo:hl -- --trip
+pnpm demo:perp-loop -- --trip            # Loop A: GMX / Pendle / HL / Variational
+pnpm demo:spot-loop -- --trip             # Loop B: USD.ai collateral lane
+
+# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+
+# === Tier 0 & Regression Verification ===
+docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
+pnpm test -- --run                       # Full Regression Suite (222 test files | 1044 PASS clean)
 ```
 
-Optional deeper tiers:
+| Command | Proves |
+|---------|--------|
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard · **35/35 PASS** · 0-Gas pre-consensus intercept |
+| `pnpm demo:gmx -- --trip` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
+| `pnpm demo:variational -- --trip` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
+| `pnpm demo:hl -- --trip` | **p50 ~15µs reflex core** · HL session-key FAIL_CLOSED |
+| `pnpm demo:perp-loop -- --trip` | **p50 ~15µs reflex core** · Loop A perp/yield stack R20 severance |
+| `pnpm demo:spot-loop -- --trip` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
+| `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
+| `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
+| `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
+| `pnpm execute:gmx:gm-deposit` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
+| `pnpm run audit:security` | 3-Tier Security Matrix **5/0/0 PASS** |
 
-```bash
-pnpm audit:security                         # Tier 2 — full 5/0/0 matrix
-cd SliverVineGate && forge test && cd ..     # Tier 3 — Gate + default fuzz (5,120)
-cd SliverVineGate && FOUNDRY_PROFILE=deep forge test --match-path 'test/*.fuzz.t.sol' && cd ..  # 327,675 deep fuzz
-pnpm audit:nightly                          # Tier 2/3 deep — Echidna · Halmos · deep fuzz gate
-# Tier 5 — see docker/README.md
-```
+### 5-Core Venue CLI Flags (SSOT)
 
----
+| Flag | Effect |
+|------|--------|
+| *(default)* | Healthy soil ALLOW path · **p50 ~106µs** E2E Edge Shield |
+| `--trip` | Simulated toxic intent → **p50 ~15µs** Wasm `rootProtection()` deadlock · **0-Gas FAIL_CLOSED** |
 
-## Tier Map
-
-| Tier | Command | What it proves | Expected |
-|------|---------|----------------|----------|
-| **0** | `docker build -t slivervine-citadel . && docker run --rm slivervine-citadel` | Isolated **`demo:e2e`** · zero host Node/pnpm | `[tier0] demo:e2e PASS` |
-| **1** | `pnpm test` | Core engine · Soil · Wasm · Sequencer · Margin Buffer · adapters | **164 files / 735 PASS** |
-| **2** | `pnpm audit:fast` / `pnpm audit:security` | TSC · Vitest security · Solhint · Gitleaks · Slither · Aderyn | Fast PASS · Security **5/0/0** |
-| **3** | `cd SliverVineGate && forge test` | On-chain Gate · default property fuzz (5×1,024) · gas bounds | **60 Passed** · **5,120 fuzz** (default profile) |
-| **4** | `pnpm test:zerodev` | Kernel v3 UserOp draft · session scope · oracle gate (offline) | Dry-run harness **PASS** |
-| **5** | [`docker/README.md`](../docker/README.md) | Telemetry sidecar · live grant-audit endpoints | `/health` · `/api/grant-audit` |
-
----
-
-## Tier 1 — Core Engine & Risk Verification
-
-**Command:** `pnpm test`  
-**Definition:** `vitest run --dir . --coverage` (after coverage clean)  
-**SSOT:** **164 test files · 735 PASS · `risk-control.ts` 100% coverage**
-
-| Domain | Coverage focus | Example paths |
-|--------|----------------|---------------|
-| **Soil / Pre-execution** | `checkSoilResistance()` · fail-closed trips | `tests/risk-control/*` · soil / margin-buffer |
-| **Wasm shield** | `soil_core.wasm` feasibility / hot-path | `tests/services/wasm-feasibility*` |
-| **Sequencer / gas / soft-confirm** | ArbOS guards · lag · soft confirmation | `tests/services/*guard*` · risk suite |
-| **Margin Buffer (5%)** | `DEFAULT_CROSS_MMR === 0.05` · rebalance | `tests/risk-control/margin-buffer.test.ts` |
-| **GMX v2** | Unsigned payloads · fees · datastore | `tests/adapters/gmx-v2-*` |
-| **Hyperliquid** | Session key · auth · WS · 5TX provenance | `tests/adapters/hl/*` · `tests/verify-5tx-*` |
-| **SDK / Gate attestation** | EIP-712 · bridge armor | `tests/sdk/*` |
-| **Robinhood ingress** | Unidirectional escort · AML inbound block | `tests/adapters/robinhood-*` · `r-chain-*` |
-| **ZeroDev AA (unit)** | Adapter / dry-run harness units | `tests/adapters/zerodev-aa-*` |
-
-### R03 / R04 — RPC & Execution-Lag Telemetry (Provenance)
-
-Real-world **RTT & RPC Jitter Guard** is **active** with strict fail-closed budgets:
-
-| ID | Guard | Fail-closed budget | Code SSOT |
-|----|-------|-------------------|-----------|
-| **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · `src/adapters/hl/websocket/websocket-health.ts` |
-| **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · `src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts` |
-
-**Live testnet execution provenance:** 5 verified Hyperliquid testnet orders in [`verified_5tx_results.json`](../src/data/verified_5tx_results.json) (bundled via [`provenance_verified_trades.json`](../src/data/provenance_verified_trades.json) → `GET /api/grant-audit` · `provenanceVerified`). Observed cross-venue execution RTT band **~180–320ms** (RPC failover benchmark · testnet fill window) with **&lt;0.12% delta decay** (`crossVenueSlippage: 0.0004` = **0.04%** in 5-TX soil audit).
-
-**Judge note:** Full suite is the institutional regression bar. Sub-slices (`pnpm test:grant-v09-sim`, `pnpm test:wasm-feasibility`) are optional deep-dives only.
+→ Full tables: [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) · [`examples/lib/agent-venue-matrix.ts`](../examples/lib/agent-venue-matrix.ts)
 
 ---
 
-## Tier 2 — Security & Static Analysis
+## 3-Tier Sovereign Vault (Grant SSOT Summary)
 
-| Tier | Command | Tools | Artifact |
-|------|---------|-------|----------|
-| **Fast** | `pnpm audit:fast` | `tsc --noEmit` · Vitest security slice · Solhint · Gitleaks | `docs/audit/security-scorecard.json` (`"tier":"fast"`) |
-| **Security** | `pnpm audit:security` | Vitest · Forge · Slither · Aderyn · `pnpm audit` | `docs/audit/static-analysis-report.json` + scorecard · **5/0/0 PASS** |
-| **Nightly** (optional) | `pnpm audit:nightly` | Echidna · Halmos · deep fuzz | Nightly scorecard |
+| Lane | Address | Role |
+|------|---------|------|
+| **Wallet A — HL Hedge** | `0xef0752df6387248B897F3A59A180af42D801960d` | EIP-712 session-key 1× perp short |
+| **Wallet B — GMX GM Vault** | `0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F` | Principal capital custody · GM deposit/withdraw |
+| **Protocol Treasury — UI Fee Vault** | `0xc9BddABD80982d2201376195DD9B85fb7951546f` | `uiFeeReceiver` · +10 bps builder rebate (segregated from Wallet B) |
 
-**OpSec:** Fast scorecard always mirrors the **last** `audit:*` run — check `"tier"` before citing **5/0/0**.
-
-Related: [`audit/PRINCIPAL_AUDIT_REPORT.md`](./audit/PRINCIPAL_AUDIT_REPORT.md) · [`audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md`](./audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md)
+Full workflow → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md)
 
 ---
 
-## Tier 3 — Smart Contract & Fuzzing
+## On-Chain Anchors (Copy-Paste)
 
-**Default command (CI / `audit:security`):**
+| Contract | Address |
+|----------|---------|
+| **SliverVineGate (42161)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
+| **PolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` |
+| **GmxSoilMatrixSwitch** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` |
+| **SliverVineRiskOracleV2** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` |
+| **Gate PolicyLink** | `0xe4ef5350963241c49a29e72a4cf093208cd19af0` |
+| **Stylus Soil Coprocessor** | `0xc23587d6573dd134f95b02b0202ffbf84686625e` |
 
-```bash
-cd SliverVineGate && forge test --gas-report && cd ..
-```
-
-**Deep fuzz command (327,675 executions):**
-
-```bash
-pnpm audit:nightly
-# or: cd SliverVineGate && FOUNDRY_PROFILE=deep forge test --match-path 'test/*.fuzz.t.sol' && cd ..
-```
-
-| Metric | Default `forge test` | Deep profile (`FOUNDRY_PROFILE=deep` / `pnpm audit:nightly`) |
-|--------|----------------------|----------------------------------------------------------------|
-| Unit tests | **60 Passed · 0 Failed** | **60 Passed · 0 Failed** |
-| Property fuzzing | **5 × 1,024 = 5,120** executions | **5 × 65,535 = 327,675** executions |
-| Invariants | **3 × 16,384** stateful calls · 0 counterexamples | same |
-| Core | `SliverVineGate.sol` consume-once attestation · gas-bounded `verifyAndConsume` | same |
+Full tables · Phase A+B+C · Stylus proof → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md)
 
 ---
 
-## Tier 4 — ZeroDev AA Dry-Run
+## Live Mainnet Evidence (Summary)
 
-**Command:** `pnpm test:zerodev`  
-**Definition:** `vitest run tests/adapters/zerodev-aa-dryrun-harness.test.ts`
+| Proof | Tx / Status |
+|-------|-------------|
+| **GM Deposit** | [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) |
+| **GM Approve** | [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) |
+| **GM Withdraw** | [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
+| **Micro-fill fail-closed** | `pnpm execute:gmx:micro-fill --size=1` · **`lostUsd ≡ 0`** |
 
-| Assertion | Status |
-|-----------|--------|
-| Kernel v3 / EntryPoint **v0.7** UserOp **draft** path | ✅ Dry-run harness verified |
-| Session scope + Risk Oracle Gate fail-closed | ✅ Offline / mock bundler |
-| Mainnet UserOp broadcast | ⚠️ **Not claimed** (`USE_ZERODEV_AA` default-off) |
-
-No funded Sepolia / mainnet network dependency for this tier.
+Full harness specs · `[MAINNET_LIVE_EXECUTION_EVIDENCE]` → [`04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md)
 
 ---
 
-## Tier 5 — Sidecar & Integration
+## CLI Zone Map (Deep Dive)
 
-**Guide:** [`docker/README.md`](../docker/README.md) · **License:** BUSL-1.1 · Copyright (c) 2026 SilverVine Labs
-
-| Surface | How to verify |
-|---------|---------------|
-| Sidecar image | `docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .` |
-| Health | `curl -sS http://localhost:8080/health \| jq .` |
-| Fail-closed intent | `POST /v1/intent` → HTTP **403** |
-| Live grant audit | `curl -s https://bedeltawater.slivervine.xyz/api/grant-audit \| jq .provenanceVerified` |
-| Demo pipeline | `pnpm run demo:e2e` |
+| Zone | Scope | Document |
+|------|-------|----------|
+| **Zone A** | 30-second express · Tier 1–3 demo suite | [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) § Zone A |
+| **Zone A.1** | Security audit · bundle gates | same § Zone A.1 |
+| **Zone B** | Hybrid Pillar Sets X & Y inside (GMX · Pendle · Dune) | same § Zone B |
+| **Zone C** | EIP-1193 Retail Guard · 5-core venue proofs · B2B decorator | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
 
 ---
 
-## On-Chain Contract Topology (`contracts/` vs `SliverVineGate/`)
+## Core Invariants
 
-Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contracts/*.sol` paths; **no duplicate** Solidity definitions inside `SliverVineGate/`. Two distinct on-chain surfaces:
+$$
+\Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0 \qquad lostUsd \equiv 0 \qquad t_{\text{reflector\_p50}} \sim 106\mu s
+$$
 
-| Path | Contracts | Role | Forge / TS linkage |
-|------|-----------|------|-------------------|
-| **`SliverVineGate/`** | `SliverVineGate.sol` · `GatedExecutor.sol` | EIP-712 consume-once attestation gate (Tier 3) | `cd SliverVineGate && forge test` · **60/60** · default fuzz **5,120** · deep **327,675** via `FOUNDRY_PROFILE=deep` |
-| **`contracts/`** | `SliverVineRiskOracle.sol` · `RobinhoodSafetySwitch.sol` | Robinhood Chain compliance oracle + institutional firewall | **Not** in Forge testbed · ABI mirrored in TS |
-
-**TypeScript interface SSOT (Edge runtime):**
-
-| Solidity source | TS ABI / adapter | Usage |
-|-----------------|------------------|-------|
-| `contracts/SliverVineRiskOracle.sol` | `src/services/aa-adapter/risk-oracle.ts` → `SLIVERVINE_RISK_ORACLE_ABI` | `risk-oracle-gate.ts` · viem `readContract` when `SLIVERVINE_RISK_ORACLE_ADDRESS` set |
-| `contracts/RobinhoodSafetySwitch.sol` | `risk-oracle.ts` → `ROBINHOOD_SAFETY_SWITCH_ABI` | `risk-oracle-adapter.ts` · `evaluateComplianceAdapter()` (fail-closed logic) |
-
-**Static analysis:** Solhint / Slither scan repo-wide `*.sol` (includes `contracts/`).  
-**Verdict:** `contracts/` is **not** a safe delete — it is the canonical Solidity spec for Robinhood ingress; TS adapters intentionally mirror ABIs (no Forge artifact import at Edge).
-
----
-
-## Maintainer Scripts (evaluator-safe)
-
-| Script | Purpose |
-|--------|---------|
-| `pnpm test` | Full Vitest + coverage |
-| `pnpm test:zerodev` | AA dry-run harness |
-| `pnpm test:watch` | Interactive Vitest |
-| `pnpm typecheck` | `tsc --noEmit` |
-| `pnpm audit:fast` / `audit:security` / `audit:nightly` | 3-tier security matrix |
-| `pnpm run demo:e2e` | Grant E2E demonstration |
-| `docker build -t slivervine-citadel . && docker run --rm slivervine-citadel` | Tier 0 isolated E2E (see root `Dockerfile`) |
-| `pnpm build:wasm` | Rust `soil_core.wasm` |
-| `pnpm verify:5tx` / `verify:grant` / `verify:negative` | Provenance / negative proofs |
-| `pnpm build` / `deploy` / `dev` | Worker / SPA toolchain |
-
-**Removed from public script surface (OpSec):** live ignition / wallet sweep / spot sell / Sepolia UserOp one-offs — not required for Buildathon diligence.
+Derivations → [`architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#31-microsecond-moats-summary)
 
 ---
 
@@ -208,12 +137,13 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 | Document | Role |
 |----------|------|
-| [`README.md`](./README.md) | Docs router |
-| [`grants/SUBMISSION.md`](./grants/SUBMISSION.md) | Buildathon main submission |
-| [`architecture/TECHNICAL_SPECIFICATION.md`](./architecture/TECHNICAL_SPECIFICATION.md) | Yellow Paper |
-| [`../README.md`](../README.md) | Repo entry · CLI verification |
-| [`../docker/README.md`](../docker/README.md) | Sidecar testlist |
+| [`README.md`](../README.md) | Repo entry · Shield + Sovereign Vault |
+| [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (Shield-first) |
+| [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
+| [`architecture/README.md`](./architecture/README.md) | Yellow Paper · R01–R20 |
+| [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) | Tier 0–3 demo suite (5-core + Retail Guard) |
+| [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | 30-second Buildathon brief |
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Verification Matrix · Vitest 735 PASS (164 files)*
+*SilverVine Labs · Verification Express Hub · 222 test files | 1044 PASS clean*

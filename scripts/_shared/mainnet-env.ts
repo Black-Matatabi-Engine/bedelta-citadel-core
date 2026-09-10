@@ -5,8 +5,12 @@ import { fileURLToPath } from "node:url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 export const ENV_PRODUCTION_PATH = join(__dirname, "../../.env.production");
 
+export function envProductionExists(): boolean {
+  return existsSync(ENV_PRODUCTION_PATH);
+}
+
 export function loadEnvProduction(): void {
-  if (!existsSync(ENV_PRODUCTION_PATH)) {
+  if (!envProductionExists()) {
     throw new Error(`.env.production missing — run setup first`);
   }
   for (const raw of readFileSync(ENV_PRODUCTION_PATH, "utf8").split("\n")) {

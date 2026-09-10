@@ -1,35 +1,33 @@
-//! SliverVine M4 — `#![no_std]` soil resistance + session clip/TTL core.
-//! SPDX-License-Identifier: Apache-2.0
-//! Layout: 8×f64 little-endian input @ host buffer (see TS `encodeWasmSoilInput`).
-#![no_std]
+//! SliverVine M4 — soil resistance + session clip/TTL core.
+//! SPDX-License-Identifier: BUSL-1.1 (SliverVine Protocol Proprietary)
+//! Layout: 28×f64 protocol vector + 8×f64 soil input (see TS `encodeWasmSoilInput`).
 
-#[panic_handler]
-fn panic(_: &core::panic::PanicInfo) -> ! {
-    loop {}
-}
-
+const PROTO_VECT_LEN: usize = 28;
+const WASM_SOIL_OFFSET: usize = 28;
 const TRIP_CROSS_VENUE: u32 = 1;
 const TRIP_DEPTH: u32 = 2;
 const TRIP_INSUFFICIENT: u32 = 4;
+const TRIP_PROTOCOL: u32 = 8;
 
 #[inline]
 fn abs_f64(x: f64) -> f64 {
     if x < 0.0 { -x } else { x }
 }
 
-/// Evaluate soil core from 8 f64 inputs → write 6 f64 outputs, return trip_flags.
-/// in:  [hlSpot, hlPerp, dydxPerp, depthUsd, orderSizeUsd, accountBalanceUsd, maxSlippage, minDepthUsd]
+/// Evaluate soil core from 28+8 f64 inputs → write 6 f64 outputs, return trip_flags.
+/// in:  [0..27] protocol lanes (mask @ 27) · [28..35] soil fields
 /// out: [crossVenue, spotPerp, tripped(0|1), soilRiskUsd, cappedMaxSlUsd, tripFlags]
 #[no_mangle]
 pub unsafe extern "C" fn soil_core_eval(in_ptr: *const f64, out_ptr: *mut f64) -> u32 {
-    let hl_spot = *in_ptr.add(0);
-    let hl_perp = *in_ptr.add(1);
-    let dydx_perp = *in_ptr.add(2);
-    let depth_usd = *in_ptr.add(3);
-    let order_size = *in_ptr.add(4);
-    let account = *in_ptr.add(5);
-    let max_slip = *in_ptr.add(6);
-    let min_depth = *in_ptr.add(7);
+    let soil_in = in_ptr.add(WASM_SOIL_OFFSET);
+    let hl_spot = *soil_in.add(0);
+    let hl_perp = *soil_in.add(1);
+    let dydx_perp = *soil_in.add(2);
+    let depth_usd = *soil_in.add(3);
+    let order_size = *soil_in.add(4);
+    let account = *soil_in.add(5);
+    let max_slip = *soil_in.add(6);
+    let min_depth = *soil_in.add(7);
 
     let cross = if hl_perp > 0.0 && dydx_perp > 0.0 {
         abs_f64(dydx_perp - hl_perp) / hl_perp
@@ -53,6 +51,11 @@ pub unsafe extern "C" fn soil_core_eval(in_ptr: *const f64, out_ptr: *mut f64) -
         flags |= TRIP_DEPTH;
     }
 
+    let protocol_mask = *in_ptr.add(PROTO_VECT_LEN - 1);
+    if protocol_mask != 0.0 {
+        flags |= TRIP_PROTOCOL;
+    }
+
     let slip_for_risk = if cross.is_finite() && cross >= 0.0 { cross } else { max_slip };
     let soil_risk = if order_size > 0.0 { order_size * if slip_for_risk > 0.0 { slip_for_risk } else { 0.0 } } else { 0.0 };
     let dynamic_max = if account > 0.0 { account * 0.01 + 100.0 } else { 100.0 };
@@ -73,7 +76,6 @@ pub unsafe extern "C" fn soil_core_eval(in_ptr: *const f64, out_ptr: *mut f64) -
 }
 
 /// Session clip + TTL: returns 1 if ok, 0 if breach.
-/// args: max_order_clip, clip_limit, expires_at_ms, now_ms, auto_expire_window_ms
 #[no_mangle]
 pub extern "C" fn session_core_ok(
     max_order_clip: f64,
@@ -98,5 +100,5 @@ pub extern "C" fn session_core_ok(
 /// Module ABI stamp — host verifies Wasm is official soil_core.
 #[no_mangle]
 pub extern "C" fn soil_core_abi_version() -> u32 {
-    1
+    2
 }

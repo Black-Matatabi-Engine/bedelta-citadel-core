@@ -1,15 +1,17 @@
 # Grants — Public Submission Index
 
-**Entity:** SilverVine Labs · `grants@silvervinelabs.com`  
+**Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
+**Pitch:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum.
+**Entity:** SilverVine Labs · `grants@silvervinelabs.com`
 **OpSec:** External-facing grant packs only.
 
-> **Baseline (locked):** Vitest **164 test files | 735 PASS (100% Clean)** · `pnpm test`.
+> **Vitest SSOT:** **222 test files | 1044 PASS clean (100%)** · `pnpm test -- --run`.
 
 | Track | Status | Entry |
 |-------|--------|-------|
-| **Buildathon Main Submission** | ✅ Submitted | [`SUBMISSION.md`](./SUBMISSION.md) |
+| **Buildathon Main Submission** | ✅ Submitted | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
 | **Arbitrum One-Pager** | ✅ Submitted | [`arbitrum/ARBITRUM_ONE_PAGER.md`](./arbitrum/ARBITRUM_ONE_PAGER.md) |
 | **Arbitrum Grant Scope** | ✅ Submitted | [`arbitrum/GRANT_PROPOSAL.md`](./arbitrum/GRANT_PROPOSAL.md) |
 | **GMX Builders** | ✅ Submitted | [`gmx/GMX_BUILDERS_PITCH.md`](./gmx/GMX_BUILDERS_PITCH.md) |
 
-Shared SSOT: [`../architecture/TECHNICAL_SPECIFICATION.md`](../architecture/TECHNICAL_SPECIFICATION.md) · [`../sdk/CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) · Docs router: [`../README.md`](../README.md)
+Shared SSOT: [`../architecture/README.md`](../architecture/README.md) · [`../sdk/README.md`](../sdk/README.md) · Docs router: [`../README.md`](../README.md)

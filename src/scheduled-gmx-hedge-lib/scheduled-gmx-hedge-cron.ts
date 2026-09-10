@@ -1,6 +1,7 @@
 /** Cron — GMX DataStore ETH delta vs HL ETH short hedge tick (fail-closed). */
 import type { Env } from "../env";
 import { checkSoilResistanceWithArbFallback } from "../services/risk-control-lib/soil-arb-probe-refresh";
+import { buildLiveHedgeSoilInput } from "../services/gmx-cross-wallet-hedge-lib/build-hedge-soil-input";
 import {
   fetchGmxEthDeltaForWallet,
   fetchHlEthMarkUsdStrict,
@@ -21,7 +22,7 @@ import {
   dispatchEscalationFlashUnwind,
   type PositionLegSnapshot,
 } from "../services/risk/flash-unwind";
-import { HL_ETH_PERP_ASSET_INDEX, HL_ETH_SZ_DECIMALS } from "../services/hl-auto-hedge";
+import { HL_ETH_PERP_ASSET_INDEX, HL_ETH_SZ_DECIMALS } from "../services/hl-auto-hedge-status";
 import {
   CRON_FLASH_UNWIND,
   CRON_SKIP_BALANCED,
@@ -89,18 +90,18 @@ export async function runScheduledGmxHedgeCron(env: Env): Promise<void> {
   const fetchFn = fetch;
   try {
     const ethMark = await fetchHlEthMarkUsdStrict(fetchFn);
-    const soil = await checkSoilResistanceWithArbFallback({
-      symbol: "ETH",
-      hlSpot: ethMark,
-      hlPerp: ethMark,
-      dydxPerp: ethMark,
-      depthUsd: 500_000,
-    });
-
     const delta = await fetchGmxEthDeltaForWallet(walletB, { fetchFn });
     const hlShortEth = await fetchWalletAEthShortSize(walletA, fetchFn);
     const driftUsd = computeCronDriftUsd(delta.ethDeltaUsd, hlShortEth, ethMark);
     const overhedgeUsd = computeCronOverhedgeUsd(delta.ethDeltaUsd, hlShortEth, ethMark);
+    const probeOrderUsd = Math.max(driftUsd, overhedgeUsd, 10);
+    const liveSoilInput = await buildLiveHedgeSoilInput({
+      symbol: "ETH",
+      orderUsd: probeOrderUsd,
+      gmxReferenceMidUsd: delta.ethMidUsd || ethMark,
+      fetchFn,
+    });
+    const soil = await checkSoilResistanceWithArbFallback(liveSoilInput);
     const hedgedUsd = hlShortEth * ethMark;
     const live = env.IS_MAINNET === "true";
 

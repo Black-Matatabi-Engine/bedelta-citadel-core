@@ -1,4 +1,4 @@
-# Docker / build context — never ship production secrets into images
+# Docker build context — keep lean; never ship secrets or host artifacts
 .env
 .env.*
 !.env.example
@@ -12,12 +12,19 @@ id_rsa*
 *.pfx
 wallet.json
 **/private-keys/
-node_modules/
-.git/
+
+# Dependencies & build outputs (rebuilt inside image)
+node_modules
+dist
+coverage
+
+# VCS & IDE (prevents Cursor/pipe IO errors during docker build)
+.git
+.cursor
+.cursorignore
+.cursorrules
+
+# Cloudflare / tooling caches
 .wrangler/
-coverage/
-dist/
-dist-worker/
-.cursor/
 .specstory/
 *.log

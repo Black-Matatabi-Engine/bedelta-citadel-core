@@ -1,58 +1,37 @@
 import type { Env } from "./env";
-import { routeRequest } from "./api/routes";
-import {
-  handleExecutionLogsRequest,
-} from "./api/routes/logs";
+import { routeRequest } from "./api/routes-lean";
+import { applyPublicApiResponseHeaders } from "./middleware/citadel-tier-headers";
+import { CORS_JSON_HEADERS } from "./services/config";
+import { severSigningChannel } from "./services/session-key-adapter-lib/session-key-gates";
+import { configureTelegramAlert } from "./services/telemetry/telegram-alert";
+import { bindProtocolMaskKv, prefetchProtocolMaskKv } from "./services/kv-lib/protocol-mask";
+import { fetchStaticAsset, isWorkerApiPath, DUNE_TELEMETRY_PORTAL_URL } from "./worker-routing";
 import {
   handleGrantAuditRequest,
   isGrantAuditApiPath,
-} from "./routes/grant-audit";
+} from "./api/routes/grant-audit";
+import { handleExecutionLogsRequest } from "./api/routes/logs";
+
 import {
-  applyEngineModeResponseHeaders,
-  parseEngineModeHeader,
-} from "./middleware/engine-mode-router";
-import { CORS_JSON_HEADERS } from "./services/config";
-import { severSigningChannel } from "./services/session-key-adapter";
-import { configureTelegramAlert } from "./services/telemetry/telegram-alert";
-import { ensureIntentPersistenceBoot } from "./worker-scheduled";
-import { fetchStaticAsset, isWorkerApiPath } from "./worker-routing";
-
-const GEO_BLOCKED_COUNTRIES = new Set(["US", "CU", "IR", "KP", "SY"]);
-
-const PUBLIC_READ_ONLY_PATHS = new Set([
-  "/api/telemetry/health",
-  "/api/telemetry/analytics",
-  "/api/badge/health",
-  "/api/badge/proofs",
-  "/api/yield/triangle",
-  "/api/logs",
-  "/api/grant-audit",
-  "/api",
-  "/api/health",
-  "/logs",
-  "/",
-  "/grant-audit",
-  "/b2b",
-  "/app",
-]);
+  isGeoBlockedCountry,
+  isPublicReadOnlyPath,
+  WRK_MSG_GEO_BLOCKED,
+} from "./worker/worker-error-codes";
 
 function enforceGeoCompliance(request: Request): Response | null {
   const url = new URL(request.url);
-  if (request.method === "GET" && PUBLIC_READ_ONLY_PATHS.has(url.pathname)) {
+  if (request.method === "GET" && isPublicReadOnlyPath(url.pathname)) {
     return null;
   }
   const country = request.cf?.country;
-  if (typeof country !== "string" || !GEO_BLOCKED_COUNTRIES.has(country)) {
+  if (typeof country !== "string" || !isGeoBlockedCountry(country)) {
     return null;
   }
   severSigningChannel();
-  return new Response(
-    "[SILVERVINE DEFENSE] Access Denied by Geo-Compliance Circuit Breaker\n\nHyperliquid Foundation Evaluators: Contact grants@silvervinelabs.com for evaluator whitelist onboarding.",
-    {
-      status: 403,
-      headers: { "Content-Type": "text/plain; charset=UTF-8" },
-    },
-  );
+  return new Response(WRK_MSG_GEO_BLOCKED, {
+    status: 403,
+    headers: { "Content-Type": "text/plain; charset=UTF-8" },
+  });
 }
 
 export async function handleWorkerFetch(
@@ -64,16 +43,17 @@ export async function handleWorkerFetch(
     TELEGRAM_BOT_TOKEN: env.TELEGRAM_BOT_TOKEN,
     TELEGRAM_CHAT_ID: env.TELEGRAM_CHAT_ID,
   });
-  ctx.waitUntil(
-    ensureIntentPersistenceBoot(env).catch((err) => {
-      console.error("[bedelta] fetch persistence boot failed", err);
-    }),
-  );
+  const kv = env.SLIVERVINE_KV ?? env.SYSTEM_STATE_KV;
+  bindProtocolMaskKv(kv);
+  ctx.waitUntil(prefetchProtocolMaskKv(kv));
 
   const geoResponse = enforceGeoCompliance(request);
   if (geoResponse) return geoResponse;
 
   const url = new URL(request.url);
+  if (request.method === "GET" && url.pathname === "/") {
+    return Response.redirect(DUNE_TELEMETRY_PORTAL_URL, 302);
+  }
   if (!isWorkerApiPath(url.pathname)) {
     return fetchStaticAsset(env, request);
   }
@@ -86,9 +66,9 @@ export async function handleWorkerFetch(
       return await handleExecutionLogsRequest(env, request);
     }
     if (request.method === "GET" && isGrantAuditApiPath(url.pathname)) {
-      return applyEngineModeResponseHeaders(
+      return applyPublicApiResponseHeaders(
         await handleGrantAuditRequest(env, request),
-        parseEngineModeHeader(request),
+        request,
       );
     }
   } catch (error) {

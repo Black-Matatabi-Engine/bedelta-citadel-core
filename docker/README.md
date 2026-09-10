@@ -1,4 +1,4 @@
-# SliverVine Citadel Telemetry Sidecar — User Guide & Testlist
+# SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) — Citadel Telemetry Sidecar
 
 > **License:** BUSL-1.1 (Business Source License 1.1) · Copyright (c) 2026 SilverVine Labs
 
@@ -6,12 +6,14 @@
 
 > **Doc log (2026-08-25):** Tier-0 root [`Dockerfile`](../Dockerfile) E2E · Sidecar Tier-5 · R03/R04 RTT 200/500ms · 5-TX provenance SSOT.
 
-**Entity:** SilverVine Labs · **Official Site:** [silvervinelabs.com](https://silvervinelabs.com) · **Upstream:** `https://bedeltawater.slivervine.xyz/api/telemetry/health`  
-**Regression bar:** **164 test files | 735 PASS (100% Clean)** · `tsc --noEmit` CLEAN
+**Entity:** SilverVine Labs · **Official Site:** [silvervinelabs.com](https://silvervinelabs.com) · **Upstream:** `https://bedeltawater.slivervine.xyz/api/telemetry/health`
+**Regression bar:** **222 test files | 1044 PASS clean (100%)** · `tsc --noEmit` CLEAN
 
 ---
 
-## 0. Tier-0 — Root E2E Verifier (Zero Host Node/pnpm)
+## 0. Path 2 — Root E2E Verifier (Isolated Docker)
+
+> **Fastest path:** see root README **Path 1** (`pnpm install && pnpm run demo:e2e`) — ~3 seconds with host Node/pnpm.
 
 From repository root — **not** the sidecar image:
 
@@ -19,11 +21,13 @@ From repository root — **not** the sidecar image:
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 ```
 
+> **WSL2 / Linux User Note:** If executing Docker directly inside WSL2 without Docker Desktop integration, run commands with `sudo` (e.g., `sudo docker build -t slivervine-citadel . && sudo docker run --rm slivervine-citadel`), or leverage **Path 1 (`pnpm run demo:e2e`)** for instant 3-second host verification without containers.
+
 | Item | Value |
 |------|-------|
 | Dockerfile | [`../Dockerfile`](../Dockerfile) (repo root) |
 | Default CMD | `pnpm run demo:e2e` → `[tier0] demo:e2e PASS` |
-| Full Vitest bar | `docker run --rm slivervine-citadel pnpm test` → **735 PASS** |
+| Full Vitest bar | `docker run --rm slivervine-citadel pnpm test` → **222 test files | 1044 PASS clean (100%)** |
 | Isolation | No host Node 22 / pnpm / WSL required |
 
 Sidecar telemetry (Tier 5) remains [`Dockerfile.sidecar`](./Dockerfile.sidecar) below.
@@ -45,11 +49,11 @@ Sidecar telemetry (Tier 5) remains [`Dockerfile.sidecar`](./Dockerfile.sidecar) 
 ## 1. Prerequisites
 
 
-| Requirement    | Notes                                          |
+| Requirement | Notes |
 | -------------- | ---------------------------------------------- |
-| Docker 24+     | Or Node 22+ for native daemon                  |
+| Docker 24+ | Or Node 22+ for native daemon |
 | Network egress | Sidecar polls production telemetry (read-only) |
-| Port `8080`    | Default bind · override via `SIDECAR_PORT`     |
+| Port `8080` | Default bind · override via `SIDECAR_PORT` |
 
 
 ---
@@ -65,11 +69,11 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 ```
 
 
-| Flag       | Value                       |
+| Flag | Value |
 | ---------- | --------------------------- |
-| Image tag  | `silvervine-sidecar`        |
+| Image tag | `silvervine-sidecar` |
 | Dockerfile | `docker/Dockerfile.sidecar` |
-| Context    | `.` (repo root)             |
+| Context | `.` (repo root) |
 
 
 ---
@@ -86,10 +90,10 @@ Optional env overrides:
 
 ```bash
 docker run -d --name sv-sidecar -p 8080:8080 \
-  -e SIDECAR_PORT=8080 \
-  -e SIDECAR_DECISION_SLO_MS=500 \
-  -e TELEMETRY_UPSTREAM=https://bedeltawater.slivervine.xyz/api/telemetry/health \
-  silvervine-sidecar
+ -e SIDECAR_PORT=8080 \
+ -e SIDECAR_DECISION_SLO_MS=500 \
+ -e TELEMETRY_UPSTREAM=https://bedeltawater.slivervine.xyz/api/telemetry/health \
+ silvervine-sidecar
 ```
 
 Stop / remove:
@@ -102,7 +106,7 @@ docker stop sv-sidecar && docker rm sv-sidecar
 
 
 
-## 4. Verification Testlist (Grant Evaluators)
+## 4. Verification Testlist for Express Auditors
 
 Run after container starts (~5s warm-up).
 
@@ -124,9 +128,9 @@ curl -sS -w "\nHTTP %{http_code}\n" http://localhost:8080/health | jq .
 
 ```bash
 curl -sS -w "\nHTTP %{http_code}\n" \
-  -X POST http://localhost:8080/v1/intent \
-  -H 'Content-Type: application/json' \
-  -d '{"symbol":"ETH","side":"long","sizeUsd":100}' | jq .
+ -X POST http://localhost:8080/v1/intent \
+ -H 'Content-Type: application/json' \
+ -d '{"symbol":"ETH","side":"long","sizeUsd":100}' | jq .
 ```
 
 **Pass criteria:**
@@ -141,9 +145,9 @@ curl -sS -w "\nHTTP %{http_code}\n" \
 
 ```bash
 curl -sS -w "\nHTTP %{http_code}\n" \
-  -X POST http://localhost:8080/v1/intent \
-  -H 'Content-Type: application/json' \
-  -d 'not-json'
+ -X POST http://localhost:8080/v1/intent \
+ -H 'Content-Type: application/json' \
+ -d 'not-json'
 ```
 
 **Pass criteria:** HTTP **400** · `INVALID_JSON`
@@ -177,12 +181,12 @@ Same curl commands against `http://localhost:8080`.
 ## 6. B2B Circuit Breaker Wiring
 
 
-| Endpoint                      | Role                                                                               |
+| Endpoint | Role |
 | ----------------------------- | ---------------------------------------------------------------------------------- |
-| `GET /health`                 | Liveness · mirrors upstream Citadel telemetry RTT                                  |
-| `POST /v1/intent`             | Pre-execution gate stub — always fail-closed until `@SagaProtected` signer mounted |
-| `SIDECAR_DECISION_SLO_MS=500` | **500ms** local Sidecar decision SLO (RTT to `/health`)                            |
-| On-chain RPC                  | **3000ms** network timeout — fail-closed (no synthetic market depth)               |
+| `GET /health` | Liveness · mirrors upstream Citadel telemetry RTT |
+| `POST /v1/intent` | Pre-execution gate stub — always fail-closed until `@SagaProtected` signer mounted |
+| `SIDECAR_DECISION_SLO_MS=500` | **500ms** local Sidecar decision SLO (RTT to `/health`) |
+| On-chain RPC | **3000ms** network timeout — fail-closed (no synthetic market depth) |
 
 
 Institutional funds route alpha through `silvervine-proxy` at `localhost:8080` — existing Python/TS strategies unchanged.
@@ -194,12 +198,12 @@ Institutional funds route alpha through `silvervine-proxy` at `localhost:8080` �
 ## 7. Troubleshooting
 
 
-| Symptom                         | Fix                                        |
+| Symptom | Fix |
 | ------------------------------- | ------------------------------------------ |
-| `connection refused` on `:8080` | `docker ps` · confirm `-p 8080:8080`       |
-| Health HTTP 503                 | Upstream blocked — check egress / VPN      |
-| Build fails `COPY`              | Run `docker build` from repo root          |
-| Port clash                      | `docker run -p 9090:8080` and curl `:9090` |
+| `connection refused` on `:8080` | `docker ps` · confirm `-p 8080:8080` |
+| Health HTTP 503 | Upstream blocked — check egress / VPN |
+| Build fails `COPY` | Run `docker build` from repo root |
+| Port clash | `docker run -p 9090:8080` and curl `:9090` |
 
 
 ---
@@ -209,14 +213,14 @@ Institutional funds route alpha through `silvervine-proxy` at `localhost:8080` �
 ## 8. Related Paths
 
 
-| File                                               | Purpose                                   |
+| File | Purpose |
 | -------------------------------------------------- | ----------------------------------------- |
-| [`../Dockerfile`](../Dockerfile)                   | **Tier-0** isolated E2E verifier image    |
-| [`Dockerfile.sidecar`](./Dockerfile.sidecar)       | Tier-5 telemetry sidecar image            |
-| [`sidecar-daemon.mjs`](./sidecar-daemon.mjs)       | Edge-safe daemon (no TS runtime)          |
-| [Root README.md](../README.md)                          | Citadel Core Architecture & Quickstart    |
-| [docs/grants/arbitrum/GRANT_PROPOSAL.md](../docs/grants/arbitrum/GRANT_PROPOSAL.md) | Full Citadel scope                        |
-| [docs/README.md](../docs/README.md) | Docs audience index                       |
+| [`../Dockerfile`](../Dockerfile) | **Tier-0** isolated E2E verifier image |
+| [`Dockerfile.sidecar`](./Dockerfile.sidecar) | Tier-5 telemetry sidecar image |
+| [`sidecar-daemon.mjs`](./sidecar-daemon.mjs) | Edge-safe daemon (no TS runtime) |
+| [Root README.md](../README.md) | Citadel Core Architecture & Quickstart |
+| [docs/grants/arbitrum/GRANT_PROPOSAL.md](../docs/grants/arbitrum/GRANT_PROPOSAL.md) | Full Citadel scope |
+| [docs/README.md](../docs/README.md) | Docs audience index |
 
 
 ---

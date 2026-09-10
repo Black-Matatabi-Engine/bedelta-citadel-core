@@ -1,9 +1,15 @@
-# Build & Temp
-node_modules/
+# Build & Compilation Artifacts
+cache/
+broadcast/
+coverage/
 dist/
 dist-worker/
+dist-worker-probe/
+dist-worker-test/
 .wrangler/
-coverage/
+
+# Dependencies
+node_modules/
 .pnpm-store/
 
 # Secrets & Local Configs
@@ -48,8 +54,8 @@ san
 # STRICT OPSEC WHITELIST FOR DOCUMENTS (BLOCK EVERYTHING BY DEFAULT)
 # ------------------------------------------------------------------------------
 # Block all root-level and sub-folder markdown files by default
-*.md
-docs/**
+#*.md
+#docs/**
 
 
 # EXPLICITLY ALLOW ONLY PUBLIC GRANT ARTIFACTS
@@ -70,15 +76,13 @@ docs/**
 !docs/audit/zerodev-aa-metrics.json
 !docs/sdk/
 !docs/sdk/**
-!docs/audit/PRINCIPAL_AUDIT_REPORT.md
-!docs/audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md
-!src/sdk/README.md
 
 # Internal scorecards / self-audits (local-only; do not publish)
+
 docs/audit/PROGRESS_TRUTH_CHECK.md
 docs/audit/BUILDATHON_JUDGE_REVIEW.md
 
-# Rust Wasm build artifacts (commit pkg/soil_core.wasm only)
-src/wasm/target/
+# Rust build artifacts (commit pkg/soil_core.wasm only; ignore all Cargo target dirs)
+**/target/
 
 

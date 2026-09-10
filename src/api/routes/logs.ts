@@ -1,10 +1,17 @@
 import type { Env } from "../../env";
 import { APP_VERSION, CORS_JSON_HEADERS } from "../../services/config";
 import {
-  buildGrantAuditPayload,
+  collectGrantAuditEntries,
+  extractGrantAuditCitadelMetrics,
+  GRANT_AUDIT_HISTORY_KEY,
+  GRANT_AUDIT_LATEST_KEY,
+  readGrantAuditKvJson,
+} from "../../routes/grant-audit-lib/grant-audit-kv";
+import {
   extractTxHashes,
   proveZeroDelta,
-} from "../../routes/grant-audit";
+} from "../../routes/grant-audit-lib/grant-audit-zero-delta";
+import { buildEscalationStateForLogs } from "../../services/risk/escalation-logs";
 
 const LATEST_KEY = "log_latest";
 const HISTORY_KEY = "history_7d";
@@ -16,25 +23,12 @@ function jsonResponse(body: unknown, status = 200): Response {
   });
 }
 
-async function readKvJson(
-  kv: KVNamespace,
-  key: string,
-): Promise<unknown | null> {
-  const raw = await kv.get(key);
-  if (!raw) return null;
-  try {
-    return JSON.parse(raw) as unknown;
-  } catch {
-    return { raw };
-  }
-}
-
 /**
- * GET /api/logs | GET /logs — full execution history, raw Tx hashes, Zero-Delta proof.
+ * GET /api/logs | GET /logs — KV execution history + zero-delta proof (no heavy audit builder).
  */
 export async function handleExecutionLogsRequest(
   env: Env,
-  request?: Request | null,
+  _request?: Request | null,
 ): Promise<Response> {
   if (!env.EXECUTION_LOGS_KV) {
     return jsonResponse(
@@ -54,20 +48,29 @@ export async function handleExecutionLogsRequest(
     );
   }
 
-  const audit = await buildGrantAuditPayload(env, request);
+  const kv = env.EXECUTION_LOGS_KV;
+  const [latest, history] = await Promise.all([
+    readGrantAuditKvJson(kv, GRANT_AUDIT_LATEST_KEY),
+    readGrantAuditKvJson(kv, GRANT_AUDIT_HISTORY_KEY),
+  ]);
+  const executionHistory = collectGrantAuditEntries(history, latest);
+  const txHashes = extractTxHashes(executionHistory);
+  const zeroDelta = proveZeroDelta(executionHistory);
+  const citadel = extractGrantAuditCitadelMetrics(latest);
+  const escalationState = buildEscalationStateForLogs(latest);
 
   return jsonResponse({
     success: true,
     keys: { latest: LATEST_KEY, history: HISTORY_KEY },
-    latest: audit.latest,
-    history: audit.history,
-    executionHistory: audit.executionHistory,
-    txHashes: audit.txHashes,
-    zeroDelta: audit.zeroDelta,
-    citadel: audit.citadel,
-    escalationState: audit.escalationState,
+    latest,
+    history,
+    executionHistory,
+    txHashes,
+    zeroDelta,
+    citadel,
+    escalationState,
     audit: "ZERO_TRUST_GRANT",
-    fetchedAt: audit.fetchedAt,
+    fetchedAt: new Date().toISOString(),
   });
 }
 
@@ -99,4 +102,4 @@ export function isExecutionLogsPath(pathname: string): boolean {
   return pathname === "/api/logs" || pathname === "/logs";
 }
 
-export { extractTxHashes, proveZeroDelta, readKvJson };
+export { readKvJson } from "./logs-kv";

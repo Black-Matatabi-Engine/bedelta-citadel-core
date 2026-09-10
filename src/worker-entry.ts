@@ -1,4 +1,5 @@
 import type { Env } from "./env";
+import { WRK_ERR_CRON_FAILED } from "./worker/worker-error-codes";
 import { handleWorkerFetch } from "./worker-fetch";
 import { runScheduledJobs } from "./worker-scheduled";
 
@@ -22,7 +23,7 @@ export default {
     try {
       await runScheduledJobs(env, controller.cron);
     } catch (err) {
-      console.error("[bedelta-living-water] scheduled cron failed", err);
+      console.error(`[bedelta-living-water] ${WRK_ERR_CRON_FAILED}`, err);
     }
     void ctx;
   },

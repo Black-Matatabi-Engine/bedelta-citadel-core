@@ -2,12 +2,12 @@
 name = "soil_core"
 version = "0.1.0"
 edition = "2021"
-license = "Apache-2.0"
+license = "BUSL-1.1"
 description = "SliverVine M4 no_std soil + session core for Cloudflare Workers Wasm"
 
 [lib]
 crate-type = ["cdylib"]
-path = "soil_core.rs"
+path = "lib.rs"
 
 [profile.release]
 opt-level = "z"
