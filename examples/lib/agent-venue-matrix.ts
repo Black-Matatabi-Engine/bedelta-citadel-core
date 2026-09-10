@@ -1,4 +1,4 @@
-/** 7-Protocol Execution Matrix — dynamic venue rotation & intent mapping for agent demos. */
+/** 5-Core Venue Execution Matrix — dynamic venue rotation & intent mapping for agent demos. */
 import type { SoilResistanceInput } from "../../src/services/risk-control";
 import { HEALTHY_SOIL, TOXIC_SOIL, BOLD, CYAN, GRAY, R } from "../adapters/citadel-ansi-hud";
 import { isDemoTripArgv } from "./demo-harness";
@@ -6,9 +6,6 @@ import { isDemoTripArgv } from "./demo-harness";
 export type AgentVenueKey =
   | "gmx"
   | "pendle"
-  | "uniswap"
-  | "aave"
-  | "morpho"
   | "usdai"
   | "hyperliquid"
   | "variational";
@@ -28,9 +25,6 @@ export interface AgentVenueContext {
 const VENUE_ORDER: AgentVenueKey[] = [
   "gmx",
   "pendle",
-  "uniswap",
-  "aave",
-  "morpho",
   "usdai",
   "hyperliquid",
   "variational",
@@ -39,10 +33,6 @@ const VENUE_ORDER: AgentVenueKey[] = [
 const VENUE_ALIASES: Record<string, AgentVenueKey> = {
   gmx: "gmx",
   pendle: "pendle",
-  uniswap: "uniswap",
-  uni: "uniswap",
-  aave: "aave",
-  morpho: "morpho",
   usdai: "usdai",
   usd: "usdai",
   hyperliquid: "hyperliquid",
@@ -67,33 +57,6 @@ const VENUE_CATALOG: Record<AgentVenueKey, Omit<AgentVenueContext, "healthyInten
     chainLabel: "Arbitrum One 42161",
     hudVenue: "Pendle PT/YT · PT-eETH market",
     invariantCheck: "|Yield_current − Yield_oracle| ≤ 150 bps",
-    healthySoil: HEALTHY_SOIL,
-    toxicSoil: TOXIC_SOIL,
-  },
-  uniswap: {
-    key: "uniswap",
-    label: "Uniswap V3",
-    chainLabel: "Arbitrum One 42161",
-    hudVenue: "Uniswap V3 ETH/USDC 0.05% pool",
-    invariantCheck: "Tick depth · dynamic fee / slippage ≤ 50 bps",
-    healthySoil: HEALTHY_SOIL,
-    toxicSoil: TOXIC_SOIL,
-  },
-  aave: {
-    key: "aave",
-    label: "Aave V3",
-    chainLabel: "Arbitrum One 42161",
-    hudVenue: "Aave V3 ETH supply / borrow",
-    invariantCheck: "Health Factor HF ≥ 1.15 · liquidation guard",
-    healthySoil: HEALTHY_SOIL,
-    toxicSoil: TOXIC_SOIL,
-  },
-  morpho: {
-    key: "morpho",
-    label: "Morpho Blue",
-    chainLabel: "Arbitrum One 42161",
-    hudVenue: "Morpho Blue vault shares",
-    invariantCheck: "NAV deviation ≤ 30 bps · sandwich guard",
     healthySoil: HEALTHY_SOIL,
     toxicSoil: TOXIC_SOIL,
   },
@@ -129,9 +92,6 @@ const VENUE_CATALOG: Record<AgentVenueKey, Omit<AgentVenueContext, "healthyInten
 const HEALTHY_INTENTS: Record<AgentVenueKey, string> = {
   gmx: "DELTA_NEUTRAL_GM_DEPOSIT",
   pendle: "PENDLE_PT_YT_SWAP",
-  uniswap: "UNISWAP_V3_SWAP",
-  aave: "AAVE_V3_SUPPLY",
-  morpho: "MORPHO_VAULT_DEPOSIT",
   usdai: "USDAI_COLLATERAL_MINT",
   hyperliquid: "HL_SESSION_PERP_ORDER",
   variational: "VARIATIONAL_RFQ_QUOTE",

@@ -8,7 +8,8 @@ export type {
 
 export {
   ARBITRUM_STABLE_ADDRESSES,
-  DEFAULT_AAVE_BASE_APY,
+  DEFAULT_GMX_BASE_APY,
+  DEFAULT_PENDLE_BASE_APY,
 } from "./arbitrum-yield-ingress-types";
 
 export {

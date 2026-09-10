@@ -5,12 +5,19 @@ export const ARBITRUM_STABLE_ADDRESSES: Record<ArbitrumStableSymbol, string> = {
   USDT: "0xFd086bC7CD5C481DCC9CE3f219033bB859fA8Cb",
 };
 
-export const DEFAULT_AAVE_BASE_APY: Record<ArbitrumStableSymbol, number> = {
+/** Static GMX v2 GM pool APY floor when live wire returns zero APR. */
+export const DEFAULT_GMX_BASE_APY: Record<ArbitrumStableSymbol, number> = {
   USDC: 0.038,
   USDT: 0.035,
 };
 
-export type ArbitrumYieldSource = "gmx" | "aave" | "default";
+/** Pendle PT yield fallback when GMX markets wire is unavailable. */
+export const DEFAULT_PENDLE_BASE_APY: Record<ArbitrumStableSymbol, number> = {
+  USDC: 0.042,
+  USDT: 0.039,
+};
+
+export type ArbitrumYieldSource = "gmx" | "pendle" | "default";
 
 export interface ArbitrumStableYieldSnapshot {
   symbol: ArbitrumStableSymbol;

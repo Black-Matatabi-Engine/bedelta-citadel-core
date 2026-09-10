@@ -26,7 +26,7 @@ export const PILLAR_SET_Y_FRAMEWORK_LINE =
 const PERP_STRATEGY_BASKET =
   "Parallel Perp & Yield Matrix [Pendle | GMX v2 | Hyperliquid L1 | Variational RFQ]";
 const SPOT_STRATEGY_BASKET =
-  "Parallel Spot & Lending Matrix [Uniswap V3 | Aave V3 | Morpho Blue | USD.ai]";
+  "Parallel Spot & Collateral Matrix [USD.ai]";
 
 export const HEALTHY_SOIL: SoilResistanceInput = {
   symbol: "ETH",
