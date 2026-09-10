@@ -10,10 +10,10 @@ import {
   INTENT_SLOT_FLAGS,
   INTENT_SLOT_ALLOWED_MASK,
   INTENT_SLOT_TARGET_BIT,
-  WASM_ABI_VERSION,
 } from "../../core/wasm-intent-ffi";
 import {
   SOIL_FFI_REUSABLE_BUFFER,
+  WASM_ABI_VERSION,
   WASM_SOIL_INPUT_BYTES,
   WASM_SOIL_OUTPUT_BYTES,
   encodeWasmSoilInput,
@@ -30,9 +30,9 @@ type RetailWasmExports = {
   soil_core_abi_version: () => number;
   intent_core_evaluate_gate: (
     heapPtr: number,
-    allowedMask: number,
-    targetBit: number,
-    maxAttempts: number,
+    allowedMask: bigint,
+    targetBit: bigint,
+    maxAttempts: bigint,
   ) => number;
 };
 
@@ -40,7 +40,9 @@ let exportsRef: RetailWasmExports | null = null;
 
 function bindRetailWasm(bytes: Uint8Array): boolean {
   try {
-    const mod = new WebAssembly.Module(bytes);
+    const copy = new Uint8Array(bytes.byteLength);
+    copy.set(bytes);
+    const mod = new WebAssembly.Module(copy);
     const instance = new WebAssembly.Instance(mod, {});
     const ex = instance.exports as unknown as RetailWasmExports;
     if (typeof ex.soil_core_eval !== "function") return false;
@@ -130,9 +132,9 @@ export function evaluateIntentGateViaWasm(
 
   const allowed = exportsRef.intent_core_evaluate_gate(
     WASM_INTENT_HEAP_BYTE_OFFSET,
-    allowedMask >>> 0,
-    targetBit >>> 0,
-    maxAttempts,
+    BigInt(allowedMask >>> 0),
+    BigInt(targetBit >>> 0),
+    BigInt(maxAttempts),
   );
 
   for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i += 1) {

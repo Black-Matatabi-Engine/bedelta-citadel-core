@@ -49,7 +49,9 @@ export function verifyTransportBitmark(): boolean {
 
 function probeWasmTransportCore(bytes: Uint8Array): boolean {
   try {
-    const mod = new WebAssembly.Module(bytes);
+    const copy = new Uint8Array(bytes.byteLength);
+    copy.set(bytes);
+    const mod = new WebAssembly.Module(copy);
     const instance = new WebAssembly.Instance(mod, {});
     const ex = instance.exports as {
       soil_core_abi_version?: () => number;

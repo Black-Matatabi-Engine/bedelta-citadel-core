@@ -17,7 +17,9 @@ let exportsRef: IntentWasmExports | null = null;
 
 function bindIntentExports(bytes: Uint8Array): boolean {
   try {
-    const mod = new WebAssembly.Module(bytes);
+    const copy = new Uint8Array(bytes.byteLength);
+    copy.set(bytes);
+    const mod = new WebAssembly.Module(copy);
     const instance = new WebAssembly.Instance(mod, {});
     const ex = instance.exports as unknown as IntentWasmExports;
     if (typeof ex.intent_core_hash_key_to_slot !== "function") return false;
