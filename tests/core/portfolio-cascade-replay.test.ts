@@ -1,12 +1,12 @@
 import { describe, expect, it } from "vitest";
 import { replayPortfolioCascade } from "../../src/core/portfolio-cascade-core";
-import { AAVE_HF_MIN } from "../../src/core/risk-engine-limits";
+import { COLLATERAL_HF_MIN } from "../../src/core/risk-engine-limits";
 
 const BASE_LEGS = [
   { venue: "GMX_GM" as const, notionalUsd: 50_000, ethExposure: 12.5, collateralUsd: 50_000, debtUsd: 0 },
   { venue: "HL_SHORT" as const, notionalUsd: 48_000, ethExposure: -12.0 },
   {
-    venue: "AAVE_COLLATERAL" as const,
+    venue: "USDAI_COLLATERAL" as const,
     notionalUsd: 80_000,
     ethExposure: 0,
     collateralUsd: 80_000,
@@ -81,12 +81,12 @@ describe("portfolio cascade replay — Gauntlet-style stress", () => {
         },
       ],
       hfCascadeDeltaPerStep: 0.08,
-      aaveHfMin: AAVE_HF_MIN,
+      collateralHfMin: COLLATERAL_HF_MIN,
       gmxPoolLongUsd: 55,
       gmxPoolShortUsd: 45,
     });
     expect(result.cascadeVelocityTripped || result.totalBlocked > 0).toBe(true);
-    expect(result.finalHf).toBeLessThan(AAVE_HF_MIN + 0.5);
+    expect(result.finalHf).toBeLessThan(COLLATERAL_HF_MIN + 0.5);
   });
 
   it("blocks delta drift when hedge leg is missing", () => {

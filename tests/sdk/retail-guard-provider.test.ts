@@ -85,6 +85,7 @@ function baseConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGuardConf
   };
 }
 
+/** Generic DEX router selectors — EIP-1193 calldata parsing only (not pruned Uniswap V3 adapter). */
 describe("calldata-parser", () => {
   it("parses infinite ERC20 approve", () => {
     const parsed = parseTransactionCalldata({

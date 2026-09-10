@@ -2,8 +2,8 @@
 export const GMX_IMBALANCE_MAX = 0.35;
 export const GMX_COLLATERAL_MIN = 1.05;
 export const PENDLE_YIELD_SHOCK_MAX_BPS = 150;
-/** Retained for portfolio-cascade stress replay — not tied to pruned Aave V3 adapter. */
-export const AAVE_HF_MIN = 1.15;
+/** USD.ai collateral lane HF floor — portfolio-cascade stress replay SSOT. */
+export const COLLATERAL_HF_MIN = 1.15;
 export const HL_SPREAD_MAX_BPS = 20;
 export const HL_RATE_LIMIT_RPM = 120;
 export const STABILIZER_DEPEG_MAX_BPS = 50;

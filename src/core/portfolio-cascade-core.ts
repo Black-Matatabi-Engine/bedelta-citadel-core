@@ -3,9 +3,9 @@ import { evaluateBlackSwanRisk } from "./black-swan-guard-lib/black-swan-guard-e
 import type { BlackSwanMarketParams } from "./black-swan-guard-lib/black-swan-guard-types";
 import { computeUncoveredDeltaEth } from "./delta-neutral-calculator";
 import { auditGmxPoolWeightsImbalancePure } from "./gmx-risk-core";
-import { AAVE_HF_MIN, GMX_IMBALANCE_MAX } from "./risk-engine-limits";
+import { COLLATERAL_HF_MIN, GMX_IMBALANCE_MAX } from "./risk-engine-limits";
 
-export type PortfolioVenueLeg = "GMX_GM" | "HL_SHORT" | "AAVE_COLLATERAL";
+export type PortfolioVenueLeg = "GMX_GM" | "HL_SHORT" | "USDAI_COLLATERAL";
 
 export interface PortfolioLegSnapshot {
   venue: PortfolioVenueLeg;
@@ -48,7 +48,7 @@ export interface PortfolioCascadeInput {
   gmxPoolLongUsd?: number;
   gmxPoolShortUsd?: number;
   hfCascadeDeltaPerStep?: number;
-  aaveHfMin?: number;
+  collateralHfMin?: number;
 }
 
 export interface PortfolioCascadeReplayResult {
@@ -60,7 +60,7 @@ export interface PortfolioCascadeReplayResult {
 
 const HF_VELOCITY_DEFAULT = 0.08;
 
-function resolveAaveHf(leg: PortfolioLegSnapshot, priceRatio: number): number {
+function resolveCollateralHf(leg: PortfolioLegSnapshot, priceRatio: number): number {
   const collateral = (leg.collateralUsd ?? leg.notionalUsd) * priceRatio;
   const debt = leg.debtUsd ?? leg.notionalUsd * 0.75;
   if (!(debt > 0)) return Number.POSITIVE_INFINITY;
@@ -83,7 +83,7 @@ export function replayPortfolioCascade(
   input: PortfolioCascadeInput,
 ): PortfolioCascadeReplayResult {
   const steps: CascadeReplayStep[] = [];
-  const hfMin = input.aaveHfMin ?? AAVE_HF_MIN;
+  const hfMin = input.collateralHfMin ?? COLLATERAL_HF_MIN;
   const hfVelocityMax = input.hfCascadeDeltaPerStep ?? HF_VELOCITY_DEFAULT;
   let totalBlocked = 0;
   let prevHf = Number.POSITIVE_INFINITY;
@@ -100,12 +100,12 @@ export function replayPortfolioCascade(
 
     const gmxLeg = input.legs.find((l) => l.venue === "GMX_GM");
     const hlLeg = input.legs.find((l) => l.venue === "HL_SHORT");
-    const aaveLeg = input.legs.find((l) => l.venue === "AAVE_COLLATERAL");
+    const collateralLeg = input.legs.find((l) => l.venue === "USDAI_COLLATERAL");
 
     const gmxEth = (gmxLeg?.ethExposure ?? 0) * priceRatio;
     const hlEth = hlLeg?.ethExposure ?? 0;
     const deltaNetEth = computeUncoveredDeltaEth(gmxEth, -hlEth);
-    finalHf = aaveLeg ? resolveAaveHf(aaveLeg, priceRatio) : Number.POSITIVE_INFINITY;
+    finalHf = collateralLeg ? resolveCollateralHf(collateralLeg, priceRatio) : Number.POSITIVE_INFINITY;
 
     if (Number.isFinite(prevHf) && Number.isFinite(finalHf)) {
       const hfDrop = prevHf - finalHf;
