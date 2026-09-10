@@ -160,7 +160,7 @@ When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engi
 | HL session PK missing | `runScheduledGmxHedgeCron` → `CRON_SKIP: CIRCUIT_TRIP` · no hedge broadcast |
 | `INSUFFICIENT_WALLETA_HEDGE_MARGIN` | Hedge skipped · `[COLD_START_GUARD]` emitted · GM deposit may proceed but delta remains uncovered until margin seeded |
 | Soil trip on hedge probe | Flash unwind plan + `CRON_FLASH_UNWIND` · signing channel severed |
-| Bridge capital in-flight | `lostUsd ≡ 0` on `IN_FLIGHT_BRIDGE_CAPITAL` until `SETTLED` (Pillar 2 escort SSOT) |
+| Bridge capital in-flight | `lostUsd ≡ 0` on `IN_FLIGHT_BRIDGE_CAPITAL` until `SETTLED` (Pillar Set X · Component 2 escort SSOT) |
 
 ### 3.4 Cron drift rebalance (`CRON_DRIFT_MIN_USD = 10`)
 

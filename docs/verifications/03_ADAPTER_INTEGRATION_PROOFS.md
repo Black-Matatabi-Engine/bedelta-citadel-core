@@ -6,7 +6,7 @@
 
 Citadel is the **native pre-execution risk firewall** for the Wayfinder Agent Engine on **Arbitrum One (`42161`)**:
 
-- **Native adapter SSOT:** [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` integrates `checkSoilResistance()` (Pillar 3 soil fuse) and `verifyAgentIntent()` (8-dimension validation) before on-chain route dispatch
+- **Native adapter SSOT:** [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` integrates `checkSoilResistance()` (Pillar Set Y soil fuse) and `verifyAgentIntent()` (8-dimension validation) before on-chain route dispatch
 - **0-Gas fail-closed:** soil trips and session-key violations sever the EIP-712 signing channel pre-broadcast — blocked paths consume no Sequencer gas
 - **Tests:** [`tests/adapters/wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) — ALLOW · toxic soil FAIL_CLOSED · session-key clip/expiry FAIL_CLOSED
 
@@ -29,7 +29,7 @@ pnpm demo:wayfinder -- --stabilizer --trip      # Depleted pool / reserve floor 
         verifyAgentIntent()  (8-dimension gate)
                     │
                     ▼
-        checkSoilResistance()  (Pillar 3 soil fuse · p50 ~106µs)
+        checkSoilResistance()  (Pillar Set Y soil fuse · p50 ~106µs)
                     │
           ┌─────────┴─────────┐
           ▼                   ▼
@@ -143,7 +143,7 @@ pnpm demo:spot-loop -- --trip     # Loop B spot/lending vault reflex core
 
 ---
 
-## Zone C — Outside Three Pillars (Ecosystem & Simulation Harnesses)
+## Zone C — Outside Pillar Set X & Y (Ecosystem & Simulation Harnesses)
 
 ### 1. Wayfinder Native Adapter (V1.0 Live · Arbitrum AI Agent Engine)
 
@@ -159,7 +159,7 @@ pnpm exec vitest run tests/adapters/wayfinder-shield.test.ts
 | Scope | Detail |
 |-------|--------|
 | Adapter SSOT | [`wayfinder-shield.ts`](../../src/adapters/wayfinder/wayfinder-shield.ts) — `wayfinderCitadelShieldHook` |
-| Integrates | `checkSoilResistance()` (Pillar 3 soil fuse) + `verifyAgentIntent()` (8-dimension validation) |
+| Integrates | `checkSoilResistance()` (Pillar Set Y soil fuse) + `verifyAgentIntent()` (8-dimension validation) |
 | Chain | Arbitrum One (`42161`) — native pre-execution risk firewall for Wayfinder Agent Engine |
 
 | Test scenario | File | Expected |
@@ -180,7 +180,7 @@ pnpm exec vitest run tests/adapters/wayfinder-shield.test.ts
         verifyAgentIntent()  (8-dimension gate)
                     │
                     ▼
-        checkSoilResistance()  (Pillar 3 soil fuse · p50 ~106µs)
+        checkSoilResistance()  (Pillar Set Y soil fuse · p50 ~106µs)
                     │
           ┌─────────┴─────────┐
           ▼                   ▼
@@ -392,7 +392,7 @@ Automated dependency audit (2026-08-24): **no TS/JS runtime import** of `contrac
 
 | Path | Contracts | Role | Forge / TS linkage |
 |------|-----------|------|-------------------|
-| **`SliverVineGate/`** | `SliverVineGate.sol` · `GatedExecutor.sol` | EIP-712 consume-once attestation gate (Pillar 3) | `cd SliverVineGate && forge test` · **60/60** · default fuzz **5,120** · deep **327,675** via `FOUNDRY_PROFILE=deep` |
+| **`SliverVineGate/`** | `SliverVineGate.sol` · `GatedExecutor.sol` | EIP-712 consume-once attestation gate (Pillar Set Y) | `cd SliverVineGate && forge test` · **60/60** · default fuzz **5,120** · deep **327,675** via `FOUNDRY_PROFILE=deep` |
 | **`contracts/`** | `SliverVineRiskOracle.sol` · `IngressSafetySwitch.sol` | Venue-agnostic ingress compliance oracle + address-level safety switch | **Not** in Forge testbed · ABI mirrored in TS |
 
 **TypeScript interface SSOT (Edge runtime):**

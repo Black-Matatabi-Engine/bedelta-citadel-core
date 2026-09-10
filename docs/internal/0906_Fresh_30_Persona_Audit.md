@@ -155,13 +155,13 @@
 
 ### 4. Marcus Chen — ZeroDev AA Security
 
-- **說服：** Pillar 1 與 Pillar 3 解耦敘事清楚；`decorator.test.ts` 存在。
+- **說服：** Pillar Set X · Component 1 與 Pillar Set Y 解耦敘事清楚；`decorator.test.ts` 存在。
 - **Nit：** 非官方 Kernel plugin；session key replay 窗口 **未持久化 nonce**。
 - **分數：** 8.54 — AA 人格對鏈上衛生不買帳。
 
 ### 5. Liam O'Sullivan — Across Relayer
 
-- **說服：** Pillar 2 出站護航 `lostUsd ≡ 0` 方程在文件裡 **可審計**。
+- **說服：** Pillar Set X · Component 2 出站護航 `lostUsd ≡ 0` 方程在文件裡 **可審計**。
 - **Nit：** Across ≠ LayerZero；**入站 AML** 仍 blocked 敘事，無 live 跨鏈 fill。
 - **分數：** 8.48。
 

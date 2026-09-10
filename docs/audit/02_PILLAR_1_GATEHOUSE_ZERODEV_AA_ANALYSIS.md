@@ -1,8 +1,8 @@
-# Pillar 1: The Gatehouse — Opt-In ZeroDev Kernel v3 AA Analysis (EIP-7702 Comparative)
+# Pillar Set X · Component 1 — The Gatehouse — Opt-In ZeroDev Kernel v3 AA Analysis (EIP-7702 Comparative)
 
 | Field | Value |
 |-------|-------|
-| **Document** | Pillar 1: Gatehouse — ZeroDev Kernel v3 AA Analysis |
+| **Document** | Pillar Set X · Component 1 — Gatehouse — ZeroDev Kernel v3 AA Analysis |
 | **Version** | **v1.0.0** |
 | **Classification** | Grant / Institutional Allocator · AA Architecture Benchmark |
 | **Branch baseline** | `v1.0_push_BDLW` |
@@ -10,7 +10,7 @@
 | **Baseline** | **Vitest SSOT:** **199 test files \| 868 PASS Clean (100% PASS)** · Wasm **50.94 KiB gzip** (`pkg/soil_core.wasm` **< 28 KiB**) · Shield **p50 ~106 µs** (TS Gateway path) · Wasm warm **&lt;60 µs** |
 | **Related SSOT** | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) · [`README.md`](../architecture/README.md) §2.4 · [Risk Spectrum §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) |
 
-> **Boundary:** ZeroDev Kernel v3 is an **Opt-In Pillar 1 Account Abstraction Layer** (`USE_ZERODEV_AA` default-off). **Pillar 3 Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`) and **Pillar 2 Arbitrum Native Ingress** function **100% independently** — ZeroDev failure never impairs sub-ms pre-broadcast protection or bridge `lostUsd ≡ 0` accounting.
+> **Boundary:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X · Component 1 (Gatehouse) Account Abstraction Layer** (`USE_ZERODEV_AA` default-off). **Pillar Set Y Edge Wasm Shield** (`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`) and **Pillar Set X · Component 2 Arbitrum Native Ingress** function **100% independently** — ZeroDev failure never impairs sub-ms pre-broadcast protection or bridge `lostUsd ≡ 0` accounting.
 
 > **Scope note:** This document compares **consumer-focused EIP-7702 AA implementations** with SliverVine Protocol's **institutional-grade pre-execution risk substrate**. It is an architectural diligence artifact — not legal or investment advice.
 
@@ -20,16 +20,16 @@
 
 EIP-7702 and ERC-7579 enable EOAs to delegate execution to smart-account logic — unlocking **1-click intent composition**, **gas sponsorship**, and **session-scoped permissions**. Consumer AA stacks optimize for **conversion and retention**: long-lived session keys, broad contract scopes, and post-hoc policy checks.
 
-SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) offers ZeroDev Kernel v3 as an **opt-in Pillar 1 Account Abstraction Layer** — **Code-Verified / Dry-Run Verified** (`pnpm test:zerodev`). Kernel v4 + EIP-7702 intent composer is **⏳ Post-Grant Roadmap (V1.5)**. ZeroDev **never substitutes** risk governance and **does not power** sub-ms latency (that is 100% `pkg/soil_core.wasm`). Frictionless onboarding rides on the same **Three Pillars** stack:
+SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) offers ZeroDev Kernel v3 as an **opt-in Pillar Set X · Component 1 Account Abstraction Layer** — **Code-Verified / Dry-Run Verified** (`pnpm test:zerodev`). Kernel v4 + EIP-7702 intent composer is **⏳ Post-Grant Roadmap (V1.5)**. ZeroDev **never substitutes** risk governance and **does not power** sub-ms latency (that is 100% `pkg/soil_core.wasm`). Frictionless onboarding rides on the same **Pillar Set X & Y** stack:
 
 ```text
-[Pillar 1: Opt-In Gatehouse (AA)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes (optional)
-[Pillar 2: Compliance Ingress Firewall] Arbitrum Native Ingress + optional reference adapters (Robinhood / Across)
+[Pillar Set X · Component 1 — Opt-In Gatehouse (AA)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes (optional)
+[Pillar Set X · Component 2 — Compliance Ingress Firewall] Arbitrum Native Ingress + optional reference adapters (Robinhood / Across)
  → outbound escort · AML inbound block · payloadHash binding · lostUsd ≡ 0
-[Pillar 3: Shield] checkSoilResistance() · pkg/soil_core.wasm · Fail-Closed pre-broadcast (independent of AA)
+[Pillar Set Y — Shield] checkSoilResistance() · pkg/soil_core.wasm · Fail-Closed pre-broadcast (independent of AA)
 ```
 
-> **Pillar 1 verification scope:** **[Pillar 1: The Gatehouse (Auth)]** authorization mechanics (`sessionOk`, `allowedToSign`) are evaluated via secure dry-run adapters in the E2E demo (`pnpm run demo:e2e`); comprehensive ZeroDev Kernel v3 integration coverage is verified under `pnpm test:zerodev`.
+> **Pillar Set X · Component 1 verification scope:** **[Pillar Set X · Component 1 — The Gatehouse (Auth)]** authorization mechanics (`sessionOk`, `allowedToSign`) are evaluated via secure dry-run adapters in the E2E demo (`pnpm run demo:e2e`); comprehensive ZeroDev Kernel v3 integration coverage is verified under `pnpm test:zerodev`.
 
 **Institutional differentiation:** Sub-ms pre-broadcast protection is **100% Wasm-powered** (`checkSoilResistance()` · p50 ~106 µs · `pkg/soil_core.wasm`) — **independent of ZeroDev**. When AA is opted in, every UserOp is additionally bound to **30s TTL Heartbeat / Intent Execution Window** and **Pending-Capital Recognition Invariant (`lostUsd ≡ 0`)** before any GMX or Hyperliquid broadcast.
 
@@ -66,13 +66,13 @@ These patterns are appropriate for **retail conversion funnels**. They are **ins
 | **Emergency response** | Admin pause · multisig | **Automated** R17 daily severance · R20 physical deadlock · `rootProtection()` |
 | **Regression proof** | Vendor QA / audit snapshots | **199 test files \| 868 PASS Clean (100% PASS)** · `zerodev-aa-gate.test.ts` **4/4** · chaos matrix **255/255** |
 
-> **Pillar 1 alignment note:** **[Pillar 1: The Gatehouse (Auth)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes** — `sessionOk` / `allowedToSign` gates are demonstrated in `pnpm run demo:e2e` (secure dry-run); full Kernel v3 harness regression is under `pnpm test:zerodev` (`tests/adapters/zerodev-aa-dryrun-harness.test.ts`).
+> **Pillar Set X · Component 1 alignment note:** **[Pillar Set X · Component 1 — The Gatehouse (Auth)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes** — `sessionOk` / `allowedToSign` gates are demonstrated in `pnpm run demo:e2e` (secure dry-run); full Kernel v3 harness regression is under `pnpm test:zerodev` (`tests/adapters/zerodev-aa-dryrun-harness.test.ts`).
 
 ---
 
 ## 4. Deep Dive — Three Institutional Anchors
 
-### 4.1 [Pillar 1: The Gatehouse (Auth)] — 30s TTL Heartbeat / Intent Execution Window
+### 4.1 [Pillar Set X · Component 1 — The Gatehouse (Auth)] — 30s TTL Heartbeat / Intent Execution Window
 
 Consumer AA extends session duration to reduce wallet prompts. SliverVine Protocol **minimizes signing-channel exposure** via a **30s TTL Heartbeat / Intent Execution Window** — distinct from the underlying cryptographic session key lifetime (bounded up to **24h / 7d** per module scope):
 
@@ -150,14 +150,14 @@ EOA → EIP-7702 delegate → UserOp → bundler → venue
 Kernel Smart Account (ZeroDev v3)
  │
  ▼
-[Pillar 1: The Gatehouse (Auth)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes
+[Pillar Set X · Component 1 — The Gatehouse (Auth)] ZeroDev Kernel v3 Session Keys & EIP-712 Scopes
  │ sessionOk · allowedToSign · Paymaster caps
  │
  ▼
-Pillar 2 Compliance Ingress Firewall — payloadHash() bind · bridge direction validate
+Pillar Set X · Component 2 — Compliance Ingress Firewall — payloadHash() bind · bridge direction validate
  │
  ▼
-Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
+Pillar Set Y — checkSoilResistance() · p50 ~106 µs · Fail-Closed
  │
  ├─ soil TRIP → sever signing channel
  │
@@ -197,7 +197,7 @@ Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
 |---|-------|-------------------|----------|
 | 1 | Full regression | `pnpm test -- --run` | **199 test files \| 868 PASS Clean (100% PASS)** |
 | 2 | ZeroDev AA gate fail-closed | `pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts` | **4/4 PASS** |
-| 2b | Pillar 1 Gatehouse dry-run harness | `pnpm test:zerodev` | Kernel v3 session scopes · EIP-712 dry-run PASS |
+| 2b | Pillar Set X · Component 1 Gatehouse dry-run harness | `pnpm test:zerodev` | Kernel v3 session scopes · EIP-712 dry-run PASS |
 | 3 | Session R07 $5k cap | `pnpm exec vitest run tests/services/session-key-gates.test.ts` | Severance on breach |
 | 4 | 30s heartbeat expiry | `pnpm exec vitest run tests/services/nonce-auto-healing.test.ts` | Lock on expiry |
 | 5 | Bridge honest accounting | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 · lostUsd ≡ 0** |
@@ -221,8 +221,8 @@ Pillar 3 — checkSoilResistance() · p50 ~106 µs · Fail-Closed
 | [`05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Principal audit · SSOT metric lock |
 | [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | Full DDIP · Risk & Disclaimer · Basel mapping |
 | [`README.md`](../architecture/README.md) §2.4 | Opt-In ZeroDev Kernel v3/v4 · Wasm Shield decoupled (§2.4.1) |
-| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Three Pillars · AML firewall |
-| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 Wasm Shield · R01–R20 |
+| [`03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md`](./03_PILLAR_2_COMPLIANCE_INGRESS_FIREWALL_AUDIT.md) | Pillar Set X & Y · AML firewall |
+| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y Wasm Shield · R01–R20 |
 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Risk mitigation · fail-closed boundaries · 60 invariants · real yield vs. toxic inflation |
 
 ---

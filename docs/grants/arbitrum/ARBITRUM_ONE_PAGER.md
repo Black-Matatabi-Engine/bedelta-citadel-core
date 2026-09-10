@@ -23,9 +23,9 @@
 
 ## What It Does
 
-Before any GMX DataStore broadcast, the Citadel edge evaluates sequencer health, oracle lag, soil resistance (including **Pendle Institutional Shield** — V1.0 Core Pillar 3 · sync oracle · `PENDLE_ORACLE_STALE` fail-closed), and pool skew — then routes qualified flow to GM pool **underweight sides**, reducing imbalance. Hyperliquid session-key hedging is the Emergency Liquidity Sponge fallback.
+Before any GMX DataStore broadcast, the Citadel edge evaluates sequencer health, oracle lag, soil resistance (including **Pendle Institutional Shield** — Component of Pillar Set Y · sync oracle · `PENDLE_ORACLE_STALE` fail-closed), and pool skew — then routes qualified flow to GM pool **underweight sides**, reducing imbalance. Hyperliquid session-key hedging is the Emergency Liquidity Sponge fallback.
 
-**Triangle Liquidity Loop:** `Robinhood Chain (Pillar 2 Reference Escort Adapter)` ↔ `Arbitrum One (GMX GM Yield Base)` ↔ `Hyperliquid (1× Short Hedge)`.
+**Triangle Liquidity Loop:** `Robinhood Chain (Pillar Set X · Component 2 Reference Escort Adapter)` ↔ `Arbitrum One (GMX GM Yield Base)` ↔ `Hyperliquid (1× Short Hedge)`.
 
 **Arbitrum Native Execution Premium:** Direct Arbitrum One liquidity providers earn an estimated **+15 ~ 30 bps** execution premium vs bridged / multi-hop routes (Stylus-aligned ingress · lower cross-venue friction · underweight rebate capture).
 

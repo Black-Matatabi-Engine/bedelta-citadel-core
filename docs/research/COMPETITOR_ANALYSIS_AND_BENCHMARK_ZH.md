@@ -266,7 +266,7 @@ pnpm demo:elizaos           # Agent framework guard path
 | 主題 | 路徑 |
 |------|------|
 | 延遲 / Defense Matrix | `docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md` |
-| Three Pillars / ZeroDev | `docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md` |
+| Pillar Set X & Y / ZeroDev | `docs/architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md` |
 | Core Sinking | `README.md` · `src/core/*` |
 | 驗證矩陣 | `docs/VERIFICATION_MATRIX.md` |
 | 內部評審（分數基線） | `docs/internal/0907_PM_Fresh_30_Persona_Audit.md` |

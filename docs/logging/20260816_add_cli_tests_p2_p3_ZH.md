@@ -3,8 +3,8 @@
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 ## Summary of Changes
-- 新增 `scripts/test-rwa-refraction-cli.ts`：Pillar 2 端到端 Vault → Across → GMX 路由診斷輸出
-- 新增 `scripts/test-agent-armor-cli.ts`：Pillar 3 正常簽名與 >500ms / soil 失敗 R20 sever 診斷
+- 新增 `scripts/test-rwa-refraction-cli.ts`：Pillar Set X · Component 2 端到端 Vault → Across → GMX 路由診斷輸出
+- 新增 `scripts/test-agent-armor-cli.ts`：Pillar Set Y 正常簽名與 >500ms / soil 失敗 R20 sever 診斷
 - `package.json` 新增 `test:cli:rwa` 與 `test:cli:armor`
 
 ## Test Results

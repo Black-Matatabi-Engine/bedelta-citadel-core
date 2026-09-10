@@ -3,7 +3,7 @@
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 > **分支：** `v1.0_push_BDLW`  
-> **Pillar：** Pillar 2 — Firewall (Compliance) · Institutional Ingress  
+> **Pillar：** Pillar Set X · Component 2 — Firewall (Compliance) · Institutional Ingress  
 > **SSOT：** `ZERODEV_SMART_ROUTE_TARGETS` · `buildGmxSmartRoutePayloadBinding()` · `GatedExecutor.payloadHash()`  
 > **Baseline：** Vitest smart-route / across-bridge / payload-binding 全綠 · `lostUsd ≡ 0` 審計通過
 
@@ -61,7 +61,7 @@ ZeroDev Smart Routing（BDLW）
 ### 2.3 為何 SliverVine Protocol 不將 Stargate/Hop 作為主路徑
 
 1. **合規單向性：** Robinhood Chain 機構資金必須 **outbound-only**（`46630`/`4663` → `42161`）。通用橋的雙向流動性與 SliverVine Protocol 的 AML inbound 封鎖語意衝突（`AML_INBOUND_TO_ROBINHOOD_BLOCKED`）。
-2. **Pre-execution SSOT：** Pillar 3 Shield 必須在 **任何 L2 廣播之前** 決策。傳統橋將資金先釋放到 EOA，風控閘門被迫後置。
+2. **Pre-execution SSOT：** Pillar Set Y Shield 必須在 **任何 L2 廣播之前** 決策。傳統橋將資金先釋放到 EOA，風控閘門被迫後置。
 3. **Payload 完整性：** 傳統橋無法將「橋接 leg」與「GMX 訂單 calldata」綁入同一 `RiskAttestation`；SliverVine Protocol 透過 `GatedExecutor.payloadHash` 消除 **attestation 重放 / 路由劫持** 攻擊面。
 4. **用戶摩擦：** 機構 Treasury 不應管理多鏈 seed phrase、兩套 gas、bridge claim 時窗；Kernel AA + Smart Routing 將 onboarding 壓縮為 **單一智能帳戶介面**。
 

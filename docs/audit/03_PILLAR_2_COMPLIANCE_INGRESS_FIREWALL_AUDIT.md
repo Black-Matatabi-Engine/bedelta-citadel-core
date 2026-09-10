@@ -1,21 +1,21 @@
-# Pillar 2: Compliance Ingress Firewall & Reference Adapter Audit (e.g., Robinhood Chain / Across)
+# Pillar Set X · Component 2 — Compliance Ingress Firewall & Reference Adapter Audit (e.g., Robinhood Chain / Across)
 
 | Field | Value |
 |-------|-------|
-| **Document** | Pillar 2: Compliance Ingress Firewall & Reference Adapter Audit |
+| **Document** | Pillar Set X · Component 2 — Compliance Ingress Firewall & Reference Adapter Audit |
 | **Version** | **v1.0.0** |
 | **Classification** | Public Grant / Institutional Diligence |
 | **Entity** | SilverVine Labs |
 | **Protocol** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine |
-| **Scope** | Pillar 2 Compliance Ingress Firewall · Robinhood Chain **46630** (testnet) · **4663** (mainnet) · Across reference escort · Arbitrum One **42161** |
+| **Scope** | Pillar Set X · Component 2 — Compliance Ingress Firewall · Robinhood Chain **46630** (testnet) · **4663** (mainnet) · Across reference escort · Arbitrum One **42161** |
 | **Spec SSOT** | [`docs/architecture/README.md`](../architecture/README.md) |
 | **Live Proof** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 
-> **Product identity boundary:** Robinhood Chain and Across are **optional Pillar 2 Reference Ingress Adapters** demonstrating multi-chain compliance escort accounting — they are integration examples, **not** the core product identity of SliverVine Protocol. The protocol's center of gravity remains the **Pre-Consensus Intent Firewall & GMX/HL Execution Safety Primitive (Pillar 3 Shield)** — see [README § Three Pillars](../../README.md).
+> **Product identity boundary:** Robinhood Chain and Across are **optional Pillar Set X · Component 2 Reference Ingress Adapters** demonstrating multi-chain compliance escort accounting — they are integration examples, **not** the core product identity of SliverVine Protocol. The protocol's center of gravity remains the **Pre-Consensus Intent Firewall & GMX/HL Execution Safety Primitive (Pillar Set Y Shield)** — see [README § Pillar Set X & Y](../../README.md).
 
-> **Authority statement:** This report verifies the Pillar 2 Compliance Ingress Firewall under the Citadel **Three Pillars Architecture**, using Robinhood Chain / Across as inaugural reference adapters. All quantitative claims are CLI-verifiable via `pnpm test -- --run` and targeted bridge tests.
+> **Authority statement:** This report verifies the Pillar Set X · Component 2 — Compliance Ingress Firewall under the Citadel **Pillar Set X & Y Architecture**, using Robinhood Chain / Across as inaugural reference adapters. All quantitative claims are CLI-verifiable via `pnpm test -- --run` and targeted bridge tests.
 
-> **Verification posture:** No standalone `demo:robinhood` / `demo:across` script in `package.json`. Pillar 2 is **Unit-Verified in Vitest SSOT** (`pnpm test`) via [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6**. Optional macro embed only: `pnpm demo:e2e` Step 2 (Reference Ingress Adapter).
+> **Verification posture:** No standalone `demo:robinhood` / `demo:across` script in `package.json`. Pillar Set X · Component 2 is **Unit-Verified in Vitest SSOT** (`pnpm test`) via [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6**. Optional macro embed only: `pnpm demo:e2e` Step 2 (Reference Ingress Adapter).
 
 ---
 
@@ -34,27 +34,27 @@
 
 ---
 
-## Three Pillars Architecture
+## Pillar Set X & Y Architecture
 
 ```text
 [ Institutional Treasury (Robinhood Chain 46630 / 4663) ]
  │
  ▼
  ┌─────────────────────────────────────────────────────────┐
- │ Pillar 1: THE GATEHOUSE (Auth) │
+ │ Pillar Set X · Component 1 — THE GATEHOUSE (Auth) │
  │ ZeroDev Kernel v3 Session Keys & EIP-712 Scopes │
  └──────────────────────┬──────────────────────────────────┘
  │
  ▼
  ┌─────────────────────────────────────────────────────────┐
- │ Pillar 2: COMPLIANCE INGRESS FIREWALL (Reference Adapters — Robinhood / Across) │
+ │ Pillar Set X · Component 2 — COMPLIANCE INGRESS FIREWALL (Reference Adapters — Robinhood / Across) │
  │ Unidirectional Escort · AML inbound isolation │
  │ IngressSafetySwitch.sol · lostUsd ≡ 0 │
  └──────────────────────┬──────────────────────────────────┘
  │
  ▼
  ┌─────────────────────────────────────────────────────────┐
- │ Pillar 3: THE SHIELD (Core Moat) │
+ │ Pillar Set Y — THE SHIELD (Core Moat) │
  │ Sub-ms checkSoilResistance() & Wasm engine │
  └──────────────────────┬──────────────────────────────────┘
  │
@@ -64,7 +64,7 @@
 
 ---
 
-## Pillar 1: The Gatehouse (Auth)
+## Pillar Set X · Component 1 — The Gatehouse (Auth)
 
 **ZeroDev Kernel v3 Session Keys & EIP-712 Scopes**
 
@@ -78,7 +78,7 @@
 
 ---
 
-## Pillar 2: Compliance Ingress Firewall (Reference Adapters — Robinhood Chain / Across)
+## Pillar Set X · Component 2 — Compliance Ingress Firewall (Reference Adapters — Robinhood Chain / Across)
 
 ### 2.1 Vitest Verification — 6/6 PASS
 
@@ -153,7 +153,7 @@ The bridge state machine in `evaluateAcrossBridgeTransfer()` enforces:
 
 ---
 
-## Pillar 3: The Shield (Core Moat)
+## Pillar Set Y — The Shield (Core Moat)
 
 **Sub-ms `checkSoilResistance()` & Wasm Engine**
 
@@ -187,10 +187,10 @@ cd SliverVineGate && forge test && cd ..
 
 | Path | Role |
 |------|------|
-| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar 1 Gatehouse · ZeroDev Kernel v3 |
+| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](./02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar Set X · Component 1 Gatehouse · ZeroDev Kernel v3 |
 | [`docs/architecture/README.md`](../architecture/README.md) | Triangle Liquidity Loop · Segregated Tranches · Elara alignment |
 | [`docs/architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | `lostUsd ≡ 0` · honest bridge accounting |
-| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar 3 Wasm Shield · R01–R20 · Tri-Sensor |
+| [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](./04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y Wasm Shield · R01–R20 · Tri-Sensor |
 | [`docs/audit/05_PRINCIPAL_AUDIT_REPORT.md`](./05_PRINCIPAL_AUDIT_REPORT.md) | Principal Audit · survival matrix |
 | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) | Edge adapter — unidirectional routing + AML block |
 | [`contracts/IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | On-chain compliance filter |
@@ -198,4 +198,4 @@ cd SliverVineGate && forge test && cd ..
 
 ---
 
-*SilverVine Labs · BUSL-1.1 · Pillar 2 Compliance Ingress Firewall Audit v1.0.0*
+*SilverVine Labs · BUSL-1.1 · Pillar Set X · Component 2 — Compliance Ingress Firewall Audit v1.0.0*

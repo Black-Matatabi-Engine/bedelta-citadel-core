@@ -203,7 +203,7 @@
 
 ### 5. Liam O'Sullivan — Across Relayer
 
-- **說服：** Pillar 2 `lostUsd ≡ 0` 方程未因 v0.95 改動；雙錢包 Cron **live RPC** 讀 GMX delta。
+- **說服：** Pillar Set X · Component 2 `lostUsd ≡ 0` 方程未因 v0.95 改動；雙錢包 Cron **live RPC** 讀 GMX delta。
 - **Nit：** Wallet B GMX 入金仍 **unsigned preview**；`sendZeroDevUserOp` 僅腳本路徑。
 - **分數：** 8.50。
 

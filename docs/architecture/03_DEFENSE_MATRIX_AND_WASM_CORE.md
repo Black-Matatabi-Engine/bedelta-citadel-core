@@ -132,7 +132,7 @@ $$
 
 **Companion fuses:** Dynamic Account Risk Ceiling (V0.8 Baseline: Equity-Weighted SL; V1.0 Mainnet: Dynamic Adaptive Engine) · Sequencer 600s grace · Oracle lag fail-closed · Root slippage breaker (0.5%). · Configurable Dynamic Slippage Deadman is an additional fail-closed fuse on the AA / SDK path.
 
-#### § Pendle Institutional Shield (V1.0 Live · Core Pillar 3)
+#### § Pendle Institutional Shield (V1.0 Live · Component of Pillar Set Y)
 
 | Layer | Module | Hot-path behavior |
 |-------|--------|-----------------|
@@ -145,7 +145,7 @@ $$
 
 **Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **217 test files | 967 PASS clean** · coexists with Shield **p50 ~106µs** budget.
 
-#### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar 3)
+#### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar Set Y · USD.ai Collateral Module)
 
 | Layer | Module | Hot-path behavior |
 |-------|--------|-------------------|

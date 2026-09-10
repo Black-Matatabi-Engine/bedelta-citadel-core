@@ -11,13 +11,13 @@
 
 ---
 
-## Three Pillars — Multi-Venue Topology
+## Pillar Set X & Y — Multi-Venue Topology
 
 | Pillar | Scope | SDK surface |
 |--------|-------|-------------|
-| **Pillar 1 — Gatehouse (Account Abstraction & Intent Gateway)** | **Arbitrum One (`42161`)** is the **primary execution anchor / center of gravity** — GMX v2 GM pools, EIP-712 Gate domain, Agent-Citadel-Guard chainId | `ARBITRUM_ONE_CHAIN_ID`, `SLIVERVINE_GATE_ADDRESS`, `verifyAgentIntent()` |
-| **Pillar 2 — Compliance Ingress Firewall (Pillar 2 Reference Escort Adapters)** | Venue-agnostic route policy + capital escort · **`IN_FLIGHT_BRIDGE_CAPITAL`** · **Pending-Capital Recognition Invariant (`lostUsd ≡ 0`)**. **Robinhood Chain / Across (`46630`/`4663` → `42161`) are Pillar 2 Reference Escort Adapters** — not the core anchor. Also governs Arbitrum-native routes and Arb ↔ Hyperliquid hedge channels | `assertUnidirectionalBridge()`, `exportRobinhoodAuditSnapshot()`, `quoteRChainYieldToArbitrumGm()` |
-| **Pillar 3 — The Shield** | Sub-ms `checkSoilResistance()` semantics (p50 ~106 μs; Wasm warm &lt;60 μs) protect **Arbitrum One (GMX v2) native execution**, **Arb ↔ Hyperliquid cross-venue routing**, and **Arbitrum Edge Worker AI Agents** | `verifyAgentIntent()`, `evaluateSoilCore()`, `guardAgentUserOp()`, legacy-risk re-exports |
+| **Pillar Set X · Component 1 — Gatehouse (Account Abstraction & Intent Gateway)** | **Arbitrum One (`42161`)** is the **primary execution anchor / center of gravity** — GMX v2 GM pools, EIP-712 Gate domain, Agent-Citadel-Guard chainId | `ARBITRUM_ONE_CHAIN_ID`, `SLIVERVINE_GATE_ADDRESS`, `verifyAgentIntent()` |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic route policy + capital escort · **`IN_FLIGHT_BRIDGE_CAPITAL`** · **Pending-Capital Recognition Invariant (`lostUsd ≡ 0`)**. **Robinhood Chain / Across (`46630`/`4663` → `42161`) are Pillar Set X · Component 2 Reference Escort Adapters** — not the core anchor. Also governs Arbitrum-native routes and Arb ↔ Hyperliquid hedge channels | `assertUnidirectionalBridge()`, `exportRobinhoodAuditSnapshot()`, `quoteRChainYieldToArbitrumGm()` |
+| **Pillar Set Y — The Shield** | Sub-ms `checkSoilResistance()` semantics (p50 ~106 μs; Wasm warm &lt;60 μs) protect **Arbitrum One (GMX v2) native execution**, **Arb ↔ Hyperliquid cross-venue routing**, and **Arbitrum Edge Worker AI Agents** | `verifyAgentIntent()`, `evaluateSoilCore()`, `guardAgentUserOp()`, legacy-risk re-exports |
 
 ```text
 ┌──────────────────────────────────────────────────────────────────────────┐
@@ -180,9 +180,9 @@ guardAgentUserOp(input: AgentCitadelGuardInput): Promise<AgentCitadelGuardResult
 
 ---
 
-## Pillar 2 — Compliance Ingress Firewall (with Robinhood Ingress as Reference Adapter)
+## Pillar Set X · Component 2 — Compliance Ingress Firewall (with Robinhood Ingress as Reference Adapter)
 
-Robinhood Chain is the **inaugural Code-Verified / Dry-Run Verified reference adapter** for Pillar 2 — venue-agnostic unidirectional AML escort and Pending-Capital Recognition Invariant (`IN_FLIGHT_BRIDGE_CAPITAL`, `lostUsd ≡ 0`). It is **not** the protocol anchor.
+Robinhood Chain is the **inaugural Code-Verified / Dry-Run Verified reference adapter** for Pillar Set X · Component 2 — venue-agnostic unidirectional AML escort and Pending-Capital Recognition Invariant (`IN_FLIGHT_BRIDGE_CAPITAL`, `lostUsd ≡ 0`). It is **not** the protocol anchor.
 
 | Route | Policy | SDK call |
 |-------|--------|----------|
@@ -195,7 +195,7 @@ Robinhood Chain is the **inaugural Code-Verified / Dry-Run Verified reference ad
 
 ---
 
-## Pillar 3 — The Shield (Multi-Venue AI Armor)
+## Pillar Set Y — The Shield (Multi-Venue AI Armor)
 
 `checkSoilResistance()` (Edge Worker) and SDK `evaluateSoilCore()` / `verifyAgentIntent()` share the same soil fuse semantics:
 
@@ -416,7 +416,7 @@ Verified by [`tests/risk-control/margin-buffer.test.ts`](../../tests/risk-contro
 | **2. B2B Trading Bot CaaS** | Telegram Trading Bots · Institutional Desks | Sub-ms `checkSoilResistance()` + Gate attestation as Security Citadel in front of bot signers · no custody |
 | **3. Dev Incentive Flywheel** | SDK integrators | **50% revenue share** of GMX **10 bps** builder fee for verified integrator partner wallets |
 
-**Pendle risk guard (V1.0 Live · Core Pillar 3):**
+**Pendle risk guard (V1.0 Live · Component of Pillar Set Y):**
 
 | Layer | Module | Behavior |
 |-------|--------|----------|

@@ -190,7 +190,7 @@
 
 ### 8. Robinhood Crypto Institutional
 
-- **說服：** Pillar 2 Reference Adapter 維持；密鑰敘事較不像「已過委員會」。
+- **說服：** Pillar Set X · Component 2 Reference Adapter 維持；密鑰敘事較不像「已過委員會」。
 - **Nit：** 機構不會用 0x1111 過會；Across ≠ RH 官方。
 - **分數驅動：** +0.04 全是文件。
 

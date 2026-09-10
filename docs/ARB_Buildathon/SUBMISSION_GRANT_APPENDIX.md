@@ -69,7 +69,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 
 ## 88% Defense Mesh & 12% Post-Grant R&D Roadmap
 
-> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar 3.
+> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../architecture/05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar Set Y.
 
 ### Industry Baseline (~80% or Below)
 
@@ -307,8 +307,8 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 | Pillar | Role | SSOT |
 |--------|------|------|
-| **Gatehouse (Auth)** | **Opt-In Pillar 1** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · `USE_ZERODEV_AA` default-off | `zerodev-aa-*` · Gate attestation · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
-| **Pillar 2: Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort · Robinhood Chain RWA ingress (`46630`/`4663` → `42161`) · **`lostUsd ≡ 0`** · inbound AML block · **ArbOS 61 Elara** reinforcement plane | `src/adapters/across-ingress-bridge.ts` · `contracts/IngressSafetySwitch.sol` |
+| **Gatehouse (Auth)** | **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · `USE_ZERODEV_AA` default-off | `zerodev-aa-*` · Gate attestation · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) |
+| **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort · Robinhood Chain RWA ingress (`46630`/`4663` → `42161`) · **`lostUsd ≡ 0`** · inbound AML block · **ArbOS 61 Elara** reinforcement plane | `src/adapters/across-ingress-bridge.ts` · `contracts/IngressSafetySwitch.sol` |
 | **Shield (CORE MOAT)** | Sub-ms Wasm pre-execution armor · **p50 ~106 µs** · Wasm **<28kb / <60µs** · fail-closed before mempool · **auto `severSigningChannel()` on bitmask trips** · **Stylus 96KB coprocessor ready** (`SliverVineSoilCoprocessor` · 9/9 PASS) · **independent of ZeroDev** | `checkSoilResistance()` · `soil_core.wasm` · `check_soil_resistance_stylus` |
 
 ### Competitive Positioning — Four-Dimensional ASCII Matrices (SliverVine Protocol)

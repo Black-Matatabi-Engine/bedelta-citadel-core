@@ -62,7 +62,7 @@ SliverVine models the **100% Total On-Chain Risk Surface** — the complete set 
 Where referenced in Pillar Set Y and technical specs, the **80/20 Pareto rule** is a **distinct, orthogonal microstructure statistic** — not additive to the 88/12 spectrum:
 
 - **~80%** of acute toxic execution loss (sandbox replay · Monte Carlo substrate) stems from **~20%** of microsecond-scale depth / slippage anomalies (illiquidity spikes, cross-venue decoupling, sub-block MEV windows).
-- **Pillar 3** (`checkSoilResistance()` · R03 depth fuse · R04 slippage fuse · PGATE latency fuse) **targets this 20% acute tail** directly at sub-ms Edge evaluation — the highest-leverage interception band within the broader **88% mesh**.
+- **Pillar Set Y** (`checkSoilResistance()` · R03 depth fuse · R04 slippage fuse · PGATE latency fuse) **targets this 20% acute tail** directly at sub-ms Edge evaluation — the highest-leverage interception band within the broader **88% mesh**.
 
 #### Core Physical Invariants (Judge Quick Reference)
 

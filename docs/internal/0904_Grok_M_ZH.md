@@ -28,7 +28,7 @@
 | Sepolia / One **同址** | ✅ | ✅ 不變 |
 | `withCitadelShield` 一行 wrap · Apache-2.0 barrel | ✅ | ✅ + **`tests/sdk/decorator.test.ts` 已命中** |
 | Agent harness **uncapped** `latencyUs` | ✅ | ✅ + HUD 拆 Wasm &lt;60µs vs Node RTT |
-| Pendle 公開敘事鎖 Safety Sentinel | ✅ | ✅ V1.0 Core Pillar 3 已上線（非 yield 競品） |
+| Pendle 公開敘事鎖 Safety Sentinel | ✅ | ✅ Component of Pillar Set Y 已上線（非 yield 競品） |
 | Halmos 失敗 JSON 已撤公開敘事 | ✅ | ✅ |
 | Stylus badge vs 主網 | 掛 5/5、易被讀成已上 Stylus | **改標 `V2.0 Stylus Probe (Roadmap)`** + README 明文「probe only」 |
 | ZeroDev × 106µs | 易被讀成 AA 耦合 | **§2.4.1 解耦 · Opt-In · Smart Routing = Reference Harness** |
@@ -56,7 +56,7 @@
 ## 0.1 一日工作面：評審會怎麼讀（不是 changelog）
 
 **產業組會加分的「誠實」**
-- ZeroDev 不再綁死 106µs；Robinhood 從產品身份降為 Pillar 2 **Reference Escort Adapter**。
+- ZeroDev 不再綁死 106µs；Robinhood 從產品身份降為 Pillar Set X · Component 2 **Reference Escort Adapter**。
 - Eliza / Virtuals / Wayfinder / CrewAI 標 **⏳ V1.5**——Goldfeder / HackQuest 視為 *don't badge what you didn't ship*。（Pendle Institutional Shield 已標 **V1.0 Live**）
 - 88/12 寫成完備分割；8.2–11.8% APY 有現金流拆表、標非保證。
 
@@ -184,7 +184,7 @@
 
 ### 8. Robinhood Crypto Institutional（合規、非託管 EIP-712、AML 入口）
 
-- **說服（新）：** 產品身份從「Robinhood 故事」改成 **Pillar 2 Reference Adapter**——委員會材料較不易被法務讀成官方接入。
+- **說服（新）：** 產品身份從「Robinhood 故事」改成 **Pillar Set X · Component 2 Reference Adapter**——委員會材料較不易被法務讀成官方接入。
 - **Nit（仍在）：** 機構不會用 0x1111 過委員會；Across ≠ RH 官方。
 - **分數驅動：** PMF +0.10 來自敘事降級，不是合規證書。
 
