@@ -29,6 +29,7 @@ import {
   INTENT_RING_SLOT_COUNT as FFI_RING_SLOTS,
   INTENT_WASM_ABI_VERSION as FFI_ABI_VERSION,
 } from "../../src/core/wasm-intent-ffi";
+import { ensureIntentWasm, intentWasmHashKeyToSlot } from "../../src/sdk/intent-wasm";
 
 describe("intent-core — zero-allocation hot path", () => {
   it("reuses pre-allocated ring slab without per-iteration heap churn (<16 KiB / 10k)", () => {
@@ -145,5 +146,24 @@ describe("intent-core — ring slab slot indexing", () => {
 
     expect(trackAttemptBudgetU32Pure(offsetB).nextAttempts).toBe(3);
     expect(INTENT_RING_U32[offsetA + INTENT_SLOT_ATTEMPTS]).toBe(3);
+  });
+});
+
+describe("intent-core — Wasm FNV-1a hash parity", () => {
+  it("intent_core_hash_key_to_slot matches TS hashKeyToSlotIndex", () => {
+    expect(ensureIntentWasm()).toBe(true);
+    const probes = [
+      "agent:collision-probe:0",
+      "agent:collision-probe:256",
+      "0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789",
+      "digest:venue-drift:test",
+    ];
+    for (const key of probes) {
+      const tsSlot = hashKeyToSlotIndex(key);
+      const wasmSlot = intentWasmHashKeyToSlot(key);
+      expect(wasmSlot).toBe(tsSlot);
+      expect(tsSlot).toBeGreaterThanOrEqual(0);
+      expect(tsSlot).toBeLessThan(INTENT_RING_SLOT_COUNT);
+    }
   });
 });

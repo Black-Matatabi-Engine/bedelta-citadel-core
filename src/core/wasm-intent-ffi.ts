@@ -20,6 +20,10 @@ export const INTENT_MAX_ATTEMPTS_DEFAULT = 3;
 export const INTENT_RING_SLOT_COUNT = 256;
 export const INTENT_RING_SLOT_MASK = INTENT_RING_SLOT_COUNT - 1;
 
+/** FNV-1a constants — parity with `intent_core.rs` · `intent-core-ring.ts`. */
+export const INTENT_FNV_OFFSET_BASIS = 0x811c9dc5;
+export const INTENT_FNV_PRIME = 0x01000193;
+
 /** 7+1 venue matrix bit positions (u64 mask). */
 export const VENUE_BIT_GMX = 1n << 0n;
 export const VENUE_BIT_PENDLE = 1n << 1n;

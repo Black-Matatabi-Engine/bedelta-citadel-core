@@ -207,8 +207,8 @@ Per [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCH
 | `src/core/black-swan-guard-lib/*` | `.push()` reasons | f64 thresholds | ❌ | ❌ |
 | `src/core/portfolio-cascade-core.ts` | `.push()` steps/reasons | f64 simulation | ❌ | ❌ |
 | `src/core/risk-severance.ts` | Side-effect only | ✅ Bitmask severance | ❌ | ❌ |
-| `src/core/wasm-soil-ffi.ts` | Per-invoke `ArrayBuffer` | Layout SSOT | — | ABI pack only |
-| `src/wasm/intent_core.rs` | N/A (Rust) | ✅ Bitwise | — | ✅ via `IntentRingSlabLib` |
+| `src/core/wasm-soil-ffi.ts` | **RESOLVED** — `SOIL_FFI_REUSABLE_BUFFER` | Layout SSOT + `stylus-soil-abi-bridge.ts` | — | ✅ bridge pack |
+| `src/wasm/intent_core.rs` | N/A (Rust) | ✅ Bitwise | **RESOLVED** — `intent_core_hash_key_to_slot` | ✅ via `IntentRingSlabLib` |
 | `src/wasm/soil_core.rs` | N/A (Rust) | f64 eval | — | Partial vs `soil_eval_u64` |
 | `src/wasm/clock_core.rs` | N/A (Rust) | ✅ i64 monotonic | — | ❌ |
 | `contracts/src/libs/IntentRingSlabLib.sol` | N/A (EVM) | ✅ u32 ring | N/A (canonical on-chain) | — |
@@ -220,22 +220,25 @@ Per [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCH
 
 ## Gap Closure Roadmap (Prioritized)
 
-| Priority | Gap | Recommended action |
-|----------|-----|-------------------|
-| **P0** | Soil ABI mismatch: Edge f64 lane vs Stylus u64 packed | Document canonical pack in `CitadelInvariantsPackLib`; add cross-tier golden-vector test |
-| **P1** | Wasm missing FNV ring index | Add `intent_core_hash_key_to_slot` C-ABI in `intent_core.rs` |
-| **P1** | `encodeWasmSoilInput` per-call alloc | Thread-local reusable `ArrayBuffer` in `wasm-soil-ffi.ts` |
-| **P2** | Risk flag evaluators (Variational / USDAI) | Pack into `PROTO_VECT_LEN` lanes · extend `soil_core_eval` protocol_mask trip |
-| **P2** | `MonotonicTimeSSOT.read()` object alloc | Module scratch `{ virtualWallMs, anomaly }` for burst paths |
-| **P3** | Black-swan / portfolio cascade on-chain | Keep offline; optional Stylus score feed for HF breach bitmask only |
+| Priority | Gap | Status | Resolution |
+|----------|-----|--------|------------|
+| **P0** | Soil ABI mismatch: Edge f64 lane vs Stylus u64 packed | ✅ **RESOLVED** | `stylus-soil-abi-bridge.ts` · `tests/core/soil-abi-parity.test.ts` **7/7** |
+| **P1** | Wasm missing FNV ring index | ✅ **RESOLVED** | `intent_core_hash_key_to_slot` · `sdk/intent-wasm.ts` · Vitest parity in `intent-sinking-audit.test.ts` |
+| **P1** | `encodeWasmSoilInput` per-call alloc | ✅ **RESOLVED** | `SOIL_FFI_REUSABLE_BUFFER` module scratch in `wasm-soil-ffi.ts` |
+| **P2** | Risk flag evaluators (Variational / USDAI) | ⏳ Open | Pack into `PROTO_VECT_LEN` lanes · extend `soil_core_eval` protocol_mask trip |
+| **P2** | `MonotonicTimeSSOT.read()` object alloc | ⏳ Open | Module scratch `{ virtualWallMs, anomaly }` for burst paths |
+| **P3** | Black-swan / portfolio cascade on-chain | ⏳ Open | Keep offline; optional Stylus score feed for HF breach bitmask only |
 
 ---
 
 ## Verification Commands
 
 ```bash
-# Zero-GC intent ring heap proof (8/8)
+# Zero-GC intent ring heap + Wasm FNV hash parity (10/10)
 npx vitest run tests/core/intent-sinking-audit.test.ts
+
+# Soil ABI golden vectors — TS · Wasm · Stylus bridge (7/7)
+npx vitest run tests/core/soil-abi-parity.test.ts
 
 # Monotonic clock + Wasm FFI (14/14)
 npx vitest run tests/clock-monotonicity.test.ts
@@ -259,8 +262,8 @@ cargo test -p citadel_invariants
 
 | Pillar | Grade | Notes |
 |--------|-------|-------|
-| **P1 Memory / TypedArray sinking** | **A-** | Tier-0 reflex compliant; FFI + gateway paths have known alloc pockets |
+| **P1 Memory / TypedArray sinking** | **A** | P1 FFI buffer pool resolved; Tier-0 reflex zero-GC |
 | **P2 Bitwise pure state** | **B+** | Flags + intent masks excellent; soil uses f64 ratios by design |
-| **P3 Cross-tier parity** | **B** | GMX + intent budget strong; multi-protocol flags + clock lack on-chain mirror |
+| **P3 Cross-tier parity** | **A-** | P0 soil bridge + P1 FNV Wasm hash resolved; clock + multi-flag lanes still Edge-only |
 
 *This document is the internal SSOT for performance sinking and execution parity. Public-facing summaries belong in [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) and [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md).*

@@ -4,6 +4,10 @@
 
 pub const INTENT_ABI_VERSION: u32 = 1;
 pub const INTENT_MAX_ATTEMPTS_DEFAULT: i64 = 3;
+pub const INTENT_RING_SLOT_MASK: u32 = 255;
+
+const FNV_OFFSET_BASIS: u32 = 0x811c9dc5;
+const FNV_PRIME: u32 = 0x01000193;
 
 const SLOT_ATTEMPTS: usize = 0;
 const SLOT_FLAGS: usize = 1;
@@ -18,6 +22,21 @@ fn read_i64(heap: *const i64, slot: usize) -> i64 {
 #[inline(always)]
 fn write_i64(heap: *mut i64, slot: usize, value: i64) {
     unsafe { *heap.add(slot) = value };
+}
+
+/// FNV-1a 32-bit hash masked to ring slot index — parity with TS `hashKeyToSlotIndex`.
+#[no_mangle]
+pub unsafe extern "C" fn intent_core_hash_key_to_slot(key_ptr: *const u8, key_len: usize) -> u32 {
+    if key_ptr.is_null() || key_len == 0 {
+        return 0;
+    }
+    let key = core::slice::from_raw_parts(key_ptr, key_len);
+    let mut h: u32 = FNV_OFFSET_BASIS;
+    for &b in key {
+        h ^= u32::from(b);
+        h = h.wrapping_mul(FNV_PRIME);
+    }
+    h & INTENT_RING_SLOT_MASK
 }
 
 /// Returns 1 when target venue is authorized, 0 on drift. Mask 0 or target 0 → pass (1).

@@ -21,6 +21,10 @@ export interface WasmSoilCoreInput {
   protocolMask?: number;
 }
 
+/** Module-load reusable scratch — zero per-invoke `ArrayBuffer` allocation on hot FFI path. */
+export const SOIL_FFI_REUSABLE_BUFFER = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
+const SOIL_FFI_REUSABLE_VIEW = new DataView(SOIL_FFI_REUSABLE_BUFFER);
+
 const SOIL_FIELD_ORDER: (keyof WasmSoilCoreInput)[] = [
   "hlSpot",
   "hlPerp",
@@ -54,19 +58,26 @@ export function readProtocolVectorFromView(
   return vec;
 }
 
+/** Write soil input into `SOIL_FFI_REUSABLE_BUFFER` (in-place · zero alloc). */
 export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
-  const buf = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
-  const view = new DataView(buf);
+  const view = SOIL_FFI_REUSABLE_VIEW;
+  for (let i = 0; i < WASM_SOIL_INPUT_BYTES; i += 8) {
+    view.setFloat64(i, 0, true);
+  }
   if (input.protocolMask) {
     view.setFloat64(wasmSoilInputByteOffset("protocolMask"), input.protocolMask, true);
   }
   for (const key of SOIL_FIELD_ORDER) {
     view.setFloat64(wasmSoilInputByteOffset(key), input[key] as number, true);
   }
-  return buf;
+  return SOIL_FFI_REUSABLE_BUFFER;
 }
 
-export function decodeWasmSoilInput(buf: ArrayBuffer): WasmSoilCoreInput {
+export function getSoilFfiReusableDataView(): DataView {
+  return SOIL_FFI_REUSABLE_VIEW;
+}
+
+export function decodeWasmSoilInput(buf: ArrayBuffer = SOIL_FFI_REUSABLE_BUFFER): WasmSoilCoreInput {
   const view = new DataView(buf);
   const protocolMask = view.getFloat64(wasmSoilInputByteOffset("protocolMask"), true);
   return {
