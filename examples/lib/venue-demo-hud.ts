@@ -1,6 +1,6 @@
 /** Standardized Pillar Set Y venue demo HUD — aligned with matrix-cross-venue-demo.ts. */
 import { GMX_POOL_IMBALANCE_MAX_RATIO } from "../../src/adapters/gmx/gmx-v2-invariants";
-import { HL_SPREAD_MAX_BPS, UNISWAP_SLIPPAGE_MAX_BPS } from "../../src/core/risk-engine-limits";
+import { HL_SPREAD_MAX_BPS } from "../../src/core/risk-engine-limits";
 import { BOLD, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import {
   GUARD_BRIGHT_GREEN,
@@ -61,8 +61,3 @@ export function pendleTripBreaches(): BreachLine[] {
   const driftBps = Math.abs(0.05 - 0.095) * 10_000;
   return [{ label: "Yield Shock", value: `${driftBps.toFixed(1)} bps`, limit: "LIMIT: >150.0 bps" }];
 }
-
-export const UNISWAP_TRIP_BREACHES: BreachLine[] = [
-  { label: "Swap Slippage", value: ">50.0 bps", limit: `LIMIT: ≤${UNISWAP_SLIPPAGE_MAX_BPS}.0 bps` },
-  { label: "CL Liquidity", value: "$200,000 USD", limit: "MIN: active depth for $600k swap" },
-];

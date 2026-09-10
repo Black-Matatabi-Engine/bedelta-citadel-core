@@ -1,0 +1,88 @@
+{
+  "balances": {
+    "ethWei": 1001000000000000000,
+    "gmToken": 0,
+    "gmTokenAmount": 0,
+    "usdc": 0,
+    "usdcAllowanceRouter": 0
+  },
+  "meta": {
+    "blockNumber": 25933473,
+    "chainId": 42161,
+    "eoa": "0xef0752df6387248B897F3A59A180af42D801960d",
+    "fixture": "contracts/test/fixtures/gmx-wallet-a-short-multicall.json",
+    "msgValue": 1000000000000000,
+    "router": "0x7dE39FF2e232A2203196788d37e234cF8F1b83f1"
+  },
+  "multicall": {
+    "gasUsed": 110435,
+    "label": "multicall",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: transfer amount exceeds allowance"
+      },
+      "decoded": "Error(ERC20: transfer amount exceeds allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002845524332303a207472616e7366657220616d6f756e74206578636565647320616c6c6f77616e6365000000000000000000000000000000000000000000000000",
+      "returndataLen": 132,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[0]": {
+    "gasUsed": 81381,
+    "label": "leg sendWnt",
+    "ok": true
+  },
+  "probes[1]": {
+    "gasUsed": 25543,
+    "label": "leg sendTokens",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: transfer amount exceeds allowance"
+      },
+      "decoded": "Error(ERC20: transfer amount exceeds allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002845524332303a207472616e7366657220616d6f756e74206578636565647320616c6c6f77616e6365000000000000000000000000000000000000000000000000",
+      "returndataLen": 132,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[2]": {
+    "gasUsed": 860791,
+    "label": "leg createOrder",
+    "ok": true
+  },
+  "probes[3]": {
+    "gasUsed": 110374,
+    "label": "fundMulticall",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "message": "ERC20: transfer amount exceeds allowance"
+      },
+      "decoded": "Error(ERC20: transfer amount exceeds allowance)",
+      "errorName": "Error(string)",
+      "returndataHex": "0x08c379a00000000000000000000000000000000000000000000000000000000000000020000000000000000000000000000000000000000000000000000000000000002845524332303a207472616e7366657220616d6f756e74206578636565647320616c6c6f77616e6365000000000000000000000000000000000000000000000000",
+      "returndataLen": 132,
+      "selector": "0x08c379a0"
+    }
+  },
+  "probes[4]": {
+    "gasUsed": 131716,
+    "label": "createOrder after funding",
+    "ok": false,
+    "revert": {
+      "argsJson": {
+        "wntAmount": "0",
+        "executionFee": "38d7ea4c68000"
+      },
+      "decoded": "InsufficientWntAmountForExecutionFee(0, 38d7ea4c68000)",
+      "errorName": "InsufficientWntAmountForExecutionFee",
+      "returndataHex": "0x3a78cd7e000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000038d7ea4c68000",
+      "returndataLen": 68,
+      "selector": "0x3a78cd7e"
+    }
+  }
+}

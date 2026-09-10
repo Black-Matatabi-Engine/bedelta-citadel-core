@@ -1,6 +1,12 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
 export const EDGE_TARGET_US = 106;
+/** Production SSOT latency bands — hardware-agnostic; local CLI may vary. */
+export const PURE_INVARIANT_BAND_US = "~0.5–1.1µs (warm-path min)";
+export const REFLEX_CORE_BAND_US = "p50 ~15µs (<20µs warm path)";
+export const E2E_SHIELD_BAND_US = "p50 ~106µs (Edge Worker target)";
+export const LATENCY_HOST_VARIANCE_DISCLAIMER =
+  "Absolute CLI μs vary by CPU/OS; production SSOT = Edge p50 bands.";
 export const BENCH_BOX_W = 64;
 export const INTENT_BOX_W = 72;
 const BENCH_KV_LABEL_W = 22;
@@ -79,11 +85,11 @@ function formatBenchmarkKvRow(label: string, latencyUs: number, suffix = ""): st
 export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
   const matrixPass = snapshot.fullMatrixUs <= EDGE_TARGET_US;
   const passTag = matrixPass ? ` ${GUARD_BRIGHT_GREEN}${BOLD}(PASS)${R}` : "";
-  const title = `${BOLD}[BENCHMARK]${R} Runtime: Edge Wasm Kernel ${CORE_BRIGHT_CYAN}${BOLD}(Target: <${EDGE_TARGET_US.toFixed(1)}µs)${R}`;
+  const title = `${BOLD}[BENCHMARK]${R} Bands: ${PURE_INVARIANT_BAND_US} · ${REFLEX_CORE_BAND_US} · ${E2E_SHIELD_BAND_US}`;
   const rows = [
-    formatBenchmarkKvRow("Pure Invariant Time", snapshot.pureInvariantUs),
-    formatBenchmarkKvRow("Full Matrix Execution", snapshot.fullMatrixUs, passTag),
-    formatBenchmarkKvRow("E2E Harness Overhead", snapshot.e2eHarnessUs),
+    formatBenchmarkKvRow("Pure Invariant (local)", snapshot.pureInvariantUs, ` ${GRAY}${PURE_INVARIANT_BAND_US}${R}`),
+    formatBenchmarkKvRow("Full Matrix (local)", snapshot.fullMatrixUs, `${passTag} ${GRAY}${REFLEX_CORE_BAND_US}${R}`),
+    formatBenchmarkKvRow("E2E Harness (local)", snapshot.e2eHarnessUs, ` ${GRAY}${E2E_SHIELD_BAND_US}${R}`),
   ];
   const innerW = BENCH_BOX_W - 2;
   console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(BENCH_BOX_W)}┐${R}`);
@@ -92,6 +98,7 @@ export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot):
     console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${row}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
   }
   console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(BENCH_BOX_W)}┘${R}`);
+  console.log(`${GRAY}  ${LATENCY_HOST_VARIANCE_DISCLAIMER}${R}`);
 }
 
 export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {

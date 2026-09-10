@@ -1,14 +1,5 @@
 /** Matrix cross-venue demo HUD — breach trees, R20 banner, console noise suppression. */
-import { AAVE_ARBITRUM_CHAIN_ID, evaluateAaveV3Guard } from "../../src/adapters/aave/aave-v3-adapter";
-import { AAVE_HF_FAIL_CLOSED_THRESHOLD } from "../../src/adapters/aave/aave-v3-constants";
 import { GMX_POOL_IMBALANCE_MAX_RATIO, verifyGmxPoolImbalance } from "../../src/adapters/gmx/gmx-v2-invariants";
-import {
-  MORPHO_ARBITRUM_CHAIN_ID,
-  MORPHO_MIN_MARKET_LIQUIDITY_USD,
-  MORPHO_ORACLE_MAX_AGE_MS,
-  MORPHO_PRICE_DEVIATION_MAX_BPS,
-  computeMorphoPriceDeviationBps,
-} from "../../src/adapters/morpho/morpho-blue-adapter";
 import { PENDLE_IMPLIED_YIELD_SHOCK_MAX_BPS } from "../../src/adapters/pendle/pendle-pool-factory-adapter";
 import {
   USDAI_ARBITRUM_CHAIN_ID,
@@ -90,7 +81,7 @@ export function printR20DeadlockBanner(state: SystemState): void {
   );
 }
 
-const R20_CASCADE_VENUES = new Set(["Uniswap V3", "Aave V3", "USD.ai"]);
+const R20_CASCADE_VENUES = new Set(["USD.ai"]);
 const R20_CASCADE_TAG = `${YELLOW}${BOLD}[R20 CASCADING DEADLOCK]${R}`;
 
 export function printTripVenueRows(
@@ -115,60 +106,6 @@ export function collectCrossVenueSlippageLine(reasons: string[]): BreachLine | n
     value: `${parseFloat(match[1]).toFixed(2)}%`,
     limit: `LIMIT: >${parseFloat(match[2]).toFixed(2)}%`,
   };
-}
-
-export function collectMorphoBreachLines(nowMs: number): BreachLine[] {
-  const depthUsd = 6_000;
-  const marketLiquidityUsd = 80_000;
-  const oraclePriceUsd = 3650;
-  const referencePriceUsd = 3500;
-  const deviationBps = computeMorphoPriceDeviationBps(oraclePriceUsd, referencePriceUsd);
-  const oracleAgeMs = Math.max(0, nowMs - (nowMs - 5_000_000));
-  const lines: BreachLine[] = [];
-  if (deviationBps > MORPHO_PRICE_DEVIATION_MAX_BPS) {
-    lines.push({
-      label: "Morpho Oracle Deviation",
-      value: `${deviationBps.toFixed(1)} bps`,
-      limit: `LIMIT: >${MORPHO_PRICE_DEVIATION_MAX_BPS}.0 bps`,
-    });
-  }
-  if (depthUsd < MORPHO_MIN_MARKET_LIQUIDITY_USD || marketLiquidityUsd < MORPHO_MIN_MARKET_LIQUIDITY_USD) {
-    lines.push({
-      label: "Morpho Liquidity",
-      value: `$${depthUsd.toLocaleString("en-US")} USD`,
-      limit: `MIN: $${MORPHO_MIN_MARKET_LIQUIDITY_USD.toLocaleString("en-US")} USD`,
-    });
-  }
-  if (oracleAgeMs > MORPHO_ORACLE_MAX_AGE_MS) {
-    lines.push({
-      label: "Oracle Age",
-      value: `${(oracleAgeMs / 1000).toFixed(0)}s`,
-      limit: `MAX: ${(MORPHO_ORACLE_MAX_AGE_MS / 1000).toFixed(0)}s`,
-    });
-  }
-  return lines;
-}
-
-export function collectAaveBreachLines(nowMs: number): BreachLine[] {
-  const r = evaluateAaveV3Guard({
-    chainId: AAVE_ARBITRUM_CHAIN_ID,
-    market: "WETH/USDC",
-    collateralUsd: 150_000,
-    debtUsd: 120_000,
-    liquidationThreshold: 0.825,
-    projectedHealthFactor: 1.05,
-    refPriceUsd: 3500,
-    spotPriceUsd: 3500,
-    depthUsd: 500_000,
-    nowMs,
-  });
-  return [
-    {
-      label: "Health Factor",
-      value: r.healthFactor.toFixed(2),
-      limit: `MIN: ${AAVE_HF_FAIL_CLOSED_THRESHOLD.toFixed(2)}`,
-    },
-  ];
 }
 
 export function collectUsdaiBreachLines(soil: UsdaiSoilInput, nowMs: number): BreachLine[] {
