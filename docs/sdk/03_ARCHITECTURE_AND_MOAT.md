@@ -49,7 +49,7 @@
 
 ### Pillar 2 — AI Agent Hallucination & Prompt Injection Intent Binding
 
-See [`AI_INTENT_PROTECTION.md`](./AI_INTENT_PROTECTION.md).
+See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 
 ### Pillar 3 — Multi-Submit FOMO / Panic Retry Storm Severing (`INTENT_RING_U32`)
 
@@ -84,6 +84,8 @@ announceGuardedProvider(window.ethereum, config, {
 
 ## Related Documents
 
-- [`ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](./ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) — integration blueprint
-- [`AI_INTENT_PROTECTION.md`](./AI_INTENT_PROTECTION.md) — LLM / agent threat model
+- [`README.md`](./README.md) — documentation index
+- [`01_SDK_INTEGRATION_BLUEPRINT.md`](./01_SDK_INTEGRATION_BLUEPRINT.md) — integration blueprint
+- [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) — market intelligence
+- [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md) — LLM / agent threat model
 - [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) — Wasm reflex core · §3.7

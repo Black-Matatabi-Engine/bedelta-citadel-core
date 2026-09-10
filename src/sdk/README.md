@@ -119,6 +119,6 @@ Covers: prompt-injection / session drift interception, missing & tampered attest
 
 ## Related
 
-- Blueprint: [`ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../../docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)
+- Blueprint: [`01_SDK_INTEGRATION_BLUEPRINT.md`](../../docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md)
 - Docs index: [`docs/README.md`](../../docs/README.md)
 - On-chain: [`SliverVineGate/`](../../SliverVineGate/) · [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol)

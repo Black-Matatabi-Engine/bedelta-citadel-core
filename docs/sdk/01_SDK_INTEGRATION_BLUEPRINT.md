@@ -118,7 +118,7 @@ announceGuardedProvider(window.ethereum, config, {
 
 ### 2 — AI Agent Intent Protection
 
-Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`AI_INTENT_PROTECTION.md`](./AI_INTENT_PROTECTION.md).
+Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 
 ### 3 — Retry Storm Severance (`INTENT_RING_U32`)
 
@@ -138,7 +138,7 @@ EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT
 |------|------|
 | `provider.ts` | EIP-1193 middleware · EIP-6963 |
 | `risk-evaluator.ts` | `evaluateRetailRisk` orchestration |
-| `guard-engine.ts` | Policy gates + Living Water |
+| `guard-engine.ts` | Policy gates + RPC transport protocol |
 | `calldata-parser.ts` | Zero-alloc selector dispatch |
 | `transport-stream.ts` | RPC transport stream synchronization |
 | `wasm-adapter.ts` | `pkg/soil_core.wasm` FFI |
@@ -159,8 +159,10 @@ npx vitest run tests/sdk/
 
 | Document | Role |
 |----------|------|
-| [`ARCHITECTURE_AND_MOAT.md`](./ARCHITECTURE_AND_MOAT.md) | Competitive positioning · paradigm shift |
-| [`AI_INTENT_PROTECTION.md`](./AI_INTENT_PROTECTION.md) | LLM / agent threat model |
+| [`README.md`](./README.md) | Documentation index (01 → 04) |
+| [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Competitive matrix · grant strategy |
+| [`03_ARCHITECTURE_AND_MOAT.md`](./03_ARCHITECTURE_AND_MOAT.md) | Competitive positioning · paradigm shift |
+| [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md) | LLM / agent threat model |
 | [`../ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon submission SSOT |
 | [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) | Wasm reflex core · §3.7 |
 

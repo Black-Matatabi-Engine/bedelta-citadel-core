@@ -20,7 +20,7 @@
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [Physical Clock Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
-| **5** | **Robinhood Agentic & Retail Wallet Guard SDK (C-End Middleware)** | Apache-2.0 EIP-1193 wrapper · 0-Gas pre-consensus intercept for infinite approvals · Permit2 · EIP-712 phishing · AI agent retry severance (`INTENT_RING_U32`) · EIP-6963 multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/` **48/48 PASS** · [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#37-robinhood-agentic--retail-wallet-guard-sdk--c-end-eip-1193-middleware) |
+| **5** | **Robinhood Agentic & Retail Wallet Guard SDK (C-End Middleware)** | Apache-2.0 EIP-1193 wrapper · 0-Gas pre-consensus intercept for infinite approvals · Permit2 · EIP-712 phishing · AI agent retry severance (`INTENT_RING_U32`) · EIP-6963 multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/` **48/48 PASS** · [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#37-robinhood-agentic--retail-wallet-guard-sdk--c-end-eip-1193-middleware) |
 
 ---
 
@@ -43,7 +43,7 @@ npx vitest run tests/sdk/
 # Expected: Tests  48 passed (48)  ·  5 test files
 ```
 
-**SSOT:** [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · [`docs/sdk/ARCHITECTURE_AND_MOAT.md`](../sdk/ARCHITECTURE_AND_MOAT.md)
+**SSOT:** [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · [`docs/sdk/03_ARCHITECTURE_AND_MOAT.md`](../sdk/03_ARCHITECTURE_AND_MOAT.md)
 
 ---
 

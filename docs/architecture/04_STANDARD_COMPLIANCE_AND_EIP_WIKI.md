@@ -7,7 +7,7 @@
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
 
-Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
+Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
 
 ### Live SSOT Anchors
 
@@ -41,6 +41,8 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 | **ArbOS 61** | Arbitrum L2 execution / Stylus co-residence alignment (⏳ V1.0 Design Spec) | `IngressSafetySwitch.sol` · Elara ingress design · Stylus WASM parity path | Robinhood safety contracts · audit notes |
 | **Robinhood Chain Ingress** | Permissioned institutional egress · AML inbound isolation | Chains **46630** (testnet) / **4663** (mainnet filter) · Across bridge · `IngressSafetySwitch.sol` | Robinhood Across bridge tests · audit snapshot |
 | **WASM Core (`soil_core`)** | Sub-ms pre-execution soil fuse · Cloudflare Edge hot path | `pkg/soil_core.wasm` · `#![no_std]` Rust · budget **< 28 KiB** · warm exec **< 60 µs** · p50 ~106 µs | Wasm feasibility suite · Pillar Set Y Wasm CoreSpec |
+| **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | Ethereum Provider JavaScript API — pre-consensus wallet guard middleware | `withRetailGuardProvider` · `src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts` · fail-closed on `eth_sendTransaction` / `eth_signTypedData_v4` | `npx vitest run tests/sdk/` **48/48 PASS** · [`01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | Multi Injected Provider Discovery — guarded provider announcement | `announceGuardedProvider` · `eip6963:announceProvider` / `eip6963:requestProvider` · default `rdns`: `io.slivervine.agenticretailwalletguard` | `tests/sdk/retail-guard-provider.test.ts` · EIP-6963 announce/request Vitest |
 | **Clock / L2 timestamp monotonicity (EIP-1482-class)** | RPC `block.timestamp` high-watermark · leap / NTP fail-closed · multi-provider failover | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock_core.rs`](../../src/wasm/clock_core.rs) · [`rpc-radar.ts`](../../src/services/adapters/rpc-radar.ts) | [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [§ Dual-Engine](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md#dual-engine-infrastructure-map-frozen--2026-09-10) |
 
 ---
@@ -95,6 +97,30 @@ SDK envelopes mirror Gate domain binding: `evaluateAttestation()` rejects mismat
 | **UserOp `signature`** | Module-bound session proof consumed by Kernel validation hook, not raw EOA sig |
 
 Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-1271 / ECDSA verification occurs at Kernel validateUserOp and Gate `verifyAndConsume` respectively.
+
+### EIP-1193 — Ethereum Provider JavaScript API (Wallet Guard Middleware)
+
+| Field | Citadel binding |
+|-------|-----------------|
+| **Wrapper** | `withRetailGuardProvider(baseProvider, config)` — proxies `request()` on the injected provider |
+| **Guarded methods** | `eth_sendTransaction` · `eth_signTypedData_v4` — evaluated **before** `baseProvider.request()` |
+| **Risk stack** | `evaluateRetailRisk()` → RPC transport protocol · calldata parse · approve gate · venue allowlist · soil gate · intent ring |
+| **Fail-closed** | `RetailGuardRejectedError` thrown pre-broadcast — **0-Gas** on rejection; tx never reaches RPC |
+| **Package** | `@slivervine/robinhood-agentic-retail-wallet-guard` · Apache-2.0 wrapper · Wasm IP `pkg/soil_core.wasm` |
+
+The Wallet Guard is an EIP-1193 **middleware layer**, not a replacement wallet. Integrators wrap `window.ethereum` (or any compliant provider) and retain full downstream signing semantics when policy passes.
+
+### EIP-6963 — Multi Injected Provider Discovery (Guarded Provider Announcement)
+
+| Field | Citadel binding |
+|-------|-----------------|
+| **Entry** | `announceGuardedProvider(baseProvider, config, options?)` |
+| **Announce event** | `eip6963:announceProvider` with `{ info, provider }` detail |
+| **Request listener** | `eip6963:requestProvider` → re-announce on dApp discovery |
+| **Default metadata** | `name`: `Robinhood Agentic & Retail Wallet Guard` · `rdns`: `io.slivervine.agenticretailwalletguard` |
+| **SSR / Node fallback** | When `dispatchEvent` / `addEventListener` unavailable, returns guarded-only wrap (no EIP-6963 registration) |
+
+EIP-6963 enables dApps to discover the guarded provider alongside MetaMask-class injectors without overwriting `window.ethereum`. See [`01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix §3.7](./03_DEFENSE_MATRIX_AND_WASM_CORE.md#37-robinhood-agentic--retail-wallet-guard-sdk--c-end-eip-1193-middleware).
 
 ### ERC-20 / ERC-777 — Non-Custodial Asset Transfer Escrow Semantics
 
@@ -245,4 +271,5 @@ Multi-chain HTTPS/WSS placeholders live in `.env.example` — replace `YOUR_ALCH
 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y — Wasm soil core · p50 ~106µs |
 | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | R01–R20 Defense Matrix · §3.1.1 Physical Clock & Edge Monotonicity |
 | [`../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) | Dual-Engine Map (Engine A Stylus · Engine B Edge Wasm) · FROZEN anchors |
-| [`ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) | Robinhood Agentic & Retail Wallet Guard SDK |
+| [`../sdk/README.md`](../sdk/README.md) | Wallet Guard SDK documentation index (01 → 04) |
+| [`../sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) | Robinhood Agentic & Retail Wallet Guard SDK |

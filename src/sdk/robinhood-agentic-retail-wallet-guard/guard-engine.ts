@@ -10,7 +10,7 @@
  *  - Infinite retry storms (`MAX_ATTEMPTS_EXCEEDED_SEVERED` via `INTENT_RING_U32`)
  *
  * Scratch SSOT: `SOIL_FFI_REUSABLE_BUFFER` (Wasm soil) · `INTENT_RING_U32` (u32 hot path).
- * See `AI_INTENT_PROTECTION.md` for full threat model.
+ * See `docs/sdk/04_AI_INTENT_PROTECTION_MODEL.md` for full threat model.
  */
 import { INTENT_RING_U32 } from "../../core/intent-core-buffers";
 import {

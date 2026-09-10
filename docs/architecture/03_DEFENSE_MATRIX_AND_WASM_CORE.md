@@ -365,7 +365,7 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 ### 3.7 Robinhood Agentic & Retail Wallet Guard SDK — C-End EIP-1193 Middleware
 
-> **SSOT:** [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
+> **SSOT:** [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
 > **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
 The **Robinhood Agentic & Retail Wallet Guard SDK** (`@slivervine/robinhood-agentic-retail-wallet-guard`) packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** — no Cloudflare Worker required for C-end wallet and agentic wallet integrations.
@@ -397,8 +397,8 @@ dApp → withRetailGuardProvider(config)
      → [FAIL] RetailGuardRejectedError + plainTextWarning
 ```
 
-→ Integration blueprint: [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)  
-→ Competitive moat: [`docs/sdk/ARCHITECTURE_AND_MOAT.md`](../sdk/ARCHITECTURE_AND_MOAT.md)
+→ Integration blueprint: [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md)  
+→ Competitive moat: [`docs/sdk/03_ARCHITECTURE_AND_MOAT.md`](../sdk/03_ARCHITECTURE_AND_MOAT.md)
 
 ### 3.6 Financial Risk Parameters & Epoch Operations
 

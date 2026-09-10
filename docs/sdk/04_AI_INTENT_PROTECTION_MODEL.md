@@ -33,3 +33,14 @@ The Robinhood Agentic & Retail Wallet Guard SDK is a **pre-broadcast involuntary
 | `SOIL_FFI_REUSABLE_BUFFER` | `wasm-soil-ffi.ts` | Zero-alloc Wasm soil input encode |
 | `INTENT_RING_U32` | `intent-core-buffers.ts` | O(1) attempt budget + venue bitmask hot path |
 | `CALLDATA_SCRATCH` | `calldata-parser.ts` | Reusable byte view for selector / ABI decode |
+
+---
+
+## Related Documents
+
+| # | Document |
+|---|----------|
+| — | [`README.md`](./README.md) |
+| 01 | [`01_SDK_INTEGRATION_BLUEPRINT.md`](./01_SDK_INTEGRATION_BLUEPRINT.md) |
+| 02 | [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) |
+| 03 | [`03_ARCHITECTURE_AND_MOAT.md`](./03_ARCHITECTURE_AND_MOAT.md) |

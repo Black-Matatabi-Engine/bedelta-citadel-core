@@ -5,13 +5,15 @@
 
 Apache-2.0 EIP-1193 middleware for pre-consensus retail and agentic wallet protection.
 
-**Documentation SSOT:** [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../../../docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)
+**Documentation SSOT:** [`docs/sdk/README.md`](../../../docs/sdk/README.md)
 
 | Document | Path |
 |----------|------|
-| Integration Blueprint | [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../../../docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) |
-| Architecture & Moat | [`docs/sdk/ARCHITECTURE_AND_MOAT.md`](../../../docs/sdk/ARCHITECTURE_AND_MOAT.md) |
-| AI Intent Protection | [`docs/sdk/AI_INTENT_PROTECTION.md`](../../../docs/sdk/AI_INTENT_PROTECTION.md) |
+| Documentation Index | [`docs/sdk/README.md`](../../../docs/sdk/README.md) |
+| Integration Blueprint | [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../../../docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| Market Intelligence | [`docs/sdk/02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../../../docs/sdk/02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) |
+| Architecture & Moat | [`docs/sdk/03_ARCHITECTURE_AND_MOAT.md`](../../../docs/sdk/03_ARCHITECTURE_AND_MOAT.md) |
+| AI Intent Protection | [`docs/sdk/04_AI_INTENT_PROTECTION_MODEL.md`](../../../docs/sdk/04_AI_INTENT_PROTECTION_MODEL.md) |
 
 ```bash
 npx vitest run tests/sdk/   # 48/48 PASS

@@ -46,7 +46,7 @@ Five pure invariant modules are the TypeScript SSOT; `src/adapters/` and `src/se
 | [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
 | [`../ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon submission SSOT |
 | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
-| [`../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) | Robinhood Agentic & Retail Wallet Guard SDK |
+| [`../sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) | Robinhood Agentic & Retail Wallet Guard SDK |
 | [`../audit/`](../audit/) | Principal audit · Pillar Set X & Y specifications |
 | [`../grants/`](../grants/) | Public grant submissions (GMX · Arbitrum) |
 | [`../../docker/README.md`](../../docker/README.md) | Sidecar |
