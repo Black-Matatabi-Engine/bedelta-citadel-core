@@ -1,31 +1,31 @@
 # SliverVine Protocol (BeΔ) — SliverVine Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
 
-## Grant Submission SSOT — Full Buildathon Pack
+## Protocol Documentation Index
 
 | Priority | Document | Role |
 |----------|----------|------|
-| **0** | [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 1-page executive brief for evaluators |
-| **1** | **This file** (`SUBMISSION.md`) | Authoritative deep-dive grant submission SSOT |
+| **0** | [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | Executive protocol summary |
+| **1** | **This file** (`SUBMISSION.md`) | Authoritative technical specification |
 | **2** | [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
 | **3** | [`../architecture/README.md`](../architecture/README.md) | Yellow Paper · R01–R20 · Hybrid Pillar Sets X & Y |
 | **4** | [`../../README.md`](../../README.md) | English SSOT landing page |
 
 ---
 
-## 🏆 Top 4 High-Score Differentiators (Buildathon Judges)
+## Core Architectural Innovations & Safety Invariants
 
-| # | Pillar | What judges should score | Proof |
-|---|--------|--------------------------|-------|
-| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Kills unverified agent attempts at **Cloudflare Edge isolates** — **$0 Gas** burned · toxic intents never enter Arbitrum Sequencer queues | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
-| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Live **42161** contracts · Stylus coprocessor optional · **100% fail-closed** without Nitro activation | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) (`stylusCoprocessor=0`) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
-| **3** | **Hyperliquid → GMX V2 Native Liquidity Backup** | Seamless fallback from external L1 primary hedge to **Arbitrum-native GMX GM Pools** — **GMX Builder Grant** alignment (**$15k+**) | `pnpm demo:hl -- --trip` (L1 hedge) · `pnpm demo:gmx -- --trip` (native backup) · `pnpm demo:e2e` (Δ_net ≡ 0 lifecycle) |
-| **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) **sub-ms immunity** against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [§ Physical Clock Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
+| # | Security Pillar | System Guarantees & Technical Defense | Verification Protocol |
+|---|-----------------|---------------------------------------|----------------------|
+| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified agent intents rejected at **Cloudflare Edge isolates** before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
+| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
+| **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
+| **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [Physical Clock Matrix](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
 
 ---
 
-## 🔬 Proof of Performance & Zero-GC Memory
+## Performance Verification — Zero-GC Memory Isolation
 
-Citadel's intent mandate hot path uses a **pre-allocated 256×4 ring slab** — no per-digest `Map` churn · **C-ABI parity** with Rust `intent_core.rs`. Run this **single-test** gate to verify zero-allocation memory isolation on any judge machine:
+The intent mandate hot path uses a **pre-allocated 256×4 ring slab** — no per-digest `Map` churn · **C-ABI parity** with Rust `intent_core.rs`. Execute the following single-test gate to verify zero-allocation memory isolation:
 
 ```bash
 # Verify Zero-GC Hot-Path Memory Isolation (<16 KiB Heap Delta / 10,000 iterations)
@@ -38,7 +38,7 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
  Tests  8 passed (8)
 ```
 
-**What this proves:** Verified **zero-allocation hot path**, **C-ABI memory parity**, and **fail-closed intent locks** (venue drift · attempt budget · ring-slab slot indexing).
+**Invariant coverage:** Zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab slot indexing).
 
 → Deep dive: [Zero-GC Ring Slab Memory Engine](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · SSOT modules: [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts)
 
@@ -58,7 +58,7 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
 
 ---
 
-## ⚡ 3-Second TL;DR for Judges (Neuromorphic Security)
+## Executive Summary — Dual-Layer Intent Validation
 
 **Cerebrum vs. Cerebellum — Citadel Shield is the involuntary reflex arc for autonomous AI agents.**
 
@@ -87,11 +87,11 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
+**Fail-closed behavior:** Out-of-scope calldata (e.g. cross-chain intent drift) triggers physical deadlock (**p50 ~15µs**) via `severSigningChannel()` before EIP-712 broadcast — **zero on-chain gas** on rejected paths. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
 ---
 
-## 🛡️ AI Agent Pre-Consensus Firewall (The Shield — Buildathon Primary)
+## Pre-Consensus Intent Firewall
 
 SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & Cerebellum Reflex Arc for AI Agents** — not a passive RPC relay. It intercepts toxic agent intents at **p50 ~106µs** (TypeScript Gateway + Wasm `checkSoilResistance()`) **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
 
@@ -139,7 +139,7 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
 | **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED · **max 3-attempt** budget per intent digest |
 
-**Judge reproduction:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `pnpm demo:wayfinder -- --trip`
+**Verification protocol:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `pnpm demo:wayfinder -- --trip`
 
 ---
 
@@ -153,14 +153,14 @@ Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** w
 | **Arbitrum native backup** | **GMX V2** | Arbitrum One `42161` | **Hard anchor** when HL is isolated or session keys expire · GM Pool liquidity · zero sequencer queue pollution |
 | **Multi-venue expansion** | Variational + 6 natives | Arbitrum One `42161` | Protocol-agnostic firewall · `allowedVenues[]` mandates · **`VENUE_DRIFT_REJECTED`** |
 
-### GMX Builder Grant alignment ($15k+)
+### GMX V2 Native Liquidity Routing
 
-| GMX Builder criterion | Citadel evidence |
-|----------------------|------------------|
-| **Native Arbitrum integration** | Live GM deposit/withdraw on `42161` · `uiFeeReceiver` builder lane (+10 bps) · `PolicyGuardV2` + `GmxSoilMatrixSwitch` mainnet anchors |
-| **Synthetics / GM pool safety** | `checkSoilResistance()` OI skew · pool-skew breach tree · `pnpm demo:gmx -- --trip` FAIL_CLOSED HUD |
-| **AI-agent ingress hygiene** | Pre-consensus 0-Gas severance **before** GMX calldata reaches sequencer queue |
-| **Fallback resilience** | HL primary → GMX native backup architecture documented in [`DEMO_GUIDE.md`](../DEMO_GUIDE.md) |
+| Integration invariant | Implementation |
+|-----------------------|----------------|
+| **Native Arbitrum settlement** | Live GM deposit/withdraw on `42161` · `uiFeeReceiver` builder lane (+10 bps) · `PolicyGuardV2` + `GmxSoilMatrixSwitch` mainnet anchors |
+| **GM pool risk bounds** | `checkSoilResistance()` OI skew · pool-skew breach tree · `pnpm demo:gmx -- --trip` FAIL_CLOSED HUD |
+| **Pre-sequencer ingress filter** | 0-Gas fail-closed severance **before** GMX calldata reaches sequencer queue |
+| **Dual-venue fallback** | HL primary → GMX native backup — [`DEMO_GUIDE.md`](../DEMO_GUIDE.md) |
 
 ### 8-Venue Universal Firewall Matrix
 
@@ -176,10 +176,10 @@ Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** w
 | `hyperliquid` / `hl` | Hyperliquid L1 | `pnpm demo:hl -- --trip` |
 
 ```bash
-# GMX — Primary Arbitrum Native Backup (GMX Builder Grant primary proof)
+# GMX V2 — Arbitrum-native liquidity anchor
 pnpm demo:gmx -- --trip
 
-# Variational — Multi-Venue Expansion & drift-defense proof
+# Variational — Multi-venue RFQ gate
 pnpm demo:variational -- --trip
 
 # Hyperliquid — External L1 primary hedge path
@@ -203,13 +203,13 @@ Citadel's intent mandate gate (`evaluateIntentMandateGate`) executes on every AI
 
 **C-ABI parity:** Host ring slots are **100% pointer-aligned** with Rust [`intent_core.rs`](../../src/wasm/intent_core.rs) (`intent_core_evaluate_gate` · `4 × i64` mandate heap) and Arbitrum Stylus Wasm coprocessors — one mandate semantics from Edge Worker to Nitro block.
 
-**Buildathon judge value:**
+**System properties:**
 
-1. **Zero STW GC spikes** during high-frequency AI-agent intent validation — reflex arc stays inside **p50 ~106µs** Edge budget even under adversarial retry fan-out.
-2. **Bounded isolate memory** — **8 KiB** fixed mandate state (256 × 32 B) instead of unbounded `Map` growth.
-3. **Portable audit surface** — identical slot layout across TypeScript Edge · `pkg/soil_core.wasm` · Stylus Nitro.
+1. **Zero STW GC** — high-frequency intent validation without V8 pause risk; reflex arc within **p50 ~106µs** Edge budget under retry fan-out.
+2. **Bounded isolate memory** — **8 KiB** fixed mandate state (256 × 32 B); no unbounded `Map` growth.
+3. **C-ABI portability** — identical slot layout across TypeScript Edge · `pkg/soil_core.wasm` · Stylus Nitro.
 
-→ **Full architecture, equations, and benchmark table:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · **Judge one-liner:** [§ Proof of Performance & Zero-GC Memory](#-proof-of-performance--zero-gc-memory)
+→ Architecture SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) · [Performance Verification](#performance-verification--zero-gc-memory-isolation)
 
 ---
 
@@ -277,7 +277,7 @@ pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
 pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 ```
 
-> **Buildathon evaluators:** Start with **The Shield** — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault (`pnpm demo:e2e`) is supplementary live-MVP evidence.
+> **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault lifecycle (`pnpm demo:e2e`) provides supplementary mainnet execution evidence.
 
 ---
 
@@ -303,16 +303,16 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 ---
 
-## Official HackQuest Judging Criteria Mapping
+## Submission Criteria Evidence Index
 
-| Criterion | Evidence (CLI / code) |
-|-----------|------------------------|
+| Review dimension | Verification evidence (CLI / code) |
+|------------------|-------------------------------------|
 | **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **220 test files | 992 PASS clean** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **Zero-GC Ring Slab Memory Engine** (pre-allocated **256×4** mandate heap · **&lt;16 KiB** / 10k iterations · [C-ABI parity](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#c-abi-parity--rust-wasm--arbitrum-stylus-coprocessors)) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
 | **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **8-venue universal firewall** (GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,gmx,variational,hl}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
 
-#### Innovation and Creativity — Conceptual Framing
+#### Innovation and Creativity — Technical Summary
 
 - **Pre-Consensus Intent Clearing**: Intercepts toxic AI Agent payloads at **p50 ~106µs** on Cloudflare Edge **before** they reach Arbitrum Sequencer queues, Bundler ingress, or public mempools — **0-Gas loss prevention** (fail-closed severance; no wasted Bundler gas on doomed UserOps).
 - **PEV (Prevented Exploit Volume) — Dune Analytics Primitive**: Introduces **PEV** as a structured telemetry metric — nominal USD volume of toxic intents blocked pre-broadcast — indexable via `RiskTripBlocked` / soil-trip events and grant-audit JSON (`duneTelemetry`). See [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
@@ -343,4 +343,4 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 ---
 
-*SilverVine Labs · Lean Buildathon Submission · 220 test files | 992 PASS clean · HEAD `c1a37d4`*
+*SilverVine Labs · SliverVine Citadel Shield · 220 test files | 992 PASS clean · HEAD `068f3b6`*

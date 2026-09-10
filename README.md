@@ -36,20 +36,20 @@
 
 ---
 
-## 🏆 Top 4 High-Score Differentiators (Buildathon Judges)
+## Core Architectural Innovations & Safety Invariants
 
-| # | Pillar | Judge takeaway | Fast proof |
-|---|--------|----------------|------------|
-| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Kills unverified agent attempts at **Edge isolates** — **$0 Gas** · no Sequencer queue pollution | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
-| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Live **42161** · Stylus optional · **100% fail-closed** without Nitro | Stylus [`0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
-| **3** | **Hyperliquid → GMX V2 Native Liquidity Backup** | L1 primary hedge → **Arbitrum-native GMX GM** fallback · **GMX Builder Grant ($15k+)** | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
-| **4** | **Physical Clock Monotonicity** | Edge Wasm **sub-ms immunity** to leap seconds · RPC time regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
+| # | Security Pillar | System Guarantees & Technical Defense | Verification Protocol |
+|---|-----------------|---------------------------------------|----------------------|
+| **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified intents rejected at Edge isolates before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
+| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus · **100% fail-closed** when `stylusCoprocessor=0` | Stylus [`0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
+| **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic L1 primary hedge → Arbitrum-native GMX GM fallback; **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
+| **4** | **Physical Clock Monotonicity** | Edge Wasm fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
 
-→ Full submission narrative: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)
+→ Technical specification: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)
 
 ---
 
-## 🔬 Proof of Performance & Zero-GC Memory
+## Performance Verification — Zero-GC Memory Isolation
 
 Pre-allocated **256×4 ring slab** intent mandate engine — **O(1)** slot hashing · **zero `Map` churn** · **C-ABI parity** with Rust `intent_core.rs`.
 
@@ -64,24 +64,24 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
  Tests  8 passed (8)
 ```
 
-**Verified:** zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab indexing).
+**Invariant coverage:** zero-allocation hot path · C-ABI memory parity · fail-closed intent locks (venue drift · attempt budget · ring-slab indexing).
 
 → Architecture SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Ring Slab](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
 
 ---
 
-## ⚡ 30-Second Judge Action Box
+## Verification Command Reference
 
 ```bash
-# === Zero-GC memory proof (single-test · <16 KiB / 10k iterations) ===
+# Zero-GC memory isolation (<16 KiB heap delta / 10,000 iterations)
 npx vitest run tests/core/intent-sinking-audit.test.ts   # expect: 8 passed (8)
 
-# === Judge fast-track — targeted per-venue FAIL-CLOSED proofs (START HERE) ===
+# Per-venue FAIL_CLOSED severance proofs
 pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
 pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
 pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
 
-# === Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (PRIMARY FLAGSHIP) ===
+# Pillar Set Y — Pre-Consensus Firewall & Reflex Defense
 pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E Edge Shield)
 pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
 pnpm demo:virtuals -- --venue=pendle     # Virtuals GAME Guard (Manual lock to Pendle PT/YT)
@@ -89,20 +89,20 @@ pnpm demo:langchain -- --trip            # LangChain AI Guard (p50 ~15µs Physic
 pnpm demo:perp-loop -- --trip            # Standalone Perp/Yield Stack Guard (Loop A: GMX/Pendle/HL)
 pnpm demo:spot-loop -- --trip            # Standalone Spot/Lending Vault Guard (Loop B: Morpho/USD.ai)
 
-# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+# Pillar Set X — Liquidity & Ingress Infrastructure
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
 pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 
-# === Tier 0 & Regression Verification ===
+# Regression verification
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 pnpm test                                # Full Regression Suite (220 test files | 992 PASS clean)
 ```
 
 ---
 
-## ⚡ Latency Hierarchy (Judge SSOT)
+## Latency Hierarchy (Measurement SSOT)
 
-Citadel Shield reports **three statistical latency tiers** — judges should map each demo command to the correct tier:
+Citadel Shield reports **three statistical latency tiers**. Map each verification command to the tier it exercises:
 
 | Tier | Metric | Scope (what is measured) | Canonical demo |
 |------|--------|--------------------------|----------------|
@@ -145,7 +145,7 @@ Citadel Shield reports **three statistical latency tiers** — judges should map
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
+**Fail-closed behavior:** Out-of-scope calldata triggers physical deadlock (**p50 ~15µs**) via `severSigningChannel()` before EIP-712 broadcast — zero on-chain gas on rejected paths. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
 
 ---
 
@@ -180,9 +180,9 @@ Wallet segregation (Wallet A hedge · Wallet B principal · Protocol Treasury +1
 
 | Priority | Document | Role |
 |----------|----------|------|
-| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | 30-second Buildathon brief · neuromorphic security · Arbitrum H1 2026 alignment |
-| **2** | [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) | Express verification hub — role routing · decoupled proof index |
-| **3** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) | Full Buildathon submission pack · v0.95 patch log |
+| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | Executive protocol summary · dual-layer validation architecture |
+| **2** | [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) | Verification hub — CLI Tier 0–5 · decoupled proof index |
+| **3** | [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) | Technical specification · v0.95 patch log |
 | **4** | [`docs/architecture/README.md`](./docs/architecture/README.md) | Yellow Paper · R01–R20 · Hybrid Pillar Sets X & Y |
 | **5** | [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md) | Granular `pnpm demo:*` command reference |
 | **6** | [`docs/README.md`](./docs/README.md) | Full documentation index · audit · grants · SDK blueprint |
@@ -192,7 +192,7 @@ Wallet segregation (Wallet A hedge · Wallet B principal · Protocol Treasury +1
 ### Extended Express Audit
 
 ```bash
-# Zone A — Judge fast-track (recommended first pass)
+# Zone A — Primary verification commands
 pnpm demo:gmx -- --trip && pnpm demo:variational -- --trip && pnpm demo:hl -- --trip
 
 # Zone B — Inside Pillar Sets X & Y
