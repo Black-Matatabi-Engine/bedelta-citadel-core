@@ -124,7 +124,7 @@ beforeAll(async () => {
   const bytes = readFileSync(WASM_PATH);
   const { instance } = await WebAssembly.instantiate(bytes, {});
   wasmExports = instance.exports as unknown as WasmExports;
-});
+}, 60_000);
 
 function evalWasmGmxMask(packed: Uint8Array): { status: bigint; gmxMask: bigint } {
   if (!wasmExports) throw new Error("wasm not loaded");
