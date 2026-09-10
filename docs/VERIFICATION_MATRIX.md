@@ -5,7 +5,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **222 test files | 1044 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
+> **Vitest SSOT:** **225 test files | 1052 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
 > **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)  
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
@@ -44,7 +44,7 @@ pnpm demo:escort                         # Unidirectional Compliance Bridge Esco
 
 # === Tier 0 & Regression Verification ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # Full Regression Suite (222 test files | 1044 PASS clean)
+pnpm test -- --run                       # Full Regression Suite (225 test files | 1052 PASS clean)
 ```
 
 | Command | Proves |
@@ -146,4 +146,4 @@ Derivations → [`architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./architectu
 
 ---
 
-*SilverVine Labs · Verification Express Hub · 222 test files | 1044 PASS clean*
+*SilverVine Labs · Verification Express Hub · 225 test files | 1052 PASS clean*

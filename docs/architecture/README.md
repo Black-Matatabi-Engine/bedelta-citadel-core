@@ -1,6 +1,6 @@
 # Architecture Specification Index
 
-> **Vitest SSOT:** **222 test files | 1044 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
+> **Vitest SSOT:** **225 test files | 1052 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
 
 **Hybrid Pillar Architecture**
 

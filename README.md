@@ -4,7 +4,7 @@
 
 > **An Edge Wasm-powered, Pre-Consensus 0-Gas Security Firewall & Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware for Autonomous AI Agents and Retail Wallets on Arbitrum.**
 
-![Vitest](https://img.shields.io/badge/Vitest-1044%20PASS%20%28222%20files%29-brightgreen?logo=vitest)
+![Vitest](https://img.shields.io/badge/Vitest-1052%20PASS%20%28225%20files%29-brightgreen?logo=vitest)
 ![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -24,7 +24,7 @@
 
 ## 🚀 Standards Moat — How SilverVine Solves Next-Gen EIPs
 
-> **Industry's First [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
+> **Industry's First [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
 >
 > SilverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.
 
@@ -34,9 +34,12 @@
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118 (draft)](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#erc-8196--erc-8118--ai-agent-authenticated-wallet-off-chain-reference-implementation)** *(AI Authenticated Policy Engine)* | On-chain policy checks burn Gas and cannot catch prompt-injection intent drifts pre-execution. | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware (**`withRetailGuardProvider`**)** intercepts `eth_sendTransaction`, running **sub-10ms, 0-Gas** Wasm calldata validation.                                     | `src/sdk/robinhood-agentic-retail-wallet-guard/` `tests/sdk/retail-guard-provider.test.ts` **(35 PASS)** |
 | **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** *(Attenuated Session Mandates)*    | Lack of zero-gas enforcement for multi-agent delegation decay and cumulative spend caps.       | `INTENT_RING_U32` + `[agentic-auto-roll-gate.ts](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts)` real-time spend attempt tracking; severs channel prior to signing. | `src/services/api/pendle-shield/` `tests/services/api/pendle-shield.test.ts` **(7/7 PASS)**           |
 | **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) / [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** *(Pre-Consensus 0-Gas Gateway)*    | Blind mempool ingress without a 0-Gas transaction withdrawal mechanism against MEV.            | **Client-Side Preconf Gateway** in Wasm (`[soil-resistance-core.ts](./src/core/soil-resistance-core.ts)`) simulates execution and aborts locally before broadcast.               | `src/core/soil-resistance-core.ts` `tests/core/protocol-mask-sync.test.ts` **(6 PASS)**                  |
+| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** *(Cross-Chain Intent Standard)* | Solver MEV and slippage exploitation on `CrossChainOrder` fills before signature release. | Client-side Edge-Wasm pre-signature simulation via [`erc7683-intent-guard.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard.ts) — execution delta + solver MEV bps gate (**sub-10ms**). | `tests/sdk/erc7683-intent-guard.test.ts` **(3 PASS)** |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** *(Set EOA Account Code)* | Prompt-injected EOA delegation can install malicious implementation bytecode pre-broadcast. | [`eip7702-auth-guard.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/eip7702-auth-guard.ts) decodes `authorization` tuples · whitelisted implementation invariant matrix. | `tests/sdk/eip7702-auth-guard.test.ts` **(3 PASS)** |
+| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** *(Intent Delegations & Expiry)* | No zero-gas cancellation path when soil resistance trips before sequencer inclusion. | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) binds `rootProtection()` (**p50 ~15µs**) · emits Permit2 deadline expiry cancellation signal. | `tests/services/api/erc7710-intent-expiry.test.ts` **(2 PASS)** |
 
 
-→ Wiki: `[04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105)`
+→ Wiki: [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710)
 
 ---
 
@@ -130,7 +133,7 @@ pnpm demo:perp-loop -- --trip     # Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip     # Loop B: USD.ai Collateral Lane
 npx vitest run tests/sdk/retail-guard-provider.test.ts # EIP-1193 Retail Guard SDK (35 PASS)
 
-# Full Regression Test Suite (222 test files | 1044 PASS clean)
+# Full Regression Test Suite (225 test files | 1052 PASS clean)
 pnpm test -- --run
 ```
 

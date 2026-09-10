@@ -3,7 +3,7 @@
 > **Buildathon Primary (The Shield):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`  
 > **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).  
 > **Venue SSOT:** **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Hyperliquid · Variational.  
-> **Vitest SSOT:** **222 test files | 1044 PASS clean** on `pnpm test -- --run`.  
+> **Vitest SSOT:** **225 test files | 1052 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
 ---
@@ -164,7 +164,7 @@ pnpm install
 pnpm demo:gmx -- --trip
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:e2e
-pnpm test       # Full System Regression Suite (222 test files | 1044 PASS clean)
+pnpm test       # Full System Regression Suite (225 test files | 1052 PASS clean)
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

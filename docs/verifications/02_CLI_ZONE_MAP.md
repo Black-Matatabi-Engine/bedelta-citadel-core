@@ -23,7 +23,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (222 test files | 1044 PASS clean)
+pnpm test       # Full System Regression Suite (225 test files | 1052 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -46,7 +46,7 @@ pnpm test       # Full System Regression Suite (222 test files | 1044 PASS clean
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm test` | Full Vitest regression bar | **222 test files | 1044 PASS clean** |
+| `pnpm test` | Full Vitest regression bar | **225 test files | 1052 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -87,7 +87,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **222 test files | 1044 PASS clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **225 test files | 1052 PASS clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 

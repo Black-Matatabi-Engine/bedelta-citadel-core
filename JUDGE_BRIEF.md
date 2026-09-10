@@ -4,7 +4,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **222 test files | 1044 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **SSOT Lock:** **225 test files | 1052 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)
 
 ---
@@ -23,15 +23,18 @@
 
 ### How SilverVine Solves Next-Gen EIPs (Problem → Breakthrough → Proof)
 
-**Industry's first [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** for [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
+**Industry's first [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** for [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
 
 | Standard | **Problem** (architectural gap) | **Breakthrough** (SilverVine Edge-Wasm) | **Proof** |
 |----------|--------------------------------|----------------------------------------|-----------|
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118 (draft)](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#erc-8196--erc-8118--ai-agent-authenticated-wallet-off-chain-reference-implementation)** | On-chain policy checks burn Gas and cannot catch prompt-injection / calldata drift **before** execution | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) `withRetailGuardProvider()` intercepts `eth_sendTransaction` · sub-10ms Edge Wasm calldata validation · **0-Gas** on reject | `npx vitest run tests/sdk/` **48/48 PASS** · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](./src/sdk/robinhood-agentic-retail-wallet-guard/) |
 | **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** | No zero-gas enforcement for multi-agent delegation decay · cumulative spend caps unenforced at RPC layer | `agentic-auto-roll-gate.ts` + `INTENT_RING_U32` ring-buffer tracks attempts in real time · severs signing channel **before** [EIP-712](https://eips.ethereum.org/EIPS/eip-712) release | `npx vitest run tests/services/api/pendle-shield.test.ts` **7/7 PASS** |
 | **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) / [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** | Transactions enter mempools blind — L2 Sequencer MEV exposure with no 0-Gas abort path | Client-side Pre-Consensus Gateway — Wasm simulates preconfirmations locally · aborts unsafe txs **before** network broadcast | [`soil-resistance-core.ts`](./src/core/soil-resistance-core.ts) · `npx vitest run tests/core/protocol-mask-sync.test.ts` **6/6 PASS** |
+| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** | Cross-chain `CrossChainOrder` fills expose users to solver MEV / slippage overshoot pre-signature | [`erc7683-intent-guard.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard.ts) — Edge-Wasm execution delta + solver MEV bps gate (**sub-10ms**) | `npx vitest run tests/sdk/erc7683-intent-guard.test.ts` **3/3 PASS** |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | Malicious `authorization` tuple can hijack EOA code before broadcast | [`eip7702-auth-guard.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/eip7702-auth-guard.ts) — trusted implementation / blocked-address matrix | `npx vitest run tests/sdk/eip7702-auth-guard.test.ts` **3/3 PASS** |
+| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | Intent delegations lack zero-gas expiry cancellation on soil trip | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) — `rootProtection()` (**p50 ~15µs**) + Permit2 deadline sink | `npx vitest run tests/services/api/erc7710-intent-expiry.test.ts` **2/2 PASS** |
 
-**Vitest SSOT:** **222 test files | 1044 PASS clean** · `pnpm test -- --run`
+**Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · `pnpm test -- --run`
 
 ---
 
@@ -65,7 +68,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| **Vitest** | **222 test files | 1044 PASS clean** · `pnpm test -- --run` |
+| **Vitest** | **225 test files | 1052 PASS clean** · `pnpm test -- --run` |
 | **C-End SDK** | `@slivervine/robinhood-agentic-retail-wallet-guard` · [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) · **35/35** retail guard tests |
 | **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
@@ -114,7 +117,7 @@ $$
 ## Judge Quickstart (60s Verification)
 
 ```bash
-pnpm test -- --run          # 222 test files | 1044 PASS clean
+pnpm test -- --run          # 225 test files | 1052 PASS clean
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 
 pnpm demo:gmx -- --trip
