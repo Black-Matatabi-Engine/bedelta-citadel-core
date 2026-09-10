@@ -1,6 +1,6 @@
 # 🛡️ SliverVine Protocol (BeΔ) — Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive & 0-Gas Physical Deadlock for AI Agents on Arbitrum
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️**
+**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️ · `v0.95 Santenmoku Core`**
 
 > **Latency hierarchy (do not conflate):** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).
 >
@@ -68,7 +68,9 @@ Full wiki → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./doc
 
 ## Standards Moat — How SilverVine Solves Next-Gen EIPs
 
-> **Pre-Consensus Edge-Wasm Firewall** · **218 test files \| 1032 PASS clean** · Edge Wasm executes **before** Arbitrum Sequencer ingress — **0-Gas** on rejection.
+> **Industry's first EIP-1193 Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — ERC-8196 · ERC-8226 · EIP-8079.
+>
+> **Pre-Consensus Edge-Wasm Firewall** · **218 test files \| 1032 PASS clean (100%)** · Edge Wasm executes **before** Arbitrum Sequencer ingress — **0-Gas** on rejection.
 >
 > | Standard | Problem | SilverVine breakthrough | Proof |
 > |----------|---------|-------------------------|-------|
