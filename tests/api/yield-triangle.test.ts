@@ -55,7 +55,7 @@ describe("yield triangle API", () => {
         hlLendApy: 0.06,
         totalStackedApy: 0.12,
         stableDepthUsd: 2_000_000,
-        yieldSource: "aave",
+        yieldSource: "gmx",
       },
     });
 
@@ -91,7 +91,7 @@ describe("yield triangle API", () => {
         hlLendApy: 0.06,
         totalStackedApy: 0.11,
         stableDepthUsd: 3_000_000,
-        yieldSource: "aave",
+        yieldSource: "gmx",
       },
     });
 

@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import {
-  DEFAULT_AAVE_BASE_APY,
+  DEFAULT_PENDLE_BASE_APY,
   fetchAllArbitrumStableYields,
   fetchArbitrumStableYield,
   pickBestArbitrumStableIngress,
@@ -44,11 +44,11 @@ describe("arbitrum-yield-ingress", () => {
     expect(snap.source).toBe("gmx");
   });
 
-  it("falls back to Aave APY when GMX unavailable", async () => {
+  it("falls back to Pendle APY when GMX unavailable", async () => {
     const fetchFn = vi.fn(async () => new Response("", { status: 502 }));
     const snap = await fetchArbitrumStableYield("USDT", { fetchFn });
-    expect(snap.baseApy).toBe(DEFAULT_AAVE_BASE_APY.USDT);
-    expect(snap.source).toBe("aave");
+    expect(snap.baseApy).toBe(DEFAULT_PENDLE_BASE_APY.USDT);
+    expect(snap.source).toBe("pendle");
   });
 
   it("pickBestArbitrumStableIngress selects highest APY with depth", async () => {
@@ -65,7 +65,7 @@ describe("arbitrum-yield-ingress", () => {
       address: "0x",
       baseApy: 0.03,
       depthUsd: 500,
-      source: "aave" as const,
+      source: "pendle" as const,
       fetchedAt: "",
     };
     const v = validateArbitrumYieldIngress(shallow);
