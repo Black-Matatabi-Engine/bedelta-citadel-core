@@ -1,5 +1,7 @@
-/** Plain-text retail warning generator — Robinhood C-end user alerts. */
-
+/**
+ * SPDX-License-Identifier: Apache-2.0
+ * Plain-text retail warning generator — Robinhood C-end user alerts.
+ */
 import type { RetailGuardReasonCode } from "./types";
 
 export function formatRetailWarning(

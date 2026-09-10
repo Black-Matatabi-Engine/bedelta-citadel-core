@@ -1,4 +1,5 @@
 /**
+ * SPDX-License-Identifier: Apache-2.0
  * Unified retail risk evaluator — calldata · EIP-712 · soil · intent gates.
  */
 import { parseTransactionCalldata } from "./calldata-parser";
@@ -71,7 +72,7 @@ function resolveVenueBit(
   return 0;
 }
 
-/** Run full retail risk stack for a guarded EIP-1193 method. Returns reject payload or null. */
+/** Run full retail risk stack for a guarded EIP-1193 method. */
 export function evaluateRetailRisk(
   config: RetailGuardConfig,
   method: string,
@@ -112,7 +113,7 @@ export function evaluateRetailRisk(
 
   const soilQuote = resolveSoilQuote(config, method, params);
   if (soilQuote) {
-    const soilReject = evaluateRetailSoilGate(soilQuote);
+    const soilReject = evaluateRetailSoilGate(soilQuote, config.preferWasm !== false);
     if (soilReject) return soilReject;
   }
 

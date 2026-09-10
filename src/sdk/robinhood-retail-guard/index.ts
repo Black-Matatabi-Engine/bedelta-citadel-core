@@ -1,3 +1,7 @@
+/**
+ * SPDX-License-Identifier: Apache-2.0
+ * @module @slivervine/robinhood-retail-guard
+ */
 export { withRetailGuardProvider, RetailGuardRejectedError } from "./provider";
 export { evaluateRetailRisk, parseTypedDataPayload } from "./risk-evaluator";
 export {
@@ -11,11 +15,21 @@ export {
   RETAIL_UNKNOWN_VENUE_BIT,
 } from "./guard-engine";
 export {
+  ensureRetailGuardWasm,
+  isRetailGuardWasmReady,
+  evaluateSoilViaWasm,
+  evaluateIntentGateViaWasm,
+  __resetRetailGuardWasmForTests,
+} from "./wasm-adapter";
+export {
   parseTransactionCalldata,
   parseSelector,
   encodeApproveCalldata,
+  readSelectorU32,
   isInfiniteApproval,
   UINT256_MAX,
+  SEL_ERC20_APPROVE,
+  SEL_ERC20_TRANSFER,
   SELECTOR_ERC20_APPROVE,
   SELECTOR_ERC20_TRANSFER,
   SELECTOR_UNISWAP_V2_SWAP_EXACT,

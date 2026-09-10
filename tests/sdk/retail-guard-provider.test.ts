@@ -16,7 +16,7 @@ import {
   withRetailGuardProvider,
   type EIP1193Provider,
   type RetailGuardConfig,
-} from "../../src/sdk/retail-guard";
+} from "../../src/sdk/robinhood-retail-guard";
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX_ROUTER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
