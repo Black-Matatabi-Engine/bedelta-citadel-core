@@ -4,14 +4,15 @@
 
 ## Zone A — 30-Second Express Verification (Fast Track)
 
-### 3-Tier Demo Suite (CLI SSOT)
+### 4-Tier Demo Suite (CLI SSOT)
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall · GMX · HL |
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:variational` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational |
-| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
+| **Tier 0 — Retail Guard SDK** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` |
+| **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
+| **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
+| **Tier 2 — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
+| **Tier 3 — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia Stabilizer · **4-step Happy Path** (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
@@ -22,7 +23,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
+pnpm test       # Full System Regression Suite (218 test files | 1032 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -31,29 +32,21 @@ pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:uniswap` | Uniswap V3 concentrated liquidity · dynamic fee guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:aave` | Aave V3 HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:morpho` | Morpho Blue vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:usdai` | USD.ai AI-compute yield collateral guard (`evaluateUsdAiCollateralGuard`) | `ALLOW` / `--trip` FAIL_CLOSED · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) **5/5** |
 | `pnpm demo:variational` | Variational Omni RFQ stale quote & OLP depth guard | `ALLOW` / `--trip` **FAIL_CLOSED** (`VARIATIONAL_STALE_QUOTE_BREACH`) |
 | `pnpm demo:gmx -- --trip` | **Judge fast track** — GMX V2 Arbitrum native hard anchor | **FAIL_CLOSED** · pool skew / price-impact breach |
 | `pnpm demo:variational -- --trip` | **Judge fast track** — Variational multi-venue RFQ gate | **FAIL_CLOSED** · stale quote / OLP breach |
 | `pnpm demo:hl -- --trip` | **Judge fast track** — Hyperliquid L1 primary hedge path | **FAIL_CLOSED** · session-key / depth guard |
 | `pnpm demo:perp-loop -- --trip` | Loop A perp/yield stack (GMX / Pendle / HL / Variational) | **FAIL_CLOSED** · p50 ~15µs reflex core |
-| `pnpm demo:spot-loop -- --trip` | Loop B spot/lending vault (Morpho / Aave / USD.ai / Uniswap) | **FAIL_CLOSED** · p50 ~15µs reflex core |
+| `pnpm demo:spot-loop -- --trip` | Loop B USD.ai collateral lane | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:e2e -- --unwind` | Optional Step 5 Citadel Shield R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
-| `pnpm demo:wayfinder` | Wayfinder route interception on Arbitrum `42161` | `ALLOW` · pre-broadcast clearance |
-| `pnpm demo:elizaos` | ElizaOS Action handler pre-broadcast guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:virtuals` | Virtuals GAME worker task guard | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:langchain` | LangChain CitadelRiskGuardTool invoke | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:wayfinder -- --trip` | 0-Gas Fail-Closed soil trip | `FAIL_CLOSED` · 0-Gas intercept |
-| `pnpm demo:wayfinder -- --stabilizer` | Sepolia Stabilizer 1:1 stablecoin swap (Wayfinder harness) | `ALLOW` · zero-slippage clearance |
-| `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach (Wayfinder harness) | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard SDK | **35/35 PASS** |
+| `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm test` | Full Vitest regression bar | **217 test files | 967 PASS clean** |
+| `pnpm test` | Full Vitest regression bar | **218 test files | 1032 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -94,7 +87,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **217 test files | 967 PASS clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **218 test files | 1032 PASS clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 

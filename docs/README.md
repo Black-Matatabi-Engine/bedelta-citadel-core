@@ -6,9 +6,11 @@
 **Entity:** SilverVine Labs · **Protocol:** SliverVine · **Branch:** `v1.0_push_BDLW`
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · **Contact:** `grants@silvervinelabs.com`
 
-> **Vitest SSOT:** **217 test files | 967 PASS clean** · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` (12 Dual Pillar Set X & Y scenarios) · `pnpm demo:e2e` (**4-step Happy Path** · `--unwind` · `--trip` optional) · live proof `GET /api/grant-audit`.
+> **Vitest SSOT:** **218 test files | 1032 PASS clean** · `pnpm exec tsc --noEmit` **tsc 0 errors** · Worker bundle **143.77 KiB raw | 50.94 KiB gzip** · `pnpm test` · `pnpm demo` · `pnpm demo:e2e` · live proof `GET /api/grant-audit`.
 
 > **Language policy:** English SSOT files are self-contained — professional English only, no CJK characters, no cross-language links.
+
+> **Historical archives:** Dated persona audits under [`docs/internal/`](./internal/) (`09xx_*`) are **immutable** point-in-time records. Current product SSOT = [`architecture/`](./architecture/) + [`sdk/`](./sdk/) + [`SSOT_VOCABULARY.md`](./SSOT_VOCABULARY.md).
 
 ---
 
@@ -29,7 +31,7 @@
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate
 pnpm execute:gmx:gm-deposit           # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
 pnpm demo:e2e                         # 4-step Happy Path macro lifecycle HUD
-pnpm test                             # 217 test files | 967 PASS clean
+pnpm test                             # 218 test files | 1032 PASS clean
 ```
 
 ---
@@ -42,7 +44,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 | 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Express verification hub** — CLI Tier 0–5 entry · decoupled proof index |
 | 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (`00`–`05`)** — topology · Hybrid Pillar Sets X & Y · R01–R20 · ERC/EIP wiki · risk framework |
 | 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
-| 5 | [`sdk/README.md`](./sdk/README.md) | **C-End Middleware SDK Docs (01→04)** — `@slivervine/robinhood-agentic-retail-wallet-guard` · EIP-1193 pre-consensus wallet guard · **48/48** Vitest |
+| 5 | [`sdk/README.md`](./sdk/README.md) | **C-End Middleware SDK Docs (01→04)** — `@slivervine/robinhood-agentic-retail-wallet-guard` · EIP-1193 pre-consensus wallet guard · **35/35** retail guard Vitest |
 
 ---
 

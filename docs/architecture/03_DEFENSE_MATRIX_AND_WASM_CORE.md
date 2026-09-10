@@ -7,12 +7,12 @@
 > - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 > - **Zero-GC Ring Slab** — pre-allocated **256×4** intent heap · **O(1)** slot hash · **&lt;16 KiB** heap delta / 10k hot-path iterations (Vitest worker isolation)
 >
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **220 test files | 992 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **218 test files | 1032 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
 
-Institutional-grade technical moat: Citadel Shield evaluates the full **7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1)** as a **single parallel vector** — not a sequential per-venue RPC loop. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
+Institutional-grade technical moat: Citadel Shield evaluates the **5-Core Venue Matrix** (GMX · Pendle · USD.ai · Variational · Hyperliquid) as a **single parallel vector** — not a sequential per-venue RPC loop. Pruned venues retain **RESERVED_ABI_V2** bitmask holes. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
 
 ### Pure-Math Invariant Evaluation (~0.5µs–1.1µs)
 
@@ -31,8 +31,8 @@ $$
 | Layer | SSOT module | Parallelism model |
 |-------|-------------|-------------------|
 | **TS bitmask compiler** | [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | All R01–R20 + protocol lanes compile to **`protocolMask` / `tripFlags`** — evaluated in one bitwise pass |
-| **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` |
-| **8-venue matrix coverage** | Per-venue demos · `pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl` | Entire **7+1** lane set evaluated via bitmask — targeted single/dual-venue judge proofs |
+| **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs active lanes (GMX · Pendle · USD.ai · Variational · HL) + **RESERVED_ABI_V2** holes · slot **27** = aggregated `protocolMask` |
+| **5-core matrix coverage** | Per-venue demos · `pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl` | Active lanes evaluated via bitmask — pruned bits 4–6 frozen |
 
 ```text
 Intent → pack Float64Array[28] → Wasm bitmask eval → tripFlags (u64) → severSigningChannel()

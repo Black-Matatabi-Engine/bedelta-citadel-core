@@ -1,6 +1,6 @@
 # Architecture Specification Index
 
-> **Vitest SSOT:** **217 test files | 967 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
+> **Vitest SSOT:** **218 test files | 1032 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
 
 **Hybrid Pillar Architecture**
 
@@ -12,8 +12,8 @@
 | # | Document | Scope |
 |---|----------|-------|
 | **00** | [`00_TECHNICAL_SPECIFICATION_REDIRECT.md`](./00_TECHNICAL_SPECIFICATION_REDIRECT.md) | Legacy modularization redirect stub (former monolithic spec) |
-| **01** | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | BeΔ philosophy · **7+1 Cross-Chain Execution Matrix** · GMX/HL triangle loop · settlement & fee tokenomics |
-| **02** | [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | **Pillar Set X** ingress & liquidity · **Pillar Set Y** reflex hooks · ZeroDev · agent adapters |
+| **01** | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | BeΔ philosophy · **5-Core Venue Matrix** · Wasm ABI v2 RESERVED_ABI_V2 holes · GMX/HL triangle loop |
+| **02** | [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | **Pillar Set X** ingress & liquidity · **Pillar Set Y** reflex hooks · EIP-1193 Retail Guard · B2B decorator |
 | **03** | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | **Pillar Set Y** — R01–R20 Defense Matrix · `soil_core` Wasm · microsecond moats |
 | **04** | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC-8196 (Final) · ERC-4337 · EIP-712 · Stylus coprocessor · ArbOS alignment |
 | **05** | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | **88% / 12%** risk spectrum · Basel mapping · fail-closed boundaries · disclaimers |

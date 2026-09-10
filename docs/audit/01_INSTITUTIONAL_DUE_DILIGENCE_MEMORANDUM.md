@@ -628,7 +628,7 @@ pnpm test -- --run # 199 test files | 868 PASS Clean (100% PASS)
 | **Hurdle Gate friction buffer** | **+0.5%** (`FRICTION_BUFFER_APY = 0.005`) | `rebalance-rules.ts` |
 | **Rebalance predicate** | Deploy only when excess yield exceeds friction buffer | `resolveCapitalAllocation()` · `passesDeltaNeutralHurdle()` |
 
-> **Allocator note:** The 8.2–11.8% band is a **dynamic target range for HUD disclosure**, not a guaranteed return. Performance crystallization remains gated by the Hurdle Gate friction buffer and planned Aave + 1.5% performance hurdle (Invariant #24) *(Hurdle-rate probe only — not a yield-stacking product track)*.
+> **Allocator note:** The 8.2–11.8% band is a **dynamic target range for HUD disclosure**, not a guaranteed return. Performance crystallization remains gated by the Hurdle Gate friction buffer and planned Pendle/GMX yield probe + 1.5% performance hurdle (Invariant #24) *(Hurdle-rate probe only — not a yield-stacking product track)*.
 
 ### 5.7 Three Lines of Defense & Allocator FAQ
 

@@ -27,7 +27,7 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ dApp / AI Agent (ElizaOS · LangChain · Virtuals · custom)       │
+│ dApp / Wallet / AI Copilot (any EIP-1193 host)                  │
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
@@ -63,7 +63,7 @@ const config: RetailGuardConfig = {
   walletAddress: "0xYourWallet…",
   allowedVenues: [
     "0xGmxRouter…",
-    "0xUniswapRouter…",
+    "0xUniswapRouter…", // generic DEX calldata guard — not the pruned Uniswap V3 venue adapter
     "0xUsdcToken…",
     "0x000000000022d473030f116ddee9f6b43ac78b6", // Permit2
   ],

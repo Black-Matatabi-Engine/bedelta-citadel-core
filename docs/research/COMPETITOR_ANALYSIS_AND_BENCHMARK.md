@@ -95,7 +95,9 @@ Speed ratio (order of magnitude): 10⁴ – 10⁵× faster decision vs polling k
 | Capability | **Citadel** | **Standard Stop-Loss / HF Oracle** |
 |------------|-------------|-------------------------------------|
 | **State Representation** | `Float64Array(PROTO_VECT_LEN=28)` · protocol bitmask | Single price / HF scalar |
-| **Protocol Coverage** | GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · HL · Variational (7+1 venues) | Usually single-protocol or single metric |
+| **Protocol Coverage** | GMX · Pendle · USD.ai · HL · Variational (5-core venues)[^1] | Usually single-protocol or single metric |
+
+[^1]: Citadel product surface = 5-core venues + EIP-1193 Retail Guard SDK — not point-to-point framework plugins. Competitor landscape may cite ElizaOS/Virtuals as market context.
 | **Defense Matrix** | R01–R20 · `FLAGS_AUTO_SEVER_MASK` · auto severance | No standardized matrix |
 | **Clock SSOT** | `USDAI_CLOCK_SKEW_MAX_MS = 30_000` · `resolveUsdAiClockSsotPure()` | Relies on on-chain `block.timestamp` or bot local clock |
 | **Slippage / Depth** | Soil lane · orderbook gap · cross-venue TWAP | Fixed % stop or liquidation line |
@@ -256,7 +258,7 @@ pnpm bundle:measure         # gzipKiB < 51 · pass: true
 pnpm demo:gmx -- --trip            # GMX native hard anchor
 pnpm demo:variational -- --trip    # Variational multi-venue gate
 pnpm demo:hl -- --trip             # Hyperliquid primary path
-pnpm demo:elizaos           # Agent framework guard path
+npx vitest run tests/sdk/retail-guard-provider.test.ts  # EIP-1193 Retail Guard SDK
 ```
 
 ---

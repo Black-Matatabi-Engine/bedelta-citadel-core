@@ -95,7 +95,7 @@ forge test --match-contract IntentRingSlabTest
 
 | | **Cerebrum (LLM Reasoning & Agent Loop)** | **Citadel Reflex Arc (Cerebellum)** |
 |---|-------------------------------------------|-------------------------------------|
-| **Stack** | DeepSeek-R1 / GPT-4 + Wayfinder / ElizaOS / GAME / LangChain | Wasm `checkSoilResistance()` reflex kernel |
+| **Stack** | DeepSeek-R1 / GPT-4 + any EIP-1193 wallet host | Wasm `checkSoilResistance()` reflex kernel · `withRetailGuardProvider()` |
 | **Latency scale** | **~1.0s–10.0s** (1,000ms–10,000ms · DeepSeek-R1 CoT & tool calls) | **Pure ~0.5–1.1µs** · **Reflex p50 ~15µs (<20µs warm)** · **E2E p50 ~106µs** (Edge target) |
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** physical deadlock |
 | **On threat** | May emit out-of-scope calldata (e.g. Cross-chain hallucination to Base / Aerodrome) | **p50 ~15µs** reflex — severs EIP-712 channel |
@@ -133,10 +133,10 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & C
 | **Physical Deadlock** | `rootProtection()` · `severSigningChannel()` on R20 / soil trip | **p50 ~15µs** | **0** |
 | **On-Chain Anchor** | EIP-712 consume-once `SliverVineGate` attestation | Post-clearance only | Minimal |
 
-**Multi-framework coverage (V1.0 Live):** Wayfinder · ElizaOS · Virtuals · LangChain — prove per framework or per venue:
+**5-Core Venue + Retail Guard SDK (V1.0 Live):**
 
 ```bash
-pnpm demo:wayfinder -- --trip    # Wayfinder AI Guard → FAIL_CLOSED (p50 ~15µs deadlock)
+npx vitest run tests/sdk/retail-guard-provider.test.ts  # EIP-1193 Retail Guard · 35/35
 pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
 pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
 pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
@@ -170,19 +170,19 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
 | **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED · **max 3-attempt** budget per intent digest |
 
-**Verification protocol:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `pnpm demo:wayfinder -- --trip`
+**Verification protocol:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`
 
 ---
 
-## 🏗️ Dual-Venue Short Architecture — GMX Hard Anchor & 8-Venue Matrix
+## 🏗️ Dual-Venue Short Architecture — GMX Hard Anchor & 5-Core Venue Matrix
 
-Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** while Hyperliquid remains the **external L1 primary hedge path**. Variational and six additional Arbitrum-native protocols prove **universal AI-agent firewall compatibility**.
+Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** while Hyperliquid remains the **external L1 primary hedge path**. Variational · Pendle · USD.ai complete the **5-Core Venue Matrix**.
 
 | Tier | Venue | Chain | Strategic role |
 |------|-------|-------|----------------|
 | **Primary hedge** | Hyperliquid L1 | Off-Arbitrum | Session-key perp shorts · `Wallet A` · 0-Gas pre-broadcast soil fuse |
 | **Arbitrum native backup** | **GMX V2** | Arbitrum One `42161` | **Hard anchor** when HL is isolated or session keys expire · GM Pool liquidity · zero sequencer queue pollution |
-| **Multi-venue expansion** | Variational + 6 natives | Arbitrum One `42161` | Protocol-agnostic firewall · `allowedVenues[]` mandates · **`VENUE_DRIFT_REJECTED`** |
+| **RFQ + yield + collateral** | Variational · Pendle · USD.ai | Arbitrum One `42161` | Protocol-agnostic firewall · `allowedVenues[]` mandates · **`VENUE_DRIFT_REJECTED`** |
 
 ### GMX V2 Native Liquidity Routing
 
@@ -193,15 +193,12 @@ Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** w
 | **Pre-sequencer ingress filter** | 0-Gas fail-closed severance **before** GMX calldata reaches sequencer queue |
 | **Dual-venue fallback** | HL primary → GMX native backup — [`DEMO_GUIDE.md`](../DEMO_GUIDE.md) |
 
-### 8-Venue Universal Firewall Matrix
+### 5-Core Venue Firewall Matrix
 
-| `--venue` | Protocol | Demo command |
-|-----------|----------|--------------|
+| Venue | Protocol | Demo command |
+|-------|----------|--------------|
 | `gmx` | GMX v2 | `pnpm demo:gmx -- --trip` |
-| `pendle` | Pendle PT/YT | `pnpm demo:pendle -- --trip` |
-| `uniswap` | Uniswap V3 | `pnpm demo:uniswap -- --trip` |
-| `aave` | Aave V3 | `pnpm demo:aave -- --trip` |
-| `morpho` | Morpho Blue | `pnpm demo:morpho -- --trip` |
+| `pendle` | Pendle PT/YT | `pnpm demo:pendle` |
 | `usdai` | USD.ai | `pnpm demo:usdai -- --trip` |
 | `variational` | Variational Omni RFQ | `pnpm demo:variational -- --trip` |
 | `hyperliquid` / `hl` | Hyperliquid L1 | `pnpm demo:hl -- --trip` |
@@ -339,7 +336,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`c1a37d4`** (zero-GC ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **220/992** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
-> **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 7+1 Cross-Chain Execution Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
+> **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 5-Core Venue Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
 
 **Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [Headless Audit](https://bedeltawater.slivervine.xyz/api/grant-audit) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md)
 
@@ -352,7 +349,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **220 test files | 992 PASS clean** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **Zero-GC Ring Slab Memory Engine** (pre-allocated **256×4** mandate heap · **&lt;16 KiB** / 10k iterations · [C-ABI parity](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#c-abi-parity--rust-wasm--arbitrum-stylus-coprocessors)) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
-| **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **8-venue universal firewall** (GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,gmx,variational,hl}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
+| **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **5-Core Venue firewall** (GMX · Pendle · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **EIP-1193 Retail Guard SDK** + **5-Core Venue guards** · Stabilizer Sepolia ([`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · `pnpm demo:{gmx,pendle,usdai,variational,hl,stabilizer}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
 
 #### Innovation and Creativity — Technical Summary
 
@@ -365,7 +362,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 #### Innovation & Real Problem Solving — AI Behavioral Safety Substrate
 
-1. **Native LLM Back-off & Retry Intercepts**: Active **60-second cooldown lock** per `agentId` in `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) prevents token-burning infinite retry loops and **RPC Rate-Limit Self-DoS** when transactions fail closed — `[Citadel Back-off] MANDATORY_COOLDOWN_ACTIVE` surfaced across all V1.0 agent adapters (`pnpm demo:elizaos -- --trip` · `pnpm demo:virtuals -- --trip` · `pnpm demo:langchain -- --trip`).
+1. **Native LLM Back-off & Retry Intercepts**: Active **60-second cooldown lock** per `agentId` in `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) prevents token-burning infinite retry loops and **RPC Rate-Limit Self-DoS** when transactions fail closed — `[Citadel Back-off] MANDATORY_COOLDOWN_ACTIVE` surfaced via Retail Guard SDK and B2B decorator (`pnpm demo:agent -- --trip`).
 2. **Non-Semantic Bytecode Predicate Assertions**: Evaluates **raw bytecode parameters** at **p50 ~106µs** Edge Wasm rather than natural language — immune to **Indirect Prompt Injections** at the signing layer ([Technical Specification §0.1](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec)).
 3. **Dynamic Threshold Obfuscation**: Cryptographic pseudo-random **±2–5 bps jitter** on `MAX_SLIPPAGE` / depth bounds ([`soil-threshold-jitter.ts`](../../src/services/risk-control-lib/soil-threshold-jitter.ts)) prevents MEV searchers from predicting exact **50 bps** cutoff boundaries off-chain.
 

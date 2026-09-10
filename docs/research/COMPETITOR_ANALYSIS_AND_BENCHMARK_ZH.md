@@ -95,7 +95,9 @@ Speed ratio (order of magnitude): 10⁴ – 10⁵× faster decision vs polling k
 | 能力 | **Citadel** | **標準 Stop-Loss / HF Oracle** |
 |------|-------------|--------------------------------|
 | **狀態表示** | `Float64Array(PROTO_VECT_LEN=28)` · protocol bitmask | 單點價格 / HF 標量 |
-| **協議覆蓋** | GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · HL · Variational（7+1 venue） | 通常單協議或單指標 |
+| **協議覆蓋** | GMX · Pendle · USD.ai · HL · Variational（5-core venues）[^1] | 通常單協議或單指標 |
+
+[^1]: Citadel 產品面 = 5-core venues + EIP-1193 Retail Guard SDK — 非 point-to-point 框架插件。競品景觀可引用 ElizaOS/Virtuals 作市場背景。
 | **Defense Matrix** | R01–R20 · `FLAGS_AUTO_SEVER_MASK` · auto severance | 無標準化矩陣 |
 | **時鐘 SSOT** | `USDAI_CLOCK_SKEW_MAX_MS = 30_000` · `resolveUsdAiClockSsotPure()` | 依賴鏈上 `block.timestamp` 或 bot 本地時鐘 |
 | **滑點 / 深度** | Soil lane · orderbook gap · cross-venue TWAP | 固定 % stop 或清算線 |
@@ -256,7 +258,7 @@ pnpm bundle:measure         # gzipKiB < 51 · pass: true
 pnpm demo:gmx -- --trip            # GMX native hard anchor
 pnpm demo:variational -- --trip    # Variational multi-venue gate
 pnpm demo:hl -- --trip             # Hyperliquid primary path
-pnpm demo:elizaos           # Agent framework guard path
+npx vitest run tests/sdk/retail-guard-provider.test.ts  # EIP-1193 Retail Guard SDK
 ```
 
 ---

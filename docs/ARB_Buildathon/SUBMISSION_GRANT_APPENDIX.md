@@ -59,7 +59,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
 | **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **p50 ~15µs** |
 
-**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:wayfinder -- --trip` · `pnpm demo:gmx -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip`.
 
 ### Legal & Regulatory Positioning
 
@@ -97,14 +97,14 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
-**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards · **GM Pool I/O channel CLOSED on 42161** (deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410)) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **V1.0 Live Native Agent Integrations** (Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer) · Dune Sepolia live stream + 42161 SQL pre-compiled · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · V1.1 4-tier SaaS roadmap · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
+**V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards · **GM Pool I/O channel CLOSED on 42161** (deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410)) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **EIP-1193 Retail Guard SDK** + **5-Core Venue guards** · Stabilizer Sepolia · Dune Sepolia live stream + 42161 SQL pre-compiled · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · V1.1 4-tier SaaS roadmap · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---
 
 ## Architectural SSOT & Hardened Metrics
 
-* **Test Suite**: **217 test files | 967 PASS clean** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
-* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Dual Pillar Set X & Y ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`pnpm demo:wayfinder`** — Wayfinder route interception on Arbitrum `42161` (normal ALLOW · `--trip` 0-Gas FAIL_CLOSED).
+* **Test Suite**: **218 test files | 1032 PASS clean** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../VERIFICATION_MATRIX.md).
+* **Dual-Demo Architecture**: **`pnpm demo`** — 12 Dual Pillar Set X & Y ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`npx vitest run tests/sdk/retail-guard-provider.test.ts`** — EIP-1193 Retail Guard SDK (35/35 PASS).
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#3-cross-venue-risk-engine-defense-matrix-r01-r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../telemetry/game_theory_simulation_results.json) *(simulation only; not live savings)*.
 * **Deployments**: Arbitrum One Mainnet Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification-arbitrum-one-42161) · [Sepolia](#on-chain-verification-arbitrum-sepolia-421614).
@@ -172,7 +172,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **217 test files | 967 PASS clean** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **50.94 KiB gzip** · **218 test files | 1032 PASS clean** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -189,9 +189,9 @@ Optional bridges (Robinhood / Across) are **Pillar Set X Reference Escort Adapte
 | **Pendle** | **Institutional Sentinel + AI Guarded Pool Factory** (V1.0 Pillar Set Y) | 60s TTL Oracle Fuse · 200bps Jitter Guard · `validateAIPoolSelection()` 5 Invariants · protocol-tax-free · SaaS credits in V1.1 | `src/adapters/pendle/pendle-market-oracle-adapter.ts` · `src/adapters/pendle/pendle-pool-factory-adapter.ts` · `src/guards/pendle-gmx-cross-guard.ts` |
 | **Dune** | **PEV** + `RiskTripBlocked` telemetry | Indexes off-chain blocked attacks; Sepolia live · One SQL spec | `DUNE_DASHBOARD_SPECIFICATION.md` |
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `src/services/adapters/gmx-v2-order-payload.ts` |
-| **Wayfinder** | Native pre-execution risk firewall on **42161** | `wayfinderCitadelShieldHook` · soil fuse + 8-dimension intent gate · 0-Gas fail-closed | `src/adapters/wayfinder/wayfinder-shield.ts` · `pnpm demo:wayfinder` |
+| **EIP-1193 Retail Guard** | Universal C-end wallet middleware | `withRetailGuardProvider()` · 0-Gas pre-consensus intercept | `src/sdk/robinhood-agentic-retail-wallet-guard/` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | **Stabilizer** | Universal Sepolia sandbox & cross-pass layer on **421614** | Stabilizer → GMX v2 → Pendle routing · identical `checkSoilResistance()` gates | `src/adapters/stabilizer/stabilizer-adapter.ts` · `pnpm demo:stabilizer` |
-| **Virtuals / ElizaOS / LangChain** | Full quad-framework pre-consensus firewall | `evaluateVirtualsGameTask()` · `evaluateElizaCitadelAction()` · `CitadelRiskGuardTool` | `src/adapters/virtuals/virtuals-game-adapter.ts` · `src/adapters/elizaos/elizaos-citadel-plugin.ts` · `src/adapters/langchain/langchain-citadel-tool.ts` · `pnpm demo:virtuals` · `pnpm demo:elizaos` · `pnpm demo:langchain` |
+| **B2B Agent Decorator** | Framework-agnostic pre-consensus firewall | `withCitadelShield()` · `verifyAgentIntent()` | `src/sdk/decorator.ts` · `pnpm demo:agent` |
 | **Robinhood** | Pillar Set X RWA ingress firewall | Outbound-only `46630/4663 → 42161` · **`lostUsd ≡ 0`** · inbound AML BLOCK · ArbOS Elara compatible | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` |
 
 ---
@@ -423,12 +423,12 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | ID | Unlock condition (objective) | Sponsor / track | Status |
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in `/api/grant-audit` | Arbitrum | ✅ Delivered |
-| **M-CLI** | Vitest **217 test files | 967 PASS clean** | All | ✅ Delivered |
+| **M-CLI** | Vitest **218 test files | 1032 PASS clean** | All | ✅ Delivered |
 | **M-RH-Demo** | `4663` → `42161` outbound Smart Route **Verified Live** · UserOp `0x7b72ee9f…` · Tx [`0x4c4ca136…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Live-verified |
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **M6-Mainnet** | Arbitrum One Gate ignition on `42161` · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Tx `0x54c153…b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | Arbitrum · Grant | ✅ Delivered |
-| **M1-Native-PR** | **Milestone 1 (Weeks 2–3 post-grant):** Official upstream PRs to ElizaOS (`@elizaos/plugin-citadel`) + Virtuals GAME (`@virtuals/plugin-citadel`) — graduate from `withCitadelShield` SDK wrapper to native monorepo plugins | ElizaOS · Virtuals | ⏳ Post-grant Weeks 2–3 |
+| **M1-Wallet-SDK** | **Milestone 1 (Weeks 2–3 post-grant):** EIP-1193 Retail Guard wallet vendor integrations — MetaMask Snaps · Rabby · Coinbase Wallet distribution | Wallet vendors | ⏳ Post-grant Weeks 2–3 |
 
 ---
 
@@ -487,14 +487,13 @@ pnpm install
 pnpm demo:gmx     # Tier 1 — GMX v2 shadow margin (ALLOW)
 pnpm demo:hl      # Tier 1 — Hyperliquid session key (ALLOW)
 pnpm demo:pendle  # Tier 1 — Pendle guarded pool factory (ALLOW)
-pnpm demo:uniswap # Tier 1 — Uniswap V3 spot liquidity (ALLOW)
-pnpm demo:aave # Tier 1 — Aave V3 HF guard (ALLOW)
-pnpm demo:morpho   # Tier 1 — Morpho Blue vault guard (ALLOW)
+pnpm demo:usdai    # Tier 1 — USD.ai collateral guard (ALLOW)
+pnpm demo:pendle   # Tier 1 — Pendle yield guard (ALLOW)
 pnpm demo       # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm demo:wayfinder              # Tier 2 — Wayfinder route interception (ALLOW)
-pnpm demo:wayfinder -- --trip    # 0-Gas Fail-Closed soil trip
-pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
+npx vitest run tests/sdk/retail-guard-provider.test.ts  # Tier 0 — EIP-1193 Retail Guard SDK
+pnpm demo:agent                  # Tier 0 — B2B withCitadelShield smoke demo
+pnpm test       # Full System Regression Suite (218 test files | 1032 PASS clean)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 cd SliverVineGate && forge test --gas-report && cd ..
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
@@ -530,7 +529,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **217 test files | 967 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
+**Regression bar:** Vitest **218 test files | 1032 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
 
 ---
 
