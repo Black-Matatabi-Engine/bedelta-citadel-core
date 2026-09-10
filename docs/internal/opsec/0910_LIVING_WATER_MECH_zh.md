@@ -1,15 +1,15 @@
 # SilverVine Living Water — 內部 OpSec 機制白皮書
 
 > **分類：** INTERNAL OPSEC ONLY · DO NOT PUBLISH NATIVELY  
-> **模組 SSOT：** `src/sdk/robinhood-retail-guard/livingwater-telemetry.ts`  
+> **模組 SSOT：** `src/sdk/robinhood-agentic-retail-wallet-guard/livingwater-telemetry.ts`  
 > **相關 Commits：** `b7c33d8`（EIP-6963 · Permit2 · MOAT 白皮書）· `2216da7`（Living Water 整合）  
-> **公開對外敘事：** 「in-browser health & execution performance monitor」— 見 `src/sdk/robinhood-retail-guard/README.md`
+> **公開對外敘事：** 「in-browser health & execution performance monitor」— 見 `docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`
 
 ---
 
 ## 1. 戰略定位（內部）
 
-**SilverVine Living Water** 是 Robinhood Retail Guard SDK 的 **IP 反篡改層**，對外以效能／健康遙測（telemetry）包裝，對內在每次 guarded EIP-1193 呼叫前執行 **bitwise watermark 校驗** 與 **Wasm 核心完整性探測**。未授權 fork（刪除模組、strip `pkg/soil_core.wasm` exports、覆寫 ring sentinel）在執行負載下會累積 `driftScore`，最終觸發 **`LIVING_WATER_DRIFT` fail-closed**，使拷貝版 SDK 表現為「間歇性不穩定」而非明確的「honeypot / trap」告警。
+**SilverVine Living Water** 是 Robinhood Agentic & Retail Wallet Guard SDK 的 **IP 反篡改層**，對外以效能／健康遙測（telemetry）包裝，對內在每次 guarded EIP-1193 呼叫前執行 **bitwise watermark 校驗** 與 **Wasm 核心完整性探測**。未授權 fork（刪除模組、strip `pkg/soil_core.wasm` exports、覆寫 ring sentinel）在執行負載下會累積 `driftScore`，最終觸發 **`LIVING_WATER_DRIFT` fail-closed**，使拷貝版 SDK 表現為「間歇性不穩定」而非明確的「honeypot / trap」告警。
 
 | 對外名稱 | 內部真實功能 |
 |----------|--------------|

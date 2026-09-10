@@ -290,6 +290,6 @@ cd SliverVineGate && forge test --match-contract GatedExecutor
 ## 7. 參考文件
 
 - [`docs/architecture/TECHNICAL_SPECIFICATION.md`](../architecture/TECHNICAL_SPECIFICATION.md) §2.3 · §4.0 EIP-712
-- [`docs/sdk/CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) §1 Non-Custodial Escort
+- [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)
 - [`docs/audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md`](../audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md) §2.4 `lostUsd ≡ 0`
 - [`docs/internal/HOT_COLD_PATH_DECOUPLING.md`](./HOT_COLD_PATH_DECOUPLING.md) — Edge 熱路徑與 Smart Route fetch 路徑協作

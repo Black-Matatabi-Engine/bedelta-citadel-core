@@ -1,8 +1,9 @@
-# AI Agent Intent Protection — Robinhood Retail Guard SDK
+# AI Agent Intent Protection — Robinhood Agentic & Retail Wallet Guard SDK
 
-> **License:** Apache-2.0 wrapper · proprietary reflex math compiled in `pkg/soil_core.wasm`
+> **License:** Apache-2.0 wrapper · proprietary reflex math compiled in `pkg/soil_core.wasm`  
+> **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard`
 
-The Robinhood Retail Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
+The Robinhood Agentic & Retail Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
 
 ## Threat Model — LLM / Agent Hallucination Classes
 
@@ -24,8 +25,6 @@ The Robinhood Retail Guard SDK is a **pre-broadcast involuntary reflex arc** for
     → [PASS] forward to base wallet provider
     → [FAIL] RetailGuardRejectedError + plainTextWarning (0-Gas)
 ```
-
-**IP boundary:** Open-source TypeScript exposes configuration, calldata classification, and user-facing warnings. Core slippage fusion and intent ring budget math execute inside **`soil_core.wasm`** when loaded; TypeScript provides deterministic fallbacks for Vitest and offline harnesses.
 
 ## Scratch Buffer SSOT
 

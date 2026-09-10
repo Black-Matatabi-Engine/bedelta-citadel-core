@@ -14,4 +14,4 @@
 | **Arbitrum Grant Scope** | ✅ Submitted | [`arbitrum/GRANT_PROPOSAL.md`](./arbitrum/GRANT_PROPOSAL.md) |
 | **GMX Builders** | ✅ Submitted | [`gmx/GMX_BUILDERS_PITCH.md`](./gmx/GMX_BUILDERS_PITCH.md) |
 
-Shared SSOT: [`../architecture/README.md`](../architecture/README.md) · [`../sdk/CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) · Docs router: [`../README.md`](../README.md)
+Shared SSOT: [`../architecture/README.md`](../architecture/README.md) · [`../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) · Docs router: [`../README.md`](../README.md)

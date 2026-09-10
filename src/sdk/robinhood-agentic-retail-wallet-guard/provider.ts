@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
- * Robinhood Retail Guard — EIP-1193 provider middleware (Apache wrapper · Wasm IP core).
+ * Robinhood Agentic & Retail Wallet Guard — EIP-1193 provider middleware (Apache wrapper · Wasm IP core).
  */
 import { evaluateRetailRisk } from "./risk-evaluator";
 import type { EIP1193Provider, RetailGuardConfig, RetailGuardRejectPayload } from "./types";
@@ -10,7 +10,7 @@ export class RetailGuardRejectedError extends Error {
   readonly plainTextWarning: string;
 
   constructor(payload: RetailGuardRejectPayload) {
-    super(`[Robinhood Retail Guard] ${payload.code}: ${payload.message}`);
+    super(`[Robinhood Agentic & Retail Wallet Guard] ${payload.code}: ${payload.message}`);
     this.name = "RetailGuardRejectedError";
     this.code = payload.code;
     this.plainTextWarning = payload.plainTextWarning;
@@ -48,8 +48,8 @@ export interface EIP6963EventTarget {
 }
 
 const GUARDED_METHODS = new Set(["eth_sendTransaction", "eth_signTypedData_v4"]);
-const DEFAULT_RDNS = "io.slivervine.retailguard";
-const DEFAULT_NAME = "Robinhood Retail Guard";
+const DEFAULT_RDNS = "io.slivervine.agenticretailwalletguard";
+const DEFAULT_NAME = "Robinhood Agentic & Retail Wallet Guard";
 
 function resolveAnnounceTarget(
   target?: EIP6963EventTarget,
@@ -65,7 +65,7 @@ function createProviderUuid(): string {
   return `retail-guard-${Date.now().toString(36)}`;
 }
 
-/** Wrap an EIP-1193 provider with Robinhood Retail Guard (0-Gas fail-closed pre-broadcast). */
+/** Wrap an EIP-1193 provider with Robinhood Agentic & Retail Wallet Guard (0-Gas fail-closed pre-broadcast). */
 export function withRetailGuardProvider(
   baseProvider: EIP1193Provider,
   config: RetailGuardConfig,

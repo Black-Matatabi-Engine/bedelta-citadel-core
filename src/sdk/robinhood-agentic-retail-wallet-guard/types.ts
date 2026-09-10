@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
- * Robinhood Retail Guard SDK — EIP-1193 provider config types.
+ * Robinhood Agentic & Retail Wallet Guard SDK — EIP-1193 provider config types.
  */
 
 export interface EIP1193Provider {

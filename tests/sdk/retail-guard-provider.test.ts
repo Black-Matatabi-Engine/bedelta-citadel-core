@@ -33,7 +33,7 @@ import {
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
-} from "../../src/sdk/robinhood-retail-guard";
+} from "../../src/sdk/robinhood-agentic-retail-wallet-guard";
 
 const LW_RING_BASE = (INTENT_RING_SLOT_COUNT - 1) * INTENT_CORE_HEAP_WORDS;
 
@@ -290,11 +290,11 @@ describe("announceGuardedProvider — EIP-6963", () => {
     announceGuardedProvider(base, baseConfig(), {
       uuid: "test-uuid",
       target,
-      rdns: "io.slivervine.retailguard",
+      rdns: "io.slivervine.agenticretailwalletguard",
     });
     expect(announced).toHaveLength(1);
     expect(announced[0]).toMatchObject({
-      info: { uuid: "test-uuid", rdns: "io.slivervine.retailguard" },
+      info: { uuid: "test-uuid", rdns: "io.slivervine.agenticretailwalletguard" },
     });
   });
 

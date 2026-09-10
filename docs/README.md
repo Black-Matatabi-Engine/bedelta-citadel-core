@@ -42,7 +42,7 @@ pnpm test                             # 217 test files | 967 PASS clean
 | 2 | [`VERIFICATION_MATRIX.md`](./VERIFICATION_MATRIX.md) | **Express verification hub** — CLI Tier 0–5 entry · decoupled proof index |
 | 3 | [`architecture/README.md`](./architecture/README.md) | **Architecture index (`00`–`05`)** — topology · Hybrid Pillar Sets X & Y · R01–R20 · ERC/EIP wiki · risk framework |
 | 4 | [`audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](./audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) | **Institutional DDIP** — allocator diligence · Basel III alignment · chaos 255/255 |
-| 5 | [`sdk/CITADEL_SDK_BLUEPRINT.md`](./sdk/CITADEL_SDK_BLUEPRINT.md) | **B2B CaaS Integration Blueprint** — `@slivervine/citadel-sdk` · **10 bps builder** + referral rebate model |
+| 5 | [`sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](./sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) | **C-End Middleware Blueprint** — `@slivervine/robinhood-agentic-retail-wallet-guard` · EIP-1193 pre-consensus wallet guard · **48/48** Vitest |
 
 ---
 

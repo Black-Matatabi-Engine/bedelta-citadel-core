@@ -363,12 +363,12 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 **Reviewer clarification:** p50 ~106µs measures **Layer 1 Edge Gateway + Wasm** — not L1/L2 block confirmation. Layer 2 Nitro protection is proven by Stylus opcode Gas parity (`benchmark-stylus-opcode.ts`) and `SliverVineRiskOracle` STATUS_SHUTDOWN flush — both execute **inside** Arbitrum Sequencer block production.
 
-### 3.7 Robinhood Retail Guard SDK — C-End EIP-1193 Middleware
+### 3.7 Robinhood Agentic & Retail Wallet Guard SDK — C-End EIP-1193 Middleware
 
-> **SSOT:** [`src/sdk/robinhood-retail-guard/`](../../src/sdk/robinhood-retail-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
-> **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files) · commits `b7c33d8` · `2216da7`
+> **SSOT:** [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
+> **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
-The **Robinhood Retail Guard SDK** (also **EIP-1193 Retail Guard SDK**) packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** — no Cloudflare Worker required for C-end wallet integrations.
+The **Robinhood Agentic & Retail Wallet Guard SDK** (`@slivervine/robinhood-agentic-retail-wallet-guard`) packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** — no Cloudflare Worker required for C-end wallet and agentic wallet integrations.
 
 | Layer | Module | Defense role |
 |-------|--------|--------------|
@@ -397,8 +397,8 @@ dApp → withRetailGuardProvider(config)
      → [FAIL] RetailGuardRejectedError + plainTextWarning
 ```
 
-→ Public integration guide: [`src/sdk/robinhood-retail-guard/README.md`](../../src/sdk/robinhood-retail-guard/README.md)  
-→ Competitive moat: [`ARCHITECTURE_AND_MOAT.md`](../../src/sdk/robinhood-retail-guard/ARCHITECTURE_AND_MOAT.md)
+→ Integration blueprint: [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](../sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)  
+→ Competitive moat: [`docs/sdk/ARCHITECTURE_AND_MOAT.md`](../sdk/ARCHITECTURE_AND_MOAT.md)
 
 ### 3.6 Financial Risk Parameters & Epoch Operations
 

@@ -46,8 +46,9 @@
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus · **100% fail-closed** when `stylusCoprocessor=0` | Stylus [`0xc23587d6…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic L1 primary hedge → Arbitrum-native GMX GM fallback; **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
+| **5** | **Robinhood Agentic & Retail Wallet Guard SDK** | Apache-2.0 EIP-1193 C-end middleware · 0-Gas pre-consensus intercept · AI agent retry severance · EIP-6963 | `npx vitest run tests/sdk/` **48/48 PASS** · [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](./docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md) |
 
-→ Technical specification: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)
+→ Technical specification: [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · Wallet Guard blueprint: [`docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md`](./docs/sdk/ROBINHOOD_AGENTIC_RETAIL_WALLET_GUARD_BLUEPRINT.md)
 
 ---
 
