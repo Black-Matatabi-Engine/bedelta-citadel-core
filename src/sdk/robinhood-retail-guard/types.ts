@@ -40,7 +40,8 @@ export type RetailGuardReasonCode =
   | "VENUE_DRIFT_REJECTED"
   | "UNAUTHORIZED_SPENDER_REJECTED"
   | "MAX_ATTEMPTS_EXCEEDED_SEVERED"
-  | "CHANNEL_SEVERED";
+  | "CHANNEL_SEVERED"
+  | "LIVING_WATER_DRIFT";
 
 export interface RetailGuardRejectPayload {
   code: RetailGuardReasonCode;

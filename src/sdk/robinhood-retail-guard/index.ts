@@ -22,9 +22,18 @@ export {
   evaluateRetailIntentGate,
   evaluateRetailApproveGate,
   evaluateRetailVenueAllowlist,
+  evaluateLivingWaterGate,
   resolveVenueBitFromContract,
   RETAIL_UNKNOWN_VENUE_BIT,
 } from "./guard-engine";
+export {
+  evaluateLivingWaterHealth,
+  verifyTelemetryWatermark,
+  isLivingWaterDriftTripped,
+  __resetLivingWaterForTests,
+  LIVING_WATER_DRIFT_THRESHOLD,
+} from "./livingwater-telemetry";
+export type { LivingWaterHealthSnapshot } from "./livingwater-telemetry";
 export {
   ensureRetailGuardWasm,
   isRetailGuardWasmReady,

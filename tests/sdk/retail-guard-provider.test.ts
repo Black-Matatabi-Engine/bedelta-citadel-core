@@ -1,15 +1,24 @@
 import { describe, expect, it, beforeEach } from "vitest";
+import { INTENT_RING_U32 } from "../../src/core/intent-core-buffers";
+import {
+  INTENT_CORE_HEAP_WORDS,
+  INTENT_RING_SLOT_COUNT,
+} from "../../src/core/wasm-intent-ffi";
 import {
   __resetRetailGuardStateForTests,
   announceGuardedProvider,
   encodeApproveCalldata,
   encodePermit2ApproveCalldata,
   encodePermit2PermitCalldata,
+  evaluateLivingWaterGate,
+  evaluateLivingWaterHealth,
   evaluateRetailApproveGate,
   evaluateRetailRisk,
   evaluateRetailVenueAllowlist,
   formatRetailWarning,
+  isLivingWaterDriftTripped,
   isRetailGuardChannelSevered,
+  LIVING_WATER_DRIFT_THRESHOLD,
   parseTransactionCalldata,
   RetailGuardRejectedError,
   SELECTOR_GMX_MULTICALL,
@@ -19,11 +28,14 @@ import {
   SELECTOR_UNISWAP_V3_EXACT_INPUT_SINGLE,
   UINT160_MAX,
   UINT256_MAX,
+  verifyTelemetryWatermark,
   withRetailGuardProvider,
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
 } from "../../src/sdk/robinhood-retail-guard";
+
+const LW_RING_BASE = (INTENT_RING_SLOT_COUNT - 1) * INTENT_CORE_HEAP_WORDS;
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX_ROUTER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -506,5 +518,56 @@ describe("withRetailGuardProvider — EIP-1193 integration", () => {
         params: [{ from: WALLET, to: MALICIOUS, value: "0x0" }],
       }),
     ).rejects.toMatchObject({ code: "VENUE_DRIFT_REJECTED" });
+  });
+});
+
+describe("livingwater-telemetry — SilverVine health watermark", () => {
+  beforeEach(() => __resetRetailGuardStateForTests());
+
+  it("initializes and verifies telemetry watermark", () => {
+    expect(verifyTelemetryWatermark()).toBe(true);
+    expect(verifyTelemetryWatermark()).toBe(true);
+  });
+
+  it("reports healthy snapshot for legitimate SDK callers", () => {
+    const health = evaluateLivingWaterHealth(true);
+    expect(health.ok).toBe(true);
+    expect(health.watermarkValid).toBe(true);
+    expect(health.driftScore).toBe(0);
+  });
+
+  it("accumulates drift under tampered watermark and fail-closes at threshold", () => {
+    verifyTelemetryWatermark();
+    INTENT_RING_U32[LW_RING_BASE] = 0xdeadbeef;
+
+    for (let i = 0; i < LIVING_WATER_DRIFT_THRESHOLD - 1; i += 1) {
+      const health = evaluateLivingWaterHealth(true);
+      expect(health.ok).toBe(true);
+    }
+
+    const tripped = evaluateLivingWaterHealth(true);
+    expect(tripped.ok).toBe(false);
+    expect(isLivingWaterDriftTripped()).toBe(true);
+
+    const reject = evaluateLivingWaterGate(baseConfig());
+    expect(reject?.code).toBe("LIVING_WATER_DRIFT");
+    expect(formatRetailWarning("LIVING_WATER_DRIFT")).toContain("telemetry drift");
+  });
+
+  it("blocks guarded provider after living water drift under load", async () => {
+    verifyTelemetryWatermark();
+    INTENT_RING_U32[LW_RING_BASE] = 0xcafebabe;
+
+    const base = mockProvider(() => "0x1");
+    const guarded = withRetailGuardProvider(base, baseConfig());
+    const params = [{ from: WALLET, to: GMX_ROUTER, value: "0x0" }];
+
+    for (let i = 0; i < LIVING_WATER_DRIFT_THRESHOLD - 1; i += 1) {
+      await guarded.request({ method: "eth_sendTransaction", params });
+    }
+
+    await expect(
+      guarded.request({ method: "eth_sendTransaction", params }),
+    ).rejects.toMatchObject({ code: "LIVING_WATER_DRIFT" });
   });
 });
