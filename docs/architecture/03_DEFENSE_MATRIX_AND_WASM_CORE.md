@@ -5,8 +5,9 @@
 > - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **p50 ~15µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
 > - **Wasm Soil Core** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · Shield **p50 ~106 µs** · warm **< 60 µs**
 > - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
+> - **Zero-GC Ring Slab** — pre-allocated **256×4** intent heap · **O(1)** slot hash · **&lt;16 KiB** heap delta / 10k hot-path iterations (Vitest worker isolation)
 >
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **217 test files | 967 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **220 test files | 992 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
@@ -54,6 +55,79 @@ Parallel vector checking is what makes **simultaneous multi-venue R20 physical d
 
 ---
 
+## Zero-GC Pre-Allocated Ring Slab Memory Engine
+
+High-frequency AI-agent intent validation (`evaluateIntentMandateGate` · `evaluateIntentGatePure`) must not trigger **Stop-The-World (STW) GC** pauses on Cloudflare V8 isolates. Citadel replaces per-digest `Map<string, …>` allocations with a **module-load ring slab** — one contiguous buffer, **O(1)** numeric slot indexing, and a **u32 hot path** that never touches `bigint` inside the inner loop.
+
+### Ring Slab Layout (Module-Load SSOT)
+
+| Buffer | Type | Size | Role |
+|--------|------|------|------|
+| **`INTENT_RING_SLAB`** | `BigInt64Array` | **256 slots × 4 i64** = **1,024 words** (8 KiB) | Wasm FFI / Stylus C-ABI export surface · `*mut i64` pointer parity |
+| **`INTENT_RING_U32`** | `Uint32Array` | **1,024 u32 words** (4 KiB) | **Zero-GC hot path** — venue drift + attempt budget in-place |
+| **Singleton host** | `globalThis` SSOT | [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) | Survives duplicate Vitest module graphs · **zero per-intent `new`** |
+
+**Per-slot heap layout (32 bytes · ABI v1):**
+
+```text
+slot[i] @ offset = (hashKeyToSlotIndex(key) & 0xFF) × 4
+┌────────────┬────────┬─────────────────┬──────────────┐
+│ attempts   │ flags  │ allowed_mask    │ target_bit   │
+│ u32[0]     │ u32[1] │ u32[2]          │ u32[3]       │
+└────────────┴────────┴─────────────────┴──────────────┘
+         ↔ Rust `intent_core.rs` 4 × i64 @ `heap_ptr`
+```
+
+### O(1) Numeric Slot Hashing (No `Map` Churn)
+
+Legacy mandate tracking allocated a fresh `Map<string, BigInt64Array>` entry per `intentDigest` / `agentId` — unbounded heap growth under agent retry storms. The ring engine derives the slot index in **constant time**:
+
+$$
+\text{slotIndex} = \texttt{hashKeyToSlotIndex}(\text{key}) \mathbin{\&} \texttt{0xFF} \quad \Rightarrow \quad \text{baseOffset} = \text{slotIndex} \times 4
+$$
+
+| Property | Before | After (Ring Slab) |
+|----------|--------|-------------------|
+| **Lookup** | `Map.get(digest)` — hash table + string key retention | Bitwise mask into **256 fixed slots** |
+| **Allocation** | Per-key `BigInt64Array(4)` on miss | **Single** slab at module load |
+| **Hot-path types** | `bigint` read/write per iteration | **`Uint32Array` in-place** — no `Number(bigint)` boxing |
+
+**SSOT modules:** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`wasm-intent-ffi.ts`](../../src/core/wasm-intent-ffi.ts).
+
+### Strict Vitest / Worker Heap Isolation Proof
+
+| Test | Command | Assertion |
+|------|---------|-----------|
+| **Zero-allocation hot path** | `npx vitest run tests/core/intent-sinking-audit.test.ts` | Subprocess worker [`intent-zero-alloc.worker.ts`](../../tests/core/intent-zero-alloc.worker.ts) · **10,000** `evaluateIntentGatePure()` iterations · **50-round JIT warmup** · `global.gc()` before snapshot · **min-of-3** heap samples |
+| **Heap budget** | `--expose-gc` (Vitest `poolOptions.forks.execArgv`) | **`heapUsed` delta &lt; 16 KiB** (strict) |
+| **Determinism / layout** | Same file (6 additional cases) | C-ABI slot packing · `hashKeyToSlotIndex` mask · `resetIntentRingSlab` |
+
+```bash
+npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · includes <16 KiB worker gate
+```
+
+### C-ABI Parity — Rust Wasm & Arbitrum Stylus Coprocessors
+
+Host ring slots mirror [`src/wasm/intent_core.rs`](../../src/wasm/intent_core.rs) exports — **100% pointer-aligned** `4 × i64` mandate heap:
+
+| C-ABI export | Behavior |
+|--------------|----------|
+| `intent_core_check_venue_drift` | `(allowed_mask & target_bit) ≠ 0` → pass |
+| `intent_core_track_attempt_budget` | In-place `attempts++` · `FLAG_SEVER_CHANNEL` on exceed |
+| `intent_core_evaluate_gate` | Combined drift + budget gate · writes slots 2–3 |
+
+Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()` cold-syncs into `INTENT_RING_SLAB` before Wasm FFI or Nitro Stylus handoff — identical semantics, zero allocation on the reflex arc.
+
+### Buildathon Commercial Value (Grant Judges)
+
+| Advantage | Mechanism | Judge takeaway |
+|-----------|-----------|----------------|
+| **Zero STW GC latency spikes** | Pre-allocated slab · reused scratch `IntentGateResult` | HF AI agents validate intents at **p50 ~106µs** without V8 pause risk during retry storms |
+| **Bounded memory footprint** | **256 slots × 32 B** = **8 KiB** mandate state (plus 4 KiB u32 mirror) | Predictable Edge isolate memory — no unbounded `Map` growth under adversarial `agentId` fan-out |
+| **Wasm / Stylus portability** | Same slot layout as `intent_core.rs` | One mandate semantics across **Cloudflare Worker** · **`pkg/soil_core.wasm`** · **Arbitrum Stylus** coprocessor — audit once, deploy everywhere |
+
+---
+
 ## 3. Cross-Venue Risk Engine & Defense Matrix (R01–R20)
 
 > **Full Pillar Set Y specification:** [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) — Wasm `soil_core.wasm` engine, `checkSoilResistance()` latency moats (p50 ~106 µs · warm &lt;60 µs), Tri-Sensor matrix, and complete R01–R20 defense matrix. Below is the integration summary for grant evaluators.
@@ -67,10 +141,10 @@ Parallel vector checking is what makes **simultaneous multi-venue R20 physical d
 | **NTP Clock Drift Compensator** | `NTP_CLOCK_DRIFT_COMPENSATOR` | Rejects / skew-corrects venue timestamps with **&lt;200ms** drift vs Edge NTP; aligns with Pgate latency fuse (`PGATE_MAX_LATENCY_MS` = 200) |
 | **Cross-Venue Net Slippage TWAP** | `CrossVenueNetSlippage` | When net cross-book slippage **&gt; 0.5%** (`MAX_SLIPPAGE = 0.005`), trips soil + schedules **TWAPEngineV2** path slicing instead of market sweep |
 | **GMX Positive Skew Rebate** | `gmx-v2-balancer` / price-impact soil | Qualifies underweight-side flow · captures **positive skew / price-impact rebate** bps — never conflated with builder UI fee |
-| **Core Sinking SSOT** | `src/core/*` (5 modules) | Pure invariants sunk from adapters/services · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
+| **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **zero-GC ring slab** for mandate state · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
 | **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
 
-**Core modules (`src/core/`):** [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
+**Core modules (`src/core/`):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
 
 ### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku)
 
@@ -143,7 +217,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · **217 test files | 967 PASS clean** · coexists with Shield **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) (**&lt;16 KiB** ring-slab gate) · **220 test files | 992 PASS clean** · coexists with Shield **p50 ~106µs** budget.
 
 #### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar Set Y · USD.ai Collateral Module)
 

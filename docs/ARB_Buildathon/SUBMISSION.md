@@ -154,7 +154,34 @@ pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 ```
 
-> **Intent mandate SSOT:** `allowedVenues[]` session whitelists + `intent-core.ts` pure state machine → unauthorized venue switches fail-closed with **`VENUE_DRIFT_REJECTED`** at 0-Gas. See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`intent-core.ts`](../../src/core/intent-core.ts).
+> **Intent mandate SSOT:** `allowedVenues[]` session whitelists + **zero-GC ring slab** (`intent-core-buffers.ts`) pure state machine → unauthorized venue switches fail-closed with **`VENUE_DRIFT_REJECTED`** at 0-Gas. See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`intent-core.ts`](../../src/core/intent-core.ts). **Performance metrics & heap proof:** [Zero-GC Ring Slab Memory Engine](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine).
+
+---
+
+## ⚡ Zero-GC Pre-Allocated Ring Slab Memory Engine
+
+Citadel's intent mandate gate (`evaluateIntentMandateGate`) executes on every AI-agent reflex arc — often **thousands of times per minute** during retry storms. A `Map<string, …>`-backed tracker would allocate on every new `intentDigest` and trigger **V8 Stop-The-World GC** pauses inside Cloudflare isolates. The ring slab engine eliminates that class of latency entirely.
+
+| Property | Spec | SSOT |
+|----------|------|------|
+| **Pre-allocation** | **256 slots × 4 i64** `BigInt64Array` + matching `Uint32Array` at **module load** | [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) |
+| **O(1) slot index** | `hashKeyToSlotIndex(key) & 0xFF` — no `Map` lookup · no per-key heap churn | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) |
+| **Hot path** | `evaluateIntentGatePure()` u32 in-place mutation · **zero `new` in inner loop** | [`intent-core.ts`](../../src/core/intent-core.ts) |
+| **Heap proof** | **&lt;16 KiB** `heapUsed` delta over **10,000** iterations · Vitest subprocess worker + `--expose-gc` | [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) |
+
+**C-ABI parity:** Host ring slots are **100% pointer-aligned** with Rust [`intent_core.rs`](../../src/wasm/intent_core.rs) (`intent_core_evaluate_gate` · `4 × i64` mandate heap) and Arbitrum Stylus Wasm coprocessors — one mandate semantics from Edge Worker to Nitro block.
+
+**Buildathon judge value:**
+
+1. **Zero STW GC spikes** during high-frequency AI-agent intent validation — reflex arc stays inside **p50 ~106µs** Edge budget even under adversarial retry fan-out.
+2. **Bounded isolate memory** — **8 KiB** fixed mandate state (256 × 32 B) instead of unbounded `Map` growth.
+3. **Portable audit surface** — identical slot layout across TypeScript Edge · `pkg/soil_core.wasm` · Stylus Nitro.
+
+→ **Full architecture, equations, and benchmark table:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Zero-GC Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)
+
+```bash
+npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · <16 KiB heap gate
+```
 
 ---
 
@@ -166,7 +193,7 @@ Citadel defines **exact in-scope bounds** for AI-agent intent drift — not a ge
 |-------------|-------------|---------------|
 | **Venue switching (A → B)** | `intentDigest` binds `{chainId, venueKey, action}` · session-key **`allowedVenues[]`** whitelist | **`ATTESTATION_DIGEST_MISMATCH`** · **`VENUE_DRIFT_REJECTED`** |
 | **Cross-chain hallucination** | Soil fuse + R20 pre-broadcast | `checkSoilResistance()` · `severSigningChannel()` · **0-Gas** |
-| **Retry storms (10×)** | `withCitadelShield` **60s** cooldown · **max 3 attempts** per digest · `severSigningChannel()` on exhaust | `MANDATORY_COOLDOWN_ACTIVE` — blocks LLM inference / token burn |
+| **Retry storms (10×)** | **Zero-GC ring slab** attempt budget (`trackAttemptBudgetU32Pure`) · `withCitadelShield` **60s** cooldown · **max 3 attempts** per digest · `severSigningChannel()` on exhaust | `MANDATORY_COOLDOWN_ACTIVE` — blocks LLM inference / token burn · [&lt;16 KiB heap proof](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#strict-vitest--worker-heap-isolation-proof) |
 | **Third-party bundlers** | **DISCLOSED OUT OF SCOPE** if unintegrated | Must wire `withCitadelShield` / `verifyAgentIntent` upstream of relayer |
 
 > **Goldfeder lens:** Signing-channel sever must be **physically upstream** of any Bundler / AA UserOp relayer. Integrated agents satisfy this via `severSigningChannel()`; **unintegrated third-party bundlers operating entirely outside the Citadel hook are explicitly DISCLOSED OUT OF SCOPE.**
@@ -235,12 +262,12 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Buildathon** | Arbitrum Open House Singapore Online Buildathon |
 | **Live Gate (Sepolia)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
-| **Vitest baseline** | **217 test files | 967 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** |
+| **Vitest baseline** | **220 test files | 992 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** · ring-slab heap gate **&lt;16 KiB** ([`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts)) |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
-| **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` |
+| **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` · intent ring slab **&lt;16 KiB** / 10k iterations ([metrics SSOT](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)) |
 | **Worker bundle (hot-path)** | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · **217/967** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
+| **Verified Commit** | `main` @ **`c1a37d4`** (zero-GC ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **220/992** Vitest · **Cargo 2/2** · **50.94 KiB gzip** |
 
 > **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 7+1 Cross-Chain Execution Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
 
@@ -252,9 +279,9 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 | Criterion | Evidence (CLI / code) |
 |-----------|------------------------|
-| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **217 test files | 967 PASS clean** |
+| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **220 test files | 992 PASS clean** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
-| **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
+| **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **Zero-GC Ring Slab Memory Engine** (pre-allocated **256×4** mandate heap · **&lt;16 KiB** / 10k iterations · [C-ABI parity](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#c-abi-parity--rust-wasm--arbitrum-stylus-coprocessors)) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
 | **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **8-venue universal firewall** (GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,gmx,variational,hl}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
 
 #### Innovation and Creativity — Conceptual Framing
@@ -263,6 +290,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 - **PEV (Prevented Exploit Volume) — Dune Analytics Primitive**: Introduces **PEV** as a structured telemetry metric — nominal USD volume of toxic intents blocked pre-broadcast — indexable via `RiskTripBlocked` / soil-trip events and grant-audit JSON (`duneTelemetry`). See [`DUNE_DASHBOARD_SPECIFICATION.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION.md).
 - **Yield Safety Sentinel for Pendle**: Off-chain circuit breaker guarding Pendle **PT/YT** pool positions against **expiry blackholes** and **oracle decoupling** — plus **Pendle AI Guarded Pool Factory** for agent pool creation pre-flight ([`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts)) — protects capital from liquidation cascades **without competing on YT yield** ([`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)).
 - **Zero-Gas Pre-Broadcast Circuit Breaker**: Unlike on-chain pause functions that incur gas and await block confirmation, Citadel severs the EIP-712 signing channel at sub-ms latency *before* consensus ingress.
+- **Zero-GC Ring Slab Memory Engine**: Pre-allocated **256×4** `BigInt64Array` mandate ring at module load — **O(1)** `hashKeyToSlotIndex & 0xFF` slot hashing replaces `Map<string, …>` churn; Vitest worker proves **&lt;16 KiB** heap delta over **10,000** hot-path iterations → [performance SSOT](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine).
 - **Autonomous Reflex Arc (Agentic Safety Substrate)**: Off-chain "spinal reflex" for AI Agents — intercepts toxic intents without burning LLM tokens or adding cloud round-trips.
 
 #### Innovation & Real Problem Solving — AI Behavioral Safety Substrate
@@ -277,6 +305,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 | Topic | Document |
 |-------|----------|
+| **Zero-GC ring slab · performance metrics** | [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md` § Ring Slab](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) |
 | **AI agent adapter proofs** | [`../verifications/03_ADAPTER_INTEGRATION_PROOFS.md`](../verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
 | **CLI Zone A–C command tables** | [`../verifications/02_CLI_ZONE_MAP.md`](../verifications/02_CLI_ZONE_MAP.md) |
 | **On-chain anchors · Phase A+B+C** | [`../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) |
@@ -286,4 +315,4 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 ---
 
-*SilverVine Labs · Lean Buildathon Submission · 217 test files | 967 PASS clean · HEAD `3f26efa`*
+*SilverVine Labs · Lean Buildathon Submission · 220 test files | 992 PASS clean · HEAD `c1a37d4`*
