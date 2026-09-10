@@ -106,7 +106,55 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
 | **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED · **max 3-attempt** budget per intent digest |
 
-**Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip`
+**Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip`
+
+---
+
+## 🏗️ Dual-Venue Short Architecture — GMX Hard Anchor & 8-Venue Matrix
+
+Citadel Shield positions **GMX V2 as the primary Arbitrum-native perp backup** while Hyperliquid remains the **external L1 primary hedge path**. Variational and six additional Arbitrum-native protocols prove **universal AI-agent firewall compatibility**.
+
+| Tier | Venue | Chain | Strategic role |
+|------|-------|-------|----------------|
+| **Primary hedge** | Hyperliquid L1 | Off-Arbitrum | Session-key perp shorts · `Wallet A` · 0-Gas pre-broadcast soil fuse |
+| **Arbitrum native backup** | **GMX V2** | Arbitrum One `42161` | **Hard anchor** when HL is isolated or session keys expire · GM Pool liquidity · zero sequencer queue pollution |
+| **Multi-venue expansion** | Variational + 6 natives | Arbitrum One `42161` | Protocol-agnostic firewall · `allowedVenues[]` mandates · **`VENUE_DRIFT_REJECTED`** |
+
+### GMX Builder Grant alignment ($15k+)
+
+| GMX Builder criterion | Citadel evidence |
+|----------------------|------------------|
+| **Native Arbitrum integration** | Live GM deposit/withdraw on `42161` · `uiFeeReceiver` builder lane (+10 bps) · `PolicyGuardV2` + `GmxSoilMatrixSwitch` mainnet anchors |
+| **Synthetics / GM pool safety** | `checkSoilResistance()` OI skew · pool-skew breach tree · `pnpm demo:gmx -- --trip` FAIL_CLOSED HUD |
+| **AI-agent ingress hygiene** | Pre-consensus 0-Gas severance **before** GMX calldata reaches sequencer queue |
+| **Fallback resilience** | HL primary → GMX native backup architecture documented in [`DEMO_GUIDE.md`](../DEMO_GUIDE.md) |
+
+### 8-Venue Universal Firewall Matrix
+
+| `--venue` | Protocol | Demo command |
+|-----------|----------|--------------|
+| `gmx` | GMX v2 | `pnpm demo:gmx -- --trip` |
+| `pendle` | Pendle PT/YT | `pnpm demo:pendle -- --trip` |
+| `uniswap` | Uniswap V3 | `pnpm demo:uniswap -- --trip` |
+| `aave` | Aave V3 | `pnpm demo:aave -- --trip` |
+| `morpho` | Morpho Blue | `pnpm demo:morpho -- --trip` |
+| `usdai` | USD.ai | `pnpm demo:usdai -- --trip` |
+| `variational` | Variational Omni RFQ | `pnpm demo:variational -- --trip` |
+| `hyperliquid` / `hl` | Hyperliquid L1 | `pnpm demo:hl -- --trip` |
+
+```bash
+# GMX — Primary Arbitrum Native Backup (GMX Builder Grant primary proof)
+pnpm demo:gmx -- --trip
+
+# Variational — Multi-Venue Expansion & drift-defense proof
+pnpm demo:variational -- --trip
+
+# Full 8-venue agent matrix severance
+pnpm demo:matrix -- --trip
+pnpm demo:quad -- --trip
+```
+
+> **Intent mandate SSOT:** `allowedVenues[]` session whitelists + `intent-core.ts` pure state machine → unauthorized venue switches fail-closed with **`VENUE_DRIFT_REJECTED`** at 0-Gas. See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`intent-core.ts`](../../src/core/intent-core.ts).
 
 ---
 
@@ -161,8 +209,8 @@ SilverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for
 
 | Lane | Wallet | Venue | Role |
 |------|--------|-------|------|
-| **Wallet A — Hedge Engine** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
-| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One GMX v2 | GM LP deposit/withdraw only · **+10 bps builder fee** treasury lane |
+| **Wallet A — Hedge Engine (Primary)** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · EIP-712 session keys · `executeGmxCrossWalletHedge` |
+| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One **GMX V2** | GM LP deposit/withdraw only · **+10 bps builder fee** · **primary Arbitrum-native backup anchor** when HL is isolated |
 
 **Financial thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — `checkSoilResistance()` severs toxic paths at **p50 ~106µs** before they impact vault NAV; cross-wallet hedge cron maintains **Δ_net ≡ 0**.
 
@@ -174,7 +222,7 @@ pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
 pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 ```
 
-> **Buildathon evaluators:** Start with **The Shield** sections above (`pnpm demo:quad` · `pnpm demo:matrix -- --trip`). Sovereign Vault workflow is supplementary live-MVP evidence for grant due diligence.
+> **Buildathon evaluators:** Start with **The Shield** (`pnpm demo:quad` · `pnpm demo:matrix -- --trip`). **GMX Builder Grant judges:** `pnpm demo:gmx -- --trip` (Arbitrum native hard anchor) · `pnpm demo:variational -- --trip` (multi-venue expansion). Sovereign Vault (`pnpm demo:e2e`) is supplementary live-MVP evidence.
 
 ---
 
@@ -207,7 +255,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once EIP-712) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **217 test files | 967 PASS clean** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withCitadelShield` ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
-| **Product-Market Fit** | GMX v2 +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
+| **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **8-venue universal firewall** (GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar 1** ZeroDev Kernel v3 AA (EIP-7702 = ⏳ V1.5 post-grant) · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/) · `pnpm demo:{wayfinder,elizaos,virtuals,langchain,stabilizer,quad,gmx,variational}`) · **`withCitadelShield`** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
 
 #### Innovation and Creativity — Conceptual Framing
 

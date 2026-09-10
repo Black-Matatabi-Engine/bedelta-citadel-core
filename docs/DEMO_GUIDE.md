@@ -87,6 +87,55 @@ Append `-- --trip` to any Tier 1 command for **FAIL_CLOSED** demonstration.
 
 ---
 
+## Dual-Venue Short Architecture: GMX Backup & Variational Matrix
+
+Citadel Shield uses a **three-tier venue stack** for perp short / hedge coverage. Each tier serves a distinct strategic role — not interchangeable fallbacks.
+
+| Tier | Venue | Chain | Role |
+|------|-------|-------|------|
+| **Primary** | Hyperliquid L1 | Off-Arbitrum L1 | High-speed off-chain / external L1 perp shorting via **EIP-712 session keys** (`Wallet A`) |
+| **Hard Anchor (Arbitrum Native Backup)** | **GMX V2** | Arbitrum One `42161` | When Hyperliquid faces network isolation or session-key expiry, Citadel triggers a **pre-consensus 0-Gas fallback** to GMX V2 GM Pools — native liquidity anchor with **zero sequencer queue pollution** |
+| **Multi-Venue Expansion** | **Variational** (+ 6 other natives) | Arbitrum One `42161` | Protocol-agnostic firewall proof across the **8-venue matrix** · enforced via `allowedVenues[]` session mandates · instant **`VENUE_DRIFT_REJECTED`** 0-Gas enforcement |
+
+### Hyperliquid Primary Path (External L1)
+
+- **Wallet A** (`0xef0752…960d`) executes 1× ETH perp shorts via scoped session keys.
+- Pre-broadcast soil fuse runs **before** any HL API broadcast — toxic intents never reach the L1 orderbook ingress.
+- On session-key revocation / expiry → `READ_ONLY_OBSERVER` halts retry storms; hedge lane falls through to GMX native backup.
+
+### GMX V2 Hard Anchor (Primary Arbitrum Native Backup)
+
+- **Wallet B** (`0xc9Bdd…546f`) holds GM LP yield vault exposure on Arbitrum One.
+- GMX is the **primary Arbitrum-native perp / GM liquidity anchor** when HL is unreachable — not a secondary demo lane.
+- `gmx-v2-wallet-a-short-builder.ts` encodes fallback short probes (simulate-only on mainnet; live fill OPEN).
+- Live GM I/O proofs: deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410).
+
+### Variational & 8-Venue Expansion Matrix
+
+- Variational Omni RFQ demonstrates **protocol-agnostic** Citadel Shield coverage beyond GMX / HL.
+- Session-key **`allowedVenues[]`** whitelists bind approved protocol lanes; unauthorized A→B venue switches trip **`VENUE_DRIFT_REJECTED`** before broadcast.
+- Full 8-venue matrix: GMX · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational · Hyperliquid.
+
+### Judge copy-paste commands
+
+```bash
+# GMX V2 — Arbitrum Native Hard Anchor · Soil Matrix & Native Fallback
+pnpm demo:gmx -- --trip
+
+# Variational — Multi-Venue Expansion Gate · RFQ stale-quote & drift defense
+pnpm demo:variational -- --trip
+
+# Cross-wallet orchestration (HL primary + GMX vault)
+pnpm demo:e2e
+pnpm demo:perp-loop -- --trip    # Loop A: GMX / Pendle / HL / Variational stack
+```
+
+**Expected HUD signals (verified):**
+- `pnpm demo:gmx -- --trip` → `GMX_FAIL_CLOSED` · pool skew / price-impact breach · `⚡ Reflex Core Deadlock`
+- `pnpm demo:variational -- --trip` → `VARIATIONAL_FAIL_CLOSED` · stale quote / OLP breach · `⚡ Reflex Core Deadlock`
+
+---
+
 ## Tier 2 — Agent Frameworks
 
 Each framework demo runs **one agent guard in isolation** — **p50 ~106µs E2E Edge Shield** on ALLOW paths, **p50 ~15µs reflex core** on `--trip` — without multi-agent concurrent queue overhead. All four demos (`wayfinder` · `elizaos` · `virtuals` · `langchain`) share identical CLI flags.
