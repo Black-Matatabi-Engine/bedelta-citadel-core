@@ -240,6 +240,16 @@ Citadel defines **exact in-scope bounds** for AI-agent intent drift — not a ge
 
 **Measurement hygiene:** `process.hrtime.bigint()` · Pure Invariant / Full Matrix / E2E Harness rows isolated · **does not** include L1/L2 block time or sequencer finality.
 
+### Operational Boundaries (SSOT)
+
+| Boundary | In scope | Out of scope |
+|----------|----------|--------------|
+| **Latency** | Edge Worker p50 bands (~15µs reflex · ~106µs E2E) | Nitro opcode time · L1/L2 block confirmation |
+| **MEV** | Fail-closed before EIP-712 / Bundler ingress | Post-ALLOW public mempool sandwich protection |
+| **Cross-chain** | Venue mask + digest bind at Edge | Chainlink CCIP native message verification |
+| **Telemetry** | Sepolia Dune live · One SQL spec | Arbitrum One live Dune ingest (until events indexed) |
+| **Ring slab** | `<16 KiB` heap delta / 10k iterations | Absolute zero-byte allocation claim |
+
 ---
 
 ## 🔬 Stylus Wasm Dual-Execution Architecture

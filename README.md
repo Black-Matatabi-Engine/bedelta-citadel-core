@@ -27,10 +27,12 @@
 
 > **Latency scope:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield. None of these tiers measure L1/L2 block time, sequencer finality, or on-chain inclusion.
 
+> **Operational boundaries:** Edge latency bands are **not** Nitro/Stylus opcode times. Shield scope is **pre-broadcast** (before EIP-712 release) — **not** post-ALLOW private-mempool MEV protection, Chainlink CCIP native verification, or Robinhood Chain integration. Dune: **Sepolia (`421614`) live event stream** · **Arbitrum One (`42161`) contracts anchored + SQL spec only** (not claimed as live mainnet ingest). Ring-slab heap gate: **&lt;16 KiB** over 10k iterations (not absolute zero bytes).
+
 | Anchor | Value |
 |--------|-------|
 | **Vitest baseline** | **`220 test files | 992 PASS clean`** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Zero-GC heap gate** | **`<16 KiB` / 10,000 iterations** · `npx vitest run tests/core/intent-sinking-audit.test.ts` → **8 passed (8)** |
+| **Zero-GC heap gate** | **`<16 KiB` / 10,000 iterations** · `npx vitest run tests/core/intent-sinking-audit.test.ts` → **9 passed (9)** |
 | **Arbitrum One Gate** | [Arbiscan · `0xb174118b…f8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **Headless Audit** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) |
 

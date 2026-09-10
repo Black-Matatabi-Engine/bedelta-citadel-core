@@ -20,6 +20,7 @@ import {
   resetIntentRingSlab,
   slotBaseOffset,
   trackAttemptBudgetPure,
+  trackAttemptBudgetU32Pure,
   venueKeyToBitPure,
 } from "../../src/core/intent-core";
 import {
@@ -114,5 +115,35 @@ describe("intent-core — ring slab slot indexing", () => {
     resetIntentRingSlab();
     expect(INTENT_RING_U32[offset + INTENT_SLOT_ATTEMPTS]).toBe(0);
     expect(INTENT_RING_U32[offset + INTENT_SLOT_FLAGS]).toBe(0);
+  });
+
+  it("shares attempt budget when distinct keys collide into the same ring slot (fail-closed)", () => {
+    const seen = new Map<number, string>();
+    let keyA = "";
+    let keyB = "";
+    for (let i = 0; i < 10_000; i += 1) {
+      const key = `agent:collision-probe:${i}`;
+      const slot = hashKeyToSlotIndex(key);
+      const prior = seen.get(slot);
+      if (prior) {
+        keyA = prior;
+        keyB = key;
+        break;
+      }
+      seen.set(slot, key);
+    }
+    expect(keyA).not.toBe("");
+    expect(keyB).not.toBe(keyA);
+
+    const offsetA = slotBaseOffset(hashKeyToSlotIndex(keyA));
+    const offsetB = slotBaseOffset(hashKeyToSlotIndex(keyB));
+    expect(offsetA).toBe(offsetB);
+
+    resetIntentRingSlab();
+    expect(trackAttemptBudgetU32Pure(offsetA).nextAttempts).toBe(1);
+    expect(trackAttemptBudgetU32Pure(offsetA).nextAttempts).toBe(2);
+
+    expect(trackAttemptBudgetU32Pure(offsetB).nextAttempts).toBe(3);
+    expect(INTENT_RING_U32[offsetA + INTENT_SLOT_ATTEMPTS]).toBe(3);
   });
 });
