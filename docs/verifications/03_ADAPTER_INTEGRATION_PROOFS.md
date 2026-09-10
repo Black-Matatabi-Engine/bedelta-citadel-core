@@ -126,23 +126,18 @@ Citadel is the **pre-execution concentrated-liquidity firewall** for Uniswap V3 
 
 ```bash
 pnpm demo:wayfinder · pnpm demo:elizaos · pnpm demo:virtuals · pnpm demo:langchain
-pnpm demo:quad              # All four AI frameworks combined → ALLOW
-pnpm demo:quad -- --trip    # All four frameworks → FAIL_CLOSED
-pnpm demo:variational       # Variational Omni RFQ stale quote & OLP depth guard
-pnpm demo:matrix                    # Full 7-protocol matrix (--loop=all)
-pnpm demo:matrix -- --loop=perp     # Pendle → GMX → dual perp hedge (HL + Variational)
-pnpm demo:matrix -- --loop=perp --hedge=variational   # Variational Omni RFQ hedge leg
-pnpm demo:matrix -- --loop=perp --hedge=hyperliquid   # Hyperliquid L1 hedge leg only
-pnpm demo:matrix -- --loop=perp --hedge=both          # HL + Variational (default perp hedge)
-pnpm demo:matrix -- --loop=spot     # Uniswap V3 → Aave V3 → Morpho Blue spot loop
-pnpm demo:matrix -- --healthy-only  # Nominal PASS (no R20 sever)
+pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
+pnpm demo:variational -- --trip  # Variational Omni RFQ multi-venue gate
+pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
+pnpm demo:perp-loop -- --trip     # Loop A perp/yield stack reflex core
+pnpm demo:spot-loop -- --trip     # Loop B spot/lending vault reflex core
 ```
 
 - **Tests:** [`wayfinder-shield.test.ts`](../../tests/adapters/wayfinder-shield.test.ts) · [`elizaos-plugin.test.ts`](../../tests/adapters/elizaos-plugin.test.ts) · [`virtuals-adapter.test.ts`](../../tests/adapters/virtuals-adapter.test.ts) · [`langchain-tool.test.ts`](../../tests/adapters/langchain-tool.test.ts) · **217 test files | 967 PASS clean**
 
 #### Supplementary Agent Demos
 
-- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure`)
+- **V1.0 delivered:** All native integrations in [`src/adapters/`](../../src/adapters/) · [`withCitadelShield`](../../src/sdk/decorator.ts) · **3-Tier Demo Suite** — Tier 1 Native Protocols: `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,usdai,variational}` · Tier 2 Agents: `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` · Tier 3: `pnpm demo:{stabilizer,e2e}` — CLI reproducible ALLOW / `--trip` FAIL_CLOSED · Worker bundle **50.94 KiB gzip** (`pnpm bundle:measure`)
 - **Supplementary harness:** [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) (`tsx examples/agent-interceptor-demo.ts`) · legacy TS/Python scripts in [`examples/adapters/`](../../examples/adapters/)
 
 
@@ -369,18 +364,16 @@ docker build -t silvervine-sidecar -f docker/Dockerfile.sidecar .
 | `pnpm demo:uniswap` | Uniswap V3 concentrated liquidity CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:aave` | Aave V3 lending HF CLI | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:morpho` | Morpho Blue vault guard CLI | ALLOW / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix` | Cross-venue 7-protocol circuit breaker CLI (`--loop=all`) | **7/7 ALLOW** / trip **7/7 FAIL_CLOSED** |
-| `pnpm demo:matrix -- --loop=perp` | Perp stack loop (Pendle → GMX → HL + Variational) | **4/4 FAIL_CLOSED** trip |
-| `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational RFQ OLP / stale-quote guard | `ALLOW` / `--trip` **FAIL_CLOSED** |
-| `pnpm demo:matrix -- --loop=perp --hedge=both` | Dual hedge (HL + Variational, default) | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix -- --loop=spot` | Spot vault loop (Uniswap V3 → Aave V3 → Morpho Blue) | **4/4 FAIL_CLOSED** trip |
+| `pnpm demo:variational` | Variational Omni RFQ stale quote & OLP guard | ALLOW / `--trip` **FAIL_CLOSED** |
+| `pnpm demo:gmx -- --trip` | **Judge fast track** — GMX native hard anchor | **FAIL_CLOSED** |
+| `pnpm demo:variational -- --trip` | **Judge fast track** — Variational multi-venue gate | **FAIL_CLOSED** |
+| `pnpm demo:hl -- --trip` | **Judge fast track** — Hyperliquid primary path | **FAIL_CLOSED** |
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle ANSI HUD | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:wayfinder` | Wayfinder native route interception | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:elizaos` | ElizaOS Action handler guard | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:virtuals` | Virtuals GAME worker guard | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:langchain` | LangChain CitadelRiskGuardTool | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | ALLOW / `--trip` FAIL_CLOSED + cooldown |
-| `pnpm demo:quad` | Quad-Agent framework demo (Wayfinder · ElizaOS · Virtuals · LangChain) | ALLOW / `--trip` FAIL_CLOSED |
 | `pnpm test` | Full Vitest + coverage | **217 test files | 967 PASS clean** |
 | `pnpm test:watch` | Interactive Vitest | — |
 | `pnpm typecheck` | `tsc --noEmit` | — |

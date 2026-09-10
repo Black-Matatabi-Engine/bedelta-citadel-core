@@ -59,7 +59,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
 | **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **p50 ~15µs** |
 
-**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:quad -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `pnpm demo:wayfinder -- --trip` · `pnpm demo:gmx -- --trip`.
 
 ### Legal & Regulatory Positioning
 

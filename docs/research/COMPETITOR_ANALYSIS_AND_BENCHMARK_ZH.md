@@ -253,7 +253,9 @@ Citadel path:
 pnpm test -- --run          # 199 files | 868 PASS
 pnpm exec tsc --noEmit      # 0 errors
 pnpm bundle:measure         # gzipKiB < 51 · pass: true
-pnpm demo:matrix -- --loop=spot   # 7-venue soil fuse board
+pnpm demo:gmx -- --trip            # GMX native hard anchor
+pnpm demo:variational -- --trip    # Variational multi-venue gate
+pnpm demo:hl -- --trip             # Hyperliquid primary path
 pnpm demo:elizaos           # Agent framework guard path
 ```
 

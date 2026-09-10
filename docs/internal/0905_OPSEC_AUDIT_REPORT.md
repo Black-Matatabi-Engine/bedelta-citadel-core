@@ -231,7 +231,7 @@ Layer C — Adapter Overlay (TS, per-protocol)
 2. `evaluate*Flags(vec, manifest)` or write manifest into `Float64Array` tail slots
 3. Migrate Variational constants: `quoteMaxAgeMs`, `priceDeviationMaxBps`, `olpDepthMaxUtilization`
 4. CI gate: Stylus / `soil_core` / TS limits **tri-party parity** (extend `tests/wasm/stylus-soil-wasm.test.ts`)
-5. `pnpm demo:matrix -- --policy=./profiles/grant.json` for judge-reproducible tuning
+5. `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` for judge-reproducible venue proofs
 
 ### 4.3 Recompile Matrix
 

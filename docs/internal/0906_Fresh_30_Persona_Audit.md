@@ -9,7 +9,7 @@
 | 對照基線 | [`0905_Grok_M_ZH.md`](./0905_Grok_M_ZH.md) **8.37** · [`0905_46_Grok_zh.md`](./0905_46_Grok_zh.md) **8.52** · [`0906_Grok_M_ZH.md`](./0906_Grok_M_ZH.md) **8.58** |
 | 測試 SSOT | **194 test files \| 846 PASS Clean (100% PASS)** |
 | Worker Bundle | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` |
-| 7-Venue Matrix | `pnpm demo:matrix -- --loop=spot\|all` · USD.ai 第 7 venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` |
+| 7-Venue Matrix | `pnpm demo:usdai -- --trip` · USD.ai 第 7 venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` |
 | Bitmask SSOT | `PROTO_USDAI=24` · `PROTO_VECT_LEN=28` · bits **18–19** · `usdai-protocol-lane.ts` |
 | **本面板算術平均** | **8.63 / 10** |
 | **主席加權敘事帶** | **8.59 – 8.69 / 10**（**仍未進 9.0**） |
@@ -33,7 +33,7 @@
  晨間           午後+Q1        USD.ai落地      Array+Matrix
 ```
 
-**本面板相對 8.58 的邊際解讀：** `PROTO_USDAI` lane + `protocolMask |=` 讓 **SC/RPS 各 +0.04**；7-venue `demo:matrix` 讓 **PMF +0.03**；**無鏈上增量** 使產業組 **仍鎖在 8.5x**。
+**本面板相對 8.58 的邊際解讀：** `PROTO_USDAI` lane + `protocolMask |=` 讓 **SC/RPS 各 +0.04**；7-venue per-protocol demos 讓 **PMF +0.03**；**無鏈上增量** 使產業組 **仍鎖在 8.5x**。
 
 ---
 
@@ -185,7 +185,7 @@
 
 ### 9. Yuki Tanaka — Arb Foundation Grant
 
-- **說服：** 7-protocol + 4-framework + **可複現 `demo:matrix`** = 提交包完整度 **本賽季前 15%**。
+- **說服：** 7-protocol + 4-framework + **可複現 `pnpm demo:gmx -- --trip`** = 提交包完整度 **本賽季前 15%**。
 - **Nit：** 42161 無業務事件；**Overall #1 仍卡 fill**。
 - **分數：** **8.81** — 本卷最高單人格。
 
@@ -228,7 +228,7 @@
 
 **Blackhat 結論：** Bitmask lane 在 **單進程、誠實時鐘** 下是 $O(1)$ 且快。在 **多實例 Edge + 無 DO 狀態同步** 下，**protocolMask 與 R20 可分叉** — 與 09-05 Q7-3 同構，**未因 dfae008 修復**。
 
-### 4.2 7-Venue Capital Loop · `demo:matrix` 競態與狀態脫節
+### 4.2 7-Venue Capital Loop · per-venue demo 競態與狀態脫節
 
 **攻擊：** Loop A perp + Loop B spot **並行意圖**；或 Step 1 PASS 後 Step 3 R20 前 **重放簽名**。
 
@@ -258,8 +258,8 @@
 
 | 時碼 | 增量口播（相對 09-06） |
 |------|------------------------|
-| 0:20–0:50 | `pnpm demo:matrix -- --loop=spot --healthy-only` → 指 **USD.ai Yield Collateral Fuse: OK** |
-| +5s trip | `pnpm demo:matrix -- --loop=spot --trip --usdai` → **TRIPPED** + `bitmask=USDAI_PEG_DRIFT` |
+| 0:20–0:50 | `pnpm demo:usdai` → 指 **USD.ai Yield Collateral Fuse: OK** |
+| +5s trip | `pnpm demo:usdai -- --trip` → **TRIPPED** + `bitmask=USDAI_PEG_DRIFT` |
 | Pitch 30s | *Seven venues, one soil gate, PROTO_USDAI lane bits eighteen-nineteen.* |
 
 ---

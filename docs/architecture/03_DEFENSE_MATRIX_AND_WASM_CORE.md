@@ -31,7 +31,7 @@ $$
 |-------|-------------|-------------------|
 | **TS bitmask compiler** | [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | All R01–R20 + protocol lanes compile to **`protocolMask` / `tripFlags`** — evaluated in one bitwise pass |
 | **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs GMX · Hyperliquid · Pendle · Uniswap · Aave · Morpho · USD.ai · Variational lanes · slot **27** = aggregated `protocolMask` |
-| **8-venue matrix coverage** | Agent demos · `pnpm demo:matrix` | Entire **7+1** lane set evaluated simultaneously via bitmask — no sequential venue bottleneck |
+| **8-venue matrix coverage** | Per-venue demos · `pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl` | Entire **7+1** lane set evaluated via bitmask — targeted single/dual-venue judge proofs |
 
 ```text
 Intent → pack Float64Array[28] → Wasm bitmask eval → tripFlags (u64) → severSigningChannel()
@@ -46,9 +46,9 @@ Parallel vector checking is what makes **simultaneous multi-venue R20 physical d
 |-------|----------------|-----------|
 | **Pure invariant kernel** | **~0.5µs–1.1µs** | Pure-math soil resistance · no async |
 | **Wasm reflex core** | **p50 ~15µs** (**<20µs warm path**) | `rootProtection()` · `severSigningChannel()` on any trip bit |
-| **E2E Edge Shield** | **p50 ~106µs** | End-to-end Shield path (TS Gateway + `soil_core.wasm`) — **9/9** matrix legs trip **FAIL_CLOSED** in `pnpm demo:matrix -- --trip` without per-leg queueing |
+| **E2E Edge Shield** | **p50 ~106µs** | End-to-end Shield path (TS Gateway + `soil_core.wasm`) — per-venue demos trip **FAIL_CLOSED** without batch queueing |
 
-**Proof command:** `pnpm demo:matrix -- --trip` — reproduces **9/9 FAIL_CLOSED** severance across the full cross-chain matrix in a single HUD pass.
+**Proof commands:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` — targeted single-venue FAIL_CLOSED severance HUD.
 
 → Deep dive: [§3.1 Microsecond Moats (Summary)](#31-microsecond-moats-summary) · [§3.3 Defense Matrix (R01–R20)](#33-defense-matrix-r01-r20-summary)
 
@@ -153,7 +153,7 @@ $$
 | **Collateral Guard** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | Thin orchestration · `evaluateUsdAiCollateralGuard()` — re-exports core via `usdai-*` shells |
 | **Legacy shells** | [`usdai-constants.ts`](../../src/adapters/usdai/usdai-constants.ts) · [`usdai-soil-gate.ts`](../../src/adapters/usdai/usdai-soil-gate.ts) · [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | 100% backward-compatible re-exports from `risk-engine-usdai.ts` |
 | **Soil Fuse** | [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | `usdai` → `collectExternalSoilFlags()` · `protocolMask \|=` · `USD_AI_DEPEG_ORACLE_TRIP` |
-| **Matrix CLI** | `pnpm demo:matrix -- --loop=spot` | 7th venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` ANSI board |
+| **USD.ai CLI** | `pnpm demo:usdai -- --trip` | `USD.ai Yield Collateral Fuse: OK/TRIPPED` ANSI board |
 
 **Formal de-peg / oracle deviation (SSOT):**
 

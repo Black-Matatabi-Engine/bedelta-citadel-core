@@ -8,9 +8,9 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:matrix` | Arbitrum Native USDC GM deposit · live Wallet B multicall · GMX · HL · **7-protocol matrix** |
-| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:matrix` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · **7-protocol cross-venue matrix** |
-| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` · `pnpm demo:quad` | Wayfinder · ElizaOS · Virtuals · LangChain · combined quad |
+| **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm execute:gmx:gm-withdraw` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall · GMX · HL |
+| **Tier 1 — Native Protocols** | `pnpm demo:gmx` · `pnpm demo:hl` · `pnpm demo:pendle` · `pnpm demo:uniswap` · `pnpm demo:aave` · `pnpm demo:morpho` · `pnpm demo:usdai` · `pnpm demo:variational` | GMX · HL · Pendle · Uniswap V3 · Aave V3 · Morpho Blue · USD.ai · Variational |
+| **Tier 2 — Agent Frameworks** | `pnpm demo:wayfinder` · `pnpm demo:elizaos` · `pnpm demo:virtuals` · `pnpm demo:langchain` | Wayfinder · ElizaOS · Virtuals · LangChain |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:stabilizer` · `pnpm demo:e2e` | Sepolia Stabilizer · **4-step Happy Path** macro lifecycle (`--unwind` · `--trip` optional) |
 | **Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
 
@@ -35,14 +35,12 @@ pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 | `pnpm demo:aave` | Aave V3 HF & cross-chain liquidation guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:morpho` | Morpho Blue vault share-price & sandwich guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:usdai` | USD.ai AI-compute yield collateral guard (`evaluateUsdAiCollateralGuard`) | `ALLOW` / `--trip` FAIL_CLOSED · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) **5/5** |
-| `pnpm demo:matrix` | Full 7-protocol cross-venue matrix (`--loop=all`) | **7/7 ALLOW** nominal · **7/7 FAIL_CLOSED** trip |
-| `pnpm demo:matrix -- --loop=perp` | Delta-neutral perp stack (Pendle → GMX → HL + Variational) | **3/3 + Soil** |
-| `pnpm demo:matrix -- --loop=perp --hedge=variational` | Variational Omni RFQ hedge leg · stale quote trip | `ALLOW` / `--trip` **FAIL_CLOSED** (`VARIATIONAL_STALE_QUOTE_BREACH`) |
-| `pnpm demo:matrix -- --loop=perp --hedge=hyperliquid` | Hyperliquid L1 hedge leg only | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix -- --loop=perp --hedge=both` | Dual perp hedge (HL + Variational, default) | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:matrix -- --loop=spot` | Spot & lending vault loop (Uniswap V3 → Aave V3 → Morpho Blue) | **3/3 + Soil** |
-| `pnpm demo:matrix -- --healthy-only` | Nominal pre-flight only (no R20 sever) | **ALLOW** |
-| `pnpm demo:matrix -- --trip --gmx` | GMX pool imbalance (>0.35) trip variant | **FAIL_CLOSED** |
+| `pnpm demo:variational` | Variational Omni RFQ stale quote & OLP depth guard | `ALLOW` / `--trip` **FAIL_CLOSED** (`VARIATIONAL_STALE_QUOTE_BREACH`) |
+| `pnpm demo:gmx -- --trip` | **Judge fast track** — GMX V2 Arbitrum native hard anchor | **FAIL_CLOSED** · pool skew / price-impact breach |
+| `pnpm demo:variational -- --trip` | **Judge fast track** — Variational multi-venue RFQ gate | **FAIL_CLOSED** · stale quote / OLP breach |
+| `pnpm demo:hl -- --trip` | **Judge fast track** — Hyperliquid L1 primary hedge path | **FAIL_CLOSED** · session-key / depth guard |
+| `pnpm demo:perp-loop -- --trip` | Loop A perp/yield stack (GMX / Pendle / HL / Variational) | **FAIL_CLOSED** · p50 ~15µs reflex core |
+| `pnpm demo:spot-loop -- --trip` | Loop B spot/lending vault (Morpho / Aave / USD.ai / Uniswap) | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:e2e -- --unwind` | Optional Step 5 Citadel Shield R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
@@ -55,8 +53,6 @@ pnpm test       # Full System Regression Suite (217 test files | 967 PASS clean)
 | `pnpm demo:wayfinder -- --stabilizer --trip` | Stabilizer reserve / capacity breach (Wayfinder harness) | `FAIL_CLOSED` · `SOIL_RESISTANCE_TRIP` |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm demo:quad` | All four AI agent frameworks (Wayfinder · ElizaOS · Virtuals · LangChain) | **4/4 ALLOW** |
-| `pnpm demo:quad -- --trip` | Quad-framework toxic soil / hallucination trip | **4/4 FAIL_CLOSED** |
 | `pnpm test` | Full Vitest regression bar | **217 test files | 967 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):

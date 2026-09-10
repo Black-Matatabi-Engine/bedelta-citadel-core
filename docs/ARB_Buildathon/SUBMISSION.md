@@ -55,7 +55,7 @@
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:quad` · `pnpm demo:matrix -- --trip`
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
 ---
 
@@ -70,12 +70,13 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer & C
 | **Physical Deadlock** | `rootProtection()` · `severSigningChannel()` on R20 / soil trip | **p50 ~15µs** | **0** |
 | **On-Chain Anchor** | EIP-712 consume-once `SliverVineGate` attestation | Post-clearance only | Minimal |
 
-**Multi-framework coverage (V1.0 Live):** Wayfinder · ElizaOS · Virtuals · LangChain — prove in one command:
+**Multi-framework coverage (V1.0 Live):** Wayfinder · ElizaOS · Virtuals · LangChain — prove per framework or per venue:
 
 ```bash
-pnpm demo:quad              # All four AI frameworks → ALLOW
-pnpm demo:quad -- --trip    # Hallucination / soil trip → FAIL_CLOSED (p50 ~15µs deadlock)
-pnpm demo:matrix -- --trip  # 7+1 Cross-Chain Execution Matrix R20 severance
+pnpm demo:wayfinder -- --trip    # Wayfinder AI Guard → FAIL_CLOSED (p50 ~15µs deadlock)
+pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
+pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
+pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
 ```
 
 **Threat classes blocked at 0-Gas:**
@@ -106,7 +107,7 @@ Intent Payload → checkSoilResistance() [p50 ~106µs]
 | **Deadlock sever** | `rootProtection()` · `circuit-breaker-sever.ts` | **p50 ~15µs** EIP-712 pipe severance |
 | **Cooldown** | `withCitadelShield` decorator | 60s LLM back-off on FAIL_CLOSED · **max 3-attempt** budget per intent digest |
 
-**Judge reproduction:** `pnpm demo:wayfinder -- --trip` · `pnpm demo:quad -- --trip` · `pnpm demo:matrix -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip`
+**Judge reproduction:** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `pnpm demo:wayfinder -- --trip`
 
 ---
 
@@ -149,9 +150,8 @@ pnpm demo:gmx -- --trip
 # Variational — Multi-Venue Expansion & drift-defense proof
 pnpm demo:variational -- --trip
 
-# Full 8-venue agent matrix severance
-pnpm demo:matrix -- --trip
-pnpm demo:quad -- --trip
+# Hyperliquid — External L1 primary hedge path
+pnpm demo:hl -- --trip
 ```
 
 > **Intent mandate SSOT:** `allowedVenues[]` session whitelists + `intent-core.ts` pure state machine → unauthorized venue switches fail-closed with **`VENUE_DRIFT_REJECTED`** at 0-Gas. See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`intent-core.ts`](../../src/core/intent-core.ts).
@@ -222,7 +222,7 @@ pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
 pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 ```
 
-> **Buildathon evaluators:** Start with **The Shield** (`pnpm demo:quad` · `pnpm demo:matrix -- --trip`). **GMX Builder Grant judges:** `pnpm demo:gmx -- --trip` (Arbitrum native hard anchor) · `pnpm demo:variational -- --trip` (multi-venue expansion). Sovereign Vault (`pnpm demo:e2e`) is supplementary live-MVP evidence.
+> **Buildathon evaluators:** Start with **The Shield** — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault (`pnpm demo:e2e`) is supplementary live-MVP evidence.
 
 ---
 
