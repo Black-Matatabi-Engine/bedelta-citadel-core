@@ -7,7 +7,7 @@
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
 
-Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
+Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
 
 ---
 
@@ -34,6 +34,70 @@ Five standards form the **active C-end / on-chain compliance spine** — each ro
 | **Worker bundle** | **143.77 KiB raw** · **50.94 KiB gzip** hot-path (`pnpm bundle:measure` · `limitKiB: 150` · `pass: true`) |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · [Arbiscan](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Stylus coprocessor** | `SliverVineSoilCoprocessor` · [`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs) · Stylus SDK **0.10.7** · `cargo test` **9/9 PASS** |
+
+---
+
+## Emerging Standards & Edge-Wasm Reference Implementations (ERC-8196, ERC-7715/8226, EIP-8079/8105)
+
+Citadel's **Pre-Consensus Edge-Wasm Reference Implementation Moat** ships production code **before** several emerging AI-agent and client-gateway standards finalize — Edge `pkg/soil_core.wasm` + EIP-1193 middleware form the off-chain reflex plane; on-chain PolicyGuard anchors settlement.
+
+```text
+[ LLM / Agent Intent ]
+        │
+        ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer A — EIP-1193 Retail Guard (ERC-8196 off-chain RI)     │
+│ withRetailGuardProvider() · calldata-parser · guard-engine  │
+│ p50 ~106µs E2E · p50 ~15µs reflex · 0-Gas on reject         │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer B — Session mandate attenuation (ERC-7715/8226-class) │
+│ INTENT_RING_U32 · session-key-guard · agentic-auto-roll     │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+┌───────────────────────────────────────────────────────────┐
+│ Layer C — Pre-consensus gateway (EIP-8079/8105-class)       │
+│ Local simulation + instant reject BEFORE L2 Sequencer       │
+└───────────────────────────┬───────────────────────────────┘
+                            ▼
+              [ Arbitrum Sequencer / Bundler ingress ]
+```
+
+### ERC-8196 / ERC-8118 — AI Agent Authenticated Wallet (Off-Chain Reference Implementation)
+
+| Layer | Citadel binding | SSOT |
+|-------|-----------------|------|
+| **Off-chain RI (primary)** | [`withRetailGuardProvider()`](../../src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) — EIP-1193 middleware implementing ERC-8196-class **pre-execution policy** for AI agent wallets **before** `eth_sendTransaction` reaches any RPC or mempool | [`risk-evaluator.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/risk-evaluator.ts) · [`guard-engine.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) |
+| **Calldata / prompt-injection defense** | u32 selector dispatch on toxic calldata (approve · Permit2 · router swaps) — **non-semantic bytecode predicates** immune to NL jailbreak at signing layer | [`calldata-parser.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/calldata-parser.ts) |
+| **Edge Wasm soil fuse** | `evaluateSoilViaWasm()` / `checkSoilResistance()` — sub-ms bitmask evaluation on slippage · depth · cross-venue drift | [`wasm-adapter.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/wasm-adapter.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) |
+| **On-chain anchor** | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) **Final** — [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol) settlement-plane policy screen | Live **42161** [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
+| **ERC-8118 (emerging)** | Draft companion for authenticated agent wallet surfaces — Citadel aligns via EIP-1193 RI + PolicyGuard V2; **not** a separate product adapter | [§ ERC-8196](#erc-8196--factual-eip-attribution--historical-co-authoring-reference-not-a-venue-adapter) |
+
+**0-Gas invariant:** Rejected intents throw `RetailGuardRejectedError` locally — **no Sequencer gas** consumed. Latency: **p50 ~106µs** E2E Edge Shield · **p50 ~15µs** Wasm reflex core on `--trip` severance (sub-10ms wall-clock budget, deterministic).
+
+### ERC-7715 / ERC-8226 — Advanced Session Permissions & Attenuation
+
+| Concern | Citadel implementation | SSOT |
+|---------|------------------------|------|
+| **Scoped session mandates** | `allowedVenues[]` bitmask · `VENUE_DRIFT_REJECTED` on unauthorized venue hops | [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`guard-engine.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) |
+| **Session-key TTL / clip** | `verifySessionKeyValidity()` — expiry + clock-drift buffer before HL order broadcast | [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) |
+| **Zero-gas attempt attenuation** | `INTENT_RING_U32` ring slab — `trackAttemptBudgetU32Pure()` · default **3 attempts** → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `severSigningChannel()` | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) |
+| **Pendle Shield Option 3 (agentic roll)** | `evaluateAgenticRollGate()` — PT/YT roll actions gated by yield drift · expiry · hallucinated amount · shared `INTENT_RING_U32` attempt budget | [`agentic-auto-roll-gate.ts`](../../src/services/api/pendle-shield/agentic-auto-roll-gate.ts) |
+| **ERC-8226 (emerging)** | Permission attenuation / delegation decay — aligned via Kernel v3 session modules + `INTENT_RING_U32` severance; universal ERC-8226 wallet API ⏳ post-grant | [`zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) · [§ ERC-7715 posture](#compliance-posture) |
+
+**Verification:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `npx vitest run tests/core/intent-sinking-audit.test.ts` **8/8** · Pendle roll gate unit tests.
+
+### EIP-8079 / EIP-8105 — Client-Side Pre-Consensus Security Gateway
+
+| Property | Citadel Guard Engine behavior | SSOT |
+|----------|------------------------------|------|
+| **Pre-confirmation simulation** | `evaluateRetailRisk()` runs full policy stack (transport sync · calldata parse · approve gate · venue allowlist · soil Wasm) **locally** before wallet broadcast | [`guard-engine.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) · [`provider.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) |
+| **Instant local rejection** | Fail-closed paths never call `baseProvider.request()` — tx does not enter L2 Sequencer queue | `RetailGuardRejectedError` in [`provider.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) |
+| **EIP-8079-class alignment** | Client-side security firewall between dApp/agent and wallet — **0-Gas** pre-consensus intercept | Retail Guard SDK · Edge Worker `checkSoilResistance()` |
+| **EIP-8105-class alignment** | Pre-execution intent validation + local rejection before chain confirmation — Wasm bitmask parallel eval | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` |
+
+> **Moat thesis:** Competitors optimize **post-execution** analytics or **on-chain** governance delays. Citadel's Edge-Wasm RI executes **pre-Sequencer** — the only tier that can sever EIP-712 at **p50 ~15µs** with **$0 gas** on rejection.
 
 ---
 

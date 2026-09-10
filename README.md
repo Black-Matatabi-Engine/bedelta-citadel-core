@@ -66,6 +66,18 @@ Full wiki → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./doc
 
 ---
 
+## EVM & AI Standard Alignment (Pre-Consensus Edge-Wasm Moat)
+
+| Standard family | Citadel reference implementation | Source anchor |
+|-----------------|----------------------------------|---------------|
+| **ERC-8196 / ERC-8118** | EIP-1193 middleware as off-chain AI Agent Wallet policy RI · 0-Gas calldata + prompt-injection defense | [`provider.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) · [`guard-engine.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) |
+| **ERC-7715 / ERC-8226** | Scoped session mandates · `INTENT_RING_U32` attempt attenuation · Pendle agentic roll gate | [`intent-mandate.ts`](./src/core/intent-mandate.ts) · [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) |
+| **EIP-8079 / EIP-8105** | Client-side pre-consensus gateway — local simulation + instant reject before L2 Sequencer | [`guard-engine.ts`](./src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) · `pkg/soil_core.wasm` |
+
+Deep dive → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105)
+
+---
+
 ## Performance Verification — Zero-GC Memory Isolation
 
 Pre-allocated **256×4 ring slab** intent mandate engine — **O(1)** slot hashing · **zero `Map` churn** · **C-ABI parity** with Rust `intent_core.rs`.
