@@ -41,6 +41,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 | **ArbOS 61** | Arbitrum L2 execution / Stylus co-residence alignment (⏳ V1.0 Design Spec) | `IngressSafetySwitch.sol` · Elara ingress design · Stylus WASM parity path | Robinhood safety contracts · audit notes |
 | **Robinhood Chain Ingress** | Permissioned institutional egress · AML inbound isolation | Chains **46630** (testnet) / **4663** (mainnet filter) · Across bridge · `IngressSafetySwitch.sol` | Robinhood Across bridge tests · audit snapshot |
 | **WASM Core (`soil_core`)** | Sub-ms pre-execution soil fuse · Cloudflare Edge hot path | `pkg/soil_core.wasm` · `#![no_std]` Rust · budget **< 28 KiB** · warm exec **< 60 µs** · p50 ~106 µs | Wasm feasibility suite · Pillar Set Y Wasm CoreSpec |
+| **Clock / L2 timestamp monotonicity (EIP-1482-class)** | RPC `block.timestamp` high-watermark · leap / NTP fail-closed · multi-provider failover | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock_core.rs`](../../src/wasm/clock_core.rs) · [`rpc-radar.ts`](../../src/services/adapters/rpc-radar.ts) | [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [§ Dual-Engine](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md#dual-engine-infrastructure-map-frozen--2026-09-10) |
 
 ---
 
@@ -119,6 +120,57 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 
 Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain reinforcement — never a weaker substitute for fail-closed Edge gates.
 
+### EIP-1482-Class: Block Timestamp Monotonicity & RPC Regression Defense
+
+> **Auditor note:** Canonical [EIP-1482](https://eips.ethereum.org/EIPS/eip-1482) on ethereum.org defines **shard block proofs**, not wall-clock monotonicity. In this wiki, **EIP-1482-class** denotes Citadel's **L2 `block.timestamp` monotonicity & bounded-drift profile** — aligned with Arbitrum sequencer non-decreasing timestamp rules and heterogeneous RPC load-balancer behavior. Implementation SSOT: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) §3.1.1 · [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) § Dual-Engine Map.
+
+Citadel does **not** ship a standalone `MonotonicRpcRatchetGuard` class or `rpc-timestamp-guard.ts` module. The **monotonic RPC ratchet** is a **composite guard** across three SSOT surfaces:
+
+| Layer | SSOT symbol | Role |
+|-------|-------------|------|
+| **Wasm ratchet** | `RpcTimestampWatermark` · `clock_core_rpc_ingest()` | Per-source high-watermark on `(blockNumber, timestampSec)` — regression freezes held timestamp (fail-closed) |
+| **RPC failover** | `rpc-radar.ts` · `evaluateRpcRadarTier()` | Multi-provider probe race; `RPC_RADAR_STALE_BLOCK_MAX_MS` = **5_000** marks stale `latest` blocks; `IS_SEQUENCER_OUTAGE` triggers soil fuse |
+| **Virtual wall clock** | `MonotonicTimeSSOT.read()` · sticky `CLOCK_NEGATIVE_LEAP_DETECTED` | NTP / leap step-back does not regress virtual wall time; anomaly persists until reset |
+
+```text
+RPC probe (Alchemy / QuickNode / Ankr)
+    → clock_core_rpc_ingest / RpcTimestampWatermark (monotonic timestampSec)
+    → rpc-radar stale tier (blockAgeMs > 5s → failover)
+    → checkSoilResistance() SOIL_REASON_RPC_OUTAGE / fast-path deny
+```
+
+| Invariant | Enforcement | Fail-closed outcome |
+|-----------|-------------|-------------------|
+| `timestampSec` must not regress at equal/higher block height | `RpcTimestampWatermark.ingest()` · Wasm `clock_core_rpc_ingest` | Held high-watermark; regression flag → stale / deny |
+| Heterogeneous RPC `latest` skew | `rpc-radar` fastest-fresh-wins + all-stale tier-2 outage | `getRpcRadarOutageReason()` → soil trip |
+| Wall-clock leap / NTP step | `MonotonicTimeSSOT` offset + sticky anomaly | `risk-engine-soil.ts` fast-path deny when anomaly ≠ null |
+
+**Verification:** `npx vitest run tests/clock-monotonicity.test.ts` — **14/14 PASS** (includes Wasm FFI regression hold).
+
+### ERC-4337 / ERC-7579 / ERC-7715: Account Abstraction & Session Key Time Gates
+
+Session-key and modular-account time semantics are enforced **before** UserOp broadcast. Clock immunity prevents **fake-fresh** ages that could bypass TTL / staleness modules.
+
+| Standard facet | Clock SSOT binding | Module anchor |
+|----------------|-------------------|---------------|
+| **ERC-4337** UserOp validation window | `resolveWallAge(nowMs, quoteTimestampMs)` → `LEAP` trips stale flags | [`risk-engine-flag-alt.ts`](../../src/core/risk-engine-flag-alt.ts) · `evaluateVariationalFlags()` |
+| **ERC-7579** modular session scope | `resolveUsdAiClockSsotPure()` + `CLOCK_NEGATIVE_LEAP_DETECTED` → `FLAGS_SEVERED` | [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) |
+| **ERC-7579** session clip / TTL | `session_core_ok()` Wasm FFI · `verifySessionKeyValidity(expiresAt, nowMs)` | [`soil_core.rs`](../../src/wasm/soil_core.rs) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) |
+| **ERC-7715** permission expiry evolution | `expiresAtMs <= nowMs` replay guard + clock-skew trip (`CLOCK_SKEW_EXCEEDED` >30s) | [`session-audit.ts`](../../src/services/risk/session-audit.ts) · USDAI clock SSOT |
+
+**Anti-spoofing rule:** Negative wall deltas (`nowMs < timestampMs`) MUST NOT clamp to `ageMs = 0`. `resolveWallAge()` returns `{ kind: "LEAP" }` → variational / USDAI **STALE** or `FLAGS_SEVERED` — never ALLOW with fake freshness.
+
+### ERC-7715 / EIP-7702 & EIP-712: Session Delegation, Intent Hashing & Physical Deadlock
+
+| Mechanism | Clock / Wasm binding | Outcome |
+|-----------|---------------------|---------|
+| **EIP-712** structured intent | Domain-bound digest evaluated only after soil clock snapshot is fixed | [`evaluateAttestation()`](../../src/sdk/attestation.ts) · Gate `verifyAndConsume` |
+| **EIP-7702** / Kernel upgrade path | Pre-broadcast `checkSoilResistance()` — clock anomaly → no signature release | [`agent-citadel-guard.ts`](../../src/core/agent-citadel-guard.ts) |
+| **Physical deadlock** | `rootProtection()` / `severSigningChannel()` on `FLAGS_SEVERED` | [`root-protection-core.ts`](../../src/core/root-protection-core.ts) · [`risk-severance.ts`](../../src/core/risk-severance.ts) |
+| **Wasm FFI struct pack** | `packClockStateForWasm()` · `clock_core_pack_state()` — `[virtualWallMs, offsetMs, anomalyFlags]` | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock_core.rs`](../../src/wasm/clock_core.rs) · [`wasm-clock-ffi.ts`](../../src/core/wasm-clock-ffi.ts) |
+
+Any sticky `CLOCK_NEGATIVE_LEAP_DETECTED` or `CLOCK_EXCESSIVE_FORWARD_STEP` propagates through `applyAutoSeveranceOnFlags()` → **hot-key pipeline severed** before EIP-712 signing resumes.
+
 ---
 
 ## Compliance Posture
@@ -134,6 +186,8 @@ Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain re
 - **EIP-1559:** Gas-yield ratio fuse blocks dispatch when L1 surcharge exceeds target yield band.
 - **Robinhood Chain:** Outbound-only escort (`46630`/`4663` → `42161`); inbound AML blocked · `lostUsd ≡ 0`.
 - **WASM:** Hot-path soil evaluation mirrors Edge `checkSoilResistance()` semantics for sub-ms fail-closed.
+- **EIP-1482-class (clock):** `RpcTimestampWatermark` + `rpc-radar` + `MonotonicTimeSSOT` enforce monotonic timestamps and fail-closed on RPC regression — see [§ EIP-1482-Class](#eip-1482-class-block-timestamp-monotonicity--rpc-regression-defense).
+- **Session-key time gates:** `resolveWallAge()` LEAP branch prevents fake-fresh oracle/quote ages on ERC-4337 / ERC-7579 paths — see [§ ERC-4337 / ERC-7579 / ERC-7715](#erc-4337--erc-7579--erc-7715-account-abstraction--session-key-time-gates).
 - **ERC-7715 Decoupling:** ⏳ **Planned / V1.0 Design Spec** — ZeroDev Kernel v3 is the v1.0 ephemeral session-key adapter (Gatehouse). Universal **ERC-7715 Advanced Wallet Permissions** is the evolution target for adapter swap without Shield or Wasm rewrite.
 
 ---
@@ -189,4 +243,6 @@ Multi-chain HTTPS/WSS placeholders live in `.env.example` — replace `YOUR_ALCH
 | [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
 | [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../audit/02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md) | Pillar Set X — ZeroDev Kernel v3 AA · EIP-7702 comparative |
 | [`04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md`](../audit/04_PILLAR_3_EDGE_SHIELD_WASM_CORESPEC.md) | Pillar Set Y — Wasm soil core · p50 ~106µs |
+| [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | R01–R20 Defense Matrix · §3.1.1 Physical Clock & Edge Monotonicity |
+| [`../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md`](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) | Dual-Engine Map (Engine A Stylus · Engine B Edge Wasm) · FROZEN anchors |
 | [`CITADEL_SDK_BLUEPRINT.md`](../sdk/CITADEL_SDK_BLUEPRINT.md) | Apache-2.0 SDK API |
