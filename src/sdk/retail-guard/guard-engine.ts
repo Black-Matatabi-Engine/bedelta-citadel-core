@@ -17,9 +17,12 @@ import {
   SOIL_REASON_DEPTH_USD,
 } from "../../core/soil-resistance-math";
 import { INTENT_MAX_ATTEMPTS_DEFAULT } from "../../core/wasm-intent-ffi";
+import type { ParsedApprove } from "./calldata-parser";
+import { formatRetailWarning } from "./warnings";
 import type { RetailGuardConfig, RetailGuardRejectPayload, RetailSoilQuote } from "./types";
 
 const SOIL_LANE = new Float64Array(6);
+const DEFAULT_MAX_APPROVAL_USD = 10_000;
 
 let channelSevered = false;
 
@@ -37,6 +40,70 @@ function walletRingOffset(walletAddress: string): number {
   return slotBaseOffset(hashKeyToSlotIndex(key));
 }
 
+function isAllowedAddress(
+  address: string | undefined,
+  allowlist: readonly string[] | undefined,
+): boolean {
+  if (!address?.trim() || !allowlist?.length) return false;
+  const norm = address.trim().toLowerCase();
+  return allowlist.some((a) => a.trim().toLowerCase() === norm);
+}
+
+function approvalUsdNotional(approve: ParsedApprove, config: RetailGuardConfig): number {
+  const decimals = config.approvalTokenDecimals ?? 18;
+  const price = config.approvalTokenPriceUsd ?? 1;
+  const units = Number(approve.amountWei) / 10 ** decimals;
+  return units * price;
+}
+
+export function evaluateRetailApproveGate(
+  approve: ParsedApprove,
+  config: RetailGuardConfig,
+): RetailGuardRejectPayload | null {
+  const spender = approve.spender;
+  const allowed = isAllowedAddress(spender, config.allowedSpenders);
+  const maxUsd = config.maxApprovalUsd ?? DEFAULT_MAX_APPROVAL_USD;
+  const notional = approvalUsdNotional(approve, config);
+
+  if (approve.infinite && !allowed) {
+    return {
+      code: "UNAUTHORIZED_SPENDER_REJECTED",
+      message: `UNAUTHORIZED_SPENDER_REJECTED:infinite:spender=${spender}`,
+      plainTextWarning: formatRetailWarning("UNAUTHORIZED_SPENDER_REJECTED", {
+        spender,
+        infinite: true,
+      }),
+    };
+  }
+
+  if (!allowed && notional > maxUsd) {
+    return {
+      code: "UNAUTHORIZED_SPENDER_REJECTED",
+      message: `UNAUTHORIZED_SPENDER_REJECTED:notional=${notional.toFixed(2)}>max=${maxUsd}`,
+      plainTextWarning: formatRetailWarning("UNAUTHORIZED_SPENDER_REJECTED", {
+        spender,
+        infinite: false,
+      }),
+    };
+  }
+
+  return null;
+}
+
+export function evaluateRetailVenueAllowlist(
+  contract: string | undefined,
+  config: RetailGuardConfig,
+): RetailGuardRejectPayload | null {
+  if (!contract?.trim() || !config.allowedVenues?.length) return null;
+  if (isAllowedAddress(contract, config.allowedVenues)) return null;
+  const norm = contract.trim().toLowerCase();
+  return {
+    code: "VENUE_DRIFT_REJECTED",
+    message: `${VENUE_DRIFT_REJECTED}:contract=${norm}`,
+    plainTextWarning: formatRetailWarning("VENUE_DRIFT_REJECTED", { contract: norm }),
+  };
+}
+
 export function evaluateRetailSoilGate(quote: RetailSoilQuote): RetailGuardRejectPayload | null {
   packSoilLane(
     quote.hlSpot,
@@ -52,15 +119,16 @@ export function evaluateRetailSoilGate(quote: RetailSoilQuote): RetailGuardRejec
     return {
       code: "SLIPPAGE_EXCEEDED",
       message: `SLIPPAGE_EXCEEDED:cross=${soil.crossVenueSlippage.toFixed(6)}`,
-      plainTextWarning:
-        "Swap blocked: price impact exceeds your slippage safety limit (0-Gas pre-broadcast guard).",
+      plainTextWarning: formatRetailWarning("SLIPPAGE_EXCEEDED", {
+        crossSlippage: soil.crossVenueSlippage.toFixed(4),
+      }),
     };
   }
   if (soil.tripFlags & SOIL_REASON_DEPTH_USD) {
     return {
       code: "DEPTH_INSUFFICIENT",
       message: `DEPTH_INSUFFICIENT:depthUsd=${quote.depthUsd}`,
-      plainTextWarning: "Swap blocked: market depth is below the minimum safety floor.",
+      plainTextWarning: formatRetailWarning("DEPTH_INSUFFICIENT", { depthUsd: quote.depthUsd }),
     };
   }
   return null;
@@ -74,7 +142,7 @@ export function evaluateRetailIntentGate(
     return {
       code: "CHANNEL_SEVERED",
       message: "CHANNEL_SEVERED:hot-key pipeline severed after attempt budget exhaust",
-      plainTextWarning: "Signing channel severed — wait before retrying (FOMO throttle active).",
+      plainTextWarning: formatRetailWarning("CHANNEL_SEVERED"),
     };
   }
 
@@ -89,8 +157,9 @@ export function evaluateRetailIntentGate(
     return {
       code: "VENUE_DRIFT_REJECTED",
       message: `${VENUE_DRIFT_REJECTED}:allowed=${allowedMask}&target=${targetVenueBit}=0`,
-      plainTextWarning:
-        "Signature blocked: contract or venue is not on your approved whitelist (anti-phishing).",
+      plainTextWarning: formatRetailWarning("VENUE_DRIFT_REJECTED", {
+        contract: `bit:${targetVenueBit}`,
+      }),
     };
   }
 
@@ -99,15 +168,15 @@ export function evaluateRetailIntentGate(
     return {
       code: "MAX_ATTEMPTS_EXCEEDED_SEVERED",
       message: `${MAX_ATTEMPTS_EXCEEDED_SEVERED}:attempt=${gate.attempts}:limit=${maxAttempts}`,
-      plainTextWarning:
-        "Too many rapid submit attempts — signing channel severed to prevent FOMO / panic trading.",
+      plainTextWarning: formatRetailWarning("MAX_ATTEMPTS_EXCEEDED_SEVERED", {
+        attempts: gate.attempts,
+      }),
     };
   }
 
   return null;
 }
 
-/** Reserved venue bit for contracts absent from the retail allowlist index. */
 export const RETAIL_UNKNOWN_VENUE_BIT = 1 << 7;
 
 export function resolveVenueBitFromContract(
