@@ -37,6 +37,11 @@
 ## ⚡ 30-Second Judge Action Box
 
 ```bash
+# === Judge fast-track — targeted per-venue FAIL-CLOSED proofs (START HERE) ===
+pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
+pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
+pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
+
 # === Pillar Set Y — Pre-Consensus Firewall & Reflex Defense (PRIMARY FLAGSHIP) ===
 pnpm demo:wayfinder                      # Wayfinder AI Guard (p50 ~106µs E2E Edge Shield)
 pnpm demo:elizaos -- --venue=gmx         # ElizaOS AI Guard (Manual lock to GMX v2 GM lane)
@@ -101,7 +106,7 @@ Citadel Shield reports **three statistical latency tiers** — judges should map
     Signature Released          Reflex Deadlock Severed
 ```
 
-**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
+**Core narrative:** If the LLM Cerebrum suffers hallucination or prompt injection and issues out-of-scope calldata (e.g. cross-chain intent drift to Base / Aerodrome), Citadel's Cerebellum triggers an instant physical deadlock (**p50 ~15µs**), severing the EIP-712 channel before any cross-chain or unvetted execution — **$0 Gas**. → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)
 
 ---
 
@@ -148,17 +153,18 @@ Wallet segregation (Wallet A hedge · Wallet B principal · Protocol Treasury +1
 ### Extended Express Audit
 
 ```bash
-# Zone A — Express (recommended first pass)
-pnpm demo && pnpm demo:e2e && pnpm test
+# Zone A — Judge fast-track (recommended first pass)
+pnpm demo:gmx -- --trip && pnpm demo:variational -- --trip && pnpm demo:hl -- --trip
 
 # Zone B — Inside Pillar Sets X & Y
+pnpm test -- --run && pnpm demo:e2e
 pnpm test:zerodev
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 cd SliverVineGate && forge test && cd ..
 pnpm audit:fast && pnpm audit:security
 
-# Zone C — Outside Pillar Sets X & Y
-pnpm demo:gmx && pnpm demo:hl && pnpm demo:pendle
+# Zone C — Supplementary protocol & agent proofs
+pnpm demo:gmx && pnpm demo:hl && pnpm demo:variational
 pnpm demo:wayfinder -- --trip
 curl -s https://bedeltawater.slivervine.xyz/api/grant-audit | jq .provenanceVerified
 ```

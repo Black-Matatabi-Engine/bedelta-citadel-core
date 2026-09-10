@@ -17,7 +17,7 @@
 | **Nature** | Non-deterministic · hallucination-prone | **100% deterministic** · **0-Gas FAIL-CLOSED** |
 | **On threat** | Out-of-scope calldata (Base / Aerodrome drift) | **p50 ~15µs** — severs EIP-712 channel · **$0 Gas** |
 
-**One-liner:** LLM emits toxic intent → Citadel severs signing **before** Sequencer queues → `pnpm demo:quad -- --trip`
+**One-liner:** LLM emits toxic intent → Citadel severs signing **before** Sequencer queues → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
 ---
 
@@ -60,7 +60,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 
 | # | Arbitrum H1 2026 alignment | SliverVine deliverable | Judge proof |
 |---|----------------------------|------------------------|-------------|
-| **1** | **AI Agent Execution Primitive** | Pre-consensus safety layer for **Agentic Commerce & Swarm Trading** — `checkSoilResistance()` + consume-once Gate | `pnpm demo:wayfinder` · `pnpm demo:quad` |
+| **1** | **AI Agent Execution Primitive** | Pre-consensus safety layer for **Agentic Commerce & Swarm Trading** — `checkSoilResistance()` + consume-once Gate | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
 | **2** | **Robinhood Chain RWA Escort** | Pillar Set X unidirectional Across bridge guard — USDG/RWA `46630`/`4663` → `42161` · **`lostUsd ≡ 0`** · inbound AML block | `pnpm demo:escort` · Vitest **6/6** · optional `pnpm demo:e2e` Step 2 |
 | **3** | **ArbOS 61 Elara & Stylus** | Rust Wasm `pkg/soil_core.wasm` + **`SliverVineSoilCoprocessor`** — **96KB** Stylus budget ready · SDK **0.10.7** · Cargo **9/9 PASS** | `pnpm build:stylus` · [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) § H1 2026 |
 
@@ -101,11 +101,11 @@ SliverVine is a **pre-consensus execution safety primitive** — not a post-hoc 
 | **Morpho Blue** | Arbitrum One | NAV deviation > **30 bps** | `pnpm demo:morpho` |
 | **USD.ai** | Arbitrum One | sUSDai peg · oracle lag · depth fuse | `pnpm demo:usdai` — **AI-Compute Yield Collateral · Citadel Soil Fuse** |
 | **Hyperliquid** | L1 HF Orderbook | Spread > **20 bps** · rate limits | `pnpm demo:hl` |
-| **Variational** | Arbitrum One RFQ | Stale **>500ms** · drift **>30 bps** | `pnpm demo:matrix -- --loop=perp` |
+| **Variational** | Arbitrum One RFQ | Stale **>500ms** · drift **>30 bps** | `pnpm demo:variational -- --trip` |
 
 **Pillar Set X Escort:** `pnpm demo:escort` · `pnpm demo:escort -- --trip` — Across timeout · **`lostUsd ≡ 0`**
 
-**Agents:** `pnpm demo:quad` · Append `--trip` for **FAIL-CLOSED** severance demos.
+**Judge fast-track (FAIL-CLOSED):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
 ### Core Invariants
 
@@ -123,14 +123,20 @@ $$
 pnpm test -- --run          # 217 test files | 967 PASS clean
 pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
-pnpm demo                   # Primary showcase (12 Dual Pillar Set X & Y scenarios)
+
+# === Judge fast-track — targeted per-venue FAIL-CLOSED proofs ===
+pnpm demo:gmx -- --trip           # GMX V2 Arbitrum native hard anchor
+pnpm demo:variational -- --trip   # Variational multi-venue RFQ gate
+pnpm demo:hl -- --trip            # Hyperliquid L1 primary hedge path
+
 pnpm demo:e2e               # 5-step macro lifecycle · Robinhood escort · lostUsd ≡ 0
 ```
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,matrix}` | 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) |
-| **Tier 2 — Agents** | `pnpm demo:{wayfinder,elizaos,virtuals,langchain,quad}` | Four AI frameworks + quad |
+| **Tier 1 — Judge fast-track** | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` | GMX native anchor · Variational RFQ gate · HL primary hedge |
+| **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,uniswap,aave,morpho,variational}` | 7+1 Cross-Chain Execution Matrix (7 Arbitrum Native + 1 Hyperliquid L1) |
+| **Tier 2 — Agents** | `pnpm demo:{wayfinder,elizaos,virtuals,langchain}` | Four AI framework guards |
 | **Tier 2 — Ingress** | `pnpm demo:escort` | Pillar Set X multi-route escort · `--trip` timeout fail-closed |
 | **Tier 3 — E2E** | `pnpm demo:{stabilizer,e2e}` | Sepolia sandbox · 5-step macro |
 
