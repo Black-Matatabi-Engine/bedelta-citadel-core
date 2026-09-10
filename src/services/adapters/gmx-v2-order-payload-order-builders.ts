@@ -6,6 +6,7 @@ import type {
   GmxV2AdapterOptions,
   GmxV2UnsignedOrderPayload,
 } from "./gmx-v2-adapter.types";
+import { assertGmxPerpOrderReceiverIsolation } from "../../core/wallet-isolation-guard";
 import { assertGmxPayloadFailClosed, toGmxPrice30, toGmxUsd30 } from "./gmx-v2-order-payload-guards";
 import {
   GMX_DEFAULT_CALLBACK_GAS_LIMIT,
@@ -41,6 +42,7 @@ export function buildGmxV2UnsignedOrderPayload(
   input: GmxV2BuildUnsignedOrderInput,
   opts: GmxV2AdapterOptions = {},
 ): GmxV2UnsignedOrderPayload {
+  assertGmxPerpOrderReceiverIsolation({ receiver: input.receiver });
   const slippageBps = clampGmxMaxSlippageBps(input.maxSlippageBps);
   const isLong = input.side === "long";
   const px = requireMidPriceUsd(input.midPriceUsd);

@@ -3,8 +3,9 @@ import {
   DEFAULT_ARB_MAINNET_USER_ADDRESS,
   DEFAULT_HYPERLIQUID_MAINNET_USER_ADDRESS,
 } from "../env-grant-defaults";
-import { GMX_ETH_USD_MARKET_TOKEN } from "./adapters/gmx-v2-gm-balance";
-import type { GmxGmBalanceSnapshot } from "./adapters/gmx-v2-gm-balance";
+import { GMX_ETH_USD_MARKET_TOKEN } from "../config/gmx-markets";
+import { GRANT_AUDIT_SWR_FALLBACK_LOG_TAG } from "../config/grant-narrative-defaults";
+import type { GmxGmBalanceSnapshot } from "./adapters/gmx-v2-gm-balance-cache";
 import type { DualWalletTelemetrySnapshot } from "./dual-wallet-telemetry";
 
 export const GRANT_AUDIT_LIVE_COMBINED_TVL_USD = 1302.39;
@@ -40,6 +41,14 @@ export const GRANT_AUDIT_LIVE_TVL_FALLBACK: DualWalletTelemetrySnapshot = {
 };
 
 export function buildGrantAuditGmFallbackSnapshot(): GmxGmBalanceSnapshot {
+  console.warn(
+    JSON.stringify({
+      tag: GRANT_AUDIT_SWR_FALLBACK_LOG_TAG,
+      timestamp: new Date().toISOString(),
+      message: "Grant audit SWR fallback snapshot — not for live hedge sizing",
+      gmLiquidityUsd: 802.43,
+    }),
+  );
   return {
     userAddress: DEFAULT_ARB_MAINNET_USER_ADDRESS,
     symbol: "ETH",

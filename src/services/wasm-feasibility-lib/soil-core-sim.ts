@@ -1,27 +1,45 @@
 /**
  * M4 Wasm feasibility — pure no-std soil core math (portable to Rust `#![no_std]`).
- * Mirrors `checkSoilResistance()` slippage / depth fuse without runtime deps.
+ * SSOT layout: `src/core/wasm-soil-ffi.ts` · `PROTO_VECT_LEN` protocol lanes.
  */
+import { PROTO_VECT_LEN } from "../../core/risk-engine-core";
+import {
+  WASM_ABI_VERSION,
+  WASM_PROTOCOL_LEN,
+  WASM_SOIL_INPUT_BYTES,
+  WASM_SOIL_INPUT_FLOATS,
+  WASM_SOIL_MEMORY_BUDGET_BYTES,
+  WASM_SOIL_OFFSET,
+  WASM_SOIL_OUTPUT_BYTES,
+  decodeWasmSoilInput,
+  encodeWasmSoilInput,
+  readProtocolVectorFromView,
+  wasmSoilInputByteOffset,
+  type WasmSoilCoreInput,
+} from "../../core/wasm-soil-ffi";
 
-export const WASM_SOIL_MEMORY_BUDGET_BYTES = 28 * 1024;
+export {
+  WASM_ABI_VERSION,
+  WASM_PROTOCOL_LEN,
+  WASM_SOIL_OFFSET,
+  WASM_SOIL_INPUT_FLOATS,
+  WASM_SOIL_INPUT_BYTES,
+  WASM_SOIL_OUTPUT_BYTES,
+  WASM_SOIL_MEMORY_BUDGET_BYTES,
+  encodeWasmSoilInput,
+  decodeWasmSoilInput,
+  readProtocolVectorFromView,
+  wasmSoilInputByteOffset,
+  type WasmSoilCoreInput,
+};
+
 export const WASM_SOIL_MAX_SLIPPAGE_BPS = 50;
 export const WASM_SOIL_DEFAULT_SLIPPAGE_FUSE = 0.005;
 export const WASM_SOIL_MIN_DEPTH_USD = 100_000;
 export const WASM_SOIL_TESTNET_MIN_DEPTH_USD = 5_000;
 
-/** `#[repr(C)]` layout — 8-byte aligned f64 fields (Rust/Wasm portable). */
-export const WASM_SOIL_INPUT_BYTES = 64;
-export const WASM_SOIL_OUTPUT_BYTES = 64;
-
-export interface WasmSoilCoreInput {
-  hlSpot: number;
-  hlPerp: number;
-  dydxPerp: number;
-  depthUsd: number;
-  orderSizeUsd: number;
-  accountBalanceUsd: number;
-  maxSlippage: number;
-  minDepthUsd: number;
+if (WASM_PROTOCOL_LEN !== PROTO_VECT_LEN) {
+  throw new Error(`Wasm FFI drift: WASM_PROTOCOL_LEN=${WASM_PROTOCOL_LEN} PROTO_VECT_LEN=${PROTO_VECT_LEN}`);
 }
 
 export interface WasmSoilCoreOutput {
@@ -36,57 +54,7 @@ export interface WasmSoilCoreOutput {
 const TRIP_CROSS_VENUE = 1 << 0;
 const TRIP_DEPTH = 1 << 1;
 const TRIP_INSUFFICIENT = 1 << 2;
-
-function align8(offset: number): number {
-  return (offset + 7) & ~7;
-}
-
-export function wasmSoilInputByteOffset(field: keyof WasmSoilCoreInput): number {
-  const order: (keyof WasmSoilCoreInput)[] = [
-    "hlSpot",
-    "hlPerp",
-    "dydxPerp",
-    "depthUsd",
-    "orderSizeUsd",
-    "accountBalanceUsd",
-    "maxSlippage",
-    "minDepthUsd",
-  ];
-  let offset = 0;
-  for (const key of order) {
-    if (key === field) return offset;
-    offset = align8(offset + 8);
-  }
-  return offset;
-}
-
-export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
-  const buf = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
-  const view = new DataView(buf);
-  view.setFloat64(wasmSoilInputByteOffset("hlSpot"), input.hlSpot, true);
-  view.setFloat64(wasmSoilInputByteOffset("hlPerp"), input.hlPerp, true);
-  view.setFloat64(wasmSoilInputByteOffset("dydxPerp"), input.dydxPerp, true);
-  view.setFloat64(wasmSoilInputByteOffset("depthUsd"), input.depthUsd, true);
-  view.setFloat64(wasmSoilInputByteOffset("orderSizeUsd"), input.orderSizeUsd, true);
-  view.setFloat64(wasmSoilInputByteOffset("accountBalanceUsd"), input.accountBalanceUsd, true);
-  view.setFloat64(wasmSoilInputByteOffset("maxSlippage"), input.maxSlippage, true);
-  view.setFloat64(wasmSoilInputByteOffset("minDepthUsd"), input.minDepthUsd, true);
-  return buf;
-}
-
-export function decodeWasmSoilInput(buf: ArrayBuffer): WasmSoilCoreInput {
-  const view = new DataView(buf);
-  return {
-    hlSpot: view.getFloat64(wasmSoilInputByteOffset("hlSpot"), true),
-    hlPerp: view.getFloat64(wasmSoilInputByteOffset("hlPerp"), true),
-    dydxPerp: view.getFloat64(wasmSoilInputByteOffset("dydxPerp"), true),
-    depthUsd: view.getFloat64(wasmSoilInputByteOffset("depthUsd"), true),
-    orderSizeUsd: view.getFloat64(wasmSoilInputByteOffset("orderSizeUsd"), true),
-    accountBalanceUsd: view.getFloat64(wasmSoilInputByteOffset("accountBalanceUsd"), true),
-    maxSlippage: view.getFloat64(wasmSoilInputByteOffset("maxSlippage"), true),
-    minDepthUsd: view.getFloat64(wasmSoilInputByteOffset("minDepthUsd"), true),
-  };
-}
+const TRIP_PROTOCOL = 1 << 3;
 
 function computeCrossVenueSlippage(hlPerp: number, dydxPerp: number): number {
   return hlPerp > 0 && dydxPerp > 0 ? Math.abs(dydxPerp - hlPerp) / hlPerp : Number.POSITIVE_INFINITY;
@@ -110,25 +78,17 @@ function computeOrderAwareMaxSlUsd(
   return Math.min(dynamicMax, computeSoilRiskUsd(orderSizeUsd, slippageFuse));
 }
 
-/** Pure soil core — no I/O, no guards, Wasm/Rust portable. */
 export function runWasmSoilCoreSim(input: WasmSoilCoreInput): WasmSoilCoreOutput {
   const crossVenueSlippage = computeCrossVenueSlippage(input.hlPerp, input.dydxPerp);
   const spotPerpSlippage = computeSpotPerpSlippage(input.hlSpot, input.hlPerp);
   let tripFlags = 0;
 
-  if (!(input.hlPerp > 0) || !(input.dydxPerp > 0)) {
-    tripFlags |= TRIP_INSUFFICIENT;
-  }
-  if (
-    input.hlPerp > 0 &&
-    input.dydxPerp > 0 &&
-    crossVenueSlippage > input.maxSlippage
-  ) {
+  if (!(input.hlPerp > 0) || !(input.dydxPerp > 0)) tripFlags |= TRIP_INSUFFICIENT;
+  if (input.hlPerp > 0 && input.dydxPerp > 0 && crossVenueSlippage > input.maxSlippage) {
     tripFlags |= TRIP_CROSS_VENUE;
   }
-  if (input.depthUsd >= 0 && input.depthUsd < input.minDepthUsd) {
-    tripFlags |= TRIP_DEPTH;
-  }
+  if (input.depthUsd >= 0 && input.depthUsd < input.minDepthUsd) tripFlags |= TRIP_DEPTH;
+  if (input.protocolMask) tripFlags |= TRIP_PROTOCOL;
 
   const slipForRisk =
     Number.isFinite(crossVenueSlippage) && crossVenueSlippage >= 0
@@ -138,11 +98,7 @@ export function runWasmSoilCoreSim(input: WasmSoilCoreInput): WasmSoilCoreOutput
     input.orderSizeUsd > 0 ? computeSoilRiskUsd(input.orderSizeUsd, slipForRisk) : 0;
   const cappedMaxSlUsd =
     input.orderSizeUsd > 0 && input.accountBalanceUsd >= 0
-      ? computeOrderAwareMaxSlUsd(
-          input.accountBalanceUsd,
-          input.orderSizeUsd,
-          input.maxSlippage,
-        )
+      ? computeOrderAwareMaxSlUsd(input.accountBalanceUsd, input.orderSizeUsd, input.maxSlippage)
       : 0;
 
   return {
@@ -159,7 +115,6 @@ export function runWasmSoilCoreSimFromBuffer(buf: ArrayBuffer): WasmSoilCoreOutp
   return runWasmSoilCoreSim(decodeWasmSoilInput(buf));
 }
 
-/** Upper-bound Wasm linear memory for soil core state (input + output + scratch). */
 export function estimateWasmSoilFootprintBytes(scratchSlots = 8): number {
   return WASM_SOIL_INPUT_BYTES + WASM_SOIL_OUTPUT_BYTES + scratchSlots * 8;
 }

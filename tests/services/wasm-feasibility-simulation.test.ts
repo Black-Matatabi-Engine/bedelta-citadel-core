@@ -13,7 +13,9 @@ import {
   __setSoftConfirmationProbeForTests,
 } from "../../src/services/risk/soft-confirmation-guard";
 import {
+  WASM_PROTOCOL_LEN,
   WASM_SOIL_MEMORY_BUDGET_BYTES,
+  WASM_SOIL_OFFSET,
   WASM_SOIL_TESTNET_MIN_DEPTH_USD,
   decodeWasmSoilInput,
   encodeWasmSoilInput,
@@ -78,14 +80,16 @@ afterEach(() => {
 
 describe("wasm-feasibility-simulation", () => {
   it("aligns f64 soil input fields on 8-byte boundaries (repr C)", () => {
-    expect(wasmSoilInputByteOffset("hlSpot")).toBe(0);
-    expect(wasmSoilInputByteOffset("hlPerp")).toBe(8);
-    expect(wasmSoilInputByteOffset("dydxPerp")).toBe(16);
-    expect(wasmSoilInputByteOffset("depthUsd")).toBe(24);
-    expect(wasmSoilInputByteOffset("orderSizeUsd")).toBe(32);
-    expect(wasmSoilInputByteOffset("accountBalanceUsd")).toBe(40);
-    expect(wasmSoilInputByteOffset("maxSlippage")).toBe(48);
-    expect(wasmSoilInputByteOffset("minDepthUsd")).toBe(56);
+    const base = WASM_SOIL_OFFSET * 8;
+    expect(wasmSoilInputByteOffset("protocolMask")).toBe((WASM_PROTOCOL_LEN - 1) * 8);
+    expect(wasmSoilInputByteOffset("hlSpot")).toBe(base);
+    expect(wasmSoilInputByteOffset("hlPerp")).toBe(base + 8);
+    expect(wasmSoilInputByteOffset("dydxPerp")).toBe(base + 16);
+    expect(wasmSoilInputByteOffset("depthUsd")).toBe(base + 24);
+    expect(wasmSoilInputByteOffset("orderSizeUsd")).toBe(base + 32);
+    expect(wasmSoilInputByteOffset("accountBalanceUsd")).toBe(base + 40);
+    expect(wasmSoilInputByteOffset("maxSlippage")).toBe(base + 48);
+    expect(wasmSoilInputByteOffset("minDepthUsd")).toBe(base + 56);
   });
 
   it("round-trips no-std numeric struct through ArrayBuffer without deps", () => {

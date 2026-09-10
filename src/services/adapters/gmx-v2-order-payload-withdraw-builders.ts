@@ -1,65 +1,35 @@
 /**
- * GMX v2 unsigned withdraw payload builder.
+ * GMX v2 unsigned withdraw payload builder — thin legacy wrapper over gmx-gm-withdraw-build.
  */
-
 import type { GmxV2AdapterOptions } from "./gmx-v2-adapter.types";
-import { assertGmxPayloadFailClosed } from "./gmx-v2-order-payload-guards";
-import {
-  GMX_DEFAULT_CALLBACK_GAS_LIMIT,
-  GMX_ZERO_ADDRESS,
-} from "./gmx-v2-order-payload-constants";
-import {
-  clampGmxMaxSlippageBps,
-  estimateGmxMinOutputAmount,
-  resolveGmxExecutionFeeWei,
-  resolveGmxReferralCode,
-  resolveGmxUiFeeReceiver,
-} from "./gmx-v2-order-payload-fees";
+import { buildGmxGmWithdrawFromLegacyInput } from "./gmx-gm-withdraw-build";
+import { resolveGmxReferralCode } from "./gmx-v2-order-payload-fees";
 import type { GmxV2BuildWithdrawPayloadInput } from "./gmx-v2-order-payload.types";
-import {
-  resolveGmxMarketTokenAmount,
-  resolveWithdrawSignedImpactBps,
-} from "./gmx-v2-order-payload-builder-helpers";
 
 export function buildGmxV2UnsignedWithdrawPayload(
   input: GmxV2BuildWithdrawPayloadInput,
   opts: GmxV2AdapterOptions = {},
 ): Record<string, unknown> {
-  const slippageBps = clampGmxMaxSlippageBps(input.maxSlippageBps);
-  const signedImpactBps = resolveWithdrawSignedImpactBps(input);
-  const executionFee = resolveGmxExecutionFeeWei(opts, input);
-  assertGmxPayloadFailClosed({
-    ...input,
-    isLong: false,
-    executionFee,
-  });
+  const payload = buildGmxGmWithdrawFromLegacyInput(input, opts);
   const halfUsd = input.sizeUsd / 2;
-  const minHalfUsd = estimateGmxMinOutputAmount({
-    sizeUsd: halfUsd,
-    slippageBps,
-    signedImpactBps,
-    reduceOnly: true,
-  });
-  const marketTokenAmount = resolveGmxMarketTokenAmount(input);
-
   return {
     action: "withdraw",
     addresses: {
-      receiver: input.receiver ?? GMX_ZERO_ADDRESS,
-      callbackContract: GMX_ZERO_ADDRESS,
-      uiFeeReceiver: resolveGmxUiFeeReceiver(opts, input),
-      market: input.marketToken,
-      longTokenSwapPath: [],
-      shortTokenSwapPath: [],
+      receiver: payload.addresses.receiver,
+      callbackContract: payload.addresses.callbackContract,
+      uiFeeReceiver: payload.addresses.uiFeeReceiver,
+      market: payload.addresses.market,
+      longTokenSwapPath: payload.addresses.longTokenSwapPath ?? [],
+      shortTokenSwapPath: payload.addresses.shortTokenSwapPath ?? [],
     },
     numbers: {
-      marketTokenAmount,
-      minLongTokenAmount: minHalfUsd,
-      minShortTokenAmount: minHalfUsd,
-      executionFee,
-      callbackGasLimit: input.callbackGasLimit ?? GMX_DEFAULT_CALLBACK_GAS_LIMIT,
+      marketTokenAmount: payload.marketTokenAmount,
+      minLongTokenAmount: payload.minLongTokenAmount,
+      minShortTokenAmount: payload.minShortTokenAmount,
+      executionFee: payload.executionFee,
+      callbackGasLimit: payload.callbackGasLimit ?? "0",
     },
-    shouldUnwrapNativeToken: false,
+    shouldUnwrapNativeToken: payload.shouldUnwrapNativeToken,
     referralCode: resolveGmxReferralCode(opts, input),
     gmTokenAmountUsd: input.sizeUsd.toFixed(2),
     longTokenAmountUsd: halfUsd.toFixed(2),

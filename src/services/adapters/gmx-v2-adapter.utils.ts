@@ -57,9 +57,8 @@ export function deriveGmxMidPriceUsd(
   }
   if (longAmt > 1e15) {
     const longEth = longAmt / 1e18;
-    const shortUsd = shortAmt > 1e12 ? shortAmt / 1e6 : 0;
-    const longUsd = shortUsd > 0 ? Math.max(poolUsd - shortUsd, poolUsd * 0.45) : poolUsd * 0.55;
-    if (longEth > 0 && longUsd > 0) return longUsd / longEth;
+    const shortUsd = shortAmt > 0 ? shortAmt / 1e6 : 0;
+    if (longEth > 0 && shortUsd > 0) return shortUsd / longEth;
   }
   const scale = longAmt > 1e20 || shortAmt > 1e20 ? 1e30 : 1;
   const longTokens = longAmt / scale;
@@ -72,7 +71,13 @@ export function deriveGmxMidPriceUsd(
 }
 
 export async function fetchGmxLiveContext(opts: GmxV2AdapterOptions): Promise<GmxV2LiveContext> {
-  const [markets, rpc] = await Promise.all([fetchMarketsInfo(opts), fetchGmxRpcProbe(opts)]);
+  const rpc = await fetchGmxRpcProbe(opts);
+  let markets: GmxMarketInfo[] = [];
+  try {
+    markets = await fetchMarketsInfo(opts);
+  } catch {
+    markets = [];
+  }
   const degradationReasons = [...rpc.reasons];
   if (markets.length === 0) degradationReasons.push("GMX_MARKETS_EMPTY");
   return {

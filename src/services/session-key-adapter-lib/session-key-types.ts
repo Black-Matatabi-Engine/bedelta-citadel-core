@@ -69,24 +69,7 @@ export interface SignAndExecuteOptions {
   profile?: "retail" | "institutional";
 }
 
-export class DefenseMatrixError extends Error {
-  readonly code: string;
-  readonly httpStatus: number;
-  readonly reasons: string[];
-
-  constructor(
-    code: string,
-    message: string,
-    reasons: string[] = [],
-    httpStatus = 403,
-  ) {
-    super(message);
-    this.name = "DefenseMatrixError";
-    this.code = code;
-    this.httpStatus = httpStatus;
-    this.reasons = reasons;
-  }
-}
+export { DefenseMatrixError } from "../../core/errors";
 
 /** Terminal / HUD tag when signing channel is physically severed */
 export const PHYSICALLY_SEVERED = "PHYSICALLY_SEVERED" as const;
