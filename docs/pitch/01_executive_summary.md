@@ -107,7 +107,7 @@ SilverVine directly integrates top-tier Arbitrum ecosystem sponsors and high-vol
 
 | Sponsor / Protocol | Strategic Integration & Moat |
 | :--- | :--- |
-| **Robinhood Chain (Orbit)** | Cross-chain intent guard and tokenized RWA asset protection via ERC-7683 intent firewall. |
+| **Robinhood Chain (Orbit L2 · `46630`/`4663`)** | Pillar 2 **outbound escort** (`46630`/`4663` → `42161`) via `assertUnidirectionalBridge` · inbound AML block · RWA gates at adapter layer (`r-chain-yield-router.ts`). EIP-1193 SDK = Omni-EVM 0-Gas paymaster/retry protection (`MAX_ATTEMPTS_EXCEEDED_SEVERED`). |
 | **GMX V2** | Perps vault slippage protection and liquidation circuit breakers against toxic MEV intent vectors. |
 | **Pendle Finance** | Yield tokenization and implied yield manipulation pre-consensus firewall. |
 | **ZeroDev** | Account abstraction guard enforcing attenuated session key mandates (ERC-7715 / ERC-8226). |

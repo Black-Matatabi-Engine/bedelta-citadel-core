@@ -150,6 +150,16 @@ pnpm demo:e2e
 
 Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) · [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
+### Robinhood Chain Hard Evidence (Pitch SSOT)
+
+| Fact | Code / test anchor |
+|------|-------------------|
+| ChainId **`46630`** (testnet) · **`4663`** (mainnet) — **not `46631`** | [`src/sdk/constants.ts`](./src/sdk/constants.ts) |
+| **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:escort` · [`assertUnidirectionalBridge`](./src/sdk/unidirectional-bridge.ts) |
+| **Inbound AML** `42161 → Robinhood` blocked | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
+| **RWA gates** (adapter decision layer) | [`r-chain-yield-router.ts`](./src/adapters/robinhood/r-chain-yield-router.ts) · [`r-chain-yield-router.test.ts`](./tests/adapters/r-chain-yield-router.test.ts) |
+| **EIP-1193 0-Gas protection** (Omni-EVM middleware) | `@slivervine/eip1193-agentic-wallet-guard` · **35/35** · `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
+
 ---
 
 ## Why Protocol, Not a Tool?

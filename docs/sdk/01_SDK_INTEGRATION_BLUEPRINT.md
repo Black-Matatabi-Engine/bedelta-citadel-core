@@ -51,6 +51,30 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 
 ---
 
+## Robinhood Chain Integration Boundary (Hard Evidence SSOT)
+
+This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic at the provider layer. Robinhood Chain-specific compliance lives in **Pillar 2 adapter modules**, not inside `withRetailGuardProvider()` defaults.
+
+| Concern | Layer | Code anchor |
+|---------|-------|-------------|
+| **ChainId registration** | SDK constants | [`src/sdk/constants.ts`](../../src/sdk/constants.ts) — `46630` (testnet) · `4663` (mainnet) |
+| **Outbound escort** | Pillar 2 bridge | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) `assertUnidirectionalBridge()` — **`46630`/`4663` → `42161` only** |
+| **Inbound AML** | Pillar 2 bridge | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) — `42161 → Robinhood` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
+| **RWA / idle yield** | Adapter decision | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) `quoteRChainYieldToArbitrumGm()` — `assetKind` · `symbol` · `RWA_YIELD_MIN_USD`/`MAX` · bridge escort bind |
+| **0-Gas retry storm** | **This SDK** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) `evaluateRetailIntentGate()` → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm `INTENT_RING_U32` |
+| **ERC-7683 cross-chain** | **This SDK** (generic) | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — chain IDs supplied by caller; no Robinhood hard-wire |
+
+**Demo split:**
+
+| Track | Command | Proves |
+|-------|---------|--------|
+| Robinhood escort | `pnpm demo:escort` | Outbound `46630 → 42161` · inbound AML block · `lostUsd ≡ 0` |
+| EIP-1193 guard | `pnpm demo:eip1193` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
+
+**Do not conflate:** `evaluateRetailVenueAllowlist()` is a **config-driven** anti-phishing gate (`allowedVenues` whitelist). It does **not** embed Robinhood stock-token mint contract ABIs. Institutional RWA routing is enforced upstream in `quoteRChainYieldToArbitrumGm()` before GMX smart-route binding.
+
+---
+
 ## Quick Start
 
 ```typescript

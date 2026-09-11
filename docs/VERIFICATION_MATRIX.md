@@ -97,6 +97,24 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 
 ---
 
+## Robinhood Chain Hard Evidence SSOT (Pillar 2 Reference Escort Adapter)
+
+> **ChainId SSOT:** `ROBINHOOD_TESTNET_CHAIN_ID = 46630` · `ROBINHOOD_MAINNET_CHAIN_ID = 4663` — [`src/sdk/constants.ts`](../src/sdk/constants.ts) **L24–25**. Codebase does **not** use `46631`.
+
+| Layer | Hard evidence | Entrypoint |
+|-------|---------------|------------|
+| **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:escort` · [`examples/ingress-escort-demo.ts`](../examples/ingress-escort-demo.ts) Route A |
+| **Inbound AML block** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | Route C in same demo · [`src/adapters/across-ingress-bridge.ts`](../src/adapters/across-ingress-bridge.ts) `validateAcrossBridgeDirection` |
+| **RWA decision gates** | Adapter layer — `quoteRChainYieldToArbitrumGm()` · `assetKind: "rwa" \| "idle"` · size gates · bridge escort bind | [`src/adapters/robinhood/r-chain-yield-router.ts`](../src/adapters/robinhood/r-chain-yield-router.ts) · `tests/adapters/r-chain-yield-router.test.ts` |
+| **EIP-1193 middleware** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **Audit certificate** | SHA-256 snapshot · inbound invariant probe | `GET /api/robinhood-audit-snapshot` · [`src/sdk/robinhood-audit-snapshot.ts`](../src/sdk/robinhood-audit-snapshot.ts) |
+
+**Bridge regression:** [`tests/adapters/across-ingress-bridge.test.ts`](../tests/adapters/across-ingress-bridge.test.ts) · [`tests/sdk/citadel-sdk-bridge-armor.test.ts`](../tests/sdk/citadel-sdk-bridge-armor.test.ts)
+
+**Narrative lock:** Robinhood is a **Pillar Set X Reference Escort Adapter** — product identity remains **SliverVine Citadel on Arbitrum One (`42161`)**. RWA stock symbols (e.g. TSLA/NVDA) are gated at the **adapter decision layer** via generic `symbol` + `assetKind`, not via hard-coded mint-contract selectors in `evaluateRetailVenueAllowlist`.
+
+---
+
 ## 3-Tier Sovereign Vault (Grant SSOT Summary)
 
 | Lane | Address | Role |
