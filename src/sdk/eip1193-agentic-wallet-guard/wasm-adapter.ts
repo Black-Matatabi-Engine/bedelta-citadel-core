@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
- * Wasm IP boundary — binds retail reflex eval to `pkg/soil_core.wasm` (proprietary core).
+ * Wasm IP boundary — binds retail reflex eval to `pkg/soil_core.wasm`.
  */
 import { INTENT_RING_SLAB, INTENT_RING_U32 } from "../../core/intent-core-buffers";
 import { syncIntentSlotToWasmSlab } from "../../core/intent-core-ring";
@@ -12,17 +12,34 @@ import {
   INTENT_SLOT_TARGET_BIT,
 } from "../../core/wasm-intent-ffi";
 import {
-  SOIL_FFI_REUSABLE_BUFFER,
+  copySoilFfiInto,
+  encodeWasmSoilInput,
   WASM_ABI_VERSION,
   WASM_SOIL_INPUT_BYTES,
   WASM_SOIL_OUTPUT_BYTES,
-  encodeWasmSoilInput,
 } from "../../core/wasm-soil-ffi";
 import { readDefaultWasmBytesSync } from "../soil-wasm-node";
 import type { RetailSoilQuote } from "./types";
 
 const WASM_SOIL_OUT_OFFSET = WASM_SOIL_INPUT_BYTES;
 const WASM_INTENT_HEAP_BYTE_OFFSET = WASM_SOIL_INPUT_BYTES + WASM_SOIL_OUTPUT_BYTES;
+const SOIL_IN = {
+  hlSpot: 0,
+  hlPerp: 0,
+  dydxPerp: 0,
+  depthUsd: 0,
+  orderSizeUsd: 0,
+  accountBalanceUsd: 0,
+  maxSlippage: 0.005,
+  minDepthUsd: 100_000,
+};
+const SOIL_SCRATCH: WasmSoilEvalResult = { tripFlags: 0, crossVenueSlippage: 0 };
+const INTENT_SCRATCH: WasmIntentGateResult = {
+  ok: false,
+  venueDrift: false,
+  severChannel: false,
+  attempts: 0,
+};
 
 type RetailWasmExports = {
   memory: WebAssembly.Memory;
@@ -37,6 +54,18 @@ type RetailWasmExports = {
 };
 
 let exportsRef: RetailWasmExports | null = null;
+let wasmU8: Uint8Array | null = null;
+let wasmView: DataView | null = null;
+
+function bindViews(): { u8: Uint8Array; view: DataView } | null {
+  if (!exportsRef) return null;
+  const buf = exportsRef.memory.buffer;
+  if (!wasmU8 || wasmU8.buffer !== buf) {
+    wasmU8 = new Uint8Array(buf);
+    wasmView = new DataView(buf);
+  }
+  return { u8: wasmU8, view: wasmView! };
+}
 
 function bindRetailWasm(bytes: Uint8Array): boolean {
   try {
@@ -48,6 +77,8 @@ function bindRetailWasm(bytes: Uint8Array): boolean {
     if (typeof ex.soil_core_eval !== "function") return false;
     if (ex.soil_core_abi_version() !== WASM_ABI_VERSION) return false;
     exportsRef = ex;
+    wasmU8 = null;
+    wasmView = null;
     return true;
   } catch {
     exportsRef = null;
@@ -55,7 +86,6 @@ function bindRetailWasm(bytes: Uint8Array): boolean {
   }
 }
 
-/** Bootstrap Wasm reflex core for retail guard (idempotent). */
 export function ensureRetailGuardWasm(): boolean {
   if (exportsRef) return true;
   const bytes = readDefaultWasmBytesSync();
@@ -69,6 +99,8 @@ export function isRetailGuardWasmReady(): boolean {
 
 export function __resetRetailGuardWasmForTests(): void {
   exportsRef = null;
+  wasmU8 = null;
+  wasmView = null;
 }
 
 export interface WasmSoilEvalResult {
@@ -76,28 +108,21 @@ export interface WasmSoilEvalResult {
   crossVenueSlippage: number;
 }
 
-/** Evaluate soil lane via Wasm using `SOIL_FFI_REUSABLE_BUFFER` — returns null when Wasm unavailable. */
 export function evaluateSoilViaWasm(quote: RetailSoilQuote): WasmSoilEvalResult | null {
   if (!ensureRetailGuardWasm() || !exportsRef) return null;
-  encodeWasmSoilInput({
-    hlSpot: quote.hlSpot,
-    hlPerp: quote.hlPerp,
-    dydxPerp: quote.dydxPerp,
-    depthUsd: quote.depthUsd,
-    orderSizeUsd: 0,
-    accountBalanceUsd: 0,
-    maxSlippage: quote.maxSlippage ?? 0.005,
-    minDepthUsd: quote.minDepthUsd ?? 100_000,
-  });
-  const mem = new Uint8Array(exportsRef.memory.buffer);
-  const encoded = new Uint8Array(SOIL_FFI_REUSABLE_BUFFER);
-  mem.set(encoded.subarray(0, WASM_SOIL_INPUT_BYTES), 0);
-  const tripFlags = exportsRef.soil_core_eval(0, WASM_SOIL_OUT_OFFSET);
-  const view = new DataView(exportsRef.memory.buffer);
-  return {
-    tripFlags,
-    crossVenueSlippage: view.getFloat64(WASM_SOIL_OUT_OFFSET, true),
-  };
+  SOIL_IN.hlSpot = quote.hlSpot;
+  SOIL_IN.hlPerp = quote.hlPerp;
+  SOIL_IN.dydxPerp = quote.dydxPerp;
+  SOIL_IN.depthUsd = quote.depthUsd;
+  SOIL_IN.maxSlippage = quote.maxSlippage ?? 0.005;
+  SOIL_IN.minDepthUsd = quote.minDepthUsd ?? 100_000;
+  encodeWasmSoilInput(SOIL_IN);
+  const mem = bindViews();
+  if (!mem) return null;
+  copySoilFfiInto(mem.u8, 0);
+  SOIL_SCRATCH.tripFlags = exportsRef.soil_core_eval(0, WASM_SOIL_OUT_OFFSET);
+  SOIL_SCRATCH.crossVenueSlippage = mem.view.getFloat64(WASM_SOIL_OUT_OFFSET, true);
+  return SOIL_SCRATCH;
 }
 
 export interface WasmIntentGateResult {
@@ -107,7 +132,6 @@ export interface WasmIntentGateResult {
   attempts: number;
 }
 
-/** Evaluate intent gate via Wasm `INTENT_RING_SLAB` slice — returns null when Wasm unavailable. */
 export function evaluateIntentGateViaWasm(
   baseOffset: number,
   allowedMask: number,
@@ -121,13 +145,11 @@ export function evaluateIntentGateViaWasm(
   INTENT_RING_U32[baseOffset + INTENT_SLOT_TARGET_BIT] = targetBit >>> 0;
   syncIntentSlotToWasmSlab(baseOffset);
 
-  const view = new DataView(exportsRef.memory.buffer);
-  for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i += 1) {
-    view.setBigInt64(
-      WASM_INTENT_HEAP_BYTE_OFFSET + i * 8,
-      INTENT_RING_SLAB[baseOffset + i],
-      true,
-    );
+  const mem = bindViews();
+  if (!mem) return null;
+  const view = mem.view;
+  for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i++) {
+    view.setBigInt64(WASM_INTENT_HEAP_BYTE_OFFSET + i * 8, INTENT_RING_SLAB[baseOffset + i]!, true);
   }
 
   const allowed = exportsRef.intent_core_evaluate_gate(
@@ -137,29 +159,18 @@ export function evaluateIntentGateViaWasm(
     BigInt(maxAttempts),
   );
 
-  for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i += 1) {
-    INTENT_RING_SLAB[baseOffset + i] = view.getBigInt64(
-      WASM_INTENT_HEAP_BYTE_OFFSET + i * 8,
-      true,
-    );
+  for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i++) {
+    INTENT_RING_SLAB[baseOffset + i] = view.getBigInt64(WASM_INTENT_HEAP_BYTE_OFFSET + i * 8, true);
   }
-  INTENT_RING_U32[baseOffset + INTENT_SLOT_ATTEMPTS] = Number(
-    INTENT_RING_SLAB[baseOffset + INTENT_SLOT_ATTEMPTS],
-  );
-  INTENT_RING_U32[baseOffset + INTENT_SLOT_FLAGS] = Number(
-    INTENT_RING_SLAB[baseOffset + INTENT_SLOT_FLAGS],
-  );
+  INTENT_RING_U32[baseOffset + INTENT_SLOT_ATTEMPTS] = Number(INTENT_RING_SLAB[baseOffset + INTENT_SLOT_ATTEMPTS]);
+  INTENT_RING_U32[baseOffset + INTENT_SLOT_FLAGS] = Number(INTENT_RING_SLAB[baseOffset + INTENT_SLOT_FLAGS]);
 
-  const attempts = INTENT_RING_U32[baseOffset + INTENT_SLOT_ATTEMPTS];
   const flags = INTENT_RING_U32[baseOffset + INTENT_SLOT_FLAGS];
-  const venueDrift = (flags & 2) !== 0;
-  const severChannel = (flags & 1) !== 0;
-  return {
-    ok: allowed === 1,
-    venueDrift,
-    severChannel,
-    attempts,
-  };
+  INTENT_SCRATCH.ok = allowed === 1;
+  INTENT_SCRATCH.venueDrift = (flags & 2) !== 0;
+  INTENT_SCRATCH.severChannel = (flags & 1) !== 0;
+  INTENT_SCRATCH.attempts = INTENT_RING_U32[baseOffset + INTENT_SLOT_ATTEMPTS];
+  return INTENT_SCRATCH;
 }
 
 export const WASM_INTENT_WORDS_PER_SLOT = INTENT_CORE_HEAP_WORDS;

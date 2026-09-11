@@ -25,25 +25,28 @@ export interface WasmSoilCoreInput {
 export const SOIL_FFI_REUSABLE_BUFFER = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
 const SOIL_FFI_REUSABLE_VIEW = new DataView(SOIL_FFI_REUSABLE_BUFFER);
 
-const SOIL_FIELD_ORDER: (keyof WasmSoilCoreInput)[] = [
-  "hlSpot",
-  "hlPerp",
-  "dydxPerp",
-  "depthUsd",
-  "orderSizeUsd",
-  "accountBalanceUsd",
-  "maxSlippage",
-  "minDepthUsd",
-];
+const MASK_OFF = (WASM_PROTOCOL_LEN - 1) * 8;
+const SOIL_OFF = WASM_SOIL_OFFSET * 8;
+const SOIL_FFI_U8 = new Uint8Array(SOIL_FFI_REUSABLE_BUFFER);
+const SOIL_FIELD_OFF = {
+  protocolMask: MASK_OFF,
+  hlSpot: SOIL_OFF,
+  hlPerp: SOIL_OFF + 8,
+  dydxPerp: SOIL_OFF + 16,
+  depthUsd: SOIL_OFF + 24,
+  orderSizeUsd: SOIL_OFF + 32,
+  accountBalanceUsd: SOIL_OFF + 40,
+  maxSlippage: SOIL_OFF + 48,
+  minDepthUsd: SOIL_OFF + 56,
+} as const;
 
 export function wasmSoilInputByteOffset(field: keyof WasmSoilCoreInput): number {
-  if (field === "protocolMask") return (WASM_PROTOCOL_LEN - 1) * 8;
-  let offset = WASM_SOIL_OFFSET * 8;
-  for (const key of SOIL_FIELD_ORDER) {
-    if (key === field) return offset;
-    offset += 8;
-  }
-  return offset;
+  return SOIL_FIELD_OFF[field];
+}
+
+/** Copy packed soil input into Wasm linear memory (view reuse · no hot-path alloc). */
+export function copySoilFfiInto(dest: Uint8Array, destOffset = 0): void {
+  dest.set(SOIL_FFI_U8, destOffset);
 }
 
 /** Read all `PROTO_VECT_LEN` protocol lanes from a Wasm linear-memory view. */
@@ -60,16 +63,17 @@ export function readProtocolVectorFromView(
 
 /** Write soil input into `SOIL_FFI_REUSABLE_BUFFER` (in-place · zero alloc). */
 export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
+  SOIL_FFI_U8.fill(0);
   const view = SOIL_FFI_REUSABLE_VIEW;
-  for (let i = 0; i < WASM_SOIL_INPUT_BYTES; i += 8) {
-    view.setFloat64(i, 0, true);
-  }
-  if (input.protocolMask) {
-    view.setFloat64(wasmSoilInputByteOffset("protocolMask"), input.protocolMask, true);
-  }
-  for (const key of SOIL_FIELD_ORDER) {
-    view.setFloat64(wasmSoilInputByteOffset(key), input[key] as number, true);
-  }
+  if (input.protocolMask) view.setFloat64(MASK_OFF, input.protocolMask, true);
+  view.setFloat64(SOIL_OFF, input.hlSpot, true);
+  view.setFloat64(SOIL_OFF + 8, input.hlPerp, true);
+  view.setFloat64(SOIL_OFF + 16, input.dydxPerp, true);
+  view.setFloat64(SOIL_OFF + 24, input.depthUsd, true);
+  view.setFloat64(SOIL_OFF + 32, input.orderSizeUsd, true);
+  view.setFloat64(SOIL_OFF + 40, input.accountBalanceUsd, true);
+  view.setFloat64(SOIL_OFF + 48, input.maxSlippage, true);
+  view.setFloat64(SOIL_OFF + 56, input.minDepthUsd, true);
   return SOIL_FFI_REUSABLE_BUFFER;
 }
 

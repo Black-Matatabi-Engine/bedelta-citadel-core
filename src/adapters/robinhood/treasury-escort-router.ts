@@ -87,19 +87,10 @@ export function quoteRChainYieldToArbitrumGm(
   const market = resolveGmxMarketByRouteKey(targetRoute);
   const smartRoutingAddress = smartRoute?.smartRoutingAddress ?? GMX_V2_EXCHANGE_ROUTER_ARBITRUM;
   const reasons: string[] = [];
-
-  if (resolvedSource === null) {
-    reasons.push("RWA_YIELD_SOURCE_CHAIN_UNSUPPORTED");
-  }
-  if (!(input.amountUsd >= RWA_YIELD_MIN_USD)) {
-    reasons.push("RWA_YIELD_AMOUNT_TOO_SMALL");
-  }
-  if (input.amountUsd > RWA_YIELD_MAX_USD) {
-    reasons.push("RWA_YIELD_AMOUNT_TOO_LARGE");
-  }
-  if (!input.symbol?.trim()) {
-    reasons.push("RWA_YIELD_SYMBOL_REQUIRED");
-  }
+  if (resolvedSource === null) reasons.push("RWA_YIELD_SOURCE_CHAIN_UNSUPPORTED");
+  if (!(input.amountUsd >= RWA_YIELD_MIN_USD)) reasons.push("RWA_YIELD_AMOUNT_TOO_SMALL");
+  if (input.amountUsd > RWA_YIELD_MAX_USD) reasons.push("RWA_YIELD_AMOUNT_TOO_LARGE");
+  if (!input.symbol?.trim()) reasons.push("RWA_YIELD_SYMBOL_REQUIRED");
 
   let bridgeEscortOk = false;
   if (resolvedSource !== null) {
@@ -119,17 +110,15 @@ export function quoteRChainYieldToArbitrumGm(
     }
   }
 
-  const routeInput: RChainYieldRouteInput = {
+  const routeId = buildDeterministicRouteId({
     assetKind: input.assetKind,
     symbol: input.symbol,
     amountUsd: input.amountUsd,
     vaultId: input.vaultId ?? gmPoolTarget,
-  };
-  const routeId = buildDeterministicRouteId(routeInput);
-  const ok = reasons.length === 0;
+  });
 
   return {
-    ok,
+    ok: reasons.length === 0,
     reasons,
     sourceChainId,
     destChainId: ARBITRUM_ONE_CHAIN_ID,
