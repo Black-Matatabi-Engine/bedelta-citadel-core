@@ -142,15 +142,10 @@ export function printLatencyBreakdown(totalUs: number, wasmUs: number): void {
 }
 
 export function printChannelOpen(integrityPct: number): void {
-  console.log(
-    `  ${eipTag("CHANNEL")} ${eipTag("EIP-712")} Signature Channel: ${GREEN}${BOLD}OPEN${R} (Channel Integrity: ${integrityPct}%)`,
-  );
+  console.log(`  ${eipTag("CHANNEL")} ${eipTag("EIP-712")} Signature Channel: ${GREEN}${BOLD}OPEN${R} (Channel Integrity: ${integrityPct}%)`);
 }
-
 export function printForwardGate(addr: string): void {
-  console.log(
-    `  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Provider -> Dispatched to Sequencer RPC (${truncateAddr(addr)})`,
-  );
+  console.log(`  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Provider -> Dispatched to Sequencer RPC (${truncateAddr(addr)})`);
 }
 
 export function printDefenseMatrixHeader(): void {
