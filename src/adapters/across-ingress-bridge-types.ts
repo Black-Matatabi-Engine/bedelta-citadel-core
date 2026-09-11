@@ -2,7 +2,7 @@
  * Pillar 2 — Across ingress types + route predicates (Robinhood = reference escort).
  */
 import { ARBITRUM_ONE_CHAIN_ID, ROBINHOOD_MAINNET_CHAIN_ID } from "../sdk/constants";
-import { ROBINHOOD_TESTNET_CHAIN_ID } from "./robinhood/r-chain-yield-stub";
+import { ROBINHOOD_TESTNET_CHAIN_ID } from "./robinhood/treasury-escort-stub";
 
 export { ARBITRUM_ONE_CHAIN_ID, ROBINHOOD_TESTNET_CHAIN_ID, ROBINHOOD_MAINNET_CHAIN_ID };
 export const IN_FLIGHT_BRIDGE_CAPITAL = "IN_FLIGHT_BRIDGE_CAPITAL" as const;

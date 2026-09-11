@@ -21,7 +21,7 @@ import {
   buildRChainExecutionProbe,
   type RChainYieldAssetKind,
   type RChainYieldRouteInput,
-} from "./r-chain-yield-stub";
+} from "./treasury-escort-stub";
 
 export const GM_POOL_TARGET_DEFAULT = "GM_ETH_USDC" as const;
 export const RWA_YIELD_MIN_USD = 10 as const;

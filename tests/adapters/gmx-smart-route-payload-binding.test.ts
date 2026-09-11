@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { encodeAbiParameters, keccak256 } from "viem";
-import { quoteRChainYieldToArbitrumGm } from "../../src/adapters/robinhood/r-chain-yield-router";
+import { quoteRChainYieldToArbitrumGm } from "../../src/adapters/robinhood/treasury-escort-router";
 import { GMX_MARKET_REGISTRY } from "../../src/config/gmx-markets";
 import {
   GMX_V2_EXCHANGE_ROUTER_ARBITRUM,

@@ -60,7 +60,7 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | **ChainId registration** | SDK constants | [`src/sdk/constants.ts`](../../src/sdk/constants.ts) — `46630` (testnet) · `4663` (mainnet) |
 | **Outbound escort** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) `assertUnidirectionalBridge()` — **`46630`/`4663` → `42161` only** |
 | **Inbound AML** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) — `42161 → Robinhood` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
-| **Treasury Escort & Collateral Ingress** | Core Module B adapter | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) `quoteRChainYieldToArbitrumGm()` — Institutional Treasury Escort Router · `assetKind` · `symbol` · size gates · bridge escort bind |
+| **Treasury Escort & Collateral Ingress** | Core Module B adapter | [`src/adapters/robinhood/treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) `quoteRChainYieldToArbitrumGm()` — Institutional Treasury Escort Router · `assetKind` · `symbol` · size gates · bridge escort bind |
 | **0-Gas retry storm** | **Core Module A (this SDK)** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) `evaluateRetailIntentGate()` → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm `INTENT_RING_U32` |
 | **ERC-7683 cross-chain** | **Core Module A (this SDK, generic)** | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — chain IDs supplied by caller; no Robinhood hard-wire |
 

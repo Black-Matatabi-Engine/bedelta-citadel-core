@@ -29,11 +29,11 @@ export type {
   RobinhoodAuditSnapshotInput,
 } from "./robinhood-audit-snapshot";
 export { AML_INBOUND_TO_ROBINHOOD_BLOCKED } from "../adapters/across-ingress-bridge";
-export { quoteRChainYieldToArbitrumGm } from "../adapters/robinhood/r-chain-yield-router";
+export { quoteRChainYieldToArbitrumGm } from "../adapters/robinhood/treasury-escort-router";
 export type {
   RChainYieldEscortInput,
   RChainYieldEscortQuote,
-} from "../adapters/robinhood/r-chain-yield-router";
+} from "../adapters/robinhood/treasury-escort-router";
 export {
   AGENT_DEADMAN_SLIPPAGE_BPS,
   CITADEL_SLIPPAGE_EXCEEDED,

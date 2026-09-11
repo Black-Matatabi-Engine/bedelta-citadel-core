@@ -155,7 +155,7 @@ Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) �
 | Module | Scope | Verify |
 |--------|-------|--------|
 | **Core Module A: EIP-1193 Retail Guard SDK** | Defense Layers 1–4 · Omni-EVM 0-Gas pre-consensus middleware | `pnpm demo:eip1193` · **35/35** retail guard tests |
-| **Core Module B: Compliance Ingress Escort Adapter** | Institutional Treasury Escort Router · Pillar Set X outbound escort | `pnpm demo:escort` · `r-chain-yield-router.test.ts` |
+| **Core Module B: Compliance Ingress Escort Adapter** | Institutional Treasury Escort Router · Pillar Set X outbound escort | `pnpm demo:escort` · `treasury-escort-router.test.ts` |
 
 ### Robinhood Chain Hard Evidence — Core Module B (Pitch SSOT)
 
@@ -164,7 +164,7 @@ Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) �
 | ChainId **`46630`** (testnet) · **`4663`** (mainnet) — **not `46631`** | [`src/sdk/constants.ts`](./src/sdk/constants.ts) |
 | **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:escort` · [`assertUnidirectionalBridge`](./src/sdk/unidirectional-bridge.ts) |
 | **Inbound AML** `42161 → Robinhood` blocked | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
-| **Treasury Escort & Collateral Ingress** | [`r-chain-yield-router.ts`](./src/adapters/robinhood/r-chain-yield-router.ts) · [`r-chain-yield-router.test.ts`](./tests/adapters/r-chain-yield-router.test.ts) |
+| **Treasury Escort & Collateral Ingress** | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) · [`treasury-escort-router.test.ts`](./tests/adapters/treasury-escort-router.test.ts) |
 | **EIP-1193 0-Gas protection (Core Module A)** | `@slivervine/eip1193-agentic-wallet-guard` · **35/35** · `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
 ---

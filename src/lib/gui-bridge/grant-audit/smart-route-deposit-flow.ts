@@ -1,5 +1,5 @@
 /** Deposit → checkSoilResistance → GatedExecutor payloadHash preview (SPA-only, no EIP-712 change). */
-import { quoteRChainYieldToArbitrumGm, RWA_YIELD_MIN_USD } from "../../../adapters/robinhood/r-chain-yield-router";
+import { quoteRChainYieldToArbitrumGm, RWA_YIELD_MIN_USD } from "../../../adapters/robinhood/treasury-escort-router";
 import { type GmPoolRouteKey, GMX_MARKET_REGISTRY } from "../../../config/gmx-markets";
 import { ARBITRUM_ONE_CHAIN_ID, SLIVERVINE_GATE_ADDRESS } from "../../../sdk/constants";
 import { checkSoilResistance } from "../../../services/risk-control";

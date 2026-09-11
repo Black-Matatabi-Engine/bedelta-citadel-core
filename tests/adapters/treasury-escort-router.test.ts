@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   quoteRChainYieldToArbitrumGm,
   RWA_YIELD_MIN_USD,
-} from "../../src/adapters/robinhood/r-chain-yield-router";
+} from "../../src/adapters/robinhood/treasury-escort-router";
 import {
   AML_INBOUND_TO_ROBINHOOD_BLOCKED,
   ARBITRUM_ONE_CHAIN_ID,
@@ -13,7 +13,7 @@ import {
 const WALLET = "0xcccccccccccccccccccccccccccccccccccccccc";
 const NOW = 1_700_000_000_000;
 
-describe("r-chain-yield-router escort", () => {
+describe("treasury-escort-router escort", () => {
   it("quotes RWA → Arbitrum GM with bridge escort ok when capital settled", () => {
     const q = quoteRChainYieldToArbitrumGm({
       assetKind: "rwa",

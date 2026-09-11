@@ -7,7 +7,7 @@
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
-import { ROBINHOOD_TESTNET_CHAIN_ID, R_CHAIN_ZERODEV_BUNDLER_RPC } from "../src/adapters/robinhood/r-chain-yield-stub";
+import { ROBINHOOD_TESTNET_CHAIN_ID, R_CHAIN_ZERODEV_BUNDLER_RPC } from "../src/adapters/robinhood/treasury-escort-stub";
 import { ROBINHOOD_MAINNET_CHAIN_ID } from "../src/sdk/constants";
 import { runZeroDevSmokeProbe } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-adapter";
 import { probeBundler } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-bundler";
