@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * ElizaOS Agent Demo — Citadel Shield Action handler.
+ * ElizaOS Agent Demo — ExoMesh Action handler.
  * Usage: pnpm demo:elizaos
  * Trip:  pnpm demo:elizaos -- --trip
  * Venue: pnpm demo:elizaos -- --venue=pendle

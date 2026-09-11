@@ -136,7 +136,7 @@ export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep
 export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
   logE2eStep(
     5,
-    "Citadel Shield Exercise — R20 Physical Deadlock & Panic Flash Unwind",
+    "ExoMesh R20 Exercise — R20 Physical Deadlock & Panic Flash Unwind",
     "[Pillar Set Y: Pre-Consensus Firewall] Always-On Circuit Breaker · Demonstrating Emergency 0-Gas Unwind",
   );
   __resetCircuitBreakerSeverForTests();

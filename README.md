@@ -1,10 +1,14 @@
-# 🛡️ SliverVine Protocol (BeΔ) — Citadel Shield: Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum
+# SliverVine Protocol (BeΔ) — ExoMesh Pre-Consensus Intent Firewall for AI Agents on Arbitrum
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs 🛡️ ⚡ 🏛️ ·** `v0.95 Santenmoku Core`
+**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v0.95 Santenmoku Core`  
+**DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com)
 
-> **An Edge Wasm-powered, Pre-Consensus 0-Gas Security Firewall & Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware for Autonomous AI Agents and Retail Wallets on Arbitrum.**
+> **SliverVine ExoMesh** (Module A · ~70% pitch) — Sub-1.8µs Wasm circuit breaker · Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) middleware for autonomous AI agents and retail wallets on Arbitrum.  
+> **SliverVine Sanctuary** (Module B · ~30% pitch) — Treasury escort router · [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) async vault guard · Robinhood / Across compliance ingress.
+>
+> *Former umbrella title "SliverVine Citadel Shield" is retired; ExoMesh is the hero product.*
 
-![Vitest](https://img.shields.io/badge/Vitest-1057%20PASS%20%28226%20files%29-brightgreen?logo=vitest)
+![Vitest](https://img.shields.io/badge/Vitest-1063%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
 ![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -14,7 +18,7 @@
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
 ![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Live_42161-28A0F0?logo=arbitrum)
 
-![SliverVine Citadel Gate - Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
+![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
 
 
@@ -44,16 +48,33 @@
 
 ---
 
+## Product Modules — ExoMesh (70%) + Sanctuary (30%)
 
+### SliverVine ExoMesh — Hero Product (~70%)
+
+| Surface | SSOT | Verify |
+|---------|------|--------|
+| EIP-1193 / EIP-5792 / EIP-6963 SDK | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
+| Wasm reflex core (`rootProtection`, `checkSoilResistance`) | [`docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./docs/architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) | `pnpm demo:gmx -- --trip` |
+| 5-Core Venue Matrix | GMX · Pendle · USD.ai · HL · Variational | `pnpm demo:{gmx,hl,variational} -- --trip` |
+
+### SliverVine Sanctuary — Escrow Support (~30%)
+
+| Surface | SSOT | Verify |
+|---------|------|--------|
+| Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) | `pnpm demo:escort` |
+| Across ingress / AML unidirectional escort | [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) | `tests/adapters/across-ingress-bridge.test.ts` |
+| ERC-7540 async vault escort (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `npx vitest run tests/erc7540-async-escort.test.ts` |
+
+---
 
 ## ⚡ Key Architectural Innovations & Invariants
 
 - **0-Gas Pre-Consensus Sequencer Defense:** Unverified intents are rejected at Edge isolates before Arbitrum Sequencer queues — **0-Gas on fail-closed paths**.
 - **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
-- **Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK:** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus.
-- **Robinhood Chain (Core Module B · Pillar Set X Reference Escort Adapter):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:escort`.
-- **EIP-1193 Retail Guard SDK (Core Module A):** `@slivervine/eip1193-agentic-wallet-guard` — Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) · verify: `pnpm demo:eip1193`.
+- **SliverVine ExoMesh (Module A):** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:eip1193`.
+- **SliverVine Sanctuary (Module B · Pillar Set X Escrow Substrate):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:escort`.
 
 ---
 
@@ -81,9 +102,9 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 ## ⚡ Neuromorphic Security Architecture (AEB Analogy)
 
-**Citadel Shield acts as the involuntary reflex arc for autonomous AI agents (Pillar Set Y).**
+**SliverVine ExoMesh acts as the involuntary reflex arc for autonomous AI agents (Pillar Set Y).**
 
-**AEB Analogy:** Think of Citadel Shield like **Automated Emergency Braking (AEB)** in a vehicle. The LLM **Cerebrum** plans the trading strategy (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **p50 ~15µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before reaching the Sequencer queue or mempool.
+**AEB Analogy:** Think of SliverVine ExoMesh like **Automated Emergency Braking (AEB)** in a vehicle. The LLM **Cerebrum** plans the trading strategy (~1–10s Chain-of-Thought). The **Cerebellum reflex arc** slams the brakes in **p50 ~15µs** before the transaction leaves the agent's cabin — **$0 Gas burned** — before reaching the Sequencer queue or mempool.
 
 ```text
 ┌────────────────────────────────────────────────────────────────┐
@@ -92,7 +113,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
                          │ (Intent Payload)
                          ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [Citadel Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
+│ [ExoMesh Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
@@ -105,7 +126,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 ## ⏱️ Performance Verification & Latency Hierarchy
 
-Citadel Shield reports three statistical latency tiers:
+SliverVine ExoMesh reports three statistical latency tiers:
 
 
 | Tier                    | Metric           | Scope (What is Measured)                                                                  | Canonical Verification Command             |
@@ -131,14 +152,22 @@ pnpm demo:usdai -- --trip         # USD.ai Collateral FAIL_CLOSED proof
 pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
 pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
-# Strategy Loops & SDK Verification
+# Strategy Loops
 pnpm demo:perp-loop -- --trip     # Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip     # Loop B: USD.ai Collateral Lane
-pnpm demo:eip1193                 # Tier 0 — Scenario A–D State Matrix (JUDGE_SAFE clock)
-pnpm demo:eip1193 -- --json       # Structured JSON for CI / Dune
-npx vitest run tests/sdk/retail-guard-provider.test.ts # EIP-1193 Retail Guard SDK (35 PASS · 7/7 reason codes)
 
-# Full Regression Test Suite (225 test files | 1052 PASS clean)
+# [ExoMesh] Tier 0 — SDK/CLI Unit & Integration
+pnpm demo:eip1193                 # Scenario A–D State Matrix (JUDGE_SAFE clock)
+pnpm demo:eip1193 -- --json         # Structured JSON for CI / Dune
+npx vitest run tests/sdk/retail-guard-provider.test.ts
+npx vitest run tests/sdk/eip5792-send-calls.test.ts
+
+# [Sanctuary] Tier 0 — Escrow & Async Vault
+pnpm demo:escort
+npx vitest run tests/adapters/treasury-escort-router.test.ts
+npx vitest run tests/erc7540-async-escort.test.ts
+
+# Full Regression Test Suite (228 test files | 1063 PASS clean)
 pnpm test -- --run
 ```
 
@@ -152,7 +181,7 @@ pnpm test -- --run
 | **1**    | **Judge Brief**               | Executive Protocol Summary → [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)                                                                                      |
 | **2**    | **Verification Matrix**       | Complete Command & Proof Index → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)                                                        |
 | **3**    | **Buildathon Submission**     | Technical Specification & Patch Log → [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)                                       |
-| **4**    | **EIP-1193 Agentic Wallet Guard SDK**   | `@slivervine/eip1193-agentic-wallet-guard` · C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **4**    | **SliverVine ExoMesh SDK (EIP-1193 Agentic Wallet Guard)**   | `@slivervine/eip1193-agentic-wallet-guard` · C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
 | **5**    | **Architecture Yellow Paper** | R01–R20 Defense Matrix & Yellow Paper → [`docs/architecture/README.md`](./docs/architecture/README.md)                                                 |
 | **6**    | **EIP Standards Wiki**        | EVM & AI Standard Alignment → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
 

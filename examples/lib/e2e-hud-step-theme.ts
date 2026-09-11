@@ -15,7 +15,7 @@ export const E2E_R20_SHIELD = {
 
 export const E2E_PIPELINE_STEPS = [
   ...E2E_EXECUTION_PIPELINE_STEPS,
-  { step: 5, label: "Citadel Shield Exercise", color: BOLD_RED },
+  { step: 5, label: "ExoMesh R20 Exercise", color: BOLD_RED },
 ] as const;
 
 export function e2eStepThemeColor(step: number): string {

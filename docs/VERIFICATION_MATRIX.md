@@ -5,7 +5,7 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **226 test files | 1057 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
+> **Vitest SSOT:** **228 test files | 1063 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)  
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
@@ -28,42 +28,51 @@
 
 ```bash
 pnpm install
-# === Tier 0 — SDK/CLI Unit & Integration ===
+# === [ExoMesh] Tier 0 — SDK/CLI Unit & Integration ===
 npx vitest run tests/sdk/retail-guard-provider.test.ts
+npx vitest run tests/sdk/eip5792-send-calls.test.ts
 pnpm demo:eip1193                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
 
-# === Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
+# === [ExoMesh] Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
 pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 pnpm demo:perp-loop -- --trip            # Zone A Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lane
 
+# === [Sanctuary] Tier 0 — Escrow & Async Vault ===
+pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+npx vitest run tests/adapters/treasury-escort-router.test.ts
+npx vitest run tests/erc7540-async-escort.test.ts
+
 # === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
-pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 
 # === Tier 1 — Full Protocol Regression ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # Full Regression Suite (226 test files | 1057 PASS clean)
+pnpm test -- --run                       # Full Regression Suite (228 test files | 1063 PASS clean)
 ```
 
-| Command | Proves |
-|---------|--------|
-| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 / EIP-6963 Retail Guard · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
-| `pnpm demo:eip1193` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
-| `pnpm demo:eip1193 -- --json` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
-| `pnpm demo:eip1193 -- --trip` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
-| `pnpm demo:gmx -- --trip` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
-| `pnpm demo:variational -- --trip` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
-| `pnpm demo:hl -- --trip` | **p50 ~15µs reflex core** · HL session-key FAIL_CLOSED |
-| `pnpm demo:perp-loop -- --trip` | **p50 ~15µs reflex core** · Loop A perp/yield stack R20 severance |
-| `pnpm demo:spot-loop -- --trip` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
-| `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios |
-| `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
-| `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
-| `pnpm execute:gmx:gm-deposit` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
-| `pnpm run audit:security` | 3-Axis Security Scorecard **5/0/0 PASS** |
+| Command | Tag | Proves |
+|---------|-----|--------|
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | EIP-1193 / EIP-6963 Retail Guard · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
+| `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold · **3/3 PASS** |
+| `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
+| `npx vitest run tests/erc7540-async-escort.test.ts` | `[Sanctuary]` | ERC-7540 operator whitelist + async slippage drift |
+| `pnpm demo:eip1193` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
+| `pnpm demo:eip1193 -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
+| `pnpm demo:eip1193 -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
+| `pnpm demo:gmx -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
+| `pnpm demo:variational -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
+| `pnpm demo:hl -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · HL session-key FAIL_CLOSED |
+| `pnpm demo:perp-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop A perp/yield stack R20 severance |
+| `pnpm demo:spot-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
+| `pnpm demo` | `[ExoMesh]` | 12 Dual Pillar Set X & Y ANSI scenarios |
+| `pnpm demo:e2e` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
+| `pnpm demo:escort` | `[Sanctuary]` | Unidirectional compliance bridge escort |
+| `pnpm demo:e2e:arb-native` | `[ExoMesh]` | Arbitrum One USDC GM deposit simulate |
+| `pnpm execute:gmx:gm-deposit` | `[ExoMesh]` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
+| `pnpm run audit:security` | `[ExoMesh]` | 3-Axis Security Scorecard **5/0/0 PASS** |
 
 ### 5-Core Venue CLI Flags (SSOT)
 
@@ -101,12 +110,12 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 
 | Module | Scope | Verify |
 |--------|-------|--------|
-| **Core Module A: EIP-1193 Retail Guard SDK** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](./sdk/03_ARCHITECTURE_AND_MOAT.md)) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **Core Module B: Compliance Ingress Escort Adapter** | Pillar Set X Reference Escort · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` |
+| **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](./sdk/03_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · Institutional Treasury Escort Router · ERC-7540 · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` |
 
 ---
 
-## Robinhood Chain Hard Evidence SSOT (Pillar Set X Reference Escort Adapter · Core Module B)
+## Robinhood Chain Hard Evidence SSOT (Pillar Set X Sanctuary Escrow Substrate · Module B)
 
 > **ChainId SSOT:** `ROBINHOOD_TESTNET_CHAIN_ID = 46630` · `ROBINHOOD_MAINNET_CHAIN_ID = 4663` — [`src/sdk/constants.ts`](../src/sdk/constants.ts) **L24–25**. Codebase does **not** use `46631`.
 
@@ -115,12 +124,12 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 | **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:escort` · [`examples/ingress-escort-demo.ts`](../examples/ingress-escort-demo.ts) Route A |
 | **Inbound AML block** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | Route C in same demo · [`src/adapters/across-ingress-bridge.ts`](../src/adapters/across-ingress-bridge.ts) `validateAcrossBridgeDirection` |
 | **Treasury Escort & Collateral Ingress** | Institutional Treasury Escort Router — `quoteRChainYieldToArbitrumGm()` · `assetKind` · `symbol` · size gates · bridge escort bind | [`src/adapters/robinhood/treasury-escort-router.ts`](../src/adapters/robinhood/treasury-escort-router.ts) · `tests/adapters/treasury-escort-router.test.ts` |
-| **EIP-1193 middleware (Core Module A)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **EIP-1193 middleware (ExoMesh Module A)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
 | **Audit certificate** | SHA-256 snapshot · inbound invariant probe | `GET /api/robinhood-audit-snapshot` · [`src/sdk/robinhood-audit-snapshot.ts`](../src/sdk/robinhood-audit-snapshot.ts) |
 
 **Bridge regression:** [`tests/adapters/across-ingress-bridge.test.ts`](../tests/adapters/across-ingress-bridge.test.ts) · [`tests/sdk/citadel-sdk-bridge-armor.test.ts`](../tests/sdk/citadel-sdk-bridge-armor.test.ts)
 
-**Narrative lock:** Robinhood is **Core Module B** — a **Pillar Set X Reference Escort Adapter**. Product identity remains **SliverVine Citadel on Arbitrum One (`42161`)**. Treasury collateral symbols are gated at the **Institutional Treasury Escort Router** decision layer via generic `symbol` + `assetKind`, not via hard-coded mint-contract selectors in `evaluateRetailVenueAllowlist` (**Core Module A**).
+**Narrative lock:** Robinhood is **SliverVine Sanctuary (Module B)** — a **Pillar Set X Sanctuary Escrow Substrate**. Product identity remains **SliverVine Protocol on Arbitrum One (`42161`)** — Sanctuary is the escort substrate, not the umbrella brand. Treasury collateral symbols are gated at the **Institutional Treasury Escort Router** decision layer via generic `symbol` + `assetKind`, not via hard-coded mint-contract selectors in `evaluateRetailVenueAllowlist` (**ExoMesh Module A**).
 
 ---
 
@@ -189,8 +198,8 @@ Derivations → [`architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./architectu
 
 | Document | Role |
 |----------|------|
-| [`README.md`](../README.md) | Repo entry · Shield + Sovereign Vault |
-| [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (Shield-first) |
+| [`README.md`](../README.md) | Repo entry · ExoMesh + Sanctuary |
+| [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (ExoMesh-first) |
 | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
 | [`architecture/README.md`](./architecture/README.md) | Yellow Paper · R01–R20 |
 | [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) | Tier 0–1 + Zone A/B demo suite (5-core + Retail Guard) |
@@ -198,4 +207,4 @@ Derivations → [`architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./architectu
 
 ---
 
-*SilverVine Labs · Verification Express Hub · 225 test files | 1052 PASS clean*
+*SilverVine Labs · Verification Express Hub · 228 test files | 1063 PASS clean*

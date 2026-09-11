@@ -2,7 +2,7 @@
 /**
  * Reference Interceptor Harness & Adapter for Virtuals Protocol & ElizaOS AI Agents
  *
- * Simulates AI Agent UserOp lifecycle intercepted by SliverVine Citadel on Cloudflare Edge.
+ * Simulates AI Agent UserOp lifecycle intercepted by SliverVine ExoMesh on Cloudflare Edge.
  * Usage: pnpm tsx examples/agent-interceptor-demo.ts
  * Rogue: pnpm tsx examples/agent-interceptor-demo.ts --trip
  */
@@ -43,7 +43,7 @@ const CYAN = "\x1b[36;1m";
 const GRAY = "\x1b[90m";
 const BOLD = "\x1b[1m";
 
-const BANNER_INNER = "🛡️  SliverVine Citadel Shield · Agent Pre-Broadcast Lifecycle";
+const BANNER_INNER = "🛡️  SliverVine ExoMesh · Agent Pre-Broadcast Lifecycle";
 const BOX_W = 63;
 
 let hudEnabled = false;

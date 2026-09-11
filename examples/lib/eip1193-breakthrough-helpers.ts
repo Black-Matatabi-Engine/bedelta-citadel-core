@@ -177,7 +177,7 @@ export function printProductionPlainTextWarning(warning: string, reasonCode: str
 }
 
 export function printBreakthroughBanner(): void {
-  const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
+  const t1 = "🛡️  SliverVine ExoMesh · Universal EIP-1193 / EIP-6963 Retail Guard";
   const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, JUDGE_SAFE_CLOCK_LABEL.length + 2);
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
   console.log(bannerLine(t1, w));

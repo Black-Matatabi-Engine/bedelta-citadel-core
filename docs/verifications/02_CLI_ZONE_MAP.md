@@ -6,10 +6,11 @@
 
 ### Verification Tiers (CLI SSOT)
 
-| Tier / Zone | Commands | Scope |
-|-------------|----------|-------|
-| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` · Scenario A–D |
-| **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` | **226 files / 1057 PASS** · `pnpm exec tsc --noEmit` 0 errors |
+| Tier / Zone | Tag | Commands | Scope |
+|-------------|-----|----------|-------|
+| **Tier 0 — SDK/CLI Unit & Integration** | `[ExoMesh]` | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` · Scenario A–D |
+| **Tier 0 — Escrow & Async Vault** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · ERC-7540 async vault guard |
+| **Tier 1 — Full Protocol Regression** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1063 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
@@ -24,7 +25,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (226 test files | 1057 PASS clean)
+pnpm test       # Full System Regression Suite (228 test files | 1063 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -41,18 +42,18 @@ pnpm test       # Full System Regression Suite (226 test files | 1057 PASS clean
 | `pnpm demo:perp-loop -- --trip` | Loop A perp/yield stack (GMX / Pendle / HL / Variational) | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:spot-loop -- --trip` | Loop B USD.ai collateral lane | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
-| `pnpm demo:e2e -- --unwind` | Optional Step 5 Citadel Shield R20 unwind exercise | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:e2e -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard SDK | **35/35 PASS** |
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm test` | Full Vitest regression bar | **226 test files | 1057 PASS clean** |
+| `pnpm test` | Full Vitest regression bar | **228 test files | 1063 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
 ```diff
-+  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐
++  ┌─ SliverVine Protocol · ExoMesh + Sanctuary ─────────────────────┐
 +  │  Sepolia Gate · p50 ~106µs · Δnet ≡ 0 · lostUsd ≡ 0            │
 +  └────────────────────────────────────────────────────────────────┘
 + Step 1: allowedToSign=true · elapsed=106µs · Δnet ≡ 0
@@ -66,7 +67,7 @@ pnpm test       # Full System Regression Suite (226 test files | 1057 PASS clean
 **Optional modes:**
 
 ```diff
-+ pnpm demo:e2e -- --unwind   # Step 5 Citadel Shield R20 unwind · RESULT: E2E OK (5/5)
++ pnpm demo:e2e -- --unwind   # Step 5 ExoMesh R20 unwind · RESULT: E2E OK (5/5)
 + pnpm demo:e2e -- --trip     # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
 ```
 
@@ -129,13 +130,13 @@ pnpm demo:e2e
 | `pnpm demo:e2e -- --unwind` | Optional Step 5 R20 panic flash unwind | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 
-Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight rebalance → HL session hedge. Optional `--unwind` adds Step 5 Citadel Shield R20 exercise; `--trip` stress-tests Step 1 Gatehouse intercept.
+Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight rebalance → HL session hedge. Optional `--unwind` adds Step 5 ExoMesh R20 exercise; `--trip` stress-tests Step 1 Gatehouse intercept.
 
 ---
 
 ## Zone B — Inside Hybrid Pillar Sets X & Y (Core Protocol Invariants)
 
-### Pillar Set X — Gatehouse (Opt-In Account Abstraction & Scoped Auth)
+### Pillar Set X — Sanctuary Escrow Substrate (Gatehouse AA)
 
 **Command:** `pnpm test:zerodev`
 
@@ -163,7 +164,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 ---
 
-### Pillar Set X — Compliance Ingress Firewall (Escort Accounting & AML)
+### Pillar Set X — Sanctuary Escrow Substrate (Compliance Ingress)
 
 **Command:**
 
@@ -183,7 +184,7 @@ Related: [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_P
 
 ---
 
-### Pillar Set Y — SliverVine Citadel Shield (Pre-Consensus Wasm Risk Engine)
+### Pillar Set Y — SliverVine ExoMesh Engine Substrate (Pre-Consensus Wasm Risk Engine)
 
 | Command | Proves | Expected |
 |---------|--------|----------|
@@ -228,7 +229,7 @@ pnpm audit:nightly
 
 Related: [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) · [`VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md)
 
-#### Pendle Institutional Shield (V1.0 Live · Pillar Set Y)
+#### Pendle Institutional Guard (ExoMesh · Pillar Set Y)
 
 Zero-I/O sync oracle + fail-closed soil wiring within the existing Shield **p50 ~106µs** budget.
 

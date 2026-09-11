@@ -1,10 +1,10 @@
-# SliverVine Citadel Shield — System Topology & Yellow Paper
+# SliverVine ExoMesh — System Topology & Yellow Paper
 
-> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **225 test files | 1052 PASS clean** · Security-tier `5/0/0 PASS` · **Wasm Core:** ABI **v2** · 28-protocol-slot FFI · `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
+> **Document:** System topology · BeΔ philosophy · GMX/HL triangle loop · settlement bounds · **Vitest SSOT:** **228 test files | 1063 PASS clean** · Security-tier `5/0/0 PASS` · **Wasm Core:** ABI **v2** · 28-protocol-slot FFI · `<28kb` Cloudflare budget · `<60µs` warm execution · **p50 ~106 µs**
 > **Architecture index:** [`README.md`](./README.md) · **Hybrid Pillar Sets X & Y:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · **Defense Matrix:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **Standards:** [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) · **Risk framework:** [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md)
 
-**Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine Citadel Shield** = the pre-consensus execution safety primitive.  
-**Entity:** SilverVine Labs · **Protocol brand:** SliverVine Citadel Shield  
+**Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine ExoMesh** = the pre-consensus execution safety primitive (Module A).  
+**Entity:** SilverVine Labs · **Protocol brand:** SliverVine Protocol · **Escrow module:** SliverVine Sanctuary (Module B)  
 **Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
@@ -114,7 +114,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 ## 1. Core Product Identity
 
-**SliverVine Citadel Shield (BeDelta Living Water v1.0 / BeΔ) is a Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum.**
+**SliverVine ExoMesh (BeDelta Living Water v1.0 / BeΔ) is a Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum.**
 
 **Primary execution envelope:** **Delta-Neutral GM** on Arbitrum One — GMX v2 **ETH/USDC** GM pool + Hyperliquid **1× short hedge** (Independent L1 HF Orderbook AppChain · session-key adapter), guarded by Pillar Set Y sub-ms Wasm Shield (`checkSoilResistance()`).
 
@@ -135,7 +135,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 | **Hedge** | Hyperliquid (Independent L1 HF Orderbook AppChain) | Session-key **1× short** Emergency Liquidity Sponge · `evaluateHyperliquidSessionGuard()` · nonce-healed signing |
 | **Ingress (optional)** | Robinhood Chain | **Pillar Set X Reference Escort Adapter** — not product identity |
 
-**Robinhood Chain role:** **Pillar Set X Reference Escort Adapter** only — regulated treasuries may escort outbound (`46630`/`4663` → `42161`). Inbound AML is blocked by default. Product identity remains **SliverVine Citadel on Arbitrum**. **Audit:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md).
+**Robinhood Chain role:** **Pillar Set X Reference Escort Adapter** only — regulated treasuries may escort outbound (`46630`/`4663` → `42161`). Inbound AML is blocked by default. Product identity remains **SliverVine Protocol on Arbitrum One (`42161`)**. **Audit:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md).
 
 ### 1.1 Engineering Restraint (Blue-Chip Scope)
 
@@ -174,7 +174,7 @@ TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in `pkg/so
 
 ### 1.5 Sequencer Defense Plane A/B Model
 
-Citadel Shield is **not** “Edge-only” or “on-chain-only” — it is a **dual-layer** stack that answers the Nitro reviewer question: *TS Gateway latency ≠ Nitro opcode latency; both layers protect different phases.*
+SliverVine ExoMesh is **not** “Edge-only” or “on-chain-only” — it is a **dual-layer** stack that answers the Nitro reviewer question: *TS Gateway latency ≠ Nitro opcode latency; both layers protect different phases.*
 
 | Plane | Runtime | Role | Latency / Gas | SSOT |
 |-------|---------|------|---------------|------|
@@ -295,7 +295,7 @@ Gates must not assume instant atomicity across the triangle; inventory accountin
 
 | Extension | Settlement role | Horizon | Status |
 |-----------|-----------------|---------|--------|
-| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Pillar Set Y · soil-wired · **225 test files | 1052 PASS clean (100%)** |
+| **Pendle Finance** | PT/YT exit proceeds vs GMX margin shadow accounting — expiry blackhole / oracle decoupling guard · `PENDLE_ORACLE_STALE` soil fuse | **V1.0** | ✅ Live · Pillar Set Y · soil-wired · **228 test files | 1063 PASS clean (100%)** |
 | **USD.ai** | AI-compute RWA yield-bearing collateral tier — sUSDai peg · GPU oracle freshness · NAV deviation · depth fuse · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Pillar Set Y · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) (SSOT) · [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) (orchestration) · `pnpm demo:usdai` |
 | **Uniswap V3 DEX & Stabilizer** | `GRAIL` liquidity depth for rebalance routing; Stabilizer is **V1.0 Live** on Sepolia `421614` | **Stabilizer V1.0** · Uniswap V3 **V1.5** | ✅ Stabilizer Live · ⏳ Uniswap V3 Roadmap Spec |
 | **Variational** | Same-chain perp hedge settlement window (alternative to HL 15 min withdrawal budget) — cross-venue margin routing | **V2.0** | ⏳ PoC Spec |
@@ -321,7 +321,7 @@ Allocator-facing HUD band — **non-guaranteed**; derived from exogenous Delta-N
 | **Friction & Rebalance Costs** | **−0.5%** (`FRICTION_BUFFER_APY`) | **−0.7%** | Absorbed by Citadel Safety Buffer (basis & slippage) |
 | **Net Strategy APY Range** | **8.2%** | **11.8%** | **Exogenous Delta-Neutral Cash Flow (Zero Token Emissions)** |
 
-> **Evaluator defense narrative:** Unlike speculative emission vaults, SliverVine Citadel Shield's **8.2% ~ 11.8%** target range is mathematically grounded in real GMX trading fees, skew rebates, and Hyperliquid short funding rates, guarded by our **0.5% Hurdle Gate** (`FRICTION_BUFFER_APY = 0.005` in `rebalance-rules.ts`).
+> **Evaluator defense narrative:** Unlike speculative emission vaults, SliverVine ExoMesh's **8.2% ~ 11.8%** target range is mathematically grounded in real GMX trading fees, skew rebates, and Hyperliquid short funding rates, guarded by our **0.5% Hurdle Gate** (`FRICTION_BUFFER_APY = 0.005` in `rebalance-rules.ts`).
 
 ### 5.4 Hurdle-Rate Probe (Not Product Identity)
 
@@ -354,9 +354,9 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 
 > **Telemetry note:** Figures are order-of-magnitude **industry estimates** for threat-modeling — not audited SliverVine protocol KPIs. Primary on-chain SSOT for agent identity and registration growth is [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) telemetry on [Dune](https://dune.com/dune/erc-8004-onchain-ai-agents). See also [CryptoRank Symposium — agent-security focus](https://cryptorank.io/news/feed/fae5e-ai-agents-web3-hacking-wyoming-symposium).
 
-**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. Citadel Shield targets this gap at **p50 ~106µs** Edge Wasm evaluation ([§3.5 Wasm Soil Core](./03_DEFENSE_MATRIX_AND_WASM_CORE.md#35-wasm-soil-core-m4-summary)) — covering **88%** of the modeled on-chain risk surface per [Risk Framework §0.1](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee); the residual **12%** systemic tail is disclosed with Fail-Closed posture.
+**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. SliverVine ExoMesh targets this gap at **p50 ~106µs** Edge Wasm evaluation ([§3.5 Wasm Soil Core](./03_DEFENSE_MATRIX_AND_WASM_CORE.md#35-wasm-soil-core-m4-summary)) — covering **88%** of the modeled on-chain risk surface per [Risk Framework §0.1](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee); the residual **12%** systemic tail is disclosed with Fail-Closed posture.
 
-### Real-World Case Studies (Why Citadel Shield is Essential)
+### Real-World Case Studies (Why SliverVine ExoMesh is Essential)
 
 | # | Case | Loss / Impact | Citadel Alignment | Source |
 |---|------|---------------|-------------------|--------|

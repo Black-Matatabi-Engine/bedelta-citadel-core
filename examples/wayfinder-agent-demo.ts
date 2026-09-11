@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Wayfinder Route Interception Demo — Citadel Shield on Arbitrum & Stabilizer Sepolia.
+ * Wayfinder Route Interception Demo — SliverVine ExoMesh on Arbitrum & Stabilizer Sepolia.
  * Usage: pnpm demo:wayfinder
  * Trip:  pnpm demo:wayfinder -- --trip
  * Venue: pnpm demo:wayfinder -- --venue=gmx

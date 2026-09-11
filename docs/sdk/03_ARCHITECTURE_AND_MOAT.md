@@ -1,5 +1,6 @@
 # Architecture & Competitive Moat — EIP-1193 Agentic Wallet Guard SDK
 
+> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns ERC-7540 async vault escort path (`erc7540-async-escort.ts`)  
 > **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in `pkg/soil_core.wasm`  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 > **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)

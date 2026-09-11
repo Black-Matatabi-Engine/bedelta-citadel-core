@@ -1,5 +1,6 @@
-# EIP-1193 Agentic Wallet Guard SDK
+# SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK
 
+> **Product module:** SliverVine ExoMesh (Module A)  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 > **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
 > **License:** [Apache-2.0](./LICENSE)

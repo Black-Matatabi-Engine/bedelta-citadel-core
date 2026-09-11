@@ -15,7 +15,7 @@ import {
 import { E2E_EXECUTION_PIPELINE_STEPS, E2E_R20_SHIELD } from "./e2e-hud-step-theme";
 
 const BANNER_FRAME = [
-  "  ┌─ SliverVine Citadel Shield ─────────────────────────────────────┐",
+  "  ┌─ SliverVine Protocol · ExoMesh + Sanctuary ─────────────────────┐",
   "  │  BeΔ Living Water v1.0 · Grant E2E Demo · 4-Step Delta-Neutral   │",
   "  └────────────────────────────────────────────────────────────────┘",
 ] as const;

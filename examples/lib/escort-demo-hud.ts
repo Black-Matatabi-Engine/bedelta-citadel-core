@@ -44,7 +44,7 @@ function printEscortBenchmark(snapshot: DemoBenchmarkSnapshot): void {
 }
 
 export function printEscortBanner(snapshot: DemoBenchmarkSnapshot): void {
-  const inner = ` 🛡️  SliverVine Citadel Shield · Pillar 2 Compliance Escort · Multi-Route HUD `;
+  const inner = ` 🛡️  SliverVine Sanctuary · Compliance Escort · Multi-Route HUD `;
   const pad = Math.max(0, BOX_W - inner.length);
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${"─".repeat(Math.floor(pad / 2))}${inner}${"─".repeat(Math.ceil(pad / 2))}${R}${CYAN}│${R}`);

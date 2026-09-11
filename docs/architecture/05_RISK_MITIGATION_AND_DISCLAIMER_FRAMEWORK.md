@@ -1,6 +1,6 @@
 # SliverVine Protocol: Risk Mitigation, Fail-Closed Security Boundaries & Disclaimer Framework
 
-> **Product:** **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive
+> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
@@ -8,9 +8,9 @@
 > **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-Execution Citadel Protection.
 > **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md)
 
-> **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution. **SliverVine Citadel Shield** is the pre-consensus execution safety primitive that binds both.
+> **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution. **SliverVine ExoMesh** is the pre-consensus execution safety primitive that binds both.
 
-**Official Name:** SliverVine Citadel Shield on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
+**Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs  
 **Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety Citadel for AI Agents on Arbitrum  
 **Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune PEV dashboard:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
@@ -32,7 +32,7 @@
 |--------|------|------|
 | **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
 | **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
-| **Pillar Set Y — SliverVine Citadel Shield** | `checkSoilResistance()` · Wasm · R01–R20 | [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) |
+| **Pillar Set Y — SliverVine ExoMesh Engine Substrate** | `checkSoilResistance()` · Wasm · R01–R20 | [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) |
 
 ---
 
@@ -42,7 +42,7 @@
 
 ### 0.1 What SliverVine Citadel Shield Does — and Does Not — Guarantee
 
-**SliverVine Citadel Shield** provides an **88% pre-broadcast fail-closed interceptor mesh** — anchored by the **sub-ms Wasm soil gate** (`checkSoilResistance()` · `pkg/soil_core.wasm`) — designed to **sever toxic payloads before GMX / Hyperliquid broadcast**.
+**SliverVine ExoMesh** provides an **88% pre-broadcast fail-closed interceptor mesh** — anchored by the **sub-ms Wasm soil gate** (`checkSoilResistance()` · `pkg/soil_core.wasm`) — designed to **sever toxic payloads before GMX / Hyperliquid broadcast**.
 
 #### Formal Risk Spectrum Definition (88% / 12%)
 
@@ -50,7 +50,7 @@ SliverVine models the **100% Total On-Chain Risk Surface** — the complete set 
 
 | Partition | Share | Definition | Citadel behavior |
 |-----------|-------|------------|------------------|
-| **Pre-Broadcast Interception Mesh** (SliverVine Citadel Shield coverage) | **88%** | The proportion of **operational hazards interceptable at the pre-mempool boundary** at **p50 ~106 µs** via Wasm Soil Core (`checkSoilResistance()` · `pkg/soil_core.wasm`): MEV sandwiches, illiquid depth spikes **>10 bps**, oracle lag (`ORACLE_LAG_DEADLOCK`), unauthorized session usage (R06/R07), prompt-injection / rogue-LLM calldata, AML ingress violations (Pillar Set X), cross-venue slippage anomalies, and honeypot RPC traps | **100% fail-closed severance** — `signingChannelOpen: false`; payload never reaches mempool / bundler |
+| **Pre-Broadcast Interception Mesh** (SliverVine ExoMesh coverage) | **88%** | The proportion of **operational hazards interceptable at the pre-mempool boundary** at **p50 ~106 µs** via Wasm Soil Core (`checkSoilResistance()` · `pkg/soil_core.wasm`): MEV sandwiches, illiquid depth spikes **>10 bps**, oracle lag (`ORACLE_LAG_DEADLOCK`), unauthorized session usage (R06/R07), prompt-injection / rogue-LLM calldata, AML ingress violations (Pillar Set X), cross-venue slippage anomalies, and honeypot RPC traps | **100% fail-closed severance** — `signingChannelOpen: false`; payload never reaches mempool / bundler |
 | **Insurmountable Systemic Residuals** | **12%** | Structural crypto-systemic risks that **no pre-execution software can code-erase**: total L2 sequencer halts **>600 s**, protocol-level 0-day smart-contract exploits on third-party venues, network-level RPC disconnections beyond quorum, TEE supply-chain compromise, bridge counterparty insolvency | **Fail-Closed posture** on sensor breach — `signingChannelOpen: false`; **no claim of principal protection** against these tail events |
 
 **Mathematical closure:** `88% + 12% = 100%` of the modeled on-chain risk surface. The **88%** is derived from the **255-case chaos matrix** and **R01–R20 Defense Matrix** — coverage of **known, sensor-addressable pre-broadcast vectors** — not a guarantee against all future loss.
@@ -78,7 +78,7 @@ $$
 t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s} \ll t_{\text{mempool\_broadcast}}
 $$
 
-**SliverVine Citadel Shield** is a **pre-execution circuit breaker**, not:
+**SliverVine ExoMesh** is a **pre-execution circuit breaker**, not:
 
 - A guarantee of **zero market loss** or principal protection
 - Immunity to **all future AI exploits**, novel attack vectors, or zero-day smart-contract bugs
@@ -89,7 +89,7 @@ $$
 
 ### 0.2 Force Majeure & Residual Risk Vectors (Cannot Be Fully Eliminated)
 
-| Risk class | Example scenarios | SliverVine Citadel Shield mitigation | Residual exposure |
+| Risk class | Example scenarios | SliverVine ExoMesh mitigation | Residual exposure |
 |------------|-------------------|-------------------------------------|-------------------|
 | **Sequencer / L2 outage** | Arbitrum sequencer halt · extended reordering window | 600s recovery grace · no naked opens during desync · `ARBITRUM_SEQUENCER_UNSAFE` severance | Extended outage beyond modeled grace · state divergence |
 | **Oracle lag / manipulation** | Stale GMX / HL marks · >30s feed drift | `ORACLE_LAG_DEADLOCK` · fail-closed before payload construction | Oracle compromise beyond threshold · feed censorship |
@@ -105,7 +105,7 @@ See **[§0.1 Formal Risk Spectrum Definition](#01-what-slivervine-citadel-shield
 ```text
 User / AI intent → Pillar Set X Gatehouse (session scope)
  → Pillar Set X optional escort (AML · bridge accounting)
- → Pillar Set Y SliverVine Citadel Shield (88% interceptor mesh · sub-ms Wasm)
+ → Pillar Set Y SliverVine ExoMesh Engine Substrate (88% interceptor mesh · sub-ms Wasm)
  → [ PASS ] → venue broadcast
  → [ TRIP ] → severSigningChannel() · no broadcast · lostUsd ≡ 0 on pending bridge
 ```
@@ -120,7 +120,7 @@ SliverVine Protocol is **sophisticated smart-contract infrastructure** — not a
 
 #### 0.5.1 Asset Safety Guarantee — Pre-Broadcast Interception (0 Wasted Gas)
 
-SliverVine Citadel Shield evaluates every intent at the **Edge** via `checkSoilResistance()` (**p50 ~106 µs** · `pkg/soil_core.wasm`) and venue-specific guards (GMX pool invariants, HL session limits, bridge escort rules) **before** constructing a signed payload, UserOp, or router calldata.
+SliverVine ExoMesh evaluates every intent at the **Edge** via `checkSoilResistance()` (**p50 ~106 µs** · `pkg/soil_core.wasm`) and venue-specific guards (GMX pool invariants, HL session limits, bridge escort rules) **before** constructing a signed payload, UserOp, or router calldata.
 
 | Trip class | Example reason codes | When evaluated | On-chain / gas impact |
 |------------|---------------------|----------------|---------------------|
@@ -393,7 +393,7 @@ The HUD **Dynamic Target Range** is derived **solely from exogenous Delta-Neutra
 | **Friction & Rebalance Costs** | **−0.5%** (`FRICTION_BUFFER_APY`) | **−0.7%** | Absorbed by Citadel Safety Buffer (basis & slippage) |
 | **Net Strategy APY Range** | **8.2%** | **11.8%** | **Exogenous Delta-Neutral Cash Flow (Zero Token Emissions)** |
 
-> **Evaluator defense narrative:** Unlike speculative emission vaults, SliverVine Citadel Shield's **8.2% ~ 11.8%** target range is mathematically grounded in real GMX trading fees, skew rebates, and Hyperliquid short funding rates, guarded by our **0.5% Hurdle Gate** (`FRICTION_BUFFER_APY = 0.005`). Capital deploys only when `targetNetApy > nativeEarnApy + FRICTION_BUFFER_APY` (`rebalance-rules.ts`).
+> **Evaluator defense narrative:** Unlike speculative emission vaults, SliverVine ExoMesh's **8.2% ~ 11.8%** target range is mathematically grounded in real GMX trading fees, skew rebates, and Hyperliquid short funding rates, guarded by our **0.5% Hurdle Gate** (`FRICTION_BUFFER_APY = 0.005`). Capital deploys only when `targetNetApy > nativeEarnApy + FRICTION_BUFFER_APY` (`rebalance-rules.ts`).
 
 **Code anchors:** `src/services/yield/rebalance-rules.ts` (`FRICTION_BUFFER_APY`) · `src/services/adapters/gmx-v2-order-payload.ts` (`GMX_UI_FEE_BPS`) · `scripts/survival-benchmark/` (HL funding replay).
 

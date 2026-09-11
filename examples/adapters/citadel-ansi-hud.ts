@@ -1,5 +1,5 @@
 /**
- * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
+ * Shared Cyberpunk ANSI HUD for SliverVine ExoMesh agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
 import { printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart, printExecutionLatencyBlock, printExecutionLatencySplitBlock, printGuardTimeBlock, type DemoBenchmarkSnapshot } from "../lib/demo-timing";
@@ -62,7 +62,7 @@ export function printPillarSetYFrameworkLine(): void {
 }
 
 export function printPillarSetYVenueBanner(venueName: string, benchmark?: DemoBenchmarkSnapshot): void {
-  const line1 = "🛡️  SliverVine Citadel Shield · [PILLAR SET Y: Pre-Consensus Firewall]";
+  const line1 = "🛡️  SliverVine ExoMesh · [Pillar Set Y Engine Substrate]";
   const line2 = `Venue: ${venueName}`;
   const w = Math.max(PILLAR_BOX_W_MIN, line1.length + 4, line2.length + 4);
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
@@ -76,7 +76,7 @@ export function printPillarSetYStrategyBanner(
   basket: "perp" | "spot" | "all",
   benchmark?: DemoBenchmarkSnapshot,
 ): void {
-  const line1 = "🛡️  SliverVine Citadel Shield · [PILLAR SET Y: Pre-Consensus Firewall]";
+  const line1 = "🛡️  SliverVine ExoMesh · [Pillar Set Y Engine Substrate]";
   const line2 =
     basket === "perp"
       ? `Strategy Basket: ${PERP_STRATEGY_BASKET}`
@@ -92,7 +92,7 @@ export function printPillarSetYStrategyBanner(
 }
 
 export function printBanner(subtitle: string, benchmark?: DemoBenchmarkSnapshot): void {
-  const inner = `🛡️  SliverVine Citadel Shield · ${subtitle}`;
+  const inner = `🛡️  SliverVine ExoMesh · ${subtitle}`;
   console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
   console.log(`${CYAN}│${R}${BOLD}${padBanner(inner)}${R}${CYAN}│${R}`);
   console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
@@ -179,7 +179,7 @@ export function isCooldownError(message: string): boolean {
 }
 
 export function parseShieldTripReasons(message: string): string[] {
-  const prefix = "[Citadel Shield Trip] Execution blocked pre-broadcast: ";
+  const prefix = "[ExoMesh Trip] Execution blocked pre-broadcast: ";
   if (message.startsWith(prefix)) {
     return message.slice(prefix.length).split("; ").filter(Boolean);
   }

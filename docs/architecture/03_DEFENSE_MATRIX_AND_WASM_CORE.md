@@ -12,7 +12,7 @@
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
 
-Institutional-grade technical moat: Citadel Shield evaluates the **5-Core Venue Matrix** (GMX · Pendle · USD.ai · Variational · Hyperliquid) as a **single parallel vector** — not a sequential per-venue RPC loop. Pruned venues retain **RESERVED_ABI_V2** bitmask holes. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
+Institutional-grade technical moat: SliverVine ExoMesh evaluates the **5-Core Venue Matrix** (GMX · Pendle · USD.ai · Variational · Hyperliquid) as a **single parallel vector** — not a sequential per-venue RPC loop. Pruned venues retain **RESERVED_ABI_V2** bitmask holes. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
 
 ### Pure-Math Invariant Evaluation (~0.5µs–1.1µs)
 
@@ -167,7 +167,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 
 ### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku)
 
-Citadel Shield does **not** require HKG, SIN, NTP, or RPC clocks to agree. **Immunity** means: when any physical clock lies (leap second, NTP step, RPC `block.timestamp` regression, multi-PoP drift), the pre-consensus firewall produces **no negative intervals**, **no fake-fresh oracle ages**, and **no silent state rollback** — untrusted time states **fail-closed**.
+SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. **Immunity** means: when any physical clock lies (leap second, NTP step, RPC `block.timestamp` regression, multi-PoP drift), the pre-consensus firewall produces **no negative intervals**, **no fake-fresh oracle ages**, and **no silent state rollback** — untrusted time states **fail-closed**.
 
 | Layer | SSOT | Role |
 |-------|------|------|
@@ -344,7 +344,7 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 
 > **Sequencer Defense Plane A/B:** Plane A = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Plane B = Nitro Stylus `check_soil_resistance_stylus` + `SliverVineRiskOracle.sol` on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Plane A.
 
-> **Dual-Engine Soil Topology:** SliverVine Citadel Shield enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native `pkg/soil_core.wasm` execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
+> **Dual-Engine Soil Topology:** SliverVine ExoMesh enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native `pkg/soil_core.wasm` execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
 
 - Artifact: `pkg/soil_core.wasm` (`#![no_std]`) — **soil_core** + **clock_core** C-ABI exports
 - Budget: **&lt;28kb** Cloudflare · hot-path exec **&lt;60µs** · Shield p50 **~106µs** · clock_core **~1.5 KiB** additive

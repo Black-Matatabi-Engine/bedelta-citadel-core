@@ -67,7 +67,7 @@ export function printE2eSummaryHud(
   if (total === 5 && s5) {
     e2eLog(
       fmtSummaryRow(
-        "Step 5: Citadel Shield Exercise — R20 Unwind",
+        "Step 5: ExoMesh R20 Exercise — R20 Unwind",
         s5.ok && s5.withinBudget,
         "Channel Severed · 0-Gas Intercepted",
       ),

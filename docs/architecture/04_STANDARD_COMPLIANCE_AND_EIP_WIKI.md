@@ -1,6 +1,6 @@
 # Standard Compliance & ERC/EIP Wiki
 
-> **Product:** **SliverVine Citadel Shield** — Pre-Consensus Intent Firewall & Execution Safety Primitive  
+> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
 > **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **225 test files | 1052 PASS clean**  
 > **Architecture index:** [`README.md`](./README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) · **This file**
@@ -235,6 +235,16 @@ Agent wallets and modern injectors submit atomic batches via `wallet_sendCalls`,
 | **SSOT** | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) |
 | **Ingress** | `withRetailGuardProvider()` · method `wallet_sendCalls` |
 | **Verification** | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` **3/3 PASS** |
+
+### ERC-7540 — Asynchronous ERC-4626 Vault Token (Sanctuary Escort)
+
+Selector-level escort for async vault `requestDeposit`, `requestRedeem`, and `setOperator` — non-whitelisted operators fail-closed; Pending→Claimable slippage drift gate. Tagged **`[Sanctuary]`** (Module B).
+
+| Field | Sanctuary binding |
+|-------|-------------------|
+| **SSOT** | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) |
+| **Ingress** | `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` |
+| **Verification** | `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS** `[Sanctuary]` |
 
 ### EIP-6963 — Multi Injected Provider Discovery (Guarded Provider Announcement)
 
