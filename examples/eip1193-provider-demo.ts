@@ -40,6 +40,7 @@ import {
   printPayloadBox,
   printPreConsensusProofBox,
   rejectCode,
+  resolveDegradedSoftThresholdPct,
   resolveIntentPrincipalUsd,
   wrapGuarded,
 } from "./lib/eip1193-breakthrough-helpers";
@@ -47,12 +48,19 @@ import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 import { isDemoTripArgv, wrapDemoExecution, type DemoEnvironment } from "./lib/demo-harness";
 
 const RETAIL_GUARD_AGENT_ID = "retail-guard";
-const PHASE_RULE = "═".repeat(88);
+const SCENARIO_RULE = "═".repeat(88);
 
-function printPhaseHeader(phase: number, status: string, emoji: string, color: string): void {
-  console.log(`\n${PHASE_RULE}`);
-  console.log(`${color}${BOLD}Phase ${phase}: ${emoji} ${status}${R}`);
-  console.log(`${PHASE_RULE}\n`);
+const SCENARIO_LABELS = {
+  A: "🟢 ALLOW_PASSTHROUGH (Healthy Intent)",
+  B: "🟡 DEGRADED_WARN (High-Slippage Warning)",
+  C: "🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)",
+  D: "🔒 CHANNEL_SEVERED (Hot-Key Circuit Breaker)",
+} as const;
+
+function printScenarioHeader(id: keyof typeof SCENARIO_LABELS, color: string): void {
+  console.log(`\n${SCENARIO_RULE}`);
+  console.log(`${color}${BOLD}Scenario ${id}: ${SCENARIO_LABELS[id]}${R}`);
+  console.log(`${SCENARIO_RULE}\n`);
 }
 
 function buildGmxDepositTx() {
@@ -63,8 +71,8 @@ function buildGmxDepositTx() {
   };
 }
 
-async function runPhase1AllowPassthrough(): Promise<void> {
-  printPhaseHeader(1, "ALLOW_PASSTHROUGH", "🟢", GREEN);
+async function runScenarioA(): Promise<void> {
+  printScenarioHeader("A", GREEN);
   __resetRetailGuardStateForTests();
   const cfg = demoConfig();
   printMainnetAnchors();
@@ -86,14 +94,15 @@ async function runPhase1AllowPassthrough(): Promise<void> {
   console.log(`\n${GREEN}${BOLD}RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)${R}`);
 }
 
-async function runPhase2DegradedWarn(): Promise<void> {
-  printPhaseHeader(2, "DEGRADED_WARN", "🟡", YELLOW);
+async function runScenarioB(): Promise<void> {
+  printScenarioHeader("B", YELLOW);
   __resetRetailGuardStateForTests();
   const cfg = degradedDemoConfig();
+  const softPct = resolveDegradedSoftThresholdPct();
   printEip1193Ingress("eth_sendTransaction");
   const slipPct = crossVenueSlippagePct(cfg);
   console.log(
-    `${YELLOW}${BOLD}[DEGRADED_WARN]${R} High-Slippage Warning: cross-venue delta ${slipPct.toFixed(2)}% (monitor-only · non-blocking)`,
+    `${YELLOW}${BOLD}[DEGRADED WARN]${R} Slippage (${slipPct.toFixed(2)}%) exceeds soft threshold (${softPct.toFixed(2)}%) — Execution allowed with warning logged`,
   );
   const tx = buildGmxDepositTx();
   const wasmUs = measureWasmSoilUs(cfg);
@@ -107,8 +116,8 @@ async function runPhase2DegradedWarn(): Promise<void> {
   console.log(`\n${YELLOW}${BOLD}RESULT: 🟡 DEGRADED_WARN (High-Slippage Monitor · Passthrough Continues)${R}`);
 }
 
-async function runPhase3FailClosed(ctx: DemoEnvironment): Promise<string> {
-  printPhaseHeader(3, "FAIL_CLOSED_INTERCEPT", "🛑", RED);
+async function runScenarioC(ctx: DemoEnvironment): Promise<string> {
+  printScenarioHeader("C", RED);
   __resetRetailGuardStateForTests();
   const principalUsd = resolveIntentPrincipalUsd();
   const cfg = demoConfig();
@@ -172,10 +181,12 @@ async function runPhase3FailClosed(ctx: DemoEnvironment): Promise<string> {
     if (err instanceof RetailGuardRejectedError) thrown = err;
     else throw err;
   }
-  if (!thrown) throw new Error("PHASE3_EXPECTED_FAIL_CLOSED");
+  if (!thrown) throw new Error("SCENARIO_C_EXPECTED_FAIL_CLOSED");
 
   printPreConsensusProofBox(Math.min(wasmReflexUs, hrtimeElapsedUs(t0)), principalUsd);
-  console.log(`▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`);
+  console.log(
+    `▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`,
+  );
   printDuneTelemetry(RETAIL_GUARD_AGENT_ID, thrown.code, ctx.nowMs);
   console.log(
     `\n${RED}${BOLD}RESULT: 🛑 FAIL_CLOSED_INTERCEPT (${breakthroughMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
@@ -183,8 +194,8 @@ async function runPhase3FailClosed(ctx: DemoEnvironment): Promise<string> {
   return thrown.code;
 }
 
-async function runPhase4ChannelSevered(): Promise<string> {
-  printPhaseHeader(4, "CHANNEL_SEVERED", "🔒", RED);
+async function runScenarioD(): Promise<string> {
+  printScenarioHeader("D", RED);
   __resetRetailGuardStateForTests();
   const cfg = demoConfig({ maxAttempts: INTENT_MAX_ATTEMPTS_DEFAULT });
   printEip1193Ingress("eth_sendTransaction");
@@ -209,6 +220,9 @@ async function runPhase4ChannelSevered(): Promise<string> {
   }
   const attemptN = INTENT_MAX_ATTEMPTS_DEFAULT + 1;
   console.log(
+    `${RED}${BOLD}[CIRCUIT BREAKER]${R} R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (${breakthroughMetric("0-Gas")})`,
+  );
+  console.log(
     `${eipTag("CHANNEL SEVER")} ${attemptN}th Rapid Attack Attempt -> EIP-712 Signature Channel ${RED}${BOLD}SEVERED${R} (${rejectCode(severCode)})`,
   );
   console.log(`  ${eipTag("CHANNEL STATE")} isRetailGuardChannelSevered=${isRetailGuardChannelSevered()} · follow-up=${rejectCode(channelCode)}`);
@@ -219,15 +233,15 @@ async function runPhase4ChannelSevered(): Promise<string> {
 wrapDemoExecution(async (ctx) => {
   printBreakthroughBanner();
   if (isDemoTripArgv()) {
-    const tripCode = await runPhase3FailClosed(ctx);
-    const severCode = await runPhase4ChannelSevered();
+    const tripCode = await runScenarioC(ctx);
+    const severCode = await runScenarioD();
     return { tripped: true, reason: `${tripCode}|${severCode}` };
   }
-  await runPhase1AllowPassthrough();
-  await runPhase2DegradedWarn();
-  const tripCode = await runPhase3FailClosed(ctx);
-  const severCode = await runPhase4ChannelSevered();
+  await runScenarioA();
+  await runScenarioB();
+  const tripCode = await runScenarioC(ctx);
+  const severCode = await runScenarioD();
   console.log(
-    `\n${GREEN}${BOLD}RESULT: ✅ 4-PHASE EIP-1193 LIFECYCLE COMPLETE (ALLOW → DEGRADED → ${tripCode} → ${severCode})${R}`,
+    `\n${GREEN}${BOLD}RESULT: ✅ 4-SCENARIO EIP-1193 STATE MATRIX COMPLETE (A → B → C → D · ${tripCode} · ${severCode})${R}`,
   );
 });

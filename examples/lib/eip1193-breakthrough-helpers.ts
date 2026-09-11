@@ -49,7 +49,13 @@ export function resolveIntentPrincipalUsd(): number {
 }
 
 export function formatIntentUsd(usd: number): string {
-  return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${CAPITAL_DEFAULT_TOKEN}`;
+  return breakthroughMetric(
+    `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${CAPITAL_DEFAULT_TOKEN}`,
+  );
+}
+
+export function resolveDegradedSoftThresholdPct(cfg: RetailGuardConfig = demoConfig()): number {
+  return (cfg.soilQuote?.maxSlippage ?? 0.005) * 100;
 }
 
 export function crossVenueSlippagePct(cfg: RetailGuardConfig): number {
@@ -108,27 +114,27 @@ export function degradedDemoConfig(): RetailGuardConfig {
     soilQuote: {
       hlSpot: 3500,
       hlPerp: 3500,
-      dydxPerp: 3482.75,
+      dydxPerp: 3471.3,
       depthUsd: 500_000,
-      maxSlippage: 0.006,
+      maxSlippage: 0.009,
       minDepthUsd: 100_000,
     },
   });
 }
 
 function bannerLine(text: string, width: number): string {
-  const inner = ` ${text} `;
-  const pad = Math.max(0, width - inner.length);
-  return `${CYAN}│${R}${BOLD}${text.padEnd(width - 2)}${R}${CYAN}│${R}`;
+  return `${CYAN}│${R}${BOLD} ${text.padEnd(width - 2)}${R}${CYAN}│${R}`;
 }
+
+export const JUDGE_SAFE_CLOCK_LABEL =
+  "Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161" as const;
 
 export function printBreakthroughBanner(): void {
   const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
-  const t2 = "Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161";
-  const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, t2.length + 2);
+  const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, JUDGE_SAFE_CLOCK_LABEL.length + 2);
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
   console.log(bannerLine(t1, w));
-  console.log(bannerLine(t2, w));
+  console.log(bannerLine(JUDGE_SAFE_CLOCK_LABEL, w));
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
   console.log(`${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`);
 }
@@ -214,7 +220,7 @@ export function printPreConsensusProofBox(wasmUs: number, capitalUsd: number): v
   console.log(`${bar}\n${CYAN}│${R} ${RED}${BOLD}🚨 PRE-CONSENSUS BREAKTHROUGH PROOF${R}`);
   console.log(`${CYAN}│${R}  ▸ WASM REFLEX TIME : ${wasmCoreMetric(wasmUs)} (Sub-10ms Wasm Core Execution)`);
   console.log(`${CYAN}│${R}  ▸ GAS BURNED       : ${gas} (${bytes})`);
-  console.log(`${CYAN}│${R}  ▸ CAPITAL PROTECTED: ${formatIntentUsd(capitalUsd)} (lostUsd = $0.00 · 100% Principal Preserved)`);
+  console.log(`${CYAN}│${R}  ▸ CAPITAL PROTECTED: ${formatIntentUsd(capitalUsd)} (lostUsd = ${breakthroughMetric("$0.00")} · 100% Principal Preserved)`);
   console.log(`${CYAN}│${R}  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via ${eipTag("EIP-1193")} Middleware`);
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
 }

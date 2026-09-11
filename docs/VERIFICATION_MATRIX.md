@@ -30,6 +30,7 @@
 pnpm install
 # === Tier 0 — EIP-1193 Retail Guard SDK ===
 npx vitest run tests/sdk/retail-guard-provider.test.ts
+pnpm demo:eip1193                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
 
 # === Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
 pnpm demo:gmx -- --trip
@@ -50,6 +51,8 @@ pnpm test -- --run                       # Full Regression Suite (225 test files
 | Command | Proves |
 |---------|--------|
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard · **35/35 PASS** · 0-Gas pre-consensus intercept |
+| `pnpm demo:eip1193` | Scenario **A–D State Matrix** · full Arbitrum mainnet anchors · structured Dune telemetry · **`JUDGE_SAFE` deterministic clock** |
+| `pnpm demo:eip1193 -- --trip` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
 | `pnpm demo:gmx -- --trip` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
 | `pnpm demo:variational -- --trip` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
 | `pnpm demo:hl -- --trip` | **p50 ~15µs reflex core** · HL session-key FAIL_CLOSED |
@@ -69,6 +72,14 @@ pnpm test -- --run                       # Full Regression Suite (225 test files
 | `--trip` | Simulated toxic intent → **p50 ~15µs** Wasm `rootProtection()` deadlock · **0-Gas FAIL_CLOSED** |
 
 → Full tables: [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) · [`examples/lib/agent-venue-matrix.ts`](../examples/lib/agent-venue-matrix.ts)
+
+### CLI Demo Clock SSOT (`JUDGE_SAFE`)
+
+All `examples/*` CLI demos — including **`pnpm demo:eip1193`** — run under a fixed deterministic audit epoch for reproducible benchmark verification:
+
+`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`
+
+The banner is emitted by `examples/lib/eip1193-breakthrough-helpers.ts` (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via `examples/lib/demo-harness.ts` (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
 
 ---
 
