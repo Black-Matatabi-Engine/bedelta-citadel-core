@@ -17,8 +17,11 @@ export const E2E_PROTOCOL_TREASURY_RECEIVER_SHORT = PROTOCOL_TREASURY_RECEIVER_S
 export type E2eFinancialLedger = CapitalInvariantLedger;
 export type E2eCapitalInvariant = CapitalInvariantSnapshot;
 
-export function computeE2eFinancialLedger(ethPriceUsd = CAPITAL_DEFAULT_ETH_PRICE_USD): E2eFinancialLedger {
-  return computeCapitalInvariantLedger({ ethPriceUsd, grantNarrativeFallback: true });
+export function computeE2eFinancialLedger(
+  ethPriceUsd = CAPITAL_DEFAULT_ETH_PRICE_USD,
+  silent = false,
+): E2eFinancialLedger {
+  return computeCapitalInvariantLedger({ ethPriceUsd, grantNarrativeFallback: true, silent });
 }
 
 export function buildE2eCapitalInvariant(ethPriceUsd = CAPITAL_DEFAULT_ETH_PRICE_USD): E2eCapitalInvariant {

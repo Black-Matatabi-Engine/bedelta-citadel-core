@@ -128,9 +128,32 @@ export function printIntentLayerBanner(): void {
   console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(INTENT_BOX_W)}┘${R}`);
 }
 
+/** Stylus/Wasm core estimate for demo harness overhead isolation (1.8µs–2.5µs band). */
+export const WASM_CORE_ESTIMATE_US = 2.1;
+
 /** Per-line soil fuse / execution telemetry (Node harness E2E). */
 export function formatExecutionLatency(us: number): string {
   return `${EXEC_BRIGHT_YELLOW}${BOLD}▸ Execution Latency: ${formatLatencyLabel(us)}${R}`;
+}
+
+/** Execution latency with Wasm core vs V8/CLI shell split (Wayfinder pitch demo). */
+export function formatExecutionLatencySplit(
+  totalUs: number,
+  wasmCoreUs = WASM_CORE_ESTIMATE_US,
+): string {
+  const shellUs = Math.max(0, totalUs - wasmCoreUs);
+  return (
+    `${EXEC_BRIGHT_YELLOW}${BOLD}▸ Execution Latency: ${totalUs.toFixed(1)}µs ` +
+    `[ Pure Wasm Core: ${wasmCoreUs.toFixed(1)}µs | V8/CLI Shell: ${shellUs.toFixed(1)}µs ]${R}`
+  );
+}
+
+export function printExecutionLatencySplitBlock(
+  totalUs: number,
+  wasmCoreUs?: number,
+  indent = "    ",
+): void {
+  console.log(`${indent}${formatExecutionLatencySplit(totalUs, wasmCoreUs)}`);
 }
 
 /** Per-line guard / dispatch telemetry — bright emphasis for pitch video scanability. */

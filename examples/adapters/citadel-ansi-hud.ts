@@ -2,7 +2,7 @@
  * Shared Cyberpunk ANSI HUD for SliverVine Citadel agent adapters.
  */
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
-import { printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart, printExecutionLatencyBlock, printGuardTimeBlock, type DemoBenchmarkSnapshot } from "../lib/demo-timing";
+import { printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart, printExecutionLatencyBlock, printExecutionLatencySplitBlock, printGuardTimeBlock, type DemoBenchmarkSnapshot } from "../lib/demo-timing";
 import { captureSoilBenchmark } from "../lib/demo-benchmark";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
@@ -140,11 +140,17 @@ export function hudIntent(agentId: string, framework: string, intent: string, ve
   hudLine("INTENT", `intent: ${intent} | venue: ${venue}`, GRAY);
 }
 
-export function hudSoilFuse(pass: boolean, latencyUs: number, reasons: string[]): void {
+export function hudSoilFuse(
+  pass: boolean,
+  latencyUs: number,
+  reasons: string[],
+  opts?: { splitWasmCore?: boolean },
+): void {
   if (!pass) hudLine("ALERT", formatTripAlert(reasons), RED);
   const verdict = pass ? `${GREEN}PASS${R}` : `${RED}REJECT${R}`;
   hudLine("FUSE", `checkSoilResistance() -> ${verdict}`, pass ? GREEN : YELLOW);
-  printExecutionLatencyBlock(latencyUs, "    ");
+  if (opts?.splitWasmCore) printExecutionLatencySplitBlock(latencyUs);
+  else printExecutionLatencyBlock(latencyUs, "    ");
 }
 
 export function hudSevered(trigger: string): void {

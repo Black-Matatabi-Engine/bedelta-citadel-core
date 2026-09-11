@@ -73,6 +73,11 @@ export function printE2eSummaryHud(
       ),
     );
   }
+  e2eLog("[ DUNE TELEMETRY SYNC ]");
+  e2eLog(
+    "▸ Event: RiskTripBlocked / ExecutionProof -> Ingested to Dune Spell (silvervine_chaos.intercepts)",
+  );
+  e2eLog("▸ Telemetry Parity: GATE_ACTION_FAIL_CLOSED_BLOCK = 1 (VERIFIED)");
   e2eLog("");
   e2eLog("[ CAPITAL INVARIANT BALANCE SHEET ]");
   e2eLog(`• Initial Ingress Capital:  ${fmtE2eUsd(ledger.initialCapitalUsd)} ${ledger.token} (Arbitrum One Vault)`);

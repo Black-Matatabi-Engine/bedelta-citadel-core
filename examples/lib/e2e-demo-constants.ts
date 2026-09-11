@@ -27,7 +27,7 @@ export const GMX_BUILDER_FEE_BPS = GMX_UI_FEE_BPS;
 export const GMX_GM_ETH_LEG_SHARE = CAPITAL_GM_ETH_LEG_SHARE;
 export const E2E_LOST_USD_INVARIANT = "lostUsd ≡ $0.00";
 
-const LEDGER = computeE2eFinancialLedger(DEMO_ETH_MID);
+const LEDGER = computeE2eFinancialLedger(DEMO_ETH_MID, true);
 
 export const DEMO_VAULT_CAPITAL_USD = TOTAL_VAULT_CAPITAL_USD;
 export const GMX_ETH_LONG_EXPOSURE_USD = LEDGER.gmxEffectiveLongUsd;

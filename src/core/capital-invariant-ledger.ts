@@ -38,10 +38,19 @@ function fmtUsd2(n: number): string {
   return `$${n.toFixed(2)}`;
 }
 
+let capitalLedgerLogEmitted = false;
+
+/** Test-only reset for capital ledger startup log singleton. */
+export function __resetCapitalLedgerLogForTests(): void {
+  capitalLedgerLogEmitted = false;
+}
+
 function emitCapitalLedgerLog(
   params: CapitalLedgerParams,
   ledger: CapitalInvariantLedger,
 ): void {
+  if (capitalLedgerLogEmitted) return;
+  capitalLedgerLogEmitted = true;
   console.log(
     `[CAPITAL_LEDGER_CALC] initialized with params: ${JSON.stringify({
       totalVaultCapitalUsd: ledger.initialCapitalUsd,
