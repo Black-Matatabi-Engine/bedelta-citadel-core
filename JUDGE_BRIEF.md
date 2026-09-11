@@ -69,7 +69,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Vitest** | **225 test files | 1052 PASS clean** · `pnpm test -- --run` |
-| **C-End SDK** | `@slivervine/robinhood-agentic-retail-wallet-guard` · [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) · **35/35** retail guard tests |
+| **C-End SDK** | `@slivervine/eip1193-agentic-wallet-guard` · *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
 | **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
 ---
@@ -96,7 +96,7 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E Edge Shield
 
 **Retail Guard SDK (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
 
-### Dual-Track Verification (`@slivervine/robinhood-agentic-retail-wallet-guard`)
+### Dual-Track Verification (`@slivervine/eip1193-agentic-wallet-guard`)
 
 | Track | Command | Proves |
 |-------|---------|--------|
@@ -158,7 +158,7 @@ Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) �
 |----------|----------|
 | **Consume-once invariant** | `SliverVineGate.sol` — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
 | **Non-custodial gate** | No proxy · no ETH custody · live **42161** |
-| **Composable primitive** | `@slivervine/robinhood-agentic-retail-wallet-guard` · `withRetailGuardProvider()` · Retail Guard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) · [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **Composable primitive** | `@slivervine/eip1193-agentic-wallet-guard` · `withRetailGuardProvider()` · [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) · [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
 
 ---
 

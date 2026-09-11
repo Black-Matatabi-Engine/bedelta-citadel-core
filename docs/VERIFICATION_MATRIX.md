@@ -82,7 +82,9 @@ All `examples/*` CLI demos — including **`pnpm demo:eip1193`** — run under a
 
 The banner is emitted by `examples/lib/eip1193-breakthrough-helpers.ts` (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via `examples/lib/demo-harness.ts` (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
 
-### Dual-Track Verification Architecture (`@slivervine/robinhood-agentic-retail-wallet-guard`)
+### Dual-Track Verification Architecture (`@slivervine/eip1193-agentic-wallet-guard`)
+
+> **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
 Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — interactive demonstration plus exhaustive unit SSOT:
 

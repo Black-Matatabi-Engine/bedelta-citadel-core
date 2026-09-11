@@ -149,9 +149,9 @@ pnpm test -- --run
 | **1**    | **Judge Brief**               | Executive Protocol Summary → [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)                                                                                      |
 | **2**    | **Verification Matrix**       | Complete Command & Proof Index → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md)                                                        |
 | **3**    | **Buildathon Submission**     | Technical Specification & Patch Log → [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)                                       |
-| **4**    | **Retail Wallet Guard SDK**   | C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **4**    | **EIP-1193 Agentic Wallet Guard SDK**   | `@slivervine/eip1193-agentic-wallet-guard` · C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
 | **5**    | **Architecture Yellow Paper** | R01–R20 Defense Matrix & Yellow Paper → [`docs/architecture/README.md`](./docs/architecture/README.md)                                                 |
 | **6**    | **EIP Standards Wiki**        | EVM & AI Standard Alignment → [`docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./docs/architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) |
 
 
-**Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/robinhood-agentic-retail-wallet-guard`](./src/sdk/robinhood-agentic-retail-wallet-guard/README.md) (Apache-2.0) · **BUSL-1.1 Root License** → [LICENSE](./LICENSE)
+**Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/eip1193-agentic-wallet-guard`](./docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md) — *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* (Apache-2.0) · **BUSL-1.1 Root License** → [LICENSE](./LICENSE)

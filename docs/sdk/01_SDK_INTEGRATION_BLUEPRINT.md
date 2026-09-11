@@ -1,10 +1,11 @@
-# `@slivervine/robinhood-agentic-retail-wallet-guard` — Integration Blueprint
+# `@slivervine/eip1193-agentic-wallet-guard` — Integration Blueprint
 
-**Official Name:** Robinhood Agentic & Retail Wallet Guard SDK  
+**Official Name:** EIP-1193 Agentic Wallet Guard SDK  
+**Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
 **License:** Apache-2.0 · **Entity:** SilverVine Labs  
-**Package:** `@slivervine/robinhood-agentic-retail-wallet-guard`  
+**Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 **Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)  
-**Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for retail wallets and AI agent copilots
+**Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for Robinhood Chain, Omni-EVM AI agents, and retail wallets
 
 > **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json`
 
@@ -31,7 +32,8 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 └────────────────────────────┬────────────────────────────────────┘
                              ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ @slivervine/robinhood-agentic-retail-wallet-guard (Apache-2.0)  │
+│ @slivervine/eip1193-agentic-wallet-guard (Apache-2.0)           │
+│ Universal EIP-1193 Pre-Consensus Guard                          │
 │ ├─ withRetailGuardProvider / announceGuardedProvider (EIP-6963) │
 │ ├─ transport-stream.ts — RPC transport stream sync            │
 │ ├─ calldata-parser.ts — ERC20 · Permit2 · router u32 selectors  │
@@ -57,7 +59,7 @@ import {
   announceGuardedProvider,
   resolveInjectedEthereum,
   type RetailGuardConfig,
-} from "@slivervine/robinhood-agentic-retail-wallet-guard";
+} from "@slivervine/eip1193-agentic-wallet-guard";
 
 const config: RetailGuardConfig = {
   walletAddress: "0xYourWallet…",
@@ -98,7 +100,7 @@ await guarded.request({
 
 ```typescript
 announceGuardedProvider(window.ethereum, config, {
-  name: "Robinhood Agentic & Retail Wallet Guard",
+  name: "EIP-1193 Agentic Wallet Guard",
   rdns: "io.slivervine.agenticretailwalletguard",
 });
 ```
@@ -158,6 +160,8 @@ Source: [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-de
 ### EIP-1193 Terminal HUD Representation
 
 Representative `pnpm demo:eip1193` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
+
+**Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
 #### Scenario A — ALLOW_PASSTHROUGH (Healthy Intent)
 
@@ -275,4 +279,4 @@ pnpm demo:eip1193 -- --json                               # CLI structured outpu
 
 ---
 
-*SilverVine Labs · Robinhood Agentic & Retail Wallet Guard SDK · Apache-2.0*
+*SilverVine Labs · `@slivervine/eip1193-agentic-wallet-guard` · Apache-2.0*

@@ -12,14 +12,17 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — Retail Guard SDK** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 / EIP-6963 C-end middleware · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0 — Agentic Wallet Guard SDK** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/eip1193-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | Native protocol guards · FAIL_CLOSED proofs |
 | **Tier 2 — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
 | **Tier 3 — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle · bridge escort |
 
 ---
 
-## Tier 0 — EIP-1193 / EIP-6963 Retail Guard SDK
+## Tier 0 — EIP-1193 / EIP-6963 Agentic Wallet Guard SDK
+
+**Package:** `@slivervine/eip1193-agentic-wallet-guard`  
+**Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
 ### Dual-Track Verification
 
@@ -54,6 +57,8 @@ Independent scripted replays — **not** a sequential production lifecycle.
 ### EIP-1193 Terminal HUD Representation
 
 Representative `pnpm demo:eip1193` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
+
+**Package:** `@slivervine/eip1193-agentic-wallet-guard` · **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
 #### Scenario A — ALLOW_PASSTHROUGH (Healthy Intent)
 
