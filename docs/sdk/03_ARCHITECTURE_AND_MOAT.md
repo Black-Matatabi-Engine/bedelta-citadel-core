@@ -1,8 +1,8 @@
-# Architecture & Competitive Moat — Robinhood Agentic & Retail Wallet Guard SDK
+# Architecture & Competitive Moat — EIP-1193 Agentic Wallet Guard SDK
 
 > **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in `pkg/soil_core.wasm`  
-> **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard`  
-> **Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)
+> **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
+> **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)
 
 ---
 
@@ -64,12 +64,12 @@ import {
   withRetailGuardProvider,
   announceGuardedProvider,
   resolveInjectedEthereum,
-} from "@slivervine/robinhood-agentic-retail-wallet-guard";
+} from "@slivervine/eip1193-agentic-wallet-guard";
 
 const guarded = withRetailGuardProvider(window.ethereum, config);
 
 announceGuardedProvider(window.ethereum, config, {
-  name: "Robinhood Agentic & Retail Wallet Guard",
+  name: "EIP-1193 Agentic Wallet Guard",
   rdns: "io.slivervine.agenticretailwalletguard",
 });
 ```
@@ -78,7 +78,7 @@ announceGuardedProvider(window.ethereum, config, {
 
 ## RPC Transport Stream Sync
 
-[`transport-stream.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
+[`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
 
 ---
 

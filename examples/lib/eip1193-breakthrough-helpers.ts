@@ -12,7 +12,7 @@ import {
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
-} from "../../src/sdk/robinhood-agentic-retail-wallet-guard";
+} from "../../src/sdk/eip1193-agentic-wallet-guard";
 import { sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
 import { BOLD, CYAN, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import { formatLatencyLabel, measureProbe } from "./demo-timing";

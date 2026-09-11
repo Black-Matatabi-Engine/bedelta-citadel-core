@@ -4,7 +4,7 @@
 **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
 **License:** Apache-2.0 · **Entity:** SilverVine Labs  
 **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
-**Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)  
+**Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)  
 **Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for Robinhood Chain, Omni-EVM AI agents, and retail wallets
 
 > **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json`
@@ -144,7 +144,7 @@ Interactive Tier 0 entrypoint for judges and integrators — wraps the same prod
 | `pnpm demo:eip1193 -- --json` | JSON array: `{ scenario, status, wasmUs, code, plainTextWarning }` — no ANSI |
 | `pnpm demo:eip1193 -- --trip` | Scenario **C–D** shortcut (FAIL_CLOSED + channel severance) |
 
-**Alert SSOT:** Rejection strings originate from `formatRetailWarning()` in [`warnings.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/warnings.ts), surfaced on `RetailGuardRejectedError.plainTextWarning`. The demo **does not hardcode** production alert copy — it echoes the thrown error after `withRetailGuardProvider()` intercept.
+**Alert SSOT:** Rejection strings originate from `formatRetailWarning()` in [`warnings.ts`](../../src/sdk/eip1193-agentic-wallet-guard/warnings.ts), surfaced on `RetailGuardRejectedError.plainTextWarning`. The demo **does not hardcode** production alert copy — it echoes the thrown error after `withRetailGuardProvider()` intercept.
 
 **0-Gas pre-consensus:** Guarded methods (`eth_sendTransaction`, `eth_signTypedData_v4`) abort at the SDK layer on reject — **no calldata reaches the Sequencer**.
 

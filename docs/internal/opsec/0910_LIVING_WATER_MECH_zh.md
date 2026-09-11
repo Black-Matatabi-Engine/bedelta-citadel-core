@@ -1,7 +1,7 @@
 # SilverVine Transport Stream — 內部 OpSec 機制白皮書（Stealth v2）
 
 > **分類：** INTERNAL OPSEC ONLY · DO NOT PUBLISH NATIVELY  
-> **模組 SSOT：** `src/sdk/robinhood-agentic-retail-wallet-guard/transport-stream.ts`  
+> **模組 SSOT：** `src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts`  
 > **公開對外敘事：** 「EIP-1193 RPC transport stream synchronization」— 見 `docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`  
 > **歷史代號：** Living Water（已退役 — 禁止在公開 code / error / alert 中復用）
 

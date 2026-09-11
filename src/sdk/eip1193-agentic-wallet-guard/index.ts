@@ -1,6 +1,6 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
- * @module @slivervine/robinhood-agentic-retail-wallet-guard
+ * @module @slivervine/eip1193-agentic-wallet-guard
  */
 export {
   withRetailGuardProvider,

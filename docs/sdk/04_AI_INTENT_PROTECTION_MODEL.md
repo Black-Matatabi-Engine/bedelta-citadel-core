@@ -1,9 +1,9 @@
-# AI Agent Intent Protection — Robinhood Agentic & Retail Wallet Guard SDK
+# AI Agent Intent Protection — EIP-1193 Agentic Wallet Guard SDK
 
 > **License:** Apache-2.0 wrapper · proprietary reflex math compiled in `pkg/soil_core.wasm`  
-> **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard`
+> **Package:** `@slivervine/eip1193-agentic-wallet-guard`
 
-The Robinhood Agentic & Retail Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
+The EIP-1193 Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
 
 ## Threat Model — LLM / Agent Hallucination Classes
 

@@ -3,7 +3,7 @@ import {
   computeCrossChainExecutionDeltaBps,
   ERC7683_CODES,
   evaluateErc7683CrossChainIntentGuard,
-} from "../../src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard";
+} from "../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard";
 
 const VALID_ORDER = {
   originChainId: 42161,

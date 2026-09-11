@@ -7,10 +7,10 @@
       "ok": true,
       "wasmUsed": true,
       "deadmanOk": true,
-      "wasmHotPathUs": 2.37,
-      "wasmP50Us": 2.54,
+      "wasmHotPathUs": 2.4,
+      "wasmP50Us": 2.47,
       "wasmP50BandStatus": "FAST_LOCAL",
-      "nodeE2eRttUs": 2849.13
+      "nodeE2eRttUs": 4102.48
     },
     "2_robinhoodUnidirectionalEscort": {
       "ok": true,
@@ -25,7 +25,7 @@
       "underweightSide": "short",
       "uiFeeBps": 10,
       "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
-      "payloadRef": "sha256:68788a6305fa61bc"
+      "payloadRef": "sha256:1123144e7b561502"
     },
     "4_hlSessionKeyHedge": {
       "ok": true,
@@ -51,5 +51,5 @@
     "protocolTreasuryReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
     "deltaNetEth": "0.0000"
   },
-  "timestamp": "2026-09-11T02:48:41.191Z"
+  "timestamp": "2026-09-11T02:50:15.367Z"
 }

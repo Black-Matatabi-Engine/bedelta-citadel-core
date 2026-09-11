@@ -1,6 +1,7 @@
-# Robinhood Agentic & Retail Wallet Guard SDK
+# EIP-1193 Agentic Wallet Guard SDK
 
-> **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard`  
+> **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
+> **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
 > **License:** [Apache-2.0](./LICENSE)
 
 Apache-2.0 EIP-1193 middleware for pre-consensus retail and agentic wallet protection.
@@ -17,4 +18,5 @@ Apache-2.0 EIP-1193 middleware for pre-consensus retail and agentic wallet prote
 
 ```bash
 npx vitest run tests/sdk/   # 48/48 PASS
+pnpm demo:eip1193           # Scenario A–D State Matrix
 ```

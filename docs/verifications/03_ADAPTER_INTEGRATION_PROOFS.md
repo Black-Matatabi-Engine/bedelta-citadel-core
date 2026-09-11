@@ -29,9 +29,9 @@ Citadel ships a **universal wallet middleware** for any EIP-1193 host (dApp · w
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| Provider wrap | [`provider.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/provider.ts) | `withRetailGuardProvider()` — intercepts RPC before broadcast |
-| Calldata parse | [`calldata-parser.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/calldata-parser.ts) | Generic DEX selector parsing (Uniswap router = calldata guard, **not** pruned venue adapter) |
-| Guard engine | [`guard-engine.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/guard-engine.ts) | `checkSoilResistance()` + mandate evaluation |
+| Provider wrap | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` — intercepts RPC before broadcast |
+| Calldata parse | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) | Generic DEX selector parsing (Uniswap router = calldata guard, **not** pruned venue adapter) |
+| Guard engine | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) | `checkSoilResistance()` + mandate evaluation |
 
 ```bash
 npx vitest run tests/sdk/retail-guard-provider.test.ts   # 35/35 PASS

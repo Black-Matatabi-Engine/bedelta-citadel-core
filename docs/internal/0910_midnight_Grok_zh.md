@@ -109,7 +109,7 @@ Buildathon 提交前最後一道 OpSec 閘門：**是否將 `feat/nextgen-eips-m
 
 - **業界痛點**：Solver 利用跨鏈 Fill Transaction 時間差，對 AI Agent 進行隱性 MEV 夾擊與滑點吃掉。
 - **SilverVine 突破**：`withRetailGuardProvider()` 內置 Wasm 模擬目標鏈深度，sub-10ms 本地拒絕惡意承諾（0-Gas Rejection）。
-- **模組 SSOT**：`src/sdk/robinhood-agentic-retail-wallet-guard/erc7683-intent-guard.ts`
+- **模組 SSOT**：`src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts`
 - **驗證**：`npx vitest run tests/sdk/erc7683-intent-guard.test.ts` → **3/3 PASS**
 
 | 欄位 | 語義 |
@@ -122,7 +122,7 @@ Buildathon 提交前最後一道 OpSec 閘門：**是否將 `feat/nextgen-eips-m
 
 - **業界痛點**：AI Agent 被 Prompt-Injection 誘導用戶簽署惡意 `authorization` 指定，出讓整套 EOA 控制權。
 - **SilverVine 突破**：EIP-1193 攔截層對二進制 Bytecode Invariant 進行靜態分析，白名單過濾惡意 Implementation。
-- **模組 SSOT**：`src/sdk/robinhood-agentic-retail-wallet-guard/eip7702-auth-guard.ts`
+- **模組 SSOT**：`src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard.ts`
 - **驗證**：`npx vitest run tests/sdk/eip7702-auth-guard.test.ts` → **3/3 PASS**
 
 | Reject Code | 觸發條件 |

@@ -93,7 +93,7 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 | **Interactive CLI** | `pnpm demo:eip1193` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` (`warnings.ts`). |
 | **Unit Test Suite** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** — exhaustive coverage of all **7** SDK `RetailGuardReasonCode` variants: `VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`. |
 
-**Source:** [`examples/eip1193-provider-demo.ts`](../examples/eip1193-provider-demo.ts) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../src/sdk/robinhood-agentic-retail-wallet-guard/) · [`tests/sdk/retail-guard-provider.test.ts`](../tests/sdk/retail-guard-provider.test.ts)
+**Source:** [`examples/eip1193-provider-demo.ts`](../examples/eip1193-provider-demo.ts) · [`src/sdk/eip1193-agentic-wallet-guard/`](../src/sdk/eip1193-agentic-wallet-guard/) · [`tests/sdk/retail-guard-provider.test.ts`](../tests/sdk/retail-guard-provider.test.ts)
 
 ---
 

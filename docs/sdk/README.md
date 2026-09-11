@@ -1,7 +1,7 @@
-# Robinhood Agentic & Retail Wallet Guard SDK — Documentation Index
+# EIP-1193 Agentic Wallet Guard SDK — Documentation Index
 
-> **Package:** `@slivervine/robinhood-agentic-retail-wallet-guard` · **License:** Apache-2.0  
-> **Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)  
+> **Package:** `@slivervine/eip1193-agentic-wallet-guard` · **License:** Apache-2.0  
+> **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)  
 > **Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · `pnpm test -- --run`  
 > **SDK verification:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` → **35/35 PASS** (retail guard) · full SDK suite via `npx vitest run tests/sdk/`
 
@@ -29,4 +29,4 @@
 
 ---
 
-*SilverVine Labs · Robinhood Agentic & Retail Wallet Guard SDK*
+*SilverVine Labs · EIP-1193 Agentic Wallet Guard SDK*

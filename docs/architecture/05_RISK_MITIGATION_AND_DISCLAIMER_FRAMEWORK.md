@@ -807,4 +807,4 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | R01–R20 Defense Matrix · Wasm soil core |
 | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC/EIP alignment · ArbOS Elara compliance |
 | [`../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../architecture/02_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | Pillar Set X Compliance Ingress Firewall Audit |
-| [`../sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) | `@slivervine/robinhood-agentic-retail-wallet-guard` integration |
+| [`../sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) | `@slivervine/eip1193-agentic-wallet-guard` integration |
