@@ -1,19 +1,20 @@
-# CLI Zone Map (Tier 0–5 Verification)
+# CLI Zone Map (Tier 0–1 Verification + Ops Zones)
 
 > **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../VERIFICATION_MATRIX.md`](../VERIFICATION_MATRIX.md)
 
 ## Zone A — 30-Second Express Verification (Fast Track)
 
-### 4-Tier Demo Suite (CLI SSOT)
+### Verification Tiers (CLI SSOT)
 
-| Tier | Commands | Scope |
-|------|----------|-------|
-| **Tier 0 — Retail Guard SDK** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` |
+| Tier / Zone | Commands | Scope |
+|-------------|----------|-------|
+| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` · Scenario A–D |
+| **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` | **226 files / 1057 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
-| **Tier 2 — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia Stabilizer · **4-step Happy Path** (`--unwind` · `--trip` optional) |
-| **Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
+| **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
+| **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia Stabilizer · **4-step Happy Path** (`--unwind` · `--trip` optional) |
+| **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
 
@@ -23,7 +24,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (225 test files | 1052 PASS clean)
+pnpm test       # Full System Regression Suite (226 test files | 1057 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -46,7 +47,7 @@ pnpm test       # Full System Regression Suite (225 test files | 1052 PASS clean
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm test` | Full Vitest regression bar | **225 test files | 1052 PASS clean** |
+| `pnpm test` | Full Vitest regression bar | **226 test files | 1057 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 

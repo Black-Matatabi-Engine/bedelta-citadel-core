@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # DuneSQL 生產同步 — 即時遙測 Feed 與圖表（2026-09-02）
 
 > **中文參考譯本** · 英文 SSOT：[`20260902_dune_sql_production_sync.md`](./20260902_dune_sql_production_sync.md)  

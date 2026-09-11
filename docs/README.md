@@ -64,7 +64,7 @@ pnpm test                             # 225 test files | 1052 PASS clean
 | **Arbitrum grant scope** | [`grants/arbitrum/GRANT_PROPOSAL.md`](./grants/arbitrum/GRANT_PROPOSAL.md) | DAO proposal · milestone scope |
 | **GMX Builders** | [`grants/gmx/GMX_BUILDERS_PITCH.md`](./grants/gmx/GMX_BUILDERS_PITCH.md) | GMX v2 integration pitch · **10 bps uiFeeReceiver** |
 | **SDK package README** | [`./sdk/README.md`](./sdk/README.md) | In-repo SDK quick reference |
-| **Sidecar / B2B ops** | [`../docker/README.md`](../docker/README.md) | Telemetry sidecar · Docker Tier 5 |
+| **Sidecar / B2B ops** | [`../docker/README.md`](../docker/README.md) | Telemetry sidecar · Docker Ops Zone |
 
 ---
 

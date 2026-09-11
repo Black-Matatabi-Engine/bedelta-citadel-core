@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Grant 韌性基準審計
 
 > **中文參考譯本** · 英文 SSOT：[`20260814-230000-grant-resilience-benchmark-audit.md`](./20260814-230000-grant-resilience-benchmark-audit.md)  

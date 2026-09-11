@@ -4,7 +4,7 @@
 
 > **An Edge Wasm-powered, Pre-Consensus 0-Gas Security Firewall & Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware for Autonomous AI Agents and Retail Wallets on Arbitrum.**
 
-![Vitest](https://img.shields.io/badge/Vitest-1052%20PASS%20%28225%20files%29-brightgreen?logo=vitest)
+![Vitest](https://img.shields.io/badge/Vitest-1057%20PASS%20%28226%20files%29-brightgreen?logo=vitest)
 ![Zero-GC Ring Slab](https://img.shields.io/badge/Zero--GC_Ring_Slab-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -52,7 +52,7 @@
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
 - **Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK:** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` pre-consensus.
 - **Robinhood Chain (Core Module B · Pillar Set X Reference Escort Adapter):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:escort`.
-- **EIP-1193 Retail Guard SDK (Core Module A):** `@slivervine/eip1193-agentic-wallet-guard` — Defense Layers 1–4 · verify: `pnpm demo:eip1193`.
+- **EIP-1193 Retail Guard SDK (Core Module A):** `@slivervine/eip1193-agentic-wallet-guard` — Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) · verify: `pnpm demo:eip1193`.
 
 ---
 

@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Brand SSOT — SliverVine Protocol 拼寫修正（2026-09-02）
 
 > **中文參考譯本** · 英文 SSOT：[`20260902_brand_ssot_slivervine_spellfix.md`](./20260902_brand_ssot_slivervine_spellfix.md)  

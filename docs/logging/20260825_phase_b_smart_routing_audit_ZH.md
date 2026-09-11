@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Phase B — Payload Binding & Smart Routing Adapter
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

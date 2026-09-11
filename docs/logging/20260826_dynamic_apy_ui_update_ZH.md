@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Dynamic APY UI 更新日誌
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

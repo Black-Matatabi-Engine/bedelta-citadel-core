@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # fix_500ms_sever_circuit_breaker
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

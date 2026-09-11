@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Phase A — GMX Config Registry & ZeroDev Smart Routing
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

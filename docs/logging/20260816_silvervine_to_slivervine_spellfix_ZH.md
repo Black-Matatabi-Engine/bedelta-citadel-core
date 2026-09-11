@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine → SliverVine 協議拼寫糾正
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

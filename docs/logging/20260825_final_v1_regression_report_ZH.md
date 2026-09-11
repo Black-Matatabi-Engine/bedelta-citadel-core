@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # v1.0_push_SliverVine Protocol 最終回歸驗證報告
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

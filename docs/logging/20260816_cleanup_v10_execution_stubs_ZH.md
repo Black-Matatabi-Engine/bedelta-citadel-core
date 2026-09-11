@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # cleanup_v10_execution_stubs
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

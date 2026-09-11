@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # E2E Arbitrum Native GM Deposit Execution Log
 
 | Field | Value |

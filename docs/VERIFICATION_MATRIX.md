@@ -5,8 +5,8 @@
 **Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **225 test files | 1052 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
-> **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)  
+> **Vitest SSOT:** **226 test files | 1057 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**  
+> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)  
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
@@ -28,7 +28,7 @@
 
 ```bash
 pnpm install
-# === Tier 0 — EIP-1193 Retail Guard SDK ===
+# === Tier 0 — SDK/CLI Unit & Integration ===
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:eip1193                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
 
@@ -36,16 +36,16 @@ pnpm demo:eip1193                         # Scenario A–D State Matrix (JUDGE_S
 pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
-pnpm demo:perp-loop -- --trip            # Loop A: GMX / Pendle / HL / Variational
-pnpm demo:spot-loop -- --trip             # Loop B: USD.ai collateral lane
+pnpm demo:perp-loop -- --trip            # Zone A Loop A: GMX / Pendle / HL / Variational
+pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lane
 
-# === Pillar Set X — Liquidity & Ingress Infrastructure (SOVEREIGN VAULT POC) ===
+# === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
 pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 
-# === Tier 0 & Regression Verification ===
+# === Tier 1 — Full Protocol Regression ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # Full Regression Suite (225 test files | 1052 PASS clean)
+pnpm test -- --run                       # Full Regression Suite (226 test files | 1057 PASS clean)
 ```
 
 | Command | Proves |
@@ -63,7 +63,7 @@ pnpm test -- --run                       # Full Regression Suite (225 test files
 | `pnpm demo:e2e` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:e2e:arb-native` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
-| `pnpm run audit:security` | 3-Tier Security Matrix **5/0/0 PASS** |
+| `pnpm run audit:security` | 3-Axis Security Scorecard **5/0/0 PASS** |
 
 ### 5-Core Venue CLI Flags (SSOT)
 
@@ -168,7 +168,7 @@ Full harness specs · `[MAINNET_LIVE_EXECUTION_EVIDENCE]` → [`04_LIVE_FIRE_EVI
 
 | Zone | Scope | Document |
 |------|-------|----------|
-| **Zone A** | 30-second express · Tier 1–3 demo suite | [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) § Zone A |
+| **Zone A** | 30-second express · Tier 0–1 + Zone A/B demo suite | [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) § Zone A |
 | **Zone A.1** | Security audit · bundle gates | same § Zone A.1 |
 | **Zone B** | Hybrid Pillar Sets X & Y inside (GMX · Pendle · Dune) | same § Zone B |
 | **Zone C** | EIP-1193 Retail Guard · 5-core venue proofs · B2B decorator | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) |
@@ -193,7 +193,7 @@ Derivations → [`architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./architectu
 | [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (Shield-first) |
 | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
 | [`architecture/README.md`](./architecture/README.md) | Yellow Paper · R01–R20 |
-| [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) | Tier 0–3 demo suite (5-core + Retail Guard) |
+| [`DEMO_GUIDE.md`](./DEMO_GUIDE.md) | Tier 0–1 + Zone A/B demo suite (5-core + Retail Guard) |
 | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | 30-second Buildathon brief |
 
 ---

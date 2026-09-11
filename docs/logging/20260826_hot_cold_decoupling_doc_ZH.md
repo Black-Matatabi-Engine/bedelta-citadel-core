@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Hot/Cold Path 解耦架構文件建立日誌
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

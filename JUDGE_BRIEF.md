@@ -4,8 +4,8 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **225 test files | 1052 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Tier Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
-> **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)
+> **SSOT Lock:** **226 test files | 1057 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI)
 
 ---
 
@@ -34,26 +34,26 @@
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | Malicious `authorization` tuple can hijack EOA code before broadcast | [`eip7702-auth-guard.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard.ts) — trusted implementation / blocked-address matrix | `npx vitest run tests/sdk/eip7702-auth-guard.test.ts` **3/3 PASS** |
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | Intent delegations lack zero-gas expiry cancellation on soil trip | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) — `rootProtection()` (**p50 ~15µs**) + Permit2 deadline sink | `npx vitest run tests/services/api/erc7710-intent-expiry.test.ts` **2/2 PASS** |
 
-**Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · `pnpm test -- --run`
+**Vitest SSOT:** **226 test files | 1057 PASS clean (100%)** · `pnpm test -- --run`
 
 ---
 
-## 3-Layer Temporal Execution Stack
+## Temporal Execution Stack T1/T2/T3
 
-SilverVine occupies **Layer 3** — the only tier that operates at **microsecond** scale **before** broadcast ingress.
+SilverVine occupies **T3** — the only latency class that operates at **microsecond** scale **before** broadcast ingress.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Layer 1 — On-Chain Settlement & Finality                              │
+│ T1 — On-Chain Settlement & Finality                                     │
 │ Timescale: seconds → minutes (block inclusion · keeper settlement)      │
 └─────────────────────────────────────────────────────────────────────────┘
                                     ▲
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Layer 2 — Sequencer · Bundler · Mempool Ingress                       │
+│ T2 — Sequencer · Bundler · Mempool Ingress                              │
 └─────────────────────────────────────────────────────────────────────────┘
                                     ▲
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Layer 3 — SilverVine Pre-Broadcast Intent Firewall (Citadel Shield)   │
+│ T3 — SilverVine Pre-Broadcast Intent Firewall (Citadel Shield)          │
 │ Wasm reflex core: p50 ~15µs · E2E Edge Shield: p50 ~106µs              │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
@@ -68,7 +68,7 @@ SilverVine occupies **Layer 3** — the only tier that operates at **microsecond
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| **Vitest** | **225 test files | 1052 PASS clean** · `pnpm test -- --run` |
+| **Vitest** | **226 test files | 1057 PASS clean** · `pnpm test -- --run` |
 | **C-End SDK** | `@slivervine/eip1193-agentic-wallet-guard` · *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
 | **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) |
 
@@ -128,8 +128,8 @@ $$
 ## Judge Quickstart (60s Verification)
 
 ```bash
-pnpm test -- --run          # 225 test files | 1052 PASS clean
-pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
+pnpm test -- --run          # 226 test files | 1057 PASS clean
+pnpm run audit:security     # 3-Axis Security Scorecard: 5/0/0 PASS
 
 pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
@@ -142,11 +142,12 @@ pnpm demo:e2e
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — Retail Guard** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) C-end middleware · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) C-end middleware · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` | **226 files / 1057 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — Judge fast-track** | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
-| **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
-| **Tier 2 — Strategy loops** | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
-| **Tier 3 — E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle |
+| **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
+| **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
+| **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle |
 
 Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) · [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
@@ -154,7 +155,7 @@ Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) �
 
 | Module | Scope | Verify |
 |--------|-------|--------|
-| **Core Module A: EIP-1193 Retail Guard SDK** | Defense Layers 1–4 · Omni-EVM 0-Gas pre-consensus middleware | `pnpm demo:eip1193` · **35/35** retail guard tests |
+| **Core Module A: EIP-1193 Retail Guard SDK** | Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) | `pnpm demo:eip1193` · **35/35** retail guard tests |
 | **Core Module B: Compliance Ingress Escort Adapter** | Institutional Treasury Escort Router · Pillar Set X outbound escort | `pnpm demo:escort` · `treasury-escort-router.test.ts` |
 
 ### Robinhood Chain Hard Evidence — Core Module B (Pitch SSOT)

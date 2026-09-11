@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Pre-Consensus Chaos Sandbox Audit — 2026-09-11
 
 > **Vitest SSOT:** 225 test files | 1052 PASS clean (100% PASS)

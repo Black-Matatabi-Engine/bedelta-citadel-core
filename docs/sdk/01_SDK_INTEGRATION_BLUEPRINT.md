@@ -133,7 +133,7 @@ announceGuardedProvider(window.ethereum, config, {
 
 ## Defense Layers
 
-### Layer 1: Pre-Consensus Phishing & Approval Guard
+### Layer 1: Phishing/Approval Guard
 
 | Threat | Guard | Reason code |
 |--------|-------|-------------|
@@ -142,7 +142,7 @@ announceGuardedProvider(window.ethereum, config, {
 | EIP-712 `verifyingContract` drift | `evaluateRetailVenueAllowlist` | `VENUE_DRIFT_REJECTED` |
 | Honeypot slippage | `evaluateRetailSoilGate` | `SLIPPAGE_EXCEEDED` |
 
-### Layer 2: AI Agent Intent & Prompt Injection Shield
+### Layer 2: Agent Intent Inspector
 
 Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 

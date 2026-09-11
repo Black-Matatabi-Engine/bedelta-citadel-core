@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Performance & On-Chain Gate Audit — Arbitrum Buildathon V1.0
 
 > **中文參考譯本** · 英文 SSOT：[`20260817_performance_and_gate_audit.md`](./20260817_performance_and_gate_audit.md)  

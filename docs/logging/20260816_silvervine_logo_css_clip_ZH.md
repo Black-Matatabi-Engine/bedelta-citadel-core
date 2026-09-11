@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SilverVineLogo CSS 裁切與尺寸調整
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

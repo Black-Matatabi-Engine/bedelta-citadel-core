@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # add_cli_tests_p2_p3
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
