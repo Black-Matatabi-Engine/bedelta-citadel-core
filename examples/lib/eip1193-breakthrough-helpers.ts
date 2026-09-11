@@ -1,4 +1,4 @@
-/** Shared helpers for EIP-1193 / EIP-6963 breakthrough demo CLI. */
+/** Shared ANSI helpers for EIP-1193 / EIP-6963 breakthrough demo CLI. */
 import { keccak_256 } from "@noble/hashes/sha3";
 import { CAPITAL_DEFAULT_TOTAL_VAULT_USD } from "../../src/config/capital-invariant-defaults";
 import { INTENT_MAX_ATTEMPTS_DEFAULT } from "../../src/core/wasm-intent-ffi";
@@ -13,7 +13,7 @@ import {
   type RetailGuardConfig,
 } from "../../src/sdk/robinhood-agentic-retail-wallet-guard";
 import { computeEffectiveMaxSlUsd, sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
-import { BOLD, CYAN, GRAY, R } from "../adapters/citadel-ansi-hud";
+import { BOLD, CYAN, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import { formatLatencyLabel, measureProbe } from "./demo-timing";
 
 export const EIP1193_DEMO = {
@@ -27,6 +27,22 @@ export const EIP1193_DEMO = {
   arbChainId: 42161,
   boxW: 64,
 } as const;
+
+export function eipTag(label: string): string {
+  return `${CYAN}${BOLD}[${label}]${R}`;
+}
+
+export function breakthroughMetric(text: string): string {
+  return `${YELLOW}${BOLD}${text}${R}`;
+}
+
+export function rejectCode(code: string): string {
+  return `${RED}${BOLD}${code}${R}`;
+}
+
+export function wasmCoreMetric(us: number): string {
+  return breakthroughMetric(`⚡ ${formatLatencyLabel(us)} Pure Wasm Core`);
+}
 
 export function truncateAddr(addr: string): string {
   return `${addr.slice(0, 8)}...`;
@@ -70,11 +86,17 @@ export function printBreakthroughBanner(): void {
   const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
   const w = EIP1193_DEMO.boxW;
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}\n${CYAN}│${R}${BOLD} ${t1.padEnd(w - 1)}${R}${CYAN}│${R}\n${CYAN}└${"─".repeat(w)}┘${R}`);
-  console.log(`${GRAY}⚡ INDUSTRY'S FIRST EDGE-WASM PRE-CONSENSUS 0-GAS PROVIDER MIDDLEWARE${R}\n`);
+  console.log(
+    `${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`,
+  );
 }
 
 export function printEip6963Discovery(): void {
-  console.log(`[EIP-6963 DISCOVERY] Announcing Guarded Provider -> rdns: "${EIP1193_DEMO.rdns}"`);
+  console.log(`${eipTag("EIP-6963")} Provider Discovery -> rdns: "${EIP1193_DEMO.rdns}"`);
+}
+
+export function printEip1193Ingress(method: string): void {
+  console.log(`${eipTag("EIP-1193")} Ingress Intercept -> window.ethereum.request({ method: '${method}' })`);
 }
 
 export function wrapGuarded(base: EIP1193Provider, cfg: RetailGuardConfig): EIP1193Provider {
@@ -103,13 +125,70 @@ export function measureWasmSoilUs(cfg: RetailGuardConfig): number {
 
 export function printPayloadBox(chainId: number, wasmUs: number, clean: boolean): void {
   const w = EIP1193_DEMO.boxW;
+  const verdict = clean ? breakthroughMetric("CLEAN (0-Gas Allowed)") : rejectCode("TRIP");
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
   console.log(`${CYAN}│${R} PAYLOAD PARSER: ERC-20 Approve / GMX GM Deposit`);
-  console.log(`${CYAN}│${R} EIP-712 DOMAIN: ChainId: ${chainId} (Arbitrum One) | Verifier: Verified`);
   console.log(
-    `${CYAN}│${R} WASM REFLEX: p50 ${formatLatencyLabel(wasmUs)} Soil Check -> ${clean ? "CLEAN (0-Gas Allowed)" : "TRIP"}`,
+    `${CYAN}│${R} ${eipTag("EIP-712")} DOMAIN: ChainId: ${chainId} (Arbitrum One) | Verifier: ${GREEN}${BOLD}VERIFIED${R}`,
+  );
+  console.log(`${CYAN}│${R} WASM REFLEX: ${wasmCoreMetric(wasmUs)} Soil Check -> ${verdict}`);
+  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+}
+
+export function printLatencyBreakdown(totalUs: number, wasmUs: number): void {
+  const shellUs = Math.max(0, totalUs - wasmUs);
+  console.log(
+    `    Latency Breakdown: ${totalUs.toFixed(1)}µs [ ${breakthroughMetric(`WASM CORE: ${wasmUs.toFixed(1)}µs`)} | V8/CLI Shell: ${shellUs.toFixed(1)}µs ]`,
+  );
+}
+
+export function printChannelOpen(integrityPct: number): void {
+  console.log(
+    `  ${eipTag("CHANNEL")} ${eipTag("EIP-712")} Signature Channel: ${GREEN}${BOLD}OPEN${R} (Channel Integrity: ${integrityPct}%)`,
+  );
+}
+
+export function printForwardGate(addr: string): void {
+  console.log(
+    `  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Provider -> Dispatched to Sequencer RPC (${truncateAddr(addr)})`,
+  );
+}
+
+export function printDefenseMatrixHeader(): void {
+  console.log(`\n🔥 ${RED}${BOLD}[BREAKTHROUGH DEFENSE MATRIX TRIGGERED]${R}`);
+}
+
+export function printDefenseMatrixLine(
+  guard: string,
+  detail: string,
+  code: string | undefined,
+  branch: "├" | "└",
+): void {
+  const suffix = code ? ` (${rejectCode(code)})` : "";
+  console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix}`);
+}
+
+export function printPreConsensusProofBox(wasmUs: number): void {
+  const w = EIP1193_DEMO.boxW;
+  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
+  console.log(`${CYAN}│${R} ${RED}${BOLD}🚨 PRE-CONSENSUS BREAKTHROUGH PROOF${R}`);
+  console.log(`${CYAN}│${R}  ▸ WASM REFLEX TIME : ${wasmCoreMetric(wasmUs)} (Sub-10ms Wasm Core Execution)`);
+  console.log(
+    `${CYAN}│${R}  ▸ GAS BURNED       : ${breakthroughMetric("0.000000 ETH")} (${breakthroughMetric("0 Bytes Broadcasted to Sequencer")})`,
+  );
+  console.log(
+    `${CYAN}│${R}  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via ${eipTag("EIP-1193")} Middleware`,
   );
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+}
+
+export function printTripFooter(capitalUsd: number, evtHash: string): void {
+  console.log(
+    `▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: $${capitalUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+  );
+  console.log(
+    `${GRAY}[TELEMETRY]${R} Event: RiskTripBlocked(evtHash: ${evtHash.slice(0, 10)}...) -> ${CYAN}Dune Ingested${R} (silvervine_chaos.intercepts)`,
+  );
 }
 
 export async function probeChannelSever(cfg: RetailGuardConfig): Promise<number> {

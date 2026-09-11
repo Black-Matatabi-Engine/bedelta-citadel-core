@@ -14,22 +14,32 @@ import {
   SELECTOR_GMX_MULTICALL,
   UINT160_MAX,
 } from "../src/sdk/robinhood-agentic-retail-wallet-guard";
-import { BOLD, CYAN, GREEN, R, RED } from "./adapters/citadel-ansi-hud";
+import { BOLD, GREEN, R, RED } from "./adapters/citadel-ansi-hud";
 import {
+  breakthroughMetric,
   buildPhishingTypedData,
   demoConfig,
   deriveTripEvtHash,
+  eipTag,
   EIP1193_DEMO,
   measureWasmSoilUs,
   printBreakthroughBanner,
+  printChannelOpen,
+  printDefenseMatrixHeader,
+  printDefenseMatrixLine,
+  printEip1193Ingress,
   printEip6963Discovery,
+  printForwardGate,
+  printLatencyBreakdown,
   printPayloadBox,
+  printPreConsensusProofBox,
+  printTripFooter,
   probeChannelSever,
+  rejectCode,
   resolveCapitalProtectedUsd,
-  truncateAddr,
   wrapGuarded,
 } from "./lib/eip1193-breakthrough-helpers";
-import { formatLatencyLabel, hrtimeElapsedUs, hrtimeStart, printExecutionLatencySplitBlock } from "./lib/demo-timing";
+import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 import { isDemoTripArgv, wrapDemoExecution, type DemoEnvironment } from "./lib/demo-harness";
 
 async function runHealthy(): Promise<void> {
@@ -38,7 +48,7 @@ async function runHealthy(): Promise<void> {
   console.log(`${BOLD}MODE:${R} ${GREEN}NORMAL_INTENT${R}\n`);
   const cfg = demoConfig();
   printEip6963Discovery();
-  console.log(`[EIP-1193 INGRESS] window.ethereum.request({ method: 'eth_sendTransaction' })`);
+  printEip1193Ingress("eth_sendTransaction");
   const tx = { from: EIP1193_DEMO.wallet, to: EIP1193_DEMO.gmx, data: SELECTOR_GMX_MULTICALL + "0".repeat(128) };
   const parsed = parseTransactionCalldata(tx);
   const wasmUs = measureWasmSoilUs(cfg);
@@ -48,9 +58,9 @@ async function runHealthy(): Promise<void> {
   const guarded = wrapGuarded({ request: async () => "0xdeadbeef" }, cfg);
   const t0 = hrtimeStart();
   await guarded.request({ method: "eth_sendTransaction", params: [tx] });
-  printExecutionLatencySplitBlock(hrtimeElapsedUs(t0), wasmUs);
-  console.log(`[CHANNEL] EIP-712 Signature Channel: OPEN (Channel Integrity: ${soilClean ? 100 : 0}%)`);
-  console.log(`[FORWARD] EIP-1193 Provider -> Dispatched to Sequencer RPC Gate (${truncateAddr(EIP1193_DEMO.gmx)})`);
+  printLatencyBreakdown(hrtimeElapsedUs(t0), wasmUs);
+  printChannelOpen(soilClean ? 100 : 0);
+  printForwardGate(EIP1193_DEMO.gmx);
   console.log(`\n${GREEN}${BOLD}RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)${R}`);
 }
 
@@ -61,7 +71,7 @@ async function runRogue(ctx: DemoEnvironment): Promise<{ tripped: true; reason: 
   const cfg = demoConfig();
   const typedData = buildPhishingTypedData();
   printEip6963Discovery();
-  console.log(`[EIP-1193 INGRESS] window.ethereum.request({ method: 'eth_signTypedData_v4' })`);
+  printEip1193Ingress("eth_signTypedData_v4");
 
   const td = parseTypedDataPayload([EIP1193_DEMO.wallet, typedData]);
   const eip712 = evaluateRetailVenueAllowlist(td.verifyingContract ?? EIP1193_DEMO.malicious, cfg);
@@ -99,15 +109,29 @@ async function runRogue(ctx: DemoEnvironment): Promise<{ tripped: true; reason: 
   const severAttempt = await probeChannelSever(demoConfig({ maxAttempts: INTENT_MAX_ATTEMPTS_DEFAULT }));
   const wasmReflexUs = Math.min(measureWasmSoilUs(cfg), erc7683.evalLatencyUs);
 
-  console.log(`\n🚨 [BREAKTHROUGH DEFENSE MATRIX TRIGGERED]`);
-  if (eip712) console.log(`├── [EIP-712 GUARD] Phishing Attack Detected: verifyingContract Mismatch! (${eip712.code})`);
-  if (permit2) console.log(`├── [PERMIT2 GUARD] Blocked Infinite Approve for Untrusted Spender! (${permit2.code})`);
-  if (!erc7683.passed) {
-    console.log(
-      `├── [ERC-7683 GATE] Cross-Chain Intent Solver MEV Bps > Safety Threshold! (${erc7683.solverMevBps.toFixed(0)}bps · ${erc7683.code})`,
+  printDefenseMatrixHeader();
+  if (eip712) {
+    printDefenseMatrixLine(
+      "EIP-712 GUARD",
+      "Phishing Attack: VerifyingContract Mismatch!",
+      eip712.code,
+      "├",
     );
   }
-  console.log(`└── [CHANNEL SEVER] ${severAttempt}th Rapid Attack Attempt -> EIP-712 Channel SEVERED!`);
+  if (permit2) {
+    printDefenseMatrixLine("PERMIT2 GUARD", "Infinite Approve Blocked for Untrusted Spender!", permit2.code, "├");
+  }
+  if (!erc7683.passed) {
+    console.log(
+      `├── ${eipTag("ERC-7683 GATE")} Cross-Chain Solver MEV Bps (${breakthroughMetric(`${erc7683.solverMevBps.toFixed(0)}bps`)}) > Safety Limit! · ${rejectCode(erc7683.code ?? "FAIL")}`,
+    );
+  }
+  printDefenseMatrixLine(
+    "CHANNEL SEVER",
+    `${severAttempt}th Rapid Attack Attempt -> EIP-712 Channel SEVERED!`,
+    undefined,
+    "└",
+  );
 
   __resetRetailGuardStateForTests();
   const guarded = wrapGuarded({ request: async () => "0x0" }, cfg);
@@ -121,23 +145,12 @@ async function runRogue(ctx: DemoEnvironment): Promise<{ tripped: true; reason: 
   }
   if (!thrown) process.exit(1);
 
-  const w = EIP1193_DEMO.boxW;
-  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(`${CYAN}│${R} EIP-1193 EXCEPTION: Thrown RetailGuardRejectedError (RPC Code: 4001)`);
-  console.log(`${CYAN}│${R} PROVIDER ISOLATION: ABORTED AT BROWSER PROVIDER LAYER`);
-  console.log(`${CYAN}│${R} GAS BURNED: 0.000000 ETH (0 Bytes Broadcasted to Sequencer)`);
-  console.log(`${CYAN}│${R} WASM REFLEX TIME: ${formatLatencyLabel(Math.min(wasmReflexUs, hrtimeElapsedUs(t0)))} (Pure Wasm Core)`);
-  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
-
-  const capital = resolveCapitalProtectedUsd();
-  const evt = deriveTripEvtHash(ctx.nowMs, thrown.code);
+  printPreConsensusProofBox(Math.min(wasmReflexUs, hrtimeElapsedUs(t0)));
+  printTripSummary(resolveCapitalProtectedUsd());
+  printTelemetryIngest(deriveTripEvtHash(ctx.nowMs, thrown.code));
   console.log(
-    `▶ Gas Spent: 0.000000 ETH | Capital Protected: $${capital.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `\n${RED}${BOLD}RESULT: 🔴 EIP-1193 FAIL_CLOSED (${breakthroughMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
   );
-  console.log(
-    `[TELEMETRY] Event: RiskTripBlocked(evtHash: ${evt.slice(0, 10)}...) -> Ingested to Dune Spell (silvervine_chaos.intercepts)`,
-  );
-  console.log(`\n${RED}${BOLD}RESULT: 🔴 EIP-1193 FAIL_CLOSED (0-Gas Intercepted BEFORE RPC Dispatch)${R}`);
   return { tripped: true, reason: thrown.code };
 }
 
