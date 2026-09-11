@@ -129,6 +129,13 @@ function bannerLine(text: string, width: number): string {
 export const JUDGE_SAFE_CLOCK_LABEL =
   "Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161" as const;
 
+export const EIP1193_ARCHITECTURE_NOTE =
+  "[ARCHITECTURE NOTE] 4 scenarios (A–D) are independent scripted replays; intercept logic & plainTextWarning match production SDK." as const;
+
+export function printProductionPlainTextWarning(warning: string): void {
+  console.log(`${eipTag("PRODUCTION ALERT")} ${warning}`);
+}
+
 export function printBreakthroughBanner(): void {
   const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
   const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, JUDGE_SAFE_CLOCK_LABEL.length + 2);
@@ -136,6 +143,7 @@ export function printBreakthroughBanner(): void {
   console.log(bannerLine(t1, w));
   console.log(bannerLine(JUDGE_SAFE_CLOCK_LABEL, w));
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+  console.log(`${GRAY}${EIP1193_ARCHITECTURE_NOTE}${R}`);
   console.log(`${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`);
 }
 

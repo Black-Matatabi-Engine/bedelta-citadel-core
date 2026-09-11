@@ -39,6 +39,7 @@ import {
   printMainnetAnchors,
   printPayloadBox,
   printPreConsensusProofBox,
+  printProductionPlainTextWarning,
   rejectCode,
   resolveDegradedSoftThresholdPct,
   resolveIntentPrincipalUsd,
@@ -102,7 +103,7 @@ async function runScenarioB(): Promise<void> {
   printEip1193Ingress("eth_sendTransaction");
   const slipPct = crossVenueSlippagePct(cfg);
   console.log(
-    `${YELLOW}${BOLD}[DEGRADED WARN]${R} Slippage (${slipPct.toFixed(2)}%) exceeds soft threshold (${softPct.toFixed(2)}%) — Execution allowed with warning logged`,
+    `${YELLOW}${BOLD}[DEMO MONITOR PREVIEW] [DEGRADED WARN]${R} Slippage (${slipPct.toFixed(2)}%) exceeds soft threshold (${softPct.toFixed(2)}%) — Execution allowed with warning logged`,
   );
   const tx = buildGmxDepositTx();
   const wasmUs = measureWasmSoilUs(cfg);
@@ -183,6 +184,7 @@ async function runScenarioC(ctx: DemoEnvironment): Promise<string> {
   }
   if (!thrown) throw new Error("SCENARIO_C_EXPECTED_FAIL_CLOSED");
 
+  printProductionPlainTextWarning(thrown.plainTextWarning);
   printPreConsensusProofBox(Math.min(wasmReflexUs, hrtimeElapsedUs(t0)), principalUsd);
   console.log(
     `▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`,
@@ -204,21 +206,29 @@ async function runScenarioD(): Promise<string> {
   for (let i = 0; i < INTENT_MAX_ATTEMPTS_DEFAULT; i++) {
     await guarded.request({ method: "eth_sendTransaction", params });
   }
-  let severCode = "MAX_ATTEMPTS_EXCEEDED_SEVERED";
+  let severErr: RetailGuardRejectedError | null = null;
   try {
     await guarded.request({ method: "eth_sendTransaction", params });
   } catch (err) {
-    if (err instanceof RetailGuardRejectedError) severCode = err.code;
+    if (err instanceof RetailGuardRejectedError) severErr = err;
     else throw err;
   }
-  let channelCode = severCode;
+  if (!severErr) throw new Error("SCENARIO_D_EXPECTED_SEVER_REJECT");
+  let channelErr: RetailGuardRejectedError | null = null;
   try {
     await guarded.request({ method: "eth_sendTransaction", params });
   } catch (err) {
-    if (err instanceof RetailGuardRejectedError) channelCode = err.code;
+    if (err instanceof RetailGuardRejectedError) channelErr = err;
     else throw err;
+  }
+  if (!channelErr) throw new Error("SCENARIO_D_EXPECTED_CHANNEL_REJECT");
+  printProductionPlainTextWarning(severErr.plainTextWarning);
+  if (channelErr.plainTextWarning !== severErr.plainTextWarning) {
+    printProductionPlainTextWarning(channelErr.plainTextWarning);
   }
   const attemptN = INTENT_MAX_ATTEMPTS_DEFAULT + 1;
+  const severCode = severErr.code;
+  const channelCode = channelErr.code;
   console.log(
     `${RED}${BOLD}[CIRCUIT BREAKER]${R} R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (${breakthroughMetric("0-Gas")})`,
   );
@@ -239,9 +249,9 @@ wrapDemoExecution(async (ctx) => {
   }
   await runScenarioA();
   await runScenarioB();
-  const tripCode = await runScenarioC(ctx);
-  const severCode = await runScenarioD();
+  await runScenarioC(ctx);
+  await runScenarioD();
   console.log(
-    `\n${GREEN}${BOLD}RESULT: ✅ 4-SCENARIO EIP-1193 STATE MATRIX COMPLETE (A → B → C → D · ${tripCode} · ${severCode})${R}`,
+    `\n${GREEN}${BOLD}RESULT: ✅ EIP-1193 STATE MATRIX COMPLETE — 4 independent scripted scenarios (A·B·C·D) · Isolated replays${R}`,
   );
 });
