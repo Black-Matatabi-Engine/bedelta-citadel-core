@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Implement V1.0 Agent-Gate Fail-Closed Demo Scenario (08:00 Trip)
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

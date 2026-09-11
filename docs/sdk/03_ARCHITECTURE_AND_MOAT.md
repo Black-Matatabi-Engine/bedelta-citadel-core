@@ -34,9 +34,9 @@
 
 ---
 
-## Three Core Defense Layers
+## Defense Layers (1–4)
 
-### Layer 1: Pre-Consensus Phishing & Approval Guard
+### Layer 1: Phishing/Approval Guard
 
 **Surfaces:** `eth_sendTransaction` · `eth_signTypedData_v4` · Permit2 calldata (`0x2a0886f7`, `0x87517c45`)
 
@@ -47,7 +47,7 @@
 | EIP-712 Permit phishing (`verifyingContract` drift) | `evaluateRetailVenueAllowlist` | `contractVenueIndex` |
 | Untrusted `message.spender` in typed data | Spender cross-check | `UNAUTHORIZED_SPENDER_REJECTED` |
 
-### Layer 2: AI Agent Intent & Prompt Injection Shield
+### Layer 2: Agent Intent Inspector
 
 See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 
@@ -74,9 +74,7 @@ announceGuardedProvider(window.ethereum, config, {
 });
 ```
 
----
-
-## RPC Transport Stream Sync
+### Layer 4: RPC Transport Stream Sync
 
 [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
 

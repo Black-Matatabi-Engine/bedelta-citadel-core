@@ -30,7 +30,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Full Vitest bar | `docker run --rm slivervine-citadel pnpm test` → **225 test files | 1052 PASS clean (100%)** |
 | Isolation | No host Node 22 / pnpm / WSL required |
 
-Sidecar telemetry (Tier 5) remains [`Dockerfile.sidecar`](./Dockerfile.sidecar) below.
+Sidecar telemetry (Ops Zone) remains [`Dockerfile.sidecar`](./Dockerfile.sidecar) below.
 
 ---
 

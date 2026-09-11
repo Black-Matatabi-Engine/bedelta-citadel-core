@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # TECHNICAL_SPECIFICATION ZeroDev v4 章節更新日誌
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

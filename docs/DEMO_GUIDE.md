@@ -1,21 +1,22 @@
 # SliverVine Protocol (BeΔ) — Citadel CLI Demo Guide
 
 > **Buildathon Primary (The Shield):** `pnpm demo:eip1193` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`  
-> **Latency hierarchy:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).  
+> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E Edge Shield (Worker + TS Gateway + Wasm FFI).  
 > **Venue SSOT:** **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Hyperliquid · Variational.  
-> **Vitest SSOT:** **225 test files | 1052 PASS clean** on `pnpm test -- --run`.  
+> **Vitest SSOT:** **226 test files | 1057 PASS clean** on `pnpm test -- --run`.  
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
 ---
 
-## 4-Tier Demo Suite (CLI SSOT)
+## Verification Tiers (CLI SSOT)
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — Agentic Wallet Guard SDK** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/eip1193-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/eip1193-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` | **226 files / 1057 PASS** · 0 TS errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | Native protocol guards · FAIL_CLOSED proofs |
-| **Tier 2 — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
-| **Tier 3 — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle · bridge escort |
+| **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
+| **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle · bridge escort |
 
 ---
 
@@ -181,7 +182,7 @@ pnpm demo:hl -- --trip
 
 ---
 
-## Tier 2 — Strategy Loop Guards (Loop A / Loop B)
+## Zone A — Strategy Loop Guards (Loop A / Loop B)
 
 ```bash
 pnpm demo:perp-loop                              # Loop A: GMX / Pendle / HL / Variational
@@ -252,7 +253,7 @@ pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
 
 ---
 
-## Tier 3 — Sandbox & E2E
+## Zone B — Sandbox & E2E
 
 ```bash
 pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard

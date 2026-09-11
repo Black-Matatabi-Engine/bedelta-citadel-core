@@ -194,11 +194,11 @@ Demo **不硬編碼** alert 文案；所有 Scenario C/D 的 `[PRODUCTION ALERT]
 
 ---
 
-## Q4. Chaos Testing 點做？— 三層執行方法論（Auditor / Judge 指南）
+## Q4. Chaos Testing 點做？— Chaos Level C1–C3 執行方法論（Auditor / Judge 指南）
 
-SilverVine Protocol 的 Chaos Testing **不是** 單一腳本；而是 **三層 In-Process 方法論**，可由評審在本地 60 秒內重現：
+SilverVine Protocol 的 Chaos Testing **不是** 單一腳本；而是 **Chaos Level C1–C3 In-Process 方法論**（與 Verification Tier 0/1 命名空間隔離），可由評審在本地 60 秒內重現：
 
-### Tier 1 — Synthetic Slippage & Trap Host Injection
+### Chaos Level C1 — Trap Hosts & Synthetic Slippage Traps
 
 **目標：** 驗證未認證 RPC scraper / 惡意 frontend 無法取得 production venue 狀態。
 
@@ -210,7 +210,7 @@ SilverVine Protocol 的 Chaos Testing **不是** 單一腳本；而是 **三層 
 
 **模組 SSOT：** `src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts` · `src/services/defense/rpc-whitelist.ts`
 
-### Tier 2 — Rapid Attack & Rate Limit Injection (`INTENT_RING_U32`)
+### Chaos Level C2 — `INTENT_RING_U32` Rapid Attempt Severing (4th-Strike)
 
 **目標：** 模擬 AI Agent prompt-injection / infinite retry loop · 驗證 hot-key 簽名管線物理熔斷。
 
@@ -223,7 +223,7 @@ SilverVine Protocol 的 Chaos Testing **不是** 單一腳本；而是 **三層 
 
 **模組 SSOT：** `guard-engine.ts` · `INTENT_RING_U32` · `tests/core/intent-drift.test.ts` · `tests/sdk/retail-guard-provider.test.ts`
 
-### Tier 3 — Oracle Lag & De-peg Fault Injection
+### Chaos Level C3 — Oracle Lag / De-peg Emergency Fuses
 
 **目標：** 人工注入 stale timestamp / peg drift · 驗證 `checkSoilResistance()` 在 mempool broadcast **之前** 0-Gas reject。
 
@@ -238,10 +238,10 @@ SilverVine Protocol 的 Chaos Testing **不是** 單一腳本；而是 **三層 
 
 ```bash
 # 評審 60 秒 Chaos 快驗（三層各一條）
-npx vitest run tests/defense/rpc-whitelist.test.ts          # Tier 1
-npx vitest run tests/sdk/retail-guard-provider.test.ts      # Tier 2 (35/35)
-pnpm demo:usdai -- --trip                                    # Tier 3 de-peg
-pnpm demo:eip1193 -- --json                                  # Tier 2+3 敘事 JSON
+npx vitest run tests/defense/rpc-whitelist.test.ts          # Chaos Level C1
+npx vitest run tests/sdk/retail-guard-provider.test.ts      # Chaos Level C2 (35/35)
+pnpm demo:usdai -- --trip                                    # Chaos Level C3 de-peg
+pnpm demo:eip1193 -- --json                                  # C2+C3 敘事 JSON
 ```
 
 ---
@@ -311,7 +311,7 @@ pnpm demo:eip1193 -- --json                                  # Tier 2+3 敘事 J
 
 | 維度 | 加權 | 讀法 |
 |------|------|------|
-| **SC** | **9.40** | treasury-escort SSOT · Mini-Chaos Tier 1–3 fail-closed 不變量 |
+| **SC** | **9.40** | treasury-escort SSOT · Mini-Chaos Chaos Level C1–C3 fail-closed 不變量 |
 | **PMF** | **9.18** | Core Module A/B · Robinhood 46630/4663 硬證據 · live fill 仍封頂 |
 | **Inno** | **9.57** | EIP-1193 State Matrix · Wasm <1.8µs · 7 大 EIP moat 延續 |
 | **RPS** | **9.30** | 1057/1057 PASS · demo JSON 100% 可重現 · 0 flaky |
@@ -321,8 +321,8 @@ pnpm demo:eip1193 -- --json                                  # Tier 2+3 敘事 J
 
 ## 4. Core Module × Mini-Chaos 交叉矩陣
 
-| Module / Venue | Tier 1 Honeypot | Tier 2 INTENT_RING | Tier 3 Oracle/De-peg | 本卷判定 |
-|----------------|-----------------|--------------------|-----------------------|----------|
+| Module / Venue | C1 Honeypot | C2 INTENT_RING | C3 Oracle/De-peg | 本卷判定 |
+|----------------|-------------|----------------|-------------------|----------|
 | **Core Module A (EIP-1193 SDK)** | transport sync gate | **35/35** sever tests | soil lane in Scenario C | ✅ **Production SSOT** |
 | **Core Module B (Treasury Escort)** | N/A (bridge layer) | escort timeout fail-closed | inbound AML block | ✅ `treasury-escort-router.ts` |
 | **GMX v2** | trap RPC decoy | demo `--trip` | OI skew / impact | ✅ p50 ~15µs reflex |
@@ -362,9 +362,9 @@ pnpm demo:eip1193 -- --json                                  # Tier 2+3 敘事 J
 
 ```text
 [Attacker]                    [SilverVine 0911 Defense]
- LLM retry loop        →      INTENT_RING_U32 sever (Tier 2)
+ LLM retry loop        →      INTENT_RING_U32 sever (Chaos Level C2)
  Phishing EIP-712      →      VENUE_DRIFT + plainTextWarning (Tier 0)
- RPC scraper           →      Honeypot 99% slippage (Tier 1)
+ RPC scraper           →      Honeypot 99% slippage (Chaos Level C1)
  Inbound RH AML        →      assertUnidirectionalBridge BLOCK
  K8s partition         →      NOT RUN — disclose honestly (BH-7)
 ```

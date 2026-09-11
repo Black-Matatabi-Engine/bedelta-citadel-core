@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Weekend Void & Daily UTC Closure — 程式碼審計報告
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

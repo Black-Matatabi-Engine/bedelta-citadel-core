@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # ZeroDev Smart Routing 深度解析文件建立日誌
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

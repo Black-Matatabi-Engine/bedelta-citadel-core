@@ -342,7 +342,7 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 
 > **Full Wasm / latency specification:** [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md#wasm-soil-core-engine-no_std).
 
-> **Dual-Layer Sequencer Defense:** Layer 1 = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Layer 2 = Nitro Stylus `check_soil_resistance_stylus` + `SliverVineRiskOracle.sol` on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Layer 1.
+> **Sequencer Defense Plane A/B:** Plane A = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Plane B = Nitro Stylus `check_soil_resistance_stylus` + `SliverVineRiskOracle.sol` on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Plane A.
 
 > **Dual-Engine Soil Topology:** SliverVine Citadel Shield enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native `pkg/soil_core.wasm` execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
 

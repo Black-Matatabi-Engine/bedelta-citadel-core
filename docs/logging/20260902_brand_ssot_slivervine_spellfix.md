@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Brand SSOT — SliverVine Protocol Spell-Fix (2026-09-02)
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # UI Audit — SliverVine Citadel Shield Dashboard Assembly (4/4)
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Grant Audit Cohort 1 Matrix
 
 > **中文參考譯本** · 英文 SSOT：[`20260814-GRANT-AUDIT-COHORT1-MATRIX.md`](./20260814-GRANT-AUDIT-COHORT1-MATRIX.md)  
