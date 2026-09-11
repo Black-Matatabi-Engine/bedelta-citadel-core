@@ -8,7 +8,7 @@ import { formatE2eSoilTripReasons } from "./e2e-hud-step-theme";
 export function runE2eStep1TripIntercept(demoNowMs: number): void {
   logE2eStep(1, "Citadel Pre-Execution Gatehouse & Sub-ms Wasm Shield", [
     "[Pillar Set Y: Pre-Consensus Firewall] checkSoilResistance() — simulated tsunami / slippage anomaly injected",
-    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA Session Keys",
+    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA · ERC-7715 Session Mandates / EIP-7702 Code Auth",
   ]);
   e2eLog(`Vault Capital: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN} | Asset Pair: ETH/USDC`);
   ensureSoilWasm();

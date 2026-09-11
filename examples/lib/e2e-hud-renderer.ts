@@ -33,9 +33,9 @@ export {
 } from "./e2e-hud-header";
 export { printE2eSummaryHud } from "./e2e-hud-summary";
 
-const ROBINHOOD_CHAIN_LABEL = `ROBINHOOD (Chain ${ROBINHOOD_TESTNET_CHAIN_ID})`;
+const ROBINHOOD_CHAIN_LABEL = `ROBINHOOD Chain (Chain ${ROBINHOOD_TESTNET_CHAIN_ID})`;
 const ARBITRUM_CHAIN_LABEL = `ARBITRUM ONE (Chain ${ARBITRUM_ONE_CHAIN_ID})`;
-const STEP2_OUTBOUND_ARROW = "═══( Across Fast Intent )═══►";
+const STEP2_OUTBOUND_ARROW = "===( Across Fast Intent )===>";
 const STEP2_INBOUND_ARROW = "───( Reversal Blocked )───x";
 
 function highlight(line: string): string {

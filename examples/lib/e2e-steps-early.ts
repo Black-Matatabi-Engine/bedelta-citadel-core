@@ -54,7 +54,7 @@ import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
   logE2eStep(1, "Citadel Pre-Execution Gatehouse & Sub-ms Wasm Shield", [
     "[Pillar Set Y: Pre-Consensus Firewall] checkSoilResistance() sub-ms Wasm Intent Clearing",
-    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA Session Keys",
+    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA · ERC-7715 Session Mandates / EIP-7702 Code Auth",
   ]);
   e2eLog(`Vault Capital: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN} | Asset Pair: ETH/USDC`);
   ensureSoilWasm();
@@ -106,7 +106,9 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
   });
   const nodeE2eRttUs = hrtimeElapsedUs(nodeT0);
   const soilClear = !core.output.tripped && verdict.soilOk;
-  e2eLog("[ AA SESSION KEY ]   Kernel v3 Scopes: EIP-712 Intent Signed  │  Paymaster: 0-Gas Sponsored  [ ACTIVE ]");
+  e2eLog(
+    "[ AA SESSION KEY ]   ZeroDev Kernel v3 · ERC-7715 Session Mandate  │  Paymaster: 0-Gas Sponsored (ERC-7710 Expiry Sinker)  [ ACTIVE ]",
+  );
   e2eLog(
     `[ WASM SOIL CORE ]   Hot-Path: ${wasmHotPathUs.toFixed(1)}µs (<${WASM_EXEC_BUDGET_US}µs ${wasmBudgetPass ? "PASS" : "FAIL"})  │  p50: ${wasmP50Us.toFixed(1)}µs  │  Soil Status: ${soilClear ? "CLEAR" : "TRIP"}      [ ${soilClear && wasmBudgetPass ? "PASSED" : "FAILED"} ]`,
   );
@@ -116,7 +118,10 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
   if (!verdict.allowedToSign || !verdict.deadmanOk) {
     throw new Error(`STEP1_BLOCKED: ${verdict.reasons.join(",")}`);
   }
-  e2eLog("RESULT: 🟢 Step 1 Pre-Execution PASS — ZeroDev 0-Gas Verified · Sub-ms Wasm Clear · Soil OK · " + E2E_LOST_USD_INVARIANT);
+  e2eLog(
+    "RESULT: 🟢 Step 1 Pre-Execution PASS — ZeroDev 0-Gas Sponsored (ERC-7710 Expiry Sinker) · Sub-ms Wasm Clear · Soil OK · " +
+      E2E_LOST_USD_INVARIANT,
+  );
   return {
     ok: true,
     wasmUsed: verdict.wasmUsed,
@@ -128,7 +133,11 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
 }
 
 export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
-  logE2eStep(2, "Unidirectional Compliance Escort — AML Inbound Firewall", "[Pillar Set X: Compliance Escort] Across Intent-Based Unidirectional Escort");
+  logE2eStep(
+    2,
+    "Unidirectional Compliance Escort — AML Inbound Firewall",
+    "[Pillar Set X: Compliance Escort] ERC-7683 Cross-Chain Intent Guard (Across Fast Intent Escort)",
+  );
   const outbound = assertUnidirectionalBridge({
     sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
     destChainId: ARBITRUM_ONE_CHAIN_ID,
@@ -139,7 +148,9 @@ export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
     settledAtMs: demoNowMs + 60_000,
   });
   logE2eStep2OutboundEscortLine();
-  e2eLog(`└─ Status: SETTLED  │  ${E2E_LOST_USD_INVARIANT} Verified  │  0-Gas Paymaster: ACTIVE  [ ALLOWED ]`);
+  e2eLog(
+    `└─ Status: SETTLED  │  ${E2E_LOST_USD_INVARIANT} Verified  │  0-Gas Sponsored (ERC-7710 Expiry Sinker)  [ ALLOWED ]`,
+  );
   e2eLog(
     `Capital Routing: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} settled on Arbitrum One → GMX GM ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} + HL Margin Gateway ${fmtE2eUsd(HL_MARGIN_USD)} (bridged to Hyperliquid L1)`,
   );

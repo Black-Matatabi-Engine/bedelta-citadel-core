@@ -129,11 +129,15 @@ export function buildAgentIntent(venue: AgentVenueContext, trip: boolean): strin
   return trip ? venue.tripIntent : venue.healthyIntent;
 }
 
+const AGENT_STANDARDS_LINE =
+  "[STANDARDS] ERC-7683 Cross-Chain Intent · ERC-7715 Session Mandate · ERC-7710 0-Gas Expiry Sinker";
+
 export function printAgentVenueHud(venue: AgentVenueContext, locked: boolean): void {
   const mode = locked ? "locked" : "rotated";
   console.log(
-    `${BOLD}VENUE:${R} ${CYAN}${venue.label}${R} · ${venue.chainLabel} · ${GRAY}${mode}${R}`,
+    `${BOLD}VENUE:${R} ${CYAN}${venue.label}${R} · ${venue.chainLabel}${locked ? "" : ` · ${GRAY}${mode}${R}`}`,
   );
+  console.log(`${GRAY}${AGENT_STANDARDS_LINE}${R}`);
   console.log(`${BOLD}INVARIANT:${R} ${venue.invariantCheck}\n`);
 }
 
