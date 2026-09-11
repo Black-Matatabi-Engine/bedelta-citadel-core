@@ -85,10 +85,9 @@ export function demoConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGu
 export function printBreakthroughBanner(): void {
   const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
   const w = EIP1193_DEMO.boxW;
-  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}\n${CYAN}│${R}${BOLD} ${t1.padEnd(w - 1)}${R}${CYAN}│${R}\n${CYAN}└${"─".repeat(w)}┘${R}`);
-  console.log(
-    `${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`,
-  );
+  const bar = `${CYAN}┌${"─".repeat(w)}┐${R}`;
+  console.log(`${bar}\n${CYAN}│${R}${BOLD} ${t1.padEnd(w - 1)}${R}${CYAN}│${R}\n${CYAN}└${"─".repeat(w)}┘${R}`);
+  console.log(`${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`);
 }
 
 export function printEip6963Discovery(): void {
@@ -170,15 +169,13 @@ export function printDefenseMatrixLine(
 
 export function printPreConsensusProofBox(wasmUs: number): void {
   const w = EIP1193_DEMO.boxW;
-  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(`${CYAN}│${R} ${RED}${BOLD}🚨 PRE-CONSENSUS BREAKTHROUGH PROOF${R}`);
+  const bar = `${CYAN}┌${"─".repeat(w)}┐${R}`;
+  const gas = breakthroughMetric("0.000000 ETH");
+  const bytes = breakthroughMetric("0 Bytes Broadcasted to Sequencer");
+  console.log(`${bar}\n${CYAN}│${R} ${RED}${BOLD}🚨 PRE-CONSENSUS BREAKTHROUGH PROOF${R}`);
   console.log(`${CYAN}│${R}  ▸ WASM REFLEX TIME : ${wasmCoreMetric(wasmUs)} (Sub-10ms Wasm Core Execution)`);
-  console.log(
-    `${CYAN}│${R}  ▸ GAS BURNED       : ${breakthroughMetric("0.000000 ETH")} (${breakthroughMetric("0 Bytes Broadcasted to Sequencer")})`,
-  );
-  console.log(
-    `${CYAN}│${R}  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via ${eipTag("EIP-1193")} Middleware`,
-  );
+  console.log(`${CYAN}│${R}  ▸ GAS BURNED       : ${gas} (${bytes})`);
+  console.log(`${CYAN}│${R}  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via ${eipTag("EIP-1193")} Middleware`);
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
 }
 
