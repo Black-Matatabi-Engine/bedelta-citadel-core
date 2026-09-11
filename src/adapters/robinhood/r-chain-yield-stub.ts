@@ -1,4 +1,4 @@
-/** Pillar 2 — R-Chain Idle Yield Router Stub (Robinhood Testnet · no bridge · no deploy). */
+/** Institutional Treasury Escort Router stub (Robinhood Testnet · Treasury Escort & Collateral Ingress · no bridge deploy). */
 
 import { ROBINHOOD_TESTNET_CHAIN_ID } from "../../sdk/constants";
 
@@ -67,7 +67,7 @@ export interface RChainExecutionProbeResult {
   contractDeployed: false;
 }
 
-/** RWA / Idle Yield routing contract — stub implementation only. */
+/** Treasury Escort & Collateral Ingress routing contract — stub implementation only. */
 export interface IRChainYieldRouter {
   readonly chainId: typeof ROBINHOOD_TESTNET_CHAIN_ID;
   quoteRoute(input: RChainYieldRouteInput, nowMs?: number): RChainYieldRouteQuote;

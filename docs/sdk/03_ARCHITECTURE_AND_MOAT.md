@@ -34,9 +34,9 @@
 
 ---
 
-## Three Core Defense Pillars
+## Three Core Defense Layers
 
-### Pillar 1 — 0-Gas Pre-Consensus Infinite Approval & Phishing Interception
+### Layer 1: Pre-Consensus Phishing & Approval Guard
 
 **Surfaces:** `eth_sendTransaction` · `eth_signTypedData_v4` · Permit2 calldata (`0x2a0886f7`, `0x87517c45`)
 
@@ -47,11 +47,11 @@
 | EIP-712 Permit phishing (`verifyingContract` drift) | `evaluateRetailVenueAllowlist` | `contractVenueIndex` |
 | Untrusted `message.spender` in typed data | Spender cross-check | `UNAUTHORIZED_SPENDER_REJECTED` |
 
-### Pillar 2 — AI Agent Hallucination & Prompt Injection Intent Binding
+### Layer 2: AI Agent Intent & Prompt Injection Shield
 
 See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 
-### Pillar 3 — Multi-Submit FOMO / Panic Retry Storm Severing (`INTENT_RING_U32`)
+### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
 `INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **zero-GC**, mirrored in Rust (`intent_core.rs`) and Solidity (`IntentRingSlabLib.sol`).
 

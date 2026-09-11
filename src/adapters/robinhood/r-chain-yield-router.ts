@@ -1,7 +1,7 @@
 /**
- * Pillar 2 — R-Chain RWA / Idle Yield Router (decision layer).
- * Escort: Robinhood (46630/4663) → Arbitrum One GM pools via unidirectional bridge.
- * Contracts remain undeployed; routing decisions are fail-closed and testable.
+ * Institutional Treasury Escort Router (Pillar Set X · Component 2 decision layer).
+ * Treasury Escort & Collateral Ingress: Robinhood (46630/4663) → Arbitrum One GM pools
+ * via unidirectional bridge. Contracts remain undeployed; routing decisions are fail-closed and testable.
  */
 import {
   ARBITRUM_ONE_CHAIN_ID,
@@ -70,7 +70,7 @@ function resolveSourceChainId(chainId?: number): number | null {
   return null;
 }
 
-/** Productized yield escort: size gates + unidirectional bridge + GM destination. */
+/** Institutional treasury escort quote: size gates + unidirectional bridge + GM destination. */
 export function quoteRChainYieldToArbitrumGm(
   input: RChainYieldEscortInput,
 ): RChainYieldEscortQuote {

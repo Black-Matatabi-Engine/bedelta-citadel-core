@@ -60,9 +60,9 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | **ChainId registration** | SDK constants | [`src/sdk/constants.ts`](../../src/sdk/constants.ts) — `46630` (testnet) · `4663` (mainnet) |
 | **Outbound escort** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) `assertUnidirectionalBridge()` — **`46630`/`4663` → `42161` only** |
 | **Inbound AML** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) — `42161 → Robinhood` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
-| **RWA / idle yield** | Adapter decision | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) `quoteRChainYieldToArbitrumGm()` — `assetKind` · `symbol` · `RWA_YIELD_MIN_USD`/`MAX` · bridge escort bind |
-| **0-Gas retry storm** | **This SDK** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) `evaluateRetailIntentGate()` → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm `INTENT_RING_U32` |
-| **ERC-7683 cross-chain** | **This SDK** (generic) | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — chain IDs supplied by caller; no Robinhood hard-wire |
+| **Treasury Escort & Collateral Ingress** | Core Module B adapter | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) `quoteRChainYieldToArbitrumGm()` — Institutional Treasury Escort Router · `assetKind` · `symbol` · size gates · bridge escort bind |
+| **0-Gas retry storm** | **Core Module A (this SDK)** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) `evaluateRetailIntentGate()` → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm `INTENT_RING_U32` |
+| **ERC-7683 cross-chain** | **Core Module A (this SDK, generic)** | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — chain IDs supplied by caller; no Robinhood hard-wire |
 
 **Demo split:**
 
@@ -71,7 +71,7 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | Robinhood escort | `pnpm demo:escort` | Outbound `46630 → 42161` · inbound AML block · `lostUsd ≡ 0` |
 | EIP-1193 guard | `pnpm demo:eip1193` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
 
-**Do not conflate:** `evaluateRetailVenueAllowlist()` is a **config-driven** anti-phishing gate (`allowedVenues` whitelist). It does **not** embed Robinhood stock-token mint contract ABIs. Institutional RWA routing is enforced upstream in `quoteRChainYieldToArbitrumGm()` before GMX smart-route binding.
+**Do not conflate:** `evaluateRetailVenueAllowlist()` is a **config-driven** anti-phishing gate (`allowedVenues` whitelist) in **Core Module A**. It does **not** embed Robinhood stock-token mint contract ABIs. Institutional treasury routing is enforced in **Core Module B** via `quoteRChainYieldToArbitrumGm()` before GMX smart-route binding.
 
 ---
 
@@ -131,9 +131,9 @@ announceGuardedProvider(window.ethereum, config, {
 
 ---
 
-## Defense Pillars
+## Defense Layers
 
-### 1 — Pre-Consensus 0-Gas Interception
+### Layer 1: Pre-Consensus Phishing & Approval Guard
 
 | Threat | Guard | Reason code |
 |--------|-------|-------------|
@@ -142,17 +142,17 @@ announceGuardedProvider(window.ethereum, config, {
 | EIP-712 `verifyingContract` drift | `evaluateRetailVenueAllowlist` | `VENUE_DRIFT_REJECTED` |
 | Honeypot slippage | `evaluateRetailSoilGate` | `SLIPPAGE_EXCEEDED` |
 
-### 2 — AI Agent Intent Protection
+### Layer 2: AI Agent Intent & Prompt Injection Shield
 
 Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`04_AI_INTENT_PROTECTION_MODEL.md`](./04_AI_INTENT_PROTECTION_MODEL.md).
 
-### 3 — Retry Storm Severance (`INTENT_RING_U32`)
+### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
 4th rapid `eth_sendTransaction` within a session severs the signing channel:
 
 - `MAX_ATTEMPTS_EXCEEDED_SEVERED` → `CHANNEL_SEVERED`
 
-### 4 — RPC Transport Stream Sync
+### Layer 4 — RPC Transport Stream Sync
 
 EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT_SYNC_FAILED` when stream synchronization cannot be recovered under load (nonce-safe pause).
 
