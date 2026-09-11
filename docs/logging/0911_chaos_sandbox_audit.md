@@ -55,3 +55,12 @@ Executed in Agent mode on 2026-09-11: audit log, `nested_decode.rs`, chaos Vites
 | `tests/chaos/arbitrum-sponsor-chaos.test.ts` | `tests/chaos/orbit-agentic-failclosed-chaos.test.ts` |
 
 Targeted verify: `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test.ts`
+
+## Option 1 & 2 — 2026-09-11
+
+| Phase | Action | Result |
+|-------|--------|--------|
+| **Option 1** | `rustup update` + `rust-toolchain.toml` `1.87.0` → `1.88.0` | ✅ `cargo test nested` **2/2 PASS** · `nested_toxic_blocked_under_15us_host` OK |
+| **Option 2** | `docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md` Query C0–C5 | ✅ Chaos intercept SQL + telemetry parity table |
+| **Parity** | `gate-telemetry-types.ts` vs Dune `gateActionCode` | ✅ `GATE_ACTION_FAIL_CLOSED_BLOCK = 1` aligned |
+| **Verify** | `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test.ts` | ✅ **5/5 PASS** |

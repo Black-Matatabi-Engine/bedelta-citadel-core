@@ -260,6 +260,241 @@ LIMIT 500;
 
 ---
 
+## Pre-Consensus Chaos Intercepts (Query C0–C5)
+
+**Scope:** Orbit Agentic Fail-Closed chaos matrix · Buildathon sponsor lanes (Robinhood / GMX V2 / Pendle / ZeroDev / ArbOS / Stylus).
+**Vitest anchor:** `tests/chaos/orbit-agentic-failclosed-chaos.test.ts` (5 PASS clean).
+**Rust anchor:** `decode_nested_fail_closed` · `cargo test nested` · mean <15µs on 10k iterations.
+
+| Panel | Query | Primary source |
+|-------|-------|----------------|
+| **Chaos KPI Header** | C0 | `RiskTripBlocked` + `silvervine_chaos.intercepts` |
+| **Attack Vector Breakdown** | C1 | `reason` / `sponsor_lane` classifier |
+| **Time-Series Rollup** | C2 | Hourly blocked count + PEV |
+| **Latency Reduction** | C3 | `intercept_us` vs 250ms L2 inclusion baseline |
+| **Sponsor Attribution Banner** | C4 | Per-sponsor blocked count (pitch deck) |
+| **Unified Intercepts Feed** | C5 | On-chain ∪ off-chain chaos spell |
+
+**Spell tables (DuneSQL SSOT):**
+
+| Table | Role |
+|-------|------|
+| `dune.silvervinelabs.result_citadel_risk_trips` | Decoded `RiskTripBlocked` / `IntentAttested` from Sepolia Gate |
+| `dune.silvervinelabs.silvervine_chaos_intercepts` | Off-chain chaos sandbox ingest (`silvervine_chaos.intercepts`) |
+
+**Telemetry parity (`src/core/gate-telemetry-types.ts`):**
+
+| TS constant | Value | Dune / Solidity mapping |
+|-------------|-------|-------------------------|
+| `GATE_ACTION_PASS_GREENLIGHT` | `0` | `IntentAttested.action = 0` · `PASS_GREENLIGHT` |
+| `GATE_ACTION_FAIL_CLOSED_BLOCK` | `1` | `RiskTripBlocked` severance · `gateActionCode = 1` · `FAIL_CLOSED_BLOCK` |
+| `GATE_ACTION_EMERGENCY_DELEVERAGE` | `2` | `IntentAttested.action = 2` · `EMERGENCY_DELEVERAGE_ALLOWED` |
+
+`guardActionToGateCode('FAIL_CLOSED_BLOCK')` → `1` — **aligned** with on-chain event schema below.
+
+---
+
+## Query C0 — Chaos KPI Header (24h)
+
+```sql
+-- Panel: Pre-Consensus Chaos KPI Header
+-- Metrics: blocked_count · PEV · gas_saved_usd · latency_saved_ms
+WITH on_chain AS (
+  SELECT
+    COUNT(*) AS blocked_count,
+    COALESCE(SUM(blocked_intent_notional_usd), 0) AS pev_usd,
+    COALESCE(SUM(CAST(json_extract_scalar(extra, '$.l1SurchargeUsd') AS DOUBLE)), 0) AS gas_saved_usd,
+    COALESCE(SUM(CAST(json_extract_scalar(extra, '$.interceptUs') AS DOUBLE)), 0) AS intercept_us_sum
+  FROM dune.silvervinelabs.result_citadel_risk_trips
+  WHERE contract_address = 0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1
+    AND evt_name = 'RiskTripBlocked'
+    AND block_time >= now() - interval '24' hour
+),
+off_chain AS (
+  SELECT
+    COUNT(*) AS blocked_count,
+    COALESCE(SUM(blocked_notional_usd), 0) AS pev_usd,
+    COALESCE(SUM(l1_surcharge_usd), 0) AS gas_saved_usd,
+    COALESCE(SUM(intercept_us), 0) AS intercept_us_sum
+  FROM dune.silvervinelabs.silvervine_chaos_intercepts
+  WHERE gate_action_code = 1
+    AND ingested_at >= now() - interval '24' hour
+)
+SELECT
+  COALESCE(o.blocked_count, 0) + COALESCE(f.blocked_count, 0) AS blocked_count,
+  COALESCE(o.pev_usd, 0) + COALESCE(f.pev_usd, 0) AS prevented_exploit_volume_usd,
+  COALESCE(o.gas_saved_usd, 0) + COALESCE(f.gas_saved_usd, 0) AS gas_saved_usd,
+  (COALESCE(o.blocked_count, 0) + COALESCE(f.blocked_count, 0)) * 250000.0
+    - (COALESCE(o.intercept_us_sum, 0) + COALESCE(f.intercept_us_sum, 0)) / 1000.0 AS latency_saved_ms
+FROM on_chain o
+CROSS JOIN off_chain f;
+```
+
+---
+
+## Query C1 — Attack Vector Breakdown (Sponsor Lanes)
+
+```sql
+-- Panel: Chaos intercepts by sponsor lane (24h)
+WITH trips AS (
+  SELECT
+    reason,
+    blocked_intent_notional_usd,
+    CAST(json_extract_scalar(extra, '$.l1SurchargeUsd') AS DOUBLE) AS l1_surcharge_usd,
+    CAST(json_extract_scalar(extra, '$.interceptUs') AS DOUBLE) AS intercept_us,
+    CASE
+      WHEN reason LIKE '%SESSION%' OR reason LIKE '%ZERODEV%' THEN 'zerodev_robinhood'
+      WHEN reason LIKE '%GMX%' OR reason LIKE '%MIN_MARKET%' OR reason LIKE '%IMBALANCE%' THEN 'gmx_v2'
+      WHEN reason LIKE '%FAIL_CLOSED%' OR reason LIKE '%PENDLE%' THEN 'pendle'
+      WHEN reason LIKE '%GAS_SURCHARGE%' OR reason LIKE '%L1%' OR reason LIKE '%ARBOS%' THEN 'arbos_l1_poster'
+      WHEN reason LIKE '%NESTED%' OR reason LIKE '%STYLUS%' OR reason LIKE '%TLV%' THEN 'stylus_nested'
+      ELSE 'other'
+    END AS sponsor_lane
+  FROM dune.silvervinelabs.result_citadel_risk_trips
+  WHERE contract_address = 0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1
+    AND evt_name = 'RiskTripBlocked'
+    AND block_time >= now() - interval '24' hour
+  UNION ALL
+  SELECT
+    reason,
+    blocked_notional_usd AS blocked_intent_notional_usd,
+    l1_surcharge_usd,
+    intercept_us,
+    sponsor_lane
+  FROM dune.silvervinelabs.silvervine_chaos_intercepts
+  WHERE gate_action_code = 1
+    AND ingested_at >= now() - interval '24' hour
+)
+SELECT
+  sponsor_lane,
+  COUNT(*) AS blocked_count,
+  SUM(blocked_intent_notional_usd) AS pev_usd,
+  COALESCE(SUM(l1_surcharge_usd), 0) AS gas_saved_usd,
+  COUNT(*) * 0.250 - COALESCE(SUM(intercept_us), 0) / 1e6 AS latency_saved_sec
+FROM trips
+GROUP BY 1
+ORDER BY blocked_count DESC;
+```
+
+---
+
+## Query C2 — Chaos Time-Series Rollup (Hourly)
+
+```sql
+-- Panel: Hourly pre-consensus intercept trend
+SELECT
+  date_trunc('hour', block_time) AS hour,
+  COUNT(*) AS blocked_count,
+  SUM(blocked_intent_notional_usd) AS hourly_pev_usd
+FROM dune.silvervinelabs.result_citadel_risk_trips
+WHERE contract_address = 0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1
+  AND evt_name = 'RiskTripBlocked'
+  AND block_time >= now() - interval '7' day
+GROUP BY 1
+ORDER BY 1 DESC;
+```
+
+---
+
+## Query C3 — Latency Reduction vs L2 Inclusion Baseline
+
+```sql
+-- Panel: Pre-consensus intercept latency savings
+-- Baseline: 250ms typical Arbitrum L2 inclusion; savings = baseline - intercept_us
+WITH intercepts AS (
+  SELECT
+    block_time AS ts,
+    CAST(json_extract_scalar(extra, '$.interceptUs') AS DOUBLE) / 1000.0 AS intercept_ms
+  FROM dune.silvervinelabs.result_citadel_risk_trips
+  WHERE evt_name = 'RiskTripBlocked'
+    AND block_time >= now() - interval '24' hour
+  UNION ALL
+  SELECT
+    ingested_at AS ts,
+    intercept_us / 1000.0 AS intercept_ms
+  FROM dune.silvervinelabs.silvervine_chaos_intercepts
+  WHERE gate_action_code = 1
+    AND ingested_at >= now() - interval '24' hour
+)
+SELECT
+  date_trunc('hour', ts) AS hour,
+  COUNT(*) AS intercept_count,
+  AVG(250.0 - intercept_ms) AS avg_latency_saved_ms,
+  SUM(250.0 - intercept_ms) AS total_latency_saved_ms
+FROM intercepts
+WHERE intercept_ms IS NOT NULL AND intercept_ms < 250.0
+GROUP BY 1
+ORDER BY 1 DESC;
+```
+
+---
+
+## Query C4 — Sponsor Attribution Banner (Pitch Deck)
+
+```sql
+-- Panel: Buildathon sponsor attribution banner (cumulative 30d)
+SELECT
+  sponsor_lane,
+  COUNT(*) AS total_blocks,
+  ROUND(100.0 * COUNT(*) / SUM(COUNT(*)) OVER (), 2) AS pct_of_blocks,
+  SUM(blocked_notional_usd) AS lane_pev_usd
+FROM dune.silvervinelabs.silvervine_chaos_intercepts
+WHERE gate_action_code = 1
+  AND ingested_at >= now() - interval '30' day
+  AND sponsor_lane IN (
+    'zerodev_robinhood', 'gmx_v2', 'pendle', 'arbos_l1_poster', 'stylus_nested'
+  )
+GROUP BY 1
+ORDER BY total_blocks DESC;
+```
+
+---
+
+## Query C5 — Unified Intercepts Feed (On-Chain ∪ Chaos Spell)
+
+```sql
+-- Panel: Live pre-consensus intercept feed (most recent 100)
+SELECT
+  block_time AS event_time,
+  tx_hash,
+  CAST(agent AS VARCHAR) AS agent,
+  reason,
+  blocked_intent_notional_usd,
+  1 AS gate_action_code,
+  'on_chain' AS source
+FROM dune.silvervinelabs.result_citadel_risk_trips
+WHERE evt_name = 'RiskTripBlocked'
+  AND contract_address = 0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1
+UNION ALL
+SELECT
+  ingested_at AS event_time,
+  response_ref AS tx_hash,
+  'chaos-sandbox' AS agent,
+  reason,
+  blocked_notional_usd AS blocked_intent_notional_usd,
+  gate_action_code,
+  'silvervine_chaos.intercepts' AS source
+FROM dune.silvervinelabs.silvervine_chaos_intercepts
+WHERE gate_action_code = 1
+ORDER BY event_time DESC
+LIMIT 100;
+```
+
+**Off-chain spell schema (`silvervine_chaos.intercepts`):**
+
+| Column | Type | SSOT |
+|--------|------|------|
+| `ingested_at` | timestamp | Worker ingest time |
+| `response_ref` | varchar | sha256 ref / chaos run id |
+| `sponsor_lane` | varchar | C1 classifier key |
+| `reason` | varchar | Fail-closed reason string |
+| `blocked_notional_usd` | double | PEV numerator |
+| `l1_surcharge_usd` | double | ArbOS gas saved estimate |
+| `intercept_us` | double | Pre-consensus intercept latency (µs) |
+| `gate_action_code` | integer | `1` = `GATE_ACTION_FAIL_CLOSED_BLOCK` |
+
+---
+
 ## Live `/api/grant-audit` JSON Example (`duneTelemetry`)
 
 ```json
