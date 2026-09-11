@@ -6,7 +6,6 @@ import {
 } from "../../src/config/capital-invariant-defaults";
 import { GATE_ACTION_FAIL_CLOSED_BLOCK } from "../../src/core/gate-telemetry-types";
 import {
-  __resetRetailGuardStateForTests,
   announceGuardedProvider,
   evaluateRetailSoilGate,
   type EIP1193Provider,
@@ -26,7 +25,7 @@ export const EIP1193_DEMO = {
   permit2: "0x000000000022d473030f116ddee9f6b43ac78ba3",
   rdns: "com.slivervine.citadel",
   arbChainId: 42161,
-  boxW: 64,
+  boxW: 88,
 } as const;
 
 export function eipTag(label: string): string {
@@ -45,16 +44,17 @@ export function wasmCoreMetric(us: number): string {
   return breakthroughMetric(`⚡ ${formatLatencyLabel(us)} Pure Wasm Core`);
 }
 
-export function truncateAddr(addr: string): string {
-  return `${addr.slice(0, 10)}...`;
-}
-
 export function resolveIntentPrincipalUsd(): number {
   return sanitizeAccountEquityUsd(process.env.CITADEL_DEMO_EQUITY_USD ?? CAPITAL_DEFAULT_TOTAL_VAULT_USD);
 }
 
 export function formatIntentUsd(usd: number): string {
   return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${CAPITAL_DEFAULT_TOKEN}`;
+}
+
+export function crossVenueSlippagePct(cfg: RetailGuardConfig): number {
+  const q = cfg.soilQuote!;
+  return (Math.abs(q.hlPerp - q.dydxPerp) / Math.max(q.hlSpot, 1)) * 100;
 }
 
 export function deriveTripEvtHash(nowMs: number, agentId: string, reason: string): string {
@@ -68,6 +68,7 @@ export function mapDuneTelemetryReason(code: string): string {
     UNAUTHORIZED_SPENDER_REJECTED: "UNAUTHORIZED_SPENDER",
     SOLVER_MEV_SUSPECT: "SOLVER_MEV",
     MAX_ATTEMPTS_EXCEEDED_SEVERED: "CHANNEL_SEVERED",
+    CHANNEL_SEVERED: "CHANNEL_SEVERED",
   };
   return table[code] ?? code.replace(/_REJECTED$/, "").replace(/_EXCEEDED_SEVERED$/, "_SEVERED");
 }
@@ -102,12 +103,39 @@ export function demoConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGu
   };
 }
 
+export function degradedDemoConfig(): RetailGuardConfig {
+  return demoConfig({
+    soilQuote: {
+      hlSpot: 3500,
+      hlPerp: 3500,
+      dydxPerp: 3482.75,
+      depthUsd: 500_000,
+      maxSlippage: 0.006,
+      minDepthUsd: 100_000,
+    },
+  });
+}
+
+function bannerLine(text: string, width: number): string {
+  const inner = ` ${text} `;
+  const pad = Math.max(0, width - inner.length);
+  return `${CYAN}│${R}${BOLD}${text.padEnd(width - 2)}${R}${CYAN}│${R}`;
+}
+
 export function printBreakthroughBanner(): void {
   const t1 = "🛡️  SliverVine Citadel Shield · Universal EIP-1193 / EIP-6963 Retail Guard";
-  const w = EIP1193_DEMO.boxW;
-  const bar = `${CYAN}┌${"─".repeat(w)}┐${R}`;
-  console.log(`${bar}\n${CYAN}│${R}${BOLD} ${t1.padEnd(w - 1)}${R}${CYAN}│${R}\n${CYAN}└${"─".repeat(w)}┘${R}`);
+  const t2 = "Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161";
+  const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, t2.length + 2);
+  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
+  console.log(bannerLine(t1, w));
+  console.log(bannerLine(t2, w));
+  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
   console.log(`${breakthroughMetric("⚡ BREAKTHROUGH: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus]")}\n`);
+}
+
+export function printMainnetAnchors(): void {
+  console.log(`${eipTag("MAINNET ANCHORS")} GMX GM Vault ${EIP1193_DEMO.gmxGmVault}`);
+  console.log(`${eipTag("MAINNET ANCHORS")} SliverVine Gate ${EIP1193_DEMO.slivervineGate}`);
 }
 
 export function printEip6963Discovery(): void {
@@ -146,7 +174,7 @@ export function printPayloadBox(chainId: number, wasmUs: number, clean: boolean)
   const w = EIP1193_DEMO.boxW;
   const verdict = clean ? breakthroughMetric("CLEAN (0-Gas Allowed)") : rejectCode("TRIP");
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(`${CYAN}│${R} PAYLOAD PARSER: ERC-20 Approve / GMX GM Deposit -> ${truncateAddr(EIP1193_DEMO.gmxGmVault)}`);
+  console.log(`${CYAN}│${R} PAYLOAD PARSER: ERC-20 Approve / GMX GM Deposit -> ${EIP1193_DEMO.gmxGmVault}`);
   console.log(`${CYAN}│${R} ${eipTag("EIP-712")} DOMAIN: ChainId: ${chainId} (Arbitrum One) | Verifier: ${GREEN}${BOLD}VERIFIED${R}`);
   console.log(`${CYAN}│${R} WASM REFLEX: ${wasmCoreMetric(wasmUs)} Soil Check -> ${verdict}`);
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
@@ -165,7 +193,7 @@ export function printChannelOpen(integrityPct: number): void {
 
 export function printForwardGate(): void {
   console.log(
-    `  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Guarded Provider -> Dispatched to Sequencer RPC (${truncateAddr(EIP1193_DEMO.gmxGmVault)} · Gate ${truncateAddr(EIP1193_DEMO.slivervineGate)})`,
+    `  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Guarded Provider -> Dispatched to Sequencer RPC (Vault ${EIP1193_DEMO.gmxGmVault} · Gate ${EIP1193_DEMO.slivervineGate})`,
   );
 }
 
