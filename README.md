@@ -131,7 +131,9 @@ pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 # Strategy Loops & SDK Verification
 pnpm demo:perp-loop -- --trip     # Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip     # Loop B: USD.ai Collateral Lane
-npx vitest run tests/sdk/retail-guard-provider.test.ts # EIP-1193 Retail Guard SDK (35 PASS)
+pnpm demo:eip1193                 # Tier 0 — Scenario A–D State Matrix (JUDGE_SAFE clock)
+pnpm demo:eip1193 -- --json       # Structured JSON for CI / Dune
+npx vitest run tests/sdk/retail-guard-provider.test.ts # EIP-1193 Retail Guard SDK (35 PASS · 7/7 reason codes)
 
 # Full Regression Test Suite (225 test files | 1052 PASS clean)
 pnpm test -- --run

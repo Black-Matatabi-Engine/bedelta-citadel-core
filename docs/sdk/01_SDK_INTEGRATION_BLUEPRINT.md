@@ -6,7 +6,7 @@
 **Source:** [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../../src/sdk/robinhood-agentic-retail-wallet-guard/)  
 **Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for retail wallets and AI agent copilots
 
-> **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files)
+> **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json`
 
 ---
 
@@ -132,6 +132,31 @@ EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT
 
 ---
 
+## CLI Demonstration (`pnpm demo:eip1193`)
+
+Interactive Tier 0 entrypoint for judges and integrators — wraps the same production SDK path as unit tests, with browser-level narrative.
+
+| Command | Output |
+|---------|--------|
+| `pnpm demo:eip1193` | Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · TTY `[PRESS ENTER]` recording pauses · `[PRODUCTION ALERT]` echoes `plainTextWarning` |
+| `pnpm demo:eip1193 -- --json` | JSON array: `{ scenario, status, wasmUs, code, plainTextWarning }` — no ANSI |
+| `pnpm demo:eip1193 -- --trip` | Scenario **C–D** shortcut (FAIL_CLOSED + channel severance) |
+
+**Alert SSOT:** Rejection strings originate from `formatRetailWarning()` in [`warnings.ts`](../../src/sdk/robinhood-agentic-retail-wallet-guard/warnings.ts), surfaced on `RetailGuardRejectedError.plainTextWarning`. The demo **does not hardcode** production alert copy — it echoes the thrown error after `withRetailGuardProvider()` intercept.
+
+**0-Gas pre-consensus:** Guarded methods (`eth_sendTransaction`, `eth_signTypedData_v4`) abort at the SDK layer on reject — **no calldata reaches the Sequencer**.
+
+**Dual-track verification:**
+
+| Track | Entrypoint | Coverage |
+|-------|------------|----------|
+| Interactive CLI | `pnpm demo:eip1193` | 4 core state scenarios (A–D) · independent replays |
+| Unit SSOT | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · all **7** `RetailGuardReasonCode` variants |
+
+Source: [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`examples/lib/eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts)
+
+---
+
 ## Module Map
 
 | File | Role |
@@ -148,10 +173,24 @@ EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT
 ## Testing
 
 ```bash
-npx vitest run tests/sdk/
+npx vitest run tests/sdk/retail-guard-provider.test.ts   # Tier 0 SSOT — 35/35 · 7/7 reason codes
+npx vitest run tests/sdk/                                 # Full SDK suite — 48/48 PASS
+pnpm demo:eip1193 -- --json                               # CLI structured output (CI / Dune)
 ```
 
-**Baseline:** **48/48 PASS**
+**Retail guard baseline:** **35/35 PASS** — exhaustive `RetailGuardReasonCode` coverage:
+
+| Code | Guard |
+|------|-------|
+| `VENUE_DRIFT_REJECTED` | `evaluateRetailVenueAllowlist` |
+| `UNAUTHORIZED_SPENDER_REJECTED` | `evaluateRetailApproveGate` · EIP-712 permit spender |
+| `SLIPPAGE_EXCEEDED` | `evaluateRetailSoilGate` |
+| `DEPTH_INSUFFICIENT` | `evaluateRetailSoilGate` |
+| `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `evaluateRetailIntentGate` |
+| `CHANNEL_SEVERED` | Post-severance hard block |
+| `RPC_TRANSPORT_SYNC_FAILED` | `evaluateRpcTransportProtocol` |
+
+**Full SDK baseline:** **48/48 PASS**
 
 ---
 

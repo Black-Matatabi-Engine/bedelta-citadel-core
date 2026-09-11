@@ -15,9 +15,9 @@
 
 | Audience | First read | Then verify |
 |----------|------------|-------------|
-| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
+| **Buildathon judges** | [`JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) | `pnpm demo:eip1193` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./verifications/02_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](./PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./verifications/01_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./verifications/04_LIVE_FIRE_EVIDENCE.md) |
-| **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
+| **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./sdk/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./verifications/03_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
 | **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](./ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
 
 **Decoupled SSOT index:** [`verifications/README.md`](./verifications/README.md)
@@ -50,8 +50,9 @@ pnpm test -- --run                       # Full Regression Suite (225 test files
 
 | Command | Proves |
 |---------|--------|
-| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard · **35/35 PASS** · 0-Gas pre-consensus intercept |
-| `pnpm demo:eip1193` | Scenario **A–D State Matrix** · full Arbitrum mainnet anchors · structured Dune telemetry · **`JUDGE_SAFE` deterministic clock** |
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 / EIP-6963 Retail Guard · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
+| `pnpm demo:eip1193` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
+| `pnpm demo:eip1193 -- --json` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
 | `pnpm demo:eip1193 -- --trip` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
 | `pnpm demo:gmx -- --trip` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
 | `pnpm demo:variational -- --trip` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
@@ -80,6 +81,17 @@ All `examples/*` CLI demos — including **`pnpm demo:eip1193`** — run under a
 `Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`
 
 The banner is emitted by `examples/lib/eip1193-breakthrough-helpers.ts` (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via `examples/lib/demo-harness.ts` (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
+
+### Dual-Track Verification Architecture (`@slivervine/robinhood-agentic-retail-wallet-guard`)
+
+Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — interactive demonstration plus exhaustive unit SSOT:
+
+| Track | Entrypoint | Scope |
+|-------|------------|-------|
+| **Interactive CLI** | `pnpm demo:eip1193` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` (`warnings.ts`). |
+| **Unit Test Suite** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** — exhaustive coverage of all **7** SDK `RetailGuardReasonCode` variants: `VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`. |
+
+**Source:** [`examples/eip1193-provider-demo.ts`](../examples/eip1193-provider-demo.ts) · [`src/sdk/robinhood-agentic-retail-wallet-guard/`](../src/sdk/robinhood-agentic-retail-wallet-guard/) · [`tests/sdk/retail-guard-provider.test.ts`](../tests/sdk/retail-guard-provider.test.ts)
 
 ---
 

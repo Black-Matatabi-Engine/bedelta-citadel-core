@@ -92,14 +92,25 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E Edge Shield
 
 **Judge fast-track (FAIL-CLOSED):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
-**Retail Guard SDK:** `npx vitest run tests/sdk/retail-guard-provider.test.ts`
+**Tier 0 EIP-1193 / EIP-6963 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `pnpm demo:eip1193 -- --trip`
+
+**Retail Guard SDK (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
+
+### Dual-Track Verification (`@slivervine/robinhood-agentic-retail-wallet-guard`)
+
+| Track | Command | Proves |
+|-------|---------|--------|
+| **Interactive CLI** | `pnpm demo:eip1193` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from `warnings.ts` · 0-Gas pre-consensus intercept (no broadcast) |
+| **Unit tests** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** reason codes (`VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`) |
+
+Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK fail-closed path is covered by unit tests; scenarios **C** and **D** echo live `RetailGuardRejectedError.plainTextWarning` strings.
 
 ### EVM Standards Compliance (5-Pillar Active Matrix)
 
 | # | Standard | Judge-facing proof |
 |---|----------|-------------------|
-| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` — `withRetailGuardProvider()` |
-| **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | Same suite — `announceGuardedProvider()` announce/request |
+| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` — `withRetailGuardProvider()` · **35/35** · **7/7** reason codes |
+| **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | `pnpm demo:eip1193` (Scenario A discovery) · same suite — `announceGuardedProvider()` announce/request |
 | **3** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | `pnpm demo:gmx -- --trip` — pre-sign severance · Gate `0xb174…` consume-once |
 | **4** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) / [ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
 | **5** | **[ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) / [Permit2](https://github.com/Uniswap/permit2)** | Retail guard Vitest — Permit2 approve/permit block paths |
@@ -123,13 +134,15 @@ pnpm run audit:security     # 3-Tier Security Scorecard: 5/0/0 PASS
 pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
+pnpm demo:eip1193              # Tier 0 — Scenario A–D State Matrix (JUDGE_SAFE clock)
+pnpm demo:eip1193 -- --json    # Structured JSON for CI / Dune
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:e2e
 ```
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — Retail Guard** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) C-end middleware |
+| **Tier 0 — Retail Guard** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) C-end middleware · Scenario A–D matrix + **35/35** unit SSOT |
 | **Tier 1 — Judge fast-track** | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1 — Protocols** | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
 | **Tier 2 — Strategy loops** | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
