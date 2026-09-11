@@ -1,4 +1,5 @@
 /** Shared ANSI helpers for EIP-1193 / EIP-6963 breakthrough demo CLI. */
+import * as readline from "node:readline/promises";
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
   CAPITAL_DEFAULT_TOKEN,
@@ -132,8 +133,47 @@ export const JUDGE_SAFE_CLOCK_LABEL =
 export const EIP1193_ARCHITECTURE_NOTE =
   "[ARCHITECTURE NOTE] 4 scenarios (A–D) are independent scripted replays; intercept logic & plainTextWarning match production SDK." as const;
 
-export function printProductionPlainTextWarning(warning: string): void {
-  console.log(`${eipTag("PRODUCTION ALERT")} ${warning}`);
+export type Eip1193ScenarioId = "A" | "B" | "C" | "D";
+
+export interface Eip1193ScenarioJsonResult {
+  scenario: Eip1193ScenarioId;
+  status: string;
+  wasmUs: number;
+  code: string | null;
+  plainTextWarning?: string | null;
+}
+
+export function isDemoJsonArgv(argv: readonly string[] = process.argv): boolean {
+  return argv.includes("--json");
+}
+
+export function roundWasmUs(us: number): number {
+  return Math.round(us * 10) / 10;
+}
+
+export function clearDemoTerminal(): void {
+  process.stdout.write("\x1b[2J\x1b[3J\x1b[H");
+}
+
+export async function awaitScenarioRecordingTransition(nextId: Eip1193ScenarioId): Promise<void> {
+  if (isDemoJsonArgv() || !process.stdin.isTTY) return;
+  console.log(`\n${GRAY}[PRESS ENTER TO PROCEED TO SCENARIO ${nextId}...]${R}`);
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    await rl.question("");
+  } finally {
+    rl.close();
+    releaseDemoStdin();
+  }
+  clearDemoTerminal();
+}
+
+export function releaseDemoStdin(): void {
+  if (process.stdin.isTTY && !process.stdin.readableEnded) process.stdin.pause();
+}
+
+export function printProductionPlainTextWarning(warning: string, reasonCode: string): void {
+  console.log(`${eipTag("PRODUCTION ALERT")} ${GRAY}(warnings.ts · ${reasonCode})${R} ${warning}`);
 }
 
 export function printBreakthroughBanner(): void {
@@ -212,12 +252,12 @@ export function printForwardGate(): void {
 }
 
 export function printDefenseMatrixHeader(): void {
-  console.log(`\n🔥 ${RED}${BOLD}[BREAKTHROUGH DEFENSE MATRIX TRIGGERED]${R}`);
+  console.log(`\n🔥 ${RED}${BOLD}[BREAKTHROUGH DEFENSE MATRIX TRIGGERED]${R} ${GRAY}(diagnostic preview)${R}`);
 }
 
 export function printDefenseMatrixLine(guard: string, detail: string, code: string | undefined, branch: "├" | "└"): void {
   const suffix = code ? ` (${rejectCode(code)})` : "";
-  console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix}`);
+  console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix} ${GRAY}(diagnostic preview)${R}`);
 }
 
 export function printPreConsensusProofBox(wasmUs: number, capitalUsd: number): void {
