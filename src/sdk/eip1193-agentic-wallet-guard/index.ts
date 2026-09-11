@@ -15,6 +15,12 @@ export type {
   EIP6963EventTarget,
 } from "./provider";
 export { evaluateRetailRisk, parseTypedDataPayload } from "./risk-evaluator";
+export type { RetailRiskEvalOptions } from "./risk-evaluator";
+export {
+  EIP5792_WALLET_SEND_CALLS,
+  parseWalletSendCalls,
+  evaluateEip5792WalletSendCalls,
+} from "./eip5792-send-calls";
 export {
   __resetRetailGuardStateForTests,
   isRetailGuardChannelSevered,
@@ -44,9 +50,20 @@ export {
   __resetRetailGuardWasmForTests,
 } from "./wasm-adapter";
 export {
+  evaluateErc7540AsyncEscortGuard,
+  evaluateErc7540FromParsedCalldata,
+  computeErc7540SlippageDriftBps,
+  ERC7540_CODES,
+  type Erc7540AsyncQuote,
+  type Erc7540RejectCode,
+  type ParsedErc7540,
+} from "./erc7540-async-escort";
+export {
   parseTransactionCalldata,
   parseSelector,
   encodeApproveCalldata,
+  encodeErc7540RequestDepositCalldata,
+  encodeErc7540SetOperatorCalldata,
   encodePermit2ApproveCalldata,
   encodePermit2PermitCalldata,
   readSelectorU32,
@@ -57,6 +74,9 @@ export {
   SEL_ERC20_TRANSFER,
   SEL_PERMIT2_PERMIT,
   SEL_PERMIT2_APPROVE,
+  SEL_ERC7540_REQUEST_DEPOSIT,
+  SEL_ERC7540_REQUEST_REDEEM,
+  SEL_ERC7540_SET_OPERATOR,
   SELECTOR_ERC20_APPROVE,
   SELECTOR_ERC20_TRANSFER,
   SELECTOR_UNISWAP_V2_SWAP_EXACT,
@@ -64,6 +84,11 @@ export {
   SELECTOR_GMX_MULTICALL,
   SELECTOR_PERMIT2_PERMIT,
   SELECTOR_PERMIT2_APPROVE,
+  SELECTOR_ERC7540_REQUEST_DEPOSIT,
+  SELECTOR_ERC7540_REQUEST_REDEEM,
+  SELECTOR_ERC7540_SET_OPERATOR,
+  type ParsedErc7540Request,
+  type ParsedErc7540SetOperator,
 } from "./calldata-parser";
 export {
   evaluateErc7683CrossChainIntentGuard,

@@ -13,13 +13,14 @@
 
 ## Executive Summary
 
-Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs. Unlike server-side simulators (Blockaid, Blowfish), this SDK enforces **mandate policy pre-consensus** with **zero on-chain gas** on rejection paths.
+Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTransaction`, `eth_signTypedData_v4`, and [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` **before** the host wallet signs. Unlike server-side simulators (Blockaid, Blowfish), this SDK enforces **mandate policy pre-consensus** with **zero on-chain gas** on rejection paths.
 
 | Capability | API surface |
 |------------|-------------|
 | Provider wrap | `withRetailGuardProvider(baseProvider, config)` |
 | EIP-6963 discovery | `announceGuardedProvider(baseProvider, config, options)` |
 | Risk evaluation | `evaluateRetailRisk(config, method, params)` |
+| EIP-5792 batch | `evaluateEip5792WalletSendCalls(config, params)` · `wallet_sendCalls` |
 | RPC transport sync | `evaluateTransportStreamSync()` · `verifyTransportBitmark()` |
 
 ---
@@ -36,6 +37,7 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 │ Universal EIP-1193 Pre-Consensus Guard                          │
 │ ├─ withRetailGuardProvider / announceGuardedProvider (EIP-6963) │
 │ ├─ transport-stream.ts — RPC transport stream sync            │
+│ ├─ eip5792-send-calls.ts — EIP-5792 wallet_sendCalls unfold     │
 │ ├─ calldata-parser.ts — ERC20 · Permit2 · router u32 selectors  │
 │ ├─ guard-engine.ts — approve · venue · soil · intent gates      │
 │ └─ wasm-adapter.ts → pkg/soil_core.wasm (optional IP core)      │
@@ -170,7 +172,7 @@ Interactive Tier 0 entrypoint for judges and integrators — wraps the same prod
 
 **Alert SSOT:** Rejection strings originate from `formatRetailWarning()` in [`warnings.ts`](../../src/sdk/eip1193-agentic-wallet-guard/warnings.ts), surfaced on `RetailGuardRejectedError.plainTextWarning`. The demo **does not hardcode** production alert copy — it echoes the thrown error after `withRetailGuardProvider()` intercept.
 
-**0-Gas pre-consensus:** Guarded methods (`eth_sendTransaction`, `eth_signTypedData_v4`) abort at the SDK layer on reject — **no calldata reaches the Sequencer**.
+**0-Gas pre-consensus:** Guarded methods (`eth_sendTransaction`, `eth_signTypedData_v4`, `wallet_sendCalls`) abort at the SDK layer on reject — **no calldata reaches the Sequencer**.
 
 **Dual-track verification:**
 

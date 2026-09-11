@@ -15,6 +15,12 @@ export const SEL_GMX_MULTICALL = 0xac9650d8;
 export const SEL_PERMIT2_PERMIT = 0x2a0886f7;
 /** Permit2 approve(address,address,uint160,uint48). */
 export const SEL_PERMIT2_APPROVE = 0x87517c45;
+/** ERC-7540 requestDeposit(uint256,address,address). */
+export const SEL_ERC7540_REQUEST_DEPOSIT = 0xb2d9f201;
+/** ERC-7540 requestRedeem(uint256,address,address). */
+export const SEL_ERC7540_REQUEST_REDEEM = 0x710e20f1;
+/** ERC-7540 setOperator(address,bool). */
+export const SEL_ERC7540_SET_OPERATOR = 0x9cc233d6;
 
 /** Hex string mirrors for tests / logging only — not used in hot-path compare. */
 export const SELECTOR_ERC20_APPROVE = "0x095ea7b3";
@@ -24,6 +30,9 @@ export const SELECTOR_UNISWAP_V3_EXACT_INPUT_SINGLE = "0x414bf389";
 export const SELECTOR_GMX_MULTICALL = "0xac9650d8";
 export const SELECTOR_PERMIT2_PERMIT = "0x2a0886f7";
 export const SELECTOR_PERMIT2_APPROVE = "0x87517c45";
+export const SELECTOR_ERC7540_REQUEST_DEPOSIT = "0xb2d9f201";
+export const SELECTOR_ERC7540_REQUEST_REDEEM = "0x710e20f1";
+export const SELECTOR_ERC7540_SET_OPERATOR = "0x9cc233d6";
 
 export const UINT256_MAX =
   0xffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffn;
@@ -69,6 +78,21 @@ export interface ParsedPermit2Permit {
   infinite: boolean;
 }
 
+export interface ParsedErc7540Request {
+  kind: "erc7540_request_deposit" | "erc7540_request_redeem";
+  vault: string;
+  amountWei: bigint;
+  controller: string;
+  owner: string;
+}
+
+export interface ParsedErc7540SetOperator {
+  kind: "erc7540_set_operator";
+  vault: string;
+  operator: string;
+  approved: boolean;
+}
+
 export interface ParsedUnknown {
   kind: "unknown";
   to: string;
@@ -81,6 +105,8 @@ export type ParsedCalldata =
   | ParsedSwap
   | ParsedPermit2Approve
   | ParsedPermit2Permit
+  | ParsedErc7540Request
+  | ParsedErc7540SetOperator
   | ParsedUnknown;
 
 export interface TxCalldataInput {
@@ -253,6 +279,29 @@ export function parseTransactionCalldata(tx: TxCalldataInput): ParsedCalldata | 
     }
   }
 
+  if (
+    (sel === SEL_ERC7540_REQUEST_DEPOSIT || sel === SEL_ERC7540_REQUEST_REDEEM) &&
+    byteLen >= 4 + 96
+  ) {
+    return {
+      kind: sel === SEL_ERC7540_REQUEST_DEPOSIT ? "erc7540_request_deposit" : "erc7540_request_redeem",
+      vault: to,
+      amountWei: readUint256At(CALLDATA_SCRATCH, 4),
+      controller: readAddressAt(CALLDATA_SCRATCH, 36).toLowerCase(),
+      owner: readAddressAt(CALLDATA_SCRATCH, 68).toLowerCase(),
+    };
+  }
+
+  if (sel === SEL_ERC7540_SET_OPERATOR && byteLen >= 4 + 64) {
+    const approvedWord = readUint256At(CALLDATA_SCRATCH, 36);
+    return {
+      kind: "erc7540_set_operator",
+      vault: to,
+      operator: readAddressAt(CALLDATA_SCRATCH, 4).toLowerCase(),
+      approved: approvedWord !== 0n,
+    };
+  }
+
   if (isSwapSelector(sel)) {
     return { kind: "swap", router: to, selectorU32: sel };
   }
@@ -345,6 +394,51 @@ export function encodePermit2PermitCalldata(
   }
   writeAddr(spender, 96);
   body[228] = 0xc0;
+  let hex = "0x";
+  for (let i = 0; i < body.length; i += 1) hex += body[i]!.toString(16).padStart(2, "0");
+  return hex;
+}
+
+function writeAddrWord(body: Uint8Array, wordOff: number, hex: string): void {
+  const raw = hex.toLowerCase().replace(/^0x/, "");
+  const base = 4 + wordOff + 12;
+  for (let i = 0; i < 20; i += 1) {
+    body[base + i] = parseInt(raw.slice(i * 2, i * 2 + 2) || "00", 16);
+  }
+}
+
+/** Encode ERC-7540 requestDeposit(uint256,address,address) for harness / tests. */
+export function encodeErc7540RequestDepositCalldata(
+  assetsWei: bigint,
+  controller: string,
+  owner: string,
+): string {
+  const body = new Uint8Array(100);
+  body[0] = 0xb2;
+  body[1] = 0xd9;
+  body[2] = 0xf2;
+  body[3] = 0x01;
+  let amt = assetsWei;
+  for (let i = 35; i >= 4; i -= 1) {
+    body[i] = Number(amt & 0xffn);
+    amt >>= 8n;
+  }
+  writeAddrWord(body, 32, controller);
+  writeAddrWord(body, 64, owner);
+  let hex = "0x";
+  for (let i = 0; i < body.length; i += 1) hex += body[i]!.toString(16).padStart(2, "0");
+  return hex;
+}
+
+/** Encode ERC-7540 setOperator(address,bool) for harness / tests. */
+export function encodeErc7540SetOperatorCalldata(operator: string, approved: boolean): string {
+  const body = new Uint8Array(68);
+  body[0] = 0x9c;
+  body[1] = 0xc2;
+  body[2] = 0x33;
+  body[3] = 0xd6;
+  writeAddrWord(body, 0, operator);
+  body[67] = approved ? 1 : 0;
   let hex = "0x";
   for (let i = 0; i < body.length; i += 1) hex += body[i]!.toString(16).padStart(2, "0");
   return hex;

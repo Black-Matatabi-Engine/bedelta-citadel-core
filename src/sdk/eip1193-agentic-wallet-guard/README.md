@@ -17,6 +17,6 @@ Apache-2.0 EIP-1193 middleware for pre-consensus retail and agentic wallet prote
 | AI Intent Protection | [`docs/sdk/04_AI_INTENT_PROTECTION_MODEL.md`](../../../docs/sdk/04_AI_INTENT_PROTECTION_MODEL.md) |
 
 ```bash
-npx vitest run tests/sdk/   # 48/48 PASS
+npx vitest run tests/sdk/   # retail-guard 35/35 + eip5792 3/3 + 7683/7702
 pnpm demo:eip1193           # Scenario A–D State Matrix
 ```

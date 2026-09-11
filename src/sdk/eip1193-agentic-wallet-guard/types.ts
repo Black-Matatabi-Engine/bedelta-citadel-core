@@ -30,6 +30,25 @@ export interface RetailGuardConfig {
   resolveSoilQuote?: (method: string, params: unknown[]) => RetailSoilQuote | null;
   resolveVenueBit?: (method: string, params: unknown[]) => number;
   maxAttempts?: number;
+  /** ERC-7540 async vault operator whitelist (`setOperator` / `controller`). */
+  allowedOperators?: readonly string[];
+  /** Max Pending→Claimable drift bps for ERC-7540 requestDeposit/requestRedeem. */
+  erc7540MaxSlippageBps?: number;
+  /** Static async vault quote for slippage drift gate (tests / harness). */
+  erc7540AsyncQuote?: {
+    requestAmountWei: bigint;
+    claimableAmountWei: bigint;
+    maxSlippageBps?: number;
+  };
+  resolveErc7540Quote?: (
+    kind: "deposit" | "redeem",
+    amountWei: bigint,
+    vault: string,
+  ) => {
+    requestAmountWei: bigint;
+    claimableAmountWei: bigint;
+    maxSlippageBps?: number;
+  } | null;
   /** Prefer Wasm reflex core when `pkg/soil_core.wasm` is loaded (default true). */
   preferWasm?: boolean;
 }
@@ -41,7 +60,10 @@ export type RetailGuardReasonCode =
   | "UNAUTHORIZED_SPENDER_REJECTED"
   | "MAX_ATTEMPTS_EXCEEDED_SEVERED"
   | "CHANNEL_SEVERED"
-  | "RPC_TRANSPORT_SYNC_FAILED";
+  | "RPC_TRANSPORT_SYNC_FAILED"
+  | "SEND_CALLS_BATCH_REJECTED"
+  | "ERC7540_OPERATOR_REJECTED"
+  | "ERC7540_ASYNC_SLIPPAGE_DRIFT";
 
 export interface RetailGuardRejectPayload {
   code: RetailGuardReasonCode;

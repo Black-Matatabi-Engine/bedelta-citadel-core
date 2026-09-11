@@ -85,7 +85,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 |--------|----------|--------|
 | EVM wallet injectors (MetaMask-class) | 100M+ monthly active | Industry baseline |
 | AI agent wallet frameworks (2026) | ElizaOS · LangChain · Virtuals · custom copilots | Citadel **EIP-1193 middleware** + B2B `withCitadelShield` |
-| Pre-consensus intercept TAM | Every `eth_sendTransaction` + `eth_signTypedData_v4` | EIP-1193 surface |
+| Pre-consensus intercept TAM | Every `eth_sendTransaction` + `eth_signTypedData_v4` + `wallet_sendCalls` | EIP-1193 / EIP-5792 surface |
 | Wasm bundle budget | **< 28 KiB** · warm **< 60 µs** | `pkg/soil_core.wasm` SSOT |
 
 ---

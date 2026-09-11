@@ -23,6 +23,12 @@ export function formatRetailWarning(
       return "ALERT: Signing channel is severed — wait before retrying (FOMO throttle active).";
     case "RPC_TRANSPORT_SYNC_FAILED":
       return "ALERT: RPC transport stream synchronization anomaly — transaction execution paused to prevent nonce drift.";
+    case "SEND_CALLS_BATCH_REJECTED":
+      return "ALERT: EIP-5792 wallet_sendCalls batch rejected — empty or malformed calls[] (0-Gas pre-broadcast guard).";
+    case "ERC7540_OPERATOR_REJECTED":
+      return `ALERT: ERC-7540 async vault operator ${detail.operator ?? "unknown"} is not whitelisted — setOperator blocked (0-Gas).`;
+    case "ERC7540_ASYNC_SLIPPAGE_DRIFT":
+      return `ALERT: ERC-7540 async vault Pending→Claimable drift ${detail.driftBps ?? "?"}bps exceeds ${detail.maxBps ?? "?"}bps limit — request blocked (0-Gas).`;
     default:
       return `ALERT: Transaction blocked by Retail Guard (${code}).`;
   }

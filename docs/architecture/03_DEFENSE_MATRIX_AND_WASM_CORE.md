@@ -372,7 +372,7 @@ The **EIP-1193 Agentic Wallet Guard SDK** (`@slivervine/eip1193-agentic-wallet-g
 
 | Layer | Module | Defense role |
 |-------|--------|--------------|
-| **Ingress** | `provider.ts` · `announceGuardedProvider` (EIP-6963) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` |
+| **Ingress** | `provider.ts` · `announceGuardedProvider` (EIP-6963) · `eip5792-send-calls.ts` | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` |
 | **Transport sync** | `transport-stream.ts` | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
 | **Calldata** | `calldata-parser.ts` | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
 | **Policy** | `guard-engine.ts` · `risk-evaluator.ts` | Approve gate · venue allowlist · soil fuse · intent ring budget |
@@ -387,6 +387,7 @@ The **EIP-1193 Agentic Wallet Guard SDK** (`@slivervine/eip1193-agentic-wallet-g
 | `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` | Soil lane honeypot fuse |
 | `MAX_ATTEMPTS_EXCEEDED_SEVERED` / `CHANNEL_SEVERED` | `INTENT_RING_U32` 4th-submit severance |
 | `RPC_TRANSPORT_SYNC_FAILED` | RPC transport stream sync recovery (nonce-safe pause) |
+| `SEND_CALLS_BATCH_REJECTED` | EIP-5792 empty / malformed `wallet_sendCalls` `calls[]` |
 
 ```text
 dApp → withRetailGuardProvider(config)

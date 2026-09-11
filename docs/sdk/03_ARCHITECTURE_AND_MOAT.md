@@ -25,6 +25,7 @@
 
 [Wallet Guard Stack]
   dApp → withRetailGuardProvider / announceGuardedProvider (EIP-6963)
+       → eip5792-send-calls (wallet_sendCalls unfold)
        → calldata-parser (u32 selectors: ERC20 · Permit2 · routers)
        → guard-engine (approve · venue · soil · intent gates)
        → wasm-adapter → soil_core.wasm

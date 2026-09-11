@@ -133,7 +133,7 @@ RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb1
 | Alert SSOT | [`src/sdk/eip1193-agentic-wallet-guard/warnings.ts`](../src/sdk/eip1193-agentic-wallet-guard/warnings.ts) |
 | Integration blueprint | [`docs/sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](./sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
 
-Intercepts `eth_sendTransaction` / `eth_signTypedData_v4` at the browser/SDK layer **before** Sequencer ingress — **0-Gas** on rejection. Generic DEX calldata parsing (Uniswap router selectors) is intentional Retail Guard behavior, **not** the pruned Uniswap V3 venue adapter.
+Intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` at the browser/SDK layer **before** Sequencer ingress — **0-Gas** on rejection. Generic DEX calldata parsing (Uniswap router selectors) is intentional Retail Guard behavior, **not** the pruned Uniswap V3 venue adapter.
 
 ### Unit test reason-code coverage (7/7)
 

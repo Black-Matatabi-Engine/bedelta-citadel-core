@@ -3,13 +3,13 @@
 > **License:** Apache-2.0 wrapper · proprietary reflex math compiled in `pkg/soil_core.wasm`  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard`
 
-The EIP-1193 Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction` and `eth_signTypedData_v4` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
+The EIP-1193 Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction`, `eth_signTypedData_v4`, and [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
 
 ## Threat Model — LLM / Agent Hallucination Classes
 
 | Hallucination class | Guard surface | SSOT mechanism |
 |---------------------|---------------|----------------|
-| **Hallucinated spender / approve target** | `eth_sendTransaction` ERC20 `approve` | `evaluateRetailApproveGate` · infinite `UINT256_MAX` block |
+| **Atomic batch hide (wallet_sendCalls)** | EIP-5792 `wallet_sendCalls` | `evaluateEip5792WalletSendCalls` · unfold `calls[]` · `SEND_CALLS_BATCH_REJECTED` |
 | **Unauthorized EIP-712 domain / verifyingContract** | `eth_signTypedData_v4` | `evaluateRetailVenueAllowlist` · `VENUE_DRIFT_REJECTED` |
 | **Permit phishing (message.spender drift)** | EIP-712 Permit payloads | `allowedSpenders[]` cross-check |
 | **Honeypot / toxic slippage trade** | Swap `eth_sendTransaction` | `evaluateSoilSlippagePacked` / Wasm `soil_core_eval` |

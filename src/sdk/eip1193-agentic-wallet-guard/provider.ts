@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * EIP-1193 Agentic Wallet Guard — provider middleware (Apache wrapper · Wasm IP core).
  */
+import { EIP5792_WALLET_SEND_CALLS, evaluateEip5792WalletSendCalls } from "./eip5792-send-calls";
 import { evaluateRetailRisk } from "./risk-evaluator";
 import type { EIP1193Provider, RetailGuardConfig, RetailGuardRejectPayload } from "./types";
 
@@ -47,7 +48,11 @@ export interface EIP6963EventTarget {
   removeEventListener?(type: string, listener: () => void): void;
 }
 
-const GUARDED_METHODS = new Set(["eth_sendTransaction", "eth_signTypedData_v4"]);
+const GUARDED_METHODS = new Set([
+  "eth_sendTransaction",
+  "eth_signTypedData_v4",
+  EIP5792_WALLET_SEND_CALLS,
+]);
 const DEFAULT_RDNS = "io.slivervine.agenticretailwalletguard";
 const DEFAULT_NAME = "EIP-1193 Agentic Wallet Guard";
 
@@ -76,7 +81,10 @@ export function withRetailGuardProvider(
       const params = args.params ?? [];
 
       if (GUARDED_METHODS.has(method)) {
-        const reject = evaluateRetailRisk(config, method, params);
+        const reject =
+          method === EIP5792_WALLET_SEND_CALLS
+            ? evaluateEip5792WalletSendCalls(config, params)
+            : evaluateRetailRisk(config, method, params);
         if (reject) throw new RetailGuardRejectedError(reject);
       }
 

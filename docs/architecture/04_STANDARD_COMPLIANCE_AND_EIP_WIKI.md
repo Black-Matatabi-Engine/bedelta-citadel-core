@@ -7,7 +7,7 @@
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
 
-Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7683** · **ERC-7710** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [next-gen EIP defense matrix](#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
+Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-5792** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7683** · **ERC-7710** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [next-gen EIP defense matrix](#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
 
 ---
 
@@ -17,7 +17,7 @@ Five standards form the **active C-end / on-chain compliance spine** — each ro
 
 | # | Standard | Citadel role | Implementation anchor | Verification |
 |---|----------|--------------|----------------------|--------------|
-| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | Universal provider middleware — pre-consensus `request()` intercept | [`withRetailGuardProvider()`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · guards `eth_sendTransaction` / `eth_signTypedData_v4` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | Universal provider middleware — pre-consensus `request()` intercept | [`withRetailGuardProvider()`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · guards `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` · [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | `retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** |
 | **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | Multi-injected provider discovery & guarded announcer | [`announceGuardedProvider()`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · `eip6963:announceProvider` / `eip6963:requestProvider` · default `rdns`: `io.slivervine.agenticretailwalletguard` | EIP-6963 announce/request cases in [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) |
 | **3** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | Off-chain typed structured data parsing & **pre-signing severance** | Retail Guard: [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) (`eth_signTypedData_v4`) · Gate: [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) · severance: [`root-protection-core.ts`](../../src/core/root-protection-core.ts) · [`risk-severance.ts`](../../src/core/risk-severance.ts) | Forge Gate I1–I12 · `pnpm demo:gmx -- --trip` (FAIL_CLOSED before broadcast) |
 | **4** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)** / **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | Agentic modular AA on-chain policy guard | [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol) · live **42161** [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · ZeroDev Kernel v3 session modules · [`src/adapters/arbitrum/zerodev-aa/`](../../src/adapters/arbitrum/zerodev-aa/) | Forge PolicyGuard **9/9** · `zerodev-aa-gate.test.ts` |
@@ -155,7 +155,8 @@ Production guards on `feat/nextgen-eips-moat` extend the Pre-Consensus Edge-Wasm
 | **ArbOS 61** | Arbitrum L2 execution / Stylus co-residence alignment (⏳ V1.0 Design Spec) | `IngressSafetySwitch.sol` · Elara ingress design · Stylus WASM parity path | Robinhood safety contracts · audit notes |
 | **Robinhood Chain Ingress** | Permissioned institutional egress · AML inbound isolation | Chains **46630** (testnet) / **4663** (mainnet filter) · Across bridge · `IngressSafetySwitch.sol` | Robinhood Across bridge tests · audit snapshot |
 | **WASM Core (`soil_core`)** | Sub-ms pre-execution soil fuse · Cloudflare Edge hot path | `pkg/soil_core.wasm` · `#![no_std]` Rust · budget **< 28 KiB** · warm exec **< 60 µs** · p50 ~106 µs | Wasm feasibility suite · Pillar Set Y Wasm CoreSpec |
-| **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | Ethereum Provider JavaScript API — pre-consensus wallet guard middleware | `withRetailGuardProvider` · [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · fail-closed on `eth_sendTransaction` / `eth_signTypedData_v4` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · [`01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** | Ethereum Provider JavaScript API — pre-consensus wallet guard middleware | `withRetailGuardProvider` · [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · fail-closed on `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` | `retail-guard-provider.test.ts` **35/35** · [`01_SDK_INTEGRATION_BLUEPRINT.md`](../sdk/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | Wallet Call API — `wallet_sendCalls` batch unfold into retail risk stack | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) · empty/malformed `calls[]` fail-closed · one intent-ring attempt per batch | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` **3/3** |
 | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | Multi Injected Provider Discovery — guarded provider announcement | `announceGuardedProvider` · [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · `eip6963:announceProvider` / `eip6963:requestProvider` | [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) · EIP-6963 announce/request |
 | **ERC-2612 / Permit2** | Zero-gas allowance extraterritorial defense | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) · [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) | Permit2 + ERC-20 approve parse/block in retail guard Vitest |
 | **Clock / L2 timestamp monotonicity (EIP-1482-class)** | RPC `block.timestamp` high-watermark · leap / NTP fail-closed · multi-provider failover | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock_core.rs`](../../src/wasm/clock_core.rs) · [`rpc-radar.ts`](../../src/services/adapters/rpc-radar.ts) | [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [§ Dual-Engine](../verifications/01_ON_CHAIN_MAINNET_ANCHORS.md#dual-engine-infrastructure-map-frozen--2026-09-10) |
@@ -218,12 +219,22 @@ Edge `verifyAgentIntent()` validates attestation envelope shape; on-chain ERC-12
 | Field | Citadel binding |
 |-------|-----------------|
 | **Wrapper** | `withRetailGuardProvider(baseProvider, config)` — proxies `request()` on the injected provider |
-| **Guarded methods** | `eth_sendTransaction` · `eth_signTypedData_v4` — evaluated **before** `baseProvider.request()` |
+| **Guarded methods** | `eth_sendTransaction` · `eth_signTypedData_v4` · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` — evaluated **before** `baseProvider.request()` |
 | **Risk stack** | `evaluateRetailRisk()` → RPC transport protocol · calldata parse · approve gate · venue allowlist · soil gate · intent ring |
 | **Fail-closed** | `RetailGuardRejectedError` thrown pre-broadcast — **0-Gas** on rejection; tx never reaches RPC |
 | **Package** | `@slivervine/eip1193-agentic-wallet-guard` · Apache-2.0 wrapper · Wasm IP `pkg/soil_core.wasm` |
 
 The Wallet Guard is an EIP-1193 **middleware layer**, not a replacement wallet. Integrators wrap `window.ethereum` (or any compliant provider) and retain full downstream signing semantics when policy passes.
+
+### EIP-5792 — Wallet Call API (`wallet_sendCalls`)
+
+Agent wallets and modern injectors submit atomic batches via `wallet_sendCalls`, which **does not** pass through `eth_sendTransaction`. Citadel unfolds `params[0].calls[]` into the existing `evaluateRetailRisk()` send-tx stack (approve · venue · soil) and increments `INTENT_RING_U32` **once per batch**. Empty or malformed `calls[]` returns `SEND_CALLS_BATCH_REJECTED` (0-Gas).
+
+| Field | Citadel binding |
+|-------|-----------------|
+| **SSOT** | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) |
+| **Ingress** | `withRetailGuardProvider()` · method `wallet_sendCalls` |
+| **Verification** | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` **3/3 PASS** |
 
 ### EIP-6963 — Multi Injected Provider Discovery (Guarded Provider Announcement)
 

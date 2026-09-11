@@ -25,7 +25,7 @@
 |----------|------|
 | [`../ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon submission · C-end middleware pillar |
 | [`../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md`](../architecture/03_DEFENSE_MATRIX_AND_WASM_CORE.md) | Wasm reflex core · §3.7 Wallet Guard SDK |
-| [`../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | EIP-1193 · EIP-6963 compliance entries |
+| [`../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](../architecture/04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | EIP-1193 · EIP-5792 · EIP-6963 compliance entries |
 
 ---
 

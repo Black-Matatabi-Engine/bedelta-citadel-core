@@ -3,6 +3,7 @@
  * Unified retail risk evaluator — calldata · EIP-712 · soil · intent gates.
  */
 import { parseTransactionCalldata } from "./calldata-parser";
+import { evaluateErc7540FromParsedCalldata } from "./erc7540-async-escort";
 import {
   evaluateRpcTransportProtocol,
   evaluateRetailApproveGate,
@@ -73,14 +74,22 @@ function resolveVenueBit(
   return 0;
 }
 
+export interface RetailRiskEvalOptions {
+  skipTransport?: boolean;
+  skipIntentGate?: boolean;
+}
+
 /** Run full retail risk stack for a guarded EIP-1193 method. */
 export function evaluateRetailRisk(
   config: RetailGuardConfig,
   method: string,
   params: unknown[],
+  options?: RetailRiskEvalOptions,
 ): RetailGuardRejectPayload | null {
-  const transportReject = evaluateRpcTransportProtocol(config);
-  if (transportReject) return transportReject;
+  if (!options?.skipTransport) {
+    const transportReject = evaluateRpcTransportProtocol(config);
+    if (transportReject) return transportReject;
+  }
 
   if (method === "eth_sendTransaction") {
     const tx = parseTx(params);
@@ -102,6 +111,11 @@ export function evaluateRetailRisk(
         config,
       );
       if (approveReject) return approveReject;
+    }
+
+    if (parsed) {
+      const erc7540Reject = evaluateErc7540FromParsedCalldata(parsed, config);
+      if (erc7540Reject) return erc7540Reject;
     }
 
     if (tx?.to) {
@@ -133,6 +147,8 @@ export function evaluateRetailRisk(
     const soilReject = evaluateRetailSoilGate(soilQuote, config.preferWasm !== false);
     if (soilReject) return soilReject;
   }
+
+  if (options?.skipIntentGate) return null;
 
   const venueBit = resolveVenueBit(config, method, params);
   return evaluateRetailIntentGate(config, venueBit);
