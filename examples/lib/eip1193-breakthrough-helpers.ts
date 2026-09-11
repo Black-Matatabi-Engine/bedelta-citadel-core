@@ -1,28 +1,29 @@
 /** Shared ANSI helpers for EIP-1193 / EIP-6963 breakthrough demo CLI. */
 import { keccak_256 } from "@noble/hashes/sha3";
-import { CAPITAL_DEFAULT_TOTAL_VAULT_USD } from "../../src/config/capital-invariant-defaults";
-import { INTENT_MAX_ATTEMPTS_DEFAULT } from "../../src/core/wasm-intent-ffi";
+import {
+  CAPITAL_DEFAULT_TOKEN,
+  CAPITAL_DEFAULT_TOTAL_VAULT_USD,
+} from "../../src/config/capital-invariant-defaults";
+import { GATE_ACTION_FAIL_CLOSED_BLOCK } from "../../src/core/gate-telemetry-types";
 import {
   __resetRetailGuardStateForTests,
   announceGuardedProvider,
   evaluateRetailSoilGate,
-  RetailGuardRejectedError,
-  withRetailGuardProvider,
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
 } from "../../src/sdk/robinhood-agentic-retail-wallet-guard";
-import { computeEffectiveMaxSlUsd, sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
+import { sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
 import { BOLD, CYAN, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import { formatLatencyLabel, measureProbe } from "./demo-timing";
 
 export const EIP1193_DEMO = {
   wallet: "0x1111111111111111111111111111111111111111",
-  gmx: "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-  usdc: "0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f3f",
+  slivervineGate: "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1",
+  gmxGmVault: "0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F",
+  usdc: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
   malicious: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
-  trusted: "0xdddddddddddddddddddddddddddddddddddddddd",
-  permit2: "0x000000000022d473030f116ddee9f6b43ac78b6",
+  permit2: "0x000000000022d473030f116ddee9f6b43ac78ba3",
   rdns: "com.slivervine.citadel",
   arbChainId: 42161,
   boxW: 64,
@@ -45,30 +46,49 @@ export function wasmCoreMetric(us: number): string {
 }
 
 export function truncateAddr(addr: string): string {
-  return `${addr.slice(0, 8)}...`;
+  return `${addr.slice(0, 10)}...`;
 }
 
-export function deriveTripEvtHash(nowMs: number, code: string): string {
-  return `0x${Buffer.from(keccak_256(new TextEncoder().encode(`RiskTripBlocked:${code}:${nowMs}`))).toString("hex")}`;
+export function resolveIntentPrincipalUsd(): number {
+  return sanitizeAccountEquityUsd(process.env.CITADEL_DEMO_EQUITY_USD ?? CAPITAL_DEFAULT_TOTAL_VAULT_USD);
 }
 
-export function resolveCapitalProtectedUsd(): number {
-  return computeEffectiveMaxSlUsd(
-    sanitizeAccountEquityUsd(process.env.CITADEL_DEMO_EQUITY_USD ?? CAPITAL_DEFAULT_TOTAL_VAULT_USD),
-  );
+export function formatIntentUsd(usd: number): string {
+  return `$${usd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })} ${CAPITAL_DEFAULT_TOKEN}`;
+}
+
+export function deriveTripEvtHash(nowMs: number, agentId: string, reason: string): string {
+  const payload = `RiskTripBlocked:${agentId}:${reason}:${nowMs}:${GATE_ACTION_FAIL_CLOSED_BLOCK}`;
+  return `0x${Buffer.from(keccak_256(new TextEncoder().encode(payload))).toString("hex")}`;
+}
+
+export function mapDuneTelemetryReason(code: string): string {
+  const table: Record<string, string> = {
+    VENUE_DRIFT_REJECTED: "VENUE_DRIFT",
+    UNAUTHORIZED_SPENDER_REJECTED: "UNAUTHORIZED_SPENDER",
+    SOLVER_MEV_SUSPECT: "SOLVER_MEV",
+    MAX_ATTEMPTS_EXCEEDED_SEVERED: "CHANNEL_SEVERED",
+  };
+  return table[code] ?? code.replace(/_REJECTED$/, "").replace(/_EXCEEDED_SEVERED$/, "_SEVERED");
 }
 
 export function demoConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGuardConfig {
   const d = EIP1193_DEMO;
+  const venues = [d.gmxGmVault, d.usdc, d.permit2, d.slivervineGate].map((a) => a.toLowerCase());
   return {
     walletAddress: d.wallet,
     allowedVenueMask: 0b1111,
-    allowedVenues: [d.gmx, d.usdc, d.permit2].map((a) => a.toLowerCase()),
-    allowedSpenders: [d.trusted.toLowerCase()],
-    contractVenueIndex: { [d.gmx.toLowerCase()]: 0, [d.usdc.toLowerCase()]: 1, [d.permit2.toLowerCase()]: 2 },
-    maxApprovalUsd: 10_000,
+    allowedVenues: venues,
+    allowedSpenders: [d.slivervineGate.toLowerCase()],
+    contractVenueIndex: {
+      [d.gmxGmVault.toLowerCase()]: 0,
+      [d.usdc.toLowerCase()]: 1,
+      [d.permit2.toLowerCase()]: 2,
+      [d.slivervineGate.toLowerCase()]: 3,
+    },
+    maxApprovalUsd: resolveIntentPrincipalUsd(),
     approvalTokenPriceUsd: 1,
-    approvalTokenDecimals: 18,
+    approvalTokenDecimals: 6,
     soilQuote: {
       hlSpot: 3500,
       hlPerp: 3500,
@@ -126,10 +146,8 @@ export function printPayloadBox(chainId: number, wasmUs: number, clean: boolean)
   const w = EIP1193_DEMO.boxW;
   const verdict = clean ? breakthroughMetric("CLEAN (0-Gas Allowed)") : rejectCode("TRIP");
   console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(`${CYAN}│${R} PAYLOAD PARSER: ERC-20 Approve / GMX GM Deposit`);
-  console.log(
-    `${CYAN}│${R} ${eipTag("EIP-712")} DOMAIN: ChainId: ${chainId} (Arbitrum One) | Verifier: ${GREEN}${BOLD}VERIFIED${R}`,
-  );
+  console.log(`${CYAN}│${R} PAYLOAD PARSER: ERC-20 Approve / GMX GM Deposit -> ${truncateAddr(EIP1193_DEMO.gmxGmVault)}`);
+  console.log(`${CYAN}│${R} ${eipTag("EIP-712")} DOMAIN: ChainId: ${chainId} (Arbitrum One) | Verifier: ${GREEN}${BOLD}VERIFIED${R}`);
   console.log(`${CYAN}│${R} WASM REFLEX: ${wasmCoreMetric(wasmUs)} Soil Check -> ${verdict}`);
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
 }
@@ -144,25 +162,23 @@ export function printLatencyBreakdown(totalUs: number, wasmUs: number): void {
 export function printChannelOpen(integrityPct: number): void {
   console.log(`  ${eipTag("CHANNEL")} ${eipTag("EIP-712")} Signature Channel: ${GREEN}${BOLD}OPEN${R} (Channel Integrity: ${integrityPct}%)`);
 }
-export function printForwardGate(addr: string): void {
-  console.log(`  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Provider -> Dispatched to Sequencer RPC (${truncateAddr(addr)})`);
+
+export function printForwardGate(): void {
+  console.log(
+    `  ${eipTag("FORWARD")} ${eipTag("EIP-1193")} Guarded Provider -> Dispatched to Sequencer RPC (${truncateAddr(EIP1193_DEMO.gmxGmVault)} · Gate ${truncateAddr(EIP1193_DEMO.slivervineGate)})`,
+  );
 }
 
 export function printDefenseMatrixHeader(): void {
   console.log(`\n🔥 ${RED}${BOLD}[BREAKTHROUGH DEFENSE MATRIX TRIGGERED]${R}`);
 }
 
-export function printDefenseMatrixLine(
-  guard: string,
-  detail: string,
-  code: string | undefined,
-  branch: "├" | "└",
-): void {
+export function printDefenseMatrixLine(guard: string, detail: string, code: string | undefined, branch: "├" | "└"): void {
   const suffix = code ? ` (${rejectCode(code)})` : "";
   console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix}`);
 }
 
-export function printPreConsensusProofBox(wasmUs: number): void {
+export function printPreConsensusProofBox(wasmUs: number, capitalUsd: number): void {
   const w = EIP1193_DEMO.boxW;
   const bar = `${CYAN}┌${"─".repeat(w)}┐${R}`;
   const gas = breakthroughMetric("0.000000 ETH");
@@ -170,30 +186,15 @@ export function printPreConsensusProofBox(wasmUs: number): void {
   console.log(`${bar}\n${CYAN}│${R} ${RED}${BOLD}🚨 PRE-CONSENSUS BREAKTHROUGH PROOF${R}`);
   console.log(`${CYAN}│${R}  ▸ WASM REFLEX TIME : ${wasmCoreMetric(wasmUs)} (Sub-10ms Wasm Core Execution)`);
   console.log(`${CYAN}│${R}  ▸ GAS BURNED       : ${gas} (${bytes})`);
+  console.log(`${CYAN}│${R}  ▸ CAPITAL PROTECTED: ${formatIntentUsd(capitalUsd)} (lostUsd = $0.00 · 100% Principal Preserved)`);
   console.log(`${CYAN}│${R}  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via ${eipTag("EIP-1193")} Middleware`);
   console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
 }
 
-export function printTripFooter(capitalUsd: number, evtHash: string): void {
+export function printDuneTelemetry(agentId: string, rejectCodeRaw: string, nowMs: number): void {
+  const reason = mapDuneTelemetryReason(rejectCodeRaw);
   console.log(
-    `▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: $${capitalUsd.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`,
+    `${GRAY}[TELEMETRY]${R} Event: RiskTripBlocked { agentId: "${agentId}", actionCode: ${GATE_ACTION_FAIL_CLOSED_BLOCK}, reason: "${reason}" }`,
   );
-  console.log(
-    `${GRAY}[TELEMETRY]${R} Event: RiskTripBlocked(evtHash: ${evtHash.slice(0, 10)}...) -> ${CYAN}Dune Ingested${R} (silvervine_chaos.intercepts)`,
-  );
-}
-
-export async function probeChannelSever(cfg: RetailGuardConfig): Promise<number> {
-  __resetRetailGuardStateForTests();
-  const guarded = withRetailGuardProvider({ request: async () => "0x1" }, cfg);
-  const params = [{ from: EIP1193_DEMO.wallet, to: EIP1193_DEMO.gmx, value: "0x0" }];
-  for (let i = 0; i < INTENT_MAX_ATTEMPTS_DEFAULT + 2; i++) {
-    try {
-      await guarded.request({ method: "eth_sendTransaction", params });
-    } catch (err) {
-      if (err instanceof RetailGuardRejectedError) return i + 1;
-      throw err;
-    }
-  }
-  return INTENT_MAX_ATTEMPTS_DEFAULT + 1;
+  console.log(`▸ Dune Spell Sync Hash: ${deriveTripEvtHash(nowMs, agentId, reason)} -> ${CYAN}silvervine_chaos.intercepts${R}`);
 }
