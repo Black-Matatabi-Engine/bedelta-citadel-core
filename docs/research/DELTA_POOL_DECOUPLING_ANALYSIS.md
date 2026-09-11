@@ -150,7 +150,7 @@ The guard layer and execution layer are already separated at the adapter boundar
 | `npx vitest run tests/adapters/treasury-escort-router.test.ts` | Escort quote + size gates | **Active** |
 | `npx vitest run tests/adapters/across-ingress-bridge.test.ts` | AML inbound block | **Active** |
 
-### 4.4 Deferred to V1.5 (Not Required for Buildathon Tier 0/1)
+### 4.4 Deferred to V1.5 Plug-and-Play Yield Module (Not Required for Buildathon Tier 0/1)
 
 | Entrypoint | Current Role | Decouple Action |
 |------------|--------------|-----------------|
@@ -298,7 +298,9 @@ Decoupling the Delta Pool / Hedging Engine is **low-risk and high-clarity** for 
 3. The Delta Pool stack maps cleanly to a **V1.5 Plug-and-Play Yield Module** without deleting production code.
 4. The simplified pitch amplifies the **7-EIP Standards Moat** (ERC-7683 / EIP-7702 / ERC-7710 + core 4) without yield narrative dilution.
 
-**Research recommendation:** Proceed with decoupled **Core Guard Only** pitch for 9/14 Buildathon; retain full DN stack on `feat/delta-pool-v1.5-extract` for post-grant yield productization.
+**Research recommendation:** Proceed with decoupled **Core Guard Only** pitch for 9/14 Buildathon (Tier 0 SDK/CLI + Tier 1 full regression); reposition Delta Pool as **V1.5 / V2.0 Modular Yield Plug-in** on a dedicated extract branch post-submission.
+
+**Verification SSOT (this branch):** `226 test files | 1057 PASS clean (100%)` · `pnpm exec tsc --noEmit` 0 errors.
 
 ---
 
