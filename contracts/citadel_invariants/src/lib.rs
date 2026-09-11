@@ -11,12 +11,17 @@ extern crate alloc;
 
 pub mod abi;
 mod gmx_invariants;
+mod nested_decode;
 mod soil_eval_u64;
 
 #[cfg(all(feature = "host-export", target_arch = "wasm32"))]
 mod host_wasm;
 
 pub use gmx_invariants::{ERR_EXECUTION_FEE, ERR_MIN_MARKET_TOKENS, ERR_POOL_IMBALANCE};
+pub use nested_decode::{
+    decode_nested_fail_closed, BLOCK_DEPTH, BLOCK_LEN, BLOCK_OK, BLOCK_SHORT, BLOCK_TOXIC,
+    FLAG_L1_BLOAT, FLAG_NEST, FLAG_TOXIC, MAX_INNER_LEN, MAX_NEST_DEPTH, PACKED_MIN,
+};
 pub use soil_eval_u64::{SOIL_REASON_CROSS, SOIL_REASON_DEPTH, SOIL_REASON_PROTOCOL};
 
 /// Core evaluator — shared by Stylus entrypoint, `cargo test`, and host wasm export.
