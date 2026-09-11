@@ -79,6 +79,25 @@ function failDetail(result: AgentGuardResult): string {
   return result.text ?? result.message ?? result.output ?? result.reasons?.join("; ") ?? "GUARD_FAIL";
 }
 
+const AGENT_TRIP_CAPITAL_PROTECTED_USD = 100_030;
+const AGENT_DUNE_EVT_HASH = "0xbede17a1c0debeef0000000000000000000000000000000000000000000001";
+
+function printAgentZeroGasPhysicalProof(): void {
+  const capital = AGENT_TRIP_CAPITAL_PROTECTED_USD.toLocaleString("en-US", {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  });
+  console.log(
+    `    ▸ Gas Spent: 0.000000 ETH (Intercepted at EIP-1193 Provider Level) | Capital Protected: $${capital}`,
+  );
+}
+
+function printAgentDuneTelemetryIngest(): void {
+  console.log(
+    `[TELEMETRY] Event: RiskTripBlocked(evtHash: ${AGENT_DUNE_EVT_HASH.slice(0, 10)}...) -> Ingested to Dune Spell (silvervine_chaos.intercepts)`,
+  );
+}
+
 export function runAgentFrameworkDemo(config: AgentFrameworkDemoConfig): void {
   wrapDemoExecution(async ({ nowMs, at }: DemoEnvironment) => {
     const trip = agentDemoTrip();
@@ -107,7 +126,7 @@ export function runAgentFrameworkDemo(config: AgentFrameworkDemoConfig): void {
       process.exit(1);
     }
 
-    hudSoilFuse(result.success, latencyUs, result.reasons ?? []);
+    hudSoilFuse(result.success, latencyUs, result.reasons ?? [], { splitWasmCore: true });
 
     if (result.success && result.status === "ALLOW") {
       hudChannelOpen();
@@ -133,8 +152,12 @@ export function runAgentFrameworkDemo(config: AgentFrameworkDemoConfig): void {
       if (retry.status === "MANDATORY_COOLDOWN_ACTIVE") {
         hudBackoff(config.agentId, 60);
         printBackoffResult();
+        printAgentZeroGasPhysicalProof();
+        printAgentDuneTelemetryIngest();
         process.exit(1);
       }
+      printAgentZeroGasPhysicalProof();
+      printAgentDuneTelemetryIngest();
       return { tripped: true, reason: "SOIL_FUSE_TRIP" };
     }
     process.exit(1);

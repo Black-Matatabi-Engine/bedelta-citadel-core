@@ -3,7 +3,7 @@
  * Virtuals GAME Framework Demo — Citadel pre-broadcast worker guard.
  * Usage: pnpm demo:virtuals
  * Trip:  pnpm demo:virtuals -- --trip
- * Venue: pnpm demo:virtuals -- --venue=aave
+ * Venue: pnpm demo:virtuals -- --venue=variational
  */
 import { evaluateVirtualsGameTask } from "../src/adapters/virtuals/virtuals-game-adapter";
 import { runAgentFrameworkDemo } from "./lib/agent-framework-demo";
