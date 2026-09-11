@@ -64,3 +64,13 @@ Targeted verify: `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test
 | **Option 2** | `docs/telemetry/DUNE_DASHBOARD_SPECIFICATION.md` Query C0–C5 | ✅ Chaos intercept SQL + telemetry parity table |
 | **Parity** | `gate-telemetry-types.ts` vs Dune `gateActionCode` | ✅ `GATE_ACTION_FAIL_CLOSED_BLOCK = 1` aligned |
 | **Verify** | `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test.ts` | ✅ **5/5 PASS** |
+
+## Tier-1 Prune & Script Alignment — 2026-09-11
+
+| Action | Detail |
+|--------|--------|
+| **Safety backup** | `archive/v0.8-full-adapters-backup` pushed to `origin` (pre-prune snapshot) |
+| **git rm (7 files)** | `examples/adapters/*` HUD CLI duplicates (×5) · `crewai-autogen-adapter.py` · `mock-analytics-generator.ts` |
+| **package.json** | Added `"demo:wayfinder": "tsx examples/wayfinder-agent-demo.ts"` |
+| **Preserved** | `src/adapters/{elizaos,virtuals,wayfinder,langchain}/*` · `examples/*-agent-demo.ts` · `pnpm demo:e2e` |
+| **Verify** | `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test.ts` |
