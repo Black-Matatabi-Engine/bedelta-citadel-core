@@ -97,7 +97,7 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 
 ---
 
-## Robinhood Chain Hard Evidence SSOT (Pillar 2 Reference Escort Adapter)
+## Robinhood Chain Hard Evidence SSOT (Pillar Set X Reference Escort Adapter)
 
 > **ChainId SSOT:** `ROBINHOOD_TESTNET_CHAIN_ID = 46630` · `ROBINHOOD_MAINNET_CHAIN_ID = 4663` — [`src/sdk/constants.ts`](../src/sdk/constants.ts) **L24–25**. Codebase does **not** use `46631`.
 

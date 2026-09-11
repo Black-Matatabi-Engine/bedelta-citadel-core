@@ -51,7 +51,7 @@
 - **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
 - **Universal [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK:** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` pre-consensus.
-- **Robinhood Chain (Pillar 2 Reference Escort):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · RWA gates at [`r-chain-yield-router.ts`](./src/adapters/robinhood/r-chain-yield-router.ts) · verify: `pnpm demo:escort`.
+- **Robinhood Chain (Pillar Set X Reference Escort Adapter · Component 2: Compliance Ingress Firewall):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · RWA gates at [`r-chain-yield-router.ts`](./src/adapters/robinhood/r-chain-yield-router.ts) · verify: `pnpm demo:escort`.
 
 ---
 

@@ -150,7 +150,7 @@ pnpm demo:e2e
 
 Full matrix → [`docs/VERIFICATION_MATRIX.md`](./docs/VERIFICATION_MATRIX.md) · [`docs/DEMO_GUIDE.md`](./docs/DEMO_GUIDE.md)
 
-### Robinhood Chain Hard Evidence (Pitch SSOT)
+### Robinhood Chain Hard Evidence — Pillar Set X Reference Escort Adapter (Pitch SSOT)
 
 | Fact | Code / test anchor |
 |------|-------------------|

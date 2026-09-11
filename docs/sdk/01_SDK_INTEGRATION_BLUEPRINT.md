@@ -53,13 +53,13 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 
 ## Robinhood Chain Integration Boundary (Hard Evidence SSOT)
 
-This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic at the provider layer. Robinhood Chain-specific compliance lives in **Pillar 2 adapter modules**, not inside `withRetailGuardProvider()` defaults.
+This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic at the provider layer. Robinhood Chain-specific compliance lives in **Pillar Set X (Component 2: Compliance Ingress Firewall) adapter modules**, not inside `withRetailGuardProvider()` defaults.
 
 | Concern | Layer | Code anchor |
 |---------|-------|-------------|
 | **ChainId registration** | SDK constants | [`src/sdk/constants.ts`](../../src/sdk/constants.ts) — `46630` (testnet) · `4663` (mainnet) |
-| **Outbound escort** | Pillar 2 bridge | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) `assertUnidirectionalBridge()` — **`46630`/`4663` → `42161` only** |
-| **Inbound AML** | Pillar 2 bridge | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) — `42161 → Robinhood` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
+| **Outbound escort** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) `assertUnidirectionalBridge()` — **`46630`/`4663` → `42161` only** |
+| **Inbound AML** | Pillar Set X (Component 2: Compliance Ingress Firewall) bridge | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) — `42161 → Robinhood` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
 | **RWA / idle yield** | Adapter decision | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) `quoteRChainYieldToArbitrumGm()` — `assetKind` · `symbol` · `RWA_YIELD_MIN_USD`/`MAX` · bridge escort bind |
 | **0-Gas retry storm** | **This SDK** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) `evaluateRetailIntentGate()` → `MAX_ATTEMPTS_EXCEEDED_SEVERED` · Wasm `INTENT_RING_U32` |
 | **ERC-7683 cross-chain** | **This SDK** (generic) | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — chain IDs supplied by caller; no Robinhood hard-wire |
