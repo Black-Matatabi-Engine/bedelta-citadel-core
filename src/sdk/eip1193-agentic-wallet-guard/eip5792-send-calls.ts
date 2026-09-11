@@ -20,23 +20,23 @@ const TX_PARAMS: [unknown] = [null];
 
 type TxEnv = { to?: string; data?: string; value?: string };
 
-function asTx(call: unknown): TxEnv | null {
-  if (!call || typeof call !== "object") return null;
-  return call as TxEnv;
+function rawCalls(params: unknown[]): unknown[] | null {
+  const body = params[0];
+  if (!body || typeof body !== "object") return null;
+  const calls = (body as { calls?: unknown }).calls;
+  return Array.isArray(calls) ? calls : null;
 }
 
 /** Parse EIP-5792 `wallet_sendCalls` params[0].calls into tx envelopes. */
 export function parseWalletSendCalls(params: unknown[]): TxEnv[] | null {
-  const body = params[0];
-  if (!body || typeof body !== "object") return null;
-  const calls = (body as { calls?: unknown }).calls;
-  if (!Array.isArray(calls)) return null;
-  if (calls.length === 0) return [];
-  const out: TxEnv[] = new Array(calls.length);
-  for (let i = 0; i < calls.length; i++) {
-    const tx = asTx(calls[i]);
-    if (!tx) return null;
-    out[i] = tx;
+  const calls = rawCalls(params);
+  if (!calls) return null;
+  const len = calls.length;
+  const out: TxEnv[] = new Array(len);
+  for (let i = 0; i < len; i++) {
+    const tx = calls[i];
+    if (!tx || typeof tx !== "object") return null;
+    out[i] = tx as TxEnv;
   }
   return out;
 }
@@ -45,19 +45,21 @@ export function evaluateEip5792WalletSendCalls(
   config: RetailGuardConfig,
   params: unknown[],
 ): RetailGuardRejectPayload | null {
-  const calls = parseWalletSendCalls(params);
+  const calls = rawCalls(params);
   if (!calls || calls.length === 0) return EMPTY_BATCH;
 
   const transport = evaluateRpcTransportProtocol(config);
   if (transport) return transport;
 
   let venueBits = 0;
-  for (let i = 0; i < calls.length; i++) {
-    const tx = calls[i]!;
+  const len = calls.length;
+  for (let i = 0; i < len; i++) {
+    const tx = calls[i];
+    if (!tx || typeof tx !== "object") return EMPTY_BATCH;
     TX_PARAMS[0] = tx;
     const reject = evaluateRetailRisk(config, "eth_sendTransaction", TX_PARAMS, SKIP_OPTS);
     if (reject) return reject;
-    venueBits |= resolveVenueBitFromContract(tx.to, config.contractVenueIndex);
+    venueBits |= resolveVenueBitFromContract((tx as TxEnv).to, config.contractVenueIndex);
   }
   return evaluateRetailIntentGate(config, venueBits);
 }

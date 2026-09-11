@@ -17,6 +17,8 @@ export {
   packSoilLane,
   evaluateSoilSlippagePacked,
   computeSoilSlippageMetrics,
+  evalAsyncVaultDrift,
+  evalAsyncVaultDriftBps,
   type SoilSlippageOverrides,
 } from "./soil-resistance-math";
 

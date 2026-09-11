@@ -85,3 +85,18 @@ export function computeSoilSlippageMetrics(
   );
   return evaluateSoilSlippagePacked(SOIL_LANE_SCRATCH);
 }
+
+const ASYNC_VAULT_BPS = 10_000n;
+
+/** |claim−request| × 10000 > maxBps × request — fail-closed if request≤0. */
+export function evalAsyncVaultDrift(requestRate: bigint, claimRate: bigint, maxBps: number): boolean {
+  if (requestRate <= 0n || !Number.isFinite(maxBps) || maxBps < 0) return true;
+  const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
+  return delta * ASYNC_VAULT_BPS > BigInt(maxBps | 0) * requestRate;
+}
+
+export function evalAsyncVaultDriftBps(requestRate: bigint, claimRate: bigint): number {
+  if (requestRate <= 0n) return Number.POSITIVE_INFINITY;
+  const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
+  return Number((delta * ASYNC_VAULT_BPS) / requestRate);
+}

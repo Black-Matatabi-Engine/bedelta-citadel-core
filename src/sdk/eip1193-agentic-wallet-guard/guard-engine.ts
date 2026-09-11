@@ -159,7 +159,7 @@ export function evaluateRetailIntentGate(
   const allowedMask = config.allowedVenueMask ?? 0;
   if (allowedMask === 0 || targetVenueBit === 0) return null;
 
-  const offset = slotBaseOffset(hashKeyToSlotIndex(`retail:${config.walletAddress.trim().toLowerCase()}`));
+  const offset = slotBaseOffset(hashKeyToSlotIndex(`retail:${config.walletAddress.trim().toLowerCase()}`) & 0xff);
   const maxAttempts = config.maxAttempts ?? INTENT_MAX_ATTEMPTS_DEFAULT;
   const wasm =
     config.preferWasm !== false

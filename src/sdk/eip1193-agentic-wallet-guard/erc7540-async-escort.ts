@@ -2,6 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * ERC-7540 async vault escort — operator whitelist + vectorized Pending→Claimable bps.
  */
+import { evalAsyncVaultDrift, evalAsyncVaultDriftBps } from "../../core/soil-resistance-math";
 import type { ParsedCalldata, ParsedErc7540Request, ParsedErc7540SetOperator } from "./calldata-parser";
 import { formatRetailWarning } from "./warnings";
 import type { RetailGuardConfig, RetailGuardRejectPayload } from "./types";
@@ -35,11 +36,8 @@ function isAllowedOperator(address: string, config: RetailGuardConfig): boolean 
   return listHas(address, config.allowedOperators) || listHas(address, config.allowedSpenders);
 }
 
-/** |request−claimable| × 10000 / request — fail-closed on non-positive request. */
 export function computeErc7540SlippageDriftBps(requestWei: bigint, claimableWei: bigint): number {
-  if (requestWei <= 0n) return Number.POSITIVE_INFINITY;
-  const delta = requestWei > claimableWei ? requestWei - claimableWei : claimableWei - requestWei;
-  return Number((delta * 10_000n) / requestWei);
+  return evalAsyncVaultDriftBps(requestWei, claimableWei);
 }
 
 function rejectOperator(operator: string): RetailGuardRejectPayload {
@@ -80,8 +78,8 @@ export function evaluateErc7540AsyncEscortGuard(
   if (!quote) return null;
 
   const maxBps = quote.maxSlippageBps ?? config.erc7540MaxSlippageBps ?? DEFAULT_MAX_SLIPPAGE_BPS;
-  const driftBps = computeErc7540SlippageDriftBps(quote.requestAmountWei, quote.claimableAmountWei);
-  return driftBps > maxBps ? rejectSlippage(driftBps, maxBps) : null;
+  if (!evalAsyncVaultDrift(quote.requestAmountWei, quote.claimableAmountWei, maxBps)) return null;
+  return rejectSlippage(evalAsyncVaultDriftBps(quote.requestAmountWei, quote.claimableAmountWei), maxBps);
 }
 
 export function evaluateErc7540FromParsedCalldata(

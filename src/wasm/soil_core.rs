@@ -97,6 +97,24 @@ pub extern "C" fn session_core_ok(
     1
 }
 
+/// ERC-7540 async vault drift: |claim−request| * 10000 > max_bps * request (1=trip).
+#[no_mangle]
+pub extern "C" fn eval_async_vault_drift(request_rate: u64, claim_rate: u64, max_bps: u64) -> u32 {
+    if request_rate == 0 {
+        return 1;
+    }
+    let delta = if claim_rate > request_rate {
+        claim_rate - request_rate
+    } else {
+        request_rate - claim_rate
+    };
+    if (delta as u128) * 10000 > (max_bps as u128) * (request_rate as u128) {
+        1
+    } else {
+        0
+    }
+}
+
 /// Module ABI stamp — host verifies Wasm is official soil_core.
 #[no_mangle]
 pub extern "C" fn soil_core_abi_version() -> u32 {
