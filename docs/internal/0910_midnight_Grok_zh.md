@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 深夜 Grok 30人 Persona 戰略決策評審（Option A vs Option B · 2026-09-11）
 
 | 欄位 | 值 |

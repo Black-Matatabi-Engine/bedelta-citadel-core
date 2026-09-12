@@ -3,7 +3,8 @@
  * ERC-7540 async vault escort — operator whitelist + vectorized Pending→Claimable bps.
  */
 import { evalAsyncVaultDrift, evalAsyncVaultDriftBps } from "../../core/soil-resistance-math";
-import type { ParsedCalldata, ParsedErc7540Request, ParsedErc7540SetOperator } from "./calldata-parser";
+import { isAddressInAllowlist } from "./address-compare";
+import type { ParsedCalldata, ParsedErc7540Request, ParsedErc7540SetOperator } from "./calldata-types";
 import { formatRetailWarning } from "./warnings";
 import type { RetailGuardConfig, RetailGuardRejectPayload } from "./types";
 
@@ -23,17 +24,11 @@ export interface Erc7540AsyncQuote {
 
 const DEFAULT_MAX_SLIPPAGE_BPS = 50;
 
-function listHas(address: string, list: readonly string[] | undefined): boolean {
-  if (!list?.length) return false;
-  const n = address.trim().toLowerCase();
-  for (let i = 0; i < list.length; i++) {
-    if (list[i]!.trim().toLowerCase() === n) return true;
-  }
-  return false;
-}
-
 function isAllowedOperator(address: string, config: RetailGuardConfig): boolean {
-  return listHas(address, config.allowedOperators) || listHas(address, config.allowedSpenders);
+  return (
+    isAddressInAllowlist(address, config.allowedOperators) ||
+    isAddressInAllowlist(address, config.allowedSpenders)
+  );
 }
 
 export function computeErc7540SlippageDriftBps(requestWei: bigint, claimableWei: bigint): number {

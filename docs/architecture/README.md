@@ -1,6 +1,6 @@
 # Architecture Specification Index
 
-> **Vitest SSOT:** **228 test files | 1063 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
+> **Vitest SSOT:** **228 test files | 1064 PASS clean** · **Wasm:** `p50 ~106 µs` · `<28 KiB` budget · **Worker bundle:** **143.77 KiB raw | 50.94 KiB gzip** (`limitKiB: 150` · `pass: true`) · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated`
 
 **Hybrid Pillar Architecture**
 
@@ -17,6 +17,8 @@
 | **03** | [`03_DEFENSE_MATRIX_AND_WASM_CORE.md`](./03_DEFENSE_MATRIX_AND_WASM_CORE.md) | **ExoMesh Engine Substrate (Pillar Set Y)** — R01–R20 Defense Matrix · `soil_core` Wasm · microsecond moats |
 | **04** | [`04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md`](./04_STANDARD_COMPLIANCE_AND_EIP_WIKI.md) | ERC-8196 (Final) · ERC-4337 · EIP-712 · Stylus coprocessor · ArbOS alignment |
 | **05** | [`05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](./05_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | **88% / 12%** risk spectrum · Basel mapping · fail-closed boundaries · disclaimers |
+| **06** | [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](./06_HACKER_PROFILING_AND_TOXICOLOGY.md) | Mindhunter MO signatures (A/B/C) · Tang Sect toxicology (C1 honeypot · vaccine) · sub-1.8µs hidden blade |
+| **07** | [`07_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md`](./07_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) | Pre-Consensus Threat Telemetry (PCTII) · `slivervine_telemetry_events` schema · MO-CVE · ARB benchmark |
 
 **Legacy path:** [`01_TECHNICAL_SPECIFICATION.md`](./01_TECHNICAL_SPECIFICATION.md) → [`00_TECHNICAL_SPECIFICATION_REDIRECT.md`](./00_TECHNICAL_SPECIFICATION_REDIRECT.md)
 

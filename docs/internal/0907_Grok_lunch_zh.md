@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 首次冷評 30 Persona 壓力評審（Lunch Cold Panel · 2026-09-07 午）
 
 | 欄位 | 值 |

@@ -74,6 +74,7 @@ export function computeSoilSlippageMetrics(
 ): { crossVenueSlippage: number; spotPerpSlippage: number; tripFlags: number } {
   const slippageFuse = overrides?.maxSlippage ?? input.maxSlippage ?? MAX_SLIPPAGE;
   const minDepthUsd = overrides?.minDepthUsd ?? resolveSoilMinDepthUsd(input);
+  SOIL_LANE_SCRATCH.fill(0);
   packSoilLane(
     input.hlSpot,
     input.hlPerp,

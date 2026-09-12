@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * ERC-7683 Cross-Chain Intent Guard — pre-consensus solver MEV / slippage gate.
  */
-import { evaluateSoilSlippagePacked, MAX_SLIPPAGE, packSoilLane } from "../../core/soil-resistance-math";
+import { computeSoilSlippageMetrics, MAX_SLIPPAGE } from "../../core/soil-resistance-math";
 import { evaluateSoilViaWasm } from "./wasm-adapter";
 import type { RetailSoilQuote } from "./types";
 
@@ -41,7 +41,6 @@ export interface Erc7683GuardVerdict {
 
 const DEFAULT_MAX_SLIPPAGE_BPS = 50;
 const DEFAULT_SOLVER_MEV_BPS = 30;
-const SOIL_LANE = new Float64Array(6);
 
 function bpsDelta(numerator: bigint, denominator: bigint): number {
   if (denominator <= 0n) return Number.POSITIVE_INFINITY;
@@ -73,16 +72,15 @@ function evaluateWasmSoilLane(quote: RetailSoilQuote | undefined): number {
   if (!quote) return 0;
   const wasm = evaluateSoilViaWasm(quote);
   if (wasm) return wasm.tripFlags;
-  const lane = packSoilLane(
-    quote.hlSpot,
-    quote.hlPerp,
-    quote.dydxPerp,
-    quote.depthUsd,
-    quote.maxSlippage ?? MAX_SLIPPAGE,
-    quote.minDepthUsd ?? 100_000,
-    SOIL_LANE,
-  );
-  return evaluateSoilSlippagePacked(lane).tripFlags;
+  return computeSoilSlippageMetrics({
+    symbol: "",
+    hlSpot: quote.hlSpot,
+    hlPerp: quote.hlPerp,
+    dydxPerp: quote.dydxPerp,
+    depthUsd: quote.depthUsd,
+    maxSlippage: quote.maxSlippage ?? MAX_SLIPPAGE,
+    minDepthUsd: quote.minDepthUsd ?? 100_000,
+  }).tripFlags;
 }
 
 /** Sub-10ms Edge guard for ERC-7683 CrossChainOrder pre-broadcast simulation. */

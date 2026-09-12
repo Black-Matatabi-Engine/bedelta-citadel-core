@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # 双钱包架构深度审计报告
 
 ## 执行摘要

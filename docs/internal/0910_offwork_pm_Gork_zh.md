@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 下班 PM OpSec 綜合評審（5-Venue Core + Pendle Yield Shield · 2026-09-10）
 
 | 欄位 | 值 |

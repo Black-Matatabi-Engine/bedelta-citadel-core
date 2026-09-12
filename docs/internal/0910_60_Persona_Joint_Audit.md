@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 60 Persona Joint Pressure Audit (Production Workflow & Mainnet Verification)
 
 | Field | Value |

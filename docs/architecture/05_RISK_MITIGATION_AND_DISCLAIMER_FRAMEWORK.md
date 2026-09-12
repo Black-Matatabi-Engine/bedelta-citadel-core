@@ -40,7 +40,9 @@
 
 > **Effective scope:** This section applies to all readers — grant evaluators, institutional allocators, AI-agent integrators, and fund-of-funds diligence teams. By referencing this framework, you acknowledge that **no software can eliminate 100% of systemic crypto, market, or adversarial risks**.
 
-### 0.1 What SliverVine Citadel Shield Does — and Does Not — Guarantee
+<a id="01-what-slivervine-citadel-shield-does-and-does-not-guarantee"></a>
+
+### 0.1 What SliverVine ExoMesh Does — and Does Not — Guarantee
 
 **SliverVine ExoMesh** provides an **88% pre-broadcast fail-closed interceptor mesh** — anchored by the **sub-ms Wasm soil gate** (`checkSoilResistance()` · `pkg/soil_core.wasm`) — designed to **sever toxic payloads before GMX / Hyperliquid broadcast**.
 

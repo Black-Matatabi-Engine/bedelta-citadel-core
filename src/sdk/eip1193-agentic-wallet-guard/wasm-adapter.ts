@@ -56,6 +56,18 @@ type RetailWasmExports = {
 let exportsRef: RetailWasmExports | null = null;
 let wasmU8: Uint8Array | null = null;
 let wasmView: DataView | null = null;
+let wasmInitScratch: Uint8Array | null = null;
+
+const BIGINT_U32_LUT: bigint[] = (() => {
+  const lut: bigint[] = new Array(4096);
+  for (let i = 0; i < lut.length; i += 1) lut[i] = BigInt(i);
+  return lut;
+})();
+
+function toBigIntU32(n: number): bigint {
+  const v = n >>> 0;
+  return v < BIGINT_U32_LUT.length ? BIGINT_U32_LUT[v]! : BigInt(v);
+}
 
 function bindViews(): { u8: Uint8Array; view: DataView } | null {
   if (!exportsRef) return null;
@@ -69,9 +81,12 @@ function bindViews(): { u8: Uint8Array; view: DataView } | null {
 
 function bindRetailWasm(bytes: Uint8Array): boolean {
   try {
-    const copy = new Uint8Array(bytes.byteLength);
+    if (!wasmInitScratch || wasmInitScratch.byteLength < bytes.byteLength) {
+      wasmInitScratch = new Uint8Array(bytes.byteLength);
+    }
+    const copy = wasmInitScratch.subarray(0, bytes.byteLength);
     copy.set(bytes);
-    const mod = new WebAssembly.Module(copy);
+    const mod = new WebAssembly.Module(copy as BufferSource);
     const instance = new WebAssembly.Instance(mod, {});
     const ex = instance.exports as unknown as RetailWasmExports;
     if (typeof ex.soil_core_eval !== "function") return false;
@@ -154,9 +169,9 @@ export function evaluateIntentGateViaWasm(
 
   const allowed = exportsRef.intent_core_evaluate_gate(
     WASM_INTENT_HEAP_BYTE_OFFSET,
-    BigInt(allowedMask >>> 0),
-    BigInt(targetBit >>> 0),
-    BigInt(maxAttempts),
+    toBigIntU32(allowedMask),
+    toBigIntU32(targetBit),
+    toBigIntU32(maxAttempts),
   );
 
   for (let i = 0; i < INTENT_CORE_HEAP_WORDS; i++) {

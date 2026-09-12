@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # INTERNAL — Living Water Private Live Debug Mode
 
 > **qum0x / SilverVine Labs internal only.** Not for Buildathon judges or public docs.

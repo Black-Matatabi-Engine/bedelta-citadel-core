@@ -44,7 +44,7 @@ describe("withCitadelShield", () => {
     });
   });
 
-  it("blocks execution and throws [Citadel Shield Trip] when soil resistance fails", async () => {
+  it("blocks execution and throws [ExoMesh Trip] when soil resistance fails", async () => {
     vi.spyOn(riskControl, "checkSoilResistance").mockReturnValue({
       ok: false,
       tripped: true,
@@ -55,7 +55,7 @@ describe("withCitadelShield", () => {
     const executionFn = vi.fn();
     const shielded = withCitadelShield(executionFn);
     await expect(shielded(healthyIntent)).rejects.toThrow(
-      "[Citadel Shield Trip] Execution blocked pre-broadcast: CROSS_VENUE_SLIPPAGE=20%>0.5%; DEPTH_USD=1<100000",
+      "[ExoMesh Trip] Execution blocked pre-broadcast: CROSS_VENUE_SLIPPAGE=20%>0.5%; DEPTH_USD=1<100000",
     );
     expect(executionFn).not.toHaveBeenCalled();
   });
@@ -70,7 +70,7 @@ describe("withCitadelShield", () => {
     });
     const shielded = withCitadelShield(vi.fn());
     await expect(shielded(healthyIntent)).rejects.toThrow(
-      "[Citadel Shield Trip] Execution blocked pre-broadcast: SOIL_RESISTANCE_TRIP",
+      "[ExoMesh Trip] Execution blocked pre-broadcast: SOIL_RESISTANCE_TRIP",
     );
   });
 
@@ -95,7 +95,7 @@ describe("withCitadelShield", () => {
     const executionFn = vi.fn().mockResolvedValue("ok");
     const shielded = withCitadelShield(executionFn);
 
-    await expect(shielded(healthyIntent)).rejects.toThrow("[Citadel Shield Trip]");
+    await expect(shielded(healthyIntent)).rejects.toThrow("[ExoMesh Trip]");
     await expect(shielded(healthyIntent)).rejects.toThrow("MANDATORY_COOLDOWN_ACTIVE");
     await expect(shielded(healthyIntent)).rejects.toThrow(
       "Agent 'citadel-agent-0xbeef' tripped soil fuse recently",

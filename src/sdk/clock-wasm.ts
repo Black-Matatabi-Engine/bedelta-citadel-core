@@ -7,103 +7,40 @@ import {
   CLOCK_WASM_HEAP_BYTES,
   CLOCK_WASM_RESOLVE_LEAP,
 } from "../core/wasm-clock-ffi";
-import { readDefaultWasmBytesSync } from "./soil-wasm-node";
-
-const DEFAULT_WASM_URL = new URL("../../pkg/soil_core.wasm", import.meta.url);
-
-type ClockWasmExports = {
-  memory: WebAssembly.Memory;
-  clock_core_abi_version: () => number;
-  clock_core_read: (
-    statePtr: number,
-    stickyPtr: number,
-    wallMs: bigint,
-    maxForwardMs: bigint,
-    outVirtualPtr: number,
-  ) => number;
-  clock_core_saturating_sub: (a: bigint, b: bigint) => bigint;
-  clock_core_resolve_wall_age: (nowMs: bigint, tsMs: bigint, outDeltaPtr: number) => number;
-  clock_core_rpc_ingest: (
-    statePtr: number,
-    blockNumber: bigint,
-    timestampSec: bigint,
-    outRegressionPtr: number,
-  ) => bigint;
-  clock_core_pack_state: (
-    statePtr: number,
-    sticky: number,
-    wallMs: bigint,
-    maxForwardMs: bigint,
-    outPtr: number,
-  ) => void;
-};
-
-let exportsRef: ClockWasmExports | null = null;
-let wasmInitPromise: Promise<boolean> | null = null;
-
-function isNodeRuntime(): boolean {
-  return typeof process !== "undefined" && Boolean(process.versions?.node);
-}
-
-function toUint8Array(source: ArrayBuffer | Uint8Array): Uint8Array {
-  return source instanceof ArrayBuffer
-    ? new Uint8Array(source)
-    : new Uint8Array(source.buffer, source.byteOffset, source.byteLength);
-}
-
-function bindInstance(bytes: Uint8Array): boolean {
-  const copy = new Uint8Array(bytes.byteLength);
-  copy.set(bytes);
-  const mod = new WebAssembly.Module(copy);
-  const instance = new WebAssembly.Instance(mod, {});
-  const ex = instance.exports as unknown as ClockWasmExports;
-  if (typeof ex.clock_core_abi_version !== "function") return false;
-  if (ex.clock_core_abi_version() !== CLOCK_WASM_ABI_VERSION) return false;
-  exportsRef = ex;
-  return true;
-}
+import {
+  __resetClockWasmBindingForTests,
+  ensureClockWasmBinding,
+  getClockWasmExports,
+  initClockWasmBinding,
+  initClockWasmBindingAsync,
+  isClockWasmBindingReady,
+  type ClockWasmExports,
+} from "../core/clock-wasm-bind";
 
 export function initClockWasm(source?: ArrayBuffer | Uint8Array): boolean {
-  try {
-    const bytes = source ? toUint8Array(source) : readDefaultWasmBytesSync();
-    if (!bytes) return false;
-    return bindInstance(bytes);
-  } catch {
-    exportsRef = null;
-    return false;
-  }
+  return initClockWasmBinding(source);
 }
 
 export async function initClockWasmAsync(source?: ArrayBuffer | Uint8Array): Promise<boolean> {
-  if (source) return initClockWasm(source);
-  if (exportsRef) return true;
-  if (!wasmInitPromise) {
-    wasmInitPromise = (async () => {
-      if (isNodeRuntime()) return initClockWasm();
-      try {
-        const res = await fetch(DEFAULT_WASM_URL);
-        if (!res.ok) return false;
-        return initClockWasm(await res.arrayBuffer());
-      } catch {
-        return false;
-      }
-    })();
-  }
-  return wasmInitPromise;
+  return initClockWasmBindingAsync(source);
 }
 
 export function isClockWasmReady(): boolean {
-  return exportsRef != null;
+  return isClockWasmBindingReady();
 }
 
 export function ensureClockWasm(): boolean {
-  if (exportsRef) return true;
-  return initClockWasm();
+  return ensureClockWasmBinding();
 }
 
 export function __resetClockWasmForTests(): void {
-  exportsRef = null;
-  wasmInitPromise = null;
+  __resetClockWasmBindingForTests();
+}
+
+function requireExports(): ClockWasmExports {
+  const ex = getClockWasmExports();
+  if (!ex) throw new Error("clock_core wasm not initialized");
+  return ex;
 }
 
 /** Allocate clock heap slice in Wasm linear memory (zero host heap for state). */
@@ -113,7 +50,7 @@ export function allocClockWasmHeap(): {
   stickyView: Int32Array;
   rpcState: BigInt64Array;
 } {
-  const ex = exportsRef!;
+  const ex = requireExports();
   const basePtr = 1024;
   const stickyPtr = basePtr + 16;
   const rpcPtr = basePtr + 24;
@@ -132,7 +69,7 @@ export function clockWasmRead(
   currentWallMs: number,
   maxForwardStepMs: number,
 ): { virtualWallMs: number; anomalyCode: number } {
-  const ex = exportsRef!;
+  const ex = requireExports();
   const outPtr = 2048;
   const outView = new BigInt64Array(ex.memory.buffer, outPtr, 1);
   const code = ex.clock_core_read(
@@ -147,14 +84,15 @@ export function clockWasmRead(
 }
 
 export function clockWasmSaturatingSub(a: number, b: number): number {
-  return Number(exportsRef!.clock_core_saturating_sub(BigInt(Math.trunc(a)), BigInt(Math.trunc(b))));
+  const ex = requireExports();
+  return Number(ex.clock_core_saturating_sub(BigInt(Math.trunc(a)), BigInt(Math.trunc(b))));
 }
 
 export function clockWasmResolveWallAge(
   nowMs: number,
   timestampMs: number,
 ): { kind: "OK"; ageMs: number } | { kind: "LEAP"; deltaMs: number } {
-  const ex = exportsRef!;
+  const ex = requireExports();
   const deltaPtr = 2056;
   const deltaView = new BigInt64Array(ex.memory.buffer, deltaPtr, 1);
   const code = ex.clock_core_resolve_wall_age(
@@ -172,7 +110,7 @@ export function clockWasmRpcIngest(
   blockNumber: bigint,
   timestampSec: bigint,
 ): { ok: boolean; regression: boolean; heldTimestampSec: bigint } {
-  const ex = exportsRef!;
+  const ex = requireExports();
   const regPtr = 2064;
   const regView = new Int32Array(ex.memory.buffer, regPtr, 1);
   const held = ex.clock_core_rpc_ingest(
@@ -194,7 +132,7 @@ export function clockWasmPackState(
   wallMs: number,
   maxForwardStepMs: number,
 ): Float64Array {
-  const ex = exportsRef!;
+  const ex = requireExports();
   const outPtr = 2080;
   const out = new Float64Array(ex.memory.buffer, outPtr, 3);
   ex.clock_core_pack_state(

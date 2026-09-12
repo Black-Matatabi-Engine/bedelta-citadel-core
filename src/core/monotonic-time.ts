@@ -9,7 +9,6 @@ import {
   clockWasmPackState,
   clockWasmRead,
   clockWasmResolveWallAge,
-  clockWasmRpcIngest,
   clockWasmSaturatingSub,
   ensureClockWasm,
   isClockWasmReady,
@@ -26,8 +25,7 @@ export type WallClockAgeResult =
 
 const STATE_SLOT_LAST_WALL = 0;
 const STATE_SLOT_OFFSET = 1;
-const RPC_SLOT_BLOCK = 0;
-const RPC_SLOT_TS_SEC = 1;
+const PACK_STATE_SCRATCH = new Float64Array(3);
 
 function anomalyFromCode(code: number): ClockAnomalyType | null {
   if (code === 1) return CLOCK_NEGATIVE_LEAP_DETECTED;
@@ -146,79 +144,19 @@ export class MonotonicTimeSSOT {
       return packed;
     }
     const sample = this.read(wallMs);
-    const out = new Float64Array(3);
-    out[0] = sample.virtualWallMs;
-    out[1] = Number(this.memoryBuffer[STATE_SLOT_OFFSET]);
-    out[2] =
+    PACK_STATE_SCRATCH[0] = sample.virtualWallMs;
+    PACK_STATE_SCRATCH[1] = Number(this.memoryBuffer[STATE_SLOT_OFFSET]);
+    PACK_STATE_SCRATCH[2] =
       sample.anomaly === CLOCK_NEGATIVE_LEAP_DETECTED
         ? 1
         : sample.anomaly === CLOCK_EXCESSIVE_FORWARD_STEP
           ? 2
           : 0;
-    return out;
+    return PACK_STATE_SCRATCH;
   }
 }
 
-/** RPC chain timestamp high-watermark — holds on block.timestamp regression. */
-export class RpcTimestampWatermark {
-  private readonly memoryBuffer = new BigInt64Array(2);
-  private wasmRpcState: BigInt64Array | null = null;
-
-  constructor() {
-    if (isClockWasmReady()) {
-      const heap = allocClockWasmHeap();
-      this.wasmRpcState = heap.rpcState;
-    }
-  }
-
-  ingest(blockNumber: bigint, timestampSec: bigint): {
-    readonly ok: boolean;
-    readonly regression: boolean;
-    readonly heldTimestampSec: bigint;
-  } {
-    if (this.wasmRpcState && isClockWasmReady()) {
-      this.wasmRpcState[0] = this.memoryBuffer[RPC_SLOT_BLOCK];
-      this.wasmRpcState[1] = this.memoryBuffer[RPC_SLOT_TS_SEC];
-      const result = clockWasmRpcIngest(this.wasmRpcState, blockNumber, timestampSec);
-      this.memoryBuffer[RPC_SLOT_BLOCK] = this.wasmRpcState[0];
-      this.memoryBuffer[RPC_SLOT_TS_SEC] = this.wasmRpcState[1];
-      return result;
-    }
-
-    const lastBlock = this.memoryBuffer[RPC_SLOT_BLOCK];
-    const lastTs = this.memoryBuffer[RPC_SLOT_TS_SEC];
-
-    if (lastBlock !== 0n && blockNumber > lastBlock && timestampSec < lastTs) {
-      return { ok: false, regression: true, heldTimestampSec: lastTs };
-    }
-
-    if (lastBlock === 0n || blockNumber >= lastBlock) {
-      this.memoryBuffer[RPC_SLOT_BLOCK] = blockNumber;
-      if (lastBlock === 0n || timestampSec >= lastTs) {
-        this.memoryBuffer[RPC_SLOT_TS_SEC] = timestampSec;
-      }
-    }
-
-    return {
-      ok: true,
-      regression: false,
-      heldTimestampSec: this.memoryBuffer[RPC_SLOT_TS_SEC],
-    };
-  }
-
-  reset(): void {
-    this.memoryBuffer[RPC_SLOT_BLOCK] = 0n;
-    this.memoryBuffer[RPC_SLOT_TS_SEC] = 0n;
-    if (this.wasmRpcState) {
-      this.wasmRpcState[0] = 0n;
-      this.wasmRpcState[1] = 0n;
-    }
-  }
-
-  viewStateBuffer(): BigInt64Array {
-    return this.memoryBuffer;
-  }
-}
+export { RpcTimestampWatermark } from "./monotonic-rpc-watermark";
 
 let globalMonotonicClock: MonotonicTimeSSOT | null = null;
 

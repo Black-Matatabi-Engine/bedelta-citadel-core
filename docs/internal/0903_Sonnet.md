@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 **確認發現（`README.md` 第 3–10 行）：** 儘管內部審計曾記錄「repo slug 已全庫修正」，**README 頂部 7 個 shields.io 徽章連結仍指向舊 slug `bedelta-living-water`**（`Vitest` / `Stylus Coprocessor` / `coverage` / `Chaos Matrix` / `Benchmark` / `TypeScript` 徽章），而真實 remote 是 `bedelta-citadel-core`。這代表評審點擊任何一個徽章連回 GitHub 時，**若舊 repo 不存在或非最新內容，會直接踩中「假 CI 徽章」印象**。這是本報告 Q3 會重點標記的即時風險，先於四個問題單獨列出。
 
 ---

@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SilverVine Transport Stream — 內部 OpSec 機制白皮書（Stealth v2）
 
 > **分類：** INTERNAL OPSEC ONLY · DO NOT PUBLISH NATIVELY  

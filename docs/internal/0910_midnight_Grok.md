@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Strategic Trade-off Analysis: Buildathon Submission Option A vs Option B
 
 **Date**: 2026-09-11

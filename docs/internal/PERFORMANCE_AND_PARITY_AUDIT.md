@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Performance & Cross-Tier Parity Audit — Zero-GC Pointerization · TypedArray Sinking · Bitwise Pure State
 
 > **Audit date:** 2026-09-10  

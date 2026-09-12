@@ -58,16 +58,16 @@ export {
   type Erc7540RejectCode,
   type ParsedErc7540,
 } from "./erc7540-async-escort";
+export { parseTransactionCalldata, parseSelector, isInfiniteApproval } from "./calldata-parser";
+export { readSelectorU32 } from "./calldata-hex";
 export {
-  parseTransactionCalldata,
-  parseSelector,
   encodeApproveCalldata,
   encodeErc7540RequestDepositCalldata,
   encodeErc7540SetOperatorCalldata,
   encodePermit2ApproveCalldata,
   encodePermit2PermitCalldata,
-  readSelectorU32,
-  isInfiniteApproval,
+} from "./calldata-encoder";
+export {
   UINT256_MAX,
   UINT160_MAX,
   SEL_ERC20_APPROVE,
@@ -89,7 +89,7 @@ export {
   SELECTOR_ERC7540_SET_OPERATOR,
   type ParsedErc7540Request,
   type ParsedErc7540SetOperator,
-} from "./calldata-parser";
+} from "./calldata-types";
 export {
   evaluateErc7683CrossChainIntentGuard,
   computeCrossChainExecutionDeltaBps,
@@ -124,4 +124,4 @@ export type {
   ParsedTransfer,
   ParsedPermit2Approve,
   ParsedPermit2Permit,
-} from "./calldata-parser";
+} from "./calldata-types";

@@ -18,6 +18,13 @@ const TS_SLOT_LAG = 1;
 const TS_SLOT_INVOCATIONS = 2;
 const TS_SALT = 0x5f1a0e37;
 const TS_SYNC_FAIL_THRESHOLD = 4;
+let wasmProbeScratch: Uint8Array | null = null;
+const SYNC_SNAPSHOT_SCRATCH: TransportStreamSyncSnapshot = {
+  ok: false,
+  bitmarkValid: false,
+  roundTripUsec: 0,
+  syncLagScore: 0,
+};
 
 export interface TransportStreamSyncSnapshot {
   ok: boolean;
@@ -49,9 +56,12 @@ export function verifyTransportBitmark(): boolean {
 
 function probeWasmTransportCore(bytes: Uint8Array): boolean {
   try {
-    const copy = new Uint8Array(bytes.byteLength);
+    if (!wasmProbeScratch || wasmProbeScratch.byteLength < bytes.byteLength) {
+      wasmProbeScratch = new Uint8Array(bytes.byteLength);
+    }
+    const copy = wasmProbeScratch.subarray(0, bytes.byteLength);
     copy.set(bytes);
-    const mod = new WebAssembly.Module(copy);
+    const mod = new WebAssembly.Module(copy as BufferSource);
     const instance = new WebAssembly.Instance(mod, {});
     const ex = instance.exports as {
       soil_core_abi_version?: () => number;
@@ -92,12 +102,11 @@ export function evaluateTransportStreamSync(preferWasm = true): TransportStreamS
   INTENT_RING_U32[invSlot] = (INTENT_RING_U32[invSlot] + 1) >>> 0;
 
   const t1 = typeof performance !== "undefined" ? performance.now() : Date.now();
-  return {
-    ok: syncLagScore < TS_SYNC_FAIL_THRESHOLD,
-    bitmarkValid,
-    roundTripUsec: Math.round((t1 - t0) * 1000),
-    syncLagScore,
-  };
+  SYNC_SNAPSHOT_SCRATCH.ok = syncLagScore < TS_SYNC_FAIL_THRESHOLD;
+  SYNC_SNAPSHOT_SCRATCH.bitmarkValid = bitmarkValid;
+  SYNC_SNAPSHOT_SCRATCH.roundTripUsec = Math.round((t1 - t0) * 1000);
+  SYNC_SNAPSHOT_SCRATCH.syncLagScore = syncLagScore;
+  return SYNC_SNAPSHOT_SCRATCH;
 }
 
 /** Entangle calldata scratch with transport ring lane (required for selector decode). */

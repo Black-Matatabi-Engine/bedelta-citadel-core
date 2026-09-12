@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Internal Archive Notice
 
 Dated persona audits under `docs/internal/` (`0902_*` through `0910_*`, `GROK_*`, `FINAL_*`, `V0.9_*`, `opsec/*`) are **immutable point-in-time records**. They may reference pre-v1.1 prune architecture (7+1 / 8-venue matrix, Wayfinder/ElizaOS framework adapters, 217/967 test counts).

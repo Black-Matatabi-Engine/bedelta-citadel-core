@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 20 評審 Post-Agent Hook 正式審計報告（Grok 版）
 
 | 欄位 | 值 |

@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 60 Persona 晚間聯合壓力評審（Production Workflow · Mainnet Settlement · 2026-09-09 PM）
 
 | 欄位 | 值 |

@@ -8,6 +8,7 @@ import {
   encodeVenueMaskPure,
   evaluateIntentGatePure,
   hashKeyToSlotIndex,
+  hashRetailWalletSlotIndex,
   INTENT_CORE_HEAP_BYTES,
   INTENT_CORE_HEAP_WORDS,
   INTENT_RING_U32,
@@ -100,6 +101,18 @@ describe("intent-core — Wasm C-ABI memory layout parity", () => {
 });
 
 describe("intent-core — ring slab slot indexing", () => {
+  it("hashRetailWalletSlotIndex matches retail: prefix FNV without string concat", () => {
+    const wallets = [
+      "0xAbCdEf0123456789abcdef0123456789abcdef01",
+      " 0x1111111111111111111111111111111111111111 ",
+      "0x2222222222222222222222222222222222222222",
+    ];
+    for (const wallet of wallets) {
+      const expected = hashKeyToSlotIndex(`retail:${wallet.trim().toLowerCase()}`);
+      expect(hashRetailWalletSlotIndex(wallet)).toBe(expected);
+    }
+  });
+
   it("maps digest keys to slot index via bitwise mask (0–255)", () => {
     const digest =
       "0xabcdef0123456789abcdef0123456789abcdef0123456789abcdef0123456789";

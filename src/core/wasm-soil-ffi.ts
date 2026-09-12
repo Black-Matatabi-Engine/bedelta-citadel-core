@@ -28,6 +28,7 @@ const SOIL_FFI_REUSABLE_VIEW = new DataView(SOIL_FFI_REUSABLE_BUFFER);
 const MASK_OFF = (WASM_PROTOCOL_LEN - 1) * 8;
 const SOIL_OFF = WASM_SOIL_OFFSET * 8;
 const SOIL_FFI_U8 = new Uint8Array(SOIL_FFI_REUSABLE_BUFFER);
+const PROTO_VEC_SCRATCH = new Float64Array(WASM_PROTOCOL_LEN);
 const SOIL_FIELD_OFF = {
   protocolMask: MASK_OFF,
   hlSpot: SOIL_OFF,
@@ -53,8 +54,9 @@ export function copySoilFfiInto(dest: Uint8Array, destOffset = 0): void {
 export function readProtocolVectorFromView(
   view: DataView,
   byteOffset = 0,
+  out?: Float64Array,
 ): Float64Array {
-  const vec = new Float64Array(WASM_PROTOCOL_LEN);
+  const vec = out ?? PROTO_VEC_SCRATCH;
   for (let i = 0; i < WASM_PROTOCOL_LEN; i++) {
     vec[i] = view.getFloat64(byteOffset + i * 8, true);
   }
@@ -82,7 +84,7 @@ export function getSoilFfiReusableDataView(): DataView {
 }
 
 export function decodeWasmSoilInput(buf: ArrayBuffer = SOIL_FFI_REUSABLE_BUFFER): WasmSoilCoreInput {
-  const view = new DataView(buf);
+  const view = buf === SOIL_FFI_REUSABLE_BUFFER ? SOIL_FFI_REUSABLE_VIEW : new DataView(buf);
   const protocolMask = view.getFloat64(wasmSoilInputByteOffset("protocolMask"), true);
   return {
     hlSpot: view.getFloat64(wasmSoilInputByteOffset("hlSpot"), true),

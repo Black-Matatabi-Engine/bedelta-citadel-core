@@ -5,16 +5,15 @@
 import { INTENT_RING_U32 } from "../../core/intent-core-buffers";
 import {
   evaluateIntentGateU32Pure,
-  hashKeyToSlotIndex,
+  hashRetailWalletSlotIndex,
   resetIntentRingSlab,
   slotBaseOffset,
 } from "../../core/intent-core-ring";
 import { VENUE_DRIFT_REJECTED, MAX_ATTEMPTS_EXCEEDED_SEVERED } from "../../core/intent-mandate";
 import {
-  evaluateSoilSlippagePacked,
+  computeSoilSlippageMetrics,
   MAX_SLIPPAGE,
   MIN_DEPTH_USD,
-  packSoilLane,
   SOIL_REASON_CROSS_VENUE,
   SOIL_REASON_DEPTH_USD,
 } from "../../core/soil-resistance-math";
@@ -23,13 +22,13 @@ import {
   INTENT_SLOT_ALLOWED_MASK,
   INTENT_SLOT_TARGET_BIT,
 } from "../../core/wasm-intent-ffi";
-import type { ParsedApprove } from "./calldata-parser";
+import { isAddressInAllowlist } from "./address-compare";
+import type { ParsedApprove } from "./calldata-types";
 import { evaluateTransportStreamSync, __resetTransportStreamForTests } from "./transport-stream";
 import { evaluateIntentGateViaWasm, evaluateSoilViaWasm } from "./wasm-adapter";
 import { formatRetailWarning } from "./warnings";
 import type { RetailGuardConfig, RetailGuardRejectPayload, RetailSoilQuote } from "./types";
 
-const SOIL_LANE = new Float64Array(6);
 const DEFAULT_MAX_APPROVAL_USD = 10_000;
 const WASM_TRIP_CROSS = 1;
 const WASM_TRIP_DEPTH = 2;
@@ -60,22 +59,12 @@ export function isRetailGuardChannelSevered(): boolean {
   return channelSevered;
 }
 
-function isAllowedAddress(address: string | undefined, allowlist: readonly string[] | undefined): boolean {
-  if (!address || !allowlist?.length) return false;
-  const n = address.trim().toLowerCase();
-  if (!n) return false;
-  for (let i = 0; i < allowlist.length; i++) {
-    if (allowlist[i]!.trim().toLowerCase() === n) return true;
-  }
-  return false;
-}
-
 export function evaluateRetailApproveGate(
   approve: ParsedApprove,
   config: RetailGuardConfig,
 ): RetailGuardRejectPayload | null {
   const spender = approve.spender;
-  const allowed = isAllowedAddress(spender, config.allowedSpenders);
+  const allowed = isAddressInAllowlist(spender, config.allowedSpenders);
   const maxUsd = config.maxApprovalUsd ?? DEFAULT_MAX_APPROVAL_USD;
   const decimals = config.approvalTokenDecimals ?? 18;
   const notional = (Number(approve.amountWei) / 10 ** decimals) * (config.approvalTokenPriceUsd ?? 1);
@@ -96,7 +85,7 @@ export function evaluateRetailVenueAllowlist(
   config: RetailGuardConfig,
 ): RetailGuardRejectPayload | null {
   if (!contract?.trim() || !config.allowedVenues?.length) return null;
-  if (isAllowedAddress(contract, config.allowedVenues)) return null;
+  if (isAddressInAllowlist(contract, config.allowedVenues)) return null;
   const norm = contract.trim().toLowerCase();
   return fail("VENUE_DRIFT_REJECTED", `${VENUE_DRIFT_REJECTED}:contract=${norm}`, { contract: norm });
 }
@@ -125,16 +114,15 @@ export function evaluateRetailSoilGate(quote: RetailSoilQuote, preferWasm = true
       );
     }
   }
-  packSoilLane(
-    quote.hlSpot,
-    quote.hlPerp,
-    quote.dydxPerp,
-    quote.depthUsd,
-    quote.maxSlippage ?? MAX_SLIPPAGE,
-    quote.minDepthUsd ?? MIN_DEPTH_USD,
-    SOIL_LANE,
-  );
-  const soil = evaluateSoilSlippagePacked(SOIL_LANE);
+  const soil = computeSoilSlippageMetrics({
+    symbol: "",
+    hlSpot: quote.hlSpot,
+    hlPerp: quote.hlPerp,
+    dydxPerp: quote.dydxPerp,
+    depthUsd: quote.depthUsd,
+    maxSlippage: quote.maxSlippage ?? MAX_SLIPPAGE,
+    minDepthUsd: quote.minDepthUsd ?? MIN_DEPTH_USD,
+  });
   return soilReject(
     (soil.tripFlags & SOIL_REASON_CROSS_VENUE) !== 0,
     (soil.tripFlags & SOIL_REASON_DEPTH_USD) !== 0,
@@ -159,7 +147,7 @@ export function evaluateRetailIntentGate(
   const allowedMask = config.allowedVenueMask ?? 0;
   if (allowedMask === 0 || targetVenueBit === 0) return null;
 
-  const offset = slotBaseOffset(hashKeyToSlotIndex(`retail:${config.walletAddress.trim().toLowerCase()}`) & 0xff);
+  const offset = slotBaseOffset(hashRetailWalletSlotIndex(config.walletAddress));
   const maxAttempts = config.maxAttempts ?? INTENT_MAX_ATTEMPTS_DEFAULT;
   const wasm =
     config.preferWasm !== false

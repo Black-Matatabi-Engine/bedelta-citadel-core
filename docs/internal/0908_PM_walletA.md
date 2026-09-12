@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 [qum0x]
 [JavierPause] Q1. 我本身係做左2 wallets . wallet A 係開perp 空in HL , wallet B 做 GM Pool for delta pool. 所以呢個必要保留. 而 現在要做係先試打通 扮返 wallet A /B 做返 perp 做空同ARB 鏈上做返 backup..即先係 wallet A HL prep + wallet B HL GM 係must 1st step 做左..touch wood 有咩事 先back up 用返同鏈係返 GMX 開 short 如果你唔明你再問我, 所以而家要打通返 GMX 可以開short 先..但我唔肯定係 wallet A 開short 好 / wallet B 本身係GM pool 開short for back up 好..因為個workflow 唔同. ,Q2. 我應buy Wallet A 永遠只處理 Short 曝險，Wallet B 永遠只持有 GM LP，不會把資金與保證金混在一起。. 但問題..Wallet A 我要留幾錢係 ARB GMX for safe 我唔知點比program 做呢件事and 佢係wallet A 會唔會自己做bridge 由 HL 去返 ARB GMX ..我都唔知點做好什至會唔會用到ZeroDev..i don't knwo . 
 

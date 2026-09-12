@@ -60,9 +60,9 @@ export function withCitadelShield<T extends CitadelShieldIntent>(
       activateCooldown(agentId);
       const reason = soilResult.reasons.join("; ") || "SOIL_RESISTANCE_TRIP";
       if (soilResult.reasons.some((r) => r.startsWith(MAX_ATTEMPTS_EXCEEDED_SEVERED))) {
-        throw new Error(`[Citadel Shield Trip] ${MAX_ATTEMPTS_EXCEEDED_SEVERED}: ${reason}`);
+        throw new Error(`[ExoMesh Trip] ${MAX_ATTEMPTS_EXCEEDED_SEVERED}: ${reason}`);
       }
-      throw new Error(`[Citadel Shield Trip] Execution blocked pre-broadcast: ${reason}`);
+      throw new Error(`[ExoMesh Trip] Execution blocked pre-broadcast: ${reason}`);
     }
 
     try {

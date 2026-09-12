@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # 🔒 [INTERNAL ONLY] OpSec Audit Report — Anti-Fork Readiness & WASM Boundary
 
 | Field | Value |

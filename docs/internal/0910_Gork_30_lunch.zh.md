@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # Pointer
 
 Canonical 0910 lunch 30-persona mock audit (Traditional Chinese body · English engineering anchors):

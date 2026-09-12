@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 20 評審最終主網審計卷宗（V1.0 Submission Lock）
 
 | 欄位 | 值 |

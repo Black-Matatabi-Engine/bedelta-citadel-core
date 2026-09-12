@@ -22,6 +22,7 @@ export {
   checkVenueDriftU32Pure,
   evaluateIntentGateU32Pure,
   hashKeyToSlotIndex,
+  hashRetailWalletSlotIndex,
   resetIntentRingSlab,
   slotBaseOffset,
   syncIntentSlotToWasmSlab,

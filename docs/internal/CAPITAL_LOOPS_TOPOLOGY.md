@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # 🔒 [INTERNAL ONLY] Citadel Capital Loops Topology & Expansion Architecture
 
 > **Document Status**: Strictly Confidential / Internal Technical SSOT  

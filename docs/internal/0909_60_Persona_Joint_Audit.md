@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 60 Persona 聯合壓力評審（Phase A+B+C 閉環 · GM I/O · 2026-09-09）
 
 | 欄位 | 值 |

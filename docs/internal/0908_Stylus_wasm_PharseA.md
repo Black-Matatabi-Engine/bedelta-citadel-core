@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine 鏈上 / Stylus 升級審計報告
 
 **審計範圍：** `contracts/` · `SliverVineGate/` · `src/core/gmx-risk-core.ts` · `src/wasm/soil_core.rs` · `contracts/stylus-probe/`  

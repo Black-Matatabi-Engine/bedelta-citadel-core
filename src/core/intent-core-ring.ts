@@ -52,6 +52,40 @@ export function hashKeyToSlotIndex(key: string): number {
   return h & INTENT_RING_SLOT_MASK;
 }
 
+const RETAIL_KEY_PREFIX = "retail:";
+
+function isTrimSpace(c: number): boolean {
+  return (
+    c === 0x20 ||
+    c === 0x09 ||
+    c === 0x0a ||
+    c === 0x0d ||
+    c === 0x0b ||
+    c === 0x0c ||
+    c === 0xa0
+  );
+}
+
+/** FNV-1a `retail:{wallet}` slot index — no template-string / trim().toLowerCase() alloc. */
+export function hashRetailWalletSlotIndex(walletAddress: string): number {
+  let h = 0x811c9dc5;
+  for (let i = 0; i < RETAIL_KEY_PREFIX.length; i += 1) {
+    h ^= RETAIL_KEY_PREFIX.charCodeAt(i);
+    h = Math.imul(h, 0x01000193);
+  }
+  let start = 0;
+  let end = walletAddress.length;
+  while (start < end && isTrimSpace(walletAddress.charCodeAt(start))) start += 1;
+  while (end > start && isTrimSpace(walletAddress.charCodeAt(end - 1))) end -= 1;
+  for (let i = start; i < end; i += 1) {
+    let c = walletAddress.charCodeAt(i);
+    if (c >= 65 && c <= 90) c += 32;
+    h ^= c;
+    h = Math.imul(h, 0x01000193);
+  }
+  return h & INTENT_RING_SLOT_MASK;
+}
+
 export function slotBaseOffset(slotIndex: number): number {
   return slotIndex * INTENT_CORE_HEAP_WORDS;
 }

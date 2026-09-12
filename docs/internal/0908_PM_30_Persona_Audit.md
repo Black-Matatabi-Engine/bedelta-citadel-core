@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 全新 30 Persona 壓力評審（GM Pool I/O Channel · 2026-09-08 晚）
 
 | 欄位 | 值 |

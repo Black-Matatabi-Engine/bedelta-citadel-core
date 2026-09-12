@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # BeDelta Living Water — Wasm / Stylus 雙引擎重構路線圖
 
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)

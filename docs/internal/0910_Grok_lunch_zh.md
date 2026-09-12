@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 閉門技術防禦模擬審計（Lunch Red Team · 2026-09-10）
 
 | 欄位 | 值 |

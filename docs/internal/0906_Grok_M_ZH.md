@@ -1,3 +1,5 @@
+> [ARCHIVED LOG] Historical terminology retained for audit trail.
+
 # SliverVine Protocol — 30 Persona 隔日對照評審（Grok · 2026-09-06）
 
 | 欄位 | 值 |
