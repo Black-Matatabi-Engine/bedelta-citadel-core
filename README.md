@@ -66,9 +66,9 @@
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
-| Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) | `pnpm demo:ingress` |
-| Across ingress / AML unidirectional escort | [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) | [`tests/adapters/across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
-| **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
+| Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) · [`ingress-escort-demo.ts`](./examples/ingress-escort-demo.ts) | `pnpm demo:ingress` |
+| Across ingress / AML unidirectional escort | [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) | `pnpm demo:ingress` · [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
+| **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) · [`sanctuary-demo.ts`](./examples/sanctuary-demo.ts) | `pnpm demo:sanctuary` (`demo:escort` alias) |
 
 ---
 
@@ -172,9 +172,9 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 
 # [Sanctuary] Tier 0 — Escrow & Async Vault
-pnpm demo:sanctuary              # ERC-7540+ Scenario A–C Matrix
+pnpm demo:sanctuary              # ERC-7540+ Scenario A–C Matrix (alias: pnpm demo:escort)
 pnpm demo:ingress                # Treasury bridge escort (lostUsd ≡ 0)
-npx vitest run tests/adapters/treasury-escort-router.test.ts
+npx vitest run tests/adapters/treasury-escort-router.test.ts  # unit SSOT
 
 # Full Regression Test Suite (228 test files | 1065 PASS clean)
 pnpm test -- --run

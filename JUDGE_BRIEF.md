@@ -170,8 +170,8 @@ pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 
 # [Sanctuary] Tier 0 — Escrow & Async Vault
-pnpm demo:sanctuary
-pnpm demo:ingress
+pnpm demo:sanctuary              # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
+pnpm demo:ingress                # Treasury bridge escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
 
 pnpm demo:e2e
@@ -185,7 +185,7 @@ pnpm demo:e2e
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
 | **Zone A** | `[ExoMesh]` | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
-| **Zone B** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle · escort |
+| **Zone B** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia sandbox · macro lifecycle · ERC-7540+ · treasury ingress |
 
 Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md)
 

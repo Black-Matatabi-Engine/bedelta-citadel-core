@@ -14,7 +14,7 @@
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
-| **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia Stabilizer · **4-step Happy Path** (`--unwind` · `--trip` optional) |
+| **Zone B — Sandbox & E2E** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia Stabilizer · ERC-7540+ · treasury ingress · **4-step Happy Path** (`--unwind` · `--trip` optional) |
 | **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios ([`tests/demo/`](../../tests/demo)) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
@@ -48,6 +48,8 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
+| `pnpm demo:sanctuary` | Sanctuary Async Escort (ERC-7540+) Scenario A–C | `ALLOW` · `REJECT_OPERATOR` · `REJECT_SLIPPAGE` (`demo:escort` alias) |
+| `pnpm demo:ingress` | Treasury bridge escort · AML inbound block | `lostUsd ≡ 0` · Route A/C HUD |
 | `pnpm test` | Full Vitest regression bar | **228 test files | 1065 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
@@ -166,7 +168,9 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 
 ### Pillar Set X — Sanctuary Escrow Substrate (Compliance Ingress)
 
-**Command:**
+**CLI:** `pnpm demo:ingress` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts)
+
+**Unit SSOT:**
 
 ```bash
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
@@ -180,7 +184,7 @@ pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 
 **Narrative:** Robinhood Chain (`46630`/`4663`) Across ingress is a **Pillar Set X Reference Escort Adapter** — not product identity. Inbound AML block enforces fail-closed unidirectional isolation before capital reaches Arbitrum deployable NAV.
 
-Related: [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md)
+Related: [`04_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md)
 
 ---
 

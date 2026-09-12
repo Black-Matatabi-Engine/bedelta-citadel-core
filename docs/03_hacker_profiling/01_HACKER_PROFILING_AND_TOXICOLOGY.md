@@ -141,7 +141,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Mindhunter read:** Permission drift = **grooming** MO — establish trust delegation before extraction. Sanctuary applies **zero-trust operator whitelist** at broadcast time; revocation (`approved=false`) always allowed.
 
-**Chaos tier:** **C3** — `pnpm demo:sanctuary` · [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3** `[Sanctuary]`
+**Chaos tier:** **C3** — `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` · unit SSOT: [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3**
 
 **SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
 

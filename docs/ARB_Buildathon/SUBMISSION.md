@@ -21,7 +21,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 | # | Security Pillar | System Guarantees & Technical Defense | Verification Protocol |
 |---|-----------------|---------------------------------------|----------------------|
 | **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified agent intents rejected at **Cloudflare Edge isolates** before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
-| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../03_ON_CHAIN_MAINNET_ANCHORS.md) |
+| **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | `pnpm demo:hl -- --trip` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm (`pkg/soil_core.wasm` · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** · [Physical Clock Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
 | **5** | **SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK (C-End Middleware)** | Apache-2.0 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrapper · 0-Gas pre-consensus intercept for infinite approvals · [Permit2](https://github.com/Uniswap/permit2) · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) phishing · AI agent retry severance (`INTENT_RING_U32`) · [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#37-eip-1193-agentic-wallet-guard-sdk--c-end-eip-1193-middleware) |
@@ -74,7 +74,7 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts
 Selector-level guard for `requestDeposit`, `requestRedeem`, `setOperator` — non-whitelisted operators fail-closed; Pending→Claimable slippage drift gate.
 
 ```bash
-pnpm demo:sanctuary                                  # [Sanctuary] ERC-7540+ Scenario A–C Matrix
+pnpm demo:sanctuary                                  # [Sanctuary] ERC-7540+ Scenario A–C Matrix (alias: pnpm demo:escort)
 pnpm demo:ingress                                    # [Sanctuary] Treasury bridge escort HUD
 ```
 
@@ -115,7 +115,7 @@ forge test --match-contract IntentRingSlabTest
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
 | **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in **Edge** Wasm (`pkg/soil_core.wasm` SHA-256 `67f8fcc7…`) · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
-| **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** · activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../03_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
+| **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** · activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
 | **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
 
 > **Bootstrap keys:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.
@@ -406,10 +406,10 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | Topic | Document |
 |-------|----------|
 | **Zero-GC ring slab · performance metrics** | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md` § Ring Slab](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine) |
-| **AI agent adapter proofs** | [`../05_ADAPTER_INTEGRATION_PROOFS.md`](../05_ADAPTER_INTEGRATION_PROOFS.md) |
-| **CLI Zone A–C command tables** | [`../04_CLI_ZONE_MAP.md`](../04_CLI_ZONE_MAP.md) |
-| **On-chain anchors · Phase A+B+C** | [`../03_ON_CHAIN_MAINNET_ANCHORS.md`](../03_ON_CHAIN_MAINNET_ANCHORS.md) |
-| **Live mainnet execution evidence** | [`../06_LIVE_FIRE_EVIDENCE.md`](../06_LIVE_FIRE_EVIDENCE.md) |
+| **AI agent adapter proofs** | [`05_ADAPTER_INTEGRATION_PROOFS.md`](../06_verifications/05_ADAPTER_INTEGRATION_PROOFS.md) |
+| **CLI Zone A–C command tables** | [`04_CLI_ZONE_MAP.md`](../06_verifications/04_CLI_ZONE_MAP.md) |
+| **On-chain anchors · Phase A+B+C** | [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) |
+| **Live mainnet execution evidence** | [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) |
 | **Sponsor matrix · GTM · milestones** | [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md) |
 | **Verification express hub** | [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) |
 

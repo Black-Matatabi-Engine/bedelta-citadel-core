@@ -290,7 +290,8 @@ Selector-level escort for async vault `requestDeposit`, `requestRedeem`, and `se
 |-------|-------------------|
 | **SSOT** | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) |
 | **Ingress** | `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` |
-| **Verification** | `pnpm demo:sanctuary` · `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS** `[Sanctuary]` |
+| **Verification** | `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` |
+| **Unit SSOT** | [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3 PASS** |
 
 ### EIP-6963 — Multi Injected Provider Discovery (Guarded Provider Announcement)
 

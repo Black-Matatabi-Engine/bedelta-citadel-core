@@ -76,7 +76,7 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | Robinhood escort | `pnpm demo:ingress` | Outbound `46630 → 42161` · inbound AML block · `lostUsd ≡ 0` |
 | EIP-1193 guard | `pnpm demo:exomesh` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
 
-**Sanctuary Async Escort (ERC-7540+) (`[Sanctuary]`):** ERC-7540 Async Vault Escort Extension — selector-level guard in [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) — verify: `pnpm demo:sanctuary`.
+**Sanctuary Async Escort (ERC-7540+) (`[Sanctuary]`):** ERC-7540 Async Vault Escort Extension — selector-level guard in [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) — verify: `pnpm demo:sanctuary` (`demo:escort` alias) · treasury ingress: `pnpm demo:ingress`.
 
 **Do not conflate:** `evaluateRetailVenueAllowlist()` is a **config-driven** anti-phishing gate (`allowedVenues` whitelist) in **SliverVine ExoMesh (Module A)**. It does **not** embed Robinhood stock-token mint contract ABIs. Institutional treasury routing is enforced in **SliverVine Sanctuary (Module B)** via `quoteRChainYieldToArbitrumGm()` before GMX smart-route binding.
 

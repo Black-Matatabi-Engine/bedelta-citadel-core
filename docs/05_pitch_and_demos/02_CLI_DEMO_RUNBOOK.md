@@ -258,7 +258,7 @@ pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
 ```bash
 pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
-pnpm demo:sanctuary               # Sanctuary Async Escort (ERC-7540+) Scenario A–C
+pnpm demo:sanctuary               # Sanctuary Async Escort (ERC-7540+) Scenario A–C (alias: pnpm demo:escort)
 pnpm demo:ingress                 # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 pnpm demo:e2e                     # 4-Step Happy Path Lifecycle (RESULT: E2E OK 4/4)
 pnpm demo:e2e -- --unwind         # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
@@ -272,10 +272,12 @@ pnpm demo:e2e -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_C
 ```bash
 pnpm install
 pnpm demo:exomesh
+pnpm demo:sanctuary
+pnpm demo:ingress
 pnpm demo:gmx -- --trip
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:e2e
-pnpm test       # Full System Regression Suite (228 test files | 1064 PASS clean)
+pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean)
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

@@ -53,7 +53,7 @@ pnpm demo:perp-loop -- --trip            # Zone A Loop A: GMX / Pendle / HL / Va
 pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lane
 
 # === [Sanctuary] Tier 0 — Escrow & Async Vault ===
-pnpm demo:sanctuary                      # Sanctuary Async Escort (ERC-7540+) Scenario A–C
+pnpm demo:sanctuary                      # Sanctuary Async Escort (ERC-7540+) Scenario A–C (alias: pnpm demo:escort)
 pnpm demo:ingress                        # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
 
@@ -70,7 +70,7 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
 | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
 | `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
-| `pnpm demo:sanctuary` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — Scenario A–C · operator whitelist + async slippage drift |
+| `pnpm demo:sanctuary` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — Scenario A–C · operator whitelist + async slippage drift (`demo:escort` alias) · [`sanctuary-demo.ts`](../../examples/sanctuary-demo.ts) |
 | `pnpm demo:exomesh` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
 | `pnpm demo:exomesh -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
 | `pnpm demo:exomesh -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
@@ -81,8 +81,7 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `pnpm demo:spot-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
 | `pnpm demo` | `[ExoMesh]` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
-| `pnpm demo:ingress` | `[Sanctuary]` | Unidirectional compliance bridge escort |
-| `pnpm demo:sanctuary` | `[Sanctuary]` | ERC-7540+ async vault escort Scenario A–C matrix |
+| `pnpm demo:ingress` | `[Sanctuary]` | Unidirectional compliance bridge escort · [`ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) |
 | `pnpm demo:e2e:arb-native` | `[ExoMesh]` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | `[ExoMesh]` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
 | `pnpm run audit:security` | `[ExoMesh]` | 3-Axis Security Scorecard **5/0/0 PASS** |
@@ -126,7 +125,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 | Module | Scope | Verify |
 |--------|-------|--------|
 | **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:sanctuary` · `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` |
+| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:sanctuary` (`demo:escort` alias) · `pnpm demo:ingress` · unit: `treasury-escort-router.test.ts` · `erc7540-async-escort.test.ts` |
 
 ---
 
