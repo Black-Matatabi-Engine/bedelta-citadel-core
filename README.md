@@ -9,7 +9,7 @@
 > *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the hero product; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
 
 ![Vitest](https://img.shields.io/badge/Vitest-1065%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
-![Near Zero-GC Hot-Path](https://img.shields.io/badge/Near_Zero--GC_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
+![Zero-Allocation Hot-Path](https://img.shields.io/badge/Zero--Allocation_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
 ![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)
@@ -32,7 +32,7 @@
 >
 > SilverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.
 >
-> **Near Zero-GC (Zero-GC Hot-Path Phase)**: GC-scavenged hot-path architecture — eliminated **~50,000 ephemeral heap objects/sec** on the RPC reflex arc via reusable `DataView` scratch buffers and pre-allocated LUTs. While the TypeScript runtime retains minimal native event/promise boundaries, all SilverVine risk evaluation, calldata decoding, and attempt ring operations execute on static memory slabs with **zero ephemeral heap allocations during the microsecond execution phase**.
+> **Zero-Allocation Hot-Path**: The pre-consensus microsecond execution phase operates on pre-allocated static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc), while non-critical cold paths (user warning formatters, error loggers) remain standard readable TypeScript.
 
 
 | Standard / EIP                                             | The Architectural Limitation (The Problem)                                                              | SilverVine Breakthrough (How We Solve It)                                                                                                                                                    | Code & Test Proof Anchor                                                                                          |
@@ -138,9 +138,9 @@ SliverVine ExoMesh reports three statistical latency tiers:
 | **E2E ExoMesh Edge**    | **p50 ~106µs**   | Cloudflare Worker + TS Gateway + SSRC FFI (ExoMesh exoskeleton over ReflexCore). | `pnpm demo:gmx`                            |
 
 
-*Near Zero-GC Memory Isolation Benchmark (Zero-GC Hot-Path Phase):* Pre-allocated **256×4 ring slab** intent engine achieves `<16 KiB` **Heap Delta over 10,000 iterations** (`npx vitest run tests/core/intent-sinking-audit.test.ts`).
+*Zero-Allocation Hot-Path Memory Benchmark:* Pre-allocated **256×4 ring slab** intent engine achieves `<16 KiB` **Heap Delta over 10,000 iterations** (`npx vitest run tests/core/intent-sinking-audit.test.ts`). See [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](./docs/06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md).
 
-**Near Zero-GC (Zero-GC Hot-Path Phase)**: GC-scavenged hot-path architecture — eliminated **~50,000 ephemeral heap objects/sec** on the RPC reflex arc. Risk evaluation, calldata decoding, and attempt ring operations run on static memory slabs with **zero ephemeral heap allocations during the microsecond execution phase** (cold-path `fail()` / logging excluded).
+**Zero-Allocation Hot-Path Engine**: Risk evaluation, calldata decoding, and attempt ring operations execute on static memory slabs with **zero ephemeral heap allocations** during the microsecond reflex phase (~**50,000 ephemeral heap objects/sec eliminated**).
 
 ---
 

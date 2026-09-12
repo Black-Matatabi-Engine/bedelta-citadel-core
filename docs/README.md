@@ -10,7 +10,7 @@
 | **03** | [`03_hacker_profiling/`](./03_hacker_profiling/) | MO signatures · Pre-consensus telemetry · Dune PCTII |
 | **04** | [`04_sdk_and_integration/`](./04_sdk_and_integration/) | `@slivervine/eip1193-agentic-wallet-guard` · ExoMesh provider spec |
 | **05** | [`05_pitch_and_demos/`](./05_pitch_and_demos/) | Demo video script · CLI runbook |
-| **06** | [`06_verifications/`](./06_verifications/) | Verification matrix · Zero-GC benchmark · on-chain anchors |
+| **06** | [`06_verifications/`](./06_verifications/) | Verification matrix · Zero-Allocation Hot-Path benchmark · on-chain anchors |
 
 **Quick links:** [`../JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) · [`../README.md`](../README.md) · [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md)
 

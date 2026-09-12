@@ -70,7 +70,7 @@ slot[offset + ATTEMPTS]:  0 → 1 → 2 → 3 → 4  (default maxAttempts = 3)
 
 | Property | Value |
 |----------|-------|
-| **Buffer** | Pre-allocated `Uint32Array` · 256 slots × 4 words · **<16 KiB** / 10k iter (zero-GC) |
+| **Buffer** | Pre-allocated `Uint32Array` · 256 slots × 4 words · **<16 KiB** / 10k iter (**Zero-Allocation Hot-Path**) |
 | **Hot-path eval** | `trackAttemptBudgetU32Pure()` · `evaluateIntentGateU32Pure()` |
 | **Wasm parity** | `intent_core_evaluate_gate` via `wasm-adapter.ts` |
 | **Reject code** | `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` |
@@ -92,7 +92,7 @@ slot[offset + ATTEMPTS]:  0 → 1 → 2 → 3 → 4  (default maxAttempts = 3)
 - Legitimate-looking first call · toxic payload in index ≥ 1
 - Agent frameworks (Coinbase Smart Wallet · modern injectors) default to batch API
 
-**ExoMesh counter — direct pointer unfold (zero-GC batch dissection):**
+**ExoMesh counter — direct pointer unfold (**Zero-Allocation Hot-Path** batch dissection):**
 
 ```typescript
 // eip5792-send-calls.ts — reuse TX_PARAMS pointer; no per-call array alloc
@@ -312,7 +312,7 @@ Every reject path in Signatures A · B · C · C1 honeypot · C3 async drift sat
 ## Verification Commands (60-Second Judge Pack)
 
 ```bash
-# Mindhunter Signature A — zero-GC ring slab
+# Mindhunter Signature A — Zero-Allocation Hot-Path ring slab
 npx vitest run tests/core/intent-sinking-audit.test.ts
 
 # Mindhunter Signature B — EIP-5792 batch unfold
@@ -338,7 +338,7 @@ pnpm test -- --run   # 228 files · 1064 PASS
 
 | Document | Purpose |
 |----------|---------|
-| [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-GC ring slab · SSRC moats |
+| [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-Allocation Hot-Path ring slab · SSRC moats |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix · EIP compliance |
 | [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md) | Sanctuary ERC-7540 deep dive |
 | [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | Honeypot RPC · legacy vs engineered standards |

@@ -502,7 +502,7 @@ Real yield stack (conceptual):
 |---|--------|-----------|-----------|
 | 31 | ✅ | **Venue-Agnostic Shield** | `checkSoilResistance()` on abstract Soil state — independent of venue |
 | 32 | ✅ | **p50 ~106 µs Hot Path** | Rust `#![no_std]` Wasm on Cloudflare Edge |
-| 33 | ✅ | **Hot/Cold Decoupling** | 50.94 KiB gzip hot path isolated from 5-min Cron Workers; near-zero GC jitter on reflex phase |
+| 33 | ✅ | **Hot/Cold Decoupling** | 50.94 KiB gzip hot path isolated from 5-min Cron Workers; **Zero-Allocation Hot-Path** reflex phase |
 | 34 | ✅ | **Wasm Budget** | `<28kb` artifact · `<60µs` warm execution (`pkg/soil_core.wasm`) |
 | 35 | ✅ | **R01 Soil Resistance** | Depth · cross-spread · slippage fuse — fail-closed pre-broadcast |
 | 36 | ✅ | **R04 PGATE Latency** | `PGATE_MAX_LATENCY_MS` = 200 — rejects stale venue timestamps |

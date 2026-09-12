@@ -55,7 +55,7 @@ See [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
 
 ### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
-`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **zero-GC**, mirrored in Rust (`intent_core.rs`) and Solidity (`IntentRingSlabLib.sol`).
+`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **Zero-Allocation Hot-Path**, mirrored in Rust (`intent_core.rs`) and Solidity (`IntentRingSlabLib.sol`).
 
 ---
 

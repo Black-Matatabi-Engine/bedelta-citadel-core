@@ -114,7 +114,7 @@
 | **`docs/03_hacker_profiling/`** | Mindhunter MO · Immunology · Dune PCTII | `01_HACKER_PROFILING` · `02_PRE_CONSENSUS_MO_TELEMETRY` |
 | **`docs/04_sdk_and_integration/`** | SDK 藍圖 · ExoMesh Provider Guard · Pendle API | `01_SDK_INTEGRATION` · `02_EXOMESH_PROVIDER_GUARD_SPEC` |
 | **`docs/05_pitch_and_demos/`** | 雙片影片腳本 · CLI Runbook | `01_DEMO_VIDEO_SCRIPT` · `02_CLI_DEMO_RUNBOOK` |
-| **`docs/06_verifications/`** | 驗證矩陣 · Zero-GC 報告 · 鏈上錨點 | `01_VERIFICATION_MATRIX` · `02_ZERO_GC_BENCHMARK_REPORT` |
+| **`docs/06_verifications/`** | 驗證矩陣 · Zero-GC 報告 · 鏈上錨點 | `01_VERIFICATION_MATRIX` · `02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT` |
 
 **四份 Master Breakthrough Docs 新路徑（本卷強調）：**
 
@@ -391,7 +391,7 @@ pnpm test -- --run              # Expected: 228 files | 1065 PASS
 | [`docs/README.md`](../README.md) | 公開文檔主索引 01–06 |
 | [`docs/01_architecture/README.md`](../01_architecture/README.md) | 架構子索引 |
 | [`01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | 驗證 Express Hub |
-| [`02_ZERO_GC_BENCHMARK_REPORT.md`](../06_verifications/02_ZERO_GC_BENCHMARK_REPORT.md) | Zero-GC 基準 |
+| [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](../06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | Zero-GC 基準 |
 
 ---
 

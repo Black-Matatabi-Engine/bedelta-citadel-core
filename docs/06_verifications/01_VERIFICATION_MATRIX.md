@@ -216,7 +216,7 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 | [`architecture/README.md`](../01_architecture/README.md) | Yellow Paper · R01–R20 |
 | [`DEMO_GUIDE.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) | Tier 0–1 + Zone A/B demo suite (5-core + Retail Guard) |
 | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 30-second Buildathon brief |
-| [`02_ZERO_GC_BENCHMARK_REPORT.md`](./02_ZERO_GC_BENCHMARK_REPORT.md) | **Near Zero-GC** · Zero-GC hot-path phase · ring slab `<16 KiB` / 10k |
+| [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](./02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | **Zero-Allocation Hot-Path** · ring slab `<16 KiB` / 10k |
 
 ---
 
