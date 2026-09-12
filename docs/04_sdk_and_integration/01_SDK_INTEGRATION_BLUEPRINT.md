@@ -186,7 +186,7 @@ Interactive Tier 0 entrypoint for judges and integrators — wraps the same prod
 | Interactive CLI | `pnpm demo:exomesh` | 4 core state scenarios (A–D) · independent replays |
 | Unit SSOT | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · all **7** `RetailGuardReasonCode` variants |
 
-Source: [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`examples/lib/eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts)
+Source: [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`examples/lib/eip1193-extension-helpers.ts`](../../examples/lib/eip1193-extension-helpers.ts)
 
 ### EIP-1193 Terminal HUD Representation
 

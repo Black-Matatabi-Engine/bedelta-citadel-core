@@ -110,16 +110,16 @@
 | 序號目錄 | 評審面角色 | 代表文檔 |
 |----------|------------|----------|
 | **`docs/01_architecture/`** | 拓撲 · SSRC · 風險 88/12 · Pillar X/Y | `01_SYSTEM_TOPOLOGY` · `02_DEFENSE_MATRIX_AND_SSRC_CORE` · `03_RISK_MITIGATION` |
-| **`docs/02_eip_extensions/`** | EIP 合規矩陣 · ERC-7540 突破 | `01_EIP_COMPLIANCE` · `02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH` |
+| **`docs/02_eip_extensions/`** | EIP 合規矩陣 · ERC-7540 突破 | `01_EIP_COMPLIANCE` · `02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION` |
 | **`docs/03_hacker_profiling/`** | Mindhunter MO · Immunology · Dune PCTII | `01_HACKER_PROFILING` · `02_PRE_CONSENSUS_MO_TELEMETRY` |
 | **`docs/04_sdk_and_integration/`** | SDK 藍圖 · ExoMesh Provider Guard · Pendle API | `01_SDK_INTEGRATION` · `02_EXOMESH_PROVIDER_GUARD_SPEC` |
 | **`docs/05_pitch_and_demos/`** | 雙片影片腳本 · CLI Runbook | `01_DEMO_VIDEO_SCRIPT` · `02_CLI_DEMO_RUNBOOK` |
 | **`docs/06_verifications/`** | 驗證矩陣 · Zero-GC 報告 · 鏈上錨點 | `01_VERIFICATION_MATRIX` · `02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT` |
 
-**四份 Master Breakthrough Docs 新路徑（本卷強調）：**
+**四份 Master Implementation Docs 新路徑（本卷強調）：**
 
 1. [`docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) — ExoMesh Edge-Wasm 0-Gas Pre-Consensus RI
-2. [`docs/02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md) — Sanctuary 異步金庫護欄
+2. [`docs/02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) — Sanctuary 異步金庫護欄
 3. [`docs/03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) — Mindhunter × Cyber-Immunology
 4. [`docs/03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md`](../03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) — PCTII · Dune Sepolia PEV
 
@@ -330,7 +330,7 @@ pnpm test -- --run              # Expected: 228 files | 1065 PASS
 **裁決理由：**
 
 1. **零技術債：** `pnpm test -- --run` → **228 / 1065 PASS (100%)** · `tsc` → **0 errors** · 0 flaky · 0 trivial `expect(true)`.
-2. **評審導航級文檔：** `01`–`06` 序號拓撲 · 四份 Breakthrough Docs 就位 · 鏈路零斷裂（本卷已掃描公開 judge-facing tree）。
+2. **評審導航級文檔：** `01`–`06` 序號拓撲 · 四份 Implementation Docs 就位 · 鏈路零斷裂（本卷已掃描公開 judge-facing tree）。
 3. **SSRC 引擎品牌鎖：** 退役 Wasm Shield / Citadel Shield 英雄稱 · `pkg/soil_core.wasm` + Stylus Coprocessor 雙引擎敘事一致。
 4. **Cyber-Immunology：** FBI Mindhunter MO（Sig A/B/C）+ 疫苗層（C1 decoy · jittered soil fuse）— 國際評審友好。
 5. **工程誠實度：** 1065 構成表公開 · 核心 ~998 vs HUD/harness 分拆 — ** unmatched transparency**。

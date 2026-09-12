@@ -102,7 +102,7 @@ All `examples/*` CLI demos — including **`pnpm demo:exomesh`** — run under a
 
 `Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`
 
-The banner is emitted by [`examples/lib/eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts) (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via [`examples/lib/demo-harness.ts`](../../examples/lib/demo-harness.ts) (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
+The banner is emitted by [`examples/lib/eip1193-extension-helpers.ts`](../../examples/lib/eip1193-extension-helpers.ts) (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via [`examples/lib/demo-harness.ts`](../../examples/lib/demo-harness.ts) (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
 
 ### Dual-Track Verification Architecture (`@slivervine/exomesh-agentic-wallet-guard`)
 

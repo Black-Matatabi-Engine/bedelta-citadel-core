@@ -3,7 +3,7 @@
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
 > **Frameworks:** FBI **Mindhunter** behavioral profiling (MO · signature · escalation) · **Cyber-Biological Immunology** (self-tuning honeypot inoculation · adversarial telemetry vaccine)  
 > **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **228 test files | 1065 PASS clean**  
-> **Architecture index:** [`README.md`](../01_architecture/README.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
+> **Architecture index:** [`README.md`](../01_architecture/README.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
 
@@ -143,7 +143,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Chaos tier:** **C3** — `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` · unit SSOT: [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3**
 
-**SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
+**SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
 
@@ -340,7 +340,7 @@ pnpm test -- --run   # 228 files · 1064 PASS
 |----------|---------|
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-Allocation Hot-Path ring slab · SSRC moats |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix · EIP compliance |
-| [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md) | Sanctuary ERC-7540 deep dive |
+| [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary ERC-7540 deep dive |
 | [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | Honeypot RPC · legacy vs engineered standards |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
 

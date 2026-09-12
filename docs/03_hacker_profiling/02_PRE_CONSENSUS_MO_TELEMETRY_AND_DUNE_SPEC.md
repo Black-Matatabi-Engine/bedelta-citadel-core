@@ -96,7 +96,7 @@ PCTII is the **numerator factory** for PEV: each `mo_signature_code` row carries
 |-----------|------|--------|
 | Soil trip counter | [`telemetry-analytics-core.ts`](../../src/services/telemetry-analytics-lib/telemetry-analytics-core.ts) | ✅ Live (in-process) |
 | Grant-audit Dune block | [`grant-audit-dune-telemetry.ts`](../../src/routes/grant-audit-lib/grant-audit-dune-telemetry.ts) | ✅ Live (`GET /api/grant-audit`) |
-| Demo MO → Dune reason map | [`eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts) `mapDuneTelemetryReason()` | ✅ Demo harness |
+| Demo MO → Dune reason map | [`eip1193-extension-helpers.ts`](../../examples/lib/eip1193-extension-helpers.ts) `mapDuneTelemetryReason()` | ✅ Demo harness |
 | Sepolia event emitter | [`scripts/emit-sepolia-telemetry-events.ts`](../../scripts/emit-sepolia-telemetry-events.ts) | ✅ Q1 probe |
 | **`slivervine_telemetry_events`** | This document | 📋 **Spec v1** (schema SSOT) |
 
@@ -169,7 +169,7 @@ Pre-consensus severance means **`baseProvider.request()` is never invoked** — 
 ### 3.3 Deterministic `event_id` & `agent_id`
 
 ```typescript
-// Spec — mirrors deriveTripEvtHash() in eip1193-breakthrough-helpers.ts
+// Spec — mirrors deriveTripEvtHash() in eip1193-extension-helpers.ts
 event_id   = sha256(`${schema_version}:${agent_id}:${mo_signature_code}:${block_epoch}:${selector_u32 ?? "0x0"}`)
 agent_id   = sha256(`retail:${walletAddress.trim().toLowerCase()}`)
              // parity: hashRetailWalletSlotIndex() uses same normalized wallet
@@ -434,7 +434,7 @@ pnpm tsx scripts/emit-sepolia-telemetry-events.ts
 | [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) | Mindhunter MO · Cyber-Biological Immunology framework |
 | [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | PEV · Query 0–3 · Sepolia ingest |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix |
-| [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md) | Sanctuary async vault MO |
+| [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary async vault MO |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · PEV disclaimers |
 
 ---
