@@ -13,13 +13,13 @@
 
 | Field | Value |
 |-------|-------|
-| **Live Query URL** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Live Query URL** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **On-chain ingest source** | Sepolia `SliverVineGate` `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Decoded events** | `IntentAttested` · `RiskTripBlocked` · `AttestationConsumed` |
 | **PEV metric** | **Prevented Exploit Volume (PEV)** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs (fully operational on Sepolia Gate) |
 | **Off-chain anchor** | `/api/grant-audit` → `duneTelemetry.responseRef` (sha256) |
 
-> **Clarification:** The live Dune dashboard at [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`:
+> **Clarification:** The live Dune dashboard at [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1):
 > 1. **`IntentAttested`** — real-time EIP-712 intent attestations (PASS / emergency de-leverage greenlights).
 > 2. **`RiskTripBlocked`** — pre-broadcast fail-closed severance events (toxic intent blocked at 0-Gas; feeds **PEV**).
 >
@@ -29,7 +29,7 @@
 
 | Field | Status |
 |-------|--------|
-| **Chain** | Arbitrum One `42161` · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
+| **Chain** | Arbitrum One `42161` · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Dashboard** | Queries 1–3 below are **pre-compiled DuneSQL** for production PEV / toxic-flow panels |
 | **Live ingest** | **Not yet operational** — awaits mainnet `IntentAttested` / `RiskTripBlocked` business-event indexer activation |
 | **Sepolia parity** | Sepolia stream proves decode + PEV math; 42161 spec is **copy-ready** for sponsor diligence |
@@ -82,7 +82,7 @@ ORDER BY block_number DESC
 LIMIT 50;
 ```
 
-**Dashboard:** [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**Dashboard:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
 ---
 
@@ -121,7 +121,7 @@ ORDER BY minute_time ASC;
 
 $$\text{PEV} = \sum \text{blocked\_intent\_notional\_usd}$$
 
-Sourced exclusively from decoded **`RiskTripBlocked`** event logs emitted by Sepolia Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`. Each `RiskTripBlocked` log carries the nominal USD notional of the toxic intent severed pre-broadcast (0-Gas fail-closed path).
+Sourced exclusively from decoded **`RiskTripBlocked`** event logs emitted by Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1). Each `RiskTripBlocked` log carries the nominal USD notional of the toxic intent severed pre-broadcast (0-Gas fail-closed path).
 
 **Dashboard panel:** [silvervine-citadel-telemetry — PEV](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
@@ -263,7 +263,7 @@ LIMIT 500;
 ## Pre-Consensus Chaos Intercepts (Query C0–C5)
 
 **Scope:** Orbit Agentic Fail-Closed chaos matrix · Buildathon sponsor lanes (Robinhood / GMX V2 / Pendle / ZeroDev / ArbOS / Stylus).
-**Vitest anchor:** `tests/chaos/orbit-agentic-failclosed-chaos.test.ts` (5 PASS clean).
+**Vitest anchor:** [`tests/chaos/orbit-agentic-failclosed-chaos.test.ts`](../../tests/chaos/orbit-agentic-failclosed-chaos.test.ts) (5 PASS clean).
 **Rust anchor:** `decode_nested_fail_closed` · `cargo test nested` · mean <15µs on 10k iterations.
 
 | Panel | Query | Primary source |
@@ -282,7 +282,7 @@ LIMIT 500;
 | `dune.silvervinelabs.result_citadel_risk_trips` | Decoded `RiskTripBlocked` / `IntentAttested` from Sepolia Gate |
 | `dune.silvervinelabs.silvervine_chaos_intercepts` | Off-chain chaos sandbox ingest (`silvervine_chaos.intercepts`) |
 
-**Telemetry parity (`src/core/gate-telemetry-types.ts`):**
+**Telemetry parity ([`src/core/gate-telemetry-types.ts`](../../src/core/gate-telemetry-types.ts)):**
 
 | TS constant | Value | Dune / Solidity mapping |
 |-------------|-------|-------------------------|
@@ -547,7 +547,7 @@ LIMIT 100;
 
 ---
 
-## On-Chain Event Schema (`SliverVineGate.sol`)
+## On-Chain Event Schema ([`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol))
 
 ```solidity
 event IntentAttested(bytes32 indexed intentHash, address indexed agent, uint8 action, uint256 shadowMarginUsd);
@@ -567,7 +567,7 @@ event RiskTripBlocked(bytes32 indexed intentHash, address indexed agent, string 
 | Milestone | Deliverable |
 |-----------|-------------|
 | **M-Dune** | Dashboard live · `duneTelemetry` in `/api/grant-audit` · gate events indexed |
-| **M-CLI** | Vitest regression · `tests/api/grant-audit-dune-telemetry.test.ts` |
+| **M-CLI** | Vitest regression · [`tests/api/grant-audit-dune-telemetry.test.ts`](../../tests/api/grant-audit-dune-telemetry.test.ts) |
 
 ---
 

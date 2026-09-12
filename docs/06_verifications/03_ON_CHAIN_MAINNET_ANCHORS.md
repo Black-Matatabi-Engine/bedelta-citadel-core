@@ -19,24 +19,24 @@
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | `withRetailGuardProvider()` — C-end wallet middleware · 0-Gas pre-consensus intercept | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
 | **B2B agent decorator** | `withCitadelShield` · `verifyAgentIntent()` — framework-agnostic pre-broadcast wrapper | [`decorator.ts`](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
 | **Removed v1.1 prune** | Wayfinder · ElizaOS · Virtuals · LangChain adapters — **RESERVED_ABI_V2** holes preserved | See [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) |
-| **Stabilizer Sepolia adapter** | Universal Cross-DEX Testnet Sandbox on **421614** — 1:1 capacity · de-peg severance · cross-pass routing | `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ >50bps peg guard · 60s LLM cooldown | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:stabilizer` |
-| **Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan Sepolia](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
-| **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbiscan One](https://arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) |
-| **PolicyGuardV2 (Arbitrum One · current)** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · `stylusCoprocessor=0` | [Arbiscan](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · Deploy [`0xcd520602…`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
-| **Gate PolicyLink (42161 · bootstrap Gate)** | `0xe4ef5350963241c49a29e72a4cf093208cd19af0` → Gate `0xb174…` · PolicyGuardV2 `0xfd98…` | [PolicyLink](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) · Link [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
-| **GmxSoilMatrixSwitch (42161)** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` → oracle `0xfadb1475…` | [Arbiscan](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) · Deploy [`0x6790c2b8…`](https://arbiscan.io/tx/0x6790c2b8ea23ba02640c87f06e774f093061d3d98b462caa9bd84f48a24d63ab) |
-| **SliverVineRiskOracleV2 (42161)** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` | [Arbiscan](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) · Deploy [`0x8f5d79e5…`](https://arbiscan.io/tx/0x8f5d79e538ed65f863b1fdfc10d2dacf387b07c5cb7b3eb127afa835a27686ab) |
-| **PolicyGuard v1 (superseded)** | `0xc66f96611a737c4e58706d0955594456eab88959` | [Arbiscan](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) · Deploy [`0xeabd5fd1…`](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
-| **PolicyGuard (legacy v0)** | `0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b` | [Arbiscan](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) · Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
-| **ZeroDev Smart Route UserOp (4663→42161)** | UserOp `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` · Tx `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` | [Arbiscan Tx](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
-| **Mainnet Ignition Tx** | `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| **Stabilizer Sepolia adapter** | Universal Cross-DEX Testnet Sandbox on **421614** — 1:1 capacity · de-peg severance · cross-pass routing · `evaluateStabilizerSwapGuard()` · 15% reserve ratio · USDZ >50bps peg guard · 60s LLM cooldown | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `pnpm demo:stabilizer` |
+| **Sepolia Gate** | [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://sepolia.arbiscan.io/address/0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1) | Sepolia Arbiscan |
+| **Arbitrum One Gate** | [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | Arbiscan One |
+| **PolicyGuardV2 (Arbitrum One · current)** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0` | Deploy [`0xcd520602…`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) |
+| **Gate PolicyLink (42161 · bootstrap Gate)** | [`0xe4ef5350963241c49a29e72a4cf093208cd19af0`](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) → Gate [`0xb174…`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · PolicyGuardV2 [`0xfd98…`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | Link [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
+| **GmxSoilMatrixSwitch (42161)** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) → oracle [`0xfadb1475…`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | Deploy [`0x6790c2b8…`](https://arbiscan.io/tx/0x6790c2b8ea23ba02640c87f06e774f093061d3d98b462caa9bd84f48a24d63ab) |
+| **SliverVineRiskOracleV2 (42161)** | [`0xfadb14759a3d3c7e976697de61bf62627f14ec93`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | Deploy [`0x8f5d79e5…`](https://arbiscan.io/tx/0x8f5d79e538ed65f863b1fdfc10d2dacf387b07c5cb7b3eb127afa835a27686ab) |
+| **PolicyGuard v1 (superseded)** | [`0xc66f96611a737c4e58706d0955594456eab88959`](https://arbiscan.io/address/0xc66f96611a737c4e58706d0955594456eab88959) | Deploy [`0xeabd5fd1…`](https://arbiscan.io/tx/0xeabd5fd17f1e8684c3408887a233a8ac26220199781b401336233a3072fb4b0c) |
+| **PolicyGuard (legacy v0)** | [`0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b`](https://arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) | Deploy [`0x77fd8e1c…`](https://arbiscan.io/tx/0x77fd8e1c702ca19e9fa0621a1f6b0e8de6701f389d062cc3427e3d8d3d1e74fa) |
+| **ZeroDev Smart Route UserOp (4663→42161)** | UserOp `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` · Tx [`0x4c4ca136…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) | Arbiscan Tx |
+| **Mainnet Ignition Tx** | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) | Arbiscan Tx |
 | **Agent SDK decorator** | `withCitadelShield` — zero-touch pre-broadcast wrapper | [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) |
 | **5-Core venue demos (Tier 1)** | GMX v2 · Pendle · USD.ai · Hyperliquid · Variational standalone CLIs | [`gmx-demo.ts`](../../examples/gmx-demo.ts) · [`pendle-demo.ts`](../../examples/pendle-demo.ts) · [`usdai-demo.ts`](../../examples/usdai-demo.ts) · [`hyperliquid-demo.ts`](../../examples/hyperliquid-demo.ts) · [`variational-demo.ts`](../../examples/variational-demo.ts) · `pnpm demo:{gmx,pendle,usdai,hl,variational}` |
 | **Pruned venue adapters** | Uniswap V3 · Aave V3 · Morpho Blue — removed v1.1 · Wasm **RESERVED_ABI_V2** bits 4–6 | [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) |
 | **Hyperliquid L1 session guard** | `evaluateHyperliquidSessionGuard()` — Independent L1 HF Orderbook AppChain · MaxSizePerOrder · rate limit (120/min) · spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) · `pnpm demo:hl` |
 | **Variational Omni RFQ adapter** | `validateVariationalRFQIntent()` → `evaluateVariationalFlags()` — quote stale **>500ms** or oracle drift **>30 bps** · OLP depth utilization **>15%** (long-tail) · **Bits 12–13** in core bitmask · `FLAGS_AUTO_SEVER_MASK` | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) · `pnpm demo:variational -- --trip` |
 | **GMX v2 pool invariants** | `verifyGmxPoolImbalance()` · `verifyGmxCollateralReserve()` — imbalance > **0.35** · reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · `pnpm demo:gmx` |
-| **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
+| **Dune dashboard** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **Dune — Sepolia (`421614`)** | ✅ **Active Live Event Stream** — decoded `IntentAttested` · `RiskTripBlocked` from Sepolia Gate `0xb174…` · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Dune — Arbitrum One (`42161`)** | ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** — Queries 0–0b feed/chart + Queries 1–3 reconciliation panels pre-compiled for **ChainID `42161`** · **not** claimed as live mainnet event stream | Same spec |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Final (Ethereum Standard · Virtuals Protocol co-author) | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
@@ -102,8 +102,8 @@ SliverVine ExoMesh runs **two independent Wasm engines**. They share risk semant
 | Field | Locked value |
 |-------|--------------|
 | **Status** | `DEPLOYED_MAINNET` · `FROZEN` |
-| **Contract** | `SliverVineSoilCoprocessor` · **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** |
-| **Explorer** | [https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) |
+| **Contract** | `SliverVineSoilCoprocessor` · **[`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e)** |
+| **Explorer** | [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) |
 | **Activation Tx** | [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) |
 | **Role** | On-chain pre-consensus state validation · Stylus `check_soil_resistance_stylus` verification inside Nitro blocks |
 | **Source** | [`contracts/stylus-probe`](../../contracts/stylus-probe/) · [`stylus_core.rs`](../../contracts/stylus-probe/src/stylus_core.rs) |
@@ -117,7 +117,7 @@ SliverVine ExoMesh runs **two independent Wasm engines**. They share risk semant
 | Field | Locked value |
 |-------|--------------|
 | **Status** | `EDGE_ARTIFACT_VERIFIED` · `FROZEN` |
-| **Binary** | `pkg/soil_core.wasm` · build: `pnpm run build:wasm` |
+| **Binary** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · build: `pnpm run build:wasm` |
 | **Wasm SHA-256** | `67f8fcc70563fec84727036b6c36607733114fb30577a58490584247f8010b14` |
 | **Size** | **1,557 bytes** (&lt;28 KiB Cloudflare Worker budget) |
 | **Role** | Sub-millisecond physical clock leap / NTP step / RPC `block.timestamp` regression firewall on Edge Isolates |
@@ -132,6 +132,6 @@ SliverVine ExoMesh runs **two independent Wasm engines**. They share risk semant
 | `npx vitest run tests/clock-monotonicity.test.ts` | **14/14 PASS** | Engine B TS + Wasm FFI parity |
 | `cargo test stylus_core --release` | **5/5 PASS** | Engine A unit tests |
 | `cargo stylus check` (stylus-probe · mainnet RPC) | **PASS** | Engine A Nitro compatibility |
-| `pnpm run build:wasm` | **PASS** | Regenerates Engine B `pkg/soil_core.wasm` |
+| `pnpm run build:wasm` | **PASS** | Regenerates Engine B [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 
-> **Redeploy note:** Engine B is **never** broadcast to Arbitrum. Future Engine A redeploys use `scripts/deploy-stylus-mainnet.ts` (not `cargo stylus deploy --wasm-file pkg/soil_core.wasm`).
+> **Redeploy note:** Engine B is **never** broadcast to Arbitrum. Future Engine A redeploys use [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts) (not `cargo stylus deploy --wasm-file pkg/soil_core.wasm`).

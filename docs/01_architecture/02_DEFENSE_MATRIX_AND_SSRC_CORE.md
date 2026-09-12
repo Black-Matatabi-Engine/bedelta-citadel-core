@@ -3,7 +3,7 @@
 > **Primary Highlights (Direction B — ReflexCore / SSRC):**
 > - **Pure-Math Risk Engine** — **~0.5µs–1.1µs** pure invariant evaluation · zero async on the hot path · 28-protocol-slot bitmask vectoring
 > - **R01–R20 Defense Matrix** — single-bitmask fail-closed evaluation · **R20** triggers **p50 ~15µs** physical deadlock via `rootProtection()` / `severSigningChannel()`
-> - **ReflexCore (SSRC) soil engine** — `pkg/soil_core.wasm` **< 28 KiB** · ABI v2 · SSRC **p50 ~106 µs** · warm **< 60 µs**
+> - **ReflexCore (SSRC) soil engine** — [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · ABI v2 · SSRC **p50 ~106 µs** · warm **< 60 µs**
 > - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 > - **Zero-Allocation Hot-Path Engine** — pre-allocated **256×4** intent heap · **O(1)** slot hash · **&lt;16 KiB** heap delta / 10k hot-path iterations (Vitest worker isolation) · ~**50,000 ephemeral heap objects/sec eliminated**
 >
@@ -12,7 +12,7 @@
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
 
-Institutional-grade technical moat: SliverVine ExoMesh evaluates the **5-Core Venue Matrix** (GMX · Pendle · USD.ai · Variational · Hyperliquid) as a **single parallel vector** — not a sequential per-venue RPC loop. Pruned venues retain **RESERVED_ABI_V2** bitmask holes. The hot path is **pure deterministic math** sunk into `src/core/` with one Wasm FFI round-trip.
+Institutional-grade technical moat: SliverVine ExoMesh evaluates the **5-Core Venue Matrix** (GMX · Pendle · USD.ai · Variational · Hyperliquid) as a **single parallel vector** — not a sequential per-venue RPC loop. Pruned venues retain **RESERVED_ABI_V2** bitmask holes. The hot path is **pure deterministic math** sunk into [`src/core/`](../../src/core) with one Wasm FFI round-trip.
 
 ### Pure-Math Invariant Evaluation (~0.5µs–1.1µs)
 
@@ -20,7 +20,7 @@ Institutional-grade technical moat: SliverVine ExoMesh evaluates the **5-Core Ve
 |----------|----------------|----------------|
 | **Zero async on critical path** | [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | No `await`, no I/O, no network probes inside `checkSoilResistance()` pure evaluation — eliminates event-loop jitter during reflex arcs |
 | **Pre-allocated scratch** | Module-level `Float64Array` / `Uint8Array` lanes (`PROTO_VECT_LEN=28`) | **Zero-Allocation Hot-Path** — zero ephemeral alloc on microsecond reflex phase |
-| **Measured pure invariant** | CLI harness `Pure Invariant Time` row (`examples/lib/demo-timing.ts`) | **~0.5µs–1.1µs** isolated soil math — invariant evaluation only, excluding harness I/O |
+| **Measured pure invariant** | CLI harness `Pure Invariant Time` row ([`examples/lib/demo-timing.ts`](../../examples/lib/demo-timing.ts)) | **~0.5µs–1.1µs** isolated soil math — invariant evaluation only, excluding harness I/O |
 
 $$
 \mathrm{AllowedToSign} = f_{\mathrm{pure}}(\mathbf{v}_{28}) \in \{0,1\} \quad \text{where } t_{\mathrm{pure}} \sim 0.5\text{–}1.1\,\mu\mathrm{s}
@@ -31,7 +31,7 @@ $$
 | Layer | SSOT module | Parallelism model |
 |-------|-------------|-------------------|
 | **TS bitmask compiler** | [`risk-flags.ts`](../../src/core/risk-flags.ts) · [`risk-engine-core.ts`](../../src/core/risk-engine-core.ts) | All R01–R20 + protocol lanes compile to **`protocolMask` / `tripFlags`** — evaluated in one bitwise pass |
-| **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs active lanes (GMX · Pendle · USD.ai · Variational · HL) + **RESERVED_ABI_V2** holes · slot **27** = aggregated `protocolMask` |
+| **Wasm FFI vector** | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | **One** `check_soil_resistance()` call per intent — **28-protocol-slot ABI v2** packs active lanes (GMX · Pendle · USD.ai · Variational · HL) + **RESERVED_ABI_V2** holes · slot **27** = aggregated `protocolMask` |
 | **5-core matrix coverage** | Per-venue demos · `pnpm demo:gmx` · `pnpm demo:variational` · `pnpm demo:hl` | Active lanes evaluated via bitmask — pruned bits 4–6 frozen |
 
 ```text
@@ -80,7 +80,7 @@ slot[i] @ offset = (hashKeyToSlotIndex(key) & 0xFF) × 4
 │ attempts   │ flags  │ allowed_mask    │ target_bit   │
 │ u32[0]     │ u32[1] │ u32[2]          │ u32[3]       │
 └────────────┴────────┴─────────────────┴──────────────┘
-         ↔ Rust `intent_core.rs` 4 × i64 @ `heap_ptr`
+         ↔ Rust [`intent_core.rs`](../../src/wasm/intent_core.rs) 4 × i64 @ `heap_ptr`
 ```
 
 ### O(1) Numeric Slot Hashing (No `Map` Churn)
@@ -111,7 +111,7 @@ $$
 npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · includes <16 KiB worker gate
 ```
 
-### Foundry On-Chain Ring Slab Fuzz Proof (`IntentRingSlabLib.sol`)
+### Foundry On-Chain Ring Slab Fuzz Proof ([`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol))
 
 Solidity mandate semantics mirror the TypeScript u32 hot path — [`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol) enforces FNV-1a slot hashing · venue drift flags · attempt-budget severance. Foundry fuzz suite **5/5 PASS**:
 
@@ -148,7 +148,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 |-----------|-----------|----------------|
 | **Zero STW GC latency spikes** | Pre-allocated slab · reused scratch `IntentGateResult` | HF AI agents validate intents at **p50 ~106µs** without V8 pause risk during retry storms |
 | **Bounded memory footprint** | **256 slots × 32 B** = **8 KiB** mandate state (plus 4 KiB u32 mirror) | Predictable Edge isolate memory — no unbounded `Map` growth under adversarial `agentId` fan-out |
-| **Wasm / Stylus portability** | Same slot layout as `intent_core.rs` | One mandate semantics across **Cloudflare Worker** · **`pkg/soil_core.wasm`** · **Arbitrum Stylus** coprocessor — audit once, deploy everywhere |
+| **Wasm / Stylus portability** | Same slot layout as [`intent_core.rs`](../../src/wasm/intent_core.rs) | One mandate semantics across **Cloudflare Worker** · **[`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)** · **Arbitrum Stylus** coprocessor — audit once, deploy everywhere |
 
 ---
 
@@ -160,7 +160,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 
 | Moat | Constant / Module | Spec |
 |------|-------------------|------|
-| **Emergency Margin Buffer** | `DEFAULT_CROSS_MMR = 0.05` (5% account equity reserve) | Blocks new risk when free margin buffer would fall below **5%** after intended notional (`src/services/risk/liquidation-meter.ts`) |
+| **Emergency Margin Buffer** | `DEFAULT_CROSS_MMR = 0.05` (5% account equity reserve) | Blocks new risk when free margin buffer would fall below **5%** after intended notional ([`src/services/risk/liquidation-meter.ts`](../../src/services/risk/liquidation-meter.ts)) |
 | **HL Nonce Auto-Resync** | `HL_NONCE_AUTO_RESYNC` · `session-key-adapter-lib/nonce-auto-healing` | Monotonic nonce heal on `Invalid nonce` WS · heartbeat revoke closes signing channel |
 | **NTP Clock Drift Compensator** | `NTP_CLOCK_DRIFT_COMPENSATOR` | Rejects / skew-corrects venue timestamps with **&lt;200ms** drift vs Edge NTP; aligns with Pgate latency fuse (`PGATE_MAX_LATENCY_MS` = 200) |
 | **Cross-Venue Net Slippage TWAP** | `CrossVenueNetSlippage` | When net cross-book slippage **&gt; 0.5%** (`MAX_SLIPPAGE = 0.005`), trips soil + schedules **TWAPEngineV2** path slicing instead of market sweep |
@@ -168,7 +168,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 | **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **Zero-Allocation Hot-Path** ring slab for mandate state · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
 | **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
 
-**Core modules (`src/core/`):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
+**Core modules ([`src/core/`](../../src/core)):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
 
 ### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku)
 
@@ -177,7 +177,7 @@ SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. *
 | Layer | SSOT | Role |
 |-------|------|------|
 | **Edge host** | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock-wasm.ts`](../../src/sdk/clock-wasm.ts) | TypeScript typed-array adapter · seamless fallback when Wasm asset absent |
-| **Wasm bytecode** | [`clock_core.rs`](../../src/wasm/clock_core.rs) in `pkg/soil_core.wasm` | **Obfuscated proprietary math** — saturating arithmetic + leap guards compiled to Wasm (not exposed as TS source) |
+| **Wasm bytecode** | [`clock_core.rs`](../../src/wasm/clock_core.rs) in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | **Obfuscated proprietary math** — saturating arithmetic + leap guards compiled to Wasm (not exposed as TS source) |
 | **Stylus (Nitro)** | [`contracts/stylus-probe`](../../contracts/stylus-probe/) | On-chain coprocessor verification path · `cargo stylus check` |
 
 **Dual-layer execution:**
@@ -249,7 +249,7 @@ $$
 |-------|--------|-------------------|
 | **Core SSOT** | [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) | `resolveUsdAiClockSsotPure()` · peg/NAV/depth gates · `PROTO_USDAI` lane (module-level `Float64Array` scratch) |
 | **Collateral Guard** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | Thin orchestration · `evaluateUsdAiCollateralGuard()` — re-exports core via `usdai-*` shells |
-| **Legacy shells** | [`usdai-constants.ts`](../../src/adapters/usdai/usdai-constants.ts) · [`usdai-soil-gate.ts`](../../src/adapters/usdai/usdai-soil-gate.ts) · [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | 100% backward-compatible re-exports from `risk-engine-usdai.ts` |
+| **Legacy shells** | [`usdai-constants.ts`](../../src/adapters/usdai/usdai-constants.ts) · [`usdai-soil-gate.ts`](../../src/adapters/usdai/usdai-soil-gate.ts) · [`usdai-protocol-lane.ts`](../../src/adapters/usdai/usdai-protocol-lane.ts) | 100% backward-compatible re-exports from [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) |
 | **Soil Fuse** | [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) | `usdai` → `collectExternalSoilFlags()` · `protocolMask \|=` · `USD_AI_DEPEG_ORACLE_TRIP` |
 | **USD.ai CLI** | `pnpm demo:usdai -- --trip` | `USD.ai Yield Collateral Fuse: OK/TRIPPED` ANSI board |
 
@@ -335,9 +335,9 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 | **Arbitrum Citadel** (primary) | GMX v2 GM pools, Arbitrum One | Pre-execution gate · underweight-side routing |
 | **Hyperliquid Native** (cross-chain L1) | Independent L1 HF orderbook perps · session-key signing · spread/size/rate-limit guard | Emergency Liquidity Sponge when Citadel flags trip |
 
-Routing policy: venue selected per risk flags; both paths share the same fail-closed envelope. On-chain attestation consume-once: `SliverVineGate.sol` (`verifyAndConsume`).
+Routing policy: venue selected per risk flags; both paths share the same fail-closed envelope. On-chain attestation consume-once: [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) (`verifyAndConsume`).
 
-1. **Ingress** — `worker-fetch.ts` / `worker-scheduled.ts`.
+1. **Ingress** — [`worker-fetch.ts`](../../src/worker-fetch.ts) / [`worker-scheduled.ts`](../../src/worker-scheduled.ts).
 2. **Pre-execution** — sequencer → oracle-lag → `checkSoilResistance()` (depth, cross-spread, slippage fuse, **Pendle oracle / cross-guard soil probes**).
 3. **Routing** — underweight GM qualification → unsigned payload with optional builder hooks.
 4. **Hedge** — session-key HL leg when Citadel trips.
@@ -348,17 +348,17 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 
 ### 3.5 ReflexCore (SSRC) soil engine (M4) — Summary
 
-> **Wasm Budget SSOT:** `pkg/soil_core.wasm` **< 28 KiB** · hot-path exec **< 60 µs** · SSRC p50 **~106 µs** · fail path **< 14 µs** physical deadlock.
+> **Wasm Budget SSOT:** [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · hot-path exec **< 60 µs** · SSRC p50 **~106 µs** · fail path **< 14 µs** physical deadlock.
 
 > **Full Wasm / latency specification:** [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#wasm-soil-core-engine-no_std).
 
-> **Sequencer Defense Plane A/B:** Plane A = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Plane B = Nitro Stylus `check_soil_resistance_stylus` + `SliverVineRiskOracle.sol` on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Plane A.
+> **Sequencer Defense Plane A/B:** Plane A = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Plane B = Nitro Stylus `check_soil_resistance_stylus` + [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Plane A.
 
-> **Dual-Engine Soil Topology:** SliverVine ExoMesh enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native `pkg/soil_core.wasm` execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
+> **Dual-Engine Soil Topology:** SliverVine ExoMesh enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
 
-- Artifact: `pkg/soil_core.wasm` (`#![no_std]`) — **soil_core** + **clock_core** C-ABI exports
+- Artifact: [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) (`#![no_std]`) — **soil_core** + **clock_core** C-ABI exports
 - Budget: **&lt;28kb** Cloudflare · hot-path exec **&lt;60µs** · SSRC p50 **~106µs** · clock_core **~1.5 KiB** additive
-- Wire: `src/sdk/soil-wasm.ts` + `src/sdk/clock-wasm.ts` (production); TS sim fallback for dev
+- Wire: [`src/sdk/soil-wasm.ts`](../../src/sdk/soil-wasm.ts) + [`src/sdk/clock-wasm.ts`](../../src/sdk/clock-wasm.ts) (production); TS sim fallback for dev
 
 #### 3.5.1 Stylus Nitro Opcode Gas Benchmark (Layer 2)
 
@@ -371,22 +371,22 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 | **Gas ratio (EVM / Stylus)** | **~110×** | — | Nitro Wasm opcode schedule vs naive EVM |
 | **Edge Layer 1 Gateway** | **0 gas** | **p50 ~106 µs** | Pre-consensus intercept — **before** Nitro block |
 
-**Reviewer clarification:** p50 ~106µs measures **Layer 1 Edge Gateway + Wasm** — not L1/L2 block confirmation. Layer 2 Nitro protection is proven by Stylus opcode Gas parity (`benchmark-stylus-opcode.ts`) and `SliverVineRiskOracle` STATUS_SHUTDOWN flush — both execute **inside** Arbitrum Sequencer block production.
+**Reviewer clarification:** p50 ~106µs measures **Layer 1 Edge Gateway + Wasm** — not L1/L2 block confirmation. Layer 2 Nitro protection is proven by Stylus opcode Gas parity ([`benchmark-stylus-opcode.ts`](../../scripts/benchmark-stylus-opcode.ts)) and `SliverVineRiskOracle` STATUS_SHUTDOWN flush — both execute **inside** Arbitrum Sequencer block production.
 
 ### 3.7 ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension
 
-> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
+> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
 > **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
 The **ExoMesh Agentic Guard** (`@slivervine/eip1193-agentic-wallet-guard`) — an **EIP-1193/5792/6963 Agentic Wallet Guard Extension** — packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** compliant with standard EIP-1193 / EIP-5792 / EIP-6963 specs, extended into a **0-Gas pre-consensus superset**. No Cloudflare Worker required for C-end wallet and agentic wallet integrations.
 
 | Layer | Module | Defense role |
 |-------|--------|--------------|
-| **Ingress** | `provider.ts` · `announceGuardedProvider` (EIP-6963) · `eip5792-send-calls.ts` | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` |
-| **Transport sync** | `transport-stream.ts` | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
-| **Calldata** | `calldata-parser.ts` | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
-| **Policy** | `guard-engine.ts` · `risk-evaluator.ts` | Approve gate · venue allowlist · soil fuse · intent ring budget |
-| **Wasm FFI** | `wasm-adapter.ts` | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
+| **Ingress** | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · `announceGuardedProvider` (EIP-6963) · [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` |
+| **Transport sync** | [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
+| **Calldata** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
+| **Policy** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) · [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) | Approve gate · venue allowlist · soil fuse · intent ring budget |
+| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
 
 **Reject reason codes (fail-closed · 0-Gas):**
 

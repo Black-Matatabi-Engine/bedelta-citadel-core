@@ -10,7 +10,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **228 test files | 1065 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **SSOT Lock:** **228 test files | 1065 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
 > **Zero-Allocation Hot-Path**: Pre-consensus microsecond execution on static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated**); cold-path warning formatters and error loggers remain standard readable TypeScript.
 
@@ -36,7 +36,7 @@
 |----------|--------------------------------|----------------------------------------|-----------|
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118 (draft)](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-8196--erc-8118--ai-agent-authenticated-wallet-off-chain-reference-implementation)** | On-chain policy checks burn Gas and cannot catch prompt-injection / calldata drift **before** execution | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) `withRetailGuardProvider()` intercepts `eth_sendTransaction` · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` batch unfold · sub-10ms Edge Wasm calldata validation · **0-Gas** on reject | `npx vitest run tests/sdk/` · [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | Agent / wallet `wallet_sendCalls` batches bypass `eth_sendTransaction`-only guards | [`eip5792-send-calls.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into the existing risk stack · empty/malformed batch fail-closed · **one** intent-ring attempt per batch | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` **3/3 PASS** |
-| **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** | No zero-gas enforcement for multi-agent delegation decay · cumulative spend caps unenforced at RPC layer | `agentic-auto-roll-gate.ts` + `INTENT_RING_U32` ring-buffer tracks attempts in real time · severs signing channel **before** [EIP-712](https://eips.ethereum.org/EIPS/eip-712) release | `npx vitest run tests/services/api/pendle-shield.test.ts` **7/7 PASS** |
+| **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** | No zero-gas enforcement for multi-agent delegation decay · cumulative spend caps unenforced at RPC layer | [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) + `INTENT_RING_U32` ring-buffer tracks attempts in real time · severs signing channel **before** [EIP-712](https://eips.ethereum.org/EIPS/eip-712) release | `npx vitest run tests/services/api/pendle-shield.test.ts` **7/7 PASS** |
 | **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) / [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** | Transactions enter mempools blind — L2 Sequencer MEV exposure with no 0-Gas abort path | Client-side Pre-Consensus Gateway — Wasm simulates preconfirmations locally · aborts unsafe txs **before** network broadcast | [`soil-resistance-core.ts`](./src/core/soil-resistance-core.ts) · `npx vitest run tests/core/protocol-mask-sync.test.ts` **6/6 PASS** |
 | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** | Cross-chain `CrossChainOrder` fills expose users to solver MEV / slippage overshoot pre-signature | [`erc7683-intent-guard.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) — Edge-Wasm execution delta + solver MEV bps gate (**sub-10ms**) | `npx vitest run tests/sdk/erc7683-intent-guard.test.ts` **3/3 PASS** |
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | Malicious `authorization` tuple can hijack EOA code before broadcast | [`eip7702-auth-guard.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard.ts) — trusted implementation / blocked-address matrix | `npx vitest run tests/sdk/eip7702-auth-guard.test.ts` **3/3 PASS** |
@@ -124,7 +124,7 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 | Track | Command | Proves |
 |-------|---------|--------|
-| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from `warnings.ts` · 0-Gas pre-consensus intercept (no broadcast) |
+| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from [`warnings.ts`](./src/sdk/eip1193-agentic-wallet-guard/warnings.ts) · 0-Gas pre-consensus intercept (no broadcast) |
 | **Unit tests** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** reason codes (`VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`) |
 
 Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK fail-closed path is covered by unit tests; scenarios **C** and **D** echo live `RetailGuardRejectedError.plainTextWarning` strings.
@@ -133,7 +133,7 @@ Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK 
 
 | # | Standard | Judge-facing proof |
 |---|----------|-------------------|
-| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | `pnpm demo:exomesh` · `retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** — `eth_sendTransaction` · `eth_signTypedData_v4` · `wallet_sendCalls` |
+| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | `pnpm demo:exomesh` · [`retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) **35/35** · [`eip5792-send-calls.test.ts`](./tests/sdk/eip5792-send-calls.test.ts) **3/3** — `eth_sendTransaction` · `eth_signTypedData_v4` · `wallet_sendCalls` |
 | **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | `pnpm demo:exomesh` (Scenario A discovery) · same suite — `announceGuardedProvider()` announce/request |
 | **3** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | `pnpm demo:gmx -- --trip` — pre-sign severance · Gate `0xb174…` consume-once |
 | **4** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) / [ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
@@ -209,7 +209,7 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 | Property | Evidence |
 |----------|----------|
-| **Consume-once invariant** | `SliverVineGate.sol` — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
+| **Consume-once invariant** | [`SliverVineGate.sol/`](SliverVineGate/out/SliverVineGate.sol) — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
 | **Non-custodial gate** | No proxy · no ETH custody · live **42161** |
 | **Composable primitive** | `@slivervine/eip1193-agentic-wallet-guard` · `withRetailGuardProvider()` · [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
 

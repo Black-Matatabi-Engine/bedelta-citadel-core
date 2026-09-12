@@ -119,7 +119,7 @@ if (!isAllowedOperator(parsed.controller, config)) return rejectOperator(parsed.
 **Reject code:** `ERC7540_OPERATOR_REJECTED`  
 **User alert:** `ALERT: ERC-7540 async vault operator {addr} is not whitelisted — setOperator blocked (0-Gas).`
 
-**Verification:** `tests/erc7540-async-escort.test.ts` — malicious `setOperator(MALICIOUS, true)` → **REJECT** before mock provider receives `request()`.
+**Verification:** [`tests/erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) — malicious `setOperator(MALICIOUS, true)` → **REJECT** before mock provider receives `request()`.
 
 ---
 
@@ -219,10 +219,10 @@ USD.ai sUSDai       PROTO_USDAI lane · depeg fuse   ERC-7540 async rate drift
 
 | # | Concern | **Industry default** | **SliverVine Sanctuary** | Gas on reject | SSOT | Proof |
 |---|---------|---------------------|---------------------------|---------------|------|-------|
-| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | `erc7540-async-escort.ts` | 3/3 Vitest |
-| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | `calldata-parser.ts` + escort | malicious operator REJECT test |
-| **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | `soil-resistance-math.ts` | 20% drift REJECT test |
-| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | `eip5792-send-calls.ts` | 3/3 Vitest |
+| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | 3/3 Vitest |
+| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
+| **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) | 20% drift REJECT test |
+| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
 | **5** | Pendle / GMX / USD.ai | Per-protocol dashboards | Unified selector guard + venue config (`allowedVenues` + operators) | **$0** | Retail Guard config | `pnpm demo:escort` |
 
 ---

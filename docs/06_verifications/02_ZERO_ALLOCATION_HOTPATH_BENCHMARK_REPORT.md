@@ -1,6 +1,6 @@
 # Zero-Allocation Hot-Path Benchmark & Memory Report
 
-> **Product:** **SliverVine ExoMesh** (Module A) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)** (`pkg/soil_core.wasm`)  
+> **Product:** **SliverVine ExoMesh** (Module A) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm))  
 > **Vitest SSOT:** **228 test files | 1065 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
 
 > **Zero-Allocation Hot-Path (engineering SSOT):** The pre-consensus microsecond execution phase operates on pre-allocated static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc), while non-critical cold paths (user warning formatters, error loggers) remain standard readable TypeScript.
@@ -15,7 +15,7 @@ SliverVine ExoMesh eliminates ephemeral heap churn on the AI-agent reflex arc by
 |--------|--------|--------------|
 | **Ring slab heap delta** | **<16 KiB** over 10,000 iterations | `npx vitest run tests/core/intent-sinking-audit.test.ts` |
 | **Object scavenging** | ~50,000 obj/sec → **0 ephemeral alloc on hot-path phase** | `CALLDATA_SCRATCH` · `SOIL_FFI_REUSABLE_BUFFER` · `BIGINT_U32_LUT` |
-| **SSRC warm soil check** | **<1.8µs** | `evaluateSoilViaWasm()` · `pkg/soil_core.wasm` |
+| **SSRC warm soil check** | **<1.8µs** | `evaluateSoilViaWasm()` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 | **Reflex severance** | **p50 ~15µs** | `rootProtection()` · `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge** | **p50 ~106µs** | Worker + TS Gateway + SSRC FFI · `pnpm demo:gmx` |
 

@@ -15,7 +15,7 @@
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
 | **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia Stabilizer · **4-step Happy Path** (`--unwind` · `--trip` optional) |
-| **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios (`tests/demo/`) |
+| **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios ([`tests/demo/`](../../tests/demo)) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
 
@@ -30,7 +30,7 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix (`tests/demo/`) | **12/12 PASS** · ANSI output |
+| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix ([`tests/demo/`](../../tests/demo)) | **12/12 PASS** · ANSI output |
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
@@ -148,7 +148,7 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 | Session scope + Risk Oracle Gate fail-closed | ✅ Offline / mock bundler |
 | Mainnet UserOp broadcast | ✅ **Verified Live** — Robinhood Mainnet Smart Route `4663` → `42161` · UserOp [`0x7b72ee9f…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 
-**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar Set Y ReflexCore (SSRC) Engine** (`pkg/soil_core.wasm` · p50 ~106 µs) and **Pillar Set X Arbitrum Native Ingress** operate **100% independently** of ZeroDev. `zerodev-aa-gate.ts` provides pre-bundler UserOp validation when AA is enabled.
+**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar Set Y ReflexCore (SSRC) Engine** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · p50 ~106 µs) and **Pillar Set X Arbitrum Native Ingress** operate **100% independently** of ZeroDev. [`zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) provides pre-bundler UserOp validation when AA is enabled.
 
 **v1.0 AA scope:** Stage ① Sign-in · ③ Gas · ④ Authorize · ⑤ Execute (Sepolia verified). Stage ② Smart Routing = Reference Harness. Stages ⑥⑦ = Post-Grant Roadmap.
 
@@ -210,7 +210,7 @@ pnpm audit:nightly
 | Unit tests | **60 Passed · 0 Failed** | **60 Passed · 0 Failed** |
 | Property fuzzing | **5 × 1,024 = 5,120** executions | **5 × 65,535 = 327,675** executions |
 | Invariants | **3 × 16,384** stateful calls · 0 counterexamples | same |
-| Core | `SliverVineGate.sol` consume-once attestation · gas-bounded `verifyAndConsume` | same |
+| Core | [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) consume-once attestation · gas-bounded `verifyAndConsume` | same |
 
 **Formal Verification — Native Foundry Invariant Tests**
 
@@ -224,8 +224,8 @@ pnpm audit:nightly
 
 | ID | Guard | Fail-closed budget | Code SSOT |
 |----|-------|-------------------|-----------|
-| **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · `src/adapters/hl/websocket/websocket-health.ts` |
-| **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · `src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts` |
+| **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · [`src/adapters/hl/websocket/websocket-health.ts`](../../src/adapters/hl/websocket/websocket-health.ts) |
+| **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · [`src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts`](../../src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts) |
 
 Related: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 

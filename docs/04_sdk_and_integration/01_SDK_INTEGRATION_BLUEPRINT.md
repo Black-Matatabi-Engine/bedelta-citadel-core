@@ -52,7 +52,7 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 └─────────────────────────────────────────────────────────────────┘
 ```
 
-**IP boundary:** TypeScript wrapper, calldata classification, policy config, and user warnings are **Apache-2.0**. Slippage fusion and Wasm-accelerated intent math live in `pkg/soil_core.wasm` when loaded; deterministic TS fallbacks run in Vitest and offline harnesses.
+**IP boundary:** TypeScript wrapper, calldata classification, policy config, and user warnings are **Apache-2.0**. Slippage fusion and Wasm-accelerated intent math live in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) when loaded; deterministic TS fallbacks run in Vitest and offline harnesses.
 
 ---
 
@@ -161,7 +161,7 @@ Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt
 
 ### Layer 4 — RPC Transport Stream Sync
 
-EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT_SYNC_FAILED` when stream synchronization cannot be recovered under load (nonce-safe pause).
+EIP-1193 transport lane monitor ([`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts)). Surfaces `RPC_TRANSPORT_SYNC_FAILED` when stream synchronization cannot be recovered under load (nonce-safe pause).
 
 ---
 
@@ -264,12 +264,12 @@ RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb1
 
 | File | Role |
 |------|------|
-| `provider.ts` | EIP-1193 middleware · EIP-6963 |
-| `risk-evaluator.ts` | `evaluateRetailRisk` orchestration |
-| `guard-engine.ts` | Policy gates + RPC transport protocol |
-| `calldata-parser.ts` | Zero-alloc selector dispatch |
-| `transport-stream.ts` | RPC transport stream synchronization |
-| `wasm-adapter.ts` | `pkg/soil_core.wasm` FFI |
+| [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) | EIP-1193 middleware · EIP-6963 |
+| [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) | `evaluateRetailRisk` orchestration |
+| [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) | Policy gates + RPC transport protocol |
+| [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) | Zero-alloc selector dispatch |
+| [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) | RPC transport stream synchronization |
+| [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) FFI |
 
 ---
 

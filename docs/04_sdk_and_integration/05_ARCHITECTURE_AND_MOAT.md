@@ -1,7 +1,7 @@
 # Architecture & Competitive Moat — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path (`erc7540-async-escort.ts`)  
-> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in `pkg/soil_core.wasm`  
+> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts))  
+> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 > **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)
 
@@ -55,7 +55,7 @@ See [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
 
 ### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
-`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **Zero-Allocation Hot-Path**, mirrored in Rust (`intent_core.rs`) and Solidity (`IntentRingSlabLib.sol`).
+`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **Zero-Allocation Hot-Path**, mirrored in Rust ([`intent_core.rs`](../../src/wasm/intent_core.rs)) and Solidity ([`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol)).
 
 ---
 

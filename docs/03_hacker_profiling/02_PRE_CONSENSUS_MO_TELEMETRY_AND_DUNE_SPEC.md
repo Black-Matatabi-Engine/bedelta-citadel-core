@@ -151,7 +151,7 @@ Pre-consensus severance means **`baseProvider.request()` is never invoked** — 
 
 **`gas_price_wei` source priority:**
 
-1. Live Arbitrum base fee from `arbitrum-gas-guard.ts` snapshot at intercept
+1. Live Arbitrum base fee from [`arbitrum-gas-guard.ts`](../../src/services/risk/arbitrum-gas-guard.ts) snapshot at intercept
 2. Fallback: `2_000_000_000` wei (2 gwei) — conservative Arbitrum One estimate
 
 **Invariant:**
@@ -217,21 +217,21 @@ Sourced from [`RetailGuardReasonCode`](../../src/sdk/eip1193-agentic-wallet-guar
 
 | `mo_signature_code` | `vector_type` | `mindhunter_signature` | Intercept SSOT |
 |---------------------|---------------|------------------------|----------------|
-| `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | `intent-core-ring.ts` |
-| `CHANNEL_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | `guard-engine.ts` |
-| `SEND_CALLS_BATCH_REJECTED` | `BATCH_MASKING` | `SIG_B_BATCH` | `eip5792-send-calls.ts` |
-| `UNAUTHORIZED_SPENDER_REJECTED` | `APPROVE_ABUSE` | `SIG_SOIL` | `guard-engine.ts` · calldata-parser |
-| `VENUE_DRIFT_REJECTED` | `VENUE_DRIFT` | `SIG_SOIL` | `intent-mandate.ts` |
-| `SLIPPAGE_EXCEEDED` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | `soil-resistance-math.ts` |
-| `DEPTH_INSUFFICIENT` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | `wasm-adapter.ts` |
-| `ERC7540_OPERATOR_REJECTED` | `OPERATOR_HIJACK` | `SIG_C_DRIFT` | `erc7540-async-escort.ts` |
+| `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) |
+| `CHANNEL_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) |
+| `SEND_CALLS_BATCH_REJECTED` | `BATCH_MASKING` | `SIG_B_BATCH` | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) |
+| `UNAUTHORIZED_SPENDER_REJECTED` | `APPROVE_ABUSE` | `SIG_SOIL` | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) · calldata-parser |
+| `VENUE_DRIFT_REJECTED` | `VENUE_DRIFT` | `SIG_SOIL` | [`intent-mandate.ts`](../../src/core/intent-mandate.ts) |
+| `SLIPPAGE_EXCEEDED` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) |
+| `DEPTH_INSUFFICIENT` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) |
+| `ERC7540_OPERATOR_REJECTED` | `OPERATOR_HIJACK` | `SIG_C_DRIFT` | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) |
 | `ERC7540_ASYNC_SLIPPAGE_DRIFT` | `SLIPPAGE_DRIFT` | `SIG_C_DRIFT` | `evalAsyncVaultDriftBps()` |
-| `RPC_TRANSPORT_SYNC_FAILED` | `TRANSPORT_ANOMALY` | `SIG_HONEYPOT` | `transport-stream.ts` |
-| `SOLVER_MEV_SUSPECT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | `erc7683-intent-guard.ts` |
-| `SLIPPAGE_OVERSHOOT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | `erc7683-intent-guard.ts` |
-| `PENDLE_ORACLE_STALE` | `STALE_ORACLE` | `SIG_SOIL` | `pendle-pool-factory-adapter.ts` |
-| `USD_AI_DEPEG_ORACLE_TRIP` | `STALE_ORACLE` | `SIG_SOIL` | `usdai-adapter.ts` |
-| `HONEYPOT_ACTIVE` | `HONEYPOT_PROBE` | `SIG_HONEYPOT` | `rpc-fetch-gate-eval.ts` |
+| `RPC_TRANSPORT_SYNC_FAILED` | `TRANSPORT_ANOMALY` | `SIG_HONEYPOT` | [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) |
+| `SOLVER_MEV_SUSPECT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| `SLIPPAGE_OVERSHOOT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| `PENDLE_ORACLE_STALE` | `STALE_ORACLE` | `SIG_SOIL` | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
+| `USD_AI_DEPEG_ORACLE_TRIP` | `STALE_ORACLE` | `SIG_SOIL` | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) |
+| `HONEYPOT_ACTIVE` | `HONEYPOT_PROBE` | `SIG_HONEYPOT` | [`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) |
 | `SOIL_RESISTANCE_TRIP` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | `checkSoilResistance()` |
 
 ### 4.2 `vector_type` — Dune Facet Dimensions
@@ -336,11 +336,11 @@ Traditional CVEs describe **vulnerable software versions**. SliverVine introduce
 
 | MO-CVE ID | Pattern | `mo_signature_code` | Mitigation |
 |-----------|---------|---------------------|------------|
-| **MO-CVE-2026-0001** | EIP-5792 batch concealment | `SEND_CALLS_BATCH_REJECTED` | `eip5792-send-calls.ts` unfold |
+| **MO-CVE-2026-0001** | EIP-5792 batch concealment | `SEND_CALLS_BATCH_REJECTED` | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfold |
 | **MO-CVE-2026-0002** | Agent retry storm (4th-strike) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `INTENT_RING_U32` severance |
 | **MO-CVE-2026-0003** | ERC-7540 operator hijack | `ERC7540_OPERATOR_REJECTED` | Sanctuary whitelist lock |
 | **MO-CVE-2026-0004** | Async vault rate drift | `ERC7540_ASYNC_SLIPPAGE_DRIFT` | `evalAsyncVaultDriftBps()` |
-| **MO-CVE-2026-0005** | Cross-chain solver MEV | `SOLVER_MEV_SUSPECT` | `erc7683-intent-guard.ts` |
+| **MO-CVE-2026-0005** | Cross-chain solver MEV | `SOLVER_MEV_SUSPECT` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
 | **MO-CVE-2026-0006** | Honeypot scraper probe | `HONEYPOT_ACTIVE` | 99% synthetic slippage decoy |
 
 **Publication surface:** Dune public dashboard · `GET /api/grant-audit` MO counters · future `GET /api/telemetry/mo-registry` (roadmap).
@@ -387,10 +387,10 @@ SliverVine proposes **ARB** as a cross-framework safety score derived from PCTII
 
 | Capability | Status |
 |------------|--------|
-| Pre-consensus 0-Gas severance | ✅ `retail-guard-provider.test.ts` **35/35** |
-| Soil trip counter | ✅ `telemetry-analytics-core.ts` |
-| Grant-audit Dune reconciliation | ✅ `grant-audit-dune-telemetry.test.ts` |
-| Sepolia `RiskTripBlocked` emitter | ✅ `scripts/emit-sepolia-telemetry-events.ts` |
+| Pre-consensus 0-Gas severance | ✅ [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
+| Soil trip counter | ✅ [`telemetry-analytics-core.ts`](../../src/services/telemetry-analytics-lib/telemetry-analytics-core.ts) |
+| Grant-audit Dune reconciliation | ✅ [`grant-audit-dune-telemetry.test.ts`](../../tests/api/grant-audit-dune-telemetry.test.ts) |
+| Sepolia `RiskTripBlocked` emitter | ✅ [`scripts/emit-sepolia-telemetry-events.ts`](../../scripts/emit-sepolia-telemetry-events.ts) |
 | Dune dashboard (Sepolia PEV) | ✅ [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **`slivervine_telemetry_events` spell ingest** | 📋 Spec v1 — schema defined; spell deployment roadmap |
 | Arbitrum One `42161` business-event ingest | ⏳ Pre-compiled SQL · awaits indexer activation |
@@ -399,7 +399,7 @@ SliverVine proposes **ARB** as a cross-framework safety score derived from PCTII
 
 1. **`gas_saved_wei`** is **counterfactual** — not on-chain refunds. Label dashboards **"Prevented Gas (Model)"**.
 2. **`notional_usd_at_risk`** feeds PEV — use same reconciliation discipline as [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md).
-3. **Simulated benchmark** (`telemetry-analytics-core.ts` `isSimulatedBenchmark: true`) is **not** live mainnet P&L — separate from PCTII.
+3. **Simulated benchmark** ([`telemetry-analytics-core.ts`](../../src/services/telemetry-analytics-lib/telemetry-analytics-core.ts) `isSimulatedBenchmark: true`) is **not** live mainnet P&L — separate from PCTII.
 4. **No wallet PII** in Dune — `agent_id` hashes only.
 
 ### 7.3 Verification Commands

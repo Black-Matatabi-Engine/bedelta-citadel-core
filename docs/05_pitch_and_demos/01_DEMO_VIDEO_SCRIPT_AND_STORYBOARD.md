@@ -60,24 +60,24 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
 | **0:30–0:40** | Pillar Set X & Y schematic | *"0-Gas ExoMesh: soil trips **before** Bundler gas. No broadcast, no fee, no sandwich surface."* | Pillar Set Y Shield |
-| **0:40–0:52** | Rust `#![no_std]` · `pkg/soil_core.wasm` size badge | *"Rust `#![no_std]` Wasm on Cloudflare Edge. `checkSoilResistance()` — p50 ~106 microseconds."* | `<28kb` · warm `&lt;60µs` |
-| **0:52–1:04** | Arbiscan Sepolia · Gate address | *"EIP-712 consume-once Gate `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1`. Replay is `Replayed()`."* | `SliverVineGate.sol` |
-| **1:04–1:15** | Foundry invariant file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Foundry Invariant & Fuzzing Verification (327,675 Property Fuzz runs). Consume-once lemmas in-repo. Policy alignment: ERC-8196 (Final) Sub-ms Policy Gate."* | `SliverVineGate/test/SliverVineGate.invariant.t.sol` |
+| **0:40–0:52** | Rust `#![no_std]` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) size badge | *"Rust `#![no_std]` Wasm on Cloudflare Edge. `checkSoilResistance()` — p50 ~106 microseconds."* | `<28kb` · warm `&lt;60µs` |
+| **0:52–1:04** | Arbiscan Sepolia · Gate address | *"EIP-712 consume-once Gate `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1`. Replay is `Replayed()`."* | [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) |
+| **1:04–1:15** | Foundry invariant file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Foundry Invariant & Fuzzing Verification (327,675 Property Fuzz runs). Consume-once lemmas in-repo. Policy alignment: ERC-8196 (Final) Sub-ms Policy Gate."* | [`SliverVineGate/test/SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol) |
 
 ### A.3 `75s–120s` — 14-Dimension Score Boost & Sponsor Synergies
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
 | **1:15–1:30** | Score strip: V0.9 **5.2** → V1.0 **7.7** (internal 20-judge panel) | *"Same 14 audit dimensions. Leaving the yield-vault rain for an Agent ExoMesh is the score jump — not a louder APY."* | Internal 14-dim comparison (do not flash OpSec filenames) |
-| **1:30–1:45** | GMX payload JSON · `uiFeeReceiver` · **+10 bps** | *"GMX v2 builder lane: `uiFeeReceiver` plus ten basis points on every qualified GM payload."* | `gmx-v2-order-payload.ts` · `GMX_UI_FEE_BPS` |
-| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar Set X · Component 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` · Unit-Verified Vitest **6/6** |
+| **1:30–1:45** | GMX payload JSON · `uiFeeReceiver` · **+10 bps** | *"GMX v2 builder lane: `uiFeeReceiver` plus ten basis points on every qualified GM payload."* | [`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts) · `GMX_UI_FEE_BPS` |
+| **1:45–2:00** | Robinhood `46630`/`4663` → `42161` · inbound red stamp | *"Robinhood Chain is a **Pillar Set X · Component 2 Reference Escort Adapter**. Outbound escort only. Inbound AML **BLOCK**."* | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) · Unit-Verified Vitest **6/6** |
 
 ### A.4 `120s–150s` — Quant Monte Carlo + Pendle Institutional Shield (V1.0 Live)
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
 | **2:00–2:16** | 10,000-run histogram · **87.39%** trip rate | *"Monte Carlo: 10,000 shock-plus-sandwich runs. ExoMesh intercepts **87.39%** of toxic legs. **$9.88 million is nominal simulated LP protection** — not live TVL."* | `../audit/game_theory_simulation_results.json` |
-| **2:16–2:30** | Pendle clock · oracle TTL · 7d / 200 bps | *"Pendle Institutional Shield — V1.0 live on Pillar Set Y. Sync oracle, sixty-second TTL, `PENDLE_ORACLE_STALE` fail-closed into soil. Expiry under seven days **and** yield jitter over 200 bps → block. A refusal gate — not a PT market."* | `pendle-market-oracle-adapter.ts` · `pendle-pt-expiry-guard.ts` |
+| **2:16–2:30** | Pendle clock · oracle TTL · 7d / 200 bps | *"Pendle Institutional Shield — V1.0 live on Pillar Set Y. Sync oracle, sixty-second TTL, `PENDLE_ORACLE_STALE` fail-closed into soil. Expiry under seven days **and** yield jitter over 200 bps → block. A refusal gate — not a PT market."* | [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) |
 
 ### A.5 `150s–180s` — Milestone Roadmap & Proof Bar
 
@@ -146,8 +146,8 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVe
 | Metric | Lock |
 |--------|------|
 | Vitest | **199 test files \| 868 PASS Clean (100% PASS)** |
-| ZeroDev gate | **4/4** · `tests/adapters/zerodev-aa-gate.test.ts` |
-| Across / Robinhood escort | **6/6** · `tests/adapters/across-ingress-bridge.test.ts` |
+| ZeroDev gate | **4/4** · [`tests/adapters/zerodev-aa-gate.test.ts`](../../tests/adapters/zerodev-aa-gate.test.ts) |
+| Across / Robinhood escort | **6/6** · [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) |
 | Chaos | **255/255** · `capitalLossUsd: 0` |
 | Wasm | p50 ~106 µs · `<28kb` budget |
 | Gate | Sepolia `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1` |

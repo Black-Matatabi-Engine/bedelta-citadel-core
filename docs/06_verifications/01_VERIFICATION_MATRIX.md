@@ -101,7 +101,7 @@ All `examples/*` CLI demos — including **`pnpm demo:exomesh`** — run under a
 
 `Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`
 
-The banner is emitted by `examples/lib/eip1193-breakthrough-helpers.ts` (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via `examples/lib/demo-harness.ts` (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
+The banner is emitted by [`examples/lib/eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts) (`JUDGE_SAFE_CLOCK_LABEL`) and seeded via [`examples/lib/demo-harness.ts`](../../examples/lib/demo-harness.ts) (`initDemoEnvironmentClock`). Judges should treat Wasm μs bands and Dune telemetry hashes as **comparable across runs** when this clock is displayed.
 
 ### Dual-Track Verification Architecture (`@slivervine/eip1193-agentic-wallet-guard`)
 
@@ -113,7 +113,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 
 | Track | Entrypoint | Scope |
 |-------|------------|-------|
-| **Interactive CLI** | `pnpm demo:exomesh` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` (`warnings.ts`). |
+| **Interactive CLI** | `pnpm demo:exomesh` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` ([`warnings.ts`](../../src/sdk/eip1193-agentic-wallet-guard/warnings.ts)). |
 | **Unit Test Suite** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** — exhaustive coverage of all **7** SDK `RetailGuardReasonCode` variants: `VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`. |
 
 **Source:** [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · [`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts)
@@ -137,8 +137,8 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 |-------|---------------|------------|
 | **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:escort` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) Route A |
 | **Inbound AML block** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | Route C in same demo · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) `validateAcrossBridgeDirection` |
-| **Treasury Escort & Collateral Ingress** | Institutional Treasury Escort Router — `quoteRChainYieldToArbitrumGm()` · `assetKind` · `symbol` · size gates · bridge escort bind | [`src/adapters/robinhood/treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) · `tests/adapters/treasury-escort-router.test.ts` |
-| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · SSRC soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **Treasury Escort & Collateral Ingress** | Institutional Treasury Escort Router — `quoteRChainYieldToArbitrumGm()` · `assetKind` · `symbol` · size gates · bridge escort bind | [`src/adapters/robinhood/treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) · [`tests/adapters/treasury-escort-router.test.ts`](../../tests/adapters/treasury-escort-router.test.ts) |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · SSRC soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · [`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
 | **Audit certificate** | SHA-256 snapshot · inbound invariant probe | `GET /api/robinhood-audit-snapshot` · [`src/sdk/robinhood-audit-snapshot.ts`](../../src/sdk/robinhood-audit-snapshot.ts) |
 
 **Bridge regression:** [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) · [`tests/sdk/citadel-sdk-bridge-armor.test.ts`](../../tests/sdk/citadel-sdk-bridge-armor.test.ts)
@@ -168,7 +168,7 @@ Full workflow → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DE
 | **GmxSoilMatrixSwitch** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` |
 | **SliverVineRiskOracleV2** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` |
 | **Gate PolicyLink** | `0xe4ef5350963241c49a29e72a4cf093208cd19af0` |
-| **Stylus Soil Coprocessor** | `0xc23587d6573dd134f95b02b0202ffbf84686625e` |
+| **Stylus Soil Coprocessor** | [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) |
 
 Full tables · Phase A+B+C · Stylus proof → [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./03_ON_CHAIN_MAINNET_ANCHORS.md)
 

@@ -19,7 +19,7 @@ The Wallet Guard SDK occupies a **structural gap** between server-side transacti
 | **Execution locus** | Remote SaaS / RPC simulation farm | In-browser EIP-1193 middleware |
 | **Latency** | 200–800 ms round-trip | **< 0.014 ms** policy reflex (u32 ring + scratch) |
 | **Gas on reject** | User may already have signed | **0-Gas** — tx never broadcast |
-| **Trust model** | Third party sees full calldata graph | Self-hosted policy + optional `pkg/soil_core.wasm` |
+| **Trust model** | Third party sees full calldata graph | Self-hosted policy + optional [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 | **Agent / LLM binding** | Post-hoc warning after intent formed | **Pre-consensus** `INTENT_RING_U32` retry severance |
 | **Offline** | Requires network | TS fallbacks when Wasm unavailable |
 | **Distribution** | API key / vendor contract | **Apache-2.0** drop-in middleware |
@@ -60,7 +60,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 ### Buildathon Narrative
 
 1. **Problem:** AI agents and retail wallets sign toxic calldata before any server simulation can warn.
-2. **Solution:** Apache-2.0 EIP-1193 middleware with Wasm-accelerated reflex core (`pkg/soil_core.wasm`).
+2. **Solution:** Apache-2.0 EIP-1193 middleware with Wasm-accelerated reflex core ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)).
 3. **Proof:** `npx vitest run tests/sdk/` → **48/48 PASS** · Permit2 · EIP-6963 · intent ring severance.
 
 ### Dual-Brand Positioning
@@ -75,7 +75,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 | Layer | License | Commercial upside |
 |-------|---------|-------------------|
 | TypeScript wrapper · calldata parser · policy gates | **Apache-2.0** | Distribution · ecosystem adoption |
-| `pkg/soil_core.wasm` reflex math | Proprietary | Wasm IP licensing |
+| [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) reflex math | Proprietary | Wasm IP licensing |
 
 ---
 
@@ -86,7 +86,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 | EVM wallet injectors (MetaMask-class) | 100M+ monthly active | Industry baseline |
 | AI agent wallet frameworks (2026) | ElizaOS · LangChain · Virtuals · custom copilots | ExoMesh **EIP-1193 middleware** + B2B `withExoMeshShield` (legacy: `withCitadelShield`) |
 | Pre-consensus intercept TAM | Every `eth_sendTransaction` + `eth_signTypedData_v4` + `wallet_sendCalls` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** surface |
-| Wasm bundle budget | **< 28 KiB** · warm **< 60 µs** | `pkg/soil_core.wasm` SSOT |
+| Wasm bundle budget | **< 28 KiB** · warm **< 60 µs** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) SSOT |
 
 ---
 

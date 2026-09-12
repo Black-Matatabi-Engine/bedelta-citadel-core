@@ -14,8 +14,8 @@ This specification covers **Option 2** (Cross-Venue Shadow Margin Guard) and **O
 | Option | Status | Module |
 |--------|--------|--------|
 | **1** | ⏳ Reserved | Future yield-router primitive (not in this branch) |
-| **2** | ✅ Live | `shadow-margin-guard.ts` |
-| **3** | ✅ Live | `agentic-auto-roll-gate.ts` |
+| **2** | ✅ Live | [`shadow-margin-guard.ts`](../../src/services/api/pendle-shield/shadow-margin-guard.ts) |
+| **3** | ✅ Live | [`agentic-auto-roll-gate.ts`](../../src/services/api/pendle-shield/agentic-auto-roll-gate.ts) |
 | **4–XXX** | 📋 Roadmap | Modular expansion primitives (see §Roadmap) |
 
 ---
@@ -181,15 +181,15 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 | Layer | Binding |
 |-------|---------|
-| **Shadow margin** | `checkSoilResistance({ pendleCrossGuard })` · `pkg/soil_core.wasm` slippage lane |
+| **Shadow margin** | `checkSoilResistance({ pendleCrossGuard })` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) slippage lane |
 | **Auto-roll** | `INTENT_RING_U32` · `trackAttemptBudgetU32Pure` · `evaluatePendlePtExpiryRisk` |
-| **Registry SSOT** | `src/adapters/pendle/pendle-pt-registry.ts` |
+| **Registry SSOT** | [`src/adapters/pendle/pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) |
 
 ---
 
 ## Roadmap — Options 4 to XXX (Modular Expansion)
 
-Future Pendle Yield Shield primitives are designed as **independent API modules** under `src/services/api/pendle-shield/`:
+Future Pendle Yield Shield primitives are designed as **independent API modules** under [`src/services/api/pendle-shield/`](../../src/services/api/pendle-shield):
 
 | Option | Planned primitive | Integration surface |
 |--------|-------------------|---------------------|
