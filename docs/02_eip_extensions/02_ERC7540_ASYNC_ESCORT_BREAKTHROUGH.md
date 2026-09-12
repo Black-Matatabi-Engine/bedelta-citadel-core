@@ -31,7 +31,7 @@ Standard DeFi safety tooling (synchronous ERC-4626 share math, instant-redeem sl
               [ Vault contract · async settlement · claim phase ]
 ```
 
-**SSOT:** [`src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts)  
+**SSOT:** [`src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)  
 **Ingress:** `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` in ExoMesh EIP-1193 middleware  
 **Wiki:** [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-7540--asynchronous-erc-4626-vault-token-sanctuary-escort)
 
@@ -173,7 +173,7 @@ export function evalAsyncVaultDriftBps(requestRate: bigint, claimRate: bigint): 
 | **Default ceiling** | `erc7540MaxSlippageBps = 50` (0.50%) | Ad-hoc per protocol |
 | **Quote source** | `config.erc7540AsyncQuote` or `resolveErc7540Quote(kind, amount, vault)` | Static oracle only |
 
-**Escort wiring** ([`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts)):
+**Escort wiring** ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)):
 
 ```typescript
 const maxBps = quote.maxSlippageBps ?? config.erc7540MaxSlippageBps ?? 50;
@@ -219,10 +219,10 @@ USD.ai sUSDai       PROTO_USDAI lane · depeg fuse   ERC-7540 async rate drift
 
 | # | Concern | **Industry default** | **SliverVine Sanctuary** | Gas on reject | SSOT | Proof |
 |---|---------|---------------------|---------------------------|---------------|------|-------|
-| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
-| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
+| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
+| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
 | **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) | 20% drift REJECT test |
-| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
+| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
 | **5** | Pendle / GMX / USD.ai | Per-protocol dashboards | Unified selector guard + venue config (`allowedVenues` + operators) | **$0** | Retail Guard config | `pnpm demo:sanctuary` |
 
 ---

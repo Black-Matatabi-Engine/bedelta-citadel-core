@@ -49,7 +49,7 @@ Every guarded `request()` on `withRetailGuardProvider()` produces one of:
 | **FAIL_CLOSED** | `slivervine_telemetry_events` row · optional `RiskTripBlocked` emit | **None** (0-Gas default) · optional Sepolia Gate mirror |
 | **ALLOW** | `IntentAttested` path (settlement plane) | EIP-712 attestation · UserOp broadcast |
 
-Toxic calldata — approve drains · batch-masked `wallet_sendCalls` · ERC-7540 `setOperator` hijacks · soil trips — is parsed at **u32 selector** resolution in [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) **before** any RPC forward. This is the **crime scene** for MO profiling ([`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md)).
+Toxic calldata — approve drains · batch-masked `wallet_sendCalls` · ERC-7540 `setOperator` hijacks · soil trips — is parsed at **u32 selector** resolution in [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) **before** any RPC forward. This is the **crime scene** for MO profiling ([`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md)).
 
 ### 1.3 Relationship to Existing PEV (Prevented Exploit Volume)
 
@@ -213,22 +213,22 @@ Emitted by Edge Worker / SDK telemetry hook on every `RetailGuardRejectedError`:
 
 ### 4.1 `mo_signature_code` — Complete Registry
 
-Sourced from [`RetailGuardReasonCode`](../../src/sdk/eip1193-agentic-wallet-guard/types.ts) · soil trip reasons · ERC-7683 · honeypot gates.
+Sourced from [`RetailGuardReasonCode`](../../src/sdk/exomesh-agentic-wallet-guard/types.ts) · soil trip reasons · ERC-7683 · honeypot gates.
 
 | `mo_signature_code` | `vector_type` | `mindhunter_signature` | Intercept SSOT |
 |---------------------|---------------|------------------------|----------------|
 | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) |
-| `CHANNEL_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) |
-| `SEND_CALLS_BATCH_REJECTED` | `BATCH_MASKING` | `SIG_B_BATCH` | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) |
-| `UNAUTHORIZED_SPENDER_REJECTED` | `APPROVE_ABUSE` | `SIG_SOIL` | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) · calldata-parser |
+| `CHANNEL_SEVERED` | `BURST_RETRY` | `SIG_A_BURST` | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) |
+| `SEND_CALLS_BATCH_REJECTED` | `BATCH_MASKING` | `SIG_B_BATCH` | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) |
+| `UNAUTHORIZED_SPENDER_REJECTED` | `APPROVE_ABUSE` | `SIG_SOIL` | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) · calldata-parser |
 | `VENUE_DRIFT_REJECTED` | `VENUE_DRIFT` | `SIG_SOIL` | [`intent-mandate.ts`](../../src/core/intent-mandate.ts) |
 | `SLIPPAGE_EXCEEDED` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) |
-| `DEPTH_INSUFFICIENT` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) |
-| `ERC7540_OPERATOR_REJECTED` | `OPERATOR_HIJACK` | `SIG_C_DRIFT` | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) |
+| `DEPTH_INSUFFICIENT` | `SLIPPAGE_DRIFT` | `SIG_SOIL` | [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) |
+| `ERC7540_OPERATOR_REJECTED` | `OPERATOR_HIJACK` | `SIG_C_DRIFT` | [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) |
 | `ERC7540_ASYNC_SLIPPAGE_DRIFT` | `SLIPPAGE_DRIFT` | `SIG_C_DRIFT` | `evalAsyncVaultDriftBps()` |
-| `RPC_TRANSPORT_SYNC_FAILED` | `TRANSPORT_ANOMALY` | `SIG_HONEYPOT` | [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) |
-| `SOLVER_MEV_SUSPECT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
-| `SLIPPAGE_OVERSHOOT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| `RPC_TRANSPORT_SYNC_FAILED` | `TRANSPORT_ANOMALY` | `SIG_HONEYPOT` | [`transport-stream.ts`](../../src/sdk/exomesh-agentic-wallet-guard/transport-stream.ts) |
+| `SOLVER_MEV_SUSPECT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| `SLIPPAGE_OVERSHOOT` | `SLIPPAGE_DRIFT` | `SIG_B_BATCH` | [`erc7683-intent-guard.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) |
 | `PENDLE_ORACLE_STALE` | `STALE_ORACLE` | `SIG_SOIL` | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
 | `USD_AI_DEPEG_ORACLE_TRIP` | `STALE_ORACLE` | `SIG_SOIL` | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) |
 | `HONEYPOT_ACTIVE` | `HONEYPOT_PROBE` | `SIG_HONEYPOT` | [`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) |
@@ -336,11 +336,11 @@ Traditional CVEs describe **vulnerable software versions**. SliverVine introduce
 
 | MO-CVE ID | Pattern | `mo_signature_code` | Mitigation |
 |-----------|---------|---------------------|------------|
-| **MO-CVE-2026-0001** | EIP-5792 batch concealment | `SEND_CALLS_BATCH_REJECTED` | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfold |
+| **MO-CVE-2026-0001** | EIP-5792 batch concealment | `SEND_CALLS_BATCH_REJECTED` | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfold |
 | **MO-CVE-2026-0002** | Agent retry storm (4th-strike) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | `INTENT_RING_U32` severance |
 | **MO-CVE-2026-0003** | ERC-7540 operator hijack | `ERC7540_OPERATOR_REJECTED` | Sanctuary whitelist lock |
 | **MO-CVE-2026-0004** | Async vault rate drift | `ERC7540_ASYNC_SLIPPAGE_DRIFT` | `evalAsyncVaultDriftBps()` |
-| **MO-CVE-2026-0005** | Cross-chain solver MEV | `SOLVER_MEV_SUSPECT` | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| **MO-CVE-2026-0005** | Cross-chain solver MEV | `SOLVER_MEV_SUSPECT` | [`erc7683-intent-guard.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) |
 | **MO-CVE-2026-0006** | Honeypot scraper probe | `HONEYPOT_ACTIVE` | 99% synthetic slippage decoy |
 
 **Publication surface:** Dune public dashboard · `GET /api/grant-audit` MO counters · future `GET /api/telemetry/mo-registry` (roadmap).

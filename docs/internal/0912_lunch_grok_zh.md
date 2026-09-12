@@ -12,7 +12,7 @@
 | 本卷主題 | **公開文檔 01–06 序號化重構** · **SliverVine Stylus ReflexCore (SSRC)** 引擎品牌鎖 · **Cyber-Biological Immunology** 敘事 · **1065 PASS 物理構成矩陣** · Zero-GC 微秒熱路 |
 | **主席加權總分** | **9.54 / 10**（↑ **+0.12** vs 0911 Midnight **9.42**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**主席加權總分** = 四維算術平均。英文工程 SSOT：`pkg/soil_core.wasm` · `@slivervine/eip1193-agentic-wallet-guard` · [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**主席加權總分** = 四維算術平均。英文工程 SSOT：`pkg/soil_core.wasm` · `@slivervine/exomesh-agentic-wallet-guard` · [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
 
 **執行摘要：** 0911 深夜卷封口於 EIP-5792 + ERC-7540 + ExoMesh/Sanctuary 雙模組；本卷在同一 fail-closed 基質上完成 **評審導航級文檔拓撲重構**、**SSRC 微秒引擎正式命名**、**FBI Mindhunter + Cyber-Immunology 安全敘事標準化**，並首次在 `JUDGE_BRIEF` / `VERIFICATION_MATRIX` 公開 **1065 PASS 物理構成表**（核心 ~998 · HUD ~30 · Reference harness ~15 · Demo ~12）。P1 測試加固：`soil-resistance-latency` 增 p95 上界 · `grant-audit-metrics` 增語義断言 · `decorator` 增未 Mock `checkSoilResistance` 端到端用例。**技術債為零。**
 
@@ -59,7 +59,7 @@
 | 層 | 名稱 | 角色 | 工程錨點 |
 |----|------|------|----------|
 | 傘品牌 | **SliverVine Protocol** | 敘事母體 · BeΔ | `README.md` · `JUDGE_BRIEF.md` · `docs/README.md` |
-| **Module A · 70%** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/eip1193-agentic-wallet-guard` · Pillar Set Y |
+| **Module A · 70%** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/exomesh-agentic-wallet-guard` · Pillar Set Y |
 | **Module B · 30%** | **SliverVine Sanctuary** | 合規托管護送 · ERC-7540 異步金庫 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Pillar Set X |
 | **微秒引擎基質** | **SliverVine Stylus ReflexCore (SSRC)** | Sub-1.8µs warm soil · Stylus 鏈上同構 | `pkg/soil_core.wasm` · `contracts/stylus-probe/` · `citadel_invariants/` |
 

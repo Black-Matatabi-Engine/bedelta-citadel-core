@@ -3,7 +3,7 @@ import {
   decodeEip7702Authorization,
   EIP7702_CODES,
   evaluateEip7702AuthGuard,
-} from "../../src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard";
+} from "../../src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard";
 
 const TRUSTED_IMPL = "0xfd98cadb7018f692ec58cd4359e0c0399f4f8781";
 const MALICIOUS_IMPL = "0x1111111111111111111111111111111111111111";

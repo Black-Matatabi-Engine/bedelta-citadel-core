@@ -30,7 +30,7 @@ import {
   type EIP1193Provider,
   type EIP6963EventTarget,
   type RetailGuardConfig,
-} from "../../src/sdk/eip1193-agentic-wallet-guard";
+} from "../../src/sdk/exomesh-agentic-wallet-guard";
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX_ROUTER = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";

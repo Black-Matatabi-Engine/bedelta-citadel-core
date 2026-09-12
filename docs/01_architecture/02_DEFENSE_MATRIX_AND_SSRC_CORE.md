@@ -375,18 +375,18 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 ### 3.7 ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension
 
-> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
+> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
 > **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
-The **ExoMesh Agentic Guard** (`@slivervine/eip1193-agentic-wallet-guard`) — an **EIP-1193/5792/6963 Agentic Wallet Guard Extension** — packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** compliant with standard EIP-1193 / EIP-5792 / EIP-6963 specs, extended into a **0-Gas pre-consensus superset**. No Cloudflare Worker required for C-end wallet and agentic wallet integrations.
+The **ExoMesh Agentic Guard** (`@slivervine/exomesh-agentic-wallet-guard`) — an **EIP-1193/5792/6963 Agentic Wallet Guard Extension** — packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** compliant with standard EIP-1193 / EIP-5792 / EIP-6963 specs, extended into a **0-Gas pre-consensus superset**. No Cloudflare Worker required for C-end wallet and agentic wallet integrations.
 
 | Layer | Module | Defense role |
 |-------|--------|--------------|
-| **Ingress** | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · `announceGuardedProvider` (EIP-6963) · [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` |
-| **Transport sync** | [`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
-| **Calldata** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
-| **Policy** | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) · [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) | Approve gate · venue allowlist · soil fuse · intent ring budget |
-| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
+| **Ingress** | [`provider.ts`](../../src/sdk/exomesh-agentic-wallet-guard/provider.ts) · `announceGuardedProvider` (EIP-6963) · [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | Wrap `window.ethereum` before `eth_sendTransaction` / `eth_signTypedData_v4` / `wallet_sendCalls` |
+| **Transport sync** | [`transport-stream.ts`](../../src/sdk/exomesh-agentic-wallet-guard/transport-stream.ts) | `evaluateTransportStreamSync` · `verifyTransportBitmark` on `INTENT_RING_U32` sentinel |
+| **Calldata** | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) | u32 bitwise selectors — ERC20 · Permit2 · Uniswap · GMX (`CALLDATA_SCRATCH`, zero alloc) |
+| **Policy** | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) · [`risk-evaluator.ts`](../../src/sdk/exomesh-agentic-wallet-guard/risk-evaluator.ts) | Approve gate · venue allowlist · soil fuse · intent ring budget |
+| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) | Optional `soil_core_eval` · `intent_core_evaluate_gate` acceleration |
 
 **Reject reason codes (fail-closed · 0-Gas):**
 

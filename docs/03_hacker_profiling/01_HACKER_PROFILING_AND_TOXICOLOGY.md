@@ -72,13 +72,13 @@ slot[offset + ATTEMPTS]:  0 → 1 → 2 → 3 → 4  (default maxAttempts = 3)
 |----------|-------|
 | **Buffer** | Pre-allocated `Uint32Array` · 256 slots × 4 words · **<16 KiB** / 10k iter (**Zero-Allocation Hot-Path**) |
 | **Hot-path eval** | `trackAttemptBudgetU32Pure()` · `evaluateIntentGateU32Pure()` |
-| **Wasm parity** | `intent_core_evaluate_gate` via [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) |
+| **Wasm parity** | `intent_core_evaluate_gate` via [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) |
 | **Reject code** | `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` |
 | **Chaos tier** | **C2** — [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
 
 **Mindhunter read:** Burst MO = **disorganized escalation** — the system profiles attempt velocity and applies **physical deadlock** (R20) before the 4th toxic broadcast.
 
-**SSOT:** [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts)
+**SSOT:** [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts)
 
 ---
 
@@ -107,8 +107,8 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 | Layer | Mechanism |
 |-------|-----------|
-| **Calldata dissection** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) · [`calldata-hex.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-hex.ts) — u32 selector dispatch on `CALLDATA_SCRATCH` |
-| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/eip1193-agentic-wallet-guard/wasm-adapter.ts) — `DataView` on Wasm linear memory · `BIGINT_U32_LUT` (zero per-gate `BigInt` alloc) |
+| **Calldata dissection** | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) · [`calldata-hex.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts) — u32 selector dispatch on `CALLDATA_SCRATCH` |
+| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) — `DataView` on Wasm linear memory · `BIGINT_U32_LUT` (zero per-gate `BigInt` alloc) |
 | **Transport entangle** | `bindTransportStreamScratch()` XOR-bind on scratch selector bytes — anti-fork probe |
 | **Intent budget** | Entire batch consumes **one** `INTENT_RING_U32` attempt (not N) |
 
@@ -116,7 +116,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Chaos tier:** **C2** — [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** · `pnpm demo:exomesh` Scenario D
 
-**SSOT:** [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) · [`calldata-hex.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-hex.ts)
+**SSOT:** [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) · [`calldata-hex.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts)
 
 ---
 
@@ -143,7 +143,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Chaos tier:** **C3** — `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` · unit SSOT: [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3**
 
-**SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
+**SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
 
 ---
 
@@ -212,7 +212,7 @@ real venue RTT                    HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 | **Anti-gaming jitter** | `resolveJitteredSoilThresholds()` — ±2–5 bps random walk on `slippageFuse` / `minDepthUsd` prevents threshold-sniping | [`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts) |
 | **Protocol mask propagation** | `seedProtocolMaskScratch()` → external flags → `commitProtocolMaskScratch()` — cross-isolate trip memory | [`protocol-mask-sync.ts`](../../src/core/protocol-mask-sync.ts) |
 | **Trip severance feedback** | `applySoilTripSeverance(true)` on mandate trip — signing channel tightens on observed toxic pattern | [`risk-severance.ts`](../../src/core/risk-severance.ts) |
-| **Honeypot retail path** | Swap/depth honeypot fuses in Retail Guard — `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` at 99% synthetic lanes | [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) |
+| **Honeypot retail path** | Swap/depth honeypot fuses in Retail Guard — `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` at 99% synthetic lanes | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) |
 
 **Core reflex equation** (unchanged semantics · jittered thresholds):
 
@@ -301,8 +301,8 @@ Every reject path in Signatures A · B · C · C1 honeypot · C3 async drift sat
 | Framework layer | Concept | Implementation anchor | Reject / trip signal | Verify |
 |-----------------|---------|----------------------|----------------------|--------|
 | **Mindhunter** | Signature A — Burst | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) **11/11** |
-| **Mindhunter** | Signature B — Batch | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | `SEND_CALLS_BATCH_REJECTED` · per-call codes | [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
-| **Mindhunter** | Signature C — Drift | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | `pnpm demo:sanctuary` |
+| **Mindhunter** | Signature B — Batch | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | `SEND_CALLS_BATCH_REJECTED` · per-call codes | [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
+| **Mindhunter** | Signature C — Drift | [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | `pnpm demo:sanctuary` |
 | **Immunology** | Decoy inoculation C1 | [`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) | `HONEYPOT_ACTIVE` · 99% slippage | [`rpc-whitelist.test.ts`](../../tests/defense/rpc-whitelist.test.ts) |
 | **Immunology** | Adversarial telemetry vaccine | [`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts) | Jittered `slippageFuse` · mask commit | [`protocol-mask-sync.test.ts`](../../tests/core/protocol-mask-sync.test.ts) |
 | **ReflexCore (SSRC)** | Sub-1.8µs reflex | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | `SOIL_TRIPPED` · `rootProtection()` | `pnpm demo:gmx -- --trip` |

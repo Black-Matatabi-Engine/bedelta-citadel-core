@@ -47,14 +47,14 @@
 | Standard | Physical Limitation | SilverVine Pre-Consensus Superset | Proof |
 | -------- | ------------------- | --------------------------------- | ----- |
 | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** `[Final]` | `eth_sendTransaction` / `eth_signTypedData_v4` forwarded to RPC unchecked — revert burns gas | **ExoMesh Sub-1.8µs 0-Gas Pre-Consensus Wasm Gate** — `withRetailGuardProvider()` intercepts **before** Sequencer ingress | [`retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) **35/35** |
-| **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass `eth_sendTransaction`-only middleware | [`eip5792-send-calls.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into retail risk stack · one intent-ring attempt per batch | [`eip5792-send-calls.test.ts`](./tests/sdk/eip5792-send-calls.test.ts) **3/3** |
+| **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass `eth_sendTransaction`-only middleware | [`eip5792-send-calls.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into retail risk stack · one intent-ring attempt per batch | [`eip5792-send-calls.test.ts`](./tests/sdk/eip5792-send-calls.test.ts) **3/3** |
 | **[ERC-7540](https://eips.ethereum.org/EIPS/eip-7540)** `[Final]` | Zero-trust attack window during Pending → Claimable (rate drift · operator hijacking) | **Sanctuary Selector-Level Escort** — `evalAsyncVaultDriftBps` + Whitelisted Operator Lock | `pnpm demo:sanctuary` · [`erc7540-async-escort.test.ts`](./tests/erc7540-async-escort.test.ts) **3/3** |
 
 ### Tier 2 — Active Industrial Standards `[De-facto Industrial Draft]`
 
 | Standard | Industrial Origin | SilverVine Semantic Alignment | Proof |
 | -------- | ----------------- | ----------------------------- | ----- |
-| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** `[De-facto Industrial Draft]` | Uniswap / Across cross-chain intent | **Pre-Consensus Solver Integrity Lock & Semantic Alignment** — [`erc7683-intent-guard.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) + [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) · Solver Pre-flight Capital Lock (`IN_FLIGHT` → `SETTLED`) | `pnpm demo:ingress` · **3/3** |
+| **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** `[De-facto Industrial Draft]` | Uniswap / Across cross-chain intent | **Pre-Consensus Solver Integrity Lock & Semantic Alignment** — [`erc7683-intent-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) + [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) · Solver Pre-flight Capital Lock (`IN_FLIGHT` → `SETTLED`) | `pnpm demo:ingress` · **3/3** |
 | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** `[De-facto Industrial Draft]` | ZeroDev / Rhinestone modular AA hooks | **Edge Isomorphic Pre-Execution Hook Policy** — `assertCitadelRiskGate()` + [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) · Pillar Set X Compliance Pre-Execution Strategy (`AML_INBOUND_TO_ROBINHOOD_BLOCKED`) | `pnpm demo:ingress` Route C |
 
 ### Verified Extensions (Additional Production Guards)
@@ -63,7 +63,7 @@
 | -------------- | ------ | ------- | -------------- | ----- |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | `[Final]` | On-chain policy cannot catch prompt-injection pre-execution | EIP-1193 middleware + PolicyGuardV2 anchor | **35/35** · Forge suite |
 | **Session mandate attenuation** | `[Final]` ERC-7715 · `[Conceptual]` ERC-8226 | Zero-gas delegation decay unenforced at RPC layer | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
-| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | Malicious EOA delegation pre-broadcast | [`eip7702-auth-guard.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | Malicious EOA delegation pre-broadcast | [`eip7702-auth-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | No zero-gas intent expiry on soil trip | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
 
 
@@ -77,7 +77,7 @@
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
-| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | [`src/sdk/exomesh-agentic-wallet-guard/`](./src/sdk/exomesh-agentic-wallet-guard/) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | Wasm reflex core (`rootProtection`, `checkSoilResistance`) | [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | `pnpm demo:gmx -- --trip` |
 | 5-Core Venue Matrix | GMX · Pendle · USD.ai · HL · Variational | `pnpm demo:{gmx,hl,variational} -- --trip` |
 
@@ -85,7 +85,7 @@
 
 | Facet | Surface | SSOT | Verify |
 |-------|---------|------|--------|
-| **Module B · Vault Standard** | **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) · [`sanctuary-demo.ts`](./examples/sanctuary-demo.ts) | `pnpm demo:sanctuary` (`demo:escort` alias) |
+| **Module B · Vault Standard** | **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [`sanctuary-demo.ts`](./examples/sanctuary-demo.ts) | `pnpm demo:sanctuary` (`demo:escort` alias) |
 | **Module B · Treasury Ingress** | Institutional Treasury Escort Router · Across / Robinhood AML | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) · [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) · [`ingress-escort-demo.ts`](./examples/ingress-escort-demo.ts) | `pnpm demo:ingress` |
 
 ---
@@ -95,7 +95,7 @@
 - **0-Gas Pre-Consensus Sequencer Defense:** Unverified intents are rejected at Edge isolates before Arbitrum Sequencer queues — **0-Gas on fail-closed paths**.
 - **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
-- **SliverVine ExoMesh (Module A):** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:exomesh`.
+- **SliverVine ExoMesh (Module A):** `@slivervine/exomesh-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:exomesh`.
 - **SliverVine Sanctuary (Module B · Pillar Set X Escrow Substrate):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:ingress` · ERC-7540+: `pnpm demo:sanctuary`.
 
 ---
@@ -209,9 +209,9 @@ pnpm test -- --run
 | **1**    | **Judge Brief**               | Executive Protocol Summary → [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md)                                                                                      |
 | **2**    | **Verification Matrix**       | Complete Command & Proof Index → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md)                                                        |
 | **3**    | **Buildathon Submission**     | Technical Specification & Patch Log → [`docs/ARB_Buildathon/SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md)                                       |
-| **4**    | **SliverVine ExoMesh SDK (EIP-1193 Agentic Wallet Guard)**   | `@slivervine/eip1193-agentic-wallet-guard` · C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **4**    | **SliverVine ExoMesh SDK (EIP-1193 Agentic Wallet Guard)**   | `@slivervine/exomesh-agentic-wallet-guard` · C-end [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) integration → [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
 | **5**    | **Architecture Yellow Paper** | R01–R20 Defense Matrix & Yellow Paper → [`docs/01_architecture/README.md`](./docs/01_architecture/README.md)                                                 |
 | **6**    | **EIP Standards Wiki**        | EVM & AI Standard Alignment → [`docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) |
 
 
-**Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/eip1193-agentic-wallet-guard`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) — *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* (Apache-2.0) · **BUSL-1.1 Root License** → [LICENSE](./LICENSE)
+**Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · [`@slivervine/exomesh-agentic-wallet-guard`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) — *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* (Apache-2.0) · **BUSL-1.1 Root License** → [LICENSE](./LICENSE)

@@ -5,13 +5,13 @@
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield v0.95 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
-| 分支 / HEAD | `main` @ **`b27e96e`**（`treasury-escort-router.ts` SSOT · `@slivervine/eip1193-agentic-wallet-guard` rebrand · Core Module A/B 術語） |
+| 分支 / HEAD | `main` @ **`b27e96e`**（`treasury-escort-router.ts` SSOT · `@slivervine/exomesh-agentic-wallet-guard` rebrand · Core Module A/B 術語） |
 | 對照基線 | [`0910_midnight_Grok_zh.md`](../internal/0910_midnight_Grok_zh.md) 主席加權 **9.28** · [`0910_offwork_pm_Gork_zh.md`](../internal/0910_offwork_pm_Gork_zh.md) **9.12** · 關鍵 doc commit **`afe8903`**（Robinhood ChainId 46630/4663 outbound escort SSOT） |
 | 測試 SSOT | **226 test files \| 1057 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | 本卷主題 | **Light-Sandbox EIP-1193 State Matrix** · Mini-Chaos vs Large-Scale Chaos 邊界 · CLI Demo 微調 · 三層 Chaos 執行方法論 |
 | **主席加權總分** | **9.35 / 10**（↑ **+0.07** vs 0910 Midnight Grok **9.28**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`treasury-escort-router.ts` · `eip1193-agentic-wallet-guard/` · `rpc-fetch-gate-eval.ts` · `tests/sdk/retail-guard-provider.test.ts` · `tests/chaos/orbit-agentic-failclosed-chaos.test.ts`。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`treasury-escort-router.ts` · `exomesh-agentic-wallet-guard/` · `rpc-fetch-gate-eval.ts` · `tests/sdk/retail-guard-provider.test.ts` · `tests/chaos/orbit-agentic-failclosed-chaos.test.ts`。
 
 ---
 

@@ -12,7 +12,7 @@
 | 本卷主題 | **EIP-5792 `wallet_sendCalls` 批量展開護欄** · **ERC-7540 Async Vault Escort** · Pass 1 雙模組 SSOT（ExoMesh 70% / Sanctuary 30%） |
 | **主席加權總分** | **9.42 / 10**（↑ **+0.07** vs 0911 Offwork **9.35**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`eip5792-send-calls.ts` · `erc7540-async-escort.ts` · `treasury-escort-router.ts` · `@slivervine/eip1193-agentic-wallet-guard` · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`eip5792-send-calls.ts` · `erc7540-async-escort.ts` · `treasury-escort-router.ts` · `@slivervine/exomesh-agentic-wallet-guard` · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md)。
 
 **執行摘要：** 0911 下班卷封口於 Mini-Chaos + treasury-escort 敘事；本卷在同一 fail-closed 基質上關閉 **EIP-1193 單路徑繞過窗**（5792 `calls[]` 展開）並把 **ERC-7540 異步金庫 operator / 滑點漂移** 鎖進 Sanctuary 決策層。Pass 1 將英雄標題從 Citadel Shield 退役為 **SliverVine ExoMesh**，Escrow 補體為 **SliverVine Sanctuary**。技術債為零。
 
@@ -56,7 +56,7 @@
 | 層 | 名稱 | 角色 | 工程錨點 |
 |----|------|------|----------|
 | 傘品牌 | **SliverVine Protocol** | 敘事母體 | README / JUDGE_BRIEF |
-| **Module A · 70% Pitch** | **SliverVine ExoMesh** | 預共識意圖防火牆 · Wasm 斷路器 | `@slivervine/eip1193-agentic-wallet-guard` · EIP-1193/5792/6963 · `soil_core.wasm` |
+| **Module A · 70% Pitch** | **SliverVine ExoMesh** | 預共識意圖防火牆 · Wasm 斷路器 | `@slivervine/exomesh-agentic-wallet-guard` · EIP-1193/5792/6963 · `soil_core.wasm` |
 | **Module B · 30% Pitch** | **SliverVine Sanctuary** | 合規托管護送 · 異步金庫護欄 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Across / Robinhood ingress |
 | Pillar Set Y | ExoMesh Engine Substrate | R01–R20 · `rootProtection()` | `docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md` |
 | Pillar Set X | Sanctuary Escrow Substrate | 單向外送 · AML inbound block | `across-ingress-bridge.ts` |
@@ -98,7 +98,7 @@
 
 - **業界痛點：** 代理錢包 / 現代 injector 以 `wallet_sendCalls` 提交原子批次；僅攔截 `eth_sendTransaction` 的 1193 middleware **整批漏檢**。
 - **SliverVine 突破：** `eip5792-send-calls.ts` 將 `params[0].calls[]` **展開**進既有 `evaluateRetailRisk()` 棧（approve · venue · soil · ERC-7540）。空批次 / 畸形 `calls[]` → `SEND_CALLS_BATCH_REJECTED`。**整批只佔一次** `INTENT_RING_U32` 嘗試。任一成員毒意圖 → **0-Gas fail-closed**，永不 `eth_sendRawTransaction`。
-- **模組 SSOT：** `src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts` · `provider.ts` 方法分派
+- **模組 SSOT：** `src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts` · `provider.ts` 方法分派
 - **驗證：** `npx vitest run tests/sdk/eip5792-send-calls.test.ts` → **3/3 PASS** `[ExoMesh]`
 
 | 欄位 | 語義 |
@@ -126,7 +126,7 @@ evaluateRetailRisk() × N  (approve · venue · soil · 7540)
 
 - **業界痛點：** `requestDeposit` / `requestRedeem` 為異步 Pending→Claimable；`setOperator` (`0x9cc233d6`) 可把控制器交給惡意 operator。Pendle Yield、GMX GM 流動性、USD.ai / sUSDai 類 ERC-4626 異步金庫在 **claim 前** 即被劫持或匯率漂移。
 - **SliverVine 突破：** 選擇器級 escort（非完整 vault 實作）。`setOperator` / controller **非白名單 → fail-closed**。`requestDeposit` / `requestRedeem` 對 Pending→Claimable 漂移做 `erc7540MaxSlippageBps` 閘門。
-- **模組 SSOT：** `src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts`（物理路徑暫留 SDK 目錄；**產品歸屬 Sanctuary Module B**）
+- **模組 SSOT：** `src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts`（物理路徑暫留 SDK 目錄；**產品歸屬 Sanctuary Module B**）
 - **驗證：** `npx vitest run tests/erc7540-async-escort.test.ts` → **3/3 PASS** `[Sanctuary]`
 
 | Reject Code | 觸發條件 |
@@ -412,8 +412,8 @@ pnpm test -- --run              # Expected: 228 files | 1063 PASS
 | [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) | BlackHat 格式錨點 |
 | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 30 秒 brief（ExoMesh / Sanctuary） |
 | [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | `[ExoMesh]` / `[Sanctuary]` CLI hub |
-| [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | ExoMesh 批次護欄 |
-| [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | Sanctuary 異步金庫 escort |
+| [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | ExoMesh 批次護欄 |
+| [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | Sanctuary 異步金庫 escort |
 | [`treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) | Sanctuary 決策層 |
 
 ---

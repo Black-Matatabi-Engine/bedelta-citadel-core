@@ -1,9 +1,9 @@
 # Architecture & Competitive Moat — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress`  
+> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress`  
 > **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
-> **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
-> **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)
+> **Package:** `@slivervine/exomesh-agentic-wallet-guard`  
+> **Source:** [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/)
 
 ---
 
@@ -66,7 +66,7 @@ import {
   withRetailGuardProvider,
   announceGuardedProvider,
   resolveInjectedEthereum,
-} from "@slivervine/eip1193-agentic-wallet-guard";
+} from "@slivervine/exomesh-agentic-wallet-guard";
 
 const guarded = withRetailGuardProvider(window.ethereum, config);
 
@@ -78,7 +78,7 @@ announceGuardedProvider(window.ethereum, config, {
 
 ### Layer 4: RPC Transport Stream Sync
 
-[`transport-stream.ts`](../../src/sdk/eip1193-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
+[`transport-stream.ts`](../../src/sdk/exomesh-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
 
 ---
 

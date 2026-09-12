@@ -1,7 +1,7 @@
 {
   "name": "@slivervine/citadel-sdk",
   "version": "1.0.0",
-  "description": "SliverVine Protocol — @slivervine/citadel-sdk · @slivervine/eip1193-agentic-wallet-guard · Universal EIP-1193 Pre-Consensus Guard (SilverVine Labs)",
+  "description": "SliverVine Protocol — @slivervine/citadel-sdk · @slivervine/exomesh-agentic-wallet-guard · Universal EIP-1193 Pre-Consensus Guard (SilverVine Labs)",
   "private": true,
   "type": "module",
   "scripts": {

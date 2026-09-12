@@ -33,7 +33,7 @@ SliverVine ExoMesh eliminates ephemeral heap churn on the AI-agent reflex arc by
 | **`CALLDATA_SCRATCH`** | `Uint8Array` | Reusable calldata decode | u32 selector LUT dispatch |
 | **`SOIL_FFI_REUSABLE_BUFFER`** | `ArrayBuffer` | Fixed Wasm input lane | Zero per-invoke `ArrayBuffer` alloc on FFI lane |
 
-**SSOT modules:** [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`calldata-hex.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-hex.ts) · [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts)
+**SSOT modules:** [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`calldata-hex.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts) · [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts)
 
 ---
 

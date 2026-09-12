@@ -1,5 +1,5 @@
 {
-  "name": "@slivervine/eip1193-agentic-wallet-guard",
+  "name": "@slivervine/exomesh-agentic-wallet-guard",
   "version": "0.1.0",
   "description": "Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents (Apache-2.0 middleware)",
   "license": "Apache-2.0",

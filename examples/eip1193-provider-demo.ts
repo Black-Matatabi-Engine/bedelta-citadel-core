@@ -15,7 +15,7 @@ import {
   SELECTOR_GMX_MULTICALL,
   UINT160_MAX,
   withRetailGuardProvider,
-} from "../src/sdk/eip1193-agentic-wallet-guard";
+} from "../src/sdk/exomesh-agentic-wallet-guard";
 import { BOLD, GRAY, GREEN, R, RED, YELLOW } from "./adapters/citadel-ansi-hud";
 import {
   awaitScenarioRecordingTransition,

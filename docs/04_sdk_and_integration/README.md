@@ -1,6 +1,6 @@
 # 04 — SDK & Integration
 
-> **Package:** `@slivervine/eip1193-agentic-wallet-guard` · **License:** Apache-2.0
+> **Package:** `@slivervine/exomesh-agentic-wallet-guard` · **License:** Apache-2.0
 
 | # | Document | Scope |
 |---|----------|-------|

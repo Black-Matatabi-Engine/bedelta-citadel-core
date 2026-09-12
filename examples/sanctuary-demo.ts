@@ -9,7 +9,7 @@ import {
   parseTransactionCalldata,
   type ParsedErc7540,
   type RetailGuardConfig,
-} from "../src/sdk/eip1193-agentic-wallet-guard";
+} from "../src/sdk/exomesh-agentic-wallet-guard";
 import { BOLD, CYAN, GREEN, GRAY, RED, R } from "./adapters/citadel-ansi-hud";
 import { ensureDemoWasmSoft, wrapDemoExecution } from "./lib/demo-harness";
 import { printModuleBBanner, printOpSecFootnote } from "./lib/demo-module-banners";

@@ -1,7 +1,7 @@
 # Market Intelligence & Competitor Audit — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
 > **Document:** 02 — Market Intelligence Whitepaper  
-> **Package:** `@slivervine/eip1193-agentic-wallet-guard` · **License:** Apache-2.0  
+> **Package:** `@slivervine/exomesh-agentic-wallet-guard` · **License:** Apache-2.0  
 > **Buildathon role:** Primary **C-End Middleware** deliverable for Arbitrum Open House
 
 ---
