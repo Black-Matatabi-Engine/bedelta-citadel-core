@@ -10,6 +10,7 @@ import {
   ARBITRUM_ONE_CHAIN_ID,
   BRIDGE_TIMEOUT_FAIL_CLOSED,
   DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS,
+  IN_FLIGHT_BRIDGE_CAPITAL,
   ROBINHOOD_TESTNET_CHAIN_ID,
   evaluateAcrossBridgeTransfer,
   validateAcrossBridgeDirection,
@@ -107,6 +108,9 @@ function runRouteA(trip: boolean, t0: number): number {
   );
   printEval(inflight);
   assertLostUsdZero(inflight);
+  if (inflight.capitalLabel === IN_FLIGHT_BRIDGE_CAPITAL) {
+    console.log(`  ${CYAN}[ERC-7683 SEMANTIC]: IN_FLIGHT_BRIDGE_CAPITAL -> Solver Lock Active${R}`);
+  }
   const { value: settled, latencyUs } = measureSync(() =>
     evaluateAcrossBridgeTransfer(
       { amountUsd: ESCORT_USD, wallet: WALLET, initiatedAtMs: t0 },
@@ -115,6 +119,7 @@ function runRouteA(trip: boolean, t0: number): number {
   );
   printEval(settled);
   assertLostUsdZero(settled);
+  console.log(`  ${GREEN}[ERC-7683 SEMANTIC]: SETTLED -> Solver Pre-flight Capital Lock Released${R}`);
   console.log(`  ${GREEN}deployable NAV unlocked → GMX / Pendle pre-flight${R}`);
   return latencyUs;
 }
@@ -144,7 +149,8 @@ function runRouteC(): void {
     `  ${RED}inbound AML probe 42161→46630: blocked=${aml.inboundBlocked}${R} · ${aml.reasons[0] ?? ""}`,
   );
   if (aml.reasons[0] === AML_INBOUND_TO_ROBINHOOD_BLOCKED) {
-    console.log(`  ${GREEN}AML_INBOUND_TO_ROBINHOOD_BLOCKED enforced${R}`);
+    console.log(`  ${CYAN}[ERC-7579 ISOMORPHIC]: Pillar Set X AML Compliance Pre-Execution Hook${R}`);
+    console.log(`  ${GREEN}AML_INBOUND_TO_ROBINHOOD_BLOCKED enforced (Pillar Set X Compliance Pre-Execution Strategy · Edge Isomorphic)${R}`);
   }
 }
 

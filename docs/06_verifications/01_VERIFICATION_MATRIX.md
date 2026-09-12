@@ -82,7 +82,7 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `pnpm demo:spot-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
 | `pnpm demo` | `[ExoMesh]` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
-| `pnpm demo:ingress` | `[Sanctuary]` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort · [`ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) |
+| `pnpm demo:ingress` | `[Sanctuary]` | **Module B Treasury Ingress** — ERC-7683 Solver Pre-flight Capital Lock · Pillar Set X Compliance Pre-Execution Strategy (Edge Isomorphic) · [`ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) |
 | `pnpm demo:e2e:arb-native` | `[ExoMesh]` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | `[ExoMesh]` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
 | `pnpm run audit:security` | `[ExoMesh]` | 3-Axis Security Scorecard **5/0/0 PASS** |
