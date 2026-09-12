@@ -10,7 +10,7 @@
 
 > **SSOT Lock:** **228 test files | 1065 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
-> **Zero-GC Microsecond Hot-Path**: Scavenged ~50,000 objects/sec heap allocations down to zero using reusable `DataView` scratch buffers and pre-allocated LUTs, guaranteeing zero V8 garbage collection jitter under 10,000+ req/sec AI agent transaction swarms.
+> **Near Zero-GC (Zero-GC Hot-Path Phase)**: GC-scavenged hot-path architecture — eliminated **~50,000 ephemeral heap objects/sec** on the RPC reflex arc via reusable `DataView` scratch buffers and pre-allocated LUTs. While TypeScript retains minimal native event/promise boundaries, all SilverVine risk evaluation, calldata decoding, and attempt ring operations execute on static memory slabs with **zero ephemeral heap allocations during the microsecond execution phase**.
 
 ---
 
@@ -60,7 +60,7 @@
 
 SilverVine occupies **T3** — the only latency class that operates at **microsecond** scale **before** broadcast ingress.
 
-**Zero-GC Microsecond Hot-Path**: Scavenged ~50,000 objects/sec heap allocations down to zero using reusable `DataView` scratch buffers and pre-allocated LUTs, guaranteeing zero V8 garbage collection jitter under 10,000+ req/sec AI agent transaction swarms.
+**Near Zero-GC (Zero-GC Hot-Path Phase)**: GC-scavenged hot-path architecture — eliminated **~50,000 ephemeral heap objects/sec** on the RPC reflex arc. Risk evaluation, calldata decoding, and attempt ring operations run on static memory slabs with **zero ephemeral heap allocations during the microsecond execution phase**.
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
