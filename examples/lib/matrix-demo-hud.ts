@@ -62,7 +62,7 @@ export function printTripSoilReject(): void {
 
 export function printBreachBreakdown(lines: BreachLine[]): void {
   if (lines.length === 0) return;
-  console.log(`\n${RED}${BOLD}🚨 INVARIANT BREACH DETECTED:${R}`);
+  console.log(`\n${RED}${BOLD}INVARIANT BREACH DETECTED:${R}`);
   lines.forEach((line, i) => {
     const branch = i === lines.length - 1 ? "└─" : "├─";
     const label = `${line.label}:`.padEnd(20);

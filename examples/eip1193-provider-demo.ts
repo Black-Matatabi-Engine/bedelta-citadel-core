@@ -19,7 +19,7 @@ import {
 import { BOLD, GRAY, GREEN, R, RED, YELLOW } from "./adapters/citadel-ansi-hud";
 import {
   awaitScenarioRecordingTransition,
-  breakthroughMetric,
+  featureMetric,
   buildPhishingTypedData,
   crossVenueSlippagePct,
   degradedDemoConfig,
@@ -30,7 +30,7 @@ import {
   formatIntentUsd,
   isDemoJsonArgv,
   measureWasmSoilUs,
-  printBreakthroughBanner,
+  printFeatureBanner,
   printChannelOpen,
   printDefenseMatrixHeader,
   printDefenseMatrixLine,
@@ -49,7 +49,7 @@ import {
   resolveIntentPrincipalUsd,
   roundWasmUs,
   wrapGuarded,
-} from "./lib/eip1193-breakthrough-helpers";
+} from "./lib/eip1193-extension-helpers";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 import { isDemoTripArgv, wrapDemoExecution, type DemoEnvironment } from "./lib/demo-harness";
 
@@ -192,7 +192,7 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
     if (permit2) printDefenseMatrixLine("PERMIT2 GUARD", "Infinite Approve Blocked for Untrusted Spender!", permit2.code, "├");
     if (!erc7683.passed) {
       console.log(
-        `├── ${eipTag("ERC-7683 GATE")} Cross-Chain Solver MEV Bps (${breakthroughMetric(`${erc7683.solverMevBps.toFixed(0)}bps`)}) > Safety Limit! · ${rejectCode(erc7683.code ?? "FAIL")} ${GRAY}(diagnostic preview)${R}`,
+        `├── ${eipTag("ERC-7683 GATE")} Cross-Chain Solver MEV Bps (${featureMetric(`${erc7683.solverMevBps.toFixed(0)}bps`)}) > Safety Limit! · ${rejectCode(erc7683.code ?? "FAIL")} ${GRAY}(diagnostic preview)${R}`,
       );
     }
     printDefenseMatrixLine("PRE-CONSENSUS", "0-Gas Wasm Intercept armed for toxic EIP-712 ingress", undefined, "└");
@@ -215,11 +215,11 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
     printProductionPlainTextWarning(thrown.plainTextWarning, thrown.code);
     printPreConsensusProofBox(wasmUs, principalUsd);
     console.log(
-      `▸ Gas Spent: ${breakthroughMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`,
+      `▸ Gas Spent: ${featureMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`,
     );
     printDuneTelemetry(RETAIL_GUARD_AGENT_ID, thrown.code, ctx.nowMs);
     console.log(
-      `\n${RED}${BOLD}RESULT: 🛑 FAIL_CLOSED_INTERCEPT (${breakthroughMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
+      `\n${RED}${BOLD}RESULT: 🛑 FAIL_CLOSED_INTERCEPT (${featureMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
     );
   }
   return {
@@ -266,7 +266,7 @@ async function runScenarioD({ interactive }: ScenarioOpts): Promise<Eip1193Scena
     }
     const attemptN = INTENT_MAX_ATTEMPTS_DEFAULT + 1;
     console.log(
-      `${RED}${BOLD}[CIRCUIT BREAKER]${R} R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (${breakthroughMetric("0-Gas")})`,
+      `${RED}${BOLD}[CIRCUIT BREAKER]${R} R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (${featureMetric("0-Gas")})`,
     );
     console.log(
       `${eipTag("CHANNEL SEVER")} ${attemptN}th Rapid Attack Attempt -> EIP-712 Signature Channel ${RED}${BOLD}SEVERED${R} (${rejectCode(severErr.code)})`,
@@ -290,25 +290,25 @@ async function runScenarioMatrix(ctx: DemoEnvironment, interactive: boolean): Pr
   const trip = isDemoTripArgv();
 
   if (!trip) {
-    if (interactive) printBreakthroughBanner();
+    if (interactive) printFeatureBanner();
     results.push(await runScenarioA({ interactive }));
     if (interactive && process.stdin.isTTY) {
       await awaitScenarioRecordingTransition("B");
-      printBreakthroughBanner();
+      printFeatureBanner();
     }
     results.push(await runScenarioB({ interactive }));
     if (interactive && process.stdin.isTTY) {
       await awaitScenarioRecordingTransition("C");
-      printBreakthroughBanner();
+      printFeatureBanner(false);
     }
   } else if (interactive) {
-    printBreakthroughBanner();
+    printFeatureBanner(false);
   }
 
   results.push(await runScenarioC({ interactive, ctx }));
   if (interactive && process.stdin.isTTY) {
     await awaitScenarioRecordingTransition("D");
-    printBreakthroughBanner();
+    printFeatureBanner(false);
   }
   results.push(await runScenarioD({ interactive }));
   return results;

@@ -1,12 +1,12 @@
 /** High-precision latency helpers for Citadel CLI demos (process.hrtime.bigint). */
 
 export const EDGE_TARGET_US = 106;
-/** Production SSOT latency bands — hardware-agnostic; local CLI may vary. */
-export const PURE_INVARIANT_BAND_US = "~0.5–1.1µs (warm-path min)";
-export const REFLEX_CORE_BAND_US = "p50 ~15µs (<20µs warm path)";
-export const E2E_SHIELD_BAND_US = "p50 ~106µs (Edge Worker target)";
+/** Production warm-path SSOT targets — local CLI μs vary by CPU/OS. */
+export const PURE_INVARIANT_TARGET = "~0.5-1.1µs warm-path min";
+export const REFLEX_CORE_TARGET = "p50 ~15µs warm path";
+export const E2E_SHIELD_TARGET = "p50 ~106µs Edge Worker";
 export const LATENCY_HOST_VARIANCE_DISCLAIMER =
-  "Absolute CLI μs vary by CPU/OS; production SSOT = Edge p50 bands.";
+  "Status badges = invariant validation · μs = active CLI measurement vs production warm-path targets.";
 export const BENCH_BOX_W = 64;
 export const INTENT_BOX_W = 72;
 const BENCH_KV_LABEL_W = 22;
@@ -17,6 +17,7 @@ const SLOW_DIM = "\x1b[90m";
 export const R = "\x1b[0m";
 export const BOLD = "\x1b[1m";
 export const GRAY = "\x1b[90m";
+export const RED = "\x1b[31;1m";
 export const GUARD_BRIGHT_GREEN = "\x1b[92;1m";
 export const CORE_BRIGHT_CYAN = "\x1b[96;1m";
 export const EXEC_BRIGHT_YELLOW = "\x1b[93;1m";
@@ -77,19 +78,39 @@ function padVisible(text: string, width: number): string {
   return text + " ".repeat(pad);
 }
 
-function formatBenchmarkKvRow(label: string, latencyUs: number, suffix = ""): string {
-  const kv = `  ${label.padEnd(BENCH_KV_LABEL_W)}: ${formatLatencyLabel(latencyUs)}`;
-  return `${GRAY}${kv}${R}${suffix}`;
+export interface BenchmarkHudOpts {
+  /** When false, rows show [Trip] instead of [Clear]. Default true. */
+  invariantClear?: boolean;
+  title?: string;
 }
 
-export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
-  const matrixPass = snapshot.fullMatrixUs <= EDGE_TARGET_US;
-  const passTag = matrixPass ? ` ${GUARD_BRIGHT_GREEN}${BOLD}(PASS)${R}` : "";
-  const title = `${BOLD}[BENCHMARK]${R} Bands: ${PURE_INVARIANT_BAND_US} · ${REFLEX_CORE_BAND_US} · ${E2E_SHIELD_BAND_US}`;
+function formatInvariantBadge(clear: boolean): string {
+  return clear ? `${GUARD_BRIGHT_GREEN}[Clear]${R}` : `${RED}[Trip]${R}`;
+}
+
+function formatBenchmarkHudRow(
+  label: string,
+  latencyUs: number,
+  invariantClear: boolean,
+  target: string,
+): string {
+  const badge = formatInvariantBadge(invariantClear);
+  const kv = `${label.padEnd(BENCH_KV_LABEL_W)}: ${formatLatencyLabel(latencyUs)} ${badge} (Target: ${target})`;
+  return `${GRAY}  ${kv}${R}`;
+}
+
+export function printDynamicBenchmarkBreakdown(
+  snapshot: DemoBenchmarkSnapshot,
+  opts: BenchmarkHudOpts = {},
+): void {
+  const invariantClear = opts.invariantClear ?? true;
+  const title =
+    opts.title ??
+    `${BOLD}[BENCHMARK]${R} CLI measurement vs production warm-path targets`;
   const rows = [
-    formatBenchmarkKvRow("Pure Invariant (local)", snapshot.pureInvariantUs, ` ${GRAY}${PURE_INVARIANT_BAND_US}${R}`),
-    formatBenchmarkKvRow("Full Matrix (local)", snapshot.fullMatrixUs, `${passTag} ${GRAY}${REFLEX_CORE_BAND_US}${R}`),
-    formatBenchmarkKvRow("E2E Harness (local)", snapshot.e2eHarnessUs, ` ${GRAY}${E2E_SHIELD_BAND_US}${R}`),
+    formatBenchmarkHudRow("Pure Invariant (local)", snapshot.pureInvariantUs, invariantClear, PURE_INVARIANT_TARGET),
+    formatBenchmarkHudRow("Full Matrix (local)", snapshot.fullMatrixUs, invariantClear, REFLEX_CORE_TARGET),
+    formatBenchmarkHudRow("E2E Harness (local)", snapshot.e2eHarnessUs, invariantClear, E2E_SHIELD_TARGET),
   ];
   const innerW = BENCH_BOX_W - 2;
   console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(BENCH_BOX_W)}┐${R}`);
@@ -101,9 +122,9 @@ export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot):
   console.log(`${GRAY}  ${LATENCY_HOST_VARIANCE_DISCLAIMER}${R}`);
 }
 
-export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {
+export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot, opts?: BenchmarkHudOpts): void {
   if (snapshot) {
-    printDynamicBenchmarkBreakdown(snapshot);
+    printDynamicBenchmarkBreakdown(snapshot, opts);
     return;
   }
   console.log(`${BOLD}[BENCHMARK]${R} Runtime: Edge Wasm Kernel · probing…`);
