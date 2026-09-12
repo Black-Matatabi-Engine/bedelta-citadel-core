@@ -38,7 +38,7 @@ TRADITIONAL (Autopsy)                    SLIVERVINE (Pre-Crime)
 尸檢 Autopsy Data                   events (0-Gas)   (rare)
 ```
 
-**Thesis:** Web3 security indexers have historically measured **damage**. SliverVine ExoMesh measures **prevented damage** — forming Web3's first **Pre-Crime Threat Intelligence Index (PCTII)**: a time-series of toxic intents **intercepted** at the EIP-1193 boundary, classified by **MO signature**, and reconciled against on-chain `RiskTripBlocked` / off-chain `GET /api/grant-audit` snapshots.
+**Thesis:** Web3 security indexers have historically measured **damage**. SliverVine ExoMesh measures **prevented damage** — forming a **Pre-Crime Threat Intelligence Index (PCTII)**: a time-series of toxic intents **intercepted** at the EIP-1193 boundary, classified by **MO signature**, and reconciled against on-chain `RiskTripBlocked` / off-chain `GET /api/grant-audit` snapshots.
 
 ### 1.2 What ExoMesh Captures (and What Never Reaches Chain)
 
@@ -439,4 +439,4 @@ pnpm tsx scripts/emit-sepolia-telemetry-events.ts
 
 ---
 
-**Category one-liner:** **Pre-Consensus Threat Telemetry** turns 0-Gas rejections into structured MO intelligence — Web3's first Pre-Crime index, indexed on Dune, benchmarked by ARB.
+**Category one-liner:** **Pre-Consensus Threat Telemetry** turns 0-Gas rejections into structured MO intelligence — a Pre-Crime index indexed on Dune, benchmarked by ARB.

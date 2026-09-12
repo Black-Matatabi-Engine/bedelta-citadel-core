@@ -28,11 +28,11 @@
 
 **One-liner:** LLM emits toxic intent → ExoMesh severs signing **before** Sequencer queues → `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
-### How SilverVine Solves Next-Gen EIPs (Problem → Breakthrough → Proof)
+### How SilverVine Addresses Pre-Consensus EIPs (Problem → Implementation → Proof)
 
-**Industry's first [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** for [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
+**Pre-Consensus Edge-Wasm [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Reference Implementation** for [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
 
-| Standard | **Problem** (architectural gap) | **Breakthrough** (SilverVine Edge-Wasm) | **Proof** |
+| Standard | **Problem** (architectural gap) | **Implementation** (SliverVine Edge-Wasm) | **Proof** |
 |----------|--------------------------------|----------------------------------------|-----------|
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118 (draft)](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-8196--erc-8118--ai-agent-authenticated-wallet-off-chain-reference-implementation)** | On-chain policy checks burn Gas and cannot catch prompt-injection / calldata drift **before** execution | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) `withRetailGuardProvider()` intercepts `eth_sendTransaction` · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` batch unfold · sub-10ms Edge Wasm calldata validation · **0-Gas** on reject | `npx vitest run tests/sdk/` · [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | Agent / wallet `wallet_sendCalls` batches bypass `eth_sendTransaction`-only guards | [`eip5792-send-calls.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into the existing risk stack · empty/malformed batch fail-closed · **one** intent-ring attempt per batch | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` **3/3 PASS** |

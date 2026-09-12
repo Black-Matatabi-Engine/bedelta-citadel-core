@@ -79,7 +79,7 @@ Scenario A: 🟢 ALLOW_PASSTHROUGH (Healthy Intent)
 RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)
 ```
 
-#### Scenario C — FAIL_CLOSED_INTERCEPT (Breakthrough Defense Matrix + 0-Gas Proof)
+#### Scenario C — FAIL_CLOSED_INTERCEPT (Pre-Consensus Defense Matrix + 0-Gas Proof)
 
 ```text
 Scenario C: 🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)
@@ -88,7 +88,7 @@ Scenario C: 🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)
 [EIP-1193] Ingress Intercept -> window.ethereum.request({ method: 'eth_signTypedData_v4' })
 [INTENT VALUATION] Phishing Cross-Venue Route | Attempted Exposure: $2,500.00 USDC
 
-🔥 [BREAKTHROUGH DEFENSE MATRIX TRIGGERED] (diagnostic preview)
+🔥 [FAIL-CLOSED DEFENSE MATRIX TRIGGERED] (diagnostic preview)
 ├── [EIP-712 GUARD] Phishing Attack: VerifyingContract Mismatch! (VENUE_DRIFT_REJECTED) (diagnostic preview)
 ├── [PERMIT2 GUARD] Infinite Approve Blocked for Untrusted Spender! (UNAUTHORIZED_SPENDER_REJECTED) (diagnostic preview)
 ├── [ERC-7683 GATE] Cross-Chain Solver MEV Bps (10090bps) > Safety Limit! · SLIPPAGE_OVERSHOOT (diagnostic preview)
@@ -97,7 +97,7 @@ Scenario C: 🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)
 [PRODUCTION ALERT] (warnings.ts · VENUE_DRIFT_REJECTED) ALERT: Signature blocked — contract 0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb is not on your approved venue whitelist (anti-phishing).
 
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
-│ 🚨 PRE-CONSENSUS BREAKTHROUGH PROOF
+│ 🚨 PRE-CONSENSUS FAIL-CLOSED PROOF
 │  ▸ WASM REFLEX TIME : ⚡ 0.6µs Pure Wasm Core (Sub-10ms Wasm Core Execution)
 │  ▸ GAS BURNED       : 0.000000 ETH (0 Bytes Broadcasted to Sequencer)
 │  ▸ CAPITAL PROTECTED: $2,500.00 USDC (lostUsd = $0.00 · 100% Principal Preserved)

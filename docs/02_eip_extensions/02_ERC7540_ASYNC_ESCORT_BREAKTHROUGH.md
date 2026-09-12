@@ -1,4 +1,4 @@
-# Sanctuary Async Escort (ERC-7540+) — SliverVine Sanctuary Breakthrough
+# Sanctuary Async Escort (ERC-7540+) — Technical Specification
 
 > **Product:** **SliverVine Sanctuary** (Module B · ~30% pitch) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · async vault selector guard · Robinhood / Across compliance ingress  
 > **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex  
@@ -70,7 +70,7 @@ ERC-4626 (sync)                    ERC-7540 (async)
 
 **Industry default:** Portfolio trackers, ERC-4626 share-price widgets, and swap slippage guards evaluate **spot** state. They do not model **async state machines** where the economic outcome is determined **between** `request*` and `claim*`.
 
-**Sanctuary breakthrough:** Policy runs at **request broadcast time** — before the vault enters Pending — using:
+**Sanctuary implementation:** Policy runs at **request broadcast time** — before the vault enters Pending — using:
 
 - **Operator/controller whitelist** (`allowedOperators` · fallback `allowedSpenders`)
 - **Declared async quote** (`erc7540AsyncQuote` or `resolveErc7540Quote`) comparing **request amount** vs **expected claimable amount**

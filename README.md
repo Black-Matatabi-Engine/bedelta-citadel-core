@@ -28,16 +28,16 @@
 
 
 
-## 🚀 Standards Moat — How SilverVine Solves Next-Gen EIPs
+## Standards Compliance — Pre-Consensus EIP Extensions
 
-> **Industry's First [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
+> **Pre-Consensus Edge-Wasm [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Reference Implementation** — [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) · [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) · [ERC-7683](https://eips.ethereum.org/EIPS/eip-7683) · [EIP-7702](https://eips.ethereum.org/EIPS/eip-7702) · [ERC-7710](https://eips.ethereum.org/EIPS/eip-7710) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079).
 >
 > SilverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.
 >
 > **Zero-Allocation Hot-Path**: The pre-consensus microsecond execution phase operates on pre-allocated static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc), while non-critical cold paths (user warning formatters, error loggers) remain standard readable TypeScript.
 
 
-| Standard / EIP                                             | The Architectural Limitation (The Problem)                                                              | SilverVine Breakthrough (How We Solve It)                                                                                                                                                    | Code & Test Proof Anchor                                                                                          |
+| Standard / EIP                                             | The Architectural Limitation (The Problem)                                                              | Fail-Closed Implementation                                                                                                                                                                   | Code & Test Proof Anchor                                                                                          |
 | ---------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------- |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) / [ERC-8118 (draft)](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-8196--erc-8118--ai-agent-authenticated-wallet-off-chain-reference-implementation)** *(AI Authenticated Policy Engine)* | On-chain policy checks burn Gas and cannot catch prompt-injection intent drifts pre-execution. | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Middleware (**`withRetailGuardProvider`**)** intercepts `eth_sendTransaction` and [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls`, running **sub-10ms, 0-Gas** Wasm calldata validation. | `src/sdk/eip1193-agentic-wallet-guard/` `tests/sdk/retail-guard-provider.test.ts` **(35 PASS)** · `eip5792-send-calls.test.ts` **(3 PASS)** |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** *(Wallet Call API)* | `wallet_sendCalls` batches bypass `eth_sendTransaction`-only middleware. | [`eip5792-send-calls.ts`](./src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into the retail risk stack · empty/malformed batch fail-closed · one intent-ring attempt per batch. | `tests/sdk/eip5792-send-calls.test.ts` **(3 PASS)** |
@@ -48,7 +48,7 @@
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** *(Intent Delegations & Expiry)* | No zero-gas cancellation path when soil resistance trips before sequencer inclusion. | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) binds `rootProtection()` (**p50 ~15µs**) · emits Permit2 deadline expiry cancellation signal. | `tests/services/api/erc7710-intent-expiry.test.ts` **(2 PASS)** |
 
 
-→ Wiki: [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710)
+→ Wiki: [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#pre-consensus-eip-defense-matrix-erc-7683-eip-7702-erc-7710)
 
 ---
 

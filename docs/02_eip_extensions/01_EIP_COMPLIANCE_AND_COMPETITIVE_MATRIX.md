@@ -9,13 +9,13 @@ Official infrastructure standards map — each row links a public ERC/EIP (or ve
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard **EIP-1193** / **EIP-5792** and **ERC-7540** specs, while extending them into **0-Gas pre-consensus security supersets** — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** and **Sanctuary Async Escort (ERC-7540+)**.
 
-Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-5792** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7683** · **ERC-7710** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([ExoMesh competitive matrix](#exomesh-competitive-matrix--edge-wasm-0-gas-pre-consensus-reference-implementation-judge-brief) · [active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [next-gen EIP defense matrix](#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
+Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **EIP-1193** · **EIP-5792** · **EIP-6963** · **ERC-20/777** · **OpenZeppelin v5** · **ERC-7579** · **EIP-7702** · **ERC-7683** · **ERC-7710** · **ERC-7715** · **ERC-8196** (Final) · **EIP-1559** · **Arbitrum Stylus SDK** · **ArbOS / Stylus** · **Robinhood Chain Ingress** · **Wasm `soil_core`** — each mapped to implementation anchors and verification probes in this wiki ([ExoMesh competitive matrix](#exomesh-competitive-matrix--edge-wasm-0-gas-pre-consensus-reference-implementation-judge-brief) · [active matrix](#active-evm-standard-compliance-matrix-v10-production) · [emerging standards moat](#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105) · [pre-consensus EIP defense matrix](#pre-consensus-eip-defense-matrix-erc-7683-eip-7702-erc-7710) · [summary table](#standards-summary-table) · [compliance posture](#compliance-posture) · [ArbOS/Stylus](#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · [RPC/WSS](#infrastructure-rpc-wss-alchemy-ha)).
 
 ---
 
 ## ExoMesh Competitive Matrix — Edge-Wasm 0-Gas Pre-Consensus Reference Implementation (Judge Brief)
 
-> **Positioning thesis:** **SliverVine ExoMesh** ships the industry's first **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Edge-Wasm 0-Gas Pre-Consensus Reference Implementation (RI)** — policy executes in **client + Edge Wasm** **before** Arbitrum Sequencer / bundler ingress. Market wallets and AA bundlers optimize **post-broadcast** revert analytics or **on-chain** policy screens that **burn gas** on failure. ExoMesh severs the signing channel at **p50 ~15µs** reflex core (**SSRC soil <1.8µs** warm lane · **E2E p50 ~106µs** ExoMesh Edge gate) with **$0 gas** on `FAIL_CLOSED`.
+> **Positioning thesis:** **SliverVine ExoMesh** ships a **Pre-Consensus Edge-Wasm [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Reference Implementation (RI)** — policy executes in **client + Edge Wasm** **before** Arbitrum Sequencer / bundler ingress. Market wallets and AA bundlers optimize **post-broadcast** revert analytics or **on-chain** policy screens that **burn gas** on failure. ExoMesh severs the signing channel at **p50 ~15µs** reflex core (**SSRC soil <1.8µs** warm lane · **E2E p50 ~106µs** ExoMesh Edge gate) with **$0 gas** on `FAIL_CLOSED`.
 
 ```text
 [ LLM / Agent / dApp Intent ]
@@ -32,7 +32,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 
 ### Master Matrix — Standard Market vs SliverVine ExoMesh
 
-| # | Standard / attack surface | **Standard market** (MetaMask-class wallets · ERC-4337 bundlers · solver networks) | **SliverVine ExoMesh** breakthrough | Latency · gas | SSOT anchor | Verification |
+| # | Standard / attack surface | **Standard market** (MetaMask-class wallets · ERC-4337 bundlers · solver networks) | **SliverVine ExoMesh** fail-closed implementation | Latency · gas | SSOT anchor | Verification |
 |---|-------------------------|-----------------------------------------------------------------------------------|-------------------------------------|---------------|-------------|--------------|
 | **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** `eth_sendTransaction` · `eth_signTypedData_v4` | Forward `request()` to RPC → user signs → tx enters mempool → **revert burns gas** · Permit/approve toxic spenders discovered **after** broadcast | `withRetailGuardProvider()` proxies `request()` · `evaluateRetailRisk()` runs transport sync · u32 calldata parse · approve/venue/soil/intent gates **before** `baseProvider.request()` · `RetailGuardRejectedError` = **0-Gas fail-closed** | **p50 ~106µs** E2E ALLOW · **p50 ~15µs** reflex severance · **$0** on reject | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) · [`risk-evaluator.ts`](../../src/sdk/eip1193-agentic-wallet-guard/risk-evaluator.ts) · [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) | `retail-guard-provider.test.ts` **35/35** |
 | **1b** | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `wallet_sendCalls` | Atomic `calls[]` batches **bypass** `eth_sendTransaction`-only guards · hidden approve + swap combos reach signer | `evaluateEip5792WalletSendCalls()` **unfolds** `params[0].calls[]` into send-tx risk stack · reuses `TX_PARAMS` pointer (zero per-call array alloc) · **one** `INTENT_RING_U32` attempt per batch · empty/malformed → `SEND_CALLS_BATCH_REJECTED` | Same as row 1 · batch = single intent-ring debit | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | `eip5792-send-calls.test.ts` **3/3** |
@@ -40,7 +40,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 | **3** | **[EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** / **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079)** agent authority · session keys | Blind **EIP-712** session signing · ERC-4337 validation-phase rejection **after** bundler queue · no physical hot-key severance · cumulative agent spend caps unenforced at RPC layer | **Bitwise `INTENT_RING_U32` mandate slab** (256×4 word pre-alloc · **<16 KiB** / 10k iter **Zero-Allocation Hot-Path**) · `trackAttemptBudgetU32Pure()` default **3 strikes** → **4th attempt** `MAX_ATTEMPTS_EXCEEDED_SEVERED` + `severSigningChannel()` · `VENUE_DRIFT_REJECTED` on mask `&` target bit = 0 · session TTL via `verifySessionKeyValidity()` | Ring hot path **~0.5–1.1µs** pure TS · Wasm gate FFI parity | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`guard-engine.ts`](../../src/sdk/eip1193-agentic-wallet-guard/guard-engine.ts) | `intent-sinking-audit.test.ts` zero-alloc worker **PASS** · `retail-guard-provider.test.ts` intent severance |
 | **4** | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** cross-chain intent | Solver fills `CrossChainOrder` post-signature · **MEV extraction** + slippage overshoot on destination · user discovers bad fill **after** intent committed | `evaluateErc7683CrossChainIntentGuard()` — **pre-signature** Edge simulation · `computeCrossChainExecutionDeltaBps()` + `computeSolverMevBps()` vs `maxSlippageBps` / fee ceiling · optional `evaluateSoilViaWasm()` depth lane · `zeroGasBlocked: true` on trip | **sub-10ms** wall · SSRC soil lane **<1.8µs** | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) | `erc7683-intent-guard.test.ts` **3/3** |
 
-### Cross-Cutting Moat — Why ExoMesh Wins the Pre-Consensus Tier
+### Cross-Cutting Pre-Consensus Differentiation — ExoMesh vs Post-Broadcast Guards
 
 | Dimension | Standard market | SliverVine ExoMesh |
 |-----------|-----------------|-------------------|
@@ -83,7 +83,7 @@ Five standards form the **active C-end / on-chain compliance spine** — each ro
 
 ## Emerging Standards & Edge-Wasm Reference Implementations (ERC-8196, ERC-7715/8226, EIP-8079/8105)
 
-Citadel's **Pre-Consensus Edge-Wasm Reference Implementation Moat** ships production code **before** several emerging AI-agent and client-gateway standards finalize — Edge `pkg/soil_core.wasm` + EIP-1193 middleware form the off-chain reflex plane; on-chain PolicyGuard anchors settlement.
+Citadel's **Pre-Consensus Edge-Wasm Reference Implementation** ships production code **before** several emerging AI-agent and client-gateway standards finalize — Edge `pkg/soil_core.wasm` + EIP-1193 middleware form the off-chain reflex plane; on-chain PolicyGuard anchors settlement.
 
 ```text
 [ LLM / Agent Intent ]
@@ -141,13 +141,15 @@ Citadel's **Pre-Consensus Edge-Wasm Reference Implementation Moat** ships produc
 | **EIP-8079-class alignment** | Client-side security firewall between dApp/agent and wallet — **0-Gas** pre-consensus intercept | Retail Guard SDK · Edge Worker `checkSoilResistance()` |
 | **EIP-8105-class alignment** | Pre-execution intent validation + local rejection before chain confirmation — Wasm bitmask parallel eval | [`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · `pkg/soil_core.wasm` |
 
-> **Moat thesis:** Competitors optimize **post-execution** analytics or **on-chain** governance delays. Citadel's Edge-Wasm RI executes **pre-Sequencer** — the only tier that can sever EIP-712 at **p50 ~15µs** with **$0 gas** on rejection.
+> **Engineering thesis:** Competitors optimize **post-execution** analytics or **on-chain** governance delays. Citadel's Edge-Wasm RI executes **pre-Sequencer** — the only tier that can sever EIP-712 at **p50 ~15µs** with **$0 gas** on rejection.
 
-### Next-Gen EIP Defense Matrix (ERC-7683, EIP-7702, ERC-7710)
+<a id="next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710"></a>
 
-Production guards on `feat/nextgen-eips-moat` extend the Pre-Consensus Edge-Wasm moat into cross-chain intents, EOA delegation, and zero-gas intent expiry — each bound to a dedicated Vitest proof anchor.
+### Pre-Consensus EIP Defense Matrix (ERC-7683, EIP-7702, ERC-7710)
 
-| Standard | Architectural gap | Citadel breakthrough | Implementation SSOT | Verification |
+Production guards extend the Pre-Consensus Edge-Wasm reference implementation into cross-chain intents, EOA delegation, and zero-gas intent expiry — each bound to a dedicated Vitest proof anchor.
+
+| Standard | Architectural gap | Fail-closed implementation | Implementation SSOT | Verification |
 |----------|-------------------|----------------------|---------------------|--------------|
 | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** *(Cross-Chain Intent Standard)* | Solver MEV and slippage exploitation on `CrossChainOrder` fills before signature release | Client-side Edge-Wasm pre-signature simulation — execution delta + solver MEV bps gate (**sub-10ms**) | [`erc7683-intent-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7683-intent-guard.ts) | [`tests/sdk/erc7683-intent-guard.test.ts`](../../tests/sdk/erc7683-intent-guard.test.ts) **3/3 PASS** |
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** *(Set EOA Account Code)* | Prompt-injected EOA delegation can install malicious implementation bytecode pre-broadcast | Decodes `authorization` tuples · whitelisted implementation invariant matrix · blocked-address denylist | [`eip7702-auth-guard.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip7702-auth-guard.ts) | [`tests/sdk/eip7702-auth-guard.test.ts`](../../tests/sdk/eip7702-auth-guard.test.ts) **3/3 PASS** |
