@@ -24,6 +24,7 @@ import {
 } from "../../core/wasm-intent-ffi";
 import { isAddressInAllowlist } from "./address-compare";
 import type { ParsedApprove } from "./calldata-types";
+import { getVenueBitLut, resolveVenueBitFromLut } from "./venue-bit-lut";
 import { evaluateTransportStreamSync, __resetTransportStreamForTests } from "./transport-stream";
 import { evaluateIntentGateViaWasm, evaluateSoilViaWasm } from "./wasm-adapter";
 import { formatRetailWarning } from "./warnings";
@@ -171,15 +172,12 @@ export function evaluateRetailIntentGate(
   return null;
 }
 
-export const RETAIL_UNKNOWN_VENUE_BIT = 1 << 7;
+export { RETAIL_UNKNOWN_VENUE_BIT } from "./venue-bit-lut";
+export { compileVenueBitLut, getVenueBitLut } from "./venue-bit-lut";
 
 export function resolveVenueBitFromContract(
   contract: string | undefined,
   contractVenueIndex: Readonly<Record<string, number>> | undefined,
 ): number {
-  if (!contract?.trim()) return 0;
-  if (!contractVenueIndex) return RETAIL_UNKNOWN_VENUE_BIT;
-  const idx = contractVenueIndex[contract.trim().toLowerCase()];
-  if (idx === undefined || idx < 0 || idx > 7) return RETAIL_UNKNOWN_VENUE_BIT;
-  return 1 << idx;
+  return resolveVenueBitFromLut(contract, getVenueBitLut(contractVenueIndex));
 }

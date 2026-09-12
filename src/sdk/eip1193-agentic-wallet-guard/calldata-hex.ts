@@ -6,12 +6,19 @@
 /** Module-load reusable calldata byte scratch (max 1 KiB per tx). */
 export const CALLDATA_SCRATCH = new Uint8Array(1024);
 const HEX_NIBBLE = new Uint8Array(256);
+const HEX_CHAR = new Uint8Array(16);
+/** Reusable `0x` + 40 lowercase hex chars (42 bytes) — single final string alloc per read. */
+const ADDR_HEX_SCRATCH = new Uint8Array(42);
 
 for (let i = 0; i < 10; i += 1) HEX_NIBBLE[48 + i] = i;
 for (let i = 0; i < 6; i += 1) {
   HEX_NIBBLE[97 + i] = 10 + i;
   HEX_NIBBLE[65 + i] = 10 + i;
 }
+for (let i = 0; i < 10; i += 1) HEX_CHAR[i] = 48 + i;
+for (let i = 0; i < 6; i += 1) HEX_CHAR[10 + i] = 97 + i;
+ADDR_HEX_SCRATCH[0] = 0x30;
+ADDR_HEX_SCRATCH[1] = 0x78;
 
 export function decodeHexCalldata(data: string, out: Uint8Array): number {
   const raw = data.trim();
@@ -42,11 +49,13 @@ export function readSelectorU32(bytes: Uint8Array, byteLen: number): number {
 
 export function readAddressAt(bytes: Uint8Array, byteOffset: number): string {
   const start = byteOffset + 12;
-  let hex = "0x";
   for (let i = 0; i < 20; i += 1) {
-    hex += (bytes[start + i]! & 0xff).toString(16).padStart(2, "0");
+    const b = bytes[start + i]! & 0xff;
+    const o = 2 + i * 2;
+    ADDR_HEX_SCRATCH[o] = HEX_CHAR[b >> 4]!;
+    ADDR_HEX_SCRATCH[o + 1] = HEX_CHAR[b & 0x0f]!;
   }
-  return hex;
+  return String.fromCharCode(...ADDR_HEX_SCRATCH);
 }
 
 export function readUint256At(bytes: Uint8Array, byteOffset: number): bigint {
