@@ -21,6 +21,7 @@ SliverVine ExoMesh eliminates ephemeral heap churn on the AI-agent reflex arc by
 | **SSRC warm soil check** | **<1.8µs** | `evaluateSoilViaWasm()` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 | **Reflex severance** | **p50 ~15µs** | `rootProtection()` · `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge** | **p50 ~106µs** | Worker + TS Gateway + SSRC FFI · `pnpm demo:gmx` |
+| **Worker bundle (hot-path)** | **57.76 KiB gzip** (163.67 KiB raw) | `pnpm bundle:measure` · `limitKiB: 150` · `pass: true` |
 
 ---
 

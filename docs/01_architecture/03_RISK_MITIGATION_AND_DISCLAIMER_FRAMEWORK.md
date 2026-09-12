@@ -4,7 +4,7 @@
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
-> **Baseline:** Vitest **228 test files | 1064 PASS clean (100%)** · Wasm hot-path **50.94 KiB gzip** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB**) · SSRC **p50 ~106 µs**
+> **Baseline:** Vitest **228 test files | 1065 PASS clean (100%)** · Worker bundle **57.76 KiB gzip** (163.67 KiB raw · `limitKiB: 150` · `pass: true`) · Wasm [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · SSRC **p50 ~106 µs**
 > **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-Execution Citadel Protection.
 > **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md)
 
@@ -19,8 +19,9 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **228 test files | 1064 PASS clean (100%)** · `pnpm test -- --run` |
-| **Wasm hot-path** | **50.94 KiB gzip** · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · `pass: true` (`pnpm bundle:measure`) |
+| **Vitest baseline** | **228 test files | 1065 PASS clean (100%)** · `pnpm test -- --run` |
+| **Worker bundle (hot-path)** | **57.76 KiB gzip** (163.67 KiB raw) · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Wasm hot-path** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** |
 | **Shield performance** | **p50 ~106 µs** Edge `checkSoilResistance()` |
 | **Arbitrum One Gate** | [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Arbitrum Sepolia Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
@@ -502,7 +503,7 @@ Real yield stack (conceptual):
 |---|--------|-----------|-----------|
 | 31 | ✅ | **Venue-Agnostic Shield** | `checkSoilResistance()` on abstract Soil state — independent of venue |
 | 32 | ✅ | **p50 ~106 µs Hot Path** | Rust `#![no_std]` Wasm on Cloudflare Edge |
-| 33 | ✅ | **Hot/Cold Decoupling** | 50.94 KiB gzip hot path isolated from 5-min Cron Workers; **Zero-Allocation Hot-Path** reflex phase |
+| 33 | ✅ | **Hot/Cold Decoupling** | 57.76 KiB gzip hot path isolated from 5-min Cron Workers; **Zero-Allocation Hot-Path** reflex phase |
 | 34 | ✅ | **Wasm Budget** | `<28kb` artifact · `<60µs` warm execution ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)) |
 | 35 | ✅ | **R01 Soil Resistance** | Depth · cross-spread · slippage fuse — fail-closed pre-broadcast |
 | 36 | ✅ | **R04 PGATE Latency** | `PGATE_MAX_LATENCY_MS` = 200 — rejects stale venue timestamps |
@@ -539,7 +540,7 @@ Real yield stack (conceptual):
 | 57 | ⏳ | **PoR De-peg Defense** | Chainlink Proof-of-Reserve >0.5% RWA de-peg → execution hard-lock |
 | 58 | ⏳ | **EIP-7702 Zero-Friction Onboarding** | EOA wallet → Smart Account without asset migration |
 | 59 | ⏳ | **Dynamic Hurdle Rate** | Performance fee charged only above Aave benchmark + 1.5% *(Hurdle-rate probe only — not a yield-stacking product track)* |
-| 60 | ⏳ | **Immutable B2B License** | Static 50.94 KiB gzip Worker hot path powering CaaS ecosystem subscriptions |
+| 60 | ⏳ | **Immutable B2B License** | Static 57.76 KiB gzip Worker hot path powering CaaS ecosystem subscriptions |
 
 ---
 

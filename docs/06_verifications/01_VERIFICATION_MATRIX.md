@@ -19,7 +19,7 @@
 
 > **Engineering honesty:** **1065 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~998 core** ExoMesh/SSRC proofs vs presentation-layer locks.  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI)  
-> **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **50.94 KiB gzip** (`limitKiB: 150` · `pass: true`)
+> **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **57.76 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
 

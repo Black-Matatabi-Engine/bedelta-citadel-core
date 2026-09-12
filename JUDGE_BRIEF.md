@@ -10,7 +10,7 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **228 test files | 1065 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **SSOT Lock:** **228 test files | 1065 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.76 KiB gzip** (163.67 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
 > **Zero-Allocation Hot-Path**: Pre-consensus microsecond execution on static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated**); cold-path warning formatters and error loggers remain standard readable TypeScript.
 

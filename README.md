@@ -159,6 +159,7 @@ SliverVine ExoMesh reports three statistical latency tiers:
 | **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` pure-math kernel — no async I/O.                | CLI HUD `Pure Invariant Time` row |
 | **Stylus ReflexCore (SSRC)** | **p50 ~15µs** | `rootProtection()` physical deadlock · `severSigningChannel()` · [`pkg/soil_core.wasm`](pkg/soil_core.wasm) warm path. | `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge**    | **p50 ~106µs**   | Cloudflare Worker + TS Gateway + SSRC FFI (ExoMesh exoskeleton over ReflexCore). | `pnpm demo:gmx`                            |
+| **Worker bundle (hot-path)** | **57.76 KiB gzip** | Measured minified upload — 163.67 KiB raw · `limitKiB: 150` · `pass: true`. | `pnpm bundle:measure` |
 
 
 *Zero-Allocation Hot-Path Memory Benchmark:* Pre-allocated **256×4 ring slab** intent engine achieves `<16 KiB` **Heap Delta over 10,000 iterations** (`npx vitest run tests/core/intent-sinking-audit.test.ts`). See [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](./docs/06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md).

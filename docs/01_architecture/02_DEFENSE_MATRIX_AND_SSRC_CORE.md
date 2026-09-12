@@ -7,7 +7,7 @@
 > - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 > - **Zero-Allocation Hot-Path Engine** — pre-allocated **256×4** intent heap · **O(1)** slot hash · **&lt;16 KiB** heap delta / 10k hot-path iterations (Vitest worker isolation) · ~**50,000 ephemeral heap objects/sec eliminated**
 >
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **228 test files | 1064 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **228 test files | 1065 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
@@ -165,7 +165,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 | **NTP Clock Drift Compensator** | `NTP_CLOCK_DRIFT_COMPENSATOR` | Rejects / skew-corrects venue timestamps with **&lt;200ms** drift vs Edge NTP; aligns with Pgate latency fuse (`PGATE_MAX_LATENCY_MS` = 200) |
 | **Cross-Venue Net Slippage TWAP** | `CrossVenueNetSlippage` | When net cross-book slippage **&gt; 0.5%** (`MAX_SLIPPAGE = 0.005`), trips soil + schedules **TWAPEngineV2** path slicing instead of market sweep |
 | **GMX Positive Skew Rebate** | `gmx-v2-balancer` / price-impact soil | Qualifies underweight-side flow · captures **positive skew / price-impact rebate** bps — never conflated with builder UI fee |
-| **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **Zero-Allocation Hot-Path** ring slab for mandate state · legacy paths = thin-shell re-exports · Worker **50.94 KiB gzip** post-sink |
+| **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **Zero-Allocation Hot-Path** ring slab for mandate state · legacy paths = thin-shell re-exports · Worker **57.76 KiB gzip** post-sink |
 | **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
 
 **Core modules ([`src/core/`](../../src/core)):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
@@ -241,7 +241,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) (**&lt;16 KiB** ring-slab gate) · **228 test files | 1064 PASS clean** · coexists with SSRC **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) (**&lt;16 KiB** ring-slab gate) · **228 test files | 1065 PASS clean** · coexists with SSRC **p50 ~106µs** budget.
 
 #### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar Set Y · USD.ai Collateral Module)
 
