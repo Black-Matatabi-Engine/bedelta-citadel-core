@@ -419,7 +419,7 @@ npx vitest run tests/defense/rpc-whitelist.test.ts
 npx vitest run tests/api/grant-audit-dune-telemetry.test.ts
 
 # Demo MO telemetry emit
-pnpm demo:eip1193 -- --json
+pnpm demo:exomesh -- --json
 
 # Sepolia on-chain mirror (optional)
 pnpm tsx scripts/emit-sepolia-telemetry-events.ts

@@ -27,9 +27,9 @@
 
 | Audience | First read | Then verify |
 |----------|------------|-------------|
-| **Buildathon judges** | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | `pnpm demo:eip1193` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) |
+| **Buildathon judges** | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./03_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) |
-| **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
+| **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
 | **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
 
 **Decoupled SSOT index:** [`verifications/README.md`](./README.md)
@@ -43,7 +43,7 @@ pnpm install
 # === [ExoMesh] Tier 0 — SDK/CLI Unit & Integration ===
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
-pnpm demo:eip1193                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
+pnpm demo:exomesh                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
 
 # === [ExoMesh] Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
 pnpm demo:gmx -- --trip
@@ -71,9 +71,9 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
 | `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
 | `npx vitest run tests/erc7540-async-escort.test.ts` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — operator whitelist + async slippage drift |
-| `pnpm demo:eip1193` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
-| `pnpm demo:eip1193 -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
-| `pnpm demo:eip1193 -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
+| `pnpm demo:exomesh` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
+| `pnpm demo:exomesh -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
+| `pnpm demo:exomesh -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
 | `pnpm demo:gmx -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · GMX native hard anchor FAIL_CLOSED |
 | `pnpm demo:variational -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · RFQ stale quote FAIL_CLOSED |
 | `pnpm demo:hl -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · HL session-key FAIL_CLOSED |
@@ -97,7 +97,7 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 
 ### CLI Demo Clock SSOT (`JUDGE_SAFE`)
 
-All `examples/*` CLI demos — including **`pnpm demo:eip1193`** — run under a fixed deterministic audit epoch for reproducible benchmark verification:
+All `examples/*` CLI demos — including **`pnpm demo:exomesh`** — run under a fixed deterministic audit epoch for reproducible benchmark verification:
 
 `Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`
 
@@ -113,7 +113,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 
 | Track | Entrypoint | Scope |
 |-------|------------|-------|
-| **Interactive CLI** | `pnpm demo:eip1193` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` (`warnings.ts`). |
+| **Interactive CLI** | `pnpm demo:exomesh` | **4 scripted state scenarios** (isolated replays, not a live lifecycle): **A** `ALLOW_PASSTHROUGH` · **B** `DEGRADED_WARN` (demo monitor preview) · **C** `FAIL_CLOSED` · **D** `CHANNEL_SEVERED`. Runs under **`Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161`**. TTY recording pauses between scenarios; `--json` bypasses ANSI for CI/Dune. Echoes production alerts via `RetailGuardRejectedError.plainTextWarning` (`warnings.ts`). |
 | **Unit Test Suite** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** — exhaustive coverage of all **7** SDK `RetailGuardReasonCode` variants: `VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`. |
 
 **Source:** [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · [`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts)
@@ -124,7 +124,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 
 | Module | Scope | Verify |
 |--------|-------|--------|
-| **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
 | **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` |
 
 ---

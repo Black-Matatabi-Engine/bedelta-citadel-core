@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — ExoMesh CLI Demo Guide
 
-> **Buildathon Primary (The Shield):** `pnpm demo:eip1193` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`  
+> **Buildathon Primary (The Shield):** `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI).  
 > **Venue SSOT:** **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Hyperliquid · Variational.  
 > **Vitest SSOT:** **226 test files | 1057 PASS clean** on `pnpm test -- --run`.  
@@ -12,7 +12,7 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/eip1193-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/eip1193-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
 | **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` | **226 files / 1057 PASS** · 0 TS errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | Native protocol guards · FAIL_CLOSED proofs |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
@@ -29,18 +29,18 @@
 
 | Track | Command | Role |
 |-------|---------|------|
-| **Interactive CLI** | `pnpm demo:eip1193` | Scenario **A–D State Matrix** · `JUDGE_SAFE` deterministic clock · TTY recording pauses |
-| **CI / Dune JSON** | `pnpm demo:eip1193 -- --json` | Structured array: `{ scenario, status, wasmUs, code, plainTextWarning }` |
+| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** · `JUDGE_SAFE` deterministic clock · TTY recording pauses |
+| **CI / Dune JSON** | `pnpm demo:exomesh -- --json` | Structured array: `{ scenario, status, wasmUs, code, plainTextWarning }` |
 | **Unit SSOT** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` coverage |
 
 ```bash
-pnpm demo:eip1193                         # Interactive Scenario A–D (JUDGE_SAFE clock)
-pnpm demo:eip1193 -- --json               # CI / Dune structured output
-pnpm demo:eip1193 -- --trip               # Scenario C–D shortcut only
+pnpm demo:exomesh                         # Interactive Scenario A–D (JUDGE_SAFE clock)
+pnpm demo:exomesh -- --json               # CI / Dune structured output
+pnpm demo:exomesh -- --trip               # Scenario C–D shortcut only
 npx vitest run tests/sdk/retail-guard-provider.test.ts   # 35/35 PASS · 7/7 reason codes
 ```
 
-### Scenario A–D State Matrix (`pnpm demo:eip1193`)
+### Scenario A–D State Matrix (`pnpm demo:exomesh`)
 
 Independent scripted replays — **not** a sequential production lifecycle.
 
@@ -57,7 +57,7 @@ Independent scripted replays — **not** a sequential production lifecycle.
 
 ### EIP-1193 Terminal HUD Representation
 
-Representative `pnpm demo:eip1193` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
+Representative `pnpm demo:exomesh` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
 
 **Package:** `@slivervine/eip1193-agentic-wallet-guard` · **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
@@ -270,7 +270,7 @@ pnpm demo:e2e -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_C
 
 ```bash
 pnpm install
-pnpm demo:eip1193
+pnpm demo:exomesh
 pnpm demo:gmx -- --trip
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:e2e

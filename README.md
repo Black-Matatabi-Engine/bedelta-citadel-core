@@ -58,7 +58,7 @@
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
-| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | Wasm reflex core (`rootProtection`, `checkSoilResistance`) | [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | `pnpm demo:gmx -- --trip` |
 | 5-Core Venue Matrix | GMX · Pendle · USD.ai · HL · Variational | `pnpm demo:{gmx,hl,variational} -- --trip` |
 
@@ -77,7 +77,7 @@
 - **0-Gas Pre-Consensus Sequencer Defense:** Unverified intents are rejected at Edge isolates before Arbitrum Sequencer queues — **0-Gas on fail-closed paths**.
 - **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
-- **SliverVine ExoMesh (Module A):** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:eip1193`.
+- **SliverVine ExoMesh (Module A):** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:exomesh`.
 - **SliverVine Sanctuary (Module B · Pillar Set X Escrow Substrate):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:escort`.
 
 ---
@@ -163,8 +163,8 @@ pnpm demo:perp-loop -- --trip     # Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip     # Loop B: USD.ai Collateral Lane
 
 # [ExoMesh] Tier 0 — SDK/CLI Unit & Integration
-pnpm demo:eip1193                 # Scenario A–D State Matrix (JUDGE_SAFE clock)
-pnpm demo:eip1193 -- --json         # Structured JSON for CI / Dune
+pnpm demo:exomesh                 # Scenario A–D State Matrix (JUDGE_SAFE clock)
+pnpm demo:exomesh -- --json         # Structured JSON for CI / Dune
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 

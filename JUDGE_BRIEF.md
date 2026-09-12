@@ -116,7 +116,7 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 **Judge fast-track (FAIL-CLOSED):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
-**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `pnpm demo:eip1193 -- --trip`
+**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
 
 **ExoMesh Agentic Guard (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
 
@@ -124,7 +124,7 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 | Track | Command | Proves |
 |-------|---------|--------|
-| **Interactive CLI** | `pnpm demo:eip1193` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from `warnings.ts` · 0-Gas pre-consensus intercept (no broadcast) |
+| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from `warnings.ts` · 0-Gas pre-consensus intercept (no broadcast) |
 | **Unit tests** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** reason codes (`VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`) |
 
 Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK fail-closed path is covered by unit tests; scenarios **C** and **D** echo live `RetailGuardRejectedError.plainTextWarning` strings.
@@ -133,8 +133,8 @@ Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK 
 
 | # | Standard | Judge-facing proof |
 |---|----------|-------------------|
-| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | `pnpm demo:eip1193` · `retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** — `eth_sendTransaction` · `eth_signTypedData_v4` · `wallet_sendCalls` |
-| **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | `pnpm demo:eip1193` (Scenario A discovery) · same suite — `announceGuardedProvider()` announce/request |
+| **1** | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | `pnpm demo:exomesh` · `retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** — `eth_sendTransaction` · `eth_signTypedData_v4` · `wallet_sendCalls` |
+| **2** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | `pnpm demo:exomesh` (Scenario A discovery) · same suite — `announceGuardedProvider()` announce/request |
 | **3** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | `pnpm demo:gmx -- --trip` — pre-sign severance · Gate `0xb174…` consume-once |
 | **4** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337) / [ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
 | **5** | **[ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) / [Permit2](https://github.com/Uniswap/permit2)** | Retail guard Vitest — Permit2 approve/permit block paths |
@@ -156,8 +156,8 @@ pnpm test -- --run          # 228 test files | 1065 PASS clean
 pnpm run audit:security     # 3-Axis Security Scorecard: 5/0/0 PASS
 
 # [ExoMesh] Tier 0 — SDK / CLI Unit & Integration
-pnpm demo:eip1193
-pnpm demo:eip1193 -- --json
+pnpm demo:exomesh
+pnpm demo:exomesh -- --json
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 
@@ -176,7 +176,7 @@ pnpm demo:e2e
 
 | Tier | Tag | Commands | Scope |
 |------|-----|----------|-------|
-| **Tier 0** | `[ExoMesh]` | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0** | `[ExoMesh]` | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
 | **Tier 0** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · **Sanctuary Async Escort (ERC-7540+)** |
 | **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |

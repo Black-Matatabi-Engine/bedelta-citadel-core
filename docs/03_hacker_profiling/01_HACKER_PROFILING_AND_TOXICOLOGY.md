@@ -114,7 +114,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Mindhunter read:** Batch masking = **organized crime** MO — concealment via structure. ExoMesh **unwraps** the batch like unpacking a layered dead-drop: each `calls[i]` is individually risk-evaluated; first trip kills the whole batch.
 
-**Chaos tier:** **C2** — `eip5792-send-calls.test.ts` **3/3** · `pnpm demo:eip1193` Scenario D
+**Chaos tier:** **C2** — `eip5792-send-calls.test.ts` **3/3** · `pnpm demo:exomesh` Scenario D
 
 **SSOT:** [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) · [`calldata-hex.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-hex.ts)
 
@@ -326,7 +326,7 @@ npx vitest run tests/defense/rpc-whitelist.test.ts
 
 # ReflexCore (SSRC) — live FAIL_CLOSED severance
 pnpm demo:gmx -- --trip
-pnpm demo:eip1193 -- --trip
+pnpm demo:exomesh -- --trip
 
 # Full regression
 pnpm test -- --run   # 228 files · 1064 PASS

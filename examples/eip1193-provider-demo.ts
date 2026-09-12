@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-/** EIP-1193 Breakthrough Demo — Usage: pnpm demo:eip1193 · JSON: pnpm demo:eip1193 -- --json · Trip: --trip */
+/** ExoMesh Agentic Guard Demo — Usage: pnpm demo:exomesh · JSON: pnpm demo:exomesh -- --json · Trip: --trip · Alias: pnpm demo:eip1193 */
 import { INTENT_MAX_ATTEMPTS_DEFAULT } from "../src/core/wasm-intent-ffi";
 import {
   __resetRetailGuardStateForTests,

@@ -10,7 +10,7 @@
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
-> **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json`
+> **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json`
 
 ---
 
@@ -74,7 +74,7 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | Track | Command | Proves |
 |-------|---------|--------|
 | Robinhood escort | `pnpm demo:escort` | Outbound `46630 → 42161` · inbound AML block · `lostUsd ≡ 0` |
-| EIP-1193 guard | `pnpm demo:eip1193` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
+| EIP-1193 guard | `pnpm demo:exomesh` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
 
 **Sanctuary Async Escort (ERC-7540+) (`[Sanctuary]`):** ERC-7540 Async Vault Escort Extension — selector-level guard in [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) — verify: `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS**.
 
@@ -165,15 +165,15 @@ EIP-1193 transport lane monitor (`transport-stream.ts`). Surfaces `RPC_TRANSPORT
 
 ---
 
-## CLI Demonstration (`pnpm demo:eip1193`)
+## CLI Demonstration (`pnpm demo:exomesh`)
 
 Interactive Tier 0 entrypoint for judges and integrators — wraps the same production SDK path as unit tests, with browser-level narrative.
 
 | Command | Output |
 |---------|--------|
-| `pnpm demo:eip1193` | Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · TTY `[PRESS ENTER]` recording pauses · `[PRODUCTION ALERT]` echoes `plainTextWarning` |
-| `pnpm demo:eip1193 -- --json` | JSON array: `{ scenario, status, wasmUs, code, plainTextWarning }` — no ANSI |
-| `pnpm demo:eip1193 -- --trip` | Scenario **C–D** shortcut (FAIL_CLOSED + channel severance) |
+| `pnpm demo:exomesh` | Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · TTY `[PRESS ENTER]` recording pauses · `[PRODUCTION ALERT]` echoes `plainTextWarning` |
+| `pnpm demo:exomesh -- --json` | JSON array: `{ scenario, status, wasmUs, code, plainTextWarning }` — no ANSI |
+| `pnpm demo:exomesh -- --trip` | Scenario **C–D** shortcut (FAIL_CLOSED + channel severance) |
 
 **Alert SSOT:** Rejection strings originate from `formatRetailWarning()` in [`warnings.ts`](../../src/sdk/eip1193-agentic-wallet-guard/warnings.ts), surfaced on `RetailGuardRejectedError.plainTextWarning`. The demo **does not hardcode** production alert copy — it echoes the thrown error after `withRetailGuardProvider()` intercept.
 
@@ -183,14 +183,14 @@ Interactive Tier 0 entrypoint for judges and integrators — wraps the same prod
 
 | Track | Entrypoint | Coverage |
 |-------|------------|----------|
-| Interactive CLI | `pnpm demo:eip1193` | 4 core state scenarios (A–D) · independent replays |
+| Interactive CLI | `pnpm demo:exomesh` | 4 core state scenarios (A–D) · independent replays |
 | Unit SSOT | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · all **7** `RetailGuardReasonCode` variants |
 
 Source: [`examples/eip1193-provider-demo.ts`](../../examples/eip1193-provider-demo.ts) · [`examples/lib/eip1193-breakthrough-helpers.ts`](../../examples/lib/eip1193-breakthrough-helpers.ts)
 
 ### EIP-1193 Terminal HUD Representation
 
-Representative `pnpm demo:eip1193` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
+Representative `pnpm demo:exomesh` output (ANSI stripped). Wasm μs bands vary slightly per host; compare runs under `Clock: JUDGE_SAFE (Deterministic Audit Epoch)`.
 
 **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
@@ -278,7 +278,7 @@ RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb1
 ```bash
 npx vitest run tests/sdk/retail-guard-provider.test.ts   # Tier 0 SSOT — 35/35 · 7/7 reason codes
 npx vitest run tests/sdk/                                 # Full SDK suite — 48/48 PASS
-pnpm demo:eip1193 -- --json                               # CLI structured output (CI / Dune)
+pnpm demo:exomesh -- --json                               # CLI structured output (CI / Dune)
 ```
 
 **Retail guard baseline:** **35/35 PASS** — exhaustive `RetailGuardReasonCode` coverage:
