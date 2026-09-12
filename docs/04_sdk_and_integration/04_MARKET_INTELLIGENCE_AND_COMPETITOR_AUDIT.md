@@ -65,7 +65,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 
 ### Dual-Brand Positioning
 
-| Brand | Audience | Pitch |
+| Brand | Audience | Positioning |
 |-------|----------|-------|
 | **EIP-1193 Agentic Wallet Guard** | Grant reviewers · brokerage pilots | Involuntary reflex arc for 50M+ retail wallets |
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | Wallet vendors · dApp integrators | Omni-chain middleware under Apache-2.0 |

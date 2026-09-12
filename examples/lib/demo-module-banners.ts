@@ -4,13 +4,13 @@ import { BOLD, CYAN, GRAY, R } from "../adapters/citadel-ansi-hud";
 const BOX_W_MIN = 92;
 
 export const MODULE_A_BANNER_LINES = [
-  "🛡️ SliverVine ExoMesh (Module A · ~70% Surface)",
+  "🛡️ SliverVine ExoMesh (Module A · ~70% Architectural Surface)",
   "ExoMesh Agentic Guard (EIP-1193/5792/6963+) · Pre-Consensus Exoskeleton",
   "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm + Arbitrum Stylus Coprocessor (Sub-1.8µs Warm Path)",
 ] as const;
 
 export const MODULE_B_BANNER_LINES = [
-  "🏛️ SliverVine Sanctuary (Module B · ~30% Surface)",
+  "🏛️ SliverVine Sanctuary (Module B · ~30% Architectural Surface)",
   "Sanctuary Async Escort (ERC-7540+) · Async Vault Selector Guard",
   "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;

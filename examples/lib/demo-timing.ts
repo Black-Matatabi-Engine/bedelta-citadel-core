@@ -158,7 +158,7 @@ export function formatWasmShellLatencyLine(wasmCoreUs: number, totalUs: number):
   );
 }
 
-/** Execution latency with Wasm core vs V8/CLI shell split (Wayfinder pitch demo). */
+/** Execution latency with Wasm core vs V8/CLI shell split (Wayfinder integration demo). */
 export function formatExecutionLatencySplit(
   totalUs: number,
   wasmCoreUs = WASM_CORE_ESTIMATE_US,
@@ -182,7 +182,7 @@ export function printExecutionLatencySplitBlock(
   console.log(`${indent}${formatExecutionLatencySplit(totalUs, wasmCoreUs)}`);
 }
 
-/** Per-line guard / dispatch telemetry — bright emphasis for pitch video scanability. */
+/** Per-line guard / dispatch telemetry — bright emphasis for demo video scanability. */
 export function formatGuardTime(us: number): string {
   return `${GUARD_BRIGHT_GREEN}${BOLD}⚡ Guard Time: ${formatLatencyLabel(us)}${R}`;
 }

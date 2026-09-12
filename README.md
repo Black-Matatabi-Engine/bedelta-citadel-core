@@ -3,12 +3,12 @@
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v0.95 Santenmoku Core`  
 **DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com)
 
-> **SliverVine ExoMesh** (Module A · ~70% pitch) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · powered by **SliverVine Stylus ReflexCore (SSRC)** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) + Arbitrum Stylus coprocessor · sub-1.8µs warm soil check).  
-> **SliverVine Sanctuary** (Module B · ~30% pitch) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort router · Robinhood / Across compliance ingress · Pillar Set X.
+> **SliverVine ExoMesh** (Module A · ~70% Architectural Surface) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · powered by **SliverVine Stylus ReflexCore (SSRC)** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) + Arbitrum Stylus coprocessor · sub-1.8µs warm soil check).
+> **SliverVine Sanctuary** (Module B · ~30% Architectural Surface) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort router · Robinhood / Across compliance ingress · Pillar Set X.
 >
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 >
-> *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the hero product; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
+> *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the primary architectural surface; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
 
 ![Vitest](https://img.shields.io/badge/Vitest-1065%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
@@ -73,7 +73,7 @@
 
 ## Product Modules — ExoMesh (70%) + Sanctuary (30%)
 
-### SliverVine ExoMesh — Hero Product (~70%)
+### SliverVine ExoMesh — Primary Architectural Surface (~70%)
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
@@ -81,7 +81,7 @@
 | Wasm reflex core (`rootProtection`, `checkSoilResistance`) | [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | `pnpm demo:gmx -- --trip` |
 | 5-Core Venue Matrix | GMX · Pendle · USD.ai · HL · Variational | `pnpm demo:{gmx,hl,variational} -- --trip` |
 
-### SliverVine Sanctuary — Escrow Support (~30%)
+### SliverVine Sanctuary — Complementary Architectural Surface (~30%)
 
 | Facet | Surface | SSOT | Verify |
 |-------|---------|------|--------|

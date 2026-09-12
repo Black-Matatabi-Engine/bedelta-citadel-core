@@ -58,7 +58,7 @@ npx vitest run tests/core/core-import-boundary.test.ts
 
 > **Note:** Initial mainnet deployment utilizes Bootstrap Ignition Keys (`0x1111…`/`0x2222…`) for public verification without exposing production HSM keys. Key rotation to production multisig is executed via native governance functions.
 
-This document is **invariant-first** (Yellow Paper style): topology, thresholds, and fail-closed semantics. Monetization pitches live under `docs/grants/`.
+This document is **invariant-first** (Yellow Paper style): topology, thresholds, and fail-closed semantics. Monetization proposals live under `docs/grants/`.
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
@@ -101,7 +101,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 > **Hybrid Pillar Sets X & Y routing:** Pillar Set X (Gatehouse) and Pillar Set X (optional ingress) are summarized inline below; **exhaustive audit-grade specifications** live in the dedicated Pillar Set X & Y component specification documents above. This file retains cross-pillar topology, settlement bounds, and integration anchors.
 
-> *While single components like `checkSoilResistance()` formulas are kept standard and open for seamless `@slivervine/citadel-sdk` adoption across Arbitrum, our core moat lies in the production integration complexity—stitching Rust `#![no_std]` Wasm, Edge Worker execution, and EIP-712 Gate into a sub-ms, fail-closed system.*
+> *While single components like `checkSoilResistance()` formulas are kept standard and open for transparent FFI `@slivervine/citadel-sdk` adoption across Arbitrum, our core moat lies in the production integration complexity—stitching Rust `#![no_std]` Wasm, Edge Worker execution, and EIP-712 Gate into a sub-ms, fail-closed system.*
 
 ## ⚔️ Competitive Matrix — Pre-Execution vs. Post-Execution Risk
 

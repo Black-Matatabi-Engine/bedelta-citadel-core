@@ -56,8 +56,8 @@
 | 層 | 名稱 | 角色 | 工程錨點 |
 |----|------|------|----------|
 | 傘品牌 | **SliverVine Protocol** | 敘事母體 | README / JUDGE_BRIEF |
-| **Module A · 70% Pitch** | **SliverVine ExoMesh** | 預共識意圖防火牆 · Wasm 斷路器 | `@slivervine/exomesh-agentic-wallet-guard` · EIP-1193/5792/6963 · `soil_core.wasm` |
-| **Module B · 30% Pitch** | **SliverVine Sanctuary** | 合規托管護送 · 異步金庫護欄 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Across / Robinhood ingress |
+| **Module A · 70% Architectural Surface** | **SliverVine ExoMesh** | 預共識意圖防火牆 · Wasm 斷路器 | `@slivervine/exomesh-agentic-wallet-guard` · EIP-1193/5792/6963 · `soil_core.wasm` |
+| **Module B · 30% Architectural Surface** | **SliverVine Sanctuary** | 合規托管護送 · 異步金庫護欄 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Across / Robinhood ingress |
 | Pillar Set Y | ExoMesh Engine Substrate | R01–R20 · `rootProtection()` | `docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md` |
 | Pillar Set X | Sanctuary Escrow Substrate | 單向外送 · AML inbound block | `across-ingress-bridge.ts` |
 
@@ -382,7 +382,7 @@ pnpm test -- --run              # Expected: 228 files | 1063 PASS
 | 優先級 | 行動 | 負責面 |
 |--------|------|--------|
 | **P0** | 維持 **1063/1063 PASS** 全綠 · 禁止對外把協議拼成 SilverVine | Git / CI / Brand |
-| **P0** | 對外 pitch 僅 **ExoMesh 70% / Sanctuary 30%** · 禁止 Citadel Shield 英雄標題 | Docs / Demo |
+| **P0** | 對外敘事僅 **ExoMesh 70% / Sanctuary 30% Architectural Surface** · 禁止 Citadel Shield 英雄標題 | Docs / Demo |
 | **P1** | 雙片 demo（`demo:eip1193` happy + `--trip` · 可加 5792 空批 reject 口播） | RPS 解封頂 |
 | **P1** | `GET /api/grant-audit` 加 5792 / 7540 telemetry 欄 | Dune 對账 |
 | **P2** | Pass 2：`decorator.ts` → `[ExoMesh Trip]` · 對齊 HUD | 運行時字串 |

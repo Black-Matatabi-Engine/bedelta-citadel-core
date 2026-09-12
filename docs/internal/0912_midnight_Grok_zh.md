@@ -60,8 +60,8 @@
 | 層 | 名稱 | 角色 | 工程錨點 |
 |----|------|------|----------|
 | 傘品牌 | **SliverVine Protocol** | 敘事母體 · BeΔ | `README.md` · `JUDGE_BRIEF.md` |
-| **Module A · 70%** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/exomesh-agentic-wallet-guard` · `soil_core.wasm` |
-| **Module B · 30%** | **SliverVine Sanctuary** | 異步金庫護送 · ERC-7540+ | `erc7540-async-escort.ts` · `treasury-escort-router.ts` |
+| **Module A · 70% Architectural Surface** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/exomesh-agentic-wallet-guard` · `soil_core.wasm` |
+| **Module B · 30% Architectural Surface** | **SliverVine Sanctuary** | 異步金庫護送 · ERC-7540+ | `erc7540-async-escort.ts` · `treasury-escort-router.ts` |
 | **微秒引擎** | **SSRC (Stylus ReflexCore)** | Sub-1.8µs warm soil · p50 ~15µs reflex | `pkg/soil_core.wasm` **< 28 KiB** · Stylus coprocessor |
 | **Edge Worker** | Hot-path bundle | 獨立 artifact · 非 Wasm 體積 | **57.76 KiB gzip** · 163.67 KiB raw · `pnpm bundle:measure` |
 
@@ -383,7 +383,7 @@ pnpm test -- --run              # Expected: 228 files | 1065 PASS
 |--------|------|--------|
 | **P0** | 維持 **1065/1065 PASS** · 禁止對外拼 **SilverVine Protocol** | Git / Brand |
 | **P0** | 引用 bundle **僅** `pnpm bundle:measure` 當次輸出 | Docs / Demo |
-| **P0** | EIP 引用必帶 Tier 標籤 | SUBMISSION / pitch |
+| **P0** | EIP 引用必帶 Tier 標籤 | SUBMISSION / 技術摘要 |
 | **P1** | 雙片 demo（`demo:eip1193` + `--trip` · 可加 `bundle:measure` 口播） | RPS |
 | **P1** | `pnpm demo:sanctuary` Scenario B operator REJECT 錄屏 | Sanctuary 硬證據 |
 | **P2** | `docs/internal/**` 歷史 50.94 卷加 ARCHIVE 注腳（不改寫正文） | 內部誠實 |

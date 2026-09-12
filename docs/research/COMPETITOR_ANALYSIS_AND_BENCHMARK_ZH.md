@@ -227,7 +227,7 @@ Citadel path:
 
 ## 7. 競品護城河 vs Citadel 反制敘事
 
-| 競品護城河 | Citadel 反制（Pitch 用語） |
+| 競品護城河 | Citadel 反制（工程術語） |
 |------------|---------------------------|
 | Gelato **執行網路與觸發器** | 「Citadel 不競爭執行；我們在 Gelato 觸發 **之前** 106 µs 砍掉毒意圖。」 |
 | EigenLayer **AVS 信任與質押** | 「AVS 驗證 **已廣播** 行為；Citadel 是 **Pre-consensus Intent Firewall**。」 |

@@ -4,7 +4,7 @@
 
 ## Executive Summary & One-Page Strategic Memo
 
-**Official pitch:** Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum — see metadata table above.
+**Official positioning:** Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum — see metadata table above.
 
 | Judge pointer | SSOT document |
 |---------------|---------------|

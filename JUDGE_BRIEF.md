@@ -1,8 +1,8 @@
 # SliverVine Protocol (BeΔ) — SliverVine ExoMesh: Pre-Consensus Intent Firewall for AI Agents on Arbitrum
 
-**Hero (Module A · ~70% pitch):** SliverVine ExoMesh — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · pre-consensus Wasm reflex · ReflexCore (SSRC) soil engine · Defense Layers 1–4 · Pillar Set Y.
+**Primary (Module A · ~70% Architectural Surface):** SliverVine ExoMesh — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · pre-consensus Wasm reflex · ReflexCore (SSRC) soil engine · Defense Layers 1–4 · Pillar Set Y.
 
-**Complement (Module B · ~30% pitch):** SliverVine Sanctuary — **Sanctuary Async Escort (ERC-7540+)** · Treasury Escort Router · Robinhood/Across ingress · Pillar Set X.
+**Complement (Module B · ~30% Architectural Surface):** SliverVine Sanctuary — **Sanctuary Async Escort (ERC-7540+)** · Treasury Escort Router · Robinhood/Across ingress · Pillar Set X.
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
@@ -106,7 +106,7 @@ SilverVine occupies **T3** — the only latency class that operates at **microse
 |-------|-------|
 | **Release** | **`v0.95 Santenmoku Core`** |
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
-| **Hero module** | SliverVine ExoMesh (Module A) |
+| **Primary module** | SliverVine ExoMesh (Module A) |
 | **Escrow module** | SliverVine Sanctuary (Module B) |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |

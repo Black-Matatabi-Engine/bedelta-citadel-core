@@ -1,5 +1,5 @@
 /**
- * Compensating flatten escalation — R20 hardlock on flatten failure (Grant pitch SSOT).
+ * Compensating flatten escalation — R20 hardlock on flatten failure (grant documentation SSOT).
  */
 
 import { severCircuitBreakerPipeline } from "../../services/root-protection-lib/circuit-breaker-sever";

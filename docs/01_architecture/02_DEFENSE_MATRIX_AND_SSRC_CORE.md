@@ -176,7 +176,7 @@ SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. *
 
 | Layer | SSOT | Role |
 |-------|------|------|
-| **Edge host** | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock-wasm.ts`](../../src/sdk/clock-wasm.ts) | TypeScript typed-array adapter · seamless fallback when Wasm asset absent |
+| **Edge host** | [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`clock-wasm.ts`](../../src/sdk/clock-wasm.ts) | TypeScript typed-array adapter · deterministic fallback when Wasm asset absent |
 | **Wasm bytecode** | [`clock_core.rs`](../../src/wasm/clock_core.rs) in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | **Obfuscated proprietary math** — saturating arithmetic + leap guards compiled to Wasm (not exposed as TS source) |
 | **Stylus (Nitro)** | [`contracts/stylus-probe`](../../contracts/stylus-probe/) | On-chain coprocessor verification path · `cargo stylus check` |
 

@@ -272,7 +272,7 @@ LIMIT 500;
 | **Attack Vector Breakdown** | C1 | `reason` / `sponsor_lane` classifier |
 | **Time-Series Rollup** | C2 | Hourly blocked count + PEV |
 | **Latency Reduction** | C3 | `intercept_us` vs 250ms L2 inclusion baseline |
-| **Sponsor Attribution Banner** | C4 | Per-sponsor blocked count (pitch deck) |
+| **Sponsor Attribution Banner** | C4 | Per-sponsor blocked count (grant appendix) |
 | **Unified Intercepts Feed** | C5 | On-chain ∪ off-chain chaos spell |
 
 **Spell tables (DuneSQL SSOT):**
@@ -429,7 +429,7 @@ ORDER BY 1 DESC;
 
 ---
 
-## Query C4 — Sponsor Attribution Banner (Pitch Deck)
+## Query C4 — Sponsor Attribution Banner (Grant Appendix)
 
 ```sql
 -- Panel: Buildathon sponsor attribution banner (cumulative 30d)

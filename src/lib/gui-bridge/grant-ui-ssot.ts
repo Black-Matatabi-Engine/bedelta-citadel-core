@@ -1,4 +1,4 @@
-/** Grant documentation SSOT — mirrored in pitch / SUBMISSION / HYPERLIQUID grant pack. */
+/** Grant documentation SSOT — mirrored in SUBMISSION / HYPERLIQUID grant pack. */
 import { DEFAULT_HYPERLIQUID_MAINNET_USER_ADDRESS } from "../../env-grant-defaults";
 
 export const GRANT_VITEST_SSOT_LABEL =

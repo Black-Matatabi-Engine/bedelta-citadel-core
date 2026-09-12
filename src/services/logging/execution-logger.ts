@@ -1,5 +1,5 @@
 /**
- * Persistent 7-day mainnet execution logger — B2B pitch proof SSOT.
+ * Persistent 7-day mainnet execution logger — B2B verification proof SSOT.
  * Appends structured records to `logs/mainnet-execution-7d.json`.
  */
 
@@ -61,7 +61,7 @@ export interface MainnetExecutionLogEntry {
   stakedHypeDiscount?: number;
   /** Hyperliquid Native Earn USDC APY (hurdle rate) */
   nativeEarnApy?: number;
-  /** targetNetApy − nativeEarnApy (grant pitch excess-yield metric) */
+  /** targetNetApy − nativeEarnApy (grant reporting excess-yield metric) */
   excessYieldOverEarn?: number;
 }
 

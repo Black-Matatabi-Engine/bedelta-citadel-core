@@ -68,7 +68,7 @@ describe("rebalance hurdle — DN vs Native Earn", () => {
     expect(result.reason).toMatch(/FUNDING_BELOW_NATIVE_EARN/);
   });
 
-  it("exports excessYieldOverEarn for grant pitch metrics", () => {
+  it("exports excessYieldOverEarn for grant reporting metrics", () => {
     const result = resolveCapitalAllocation({
       targetNetApy: 0.12,
       nativeEarnApy: 0.0251,

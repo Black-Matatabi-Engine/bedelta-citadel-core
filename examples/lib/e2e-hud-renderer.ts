@@ -116,7 +116,7 @@ export function e2eLogHlSession(line: string, tone: "live" | "fallback"): void {
 
 export function printHlEnvMissingNotice(): void {
   e2eLog("[ NOTICE: .env.production missing for live Hyperliquid L1 Broadcast ]");
-  e2eLog("└─ Falling back seamlessly to Hyperliquid Session Key Live Sandbox Simulator");
+  e2eLog("└─ Falling back deterministically to Hyperliquid Session Key Live Sandbox Simulator");
 }
 
 export function emitStep4PassResult(): void {

@@ -59,8 +59,8 @@
 | 層 | 名稱 | 角色 | 工程錨點 |
 |----|------|------|----------|
 | 傘品牌 | **SliverVine Protocol** | 敘事母體 · BeΔ | `README.md` · `JUDGE_BRIEF.md` · `docs/README.md` |
-| **Module A · 70%** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/exomesh-agentic-wallet-guard` · Pillar Set Y |
-| **Module B · 30%** | **SliverVine Sanctuary** | 合規托管護送 · ERC-7540 異步金庫 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Pillar Set X |
+| **Module A · 70% Architectural Surface** | **SliverVine ExoMesh** | 預共識意圖防火牆 · EIP-1193/5792/6963 | `@slivervine/exomesh-agentic-wallet-guard` · Pillar Set Y |
+| **Module B · 30% Architectural Surface** | **SliverVine Sanctuary** | 合規托管護送 · ERC-7540 異步金庫 | `treasury-escort-router.ts` · `erc7540-async-escort.ts` · Pillar Set X |
 | **微秒引擎基質** | **SliverVine Stylus ReflexCore (SSRC)** | Sub-1.8µs warm soil · Stylus 鏈上同構 | `pkg/soil_core.wasm` · `contracts/stylus-probe/` · `citadel_invariants/` |
 
 **Zero-GC 微秒熱路（本卷 RPS/SC 加分）：** 可重用 `DataView` scratch · `BIGINT_U32_LUT` · `INTENT_RING_U32` 預分配 slab — 掃除 ~**50,000 objects/sec** 級分配壓力，保證 10k+ req/s Agent 風暴下 **零 V8 GC jitter**。

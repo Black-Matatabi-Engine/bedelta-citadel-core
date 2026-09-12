@@ -227,7 +227,7 @@ Citadel path:
 
 ## 7. Competitor Moats vs Citadel Counter-Narratives
 
-| Competitor Moat | Citadel Counter (Pitch Language) |
+| Competitor Moat | Citadel Counter (Engineering Language) |
 |-----------------|----------------------------------|
 | Gelato **execution network & triggers** | "Citadel does not compete on execution; we sever toxic intents **106 µs before** Gelato triggers fire." |
 | EigenLayer **AVS trust & staking** | "AVS attests **already-broadcast** behavior; Citadel is a **Pre-consensus Intent Firewall**." |
