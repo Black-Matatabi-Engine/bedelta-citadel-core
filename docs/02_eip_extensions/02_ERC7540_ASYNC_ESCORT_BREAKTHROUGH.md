@@ -2,7 +2,7 @@
 
 > **Product:** **SliverVine Sanctuary** (Module B · ~30% pitch) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · async vault selector guard · Robinhood / Across compliance ingress  
 > **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex  
-> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
+> **Standards compliance (Tier 1 `[Final]`):** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary). See [3-Tier Taxonomy](./01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#3-tier-eiperc-taxonomy).
 > **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626))  
 > **Verification:** `pnpm demo:sanctuary` → Scenario A–C Matrix `[Sanctuary]` (`demo:escort` alias) · CLI: [`examples/sanctuary-demo.ts`](../../examples/sanctuary-demo.ts)
 
