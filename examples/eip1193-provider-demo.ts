@@ -304,16 +304,16 @@ async function runScenarioMatrix(ctx: DemoEnvironment, interactive: boolean): Pr
     results.push(await runScenarioB({ interactive }));
     if (interactive && process.stdin.isTTY) {
       await awaitScenarioRecordingTransition("C");
-      printFeatureBanner(false);
+      printFeatureBanner();
     }
   } else if (interactive) {
-    printFeatureBanner(false);
+    printFeatureBanner();
   }
 
   results.push(await runScenarioC({ interactive, ctx }));
   if (interactive && process.stdin.isTTY) {
     await awaitScenarioRecordingTransition("D");
-    printFeatureBanner(false);
+    printFeatureBanner();
   }
   results.push(await runScenarioD({ interactive }));
   return results;

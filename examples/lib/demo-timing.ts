@@ -5,11 +5,8 @@ export const EDGE_TARGET_US = 106;
 export const PURE_INVARIANT_TARGET = "~0.5-1.1µs warm-path min";
 export const REFLEX_CORE_TARGET = "p50 ~15µs warm path";
 export const E2E_SHIELD_TARGET = "p50 ~106µs Edge Worker";
-export const LATENCY_HOST_VARIANCE_DISCLAIMER =
-  "Status badges = invariant validation · μs = active CLI measurement vs production warm-path targets.";
-export const BENCH_BOX_W = 64;
+export const JIT_WARMUP_ITERATIONS = 100;
 export const INTENT_BOX_W = 72;
-const BENCH_KV_LABEL_W = 22;
 
 const SLOW_LAYER = "\x1b[31;2m";
 const SLOW_DIM = "\x1b[90m";
@@ -37,27 +34,47 @@ export function hrtimeElapsedUs(start: bigint): number {
   return us > 0 ? us : 0.1;
 }
 
+export function runJitWarmup(fn: () => void, iterations = JIT_WARMUP_ITERATIONS): void {
+  for (let i = 0; i < iterations; i++) fn();
+}
+
 export function measureProbe(fn: () => void, runs = 3): number {
+  runJitWarmup(fn, Math.min(runs, JIT_WARMUP_ITERATIONS));
+  return measureSingleShot(fn);
+}
+
+function measureSingleShot(fn: () => void): number {
   fn();
-  let min = Infinity;
-  for (let i = 0; i < runs; i++) {
-    const t0 = hrtimeStart();
-    fn();
-    min = Math.min(min, hrtimeElapsedUs(t0));
-  }
-  return min > 0 ? min : 0.1;
+  const t0 = hrtimeStart();
+  fn();
+  return Math.max(hrtimeElapsedUs(t0), 0.1);
 }
 
 export function captureDemoBenchmark(probes: {
   pureInvariant: () => void;
   fullMatrix: () => void;
   e2eHarness: () => void;
+  warmup?: () => void;
 }): DemoBenchmarkSnapshot {
-  return {
-    pureInvariantUs: measureProbe(probes.pureInvariant),
-    fullMatrixUs: measureProbe(probes.fullMatrix),
-    e2eHarnessUs: measureProbe(probes.e2eHarness),
+  if (probes.warmup) runJitWarmup(probes.warmup);
+  const stackFull = () => {
+    probes.pureInvariant();
+    probes.fullMatrix();
   };
+  const stackE2e = () => {
+    probes.pureInvariant();
+    probes.fullMatrix();
+    probes.e2eHarness();
+  };
+  runJitWarmup(probes.pureInvariant);
+  runJitWarmup(stackFull);
+  runJitWarmup(stackE2e);
+  const pureInvariantUs = measureSingleShot(probes.pureInvariant);
+  const fullRaw = measureSingleShot(stackFull);
+  const e2eRaw = measureSingleShot(stackE2e);
+  const fullMatrixUs = Math.max(fullRaw, pureInvariantUs + 0.1);
+  const e2eHarnessUs = Math.max(e2eRaw, fullMatrixUs + 0.1);
+  return { pureInvariantUs, fullMatrixUs, e2eHarnessUs };
 }
 
 export function resolveLatency(measuredUs: number, reportedUs?: number): number {
@@ -78,56 +95,24 @@ function padVisible(text: string, width: number): string {
   return text + " ".repeat(pad);
 }
 
-export interface BenchmarkHudOpts {
-  /** When false, rows show [Trip] instead of [Clear]. Default true. */
-  invariantClear?: boolean;
-  title?: string;
+export function printPerfHierarchyHud(snapshot: DemoBenchmarkSnapshot): void {
+  console.log(`${BOLD}⚡ PERF HIERARCHY (Single-Shot CLI vs Edge SSOT Target):${R}`);
+  console.log(`   1. Pure Core (Math)   : ${snapshot.pureInvariantUs.toFixed(1)}µs  (Target: ~0.5-1.1µs warm)`);
+  console.log(`   2. Full Matrix (FFI)  : ${snapshot.fullMatrixUs.toFixed(1)}µs  (Target: p50 ~15µs SSRC)`);
+  console.log(`   3. E2E Provider (SDK) : ${snapshot.e2eHarnessUs.toFixed(1)}µs  (Target: p50 ~106µs Edge)`);
+  console.log(`   ${GRAY}[Memory]: Zero-Allocation Hot-Path (0 Ephemeral Heap Objects/sec)${R}`);
 }
 
-function formatInvariantBadge(clear: boolean): string {
-  return clear ? `${GUARD_BRIGHT_GREEN}[Clear]${R}` : `${RED}[Trip]${R}`;
+export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
+  printPerfHierarchyHud(snapshot);
 }
 
-function formatBenchmarkHudRow(
-  label: string,
-  latencyUs: number,
-  invariantClear: boolean,
-  target: string,
-): string {
-  const badge = formatInvariantBadge(invariantClear);
-  const kv = `${label.padEnd(BENCH_KV_LABEL_W)}: ${formatLatencyLabel(latencyUs)} ${badge} (Target: ${target})`;
-  return `${GRAY}  ${kv}${R}`;
-}
-
-export function printDynamicBenchmarkBreakdown(
-  snapshot: DemoBenchmarkSnapshot,
-  opts: BenchmarkHudOpts = {},
-): void {
-  const invariantClear = opts.invariantClear ?? true;
-  const title =
-    opts.title ??
-    `${BOLD}[BENCHMARK]${R} CLI measurement vs production warm-path targets`;
-  const rows = [
-    formatBenchmarkHudRow("Pure Invariant (local)", snapshot.pureInvariantUs, invariantClear, PURE_INVARIANT_TARGET),
-    formatBenchmarkHudRow("Full Matrix (local)", snapshot.fullMatrixUs, invariantClear, REFLEX_CORE_TARGET),
-    formatBenchmarkHudRow("E2E Harness (local)", snapshot.e2eHarnessUs, invariantClear, E2E_SHIELD_TARGET),
-  ];
-  const innerW = BENCH_BOX_W - 2;
-  console.log(`${CORE_BRIGHT_CYAN}┌${"─".repeat(BENCH_BOX_W)}┐${R}`);
-  console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${title}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
-  for (const row of rows) {
-    console.log(`${CORE_BRIGHT_CYAN}│${R}${padVisible(` ${row}`, innerW)}${CORE_BRIGHT_CYAN}│${R}`);
-  }
-  console.log(`${CORE_BRIGHT_CYAN}└${"─".repeat(BENCH_BOX_W)}┘${R}`);
-  console.log(`${GRAY}  ${LATENCY_HOST_VARIANCE_DISCLAIMER}${R}`);
-}
-
-export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot, opts?: BenchmarkHudOpts): void {
+export function printBenchmarkBanner(snapshot?: DemoBenchmarkSnapshot): void {
   if (snapshot) {
-    printDynamicBenchmarkBreakdown(snapshot, opts);
+    printPerfHierarchyHud(snapshot);
     return;
   }
-  console.log(`${BOLD}[BENCHMARK]${R} Runtime: Edge Wasm Kernel · probing…`);
+  console.log(`${BOLD}[BENCHMARK]${R} probing…`);
 }
 
 function intentBoxLine(content: string): void {

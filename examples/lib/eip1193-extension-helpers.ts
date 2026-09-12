@@ -174,12 +174,11 @@ export function printProductionPlainTextWarning(warning: string, reasonCode: str
   console.log(`${eipTag("PRODUCTION ALERT")} ${GRAY}(warnings.ts · ${reasonCode})${R} ${warning}`);
 }
 
-export function printFeatureBanner(invariantClear = true): void {
+export function printFeatureBanner(): void {
   printModuleABanner();
   console.log(`${GRAY}${JUDGE_SAFE_CLOCK_LABEL}${R}`);
-  console.log(`${GRAY}${EIP1193_ARCHITECTURE_NOTE}${R}`);
-  printBenchmarkBanner(captureSoilBenchmark(HEALTHY_SOIL), { invariantClear });
-  console.log(`${featureMetric("⚡ FEATURE: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus Gate]")}\n`);
+  printBenchmarkBanner(captureSoilBenchmark(HEALTHY_SOIL));
+  console.log("");
 }
 
 export function printMainnetAnchors(): void {

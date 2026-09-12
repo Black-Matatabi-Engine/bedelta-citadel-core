@@ -21,16 +21,13 @@ export function captureSoilBenchmark(
   const nowMs = soil.at?.getTime() ?? Date.now();
   const variationalProbe = { ...NOMINAL_VARIATIONAL_PROBE, nowMs, quoteTimestampMs: nowMs - 100 };
   return captureDemoBenchmark({
+    warmup: () => checkSoilResistance(soil),
     pureInvariant: () => {
       evaluateVariationalFlags(variationalProbe);
     },
     fullMatrix: () => {
       checkSoilResistance(soil);
     },
-    e2eHarness:
-      e2eHarness ??
-      (() => {
-        checkSoilResistance(soil);
-      }),
+    e2eHarness: e2eHarness ?? (() => checkSoilResistance(soil)),
   });
 }

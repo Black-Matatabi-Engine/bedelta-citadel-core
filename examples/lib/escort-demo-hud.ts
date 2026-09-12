@@ -7,23 +7,16 @@ import {
 } from "../adapters/citadel-ansi-hud";
 import {
   captureDemoBenchmark,
-  printDynamicBenchmarkBreakdown,
+  printPerfHierarchyHud,
   type DemoBenchmarkSnapshot,
 } from "./demo-timing";
 import { printModuleBBanner, printOpSecFootnote } from "./demo-module-banners";
 
 const BOX_W = 63;
 
-function printEscortBenchmark(snapshot: DemoBenchmarkSnapshot, invariantClear = true): void {
-  printDynamicBenchmarkBreakdown(snapshot, {
-    invariantClear,
-    title: `${BOLD}[BENCHMARK]${R} Pillar 2 Escort Harness`,
-  });
-}
-
-export function printEscortBanner(snapshot: DemoBenchmarkSnapshot, invariantClear = true): void {
+export function printEscortBanner(snapshot: DemoBenchmarkSnapshot): void {
   printModuleBBanner();
-  printEscortBenchmark(snapshot, invariantClear);
+  printPerfHierarchyHud(snapshot);
 }
 
 export function printEscortResult(trip: boolean): void {

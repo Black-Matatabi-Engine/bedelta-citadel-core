@@ -151,7 +151,7 @@ function runRouteC(): void {
 wrapDemoExecution(({ nowMs }) => {
   const t0 = resolveEscortT0(nowMs);
   const trip = isDemoTripArgv();
-  printEscortBanner(captureEscortBenchmark(t0), !trip);
+  printEscortBanner(captureEscortBenchmark(t0));
   printMode(trip);
   const latencyUs = runRouteA(trip, t0);
   if (!trip) {
