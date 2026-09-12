@@ -195,7 +195,7 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
     if (permit2) printDefenseMatrixLine("PERMIT2 GUARD", "Infinite Approve Blocked for Untrusted Spender!", permit2.code, "├");
     if (!erc7683.passed) {
       console.log(
-        `├── ${eipTag("ERC-7683 GATE")} Cross-Chain Solver MEV Bps (${featureMetric(`${erc7683.solverMevBps.toFixed(0)}bps`)}) > Safety Limit! · ${rejectCode(erc7683.code ?? "FAIL")} ${GRAY}(diagnostic preview)${R}`,
+        `├── ${eipTag("ERC-7683 GATE")} Cross-Chain Solver MEV Bps (${featureMetric(`${erc7683.solverMevBps.toFixed(0)}bps`)}) > Safety Limit! · ${rejectCode(erc7683.code ?? "FAIL")}`,
       );
     }
     printDefenseMatrixLine("PRE-CONSENSUS", "0-Gas Wasm Intercept armed for toxic EIP-712 ingress", undefined, "└");
@@ -217,9 +217,6 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
   if (interactive) {
     printProductionPlainTextWarning(thrown.plainTextWarning, thrown.code);
     printPreConsensusProofBox(wasmUs, principalUsd);
-    console.log(
-      `▸ Gas Spent: ${featureMetric("0.000000 ETH")} | Capital Protected: ${formatIntentUsd(principalUsd)} (100% Principal Preserved)`,
-    );
     printDuneTelemetry(RETAIL_GUARD_AGENT_ID, thrown.code, ctx.nowMs);
     console.log(
       `\n${RED}${BOLD}RESULT: 🛑 FAIL_CLOSED_INTERCEPT (${featureMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
@@ -278,8 +275,8 @@ async function runScenarioD({ interactive }: ScenarioOpts): Promise<Eip1193Scena
     console.log(
       `  ${eipTag("CHANNEL STATE")} isRetailGuardChannelSevered=${isRetailGuardChannelSevered()} · follow-up=${rejectCode(channelErr.code)}`,
     );
-    console.log(`\n${RED}${BOLD}RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate ${EIP1193_DEMO.slivervineGate})${R}`);
     printOpSecFootnote();
+    console.log(`\n${RED}${BOLD}RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate ${EIP1193_DEMO.slivervineGate})${R}`);
   }
   return {
     scenario: "D",
@@ -331,7 +328,7 @@ wrapDemoExecution(async (ctx) => {
 
   if (!isDemoTripArgv()) {
     console.log(
-      `\n${GREEN}${BOLD}RESULT: ✅ EIP-1193 STATE MATRIX COMPLETE — 4 independent scripted scenarios (A·B·C·D) · Isolated replays${R}`,
+      `\n${GREEN}${BOLD}RESULT: ✅ ExoMesh Agentic Guard Matrix Complete — Scenarios A–D Replayed (ALLOW · WARN · INTERCEPT · SEVER)${R}\n`,
     );
   }
   releaseDemoStdin();

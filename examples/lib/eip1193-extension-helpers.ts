@@ -243,12 +243,12 @@ export function printForwardGate(): void {
 }
 
 export function printDefenseMatrixHeader(): void {
-  console.log(`\n${RED}${BOLD}[PRE-CONSENSUS DEFENSE MATRIX]${R} ${GRAY}(diagnostic preview)${R}`);
+  console.log(`\n${RED}${BOLD}[PRE-CONSENSUS DEFENSE MATRIX]${R}`);
 }
 
 export function printDefenseMatrixLine(guard: string, detail: string, code: string | undefined, branch: "├" | "└"): void {
   const suffix = code ? ` (${rejectCode(code)})` : "";
-  console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix} ${GRAY}(diagnostic preview)${R}`);
+  console.log(`${branch}── ${eipTag(guard)} ${detail}${suffix}`);
 }
 
 export function printPreConsensusProofBox(wasmUs: number, capitalUsd: number): void {

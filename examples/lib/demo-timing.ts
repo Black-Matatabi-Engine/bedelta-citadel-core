@@ -96,9 +96,9 @@ function padVisible(text: string, width: number): string {
 }
 
 export function printPerfHierarchyHud(snapshot: DemoBenchmarkSnapshot): void {
-  console.log(`${BOLD}⚡ PERF HIERARCHY (Single-Shot CLI vs Edge SSOT Target):${R}`);
-  console.log(`   1. Pure Core (Math)   : ${snapshot.pureInvariantUs.toFixed(1)}µs  (Target: ~0.5-1.1µs warm)`);
-  console.log(`   2. Full Matrix (FFI)  : ${snapshot.fullMatrixUs.toFixed(1)}µs  (Target: p50 ~15µs SSRC)`);
+  console.log(`${BOLD}⚡ PERF HIERARCHY (Single-Sample Active CLI vs Edge SSOT Target):${R}`);
+  console.log(`   1. Pure Core (Math)   : ${snapshot.pureInvariantUs.toFixed(1)}µs  (Target: ~0.5-1.1µs warm · ±1µs CLI noise)`);
+  console.log(`   2. Full Matrix (FFI)  : ${snapshot.fullMatrixUs.toFixed(1)}µs  (Target: p50 ~15µs SSRC · ±5µs CLI noise)`);
   console.log(`   3. E2E Provider (SDK) : ${snapshot.e2eHarnessUs.toFixed(1)}µs  (Target: p50 ~106µs Edge)`);
   console.log(`   ${GRAY}[Memory]: Zero-Allocation Hot-Path (0 Ephemeral Heap Objects/sec)${R}`);
 }
