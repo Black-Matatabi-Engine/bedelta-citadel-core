@@ -1,0 +1,88 @@
+# Build & Compilation Artifacts
+cache/
+broadcast/
+coverage/
+dist/
+dist-worker/
+dist-worker-probe/
+dist-worker-test/
+.wrangler/
+
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Secrets & Local Configs
+.dev.vars
+.env.production
+.env
+.env.*
+!.env.example
+.env.local
+# wrangler.toml is committed SSOT (no secrets); do not re-ignore
+.cursor/
+.specstory/
+*.log
+.DS_Store
+logs/*
+!logs/.gitkeep
+
+# Design drafts & local brand artifacts (public/brand/ release assets are tracked SSOT)
+public/brand/drafts/
+public/brand/**/*draft*
+public/brand/**/*_wip.*
+design/
+*.psd
+*.ai
+*.sketch
+
+# Private Keys & Wallet
+*.pem
+*.key
+id_rsa*
+*.p12
+*.pfx
+wallet.json
+**/private-keys/
+
+# Lock Workspace & Dev Tooling
+*.code-workspace
+.grantignore
+san
+
+# ------------------------------------------------------------------------------
+# STRICT OPSEC WHITELIST FOR DOCUMENTS (BLOCK EVERYTHING BY DEFAULT)
+# ------------------------------------------------------------------------------
+# Block all root-level and sub-folder markdown files by default
+#*.md
+#docs/**
+
+
+# EXPLICITLY ALLOW ONLY PUBLIC GRANT ARTIFACTS
+!README.md
+!LICENSE
+!docker/README.md
+!docs/architecture/
+!docs/architecture/**
+!docs/grants/
+!docs/grants/**
+!docs/README.md
+!docs/VERIFICATION_MATRIX.md
+!SECURITY.md
+!docs/audit/
+!docs/audit/**
+!docs/audit/negative-proofs-artifact.json
+!docs/audit/chaos-blackswan-metrics.json
+!docs/audit/zerodev-aa-metrics.json
+!docs/sdk/
+!docs/sdk/**
+
+# Internal scorecards / self-audits (local-only; do not publish)
+
+docs/audit/PROGRESS_TRUTH_CHECK.md
+docs/audit/BUILDATHON_JUDGE_REVIEW.md
+
+# Rust build artifacts (commit pkg/soil_core.wasm only; ignore all Cargo target dirs)
+**/target/
+
+

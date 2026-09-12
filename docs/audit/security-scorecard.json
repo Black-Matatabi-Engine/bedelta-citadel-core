@@ -1,0 +1,51 @@
+{
+  "schema": "silvervine.security-scorecard.v4",
+  "protocol": "SliverVine / BeΔLivingWater",
+  "tier": "fast",
+  "generatedAt": "2026-09-06T03:47:59.963Z",
+  "narrative": "behavioral_pass_does_not_imply_web3_security",
+  "overallVerdict": "PASS",
+  "gates": [
+    {
+      "id": "tsc",
+      "label": "TypeScript typecheck",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 11583,
+      "detail": "exit 0"
+    },
+    {
+      "id": "vitest-security",
+      "label": "Vitest security slice",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 4077,
+      "detail": "RUN  v3.2.7 /home/lhsum/dev_slivervinelabs/bedelta-citadel-core |  |  ✓ |unit| tests/security/security-audit.test.ts (4 tests) 14ms |  |  Test Files  1 passed (1) |       Tests  4 passed (4) |    Start at  11:47:45 |    Duration  2.73s (transform 1.48s, setup 1.43s, collect 870ms, tests 14ms, environment 0ms, prepare 102ms)"
+    },
+    {
+      "id": "solhint",
+      "label": "Solhint SliverVineGate/src",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 1496,
+      "detail": "✖ 1 problem (0 errors, 1 warning) |  | ┌──────────────────────────────────────────────────────────────────────────────────────────────────────┐ | │ ===>      NEW  500+ Formal Verification security checks → Free scan: https://bit.ly/dowsers     <=== │ | └──────────────────────────────────────────────────────────────────────────────────────────────────────┘ | ┌──────────────────────────────────────────────────────────────────────────────────────────────────────┐ | │ ===>  Smart contract Audits by Protofire  |  Book a https://calendly.com/vitaliy-chernov/30min  <=== │ | └─────────────────────────"
+    },
+    {
+      "id": "gitleaks",
+      "label": "Gitleaks secret scan",
+      "verdict": "PASS",
+      "exitCode": 0,
+      "elapsedMs": 10183,
+      "detail": "○ |     │╲ |     │ ○ |     ○ ░ |     ░    gitleaks |  | 11:47AM INF scan completed in 10.1s | 11:47AM INF no leaks found"
+    }
+  ],
+  "summary": {
+    "pass": 4,
+    "fail": 0,
+    "skipped": 0
+  },
+  "reports": {
+    "securityScorecard": "docs/audit/security-scorecard.json"
+  },
+  "zeroKeyCommand": "pnpm run audit:fast"
+}
