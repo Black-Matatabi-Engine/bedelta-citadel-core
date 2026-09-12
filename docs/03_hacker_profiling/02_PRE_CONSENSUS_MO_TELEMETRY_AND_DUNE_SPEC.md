@@ -2,7 +2,7 @@
 
 > **Category:** **Pre-Consensus Threat Telemetry** · **Hacker Modus Operandi (MO) Profiling**  
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
-> **Indexer target:** [Dune Analytics — silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)  
+> **Indexer target:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)  
 > **Related:** [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) · [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · **Vitest:** **228 test files | 1064 PASS clean**
 
 ---
@@ -391,7 +391,7 @@ SliverVine proposes **ARB** as a cross-framework safety score derived from PCTII
 | Soil trip counter | ✅ [`telemetry-analytics-core.ts`](../../src/services/telemetry-analytics-lib/telemetry-analytics-core.ts) |
 | Grant-audit Dune reconciliation | ✅ [`grant-audit-dune-telemetry.test.ts`](../../tests/api/grant-audit-dune-telemetry.test.ts) |
 | Sepolia `RiskTripBlocked` emitter | ✅ [`scripts/emit-sepolia-telemetry-events.ts`](../../scripts/emit-sepolia-telemetry-events.ts) |
-| Dune dashboard (Sepolia PEV) | ✅ [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| Dune dashboard (Sepolia PEV) | ✅ [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **`slivervine_telemetry_events` spell ingest** | 📋 Spec v1 — schema defined; spell deployment roadmap |
 | Arbitrum One `42161` business-event ingest | ⏳ Pre-compiled SQL · awaits indexer activation |
 

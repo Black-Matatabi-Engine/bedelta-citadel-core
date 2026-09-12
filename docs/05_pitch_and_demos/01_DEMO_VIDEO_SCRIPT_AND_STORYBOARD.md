@@ -64,7 +64,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 | **0:52–1:04** | Arbiscan Sepolia · Gate address | *"EIP-712 consume-once Gate `0xb174118bc0B84e8D6D59EEF2339e29bF7FCf8BF1`. Replay is `Replayed()`."* | [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) |
 | **1:04–1:15** | Foundry invariant file · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) badge | *"Foundry Invariant & Fuzzing Verification (327,675 Property Fuzz runs). Consume-once lemmas in-repo. Policy alignment: ERC-8196 (Final) Sub-ms Policy Gate."* | [`SliverVineGate/test/SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol) |
 
-### A.3 `75s–120s` — 14-Dimension Score Boost & Sponsor Synergies
+### A.3 `75s–120s` — 14-Dimension Score Boost & Venue Integration Synergies
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|

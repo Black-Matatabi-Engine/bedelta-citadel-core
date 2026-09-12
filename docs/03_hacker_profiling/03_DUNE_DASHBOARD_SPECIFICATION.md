@@ -4,7 +4,7 @@
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · **Modules:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B)
 **Entity:** SilverVine Labs · **Live SSOT:** `GET /api/grant-audit`
-**Audience:** Buildathon evaluators · Dune sponsor diligence · institutional allocators
+**Audience:** Buildathon evaluators · Dune venue diligence · institutional allocators
 **Reconciliation:** On-chain `SliverVineGate` events + grant-audit `duneTelemetry` KV snapshots.
 
 **Status:** Live Log-Engine Verified · **Public Dashboard Published**
@@ -13,13 +13,13 @@
 
 | Field | Value |
 |-------|-------|
-| **Live Query URL** | [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Live Query URL** | [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **On-chain ingest source** | Sepolia `SliverVineGate` `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Decoded events** | `IntentAttested` · `RiskTripBlocked` · `AttestationConsumed` |
 | **PEV metric** | **Prevented Exploit Volume (PEV)** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs (fully operational on Sepolia Gate) |
 | **Off-chain anchor** | `/api/grant-audit` → `duneTelemetry.responseRef` (sha256) |
 
-> **Clarification:** The live Dune dashboard at [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1):
+> **Clarification:** The live Dune dashboard at [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1):
 > 1. **`IntentAttested`** — real-time EIP-712 intent attestations (PASS / emergency de-leverage greenlights).
 > 2. **`RiskTripBlocked`** — pre-broadcast fail-closed severance events (toxic intent blocked at 0-Gas; feeds **PEV**).
 >
@@ -32,7 +32,7 @@
 | **Chain** | Arbitrum One `42161` · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Dashboard** | Queries 1–3 below are **pre-compiled DuneSQL** for production PEV / toxic-flow panels |
 | **Live ingest** | **Not yet operational** — awaits mainnet `IntentAttested` / `RiskTripBlocked` business-event indexer activation |
-| **Sepolia parity** | Sepolia stream proves decode + PEV math; 42161 spec is **copy-ready** for sponsor diligence |
+| **Sepolia parity** | Sepolia stream proves decode + PEV math; 42161 spec is **copy-ready** for venue diligence |
 
 ---
 
@@ -82,7 +82,7 @@ ORDER BY block_number DESC
 LIMIT 50;
 ```
 
-**Dashboard:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**Dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
 
 ---
 
@@ -262,17 +262,17 @@ LIMIT 500;
 
 ## Pre-Consensus Chaos Intercepts (Query C0–C5)
 
-**Scope:** Orbit Agentic Fail-Closed chaos matrix · Buildathon sponsor lanes (Robinhood / GMX V2 / Pendle / ZeroDev / ArbOS / Stylus).
+**Scope:** Orbit Agentic Fail-Closed chaos matrix · Buildathon venue lanes (Robinhood / GMX V2 / Pendle / ZeroDev / ArbOS / Stylus).
 **Vitest anchor:** [`tests/chaos/orbit-agentic-failclosed-chaos.test.ts`](../../tests/chaos/orbit-agentic-failclosed-chaos.test.ts) (5 PASS clean).
 **Rust anchor:** `decode_nested_fail_closed` · `cargo test nested` · mean <15µs on 10k iterations.
 
 | Panel | Query | Primary source |
 |-------|-------|----------------|
 | **Chaos KPI Header** | C0 | `RiskTripBlocked` + `silvervine_chaos.intercepts` |
-| **Attack Vector Breakdown** | C1 | `reason` / `sponsor_lane` classifier |
+| **Attack Vector Breakdown** | C1 | `reason` / `venue_lane` classifier (SQL alias: `sponsor_lane`) |
 | **Time-Series Rollup** | C2 | Hourly blocked count + PEV |
 | **Latency Reduction** | C3 | `intercept_us` vs 250ms L2 inclusion baseline |
-| **Sponsor Attribution Banner** | C4 | Per-sponsor blocked count (grant appendix) |
+| **Venue Attribution Banner** | C4 | Per-sponsor blocked count (grant appendix) |
 | **Unified Intercepts Feed** | C5 | On-chain ∪ off-chain chaos spell |
 
 **Spell tables (DuneSQL SSOT):**
@@ -332,10 +332,10 @@ CROSS JOIN off_chain f;
 
 ---
 
-## Query C1 — Attack Vector Breakdown (Sponsor Lanes)
+## Query C1 — Attack Vector Breakdown (Venue Lanes)
 
 ```sql
--- Panel: Chaos intercepts by sponsor lane (24h)
+-- Panel: Chaos intercepts by venue lane (24h)
 WITH trips AS (
   SELECT
     reason,
@@ -429,10 +429,10 @@ ORDER BY 1 DESC;
 
 ---
 
-## Query C4 — Sponsor Attribution Banner (Grant Appendix)
+## Query C4 — Venue Attribution Banner (Grant Appendix)
 
 ```sql
--- Panel: Buildathon sponsor attribution banner (cumulative 30d)
+-- Panel: Buildathon venue attribution banner (cumulative 30d)
 SELECT
   sponsor_lane,
   COUNT(*) AS total_blocks,
@@ -486,7 +486,7 @@ LIMIT 100;
 |--------|------|------|
 | `ingested_at` | timestamp | Worker ingest time |
 | `response_ref` | varchar | sha256 ref / chaos run id |
-| `sponsor_lane` | varchar | C1 classifier key |
+| `sponsor_lane` | varchar | C1 classifier key (legacy SQL column · prose: **venue_lane**) |
 | `reason` | varchar | Fail-closed reason string |
 | `blocked_notional_usd` | double | PEV numerator |
 | `l1_surcharge_usd` | double | ArbOS gas saved estimate |

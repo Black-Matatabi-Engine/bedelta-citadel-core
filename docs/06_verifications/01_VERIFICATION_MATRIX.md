@@ -30,7 +30,7 @@
 | **Buildathon judges** | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./03_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) |
 | **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
-| **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
+| **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
 
 **Decoupled SSOT index:** [`verifications/README.md`](./README.md)
 
@@ -41,9 +41,9 @@
 ```bash
 pnpm install
 # === [ExoMesh] Tier 0 — SDK/CLI Unit & Integration ===
-npx vitest run tests/sdk/retail-guard-provider.test.ts
-npx vitest run tests/sdk/eip5792-send-calls.test.ts
-pnpm demo:exomesh                         # Scenario A–D State Matrix (JUDGE_SAFE clock)
+npx vitest run tests/sdk/retail-guard-provider.test.ts   # ../../tests/sdk/retail-guard-provider.test.ts
+npx vitest run tests/sdk/eip5792-send-calls.test.ts      # ../../tests/sdk/eip5792-send-calls.test.ts
+pnpm demo:exomesh                         # Scenario A–D State Matrix (JUDGE_SAFE clock) — see ../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md
 
 # === [ExoMesh] Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
 pnpm demo:gmx -- --trip
@@ -56,7 +56,7 @@ pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lan
 pnpm demo:sanctuary                      # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
 # === [Sanctuary] Tier 0 — Module B Treasury Ingress (Pillar Set X) ===
 pnpm demo:ingress                        # Across/Robinhood AML ingress escort (lostUsd ≡ $0)
-npx vitest run tests/adapters/treasury-escort-router.test.ts
+npx vitest run tests/adapters/treasury-escort-router.test.ts   # ../../tests/adapters/treasury-escort-router.test.ts
 
 # === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
@@ -68,9 +68,9 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 
 | Command | Tag | Proves |
 |---------|-----|--------|
-| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
-| `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
-| `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
+| [`npx vitest run tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) | `[ExoMesh]` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
+| [`npx vitest run tests/sdk/eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
+| [`npx vitest run tests/adapters/treasury-escort-router.test.ts`](../../tests/adapters/treasury-escort-router.test.ts) | `[Sanctuary]` | Institutional treasury escort routing |
 | `pnpm demo:sanctuary` | `[Sanctuary]` | **Module B Vault Standard** — ERC-7540+ Scenario A–C (`demo:escort` alias) · [`sanctuary-demo.ts`](../../examples/sanctuary-demo.ts) |
 | `pnpm demo:exomesh` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
 | `pnpm demo:exomesh -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
@@ -125,8 +125,8 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 
 | Module | Scope | Verify |
 |--------|-------|--------|
-| **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **SliverVine Sanctuary (Module B)** | **Vault Standard:** ERC-7540+ (`demo:sanctuary`) · **Treasury Ingress:** Pillar Set X Across/AML (`demo:ingress`) · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:sanctuary` · `pnpm demo:ingress` · unit: `treasury-escort-router.test.ts` · `erc7540-async-escort.test.ts` |
+| **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`05_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` [`pnpm demo:exomesh`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963) · [`npx vitest run tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
+| **SliverVine Sanctuary (Module B)** | **Vault Standard:** ERC-7540+ (`demo:sanctuary`) · **Treasury Ingress:** Pillar Set X Across/AML (`demo:ingress`) · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:sanctuary` · `pnpm demo:ingress` · unit: [`treasury-escort-router.test.ts`](../../tests/adapters/treasury-escort-router.test.ts) · [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) |
 
 ---
 
@@ -215,7 +215,7 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 |----------|------|
 | [`README.md`](../README.md) | Repo entry · ExoMesh + Sanctuary |
 | [`ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (ExoMesh-first) |
-| [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Sponsor matrix · GTM · milestones |
+| [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
 | [`architecture/README.md`](../01_architecture/README.md) | Yellow Paper · R01–R20 |
 | [`DEMO_GUIDE.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) | Tier 0–1 + Zone A/B demo suite (5-core + Retail Guard) |
 | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 30-second Buildathon brief |
@@ -228,7 +228,7 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 ### 🛡️ Proactive OpSec & Anti-Reversing Policy (Commit History Hardening)
 
 > **Notice to Evaluators & Security Auditors:**  
-> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SilverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1065 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
+> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SliverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1065 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
 
 ---
 

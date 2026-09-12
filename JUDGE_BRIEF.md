@@ -34,11 +34,11 @@
 | ---- | ------------ | --------- | ---------------------- |
 | **1** | `[Final]` | **EIP-1193** · **EIP-5792** · **ERC-7540** | **100% compliant** with standard specs, extended into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary) |
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** · **ERC-7579** | **Semantic alignment** to Uniswap/Across and ZeroDev/Rhinestone industrial drafts — not normative Final conformance |
-| **3** | `[Unrelated Draft — Not Implemented]` | EIP-8105 · EIP-8079 · ERC-8226 · ERC-8118 | No implementation claim — [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
+| **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | No implementation claim — [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
 #### Tier 1 — Finalized Core Standards `[Final]`
 
-| Standard | **Physical Limitation** | **SilverVine Pre-Consensus Superset** | **Proof** |
+| Standard | **Physical Limitation** | **SliverVine Pre-Consensus Superset** | **Proof** |
 | -------- | ----------------------- | ------------------------------------- | --------- |
 | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** `[Final]` | Txs reach Sequencer unchecked — reverts burn gas | **ExoMesh Sub-1.8µs 0-Gas Pre-Consensus Wasm Gate** | `pnpm demo:exomesh` · **35/35** |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass tx-only guards | [`eip5792-send-calls.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` · one intent-ring attempt per batch | **3/3** |
@@ -46,7 +46,7 @@
 
 #### Tier 2 — Active Industrial Standards `[De-facto Industrial Draft]`
 
-| Standard | **Industrial Origin** | **SilverVine Semantic Alignment** | **Proof** |
+| Standard | **Industrial Origin** | **SliverVine Semantic Alignment** | **Proof** |
 | -------- | --------------------- | ----------------------------------- | --------- |
 | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** `[De-facto Industrial Draft]` | Uniswap / Across | **Pre-Consensus Solver Integrity Lock & Semantic Alignment** — Solver Pre-flight Capital Lock (`IN_FLIGHT` → `SETTLED`) | `pnpm demo:ingress` · **3/3** |
 | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** `[De-facto Industrial Draft]` | ZeroDev / Rhinestone | **Edge Isomorphic Pre-Execution Hook Policy** — Pillar Set X Compliance Pre-Execution Strategy | `pnpm demo:ingress` Route C |
@@ -56,7 +56,7 @@
 | Standard | Status | **Implementation** | **Proof** |
 | -------- | ------ | ------------------ | --------- |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | `[Final]` | EIP-1193 middleware + PolicyGuardV2 anchor | **35/35** · Forge |
-| **Session mandate attenuation** | `[Final]` ERC-7715 | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
+| **Session mandate attenuation** | `[Final]` [ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) · `[Conceptual]` [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | [`eip7702-auth-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
 
@@ -78,7 +78,7 @@
 
 ## Temporal Execution Stack T1/T2/T3
 
-SilverVine occupies **T3** — the only latency class that operates at **microsecond** scale **before** broadcast ingress.
+SliverVine occupies **T3** — the only latency class that operates at **microsecond** scale **before** broadcast ingress.
 
 **Zero-Allocation Hot-Path Engine**: ~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc via pre-allocated ring slabs, `DataView` scratch buffers, and u32 LUTs — **zero ephemeral heap allocations** during the microsecond execution phase.
 
@@ -126,17 +126,17 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 | Protocol | Venue | Physical Boundary | Demo |
 |----------|-------|-------------------|------|
-| **GMX v2** | Arbitrum One | OI skew / PoolTVL > **0.35** | `pnpm demo:gmx` |
-| **Pendle** | Arbitrum One | Yield shock > **150 bps** | `pnpm demo:pendle` |
-| **USD.ai** | Arbitrum One | Peg drift · oracle lag · depth fuse | `pnpm demo:usdai` |
-| **Hyperliquid** | L1 HF Orderbook | Spread > **20 bps** | `pnpm demo:hl` |
-| **Variational** | Arbitrum RFQ | Stale **>500ms** · drift **>30 bps** | `pnpm demo:variational` |
+| **GMX v2** | Arbitrum One | OI skew / PoolTVL > **0.35** | [`pnpm demo:gmx`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| **Pendle** | Arbitrum One | Yield shock > **150 bps** | [`pnpm demo:pendle`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| **USD.ai** | Arbitrum One | Peg drift · oracle lag · depth fuse | [`pnpm demo:usdai`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| **Hyperliquid** | L1 HF Orderbook | Spread > **20 bps** | [`pnpm demo:hl`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| **Variational** | Arbitrum RFQ | Stale **>500ms** · drift **>30 bps** | [`pnpm demo:variational`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
 
-**Judge fast-track (FAIL-CLOSED):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
+**Judge fast-track (FAIL-CLOSED):** [`pnpm demo:gmx -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:variational -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:hl -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix)
 
-**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
+**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** [`pnpm demo:exomesh`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963) · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
 
-**ExoMesh Agentic Guard (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
+**ExoMesh Agentic Guard (unit SSOT):** [`npx vitest run tests/sdk/retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
 
 ### Dual-Track Verification (`@slivervine/exomesh-agentic-wallet-guard`)
 
@@ -246,8 +246,8 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 ### 🛡️ Proactive OpSec & Anti-Reversing Policy (Commit History Hardening)
 
 > **Notice to Evaluators & Security Auditors:**  
-> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SilverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1065 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
+> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SliverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1065 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
 
 ---
 
-**SilverVine Labs** · `grants@silvervinelabs.com` · [Live Dune Dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**SilverVine Labs** · `grants@silvervinelabs.com` · [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)

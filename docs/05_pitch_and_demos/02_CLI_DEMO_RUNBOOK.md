@@ -215,12 +215,12 @@ Live GM I/O proofs: deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e
 
 ---
 
-## B2B Agent Integration (`withCitadelShield`)
+## B2B Agent Integration (`withExoMeshShield` (legacy: `withCitadelShield`))
 
 Framework-agnostic B2B decorator — replaces v1.0 point-to-point AI framework adapters:
 
 ```bash
-pnpm demo:agent    # withCitadelShield + verifyAgentIntent smoke demo
+pnpm demo:agent    # withExoMeshShield + verifyAgentIntent smoke demo
 ```
 
 SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts)

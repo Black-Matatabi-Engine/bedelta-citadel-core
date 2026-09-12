@@ -21,7 +21,7 @@ Official infrastructure standards map — each row links a public ERC/EIP (or ve
 
 ### Tier 1 — Finalized Core Standards `[Final]`
 
-| Standard | Physical Limitation | SilverVine Pre-Consensus Superset |
+| Standard | Physical Limitation | SliverVine Pre-Consensus Superset |
 | -------- | ------------------- | --------------------------------- |
 | **EIP-1193** `[Final]` | Provider APIs allow txs to reach Sequencer unchecked — reverts burn gas | **ExoMesh Sub-1.8µs 0-Gas Pre-Consensus Wasm Gate** — intercepts **before** Sequencer ingress |
 | **EIP-5792** `[Final]` | `wallet_sendCalls` batches bypass tx-only guards | `eip5792-send-calls.ts` unfolds `calls[]` into retail risk stack |
@@ -29,7 +29,7 @@ Official infrastructure standards map — each row links a public ERC/EIP (or ve
 
 ### Tier 2 — Active Industrial Standards `[De-facto Industrial Draft]`
 
-| Standard | Industrial Origin | SilverVine Semantic Alignment |
+| Standard | Industrial Origin | SliverVine Semantic Alignment |
 | -------- | ----------------- | ----------------------------- |
 | **ERC-7683** `[De-facto Industrial Draft]` | Uniswap / Across | **Pre-Consensus Solver Integrity Lock & Semantic Alignment** — Solver Pre-flight Capital Lock |
 | **ERC-7579** `[De-facto Industrial Draft]` | ZeroDev / Rhinestone | **Edge Isomorphic Pre-Execution Hook Policy** — Pillar Set X Compliance Pre-Execution Strategy |

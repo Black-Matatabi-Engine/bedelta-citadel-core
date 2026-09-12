@@ -13,7 +13,7 @@
 **Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs  
 **Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum  
-**Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune PEV dashboard:** [silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
+**Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune PEV dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
 
 ### Live SSOT Anchors
 
@@ -41,7 +41,10 @@
 
 > **Effective scope:** This section applies to all readers — grant evaluators, institutional allocators, AI-agent integrators, and fund-of-funds diligence teams. By referencing this framework, you acknowledge that **no software can eliminate 100% of systemic crypto, market, or adversarial risks**.
 
+<a id="01-what-slivervine-exomesh-does-and-does-not-guarantee"></a>
 <a id="01-what-slivervine-citadel-shield-does-and-does-not-guarantee"></a>
+
+> **Anchor redirect:** `§0.1` was formerly `#01-what-slivervine-citadel-shield-does-and-does-not-guarantee` (legacy Citadel Shield product name). Both anchors resolve here.
 
 ### 0.1 What SliverVine ExoMesh Does — and Does Not — Guarantee
 
@@ -58,7 +61,7 @@ SliverVine models the **100% Total On-Chain Risk Surface** — the complete set 
 
 **Mathematical closure:** `88% + 12% = 100%` of the modeled on-chain risk surface. The **88%** is derived from the **255-case chaos matrix** and **R01–R20 Defense Matrix** — coverage of **known, sensor-addressable pre-broadcast vectors** — not a guarantee against all future loss.
 
-> **Evaluator SSOT:** All grant, DDIP, audit, and submission prose citing **88%** or **12%** must reference this section: [`§0.1`](#01-what-slivervine-citadel-shield-does-and-does-not-guarantee).
+> **Evaluator SSOT:** All grant, DDIP, audit, and submission prose citing **88%** or **12%** must reference this section: [`§0.1`](#01-what-slivervine-exomesh-does-and-does-not-guarantee).
 
 #### Pareto Rule — 80% / 20% (Microstructure Loss Concentration)
 
@@ -103,7 +106,7 @@ $$
 
 ### 0.3 Interceptor Mesh Coverage (88% Pre-Broadcast)
 
-See **[§0.1 Formal Risk Spectrum Definition](#01-what-slivervine-citadel-shield-does-and-does-not-guarantee)** for the authoritative **88% / 12%** partition. In summary: the **88%** reflects modeled coverage of **known toxic pre-broadcast vectors** in the 255-case chaos matrix and R01–R20 Defense Matrix; the residual **12%** comprises unmodeled tail events, third-party venue failures, governance upgrades, key compromise outside session scope, and force majeure beyond sensor thresholds (§0.2).
+See **[§0.1 Formal Risk Spectrum Definition](#01-what-slivervine-exomesh-does-and-does-not-guarantee)** for the authoritative **88% / 12%** partition. In summary: the **88%** reflects modeled coverage of **known toxic pre-broadcast vectors** in the 255-case chaos matrix and R01–R20 Defense Matrix; the residual **12%** comprises unmodeled tail events, third-party venue failures, governance upgrades, key compromise outside session scope, and force majeure beyond sensor thresholds (§0.2).
 
 ```text
 User / AI intent → Pillar Set X Gatehouse (session scope)
@@ -183,7 +186,7 @@ Rejected intents surface as **structured, actionable errors** — never silent d
 | **Core exception** | `RiskLimitExceeded` (`src/services/risk-control`) with `reason` + `details.reasons[]` | Machine-readable trip code (e.g. `GMX_POOL_IMBALANCE_BREACH`) |
 | **HUD / SPA** | `resolveComplianceAlertsFromReasons()` · `COMPLIANCE_TRIP_ALERTS` in [`compliance-trip-alerts.ts`](../../src/lib/gui-bridge/compliance-trip-alerts.ts) | Title + severity (`critical` / `warning`) + plain-language remediation |
 | **SSE telemetry** | `GET /api/hud-stream` · [`section1-soil-probes.ts`](../../src/lib/gui-bridge/section1-hud-engine/section1-hud-engine-lib/section1-soil-probes.ts) log templates | Live `SOIL_RESISTANCE_PROBE: REJECTED` with reason list |
-| **SDK / decorator** | `withCitadelShield` · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
+| **SDK / decorator** | `withExoMeshShield` (legacy: `withCitadelShield`) · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
 | **Grant audit API** | `GET /api/grant-audit` · Robinhood audit snapshot | `lostUsd: 0` · `tradeAllowed: false` on trip paths |
 
 **Example operator messages (UI SSOT):**
@@ -613,7 +616,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 | **Grant E2E Demo** | `pnpm demo:e2e` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
 | **5-TX Verified Proof** | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet 5-TX anchor with notional tiers ($1K / $100K / $1M) |
 | **Negative Proofs** | `pnpm verify:negative` | Confirms soil trips on depth breach (`DEPTH_USD < MIN_DEPTH_USD`) |
-| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/citadel-sdk` `withCitadelShield` — ALLOW / `--trip` FAIL_CLOSED |
+| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/citadel-sdk` `withExoMeshShield` (legacy: `withCitadelShield`) — ALLOW / `--trip` FAIL_CLOSED |
 
 > Production soil fuse on Edge remains **`checkSoilResistance()`** — dry-run harnesses validate adjacent paths without replacing the Worker SSOT.
 

@@ -46,7 +46,7 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 | `pnpm demo:e2e -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | ExoMesh Agentic Guard (EIP-1193/5792/6963+) | **35/35 PASS** |
-| `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
+| `pnpm demo:agent` | B2B `withExoMeshShield` (legacy: `withCitadelShield`) smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:sanctuary` | **Module B Vault Standard** — ERC-7540+ Scenario A–C | `ALLOW` · `REJECT_OPERATOR` · `REJECT_SLIPPAGE` (`demo:escort` alias) |
@@ -161,7 +161,7 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 zerodev-aa-gate.test.ts → assertCitadelRiskGate() + evaluateZeroDevGasGuards()
 zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
  ├─ zerodev-aa-failover.ts → Arbitrum One health / AA probe route
- ├─ zerodev-aa-static-breaker.ts → soil + gas sponsorship limits
+ ├─ [`zerodev-aa-static-breaker.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-static-breaker.ts) → soil + gas sponsorship limits
  └─ zerodev-aa-userop.ts → Paymaster + bundler dispatch (after gate PASS)
 ```
 

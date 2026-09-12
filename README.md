@@ -32,7 +32,7 @@
 
 > **Engineering honesty:** SliverVine is an **Off-Chain Client/Edge Pre-Consensus Intent Firewall**. Standards are classified into three tiers — judges should read the **Status** column before citing any EIP/ERC claim.
 >
-> SilverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.
+> SliverVine executes Edge-Wasm policy validation **before** Arbitrum Sequencer ingress — **0-Gas burned on rejections**.
 >
 > **Zero-Allocation Hot-Path**: The pre-consensus microsecond execution phase operates on pre-allocated static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc), while non-critical cold paths (user warning formatters, error loggers) remain standard readable TypeScript.
 
@@ -40,11 +40,11 @@
 | ---- | ------------ | --------- | --------- |
 | **1** | `[Final]` | **EIP-1193** · **EIP-5792** · **ERC-7540** | **100% compliant** with standard specs, extended into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary) |
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** (Uniswap/Across) · **ERC-7579** (ZeroDev/Rhinestone) | **Semantic alignment** — not normative Final conformance; production code maps to industrial draft problem spaces |
-| **3** | `[Unrelated Draft — Not Implemented]` | EIP-8105 · EIP-8079 · ERC-8226 · ERC-8118 | **No implementation claim** — see [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
+| **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | **No implementation claim** — see [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
 ### Tier 1 — Finalized Core Standards `[Final]`
 
-| Standard | Physical Limitation | SilverVine Pre-Consensus Superset | Proof |
+| Standard | Physical Limitation | SliverVine Pre-Consensus Superset | Proof |
 | -------- | ------------------- | --------------------------------- | ----- |
 | **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)** `[Final]` | `eth_sendTransaction` / `eth_signTypedData_v4` forwarded to RPC unchecked — revert burns gas | **ExoMesh Sub-1.8µs 0-Gas Pre-Consensus Wasm Gate** — `withRetailGuardProvider()` intercepts **before** Sequencer ingress | [`retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) **35/35** |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass `eth_sendTransaction`-only middleware | [`eip5792-send-calls.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` into retail risk stack · one intent-ring attempt per batch | [`eip5792-send-calls.test.ts`](./tests/sdk/eip5792-send-calls.test.ts) **3/3** |
@@ -52,7 +52,7 @@
 
 ### Tier 2 — Active Industrial Standards `[De-facto Industrial Draft]`
 
-| Standard | Industrial Origin | SilverVine Semantic Alignment | Proof |
+| Standard | Industrial Origin | SliverVine Semantic Alignment | Proof |
 | -------- | ----------------- | ----------------------------- | ----- |
 | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** `[De-facto Industrial Draft]` | Uniswap / Across cross-chain intent | **Pre-Consensus Solver Integrity Lock & Semantic Alignment** — [`erc7683-intent-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) + [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) · Solver Pre-flight Capital Lock (`IN_FLIGHT` → `SETTLED`) | `pnpm demo:ingress` · **3/3** |
 | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** `[De-facto Industrial Draft]` | ZeroDev / Rhinestone modular AA hooks | **Edge Isomorphic Pre-Execution Hook Policy** — `assertCitadelRiskGate()` + [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) · Pillar Set X Compliance Pre-Execution Strategy (`AML_INBOUND_TO_ROBINHOOD_BLOCKED`) | `pnpm demo:ingress` Route C |
@@ -62,7 +62,7 @@
 | Standard / EIP | Status | Problem | Implementation | Proof |
 | -------------- | ------ | ------- | -------------- | ----- |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | `[Final]` | On-chain policy cannot catch prompt-injection pre-execution | EIP-1193 middleware + PolicyGuardV2 anchor | **35/35** · Forge suite |
-| **Session mandate attenuation** | `[Final]` ERC-7715 · `[Conceptual]` ERC-8226 | Zero-gas delegation decay unenforced at RPC layer | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
+| **Session mandate attenuation** | `[Final]` [ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) · `[Conceptual]` [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) | Zero-gas delegation decay unenforced at RPC layer | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | Malicious EOA delegation pre-broadcast | [`eip7702-auth-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | No zero-gas intent expiry on soil trip | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
 

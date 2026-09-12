@@ -354,7 +354,7 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 
 > **Telemetry note:** Figures are order-of-magnitude **industry estimates** for threat-modeling — not audited SliverVine protocol KPIs. Primary on-chain SSOT for agent identity and registration growth is [ERC-8004](https://eips.ethereum.org/EIPS/eip-8004) telemetry on [Dune](https://dune.com/dune/erc-8004-onchain-ai-agents). See also [CryptoRank Symposium — agent-security focus](https://cryptorank.io/news/feed/fae5e-ai-agents-web3-hacking-wyoming-symposium).
 
-**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. SliverVine ExoMesh targets this gap at **p50 ~106µs** Edge Wasm evaluation ([§3.5 ReflexCore (SSRC) soil engine](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md#35-wasm-soil-core-m4-summary)) — covering **88%** of the modeled on-chain risk surface per [Risk Framework §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee); the residual **12%** systemic tail is disclosed with Fail-Closed posture.
+**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. SliverVine ExoMesh targets this gap at **p50 ~106µs** Edge Wasm evaluation ([§3.5 ReflexCore (SSRC) soil engine](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md#35-wasm-soil-core-m4-summary)) — covering **88%** of the modeled on-chain risk surface per [Risk Framework §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee); the residual **12%** systemic tail is disclosed with Fail-Closed posture.
 
 ### Real-World Case Studies (Why SliverVine ExoMesh is Essential)
 
@@ -374,7 +374,7 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 | **Session blast-radius** | ✅ $5k cap · scoped `ORDER_EXECUTE` | Varies | **Unbound drain risk** | Framework-dependent | ✅ ERC-4337 scopes |
 | **Prompt injection immunity** | ✅ Bytecode predicates | Partial | Partial | **Vulnerable** at hook | **Vulnerable** to injected UserOps |
 
-> See also [§0 Competitive Matrix — Pre-Execution vs. Post-Execution Risk](#competitive-matrix-pre-execution-vs-post-execution-risk) · [88% Defense Mesh](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#88-defense-mesh-12-post-grant-rd-roadmap) in [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · [Risk Spectrum §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) (formal **88% / 12%** + **80/20 Pareto** definition).
+> See also [§0 Competitive Matrix — Pre-Execution vs. Post-Execution Risk](#competitive-matrix-pre-execution-vs-post-execution-risk) · [88% Defense Mesh](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#88-defense-mesh-12-post-grant-rd-roadmap) in [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · [Risk Spectrum §0.1](./03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) (formal **88% / 12%** + **80/20 Pareto** definition).
 
 ### Supplementary Industry References
 

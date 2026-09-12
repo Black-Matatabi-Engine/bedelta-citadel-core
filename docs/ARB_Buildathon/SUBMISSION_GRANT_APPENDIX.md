@@ -1,4 +1,4 @@
-# Grant Submission Appendix — Sponsor Matrix · GTM · Milestones
+# Grant Submission Appendix — Venue Integration Matrix · GTM · Milestones
 
 > **Lean submission:** [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 
@@ -14,9 +14,9 @@
 | Pendle × GMX cross-guard | [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) |
 | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent policy | [Technical Specification §0.1](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec) |
 | Institutional DD / Basel mapping | [Due Diligence Memorandum](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
-| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
+| **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
-Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/citadel-sdk`](../../docs/04_sdk_and_integration/README.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Sponsor Integration Matrix](#sponsor-integration-matrix).
+Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/citadel-sdk`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
 
 ### The Problem
 
@@ -32,9 +32,9 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 2. **Intent Taxonomy**: Directional division separating `RISK_INCREASE` (`open`/`increase` → strict Fail-Closed evaluation) from `RISK_DECREASE` (`close`/`reduce` → greenlighted with safety routing) — [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard).
 3. **Shadow Margin Engine**: Pre-execution PT exit proceeds vs GMX maintenance margin — [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [Technical Specification §3.1](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#31-microsecond-moats-summary).
 
-### Why Citadel Shield is NOT a Normal RPC Gateway (Cerebrum vs. Cerebellum)
+### Why SliverVine ExoMesh (Module A) is NOT a Normal RPC Gateway (Cerebrum vs. Cerebellum)
 
-Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans; Citadel **Cerebellum** executes involuntary safety reflexes before EIP-712 signing.
+**SliverVine ExoMesh (Module A)** is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans; ExoMesh **Cerebellum** executes involuntary safety reflexes before EIP-712 signing via ReflexCore (SSRC).
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
@@ -43,7 +43,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
                          │ (Intent Payload)
                          ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [Citadel Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
+│ [ExoMesh Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
                          │
            ┌─────────────┴─────────────┐
@@ -52,14 +52,14 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
     Signature Released          Reflex Deadlock Severed
 ```
 
-| Dimension | Normal RPC Gateway | Citadel Shield (Cerebellum) |
+| Dimension | Normal RPC Gateway | SliverVine ExoMesh (SSRC) |
 |-----------|-------------------|-----------------------------|
 | **Role** | Transport relay | Involuntary safety reflex |
 | **Latency** | 50–300ms+ RTT (transport) | **p50 ~15µs – p50 ~106µs** (0.015ms–0.106ms) vs LLM **~1.0s–10.0s** reasoning loop |
 | **On hallucination** | Forwards calldata | **0-Gas FAIL-CLOSED** · `severSigningChannel()` |
 | **AI safety** | Unprotected | Out-of-scope cross-chain venue (e.g. Base / **Aerodrome**) severed in **p50 ~15µs** |
 
-**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; Citadel's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip`.
+**Fail-Closed walkthrough:** Cerebrum drifts into **cross-chain intent hallucination** — routing to **Aerodrome** (legitimate Base-native protocol) while policy authorizes only Arbitrum One's **7-protocol matrix**. Aerodrome is **out-of-scope**, not malicious; ExoMesh's Cerebellum triggers **p50 ~15µs** physical deadlock, severing EIP-712 **before** any cross-chain or unvetted execution → reproduce via `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip`.
 
 ### Legal & Regulatory Positioning
 
@@ -69,7 +69,7 @@ Citadel Shield is the **Cerebellum & Reflex Arc** — the LLM **Cerebrum** plans
 
 ## 88% Defense Mesh & 12% Post-Grant R&D Roadmap
 
-> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar Set Y.
+> **Formal definition (SSOT):** [Risk Mitigation & Disclaimer Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) — **100%** on-chain risk surface = **88%** pre-broadcast interception mesh + **12%** insurmountable systemic residuals · **80/20 Pareto** (microstructure loss concentration) targets the acute 20% tail within Pillar Set Y.
 
 ### Industry Baseline (~80% or Below)
 
@@ -85,7 +85,7 @@ Traditional DeFi / Agent risk checks rely on **post-hoc analytics** or **mutable
 | 🟢 **Session Key Blast-Radius Isolation** | Scoped `ORDER_EXECUTE` + **$5,000** notional cap · **v0.95 replay guard** — consume-once nonce + `expiresAt` (`5829e9a`) | `executeHlSessionKeyOrder` |
 | 🟢 **Oracle & RPC Resilience** | **30s** oracle-lag fail-closed (`ORACLE_LAG_DEADLOCK` / `ORACLE_LAG_DEADLOCK_MS = 30_000`) + **Honeypot trap RPC** defense (`evaluateRpcDefenseGate()` · 99% synthetic slippage decoy) |
 
-> **Engineering scope boundary:** Citadel is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-citadel-shield-does-and-does-not-guarantee).
+> **Engineering scope boundary:** ExoMesh is a **pre-consensus intent firewall**, not a universal risk insurer. V1.0 models **88% mesh coverage** with a disclosed **12%** systemic residual tail — see [Risk Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee).
 
 ### The Remaining **12%** (Why We Need This Foundation Grant)
 
@@ -191,12 +191,12 @@ Optional bridges (Robinhood / Across) are **Pillar Set X Reference Escort Adapte
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `src/services/adapters/gmx-v2-order-payload.ts` |
 | **EIP-1193 Retail Guard** | Universal C-end wallet middleware | `withRetailGuardProvider()` · 0-Gas pre-consensus intercept | `src/sdk/exomesh-agentic-wallet-guard/` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | **Stabilizer** | Universal Sepolia sandbox & cross-pass layer on **421614** | Stabilizer → GMX v2 → Pendle routing · identical `checkSoilResistance()` gates | `src/adapters/stabilizer/stabilizer-adapter.ts` · `pnpm demo:stabilizer` |
-| **B2B Agent Decorator** | Framework-agnostic pre-consensus firewall | `withCitadelShield()` · `verifyAgentIntent()` | `src/sdk/decorator.ts` · `pnpm demo:agent` |
+| **B2B Agent Decorator** | Framework-agnostic pre-consensus firewall | `withExoMeshShield()` (legacy: `withCitadelShield`) · `verifyAgentIntent()` | [`decorator.ts`](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
 | **Robinhood** | Pillar Set X RWA ingress firewall | Outbound-only `46630/4663 → 42161` · **`lostUsd ≡ 0`** · inbound AML BLOCK · ArbOS Elara compatible | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` |
 
 ---
 
-## Sponsor Integration Matrix
+## Venue Integration Matrix
 
 ### 1. Arbitrum One / Sepolia (Core Base)
 
@@ -313,14 +313,14 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ### Competitive Positioning — Four-Dimensional ASCII Matrices (SliverVine Protocol)
 
-**Entity:** SilverVine Labs · **Protocol:** SliverVine Protocol / SliverVine Citadel (BeΔ)  
+**Entity:** SilverVine Labs · **Protocol:** SliverVine Protocol · ExoMesh + Sanctuary (BeΔ)  
 **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196):** Finalized ERC-8196 Standard — Ethereum Standard.
 
 **Matrix 1 — Execution & Pre-Broadcast Severance Profile**
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine Citadel (BeΔ)   │ Legacy ERC-4337 / OZ       │ Gauntlet / Chaos Labs      │
+│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Legacy ERC-4337 / OZ       │ Gauntlet / Chaos Labs      │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
 │ 1. Latency Profile        │ p50 ~106µs (Sub-ms Edge)   │ 50ms – 500ms+ (Bundler RTT)│ Hours to Days (Parameter) │
 │ 2. Pre-Broadcast Severance│ YES (0-Gas Fail-Closed)     │ NO (Post-validation/mempool│ NO (Post-execution audit) │
@@ -333,7 +333,7 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine Citadel (BeΔ)   │ Multisig / Timelock        │ Web2 LLM Guardrails        │
+│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Multisig / Timelock        │ Web2 LLM Guardrails        │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
 │ 1. Policy Gate Layer      │ ERC-8196 (Final) Sub-ms Policy Gate│ On-chain Voting / Delay    │ API Proxy (Centralized)    │
 │ 2. Prompt Injection Guard │ R20 Physical Deadlock       │ Vulnerable to Signed Intent│ Bypassable via Jailbreak   │
@@ -346,7 +346,7 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine Citadel (BeΔ)   │ Native DEX Limit Orders    │ Raw Cross-Chain Bridges    │
+│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Native DEX Limit Orders    │ Raw Cross-Chain Bridges    │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
 │ 1. Cross-Spread Sensing   │ Live GMX/HL Soil Resistance │ Static Slippage Tolerance  │ Blind Asset Relaying       │
 │ 2. Liquidation Defense    │ -40 Haircut (Observatory)   │ Cascading Liquidation Risk │ No Execution Awareness     │
@@ -400,7 +400,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
   - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14 — V1.1)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+  - **SliverVine ExoMesh Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to ExoMesh-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
   - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/citadel-sdk` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane.
 
 ---
@@ -408,7 +408,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 ## Post-Hackathon Expansion Roadmap
 
 * **Milestone 1 (Weeks 2–3 post-grant approval): Native Upstream Plugin PRs**
- * Submit official native plugin Pull Requests (PRs) to **ElizaOS** (`@elizaos/plugin-citadel`) and **Virtuals GAME** (`@virtuals/plugin-citadel`) monorepos, transitioning from the current zero-overhead SDK Wrapper decorator (`withCitadelShield`) to official upstream integration.
+ * Submit official native plugin Pull Requests (PRs) to **ElizaOS** (`@elizaos/plugin-citadel`) and **Virtuals GAME** (`@virtuals/plugin-citadel`) monorepos, transitioning from the current zero-overhead SDK Wrapper decorator (`withExoMeshShield` (legacy: `withCitadelShield`)) to official upstream integration.
 * **Phase 1: Milestone Dune & PoV (Day 7 – 30)**
  * Deploy live Dune Analytics dashboards and onboarding 3 design partners (AI Agent creators on Virtuals/ElizaOS and GMX Vault Managers) for $0-fee Proof-of-Value testing.
 * **Phase 2: Milestone Prediction (Design Spec / Post-Hackathon Roadmap)**
@@ -420,7 +420,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ## Granular Milestone Matrix (Buildathon · Grant-Tied Distribution)
 
-| ID | Unlock condition (objective) | Sponsor / track | Status |
+| ID | Unlock condition (objective) | Venue / track | Status |
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in `/api/grant-audit` | Arbitrum | ✅ Delivered |
 | **M-CLI** | Vitest **225 test files | 1052 PASS clean** | All | ✅ Delivered |
@@ -492,7 +492,7 @@ pnpm demo:pendle   # Tier 1 — Pendle yield guard (ALLOW)
 pnpm demo       # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # Tier 0 — EIP-1193 Retail Guard SDK
-pnpm demo:agent                  # Tier 0 — B2B withCitadelShield smoke demo
+pnpm demo:agent                  # Tier 0 — B2B withExoMeshShield smoke demo
 pnpm test       # Full System Regression Suite (225 test files | 1052 PASS clean)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 cd SliverVineGate && forge test --gas-report && cd ..
@@ -520,7 +520,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + RESULT: E2E OK (4/4)
 ```
 
-**Optional `--unwind` (Step 5 Citadel Shield exercise):**
+**Optional `--unwind` (Step 5 ExoMesh reflex exercise):**
 
 ```diff
 - ALERT: SOIL_TRIPPED — toxic depth fuse
@@ -564,9 +564,9 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 | **Share of on-chain transactions** | **~19%** agent-attributed activity |
 | **Daily Active Wallets (DAW) touchpoints** | **~4.5M** wallets interacting with agent frameworks |
 
-**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. Citadel Shield targets this gap at **p50 ~106µs** Edge Wasm evaluation.
+**Implication:** Security must evolve from post-hoc dashboards and mutable pause functions to **microsecond Pre-Broadcast Intent Firewalls** — severing toxic calldata **before** Sequencer queues, Bundler ingress, or MEV mempools. SliverVine ExoMesh targets this gap at **p50 ~106µs** Edge Wasm evaluation.
 
-### Real-World Case Studies (Why Citadel Shield is Essential)
+### Real-World Case Studies (Why ExoMesh Pre-Broadcast Severance is Essential)
 
 | # | Case | Loss / Impact | Citadel Alignment |
 |---|------|---------------|-------------------|

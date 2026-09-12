@@ -193,11 +193,11 @@ return rejectSlippage(evalAsyncVaultDriftBps(...), maxBps); // ERC7540_ASYNC_SLI
 
 ---
 
-## 4. Sponsor Alignment — Pendle · GMX · USD.ai / sUSDai
+## 4. Venue Alignment — Pendle · GMX · USD.ai / sUSDai
 
 Sanctuary ERC-7540 escort is **selector-level protection** for async vault flows across the **5-Core Venue Matrix** — it does **not** replace ExoMesh soil resistance; it **complements** it for vault-specific async semantics.
 
-| Sponsor / venue | Async vault exposure | Pending → Claimable risk | Sanctuary guard |
+| Venue | Async vault exposure | Pending → Claimable risk | Sanctuary guard |
 |-----------------|---------------------|--------------------------|-----------------|
 | **Pendle Finance** | PT/YT rolls · yield-token async deposit/redemption paths · controller delegation on vault adapters | Operator hijack before PT claim · implied-yield drift between request and settle | `setOperator` lock · drift bps gate on `requestDeposit` / `requestRedeem` · pairs with ExoMesh `agentic-auto-roll-gate` for roll actions |
 | **GMX v2** | GM liquidity pool async deposit/redemption (ERC-7540-class share mechanics) · keeper-settled windows **3–5 min** | NAV drift during GM async window · non-whitelisted controller on pool vault | Operator whitelist on GM vault `controller` · `erc7540MaxSlippageBps` caps Pending→Claimable exchange-rate slip |

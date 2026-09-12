@@ -45,7 +45,7 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 | Surface | Status | Module SSOT | Entry point | Verify |
 |---------|--------|-------------|-------------|--------|
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | ✅ V1.0 Live | [`provider.ts`](../../src/sdk/exomesh-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withCitadelShield()` · `verifyAgentIntent()` | `pnpm demo:agent` |
+| **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` (legacy: `withCitadelShield`) · `verifyAgentIntent()` | `pnpm demo:agent` |
 | **5-Core Venue Guards** | ✅ V1.0 Live | [`src/adapters/{gmx,pendle,usdai,hl,variational*}`](../../src/adapters/) | Per-venue evaluators | `pnpm demo:{gmx,pendle,usdai,hl,variational}` |
 | **Stabilizer Protocol** | ✅ V1.0 Live (Sepolia) | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
 | **Deprecated v1.0 harnesses** | 🗑️ Pruned v1.1 | Wayfinder · ElizaOS · Virtuals · LangChain | Replaced by ExoMesh Agentic Guard + B2B decorator | **RESERVED_ABI_V2** holes preserved |
@@ -90,7 +90,7 @@ Agent Cross-Pass Route (Sepolia 421614)
 
 **Verification bar:** **228 test files | 1065 PASS clean**
 
-### 2.2 Traditional Bridge vs SilverVine Pillar Set X Compliance Escort
+### 2.2 Traditional Bridge vs SliverVine Pillar Set X Compliance Escort
 
 ```text
 Traditional Omnichain Bridge (bidirectional · loss opaque)
@@ -100,7 +100,7 @@ Traditional Omnichain Bridge (bidirectional · loss opaque)
 └──────────────┘   timeout → stuck / social   └──────────────┘
                    recovery · lostUsd > 0 risk
 
-SilverVine Pillar Set X Compliance Escort (unidirectional · fail-closed)
+SliverVine Pillar Set X Compliance Escort (unidirectional · fail-closed)
 ┌─────────────────────┐  Across reference   ┌─────────────────────┐
 │ Robinhood Chain     │  escort state mach. │ Arbitrum One 42161  │
 │ 46630 / 4663 USDG   │ ──────────────────► │ GMX v2 · Pendle PT  │
@@ -110,7 +110,7 @@ SilverVine Pillar Set X Compliance Escort (unidirectional · fail-closed)
          └── inbound 42161→46630/4663 AML BLOCKED · lostUsd ≡ 0
 ```
 
-| Dimension | Traditional Bridge | SilverVine Pillar Set X Escort |
+| Dimension | Traditional Bridge | SliverVine Pillar Set X Escort |
 |-----------|-------------------|----------------------------|
 | **Ingress direction** | Bidirectional pools · any-chain routing | **Unidirectional outbound-only** — Robinhood `46630`/`4663` → Arbitrum `42161` |
 | **In-flight timeout shield** | Capital may appear lost · manual recovery | **>3600s** Across timeout → `BRIDGE_TIMEOUT_FAIL_CLOSED` · **0-Gas severance** |
@@ -342,7 +342,7 @@ allowedToSign =
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
 | **Wallet / dApp (C-End)** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · [§0.3](#03-c-end--b-end-integration-v11-ssot) | EIP-1193 pre-consensus intercept · 0-Gas on reject |
-| **B2B agents** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withCitadelShield` | Apache-2.0 · sub-ms soil gate |
+| **B2B agents** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withExoMeshShield` (legacy: `withCitadelShield`) | Apache-2.0 · sub-ms soil gate |
 | **5-Core venues** | GMX · Pendle · USD.ai · Variational · HL guards · [§0.3](#03-c-end--b-end-integration-v11-ssot) | Per-venue `checkSoilResistance()` |
 | **Stabilizer** | ✅ V1.0 Live (Sepolia) — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
 | **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · adapter spec (removed from repo per `docs/logging/0911_chaos_sandbox_audit.md`) · [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20) | `checkSoilResistance()` · Pillar Set X AML escort boundary |
