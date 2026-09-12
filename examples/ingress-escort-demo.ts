@@ -1,9 +1,9 @@
 #!/usr/bin/env tsx
 /**
  * Pillar 2 — Unidirectional Compliance Escort (Across / Robinhood reference adapter).
- * Usage: pnpm demo:escort
- * Trip:  pnpm demo:escort -- --trip  (Across timeout >3600s · 0-Gas fail-closed · lostUsd ≡ 0)
- * Live:  pnpm demo:escort -- --livingwater
+ * Usage: pnpm demo:ingress
+ * Trip:  pnpm demo:ingress -- --trip  (Across timeout >3600s · 0-Gas fail-closed · lostUsd ≡ 0)
+ * Live:  pnpm demo:ingress -- --livingwater
  */
 import {
   AML_INBOUND_TO_ROBINHOOD_BLOCKED,

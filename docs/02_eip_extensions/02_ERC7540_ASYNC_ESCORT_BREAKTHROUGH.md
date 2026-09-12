@@ -4,7 +4,7 @@
 > **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex  
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 > **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626))  
-> **Verification:** `npx vitest run tests/erc7540-async-escort.test.ts` → **3/3 PASS** `[Sanctuary]` · `pnpm demo:escort`
+> **Verification:** `pnpm demo:sanctuary` → Scenario A–C Matrix `[Sanctuary]` · `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS**
 
 ---
 
@@ -223,7 +223,7 @@ USD.ai sUSDai       PROTO_USDAI lane · depeg fuse   ERC-7540 async rate drift
 | **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [`calldata-parser.ts`](../../src/sdk/eip1193-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
 | **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) | 20% drift REJECT test |
 | **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
-| **5** | Pendle / GMX / USD.ai | Per-protocol dashboards | Unified selector guard + venue config (`allowedVenues` + operators) | **$0** | Retail Guard config | `pnpm demo:escort` |
+| **5** | Pendle / GMX / USD.ai | Per-protocol dashboards | Unified selector guard + venue config (`allowedVenues` + operators) | **$0** | Retail Guard config | `pnpm demo:sanctuary` |
 
 ---
 
@@ -259,11 +259,14 @@ interface RetailGuardConfig {
 ### Verification commands
 
 ```bash
+# Sanctuary ERC-7540 escort interactive CLI (Scenario A–C)
+pnpm demo:sanctuary
+
 # Sanctuary ERC-7540 escort unit proof
 npx vitest run tests/erc7540-async-escort.test.ts
 
-# Treasury escort HUD demo
-pnpm demo:escort
+# Treasury bridge escort HUD
+pnpm demo:ingress
 
 # Full regression (includes escort + ExoMesh stack)
 pnpm test -- --run

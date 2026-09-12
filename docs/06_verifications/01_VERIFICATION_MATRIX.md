@@ -53,9 +53,9 @@ pnpm demo:perp-loop -- --trip            # Zone A Loop A: GMX / Pendle / HL / Va
 pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lane
 
 # === [Sanctuary] Tier 0 — Escrow & Async Vault ===
-pnpm demo:escort                         # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
+pnpm demo:sanctuary                      # Sanctuary Async Escort (ERC-7540+) Scenario A–C
+pnpm demo:ingress                        # Unidirectional Compliance Bridge Escort (lostUsd ≡ $0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
-npx vitest run tests/erc7540-async-escort.test.ts
 
 # === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
 pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
@@ -70,7 +70,7 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
 | `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
 | `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
-| `npx vitest run tests/erc7540-async-escort.test.ts` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — operator whitelist + async slippage drift |
+| `pnpm demo:sanctuary` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — Scenario A–C · operator whitelist + async slippage drift |
 | `pnpm demo:exomesh` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
 | `pnpm demo:exomesh -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
 | `pnpm demo:exomesh -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
@@ -81,7 +81,8 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 | `pnpm demo:spot-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
 | `pnpm demo` | `[ExoMesh]` | 12 Dual Pillar Set X & Y ANSI scenarios |
 | `pnpm demo:e2e` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
-| `pnpm demo:escort` | `[Sanctuary]` | Unidirectional compliance bridge escort |
+| `pnpm demo:ingress` | `[Sanctuary]` | Unidirectional compliance bridge escort |
+| `pnpm demo:sanctuary` | `[Sanctuary]` | ERC-7540+ async vault escort Scenario A–C matrix |
 | `pnpm demo:e2e:arb-native` | `[ExoMesh]` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | `[ExoMesh]` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |
 | `pnpm run audit:security` | `[ExoMesh]` | 3-Axis Security Scorecard **5/0/0 PASS** |
@@ -125,7 +126,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 | Module | Scope | Verify |
 |--------|-------|--------|
 | **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` |
+| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:sanctuary` · `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` |
 
 ---
 
@@ -135,7 +136,7 @@ Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two c
 
 | Layer | Hard evidence | Entrypoint |
 |-------|---------------|------------|
-| **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:escort` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) Route A |
+| **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:ingress` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) Route A |
 | **Inbound AML block** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | Route C in same demo · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) `validateAcrossBridgeDirection` |
 | **Treasury Escort & Collateral Ingress** | Institutional Treasury Escort Router — `quoteRChainYieldToArbitrumGm()` · `assetKind` · `symbol` · size gates · bridge escort bind | [`src/adapters/robinhood/treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) · [`tests/adapters/treasury-escort-router.test.ts`](../../tests/adapters/treasury-escort-router.test.ts) |
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · SSRC soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · [`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |

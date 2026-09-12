@@ -410,7 +410,7 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 
 # MO Signature C — ERC-7540 operator hijack [Sanctuary]
-npx vitest run tests/erc7540-async-escort.test.ts
+pnpm demo:sanctuary
 
 # Honeypot C1 — trap host decoy
 npx vitest run tests/defense/rpc-whitelist.test.ts

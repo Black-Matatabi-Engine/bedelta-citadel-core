@@ -66,9 +66,9 @@
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
-| Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) | `pnpm demo:escort` |
+| Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) | `pnpm demo:ingress` |
 | Across ingress / AML unidirectional escort | [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) | [`tests/adapters/across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
-| **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `npx vitest run tests/erc7540-async-escort.test.ts` |
+| **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
 
 ---
 
@@ -78,7 +78,7 @@
 - **Physical Deadlock (**`rootProtection`**):** Wasm reflex core severs [EIP-712](https://eips.ethereum.org/EIPS/eip-712) signing channels at **p50 ~15µs** before toxic payloads reach bundler ingress.
 - **5-Core Venue Matrix:** Hardened execution boundaries across GMX v2, Pendle, USD.ai, Hyperliquid, and Variational with zero capital leakage ($lostUsd \equiv 0$).
 - **SliverVine ExoMesh (Module A):** `@slivervine/eip1193-agentic-wallet-guard` — `withRetailGuardProvider()` intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` pre-consensus · verify: `pnpm demo:exomesh`.
-- **SliverVine Sanctuary (Module B · Pillar Set X Escrow Substrate):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:escort`.
+- **SliverVine Sanctuary (Module B · Pillar Set X Escrow Substrate):** ChainId **`46630`** (testnet) / **`4663`** (mainnet) · Institutional Treasury Escort Router · outbound escort **`46630`/`4663` → `42161`** · inbound AML block · verify: `pnpm demo:ingress` · ERC-7540+: `pnpm demo:sanctuary`.
 
 ---
 
@@ -172,9 +172,9 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 
 # [Sanctuary] Tier 0 — Escrow & Async Vault
-pnpm demo:escort
+pnpm demo:sanctuary              # ERC-7540+ Scenario A–C Matrix
+pnpm demo:ingress                # Treasury bridge escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
-npx vitest run tests/erc7540-async-escort.test.ts
 
 # Full Regression Test Suite (228 test files | 1065 PASS clean)
 pnpm test -- --run

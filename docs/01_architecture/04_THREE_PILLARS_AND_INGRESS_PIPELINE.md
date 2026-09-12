@@ -115,9 +115,9 @@ SilverVine Pillar Set X Compliance Escort (unidirectional · fail-closed)
 | **Ingress direction** | Bidirectional pools · any-chain routing | **Unidirectional outbound-only** — Robinhood `46630`/`4663` → Arbitrum `42161` |
 | **In-flight timeout shield** | Capital may appear lost · manual recovery | **>3600s** Across timeout → `BRIDGE_TIMEOUT_FAIL_CLOSED` · **0-Gas severance** |
 | **Pending-capital accounting** | Ambiguous pending / LP share semantics | `IN_FLIGHT_BRIDGE_CAPITAL` → `SETTLED` · deployable ⇔ settled ∧ route allowed |
-| **Loss invariant** | External insurance / social layer | **`lostUsd ≡ 0`** — state machine SSOT · Vitest **6/6** · `pnpm demo:escort` |
+| **Loss invariant** | External insurance / social layer | **`lostUsd ≡ 0`** — state machine SSOT · Vitest **6/6** · `pnpm demo:ingress` |
 
-**CLI:** `pnpm demo:escort` — multi-route HUD (Route A RH→42161 · Route B HL L1 probe · Route C Arb→Base) · `pnpm demo:escort -- --trip` — timeout fail-closed + `lostUsd ≡ 0` check.
+**CLI:** `pnpm demo:ingress` — multi-route HUD (Route A RH→42161 · Route B HL L1 probe · Route C Arb→Base) · `pnpm demo:ingress -- --trip` — timeout fail-closed + `lostUsd ≡ 0` check · ERC-7540+: `pnpm demo:sanctuary`.
 
 ### 2.3 ZeroDev Smart Route Calldata Binding (Pillar Set X Reference Harness — Demo Spec)
 

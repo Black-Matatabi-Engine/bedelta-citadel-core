@@ -170,9 +170,9 @@ pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 
 # [Sanctuary] Tier 0 — Escrow & Async Vault
-pnpm demo:escort
+pnpm demo:sanctuary
+pnpm demo:ingress
 npx vitest run tests/adapters/treasury-escort-router.test.ts
-npx vitest run tests/erc7540-async-escort.test.ts
 
 pnpm demo:e2e
 ```
@@ -180,7 +180,7 @@ pnpm demo:e2e
 | Tier | Tag | Commands | Scope |
 |------|-----|----------|-------|
 | **Tier 0** | `[ExoMesh]` | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
-| **Tier 0** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · **Sanctuary Async Escort (ERC-7540+)** |
+| **Tier 0** | `[Sanctuary]` | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | **Sanctuary Async Escort (ERC-7540+)** · Treasury escort |
 | **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
@@ -201,7 +201,7 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 | Fact | Code / test anchor |
 |------|-------------------|
 | ChainId **`46630`** (testnet) · **`4663`** (mainnet) — **not `46631`** | [`src/sdk/constants.ts`](./src/sdk/constants.ts) |
-| **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:escort` · [`assertUnidirectionalBridge`](./src/sdk/unidirectional-bridge.ts) |
+| **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:ingress` · [`assertUnidirectionalBridge`](./src/sdk/unidirectional-bridge.ts) |
 | **Inbound AML** `42161 → Robinhood` blocked | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
 | **Treasury Escort & Collateral Ingress** | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) · [`treasury-escort-router.test.ts`](./tests/adapters/treasury-escort-router.test.ts) |
 | **EIP-1193 0-Gas protection (ExoMesh Module A)** | `@slivervine/eip1193-agentic-wallet-guard` · **35/35** · `MAX_ATTEMPTS_EXCEEDED_SEVERED` |

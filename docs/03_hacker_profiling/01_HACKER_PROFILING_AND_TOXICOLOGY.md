@@ -141,7 +141,7 @@ return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per bat
 
 **Mindhunter read:** Permission drift = **grooming** MO — establish trust delegation before extraction. Sanctuary applies **zero-trust operator whitelist** at broadcast time; revocation (`approved=false`) always allowed.
 
-**Chaos tier:** **C3** — [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3** `[Sanctuary]`
+**Chaos tier:** **C3** — `pnpm demo:sanctuary` · [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3** `[Sanctuary]`
 
 **SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_BREAKTHROUGH.md)
 
@@ -230,7 +230,7 @@ real venue RTT                    HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 |-------|------------------|-----------|--------------|
 | **C1** | Decoy inoculation | Unauthenticated RPC scrapers | [`tests/defense/rpc-whitelist.test.ts`](../../tests/defense/rpc-whitelist.test.ts) `[ExoMesh]` |
 | **C2** | Reflex severance vs batch concealment | Burst retry + `wallet_sendCalls` masking | [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** · [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
-| **C3** | Sanctuary async-vault lock | Oracle lag · de-peg · ERC-7540 drift | `pnpm demo:usdai -- --trip` · [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3** `[Sanctuary]` |
+| **C3** | Sanctuary async-vault lock | Oracle lag · de-peg · ERC-7540 drift | `pnpm demo:sanctuary` · `pnpm demo:usdai -- --trip` |
 
 > **Honest boundary:** C1–C3 are **in-process Mini-Chaos** proofs. Large-scale K8s / Sequencer outage chaos is **NOT RUN** — disclosed per [`0911_offwork_Grok_zh.md`](../internal/opsec/0911_offwork_Grok_zh.md).
 
@@ -302,7 +302,7 @@ Every reject path in Signatures A · B · C · C1 honeypot · C3 async drift sat
 |-----------------|---------|----------------------|----------------------|--------|
 | **Mindhunter** | Signature A — Burst | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) **11/11** |
 | **Mindhunter** | Signature B — Batch | [`eip5792-send-calls.ts`](../../src/sdk/eip1193-agentic-wallet-guard/eip5792-send-calls.ts) | `SEND_CALLS_BATCH_REJECTED` · per-call codes | [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
-| **Mindhunter** | Signature C — Drift | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3** |
+| **Mindhunter** | Signature C — Drift | [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | `pnpm demo:sanctuary` |
 | **Immunology** | Decoy inoculation C1 | [`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) | `HONEYPOT_ACTIVE` · 99% slippage | [`rpc-whitelist.test.ts`](../../tests/defense/rpc-whitelist.test.ts) |
 | **Immunology** | Adversarial telemetry vaccine | [`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts) | Jittered `slippageFuse` · mask commit | [`protocol-mask-sync.test.ts`](../../tests/core/protocol-mask-sync.test.ts) |
 | **ReflexCore (SSRC)** | Sub-1.8µs reflex | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | `SOIL_TRIPPED` · `rootProtection()` | `pnpm demo:gmx -- --trip` |
@@ -319,7 +319,7 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
 npx vitest run tests/sdk/eip5792-send-calls.test.ts
 
 # Mindhunter Signature C — ERC-7540 operator lock [Sanctuary]
-npx vitest run tests/erc7540-async-escort.test.ts
+pnpm demo:sanctuary
 
 # Immunology C1 — honeypot trap hosts
 npx vitest run tests/defense/rpc-whitelist.test.ts

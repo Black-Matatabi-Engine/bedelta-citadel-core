@@ -74,8 +74,8 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts
 Selector-level guard for `requestDeposit`, `requestRedeem`, `setOperator` — non-whitelisted operators fail-closed; Pending→Claimable slippage drift gate.
 
 ```bash
-npx vitest run tests/erc7540-async-escort.test.ts   # [Sanctuary] 3/3 PASS
-pnpm demo:escort                                     # [Sanctuary] Treasury escort HUD
+pnpm demo:sanctuary                                  # [Sanctuary] ERC-7540+ Scenario A–C Matrix
+pnpm demo:ingress                                    # [Sanctuary] Treasury bridge escort HUD
 ```
 
 ---

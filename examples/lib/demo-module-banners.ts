@@ -12,7 +12,7 @@ export const MODULE_A_BANNER_LINES = [
 export const MODULE_B_BANNER_LINES = [
   "🏛️ SliverVine Sanctuary (Module B · ~30% Surface)",
   "Sanctuary Async Escort (ERC-7540+) · Treasury Escort Router",
-  "Ingress: Across / Robinhood AML Ingress · Pillar Set X Risk Engine",
+  "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;
 
 export const OPSEC_FFI_FOOTNOTE =
