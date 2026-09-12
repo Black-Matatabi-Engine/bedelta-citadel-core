@@ -11,14 +11,14 @@
 > *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the hero product; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
 
 ![Vitest](https://img.shields.io/badge/Vitest-1065%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
-![Zero-Allocation Hot-Path](https://img.shields.io/badge/Zero--Allocation_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
+![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
 ![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)
 ![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_p50_15%CE%BCs-blueviolet?logo=speedtest)
 ![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
-![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Live_42161-28A0F0?logo=arbitrum)
+![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Sepolia_Verified_(42161_Ready)-28A0F0?logo=arbitrum)
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
