@@ -373,12 +373,12 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 **Reviewer clarification:** p50 ~106µs measures **Layer 1 Edge Gateway + Wasm** — not L1/L2 block confirmation. Layer 2 Nitro protection is proven by Stylus opcode Gas parity (`benchmark-stylus-opcode.ts`) and `SliverVineRiskOracle` STATUS_SHUTDOWN flush — both execute **inside** Arbitrum Sequencer block production.
 
-### 3.7 EIP-1193 Agentic Wallet Guard SDK — C-End EIP-1193 Middleware
+### 3.7 ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension
 
 > **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core `pkg/soil_core.wasm`  
 > **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
-The **EIP-1193 Agentic Wallet Guard SDK** (`@slivervine/eip1193-agentic-wallet-guard`) packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** — no Cloudflare Worker required for C-end wallet and agentic wallet integrations.
+The **ExoMesh Agentic Guard** (`@slivervine/eip1193-agentic-wallet-guard`) — an **EIP-1193/5792/6963 Agentic Wallet Guard Extension** — packages Citadel's pre-consensus reflex arc as **ultra-lightweight browser middleware** compliant with standard EIP-1193 / EIP-5792 / EIP-6963 specs, extended into a **0-Gas pre-consensus superset**. No Cloudflare Worker required for C-end wallet and agentic wallet integrations.
 
 | Layer | Module | Defense role |
 |-------|--------|--------------|

@@ -20,7 +20,7 @@
 
 ---
 
-## Tier 0 — EIP-1193 / EIP-6963 Agentic Wallet Guard SDK
+## Tier 0 — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
 **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents

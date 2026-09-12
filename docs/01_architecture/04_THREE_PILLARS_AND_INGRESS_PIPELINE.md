@@ -44,11 +44,11 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 
 | Surface | Status | Module SSOT | Entry point | Verify |
 |---------|--------|-------------|-------------|--------|
-| **EIP-1193 Retail Guard (C-End)** | ✅ V1.0 Live | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | ✅ V1.0 Live | [`provider.ts`](../../src/sdk/eip1193-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
 | **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withCitadelShield()` · `verifyAgentIntent()` | `pnpm demo:agent` |
 | **5-Core Venue Guards** | ✅ V1.0 Live | [`src/adapters/{gmx,pendle,usdai,hl,variational*}`](../../src/adapters/) | Per-venue evaluators | `pnpm demo:{gmx,pendle,usdai,hl,variational}` |
 | **Stabilizer Protocol** | ✅ V1.0 Live (Sepolia) | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
-| **Deprecated v1.0 harnesses** | 🗑️ Pruned v1.1 | Wayfinder · ElizaOS · Virtuals · LangChain | Replaced by EIP-1193 Retail Guard + B2B decorator | **RESERVED_ABI_V2** holes preserved |
+| **Deprecated v1.0 harnesses** | 🗑️ Pruned v1.1 | Wayfinder · ElizaOS · Virtuals · LangChain | Replaced by ExoMesh Agentic Guard + B2B decorator | **RESERVED_ABI_V2** holes preserved |
 
 **Regression bar:** **228 test files | 1064 PASS clean**
 

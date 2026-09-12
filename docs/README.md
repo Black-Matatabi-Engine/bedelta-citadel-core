@@ -6,9 +6,9 @@
 | # | Directory | Judge-facing scope |
 |---|-----------|-------------------|
 | **01** | [`01_architecture/`](./01_architecture/) | Topology · ReflexCore (SSRC) · Risk framework · Pillar Sets X/Y |
-| **02** | [`02_eip_extensions/`](./02_eip_extensions/) | EIP compliance matrix · ERC-7540 Sanctuary breakthrough |
+| **02** | [`02_eip_extensions/`](./02_eip_extensions/) | EIP compliance matrix · ExoMesh Agentic Guard (EIP-1193/5792/6963+) · Sanctuary Async Escort (ERC-7540+) |
 | **03** | [`03_hacker_profiling/`](./03_hacker_profiling/) | MO signatures · Pre-consensus telemetry · Dune PCTII |
-| **04** | [`04_sdk_and_integration/`](./04_sdk_and_integration/) | `@slivervine/eip1193-agentic-wallet-guard` · ExoMesh provider spec |
+| **04** | [`04_sdk_and_integration/`](./04_sdk_and_integration/) | `@slivervine/eip1193-agentic-wallet-guard` · ExoMesh Agentic Guard (EIP-1193/5792/6963+) spec |
 | **05** | [`05_pitch_and_demos/`](./05_pitch_and_demos/) | Demo video script · CLI runbook |
 | **06** | [`06_verifications/`](./06_verifications/) | Verification matrix · Zero-Allocation Hot-Path benchmark · on-chain anchors |
 

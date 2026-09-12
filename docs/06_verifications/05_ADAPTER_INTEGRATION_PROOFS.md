@@ -1,4 +1,4 @@
-# Integration Proofs v2 (5-Core Venues · EIP-1193 Retail Guard · B2B Decorator)
+# Integration Proofs v2 (5-Core Venues · ExoMesh Agentic Guard · B2B Decorator)
 
 > **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)  
 > **Vitest baseline:** **228 test files | 1065 PASS clean**
@@ -9,7 +9,7 @@
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ (a) C-End: EIP-1193 Retail Guard SDK                            │
+│ (a) C-End: ExoMesh Agentic Guard (EIP-1193/5792/6963+)          │
 │     withRetailGuardProvider() → eth_sendTransaction intercept   │
 ├─────────────────────────────────────────────────────────────────┤
 │ (b) 5-Core Venue Guards + Demo CLIs                             │
@@ -23,7 +23,7 @@
 
 ---
 
-## (a) EIP-1193 Retail Guard — C-End Middleware
+## (a) ExoMesh Agentic Guard (EIP-1193/5792/6963+) — C-End Middleware
 
 Citadel ships a **universal wallet middleware** for any EIP-1193 host (dApp · wallet · AI copilot):
 

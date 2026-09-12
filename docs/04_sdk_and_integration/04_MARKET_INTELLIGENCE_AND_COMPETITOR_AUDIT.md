@@ -1,4 +1,4 @@
-# Market Intelligence & Competitor Audit — EIP-1193 Agentic Wallet Guard SDK
+# Market Intelligence & Competitor Audit — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
 > **Document:** 02 — Market Intelligence Whitepaper  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard` · **License:** Apache-2.0  
@@ -68,7 +68,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 | Brand | Audience | Pitch |
 |-------|----------|-------|
 | **EIP-1193 Agentic Wallet Guard** | Grant reviewers · brokerage pilots | Involuntary reflex arc for 50M+ retail wallets |
-| **EIP-1193 Retail Guard SDK** | Wallet vendors · dApp integrators | Omni-chain middleware under Apache-2.0 |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | Wallet vendors · dApp integrators | Omni-chain middleware under Apache-2.0 |
 
 ### IP Boundary
 
@@ -85,7 +85,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 |--------|----------|--------|
 | EVM wallet injectors (MetaMask-class) | 100M+ monthly active | Industry baseline |
 | AI agent wallet frameworks (2026) | ElizaOS · LangChain · Virtuals · custom copilots | ExoMesh **EIP-1193 middleware** + B2B `withExoMeshShield` (legacy: `withCitadelShield`) |
-| Pre-consensus intercept TAM | Every `eth_sendTransaction` + `eth_signTypedData_v4` + `wallet_sendCalls` | EIP-1193 / EIP-5792 surface |
+| Pre-consensus intercept TAM | Every `eth_sendTransaction` + `eth_signTypedData_v4` + `wallet_sendCalls` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** surface |
 | Wasm bundle budget | **< 28 KiB** · warm **< 60 µs** | `pkg/soil_core.wasm` SSOT |
 
 ---

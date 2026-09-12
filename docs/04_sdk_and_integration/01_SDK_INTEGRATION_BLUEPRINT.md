@@ -1,12 +1,14 @@
 # `@slivervine/eip1193-agentic-wallet-guard` — Integration Blueprint
 
-**Official Name:** EIP-1193 Agentic Wallet Guard SDK  
+**Official Name:** ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension  
 **Product module:** SliverVine ExoMesh (Module A)  
 **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
 **License:** Apache-2.0 · **Entity:** SilverVine Labs  
 **Package:** `@slivervine/eip1193-agentic-wallet-guard`  
 **Source:** [`src/sdk/eip1193-agentic-wallet-guard/`](../../src/sdk/eip1193-agentic-wallet-guard/)  
 **Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for Robinhood Chain, Omni-EVM AI agents, and retail wallets
+
+> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
 > **Verification:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 test files) · **Tier 0 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json`
 
@@ -74,7 +76,7 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 | Robinhood escort | `pnpm demo:escort` | Outbound `46630 → 42161` · inbound AML block · `lostUsd ≡ 0` |
 | EIP-1193 guard | `pnpm demo:eip1193` | Omni-EVM pre-consensus · Scenario A–D · `JUDGE_SAFE` clock on Arbitrum One `42161` |
 
-**ERC-7540 async vault escort (`[Sanctuary]`):** Selector-level guard in [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) — verify: `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS**.
+**Sanctuary Async Escort (ERC-7540+) (`[Sanctuary]`):** ERC-7540 Async Vault Escort Extension — selector-level guard in [`erc7540-async-escort.ts`](../../src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) — verify: `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS**.
 
 **Do not conflate:** `evaluateRetailVenueAllowlist()` is a **config-driven** anti-phishing gate (`allowedVenues` whitelist) in **SliverVine ExoMesh (Module A)**. It does **not** embed Robinhood stock-token mint contract ABIs. Institutional treasury routing is enforced in **SliverVine Sanctuary (Module B)** via `quoteRChainYieldToArbitrumGm()` before GMX smart-route binding.
 

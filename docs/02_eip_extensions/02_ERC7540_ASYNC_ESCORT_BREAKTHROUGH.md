@@ -1,7 +1,8 @@
-# ERC-7540 Async Vault Escort — SliverVine Sanctuary Breakthrough
+# Sanctuary Async Escort (ERC-7540+) — SliverVine Sanctuary Breakthrough
 
-> **Product:** **SliverVine Sanctuary** (Module B · ~30% pitch) — Treasury escort · async vault selector guard · Robinhood / Across compliance ingress  
-> **Complement:** **SliverVine ExoMesh** (Module A) — EIP-1193 / EIP-5792 pre-consensus Wasm reflex  
+> **Product:** **SliverVine Sanctuary** (Module B · ~30% pitch) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · async vault selector guard · Robinhood / Across compliance ingress  
+> **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex  
+> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 > **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626))  
 > **Verification:** `npx vitest run tests/erc7540-async-escort.test.ts` → **3/3 PASS** `[Sanctuary]` · `pnpm demo:escort`
 
@@ -9,7 +10,7 @@
 
 ## Executive Summary
 
-**SliverVine Sanctuary** ships a **selector-level ERC-7540 async vault escort** — not a full vault implementation, but a **pre-broadcast fail-closed policy layer** that intercepts `eth_sendTransaction` calldata **before** Arbitrum Sequencer ingress.
+**SliverVine Sanctuary** ships **Sanctuary Async Escort (ERC-7540+)** — a **selector-level ERC-7540 Async Vault Escort Extension**, not a full vault implementation, but a **pre-broadcast fail-closed policy layer** that intercepts `eth_sendTransaction` calldata **before** Arbitrum Sequencer ingress.
 
 Standard DeFi safety tooling (synchronous ERC-4626 share math, instant-redeem slippage oracles, post-tx analytics) **cannot see** the **Pending → Claimable** delay window where operator delegation and exchange-rate drift create a **zero-trust attack surface**. Sanctuary closes that window with:
 

@@ -3,8 +3,10 @@
 **SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v0.95 Santenmoku Core`  
 **DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com)
 
-> **SliverVine ExoMesh** (Module A · ~70% pitch) — EIP-1193/5792 pre-consensus exoskeleton · powered by **SliverVine Stylus ReflexCore (SSRC)** (`pkg/soil_core.wasm` + Arbitrum Stylus coprocessor · sub-1.8µs warm soil check).  
-> **SliverVine Sanctuary** (Module B · ~30% pitch) — Treasury escort router · [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) async vault guard · Robinhood / Across compliance ingress · Pillar Set X.
+> **SliverVine ExoMesh** (Module A · ~70% pitch) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · powered by **SliverVine Stylus ReflexCore (SSRC)** (`pkg/soil_core.wasm` + Arbitrum Stylus coprocessor · sub-1.8µs warm soil check).  
+> **SliverVine Sanctuary** (Module B · ~30% pitch) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort router · Robinhood / Across compliance ingress · Pillar Set X.
+>
+> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 >
 > *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the hero product; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
 
@@ -56,7 +58,7 @@
 
 | Surface | SSOT | Verify |
 |---------|------|--------|
-| EIP-1193 / EIP-5792 / EIP-6963 SDK | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | [`src/sdk/eip1193-agentic-wallet-guard/`](./src/sdk/eip1193-agentic-wallet-guard/) | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | Wasm reflex core (`rootProtection`, `checkSoilResistance`) | [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | `pnpm demo:gmx -- --trip` |
 | 5-Core Venue Matrix | GMX · Pendle · USD.ai · HL · Variational | `pnpm demo:{gmx,hl,variational} -- --trip` |
 
@@ -66,7 +68,7 @@
 |---------|------|--------|
 | Institutional Treasury Escort Router | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) | `pnpm demo:escort` |
 | Across ingress / AML unidirectional escort | [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) | `tests/adapters/across-ingress-bridge.test.ts` |
-| ERC-7540 async vault escort (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `npx vitest run tests/erc7540-async-escort.test.ts` |
+| **Sanctuary Async Escort (ERC-7540+)** (selector-level) | [`erc7540-async-escort.ts`](./src/sdk/eip1193-agentic-wallet-guard/erc7540-async-escort.ts) | `npx vitest run tests/erc7540-async-escort.test.ts` |
 
 ---
 

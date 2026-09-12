@@ -11,7 +11,7 @@
 
 | Category | File Count | Test Count (`it`) | Assertion Count (`expect`) | Execution Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **Core Protocol & SSRC Engine** | ~198 | ~998 | ~3,055 | Pure Wasm, EIP-1193/5792, ERC-7540, R01–R20 Defense Matrix |
+| **Core Protocol & SSRC Engine** | ~198 | ~998 | ~3,055 | Pure Wasm, ExoMesh Agentic Guard (EIP-1193/5792/6963+), Sanctuary Async Escort (ERC-7540+), R01–R20 Defense Matrix |
 | **Grant HUD & Copy SSOT** | 12 | ~30 | ~102 | GUI bridge, certificate copy & design token invariants |
 | **Reference Agent Adapters** | 5 | ~15 | ~64 | Virtuals, ElizaOS, Wayfinder, LangChain harness verification |
 | **Demo Flow Reproducibility** | 3 | ~12 | ~35 | End-to-end scenario validation (GMX, Pendle, Hyperliquid) |
@@ -67,10 +67,10 @@ pnpm test -- --run                       # Full Regression Suite (228 test files
 
 | Command | Tag | Proves |
 |---------|-----|--------|
-| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | EIP-1193 / EIP-6963 Retail Guard · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
-| `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold · **3/3 PASS** |
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `[ExoMesh]` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` SSOT |
+| `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | `[ExoMesh]` | EIP-5792 `wallet_sendCalls` batch unfold (Agentic Guard extension) · **3/3 PASS** |
 | `npx vitest run tests/adapters/treasury-escort-router.test.ts` | `[Sanctuary]` | Institutional treasury escort routing |
-| `npx vitest run tests/erc7540-async-escort.test.ts` | `[Sanctuary]` | ERC-7540 operator whitelist + async slippage drift |
+| `npx vitest run tests/erc7540-async-escort.test.ts` | `[Sanctuary]` | **Sanctuary Async Escort (ERC-7540+)** — operator whitelist + async slippage drift |
 | `pnpm demo:eip1193` | `[ExoMesh]` | **Tier 0 interactive CLI** · Scenario **A–D State Matrix** · `JUDGE_SAFE` clock · production `plainTextWarning` echo · recording pauses (TTY) |
 | `pnpm demo:eip1193 -- --json` | `[ExoMesh]` | Structured JSON array for Dune / CI (`scenario`, `status`, `wasmUs`, `code`, `plainTextWarning`) |
 | `pnpm demo:eip1193 -- --trip` | `[ExoMesh]` | Scenario **C–D shortcut** · FAIL_CLOSED intercept + Hot-Key channel severance |
@@ -107,7 +107,9 @@ The banner is emitted by `examples/lib/eip1193-breakthrough-helpers.ts` (`JUDGE_
 
 > **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
-Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — interactive demonstration plus exhaustive unit SSOT:
+> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard EIP-1193 / EIP-5792 and ERC-7540 specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
+
+Tier 0 **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** verification uses **two complementary tracks** — interactive demonstration plus exhaustive unit SSOT:
 
 | Track | Entrypoint | Scope |
 |-------|------------|-------|
@@ -123,7 +125,7 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 | Module | Scope | Verify |
 |--------|-------|--------|
 | **SliverVine ExoMesh (Module A)** | Omni-EVM pre-consensus middleware · Defense Layers 1–4 ([`03_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)) | `[ExoMesh]` `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · Institutional Treasury Escort Router · ERC-7540 · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` |
+| **SliverVine Sanctuary (Module B)** | Pillar Set X Escrow Substrate · **Sanctuary Async Escort (ERC-7540+)** · Institutional Treasury Escort Router · outbound `46630`/`4663` → `42161` | `[Sanctuary]` `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` |
 
 ---
 
@@ -136,7 +138,7 @@ Tier 0 EIP-1193 / EIP-6963 verification uses **two complementary tracks** — in
 | **Outbound escort** | Unidirectional **`46630`/`4663` → `42161`** · `assertUnidirectionalBridge()` · `lostUsd ≡ 0` | `pnpm demo:escort` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) Route A |
 | **Inbound AML block** | `42161 → 46630/4663` → `AML_INBOUND_TO_ROBINHOOD_BLOCKED` | Route C in same demo · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) `validateAcrossBridgeDirection` |
 | **Treasury Escort & Collateral Ingress** | Institutional Treasury Escort Router — `quoteRChainYieldToArbitrumGm()` · `assetKind` · `symbol` · size gates · bridge escort bind | [`src/adapters/robinhood/treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) · `tests/adapters/treasury-escort-router.test.ts` |
-| **EIP-1193 middleware (ExoMesh Module A)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · SSRC soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
+| **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | **Chain-agnostic** Omni-EVM pre-consensus guard — `MAX_ATTEMPTS_EXCEEDED_SEVERED` · SSRC soil · **not** Robinhood calldata-specific | `@slivervine/eip1193-agentic-wallet-guard` · `tests/sdk/retail-guard-provider.test.ts` **35/35** |
 | **Audit certificate** | SHA-256 snapshot · inbound invariant probe | `GET /api/robinhood-audit-snapshot` · [`src/sdk/robinhood-audit-snapshot.ts`](../../src/sdk/robinhood-audit-snapshot.ts) |
 
 **Bridge regression:** [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) · [`tests/sdk/citadel-sdk-bridge-armor.test.ts`](../../tests/sdk/citadel-sdk-bridge-armor.test.ts)
@@ -192,7 +194,7 @@ Full harness specs · `[MAINNET_LIVE_EXECUTION_EVIDENCE]` → [`04_LIVE_FIRE_EVI
 | **Zone A** | 30-second express · Tier 0–1 + Zone A/B demo suite | [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) § Zone A |
 | **Zone A.1** | Security audit · bundle gates | same § Zone A.1 |
 | **Zone B** | Hybrid Pillar Sets X & Y inside (GMX · Pendle · Dune) | same § Zone B |
-| **Zone C** | EIP-1193 Retail Guard · 5-core venue proofs · B2B decorator | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) |
+| **Zone C** | ExoMesh Agentic Guard (EIP-1193/5792/6963+) · 5-core venue proofs · B2B decorator | [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) |
 
 ---
 

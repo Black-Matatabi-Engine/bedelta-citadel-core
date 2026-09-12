@@ -8,8 +8,8 @@
 
 | Tier / Zone | Tag | Commands | Scope |
 |-------------|-----|----------|-------|
-| **Tier 0 — SDK/CLI Unit & Integration** | `[ExoMesh]` | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | EIP-1193 C-end middleware · `withRetailGuardProvider()` · Scenario A–D |
-| **Tier 0 — Escrow & Async Vault** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · ERC-7540 async vault guard |
+| **Tier 0 — SDK/CLI Unit & Integration** | `[ExoMesh]` | `pnpm demo:eip1193` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · `withRetailGuardProvider()` · Scenario A–D |
+| **Tier 0 — Escrow & Async Vault** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · **Sanctuary Async Escort (ERC-7540+)** |
 | **Tier 1 — Full Protocol Regression** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
@@ -44,7 +44,7 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 | `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:e2e -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
-| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Retail Guard SDK | **35/35 PASS** |
+| `npx vitest run tests/sdk/retail-guard-provider.test.ts` | ExoMesh Agentic Guard (EIP-1193/5792/6963+) | **35/35 PASS** |
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |

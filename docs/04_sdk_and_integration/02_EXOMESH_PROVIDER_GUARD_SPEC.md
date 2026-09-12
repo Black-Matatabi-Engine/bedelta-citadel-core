@@ -1,4 +1,4 @@
-# AI Agent Intent Protection — EIP-1193 Agentic Wallet Guard SDK
+# AI Agent Intent Protection — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
 > **License:** Apache-2.0 wrapper · proprietary reflex math compiled in `pkg/soil_core.wasm`  
 > **Package:** `@slivervine/eip1193-agentic-wallet-guard`

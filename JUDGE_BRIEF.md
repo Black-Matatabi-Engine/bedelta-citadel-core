@@ -1,8 +1,10 @@
 # SliverVine Protocol (BeΔ) — SliverVine ExoMesh: Pre-Consensus Intent Firewall for AI Agents on Arbitrum
 
-**Hero (Module A · ~70% pitch):** SliverVine ExoMesh — EIP-1193/5792 pre-consensus Wasm reflex · ReflexCore (SSRC) soil engine · Defense Layers 1–4 · Pillar Set Y.
+**Hero (Module A · ~70% pitch):** SliverVine ExoMesh — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · pre-consensus Wasm reflex · ReflexCore (SSRC) soil engine · Defense Layers 1–4 · Pillar Set Y.
 
-**Complement (Module B · ~30% pitch):** SliverVine Sanctuary — Treasury Escort Router · ERC-7540 Async Vault Escort · Robinhood/Across ingress · Pillar Set X.
+**Complement (Module B · ~30% pitch):** SliverVine Sanctuary — **Sanctuary Async Escort (ERC-7540+)** · Treasury Escort Router · Robinhood/Across ingress · Pillar Set X.
+
+> **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
 **Release:** **`v0.95 Santenmoku Core`**
 
@@ -46,7 +48,7 @@
 
 | Category | File Count | Test Count (`it`) | Assertion Count (`expect`) | Execution Scope |
 | :--- | :--- | :--- | :--- | :--- |
-| **Core Protocol & SSRC Engine** | ~198 | ~998 | ~3,055 | Pure Wasm, EIP-1193/5792, ERC-7540, R01–R20 Defense Matrix |
+| **Core Protocol & SSRC Engine** | ~198 | ~998 | ~3,055 | Pure Wasm, ExoMesh Agentic Guard (EIP-1193/5792/6963+), Sanctuary Async Escort (ERC-7540+), R01–R20 Defense Matrix |
 | **Grant HUD & Copy SSOT** | 12 | ~30 | ~102 | GUI bridge, certificate copy & design token invariants |
 | **Reference Agent Adapters** | 5 | ~15 | ~64 | Virtuals, ElizaOS, Wayfinder, LangChain harness verification |
 | **Demo Flow Reproducibility** | 3 | ~12 | ~35 | End-to-end scenario validation (GMX, Pendle, Hyperliquid) |
@@ -100,7 +102,7 @@ SilverVine occupies **T3** — the only latency class that operates at **microse
 
 SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edge gate **`checkSoilResistance()`** (**p50 ~106µs**) + reflex-core **`rootProtection()`** (**p50 ~15µs** on `--trip`) + immutable **[EIP-712](https://eips.ethereum.org/EIPS/eip-712) consume-once `SliverVineGate`** on Arbitrum One.
 
-**Production highlights:** GMX v2 · Pendle Institutional Sentinel · **5-Core Venue Matrix** · **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK** · Stabilizer Sepolia sandbox · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
+**Production highlights:** GMX v2 · Pendle Institutional Sentinel · **5-Core Venue Matrix** · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Stabilizer Sepolia sandbox · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
 
 ### 5-Core Venue Matrix
 
@@ -114,9 +116,9 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 **Judge fast-track (FAIL-CLOSED):** `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`
 
-**Tier 0 EIP-1193 / EIP-6963 CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `pnpm demo:eip1193 -- --trip`
+**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `pnpm demo:eip1193 -- --trip`
 
-**Retail Guard SDK (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
+**ExoMesh Agentic Guard (unit SSOT):** `npx vitest run tests/sdk/retail-guard-provider.test.ts` — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
 
 ### Dual-Track Verification (`@slivervine/eip1193-agentic-wallet-guard`)
 
@@ -174,8 +176,8 @@ pnpm demo:e2e
 
 | Tier | Tag | Commands | Scope |
 |------|-----|----------|-------|
-| **Tier 0** | `[ExoMesh]` | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) C-end middleware · Scenario A–D matrix + **35/35** unit SSOT |
-| **Tier 0** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · ERC-7540 async vault guard |
+| **Tier 0** | `[ExoMesh]` | `pnpm demo:eip1193` · `pnpm demo:eip1193 -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
+| **Tier 0** | `[Sanctuary]` | `pnpm demo:escort` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` · `npx vitest run tests/erc7540-async-escort.test.ts` | Treasury escort · **Sanctuary Async Escort (ERC-7540+)** |
 | **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
@@ -188,8 +190,8 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 | Module | Scope | Verify |
 |--------|-------|--------|
-| **SliverVine ExoMesh (Module A)** | EIP-1193/5792/6963 · Wasm reflex · Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) | `[ExoMesh]` commands above |
-| **SliverVine Sanctuary (Module B)** | Treasury Escort Router · ERC-7540 · Across AML ingress | `[Sanctuary]` commands above |
+| **SliverVine ExoMesh (Module A)** | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Wasm reflex · Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) | `[ExoMesh]` commands above |
+| **SliverVine Sanctuary (Module B)** | **Sanctuary Async Escort (ERC-7540+)** · Treasury Escort Router · Across AML ingress | `[Sanctuary]` commands above |
 
 ### Robinhood Chain Hard Evidence — SliverVine Sanctuary (Module B)
 
