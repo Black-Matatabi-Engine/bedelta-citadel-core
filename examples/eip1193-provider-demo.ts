@@ -50,6 +50,7 @@ import {
   roundWasmUs,
   wrapGuarded,
 } from "./lib/eip1193-extension-helpers";
+import { printOpSecFootnote } from "./lib/demo-module-banners";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
 import { isDemoTripArgv, wrapDemoExecution, type DemoEnvironment } from "./lib/demo-harness";
 
@@ -104,6 +105,7 @@ async function runScenarioA({ interactive }: ScenarioOpts): Promise<Eip1193Scena
     printChannelOpen(soilClean ? 100 : 0);
     printForwardGate();
     console.log(`\n${GREEN}${BOLD}RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)${R}`);
+    printOpSecFootnote();
   } else {
     await guarded.request({ method: "eth_sendTransaction", params: [tx] });
   }
@@ -133,6 +135,7 @@ async function runScenarioB({ interactive }: ScenarioOpts): Promise<Eip1193Scena
     printLatencyBreakdown(hrtimeElapsedUs(t0), wasmUs);
     printForwardGate();
     console.log(`\n${YELLOW}${BOLD}RESULT: 🟡 DEGRADED_WARN (High-Slippage Monitor · Passthrough Continues)${R}`);
+    printOpSecFootnote();
   } else {
     await guarded.request({ method: "eth_sendTransaction", params: [tx] });
   }
@@ -221,6 +224,7 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
     console.log(
       `\n${RED}${BOLD}RESULT: 🛑 FAIL_CLOSED_INTERCEPT (${featureMetric("0-Gas")} Intercepted BEFORE RPC Ingress)${R}`,
     );
+    printOpSecFootnote();
   }
   return {
     scenario: "C",
@@ -275,6 +279,7 @@ async function runScenarioD({ interactive }: ScenarioOpts): Promise<Eip1193Scena
       `  ${eipTag("CHANNEL STATE")} isRetailGuardChannelSevered=${isRetailGuardChannelSevered()} · follow-up=${rejectCode(channelErr.code)}`,
     );
     console.log(`\n${RED}${BOLD}RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate ${EIP1193_DEMO.slivervineGate})${R}`);
+    printOpSecFootnote();
   }
   return {
     scenario: "D",

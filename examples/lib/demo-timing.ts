@@ -157,16 +157,33 @@ export function formatExecutionLatency(us: number): string {
   return `${EXEC_BRIGHT_YELLOW}${BOLD}▸ Execution Latency: ${formatLatencyLabel(us)}${R}`;
 }
 
+function formatV8OverheadLabel(shellUs: number): string {
+  return shellUs >= 1000 ? `${(shellUs / 1000).toFixed(1)}ms` : `${shellUs.toFixed(1)}µs`;
+}
+
+/** Wasm core vs Node.js CLI I/O split — shell time is not engine latency. */
+export function formatWasmShellLatencyLine(wasmCoreUs: number, totalUs: number): string {
+  const shellUs = Math.max(0, totalUs - wasmCoreUs);
+  return (
+    `[SSRC Wasm Engine]: ${wasmCoreUs.toFixed(1)}µs (Pure Core) | V8 Overhead: ${formatV8OverheadLabel(shellUs)} ` +
+    `${GRAY}(Node.js CLI I/O · not engine latency)${R}`
+  );
+}
+
 /** Execution latency with Wasm core vs V8/CLI shell split (Wayfinder pitch demo). */
 export function formatExecutionLatencySplit(
   totalUs: number,
   wasmCoreUs = WASM_CORE_ESTIMATE_US,
 ): string {
-  const shellUs = Math.max(0, totalUs - wasmCoreUs);
-  return (
-    `${EXEC_BRIGHT_YELLOW}${BOLD}▸ Execution Latency: ${totalUs.toFixed(1)}µs ` +
-    `[ Pure Wasm Core: ${wasmCoreUs.toFixed(1)}µs | V8/CLI Shell: ${shellUs.toFixed(1)}µs ]${R}`
-  );
+  return `${EXEC_BRIGHT_YELLOW}${BOLD}▸ ${formatWasmShellLatencyLine(wasmCoreUs, totalUs)}${R}`;
+}
+
+export function printWasmShellLatencyBreakdown(
+  totalUs: number,
+  wasmCoreUs: number,
+  indent = "    ",
+): void {
+  console.log(`${indent}${formatWasmShellLatencyLine(wasmCoreUs, totalUs)}`);
 }
 
 export function printExecutionLatencySplitBlock(

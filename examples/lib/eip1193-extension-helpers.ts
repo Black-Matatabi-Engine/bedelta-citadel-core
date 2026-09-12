@@ -16,7 +16,8 @@ import {
 import { sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
 import { BOLD, CYAN, GRAY, GREEN, HEALTHY_SOIL, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import { captureSoilBenchmark } from "./demo-benchmark";
-import { formatLatencyLabel, measureProbe, printBenchmarkBanner } from "./demo-timing";
+import { printModuleABanner } from "./demo-module-banners";
+import { formatLatencyLabel, measureProbe, printBenchmarkBanner, printWasmShellLatencyBreakdown } from "./demo-timing";
 
 export const EIP1193_DEMO = {
   wallet: "0x1111111111111111111111111111111111111111",
@@ -124,10 +125,6 @@ export function degradedDemoConfig(): RetailGuardConfig {
   });
 }
 
-function bannerLine(text: string, width: number): string {
-  return `${CYAN}│${R}${BOLD} ${text.padEnd(width - 2)}${R}${CYAN}│${R}`;
-}
-
 export const JUDGE_SAFE_CLOCK_LABEL =
   "Clock: JUDGE_SAFE (Deterministic Audit Epoch) · Network: Arbitrum One 42161" as const;
 
@@ -178,12 +175,8 @@ export function printProductionPlainTextWarning(warning: string, reasonCode: str
 }
 
 export function printFeatureBanner(invariantClear = true): void {
-  const t1 = "🛡️  SliverVine ExoMesh · Universal EIP-1193 / EIP-6963 Retail Guard";
-  const w = Math.max(EIP1193_DEMO.boxW, t1.length + 2, JUDGE_SAFE_CLOCK_LABEL.length + 2);
-  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(bannerLine(t1, w));
-  console.log(bannerLine(JUDGE_SAFE_CLOCK_LABEL, w));
-  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+  printModuleABanner();
+  console.log(`${GRAY}${JUDGE_SAFE_CLOCK_LABEL}${R}`);
   console.log(`${GRAY}${EIP1193_ARCHITECTURE_NOTE}${R}`);
   printBenchmarkBanner(captureSoilBenchmark(HEALTHY_SOIL), { invariantClear });
   console.log(`${featureMetric("⚡ FEATURE: [Sub-10ms Off-Chain Wasm Calldata Validation] · [0-Gas Pre-Consensus Gate]")}\n`);
@@ -237,10 +230,7 @@ export function printPayloadBox(chainId: number, wasmUs: number, clean: boolean)
 }
 
 export function printLatencyBreakdown(totalUs: number, wasmUs: number): void {
-  const shellUs = Math.max(0, totalUs - wasmUs);
-  console.log(
-    `    Latency Breakdown: ${totalUs.toFixed(1)}µs [ ${featureMetric(`WASM KERNEL: ${wasmUs.toFixed(1)}µs`)} | V8/CLI Shell: ${shellUs.toFixed(1)}µs ]`,
-  );
+  printWasmShellLatencyBreakdown(totalUs, wasmUs);
 }
 
 export function printChannelOpen(integrityPct: number): void {

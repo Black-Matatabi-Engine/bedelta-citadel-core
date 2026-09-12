@@ -16,6 +16,7 @@ import {
 } from "../src/services/yield/gmx-v2-price-impact";
 import { HEALTHY_SOIL, printPillarSetYVenueBanner } from "./adapters/citadel-ansi-hud";
 import { captureSoilBenchmark } from "./lib/demo-benchmark";
+import { printOpSecFootnote } from "./lib/demo-module-banners";
 import { ensureDemoWasmSoft, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
 import { withMatrixHudMute } from "./lib/matrix-demo-hud";
 import {
@@ -76,7 +77,9 @@ wrapDemoExecution(({ at }) => {
   printVenueRow("GMX v2", !trip, trip ? "price impact trip · pool skew breach" : "shadow margin ok · cross-venue slippage clear");
   if (trip) {
     finalizeVenueTrip(GMX_TRIP_BREACHES, benchmark);
+    printOpSecFootnote();
     return { tripped: true, reason: "GMX_FAIL_CLOSED" };
   }
   finalizeVenueHappy(benchmark);
+  printOpSecFootnote();
 });

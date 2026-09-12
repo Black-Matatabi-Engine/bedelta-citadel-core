@@ -4,6 +4,7 @@
 import { checkSoilResistance, type SoilResistanceInput, type SoilResistanceResult } from "../../src/services/risk-control";
 import { printBenchmarkBanner, hrtimeElapsedUs, hrtimeStart, printExecutionLatencyBlock, printExecutionLatencySplitBlock, printGuardTimeBlock, type DemoBenchmarkSnapshot } from "../lib/demo-timing";
 import { captureSoilBenchmark } from "../lib/demo-benchmark";
+import { printModuleABanner } from "../lib/demo-module-banners";
 import { __resetArbitrumGasGuardForTests } from "../../src/services/risk/arbitrum-gas-guard";
 import { __resetSequencerGuardCacheForTests } from "../../src/services/risk/sequencer-guard";
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
@@ -62,13 +63,7 @@ export function printPillarSetYFrameworkLine(): void {
 }
 
 export function printPillarSetYVenueBanner(venueName: string, benchmark?: DemoBenchmarkSnapshot): void {
-  const line1 = "🛡️  SliverVine ExoMesh · [Pillar Set Y Engine Substrate]";
-  const line2 = `Venue: ${venueName}`;
-  const w = Math.max(PILLAR_BOX_W_MIN, line1.length + 4, line2.length + 4);
-  console.log(`${CYAN}┌${"─".repeat(w)}┐${R}`);
-  console.log(`${CYAN}│${R}${BOLD}${padBanner(line1, w)}${R}${CYAN}│${R}`);
-  console.log(`${CYAN}│${R}${padBanner(line2, w)}${R}${CYAN}│${R}`);
-  console.log(`${CYAN}└${"─".repeat(w)}┘${R}`);
+  printModuleABanner(`Venue: ${venueName}`);
   printBenchmarkBanner(benchmark ?? captureSoilBenchmark(HEALTHY_SOIL));
 }
 

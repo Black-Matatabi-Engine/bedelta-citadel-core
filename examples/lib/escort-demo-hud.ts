@@ -1,7 +1,6 @@
 /** Pillar 2 escort demo HUD — silent benchmark bar + result banners (no soil probe noise). */
 import {
   BOLD,
-  CYAN,
   GREEN,
   RED,
   R,
@@ -11,6 +10,7 @@ import {
   printDynamicBenchmarkBreakdown,
   type DemoBenchmarkSnapshot,
 } from "./demo-timing";
+import { printModuleBBanner, printOpSecFootnote } from "./demo-module-banners";
 
 const BOX_W = 63;
 
@@ -22,11 +22,7 @@ function printEscortBenchmark(snapshot: DemoBenchmarkSnapshot, invariantClear = 
 }
 
 export function printEscortBanner(snapshot: DemoBenchmarkSnapshot, invariantClear = true): void {
-  const inner = ` 🛡️  SliverVine Sanctuary · Compliance Escort · Multi-Route HUD `;
-  const pad = Math.max(0, BOX_W - inner.length);
-  console.log(`${CYAN}┌${"─".repeat(BOX_W)}┐${R}`);
-  console.log(`${CYAN}│${R}${BOLD}${"─".repeat(Math.floor(pad / 2))}${inner}${"─".repeat(Math.ceil(pad / 2))}${R}${CYAN}│${R}`);
-  console.log(`${CYAN}└${"─".repeat(BOX_W)}┘${R}`);
+  printModuleBBanner();
   printEscortBenchmark(snapshot, invariantClear);
 }
 
@@ -36,11 +32,13 @@ export function printEscortResult(trip: boolean): void {
     console.log(`\n${RED}${line}${R}`);
     console.log(`${RED}${BOLD}RESULT: 🛑 LIFECYCLE COMPLETE: FAIL_CLOSED (0-Gas Intercepted)${R}`);
     console.log(`${RED}${line}${R}`);
+    printOpSecFootnote();
     return;
   }
   console.log(`\n${GREEN}${line}${R}`);
   console.log(`${GREEN}${BOLD}RESULT: 🟢 LIFECYCLE COMPLETE: COMPLIANCE_ESCORT_SETTLED (lostUsd ≡ 0 Verified)${R}`);
   console.log(`${GREEN}${line}${R}`);
+  printOpSecFootnote();
 }
 
 export { captureDemoBenchmark, type DemoBenchmarkSnapshot };
