@@ -130,6 +130,9 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 ## ⏱️ Performance Verification & Latency Hierarchy
 
+> ℹ️ **Engineering Honesty & Physical Measurement Note**:
+> Microsecond timing targets (`p50 ~15µs SSRC` / `p50 ~106µs Edge`) reflect production Edge Worker design targets and active telemetry budget caps (`REFLEX_BUDGET_US ≤15µs`). Local CLI readings (`pnpm demo:gmx`, `pnpm demo:exomesh`) run single-sample probes subject to OS kernel scheduling, CPU frequency scaling, and Node.js V8 JIT warmup jitter. Such variations in local microsecond measurements are physical inevitabilities of non-realtime operating environments.
+
 SliverVine ExoMesh reports three statistical latency tiers:
 
 

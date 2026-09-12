@@ -101,6 +101,9 @@ export function printPerfHierarchyHud(snapshot: DemoBenchmarkSnapshot): void {
   console.log(`   2. Full Matrix (FFI)  : ${snapshot.fullMatrixUs.toFixed(1)}µs  (Target: p50 ~15µs SSRC · ±5µs CLI noise)`);
   console.log(`   3. E2E Provider (SDK) : ${snapshot.e2eHarnessUs.toFixed(1)}µs  (Target: p50 ~106µs Edge)`);
   console.log(`   ${GRAY}[Memory]: Zero-Allocation Hot-Path (0 Ephemeral Heap Objects/sec)${R}`);
+  console.log(`\n${GRAY}ℹ️  [Engineering Honesty Disclaimer]:${R}`);
+  console.log(`${GRAY}   CLI µs metrics are active single-sample probes subject to OS/CPU jitter.${R}`);
+  console.log(`${GRAY}   Production SSOT = Edge Worker design bands (SSRC p50 ~15µs budget / Edge p50 ~106µs).${R}`);
 }
 
 export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
