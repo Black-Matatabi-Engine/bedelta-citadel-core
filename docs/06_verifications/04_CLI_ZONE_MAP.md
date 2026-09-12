@@ -9,7 +9,8 @@
 | Tier / Zone | Tag | Commands | Scope |
 |-------------|-----|----------|-------|
 | **Tier 0 — SDK/CLI Unit & Integration** | `[ExoMesh]` | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · `withRetailGuardProvider()` · Scenario A–D |
-| **Tier 0 — Escrow & Async Vault** | `[Sanctuary]` | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | **Sanctuary Async Escort (ERC-7540+)** · Treasury escort |
+| **Tier 0 — Module B Vault Standard** | `[Sanctuary]` | `pnpm demo:sanctuary` | ERC-7540+ Async Escort Matrix |
+| **Tier 0 — Module B Treasury Ingress** | `[Sanctuary]` | `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | Pillar Set X Across/AML escort |
 | **Tier 1 — Full Protocol Regression** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
@@ -48,8 +49,8 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 | `pnpm demo:agent` | B2B `withCitadelShield` smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
-| `pnpm demo:sanctuary` | Sanctuary Async Escort (ERC-7540+) Scenario A–C | `ALLOW` · `REJECT_OPERATOR` · `REJECT_SLIPPAGE` (`demo:escort` alias) |
-| `pnpm demo:ingress` | Treasury bridge escort · AML inbound block | `lostUsd ≡ 0` · Route A/C HUD |
+| `pnpm demo:sanctuary` | **Module B Vault Standard** — ERC-7540+ Scenario A–C | `ALLOW` · `REJECT_OPERATOR` · `REJECT_SLIPPAGE` (`demo:escort` alias) |
+| `pnpm demo:ingress` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort | `lostUsd ≡ 0` · Route A/C HUD |
 | `pnpm test` | Full Vitest regression bar | **228 test files | 1065 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):

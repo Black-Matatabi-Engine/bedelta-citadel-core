@@ -169,9 +169,10 @@ pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 
-# [Sanctuary] Tier 0 — Escrow & Async Vault
+# [Sanctuary] Tier 0 — Module B Vault Standard (ERC-7540+)
 pnpm demo:sanctuary              # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
-pnpm demo:ingress                # Treasury bridge escort (lostUsd ≡ 0)
+# [Sanctuary] Tier 0 — Module B Treasury Ingress (Pillar Set X)
+pnpm demo:ingress                # Across/Robinhood AML ingress escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
 
 pnpm demo:e2e
@@ -180,12 +181,13 @@ pnpm demo:e2e
 | Tier | Tag | Commands | Scope |
 |------|-----|----------|-------|
 | **Tier 0** | `[ExoMesh]` | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
-| **Tier 0** | `[Sanctuary]` | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | **Sanctuary Async Escort (ERC-7540+)** · Treasury escort |
+| **Tier 0** | `[Sanctuary]` | `pnpm demo:sanctuary` | **Module B Vault Standard** — ERC-7540+ Async Escort Matrix |
+| **Tier 0** | `[Sanctuary]` | `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort |
 | **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
 | **Zone A** | `[ExoMesh]` | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
-| **Zone B** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia sandbox · macro lifecycle · ERC-7540+ · treasury ingress |
+| **Zone B** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia sandbox · macro lifecycle · `demo:sanctuary` (ERC-7540+) · `demo:ingress` (Pillar Set X) |
 
 Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md)
 
@@ -194,7 +196,7 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 | Module | Scope | Verify |
 |--------|-------|--------|
 | **SliverVine ExoMesh (Module A)** | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Wasm reflex · Defense Layers 1–4 (Phishing/Approval · Agent Intent Inspector · Retry Storm Circuit Breaker · RPC Transport Stream Sync) | `[ExoMesh]` commands above |
-| **SliverVine Sanctuary (Module B)** | **Sanctuary Async Escort (ERC-7540+)** · Treasury Escort Router · Across AML ingress | `[Sanctuary]` commands above |
+| **SliverVine Sanctuary (Module B)** | **Vault Standard:** ERC-7540+ Async Escort (`demo:sanctuary`) · **Treasury Ingress:** Pillar Set X Across/AML (`demo:ingress`) | `[Sanctuary]` commands above |
 
 ### Robinhood Chain Hard Evidence — SliverVine Sanctuary (Module B)
 

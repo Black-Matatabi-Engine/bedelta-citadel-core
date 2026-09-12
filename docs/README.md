@@ -6,7 +6,7 @@
 | # | Directory | Judge-facing scope |
 |---|-----------|-------------------|
 | **01** | [`01_architecture/`](./01_architecture/) | Topology · ReflexCore (SSRC) · Risk framework · Pillar Sets X/Y |
-| **02** | [`02_eip_extensions/`](./02_eip_extensions/) | EIP compliance matrix · ExoMesh (`pnpm demo:exomesh`) · Sanctuary ERC-7540+ (`pnpm demo:sanctuary`) · treasury ingress (`pnpm demo:ingress`) |
+| **02** | [`02_eip_extensions/`](./02_eip_extensions/) | EIP compliance matrix · ExoMesh (`pnpm demo:exomesh`) · Module B Vault (`pnpm demo:sanctuary`) · Module B Ingress (`pnpm demo:ingress`) |
 | **03** | [`03_hacker_profiling/`](./03_hacker_profiling/) | MO signatures · Pre-consensus telemetry · Dune PCTII |
 | **04** | [`04_sdk_and_integration/`](./04_sdk_and_integration/) | `@slivervine/eip1193-agentic-wallet-guard` · ExoMesh Agentic Guard (EIP-1193/5792/6963+) spec |
 | **05** | [`05_pitch_and_demos/`](./05_pitch_and_demos/) | Demo video script · CLI runbook |

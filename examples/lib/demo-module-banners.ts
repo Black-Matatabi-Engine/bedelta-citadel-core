@@ -11,7 +11,13 @@ export const MODULE_A_BANNER_LINES = [
 
 export const MODULE_B_BANNER_LINES = [
   "🏛️ SliverVine Sanctuary (Module B · ~30% Surface)",
-  "Sanctuary Async Escort (ERC-7540+) · Treasury Escort Router",
+  "Sanctuary Async Escort (ERC-7540+) · Async Vault Selector Guard",
+  "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
+] as const;
+
+export const MODULE_B_INGRESS_BANNER_LINES = [
+  "🏛️ SliverVine Sanctuary — Treasury Escort Router (Pillar Set X Ingress)",
+  "Across / Robinhood AML Compliance Ingress · In-Flight Capital Escort",
   "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;
 
@@ -40,6 +46,10 @@ export function printModuleABanner(extraLine?: string): void {
 
 export function printModuleBBanner(): void {
   printModuleBanner(MODULE_B_BANNER_LINES);
+}
+
+export function printModuleBIngressBanner(): void {
+  printModuleBanner(MODULE_B_INGRESS_BANNER_LINES);
 }
 
 export function printOpSecFootnote(): void {

@@ -10,12 +10,12 @@ import {
   printPerfHierarchyHud,
   type DemoBenchmarkSnapshot,
 } from "./demo-timing";
-import { printModuleBBanner, printOpSecFootnote } from "./demo-module-banners";
+import { printModuleBIngressBanner, printOpSecFootnote } from "./demo-module-banners";
 
 const BOX_W = 63;
 
 export function printEscortBanner(snapshot: DemoBenchmarkSnapshot): void {
-  printModuleBBanner();
+  printModuleBIngressBanner();
   printPerfHierarchyHud(snapshot);
 }
 

@@ -1,6 +1,6 @@
 #!/usr/bin/env tsx
 /**
- * Pillar 2 — Unidirectional Compliance Escort (Across / Robinhood reference adapter).
+ * Module B Treasury Ingress — Pillar Set X Across/Robinhood AML compliance escort.
  * Usage: pnpm demo:ingress
  * Trip:  pnpm demo:ingress -- --trip  (Across timeout >3600s · 0-Gas fail-closed · lostUsd ≡ 0)
  * Live:  pnpm demo:ingress -- --livingwater
