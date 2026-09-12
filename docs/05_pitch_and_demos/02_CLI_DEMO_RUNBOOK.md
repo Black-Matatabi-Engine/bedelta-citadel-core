@@ -219,6 +219,12 @@ Live GM I/O proofs: deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e
 
 Framework-agnostic B2B decorator — replaces v1.0 point-to-point AI framework adapters:
 
+```typescript
+import { withExoMeshShield } from "@slivervine/citadel-sdk";
+
+const execute = withExoMeshShield(async (intent) => agent.swap(intent));
+```
+
 ```bash
 pnpm demo:agent    # withExoMeshShield + verifyAgentIntent smoke demo
 ```

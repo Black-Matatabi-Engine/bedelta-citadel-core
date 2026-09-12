@@ -50,8 +50,8 @@ function isCooldownTrigger(message: string): boolean {
   );
 }
 
-/** @deprecated Legacy export name — prefer `withExoMeshShield`. */
-export function withCitadelShield<T extends CitadelShieldIntent>(
+/** ExoMesh B2B soil-gate decorator (SSRC-backed). */
+export function withExoMeshShield<T extends CitadelShieldIntent>(
   executionFn: (intent: T) => Promise<unknown>,
 ) {
   return async function shielded(intent: T) {
@@ -78,5 +78,5 @@ export function withCitadelShield<T extends CitadelShieldIntent>(
   };
 }
 
-/** ExoMesh B2B soil-gate decorator (SSRC-backed). Alias of legacy `withCitadelShield`. */
-export const withExoMeshShield = withCitadelShield;
+/** @deprecated Use withExoMeshShield instead. Legacy alias maintained for backward compatibility. */
+export const withCitadelShield = withExoMeshShield;

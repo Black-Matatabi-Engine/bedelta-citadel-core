@@ -359,7 +359,7 @@ Rejected allowance paths throw `RetailGuardRejectedError` **before** RPC broadca
 | **Standard status** | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) **Final** — Ethereum AI Agent Wallet Policy |
 | **Co-author attribution** | Virtuals Protocol is a **historical co-author** of the ERC text — factual EIP metadata only |
 | **Citadel binding** | On-chain policy pre-screen via `SliverVineAgentPolicyGuard` lineage → **V2** [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol) on Arbitrum One |
-| **Explicit non-scope** | **Not** a native venue adapter · **not** part of the 5-Core Venue Matrix · pruned Virtuals GAME adapter (v1.1) replaced by EIP-1193 Retail Guard + B2B `withCitadelShield` |
+| **Explicit non-scope** | **Not** a native venue adapter · **not** part of the 5-Core Venue Matrix · pruned Virtuals GAME adapter (v1.1) replaced by EIP-1193 Retail Guard + B2B `withExoMeshShield` |
 
 ### ERC-20 / ERC-777 — Non-Custodial Asset Transfer Escrow Semantics
 

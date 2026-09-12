@@ -5,7 +5,7 @@
 import { verifyAgentIntent } from "../../sdk/agent-intent";
 import {
   __clearCitadelCooldownsForTests,
-  withCitadelShield,
+  withExoMeshShield,
   type CitadelShieldIntent,
 } from "../../sdk/decorator";
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
@@ -84,7 +84,7 @@ function validateToolParams(input: CitadelRiskGuardInput): string[] {
   return reasons;
 }
 
-const shieldedInvoke = withCitadelShield(
+const shieldedInvoke = withExoMeshShield(
   async (_intent: CitadelShieldIntent): Promise<string> => "SOIL_PASS: pre-broadcast clearance granted",
 );
 

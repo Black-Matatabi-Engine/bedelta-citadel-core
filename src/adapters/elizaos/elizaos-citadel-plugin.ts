@@ -4,7 +4,7 @@
 import { verifyAgentIntent } from "../../sdk/agent-intent";
 import {
   __clearCitadelCooldownsForTests,
-  withCitadelShield,
+  withExoMeshShield,
   type CitadelShieldIntent,
 } from "../../sdk/decorator";
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
@@ -54,7 +54,7 @@ function parseShieldTripReasons(message: string): string[] {
   return [message];
 }
 
-const shieldedAction = withCitadelShield(async (): Promise<boolean> => true);
+const shieldedAction = withExoMeshShield(async (): Promise<boolean> => true);
 
 export async function evaluateElizaCitadelAction(
   runtime: ElizaRuntimeRef,

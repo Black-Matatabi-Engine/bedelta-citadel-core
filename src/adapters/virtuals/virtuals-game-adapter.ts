@@ -5,7 +5,7 @@
 import { verifyAgentIntent } from "../../sdk/agent-intent";
 import {
   __clearCitadelCooldownsForTests,
-  withCitadelShield,
+  withExoMeshShield,
   type CitadelShieldIntent,
 } from "../../sdk/decorator";
 import { checkSoilResistance, type SoilResistanceInput } from "../../services/risk-control";
@@ -63,7 +63,7 @@ function parseShieldTripReasons(message: string): string[] {
   return [message];
 }
 
-const shieldedTask = withCitadelShield(
+const shieldedTask = withExoMeshShield(
   async (_intent: CitadelShieldIntent): Promise<{ success: true; status: "ALLOW"; message: string }> => ({
     success: true,
     status: "ALLOW",
