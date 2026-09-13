@@ -119,7 +119,54 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 **Primary execution envelope:** **Delta-Neutral GM** on Arbitrum One — GMX v2 **ETH/USDC** GM pool + Hyperliquid **1× short hedge** (Independent L1 HF Orderbook AppChain · session-key adapter), guarded by Pillar Set Y ReflexCore (SSRC) (`checkSoilResistance()`).
 
-### 1.0 Tailor-Made Mathematical Invariants (Protocol Physical Boundaries)
+### 1.0 ExoMesh Pre-Consensus Shield & 5-Core Venue Matrix
+
+SliverVine ExoMesh is the **pre-consensus intent firewall** — deterministic soil evaluation **before** EIP-712 signing, Arbitrum Sequencer ingress, or RFQ acceptance. Hot paths use **zero-allocation numeric slabs** aligned with `soil_core.wasm` FFI ([`wasm-soil-ffi.ts`](../../src/core/wasm-soil-ffi.ts) · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)).
+
+#### 5-Core Venue Matrix (Arbitrum One + HL L1)
+
+| Venue | Role | Hot-path guard | Demo |
+|-------|------|----------------|------|
+| **GMX v2** | Arbitrum-native perp / GM | [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) | `pnpm demo:gmx -- --trip` |
+| **Pendle** | PT/YT safety sentinel | [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) | `pnpm demo:pendle -- --trip` |
+| **USD.ai** | sUSDai collateral fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `pnpm demo:usdai -- --trip` |
+| **Hyperliquid** | L1 session-key hedge | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) | `pnpm demo:hl -- --trip` |
+| **Variational** | RFQ + TradFi swap lane | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · [`variational-instrument-guard.zero.ts`](../../src/guards/variational-instrument-guard.zero.ts) | `pnpm demo:variational -- --trip` |
+
+#### Variational RFQ & Swap Guard
+
+- **Variational RFQ & Swap Guard**:
+  - *Hot Path (Zero-GC)*: Sub-microsecond numeric soil check (`evaluateSwapPerpSoilZero`) — pre-allocated `SoilResultSlot` mutation only; no `new` / string materialization on reflex path ([`variational-instrument-guard.zero.ts`](../../src/guards/variational-instrument-guard.zero.ts)).
+  - *Instrument Awareness*: Distinguishes **TradFi Total Return Swaps** (flat carry, market open hours, dividend pass-through) vs **Crypto Perps** (variable funding rate volatility).
+  - *Defensive Limits*: Fail-closed on closed swap market hours, carry **>8%**, quote age **>500ms**, or OLP exposure **>15%**. Perp funding volatility **>80 bps** fail-closed with **SWAP** instrument hint.
+  - *Cold Path*: Adapter-layer `validateVariationalRFQIntent()` delegates to core bitmask Bits 12–13 ([`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts)).
+
+```text
+FlatQuoteInput (numeric slab)
+        │
+        ▼
+evaluateSwapPerpSoilZero(q, out)   ← Zero-GC hot path
+        │
+        ├── SWAP: marketOpen · carryBps · quoteAge · OLP util
+        └── PERP: fundingVolBps · quoteAge · OLP util → hint SWAP
+        │
+        ▼
+SoilResultSlot { action, reason, flags, hintInstrument }
+        │
+        └── reasonToString()  ← cold path / HUD only
+```
+
+#### Physical Latency SSOT (do not conflate)
+
+| Layer | Budget | Artifact |
+|-------|--------|----------|
+| SSRC Wasm reflex | **p50 ~15µs** | `soil_core.wasm` |
+| ExoMesh packed lane | **p50 ~106µs** | `checkSoilResistance()` |
+| LLM Cerebrum loop | **~1–10s** | out of scope |
+
+> **Scope boundary:** ExoMesh pre-consensus shield is **not** Sanctuary async vault escort — see [`04_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](./04_THREE_PILLARS_AND_INGRESS_PIPELINE.md).
+
+### 1.1 Tailor-Made Mathematical Invariants (Protocol Physical Boundaries)
 
 | Protocol | Venue | Physical Boundary Check | Code Module |
 |----------|-------|-------------------------|-------------|
@@ -138,15 +185,15 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 **Robinhood Chain role:** **Pillar Set X Reference Escort Adapter** only — regulated treasuries may escort outbound (`46630`/`4663` → `42161`). Inbound AML is blocked by default. Product identity remains **SliverVine Protocol on Arbitrum One (`42161`)**. **Audit:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md).
 
-### 1.1 Engineering Restraint (Blue-Chip Scope)
+### 1.2 Engineering Restraint (Blue-Chip Scope)
 
 v1.0 is intentionally restricted to **ETH/USDC** so oracle reliability holds during Sequencer desync: one blue-chip pair removes multi-asset de-peg and FX-slippage surfaces while the Tri-Sensor Matrix (base-fee velocity, RPC jitter, phase-shift) remains authoritative.
 
-### 1.2 Large-Scale Capital Protection
+### 1.3 Large-Scale Capital Protection
 
 `checkSoilResistance()` (p50 ~106 μs) short-circuits any broadcast when local GM market depth cannot absorb a large institutional order without severe price impact (**>10 bps**). Fail-closed before L2 submission — depth / cross-spread / slippage fuse (R01).
 
-### 1.3 Cross-Isolate `protocolMask` KV Synchronization
+### 1.4 Cross-Isolate `protocolMask` KV Synchronization
 
 Multi-Worker Cloudflare Edge isolates do not share in-memory state. When one isolate trips a protocol lane (e.g. USD.ai de-peg), sibling isolates must inherit the same bitmask without blocking the **p50 ~15µs** hot path.
 
@@ -160,7 +207,7 @@ Multi-Worker Cloudflare Edge isolates do not share in-memory state. When one iso
 
 **Invariant:** `checkSoilResistance()` merges `scratch.protocolMask |= readProtocolMaskSync()` before external flag collection, then persists any delta via `scheduleProtocolMaskKvWrite()` — preserving microsecond Edge latency while closing the cross-isolate residual risk.
 
-### 1.4 Wasm FFI ABI v2 — 28-Protocol-Slot Alignment
+### 1.5 Wasm FFI ABI v2 — 28-Protocol-Slot Alignment
 
 TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) via **`soil_core_abi_version() = 2`**.
 
@@ -173,7 +220,7 @@ TypeScript `PROTO_VECT_LEN = 28` (7 lanes × 4 slots) is now mirrored in [`pkg/s
 
 **Wire modules:** [`soil-core-sim.ts`](../../src/services/wasm-feasibility-lib/soil-core-sim.ts) (`WASM_SOIL_INPUT_BYTES = 288`) · [`soil-wasm.ts`](../../src/sdk/soil-wasm.ts) (`WASM_ABI_VERSION = 2`) · [`soil_core.rs`](../../src/wasm/soil_core.rs) (`#![no_std]`).
 
-### 1.5 Sequencer Defense Plane A/B Model
+### 1.6 Sequencer Defense Plane A/B Model
 
 SliverVine ExoMesh is **not** “Edge-only” or “on-chain-only” — it is a **dual-layer** stack that answers the Nitro reviewer question: *TS Gateway latency ≠ Nitro opcode latency; both layers protect different phases.*
 
