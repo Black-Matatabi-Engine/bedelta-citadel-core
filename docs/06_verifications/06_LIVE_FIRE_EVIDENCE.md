@@ -96,6 +96,7 @@
 | **MarketDecrease Multicall Tx (EOA)** | [`0x13b1e5590119ba206d207e7950ab5aeffc8c82d547dc767630abcb865806c439`](https://arbiscan.io/tx/0x13b1e5590119ba206d207e7950ab5aeffc8c82d547dc767630abcb865806c439) · Block **504626743** · **Success** |
 | **MarketDecrease Tx (ZeroDev→EOA fallback)** | [`0xb45b2530d9390db7a55fdb2e6e972b3f58e357d6881db146dd78756cdd5764e4`](https://arbiscan.io/tx/0xb45b2530d9390db7a55fdb2e6e972b3f58e357d6881db146dd78756cdd5764e4) · Block **504628125** · **Success** · ZeroDev UserOp simulated revert → **EOA direct** |
 | **MarketDecrease Tx (DataStore execution fee)** | [`0xb8ba76c4a8f7ed8f1c9820bf1122d4895a81b3ca6c780590aa16d74522d242a7`](https://arbiscan.io/tx/0xb8ba76c4a8f7ed8f1c9820bf1122d4895a81b3ca6c780590aa16d74522d242a7) · Block **504628529** · **Success** · `executionFee` **0.001 ETH** (floor ≥ **0.0008 ETH** via DataStore `DECREASE_ORDER_GAS_LIMIT`) |
+| **MarketDecrease (100% Programmatic Close)** | [`0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) · Block **504631270** · **Success** · Reader preflight `sizeInUsd` 30-dec · `acceptablePrice` +5% buy-back cap · **lifecycle closed** |
 | **Dispatch modes** | **ZeroDev AA** (`ZeroDev_projectId` in `.env`) with **EOA fallback** · **EOA-only** via `FORCE_EOA_FALLBACK=1` |
 | **Paired entry tx** | [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · Block **504625233** |
 
