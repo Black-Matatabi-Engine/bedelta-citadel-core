@@ -37,6 +37,16 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 **Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **231 test files \| 1081 PASS clean**
 
+> **npm SDK status:** `@slivervine/exomesh-agentic-wallet-guard` is currently **private monorepo-bound** (`"private": true` in [`src/sdk/exomesh-agentic-wallet-guard/package.json`](src/sdk/exomesh-agentic-wallet-guard/package.json)). **Public npmjs release scheduled for Post-Grant Milestone 1.** Until then, import from the monorepo path above.
+
+### Sandbox & On-Chain Honesty Boundaries
+
+> **Sandbox Security Boundary:** Mainnet Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) deployed with **Bootstrap Sandbox Keys** (`0x1111…` / `0x2222…`) for public verification. **Multisig rotation is scheduled for Post-Grant Milestone 1** via native `proposeAdmin` / `acceptAdmin`.
+
+> **Stylus coprocessor (by design):** `PolicyGuardV2` deploys with `stylusCoprocessor = address(0)`, which triggers the active **Pure Solidity Fallback** ([`GmxRiskInvariantLib.sol`](contracts/src/libs/GmxRiskInvariantLib.sol)) — zero-downtime fail-closed security, not a missing deployment.
+
+> **GMX live-fill vs firewall:** Mainnet GMX tx hashes prove **execution capability** only. Pre-consensus guard demos: `pnpm demo:gmx -- --trip` · `tests/sdk/retail-guard-provider.test.ts` (**35/35**). Armed harness scripts may set `BYPASS_SOIL_PROBE` / `ALLOW_STALE_ORACLE` — terminal warns when active.
+
 ![Vitest](https://img.shields.io/badge/Vitest-1081%20PASS%20%28231%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)

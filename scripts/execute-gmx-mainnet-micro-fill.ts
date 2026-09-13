@@ -23,6 +23,7 @@ import {
 } from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import { GMX_MICRO_FILL_GATE } from "./gmx-micro-fill-gate";
 import { loadGmxMicroFillMarketSnapshot } from "./gmx-micro-fill-market-loader";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { executeGmxMicroFillLive } from "./gmx-micro-fill-live";
 
 const allowStaleOracle = (argv: string[]): boolean =>
@@ -48,6 +49,7 @@ async function main(): Promise<void> {
   const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
   const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true" || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
+  printLiveHarnessBypassBanner();
   const sizeUsd = parseMicroFillSize(argv);
   const symbol = (argv.find((a, i) => argv[i - 1] === "--symbol") ?? "ETH").toUpperCase();
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });

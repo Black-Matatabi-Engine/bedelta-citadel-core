@@ -2,6 +2,14 @@
 
 > **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 
+### Sandbox Security & Distribution Boundaries (Evaluator Read First)
+
+> **Sandbox Security Boundary:** Mainnet Gate `0xb174…` deployed with **Bootstrap Sandbox Keys** (`0x1111…` / `0x2222…`) for public verification. **Multisig rotation is scheduled for Post-Grant Milestone 1.**
+
+> **Stylus Address Handling:** `stylusCoprocessor = address(0)` triggers active **Pure Solidity Fallback** ([`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol)) per design, ensuring zero-downtime security.
+
+> **npm SDK Status:** `@slivervine/exomesh-agentic-wallet-guard` is currently **private monorepo-bound** (`"private": true`). **Public npmjs release scheduled for Post-Grant Milestone 1.**
+
 ### Absolute SSOT Lock (Evaluator Copy-Paste)
 
 | Field | Locked value | Verify |
@@ -41,7 +49,7 @@
 | **Dune — Arbitrum One (`42161`)** | ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** — Queries 0–0b feed/chart + Queries 1–3 reconciliation panels pre-compiled for **ChainID `42161`** · **not** claimed as live mainnet event stream | Same spec |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Final (Ethereum Standard · Virtuals Protocol co-author) | [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 
-> **Governance footnote (Bootstrap Ignition Keys):** Mainnet Gate `0xb174…` deploys with **Bootstrap Ignition Keys** (`0x1111…` / `0x2222…`) — **strictly for public verification and sandbox reproducibility**, not production HSM custody. Governance authority is designed for **post-launch rotation** to production multisig via native `proposeAdmin` / `acceptAdmin` functions.
+> **Governance footnote (Bootstrap Ignition Keys):** Mainnet Gate `0xb174…` deploys with **Bootstrap Ignition Keys** (`0x1111…` / `0x2222…`) — **strictly for public verification and sandbox reproducibility**, not production HSM custody. **Multisig rotation scheduled for Post-Grant Milestone 1** via native `proposeAdmin` / `acceptAdmin` functions.
 
 ### Phase A+B+C Mainnet Deployment (Arbitrum One · 42161) — Verified Live
 
@@ -51,7 +59,7 @@
 | **GmxSoilMatrixSwitch** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | [`0x6790c2b8ea23ba02640c87f06e774f093061d3d98b462caa9bd84f48a24d63ab`](https://arbiscan.io/tx/0x6790c2b8ea23ba02640c87f06e774f093061d3d98b462caa9bd84f48a24d63ab) · Block **503074242** |
 | **SliverVineAgentPolicyGuardV2** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | [`0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a`](https://arbiscan.io/tx/0xcd520602a277c0781038552d5692f5ad43076a8928f5e7384e695642f980306a) · Block **503074255** |
 
-> **Note:** `GmxRiskInvariantLib` · `GmxMulticallDecodeLib` are **internal libraries** embedded in PolicyGuardV2 bytecode — no separate mainnet deploy. `stylusCoprocessor = address(0)` → pure Solidity fallback path active.
+> **Note:** `GmxRiskInvariantLib` · `GmxMulticallDecodeLib` are **internal libraries** embedded in PolicyGuardV2 bytecode — no separate mainnet deploy. `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** active **by design** (not a missing Stylus deployment).
 
 ### Phase A+B+C — GMX On-Chain Invariant Stack (Solidity · Stylus · Wasm)
 

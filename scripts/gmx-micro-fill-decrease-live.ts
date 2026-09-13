@@ -24,6 +24,7 @@ import {
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 import { GMX_ORDER_TYPE_INDEX } from "../src/services/adapters/gmx-v2-order-payload.types";
 import { dispatchGmxDecreaseLive } from "./gmx-micro-fill-decrease-dispatch";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { resolveBufferedEip1559Fees } from "./gmx-micro-fill-gas";
 
 const CHAIN_ID = 42161;
@@ -44,6 +45,7 @@ function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 export async function executeGmxMicroFillDecreaseLive(
   input: GmxMicroFillDecreaseLiveInput,
 ): Promise<{ tx: Hex; mode: "zerodev" | "eoa" }> {
+  printLiveHarnessBypassBanner();
   const client = createPublicClient({ chain: arbitrum, transport: http(input.rpc) });
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: input.rpc, ownerPrivateKey: input.pk });
   const eoa = privateKeyToAccount(input.pk).address;
