@@ -12,7 +12,32 @@
 >
 > **V1.0 Buildathon Baseline:** 0-Friction Public Open Gateway — **no API key required**; Edge IP/header limiter enforces **5 RPS** (`X-SliverVine-Tier: public` · `X-SliverVine-RPS-Limit: 5`). **V1.1** Cloudflare KV API Key Metering ($10–$1,999/mo) is **Post-Grant Commercial Roadmap**, not the submission baseline.
 
-![Vitest](https://img.shields.io/badge/Vitest-1066%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
+## C-End SKU — `@slivervine/exomesh-agentic-wallet-guard` (Option A)
+
+**Primary product:** one-line [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrap — **0-Gas pre-sign interception** in-process (vs remote RPC simulators).
+
+```ts
+import { withRetailGuardProvider } from "@slivervine/exomesh-agentic-wallet-guard";
+
+const ethereum = withRetailGuardProvider(window.ethereum, {
+  allowedSpenders: [/* routers you trust */],
+  allowedVenues: [/* verifyingContract allowlist */],
+});
+
+await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
+// infinite approve · Permit2 phishing · EIP-712 domain drift · 4th retry → throw, $0 Gas
+```
+
+| Capability | Outcome |
+|------------|---------|
+| **1-line EIP-1193 wrapping** | Drop-in for MetaMask / Rabby / agent wallets |
+| **0-Gas pre-sign intercept** | Toxic calldata never reaches Sequencer |
+| **Local in-process reflex** | No Blockaid-class 200–800ms round-trip |
+| **AI retry severance** | 4th rapid submit → `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
+
+**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **231 test files \| 1081 PASS clean**
+
+![Vitest](https://img.shields.io/badge/Vitest-1081%20PASS%20%28231%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -96,12 +121,13 @@
 
 | Evaluation Target | Execution Method | Physical Substrate |
 |-------------------|------------------|-------------------|
-| **Real-Time Wasm Interception** | `pnpm demo:gmx -- --trip` | Live `soil_core.wasm` (<1.8µs warm) |
+| **C-End Wallet Guard (SKU)** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `withRetailGuardProvider` · **35/35** |
+| **Fail-closed soil (no broadcast)** | `pnpm demo:gmx -- --trip` | `soil_core.wasm` (<1.8µs warm) |
 | **End-to-End Macro Flow** | `pnpm demo:e2e` | 4-Step multi-venue HUD |
-| **SDK Integration Test** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Provider Guard (35/35) |
+| **GMX execution appendix** | [`06_LIVE_FIRE_EVIDENCE.md`](./docs/06_verifications/06_LIVE_FIRE_EVIDENCE.md) | Mainnet txs — **execution ≠ guard** |
 | **Audit Provenance Check** | `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" \| jq .` | Static SHA-256 Buildathon archive |
 
-*Note: Primary evaluation path is live CLI execution via `soil_core.wasm` and SDK wrapper (`withExoMeshShield`). The `/api/grant-audit` endpoint is a static Buildathon submission archive only.*
+*Note: Judge primary path is **Wallet Guard unit + `demo:gmx -- --trip`**. `withExoMeshShield` is the B2B decorator. `/api/grant-audit` is a static archive only.*
 
 ---
 
@@ -211,7 +237,7 @@ pnpm demo:sanctuary              # ERC-7540+ Scenario A–C Matrix (alias: pnpm 
 pnpm demo:ingress                # Across/Robinhood AML ingress escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts  # unit SSOT
 
-# Full Regression Test Suite (228 test files | 1066 PASS clean)
+# Full Regression Test Suite (231 test files | 1081 PASS clean)
 pnpm test -- --run
 ```
 

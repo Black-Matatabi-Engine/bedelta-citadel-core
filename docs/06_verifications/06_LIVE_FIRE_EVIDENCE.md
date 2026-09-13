@@ -1,5 +1,7 @@
 # Live-Fire Execution Evidence (Mainnet · 42161)
 
+> **Note on Live Evidence:** Mainnet GMX transaction hashes ([`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) open & [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) close) demonstrate complete **42161 mainnet execution capability**. Pre-consensus guard failure modes are verified via **non-bypass** CLI demos (`pnpm demo:gmx -- --trip`) and unit tests ([`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35**). Armed micro-fill may set `ALLOW_STALE_ORACLE=1` / `BYPASS_SOIL_PROBE=true` — that is an **execution harness**, not the firewall demo.
+
 > **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 
 ### Mainnet Live-Fire Script Specifications
