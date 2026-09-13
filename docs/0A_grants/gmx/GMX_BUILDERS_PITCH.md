@@ -9,7 +9,7 @@
 **Grant Audit:** `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .arbitrumCitadel`
 **Channel:** [t.me/GMXPartners](https://t.me/GMXPartners)
 
-> **Vitest SSOT:** **225 test files | 1052 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)**.
+> **Vitest SSOT:** **228 test files | 1066 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)**.
 
 **Audience:** GMX Builders Program evaluators only — GMX v2 GM Pool Gateway, `isGmxBalancerQualified` underweight-side routing, and +10 bps `uiFeeReceiver` yield accrual. Do not lead with ZeroDev, Robinhood, Across, or external AA grant narratives.
 
@@ -54,7 +54,7 @@ Every unsigned increase / decrease / deposit payload injects **+10 bps `uiFeeRec
 
 | Milestone | Scope | Status |
 |-----------|-------|--------|
-| **M1** | **v1.0 Delivered (Sepolia verified)** · pre-exec gateway · Live HUD · +10 bps routing · `/api/grant-audit` · **225 test files | 1052 PASS clean (100%)** | ✅ Delivered (Sepolia & dry-run; mainnet ties to M6) |
+| **M1** | **v1.0 Delivered (Sepolia verified)** · pre-exec gateway · Live HUD · +10 bps routing · `/api/grant-audit` · **228 test files | 1066 PASS clean (100%)** | ✅ Delivered (Sepolia & dry-run; mainnet ties to M6) |
 | **M2** | Institutional gateway · sidecar daemon · `claimUiFees` | ✅ Core Built (Sidecar Daemon Ready / Awaiting Treasury Claim Hook) |
 | **M3** | Multi-tenant B2B · cross-venue compensation SLA | Roadmap (Multi-tenant B2B & Cross-venue SLA) |
 
@@ -68,7 +68,7 @@ pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Sli
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .arbitrumCitadel.isGmxBalancerQualified
 ```
 
-**Regression bar:** **225 test files | 1052 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · **327,675 Property Fuzz Executions** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = 5,120) · Wasm **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)**.
+**Regression bar:** **228 test files | 1066 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · **327,675 Property Fuzz Executions** (`pnpm audit:nightly` / `FOUNDRY_PROFILE=deep`; standard `forge test` = 5,120) · Wasm **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)**.
 
 ---
 
