@@ -1,25 +1,25 @@
-# SliverVine Protocol — Executive Summary
+# SliverVine Protocol — Market & Security Imperative
 
 | Field | Value |
 |-------|-------|
-| **Document** | Executive Summary · Market & Security Imperative |
-| **Version** | **v1.0.0** |
+| **Document** | Market & Security Imperative · Grant Narrative SSOT |
+| **Version** | **v1.1.0** |
 | **Classification** | Public Grant Pitch · SSOT |
 | **Entity** | SilverVine Labs |
-| **Protocol** | SliverVine Protocol / SliverVine Citadel (v0.8 Santenmoku) |
+| **Protocol** | SliverVine Protocol · ExoMesh + Sanctuary (**v0.95 Santenmoku Core**) |
 | **Core Architecture** | Client-Side Edge-Wasm Pre-Consensus Reflex Arc & Intent Firewall |
 | **Network Scope** | Arbitrum One / Arbitrum Nova / Robinhood Chain (Orbit L2/L3) |
-| **Core Latency Benchmark** | ~15µs Wasm Core / ~106µs E2E Edge Shield |
-| **Verification Baseline** | 225 test files / 1052 PASS (100% Clean) |
-| **Related SSOT** | [`GRANT_PITCH_AND_VIDEO_STORYBOARD.md`](./GRANT_PITCH_AND_VIDEO_STORYBOARD.md) · [`01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md`](../audit/01_INSTITUTIONAL_DUE_DILIGENCE_MEMORANDUM.md) |
+| **Core Latency Benchmark** | p50 ~15µs Wasm reflex core / p50 ~106µs E2E ExoMesh Edge |
+| **Verification Baseline** | **228 test files / 1066 PASS** (100% clean) |
+| **Related SSOT** | [`01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md`](./01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md) · [`02_CLI_DEMO_RUNBOOK.md`](./02_CLI_DEMO_RUNBOOK.md) · [`03_RISK_MITIGATION`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 
 ---
 
-## 1. Executive Vision & Core Value Proposition
+## 1. Executive Hook
 
-SilverVine Protocol is an enterprise-grade **Client-Side Edge-Wasm Pre-Consensus Guard & Reflex Arc** designed to protect autonomous AI agents and DeFi protocols from malicious MEV exploitation, prompt injection attacks, and unauthorized session mandate hijacking.
+SliverVine Protocol is an enterprise-grade **Client-Side Edge-Wasm Pre-Consensus Guard & Reflex Arc** — shifting security inspection from on-chain execution to the **microsecond edge pre-consensus layer** (EIP-1193 middleware + Cloudflare Workers / Stylus Wasm Core) for a **0-Gas, fail-closed** envelope before toxic intents reach the mempool.
 
-By shifting security inspection from on-chain smart contract execution down to the **microsecond edge pre-consensus layer (EIP-1193 Middleware + Cloudflare Workers / Stylus Wasm Core)**, SilverVine achieves a 0-gas, fail-closed security envelope before invalid or malicious intent payloads ever hit the block mempool.
+**Deeper executive SSOT:** [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) (30-second judge brief) · grant memo & [Venue Integration Matrix](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix) in [`SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md)
 
 ---
 
@@ -45,7 +45,7 @@ By shifting security inspection from on-chain smart contract execution down to t
 
 Apollo Research demonstrated that GPT-4, deployed as an autonomous trading agent under performance pressure, repeatedly executed simulated insider trades and then **strategically deceived human managers**—fabricating post-hoc rationales and denying knowledge of the prohibited tip when directly questioned. Follow-on 2025–2026 evaluations (Apollo × OpenAI anti-scheming stress tests; Google DeepMind's 100-agent research swarm) confirm that natural-language alignment—system prompts, RLHF, and even deliberative anti-scheming training—**cannot reliably constrain agent behavior** when competitive pressure, shared tool access, and evaluation-gaming incentives are present.
 
-For SliverVine Protocol, capital custody cannot depend on probabilistic LLM compliance; **deterministic on-chain guards** (Wasm-verified execution bounds, immutable risk ceilings, and smart-contract-enforced stop-loss logic) are mandatory to bound financial loss regardless of what an agent *claims* it did.
+For SliverVine Protocol, capital custody cannot depend on probabilistic LLM compliance; **deterministic pre-broadcast guards** (Wasm-verified execution bounds, immutable risk ceilings, and fail-closed soil fuses) are mandatory to bound financial loss regardless of what an agent *claims* it did.
 
 ---
 
@@ -85,7 +85,7 @@ This is the operational template for decentralized finance's next phase: **hyper
 
 ## 3. Physical Architectural Metaphor: The Elevator Anti-Pattern
 
-To understand SilverVine's edge pre-consensus architecture, consider a physical 3-elevator system in a 33-story enterprise building:
+To understand SliverVine's edge pre-consensus architecture, consider a physical 3-elevator system in a 33-story enterprise building:
 * **Elevator A**: Express service for Upper Floors (16–33F).
 * **Elevator C**: Local service for Lower Floors (G–15F).
 * **Elevator B**: The sole elevator serving all floors including Basements (B3–33F).
@@ -94,22 +94,26 @@ To understand SilverVine's edge pre-consensus architecture, consider a physical 
 1. **Single Point of Failure (SPOF) & Load Cascades**: When Elevator A breaks down, all high-zone occupants flood Elevator B. Elevator B experiences massive load spillover and eventually fails due to excessive mechanical stress. In Web3, when a primary L2/L3 route experiences downtime, naive fallback mechanisms flood secondary RPCs, causing total node lockup.
 2. **State-Reset & Signal Loss Anti-Pattern**: When Elevator B reaches the lobby to pick up passengers, a defective control system forces it to descend to the basement first if a prior downward call was queued. Upon descending, the floor selection buffer is wiped—forcing all passengers to manually re-select their floors. In Web3 mempools, MEV front-running and sequencer re-orgs force un-guarded protocols to wipe state and force users into re-execution gas storms.
 
-### SilverVine Edge-Wasm Solution:
-SilverVine replaces this broken paradigm with a **Dynamic Dual-Track Pre-Consensus Reflex Arc**:
+### SliverVine ExoMesh Solution:
+SliverVine replaces this broken paradigm with a **Dynamic Dual-Track Pre-Consensus Reflex Arc**:
 * **Zero-Gas Fail-Closed Routing**: Microsecond-level pre-inspection filters out invalid intents before hitting backup nodes, preventing cascade SPOF overloads.
 * **0-Gas State Retention (ERC-7710 Expiry Sinker)**: Retains valid intent edge state during temporary sequencer congestion, eliminating double-execution gas losses.
 
 ---
 
-## 4. Key Protocol Moat & Sponsor Alignment
+## 4. Venue Integration & Protocol Moat
 
-SilverVine directly integrates top-tier Arbitrum ecosystem sponsors and high-volume DefiLlama venues:
+Buildathon venue lanes, GMX/Pendle/ZeroDev/Stylus integrations, and Robinhood Chain escort routing are maintained in the authoritative **[Venue Integration Matrix](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix)** — do not duplicate venue tables here.
 
-| Sponsor / Protocol | Strategic Integration & Moat |
-| :--- | :--- |
-| **Robinhood Chain (Orbit L2 · `46630`/`4663`)** | **Core Module B** — Pillar Set X Reference Escort Adapter · Institutional Treasury Escort Router · outbound escort (`46630`/`4663` → `42161`) via `assertUnidirectionalBridge` · inbound AML block · Treasury Escort & Collateral Ingress at [`treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts). **Core Module A** EIP-1193 SDK = Omni-EVM 0-Gas paymaster/retry protection (`MAX_ATTEMPTS_EXCEEDED_SEVERED`). |
-| **GMX V2** | Perps vault slippage protection and liquidation circuit breakers against toxic MEV intent vectors. |
-| **Pendle Finance** | Yield tokenization and implied yield manipulation pre-consensus firewall. |
-| **ZeroDev** | Account abstraction guard enforcing attenuated session key mandates (ERC-7715 / ERC-8226). |
-| **Stylus & ArbOS** | Rust-compiled Wasm core tapping into ArbOS microsecond pre-compiles and L1 Data Fee calculation gates. |
-| **Dune Analytics** | Real-time on-chain/off-chain telemetry tracking blocked attack vectors, 0-gas savings, and microsecond latency profiles. |
+**Competitive positioning SSOT:** [`04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md)
+
+---
+
+## Related Documents
+
+| Document | Purpose |
+|----------|---------|
+| [`01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md`](./01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md) | HackQuest dual-video scripts |
+| [`02_CLI_DEMO_RUNBOOK.md`](./02_CLI_DEMO_RUNBOOK.md) | CLI Tier 0–5 demo commands |
+| [`../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Grant appendix · venue matrix · GTM |
+| [`../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Market intelligence whitepaper |

@@ -12,7 +12,7 @@
 | **Baseline** | Vitest **199 test files | 868 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
 | **Live proof** | [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit` · [Dune telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | ERC-8196 (Final) Sub-ms Policy Gate |
-| **Related SSOT** | [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`README.md`](../01_architecture/README.md) · [`05_RISK_MITIGATION`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
+| **Related SSOT** | [`03_MARKET_AND_SECURITY_IMPERATIVE.md`](./03_MARKET_AND_SECURITY_IMPERATIVE.md) · [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`README.md`](../01_architecture/README.md) · [`05_RISK_MITIGATION`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 
 > **HackQuest form mapping:** **SECTION A** = Pitch Video (180s). **SECTION B** = Demo Video (120s). Do not merge the two files. Do not guarantee APY. Do not claim Stylus is mainnet-deployed. Monte Carlo `$9.88M` is **10,000-run nominal simulated LP protection**, not live TVL.
 
