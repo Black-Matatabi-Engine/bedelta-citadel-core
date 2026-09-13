@@ -126,7 +126,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 | **GMX v2** | Arbitrum One | Pool Imbalance Ratio: \|OI_long − OI_short\| / PoolTVL > **0.35** · Collateral Reserve < **105%** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) |
 | **Pendle** | Arbitrum One | Discounted Implied Yield Shock: \|Yield_current − Yield_oracle\| > **150 bps** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) |
 | **USD.ai** | Arbitrum One | sUSDai peg drift > **30 bps** · GPU oracle age > **2h** · liquidity depth < **$100k** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `USD_AI_DEPEG_ORACLE_TRIP` soil fuse |
-| **Variational** | Arbitrum One | RFQ quote stale > **500ms** · OLP depth > **15%** · oracle drift > **30 bps** | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) |
+| **Variational** | Arbitrum One | RFQ quote stale > **500ms** · OLP depth > **15%** · oracle drift > **30 bps** · TRS carry > **8%** · perp funding vol > **80 bps** | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · [`variational-instrument-guard.zero.ts`](../../src/guards/variational-instrument-guard.zero.ts) |
 | **Hyperliquid** | Independent L1 HF Orderbook AppChain | Session Key **MaxSizePerOrder** · **Rate Limit** (120/min) · Orderbook Spread > **20 bps** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) |
 | **RESERVED_ABI_V2** | Wasm ABI v2 holes | Pruned Uniswap · Aave · Morpho — protocol bits **4–6** frozen | [`risk-flags.ts`](../../src/core/risk-flags.ts) |
 

@@ -98,6 +98,26 @@ Grant allocation directly fuels our **V2.0 R&D Roadmap**:
 2. **Multi-RPC Quorum Consensus Verification** — Protecting against RPC eclipse spoofing before Wasm evaluation.
 3. **Decentralized PEV (Prevented Exploit Volume) Intelligence Feed** — Real-time Dune telemetry into decentralized agent alert networks.
 
+### Phase D Blueprint: TradFi Total Return Swap & Zero-Alloc Coprocessor
+
+> **Status:** Blueprint + **V1.0 hot-path module** landed — [`variational-instrument-guard.zero.ts`](../../src/guards/variational-instrument-guard.zero.ts) · full Stylus/Wasm lane wiring is post-grant.
+
+SliverVine models **TradFi Total Return Swaps** and **crypto perpetuals** as distinct instrument lanes inside the same Variational RFQ envelope. The reflex core must not allocate on the hot path — memory slabs are pre-sized for C/Rust `soil_core.wasm` FFI alignment:
+
+| Slab | Role | Zero-alloc contract |
+|------|------|---------------------|
+| `FlatQuoteInput` | Caller-owned numeric quote (instrument type, carry bps, funding vol, OLP depth) | Plain struct — no nested objects on hot path |
+| `SoilResultSlot` | Mutated in-place by `evaluateSwapPerpSoilZero` | `action` · `reason` · `flags` · `hintInstrument` — stable numeric ABI |
+| `ACTION` / `REASON` constants | Wasm / host parity | Materialize strings only via cold-path `reasonToString()` |
+
+**TradFi TRS lane (SWAP):** flat carry ceiling **8%** · fail-closed when swap market hours are closed · dividend pass-through modeled as carry, not funding volatility.
+
+**Crypto perp lane (PERP):** funding volatility **>80 bps** → fail-closed with **SWAP** hint — steers agents toward TRS when perp funding is toxic.
+
+**Memory efficiency:** Hot path writes only into caller-provided `SoilResultSlot`; aligns with `SOIL_LANE_SCRATCH` / `wasm-soil-ffi.ts` reusable buffers — **one FFI round-trip**, no ephemeral `Float64Array` per intent on the reflex arc.
+
+**Verification:** `npx vitest run tests/guards/variational-instrument-guard.zero.test.ts` · architecture SSOT: [`01_EXOMESH_PRE_CONSENSUS_SHIELD.md`](../01_architecture/01_EXOMESH_PRE_CONSENSUS_SHIELD.md).
+
 **V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards · **GM Pool I/O channel CLOSED on 42161** (deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410)) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **EIP-1193 Retail Guard SDK** + **5-Core Venue guards** · Stabilizer Sepolia · Dune Sepolia live stream + 42161 SQL pre-compiled · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · V1.1 4-tier SaaS roadmap · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
 ---

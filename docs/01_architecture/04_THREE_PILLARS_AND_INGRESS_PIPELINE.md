@@ -250,7 +250,12 @@ Sign in ──► Fund ──► Gas ──► Authorize ──► Execute (v1.0
 | **Pendle Finance** (Yield & Rate Hedging) | PT/YT safety sentinel for AI agents in yield-tokenization markets — **not a yield competitor** | `checkSoilResistance()` · `pendleOracle` / `pendleCrossGuard` soil probes · [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s · `PENDLE_ORACLE_STALE`) · `evaluatePendleGmxCrossGuard()` · `evaluatePendlePtExpiryRisk()` · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) | **V1.0** | ✅ Live · Pillar Set Y · **228 test files | 1066 PASS clean (100%)** |
 | **USD.ai** (AI-Compute RWA Yield Collateral) | Yield-bearing sUSDai collateral tier for AI agent treasury — GPU oracle · peg drift · NAV vs mark · depth fuse | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) · `evaluateUsdAiCollateralGuard()` · `usdai` → `collectExternalSoilFlags()` · `USD_AI_DEPEG_ORACLE_TRIP` | **V1.0** | ✅ Live · Pillar Set Y · `pnpm demo:usdai` |
 | **Stabilizer** (Sepolia Cross-Pass Sandbox) | Universal testnet sandbox for AI agent stablecoin rebalance · cross-pass routing to GMX v2 + Pendle on `421614` | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · `evaluateStabilizerSwapGuard()` · identical `checkSoilResistance()` gate as `42161` | **V1.0** | ✅ Live · Sepolia `421614` · `pnpm demo:stabilizer` |
-| **Variational** (Omni RFQ) | Protocol-agnostic RFQ firewall · stale quote · OLP depth · oracle drift | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · `validateVariationalRFQIntent()` · Bits 12–13 | **V1.0** | ✅ Live · `pnpm demo:variational` |
+| **Variational** (Omni RFQ) | Protocol-agnostic RFQ firewall · stale quote · OLP depth · oracle drift · **TradFi TRS vs perp instrument lanes** | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) · [`variational-instrument-guard.zero.ts`](../../src/guards/variational-instrument-guard.zero.ts) · `evaluateSwapPerpSoilZero` · Bits 12–13 | **V1.0** | ✅ Live · `pnpm demo:variational` |
+
+- **Variational RFQ & Swap Guard**:
+  - *Hot Path (Zero-GC)*: Sub-microsecond numeric soil check (`evaluateSwapPerpSoilZero`).
+  - *Instrument Awareness*: Distinguishes TradFi Total Return Swaps (flat carry, market open hours, dividend pass-through) vs Crypto Perps (variable funding rate volatility).
+  - *Defensive Limits*: Fail-closed on closed swap market hours, carry >8%, quote age >500ms, or OLP exposure >15%.
 
 ```text
 v1.0 Active Triangle (42161)
