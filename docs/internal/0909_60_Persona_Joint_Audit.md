@@ -30,7 +30,7 @@
 | **C** | `citadel_invariants` Rust/Stylus crate | ✅ | Cargo **2/2** · Vitest parity **6/6** · `pnpm build:citadel-invariants` |
 | **C** | `SliverVineAgentPolicyGuardV2` + Stylus fallback libs | ✅ | Stylus staticcall 優先 · revert/`address(0)` → Solidity fallback |
 
-GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) 與 [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md)。
+GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) 與 [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)。
 
 | 0908 PM 判定 | **`bbcd6bb` 判定** |
 |--------------|-------------------|
@@ -67,7 +67,7 @@ GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../0
 
 **勘誤（0908 舊 SSOT · 勿再引用）：** [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block 503038714 · **❌ Fail** · `ERC20: insufficient allowance`
 
-**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · GMX v2 Router `0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` · WithdrawalVault `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` · SSOT：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md)
+**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · GMX v2 Router `0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` · WithdrawalVault `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` · SSOT：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)
 
 **Wallet A Short Fallback（已 commit · simulate only）：**
 

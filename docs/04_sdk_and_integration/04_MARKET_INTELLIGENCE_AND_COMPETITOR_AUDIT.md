@@ -97,7 +97,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 | 01 | [`01_SDK_INTEGRATION_BLUEPRINT.md`](./01_SDK_INTEGRATION_BLUEPRINT.md) |
 | 03 | [`03_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) |
 | 04 | [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) |
-| — | [`../ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
+| — | [`../00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 
 ---
 

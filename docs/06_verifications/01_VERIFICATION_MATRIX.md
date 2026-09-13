@@ -31,7 +31,7 @@
 | **Buildathon judges** | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) |
 | **Grant evaluators (Sovereign Vault)** | [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) | [`01_ON_CHAIN_MAINNET_ANCHORS.md`](./03_ON_CHAIN_MAINNET_ANCHORS.md) · [`04_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) |
 | **Wallet / agent integrators** | [`sdk/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`03_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:agent` |
-| **Full grant appendix** | [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
+| **Full grant appendix** | [`00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
 
 **Decoupled SSOT index:** [`verifications/README.md`](./README.md)
 
@@ -215,8 +215,8 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 | Document | Role |
 |----------|------|
 | [`README.md`](../README.md) | Repo entry · ExoMesh + Sanctuary |
-| [`ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (ExoMesh-first) |
-| [`ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
+| [`00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Lean Buildathon pack (ExoMesh-first) |
+| [`00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Venue integration matrix · GTM · milestones |
 | [`architecture/README.md`](../01_architecture/README.md) | Yellow Paper · R01–R20 |
 | [`DEMO_GUIDE.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) | Tier 0–1 + Zone A/B demo suite (5-core + Retail Guard) |
 | [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 30-second Buildathon brief |

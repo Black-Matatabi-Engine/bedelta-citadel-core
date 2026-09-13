@@ -3,7 +3,7 @@
 **Document role:** **Citadel-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`).  
 **Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
 **Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (Citadel-Armor SSOT) · **225 test files | 1052 PASS clean**  
-**Related:** [`VERIFICATION_MATRIX.md`](./01_VERIFICATION_MATRIX.md) · [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md)
+**Related:** [`VERIFICATION_MATRIX.md`](./01_VERIFICATION_MATRIX.md) · [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md)
 
 ---
 
@@ -244,7 +244,7 @@ pnpm demo:e2e -- --unwind           # + Step 5 R20 exercise
 | Document | Role |
 |----------|------|
 | [`VERIFICATION_MATRIX.md`](./01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub · on-chain settlement contracts |
-| [`ARB_Buildathon/SUBMISSION.md`](./ARB_Buildathon/SUBMISSION.md) | Grant submission SSOT |
+| [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md) | Grant submission SSOT |
 | [`01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Topology · Δ-neutral loop |
 
 ---

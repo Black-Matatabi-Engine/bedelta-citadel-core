@@ -289,7 +289,7 @@ pnpm test -- --run
 | [`../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ERC-7540 wiki entry · ExoMesh competitive matrix |
 | [`../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | EIP-1193 integration · escort config |
 | [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | Tier 0 `[Sanctuary]` CLI zone |
-| [`../ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon Module B architectural surface |
+| [`../00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon Module B architectural surface |
 
 ---
 

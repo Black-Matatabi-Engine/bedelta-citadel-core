@@ -135,7 +135,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 
 | Document | Purpose |
 |----------|---------|
-| [`../../ARB_Buildathon/SUBMISSION.md`](../../ARB_Buildathon/SUBMISSION.md) | Submission pack |
+| [`../../00_ARB_Buildathon/SUBMISSION.md`](../../00_ARB_Buildathon/SUBMISSION.md) | Submission pack |
 | [`ARBITRUM_ONE_PAGER.md`](./ARBITRUM_ONE_PAGER.md) | One-pager |
 | [`../../01_architecture/README.md`](../../01_architecture/README.md) | R01–R20 |
 | [`../../audit/`](../../audit/) | Scorecards |

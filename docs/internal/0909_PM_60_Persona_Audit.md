@@ -22,7 +22,7 @@
 
 ## 0. 回訪立場（`ed485ba` · 主網結算平面閉環）
 
-09-09 晚間工程在 **`ed485ba`** 完成 **Phase A+B+C 主網部署**，並將 **雙錢包生產工作流** 寫入 [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) / [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
+09-09 晚間工程在 **`ed485ba`** 完成 **Phase A+B+C 主網部署**，並將 **雙錢包生產工作流** 寫入 [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) / [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
 
 | 平面 | SSOT | 09-09 PM 判定 |
 |------|------|---------------|

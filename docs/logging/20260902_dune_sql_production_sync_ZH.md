@@ -21,7 +21,7 @@
 ## 已同步文檔
 
 - `docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`
-- `docs/ARB_Buildathon/SUBMISSION.md`
+- `docs/00_ARB_Buildathon/SUBMISSION.md`
 - `docs/06_verifications/01_VERIFICATION_MATRIX.md`
 - `docs/sdk/CITADEL_SDK_BLUEPRINT.md`
 - `docs/01_architecture/README.md`

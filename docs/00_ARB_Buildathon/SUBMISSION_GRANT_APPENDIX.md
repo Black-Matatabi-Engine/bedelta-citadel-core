@@ -1,6 +1,6 @@
 # Grant Submission Appendix — Venue Integration Matrix · GTM · Milestones
 
-> **Lean submission:** [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
+> **Lean submission:** [`SUBMISSION.md`](./SUBMISSION.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 
 ## Executive Summary & One-Page Strategic Memo
 

@@ -36,7 +36,7 @@
 | ZeroDev × 106µs | 易被讀成 AA 耦合 | **§2.4.1 解耦 · Opt-In · Smart Routing = Reference Harness** |
 | 風險譜 | 口號式 88% | **88% + 12% = 100% 數學定義** · 80/20 Pareto 寫進 Risk Framework |
 | 評審第一印象路徑 | README 偏長 | **30-Second Express Audit + Dockerfile `--ignore-scripts`** |
-| 文件可點性 | Jared Etherscan ENS 404 | **Blockaid 真連結** · architecture/audit **數字前綴** · SUBMISSION → `docs/ARB_Buildathon/` |
+| 文件可點性 | Jared Etherscan ENS 404 | **Blockaid 真連結** · architecture/audit **數字前綴** · SUBMISSION → `docs/00_ARB_Buildathon/` |
 | Agent 生態 | Eliza/Virtuals 參考 adapter | **LLM 60s cooldown + ±2–5 bps jitter** · Wayfinder/CrewAI **寫成 V1.5、不裝成已簽約** |
 | 倉庫形狀 | GUI 殘渣 | **Zero-GUI** · Worker 91.2 KiB gzip 全庫對齊 |
 

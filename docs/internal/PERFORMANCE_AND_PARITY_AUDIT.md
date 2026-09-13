@@ -268,4 +268,4 @@ cargo test -p citadel_invariants
 | **P2 Bitwise pure state** | **B+** | Flags + intent masks excellent; soil uses f64 ratios by design |
 | **P3 Cross-tier parity** | **A-** | P0 soil bridge + P1 FNV Wasm hash resolved; clock + multi-flag lanes still Edge-only |
 
-*This document is the internal SSOT for performance sinking and execution parity. Public-facing summaries belong in [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) and [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md).*
+*This document is the internal SSOT for performance sinking and execution parity. Public-facing summaries belong in [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) and [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md).*

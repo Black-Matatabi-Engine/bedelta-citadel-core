@@ -112,7 +112,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 | **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Vitest** | **228 test files | 1066 PASS clean** · `pnpm test -- --run` |
 | **C-End SDK** | `@slivervine/exomesh-agentic-wallet-guard` · *Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
-| **Deep docs** | [`SUBMISSION.md`](./docs/ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
+| **Deep docs** | [`SUBMISSION.md`](./docs/00_ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
 
 ---
 

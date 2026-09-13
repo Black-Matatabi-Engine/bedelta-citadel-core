@@ -19,7 +19,7 @@
 
 SliverVine Protocol is an enterprise-grade **Client-Side Edge-Wasm Pre-Consensus Guard & Reflex Arc** — shifting security inspection from on-chain execution to the **microsecond edge pre-consensus layer** (EIP-1193 middleware + Cloudflare Workers / Stylus Wasm Core) for a **0-Gas, fail-closed** envelope before toxic intents reach the mempool.
 
-**Deeper executive SSOT:** [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) (30-second judge brief) · grant memo & [Venue Integration Matrix](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix) in [`SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md)
+**Deeper executive SSOT:** [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) (30-second judge brief) · grant memo & [Venue Integration Matrix](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix) in [`SUBMISSION_GRANT_APPENDIX.md`](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md)
 
 ---
 
@@ -103,7 +103,7 @@ SliverVine replaces this broken paradigm with a **Dynamic Dual-Track Pre-Consens
 
 ## 4. Venue Integration & Protocol Moat
 
-Buildathon venue lanes, GMX/Pendle/ZeroDev/Stylus integrations, and Robinhood Chain escort routing are maintained in the authoritative **[Venue Integration Matrix](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix)** — do not duplicate venue tables here.
+Buildathon venue lanes, GMX/Pendle/ZeroDev/Stylus integrations, and Robinhood Chain escort routing are maintained in the authoritative **[Venue Integration Matrix](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md#venue-integration-matrix)** — do not duplicate venue tables here.
 
 **Competitive positioning SSOT:** [`04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md)
 
@@ -115,5 +115,5 @@ Buildathon venue lanes, GMX/Pendle/ZeroDev/Stylus integrations, and Robinhood Ch
 |----------|---------|
 | [`01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md`](./01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md) | HackQuest dual-video scripts |
 | [`02_CLI_DEMO_RUNBOOK.md`](./02_CLI_DEMO_RUNBOOK.md) | CLI Tier 0–5 demo commands |
-| [`../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Grant appendix · venue matrix · GTM |
+| [`../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md`](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md) | Grant appendix · venue matrix · GTM |
 | [`../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Market intelligence whitepaper |

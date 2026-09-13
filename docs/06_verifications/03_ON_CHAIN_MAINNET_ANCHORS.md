@@ -6,7 +6,7 @@
 
 | Field | Locked value | Verify |
 |-------|--------------|--------|
-| **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
+| **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../../README.md) · [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 | **Vitest baseline** | **228 test files | 1066 PASS clean** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Verified commit** | `main` @ **`3f26efa`** (Citadel-Armor SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **163.67 KiB raw | 57.76 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
@@ -39,7 +39,7 @@
 | **Dune dashboard** | [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) | Public URL |
 | **Dune — Sepolia (`421614`)** | ✅ **Active Live Event Stream** — decoded `IntentAttested` · `RiskTripBlocked` from Sepolia Gate `0xb174…` · **PEV** `SUM(blocked_intent_notional_usd)` operational | [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Dune — Arbitrum One (`42161`)** | ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** — Queries 0–0b feed/chart + Queries 1–3 reconciliation panels pre-compiled for **ChainID `42161`** · **not** claimed as live mainnet event stream | Same spec |
-| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Final (Ethereum Standard · Virtuals Protocol co-author) | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
+| **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Final (Ethereum Standard · Virtuals Protocol co-author) | [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 
 > **Governance footnote (Bootstrap Ignition Keys):** Mainnet Gate `0xb174…` deploys with **Bootstrap Ignition Keys** (`0x1111…` / `0x2222…`) — **strictly for public verification and sandbox reproducibility**, not production HSM custody. Governance authority is designed for **post-launch rotation** to production multisig via native `proposeAdmin` / `acceptAdmin` functions.
 

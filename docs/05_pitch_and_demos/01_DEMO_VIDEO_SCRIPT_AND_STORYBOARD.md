@@ -85,7 +85,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
-| **2:30–2:45** | M1–M6 checklist: Sepolia ✅ · CLI ✅ · RH demo ✅ · GMX fee ✅ · Dune spec ✅ · Mainnet ⏳ | *"Milestones are CLI-verifiable. Mainnet is M6 — we do not pretend it is done."* | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
+| **2:30–2:45** | M1–M6 checklist: Sepolia ✅ · CLI ✅ · RH demo ✅ · GMX fee ✅ · Dune spec ✅ · Mainnet ⏳ | *"Milestones are CLI-verifiable. Mainnet is M6 — we do not pretend it is done."* | [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 | **2:45–2:55** | Dune 3-query spec card · static `GET /api/grant-audit` provenance | *"Dune: three-query production spec plus static grant-audit SHA-256 provenance reconciliation."* | [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **2:55–3:00** | End card · URL · SSOT string | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 
@@ -169,7 +169,7 @@ Start CLI map: [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verific
 | Document | Use |
 |----------|-----|
 | [`docs/README.md`](../README.md) | Grant reviewer navigation |
-| [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) | Buildathon pack |
+| [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon pack |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Allocator diligence · 88%/12% |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Option C stress + 60 invariants |
 

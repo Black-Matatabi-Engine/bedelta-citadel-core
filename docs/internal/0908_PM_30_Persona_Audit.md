@@ -51,7 +51,7 @@
 | 2 | **GM LP → Synthetics Router Approve** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) | **503038459** | ✅ Success |
 | 3 | **GM Withdraw Multicall Broadcast** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) | **503038714** | ✅ Success |
 
-**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · Synthetics Router `0xaBBc7805d812eA10e7D47d54169b8922596f9a0c` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8…7A55` · WithdrawalVault `0x0628D46b…1c55` · SSOT 同步：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/ARB_Buildathon/SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md)
+**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · Synthetics Router `0xaBBc7805d812eA10e7D47d54169b8922596f9a0c` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8…7A55` · WithdrawalVault `0x0628D46b…1c55` · SSOT 同步：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)
 
 歷史面板均分（**僅作機構記憶；本卷不校準常數**）：
 
