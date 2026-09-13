@@ -46,11 +46,11 @@
 |-------|-------------|------|-----|--------------|
 | **Phase A** | [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol) | executionFee floor · slippage floor · pool imbalance · zero SLOAD/RPC | **83** | [`PolicyGuardGmxWire.t.sol`](../../contracts/test/PolicyGuardGmxWire.t.sol) **9/9** · TS mirror [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts) **131** |
 | **Phase B** | [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol) + [`DefenseMatrixBitmap.sol`](../../contracts/libs/DefenseMatrixBitmap.sol) | defense matrix **single SLOAD** bitmap switch | **47 + 66** | [`GmxSoilMatrixSwitch.t.sol`](../../contracts/test/GmxSoilMatrixSwitch.t.sol) **8/8** |
-| **Phase C** | [`citadel_invariants`](../../contracts/citadel_invariants/) Rust crate | 96-byte packed eval · GMX errMask + soil flags · Stylus `evaluate_packed` entrypoint | **lib 58 · abi 39 · gmx 60 · soil 31** | Cargo **2/2** · Vitest [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6** |
+| **Phase C** | [`sanctuary_invariants`](../../contracts/sanctuary_invariants/) Rust crate | 96-byte packed eval · GMX errMask + soil flags · Stylus `evaluate_packed` entrypoint | **lib 58 · abi 39 · gmx 60 · soil 31** | Cargo **2/2** · Vitest [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6** |
 | **Phase C** | [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol) | optional `stylusCoprocessor` staticcall · revert/`address(0)` → **Solidity fallback** | **71** | Forge PolicyGuard **9/9** |
-| **Pack / call** | `CitadelInvariantsPackLib` · `CitadelInvariantsStylusLib` · `ICitadelInvariantsCoprocessor` | wire+ctx → 96 bytes · parse 32-byte LE result word | **41 + 28 + 6** | integrated in `_enforceGmxWire` |
+| **Pack / call** | `SanctuaryInvariantsPackLib` · `SanctuaryInvariantsStylusLib` · `ISanctuaryInvariantsCoprocessor` | wire+ctx → 96 bytes · parse 32-byte LE result word | **41 + 28 + 6** | integrated in `_enforceGmxWire` |
 
-**Build commands:** `pnpm build:citadel-invariants` (host wasm parity) · `cargo build --features stylus` (Stylus deploy) · `pnpm exec tsc --noEmit` **0 errors**.
+**Build commands:** `pnpm build:sanctuary-invariants` (host wasm parity; `build:citadel-invariants` alias retained) · `cargo build --features stylus` (Stylus deploy) · `pnpm exec tsc --noEmit` **0 errors**.
 
 ### Stylus Module Build Proof (Local Verification)
 

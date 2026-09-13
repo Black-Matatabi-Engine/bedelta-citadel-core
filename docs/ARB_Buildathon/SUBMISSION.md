@@ -324,7 +324,7 @@ SliverVine ExoMesh defines **exact in-scope bounds** for AI-agent intent drift �
 | **Layer 2 — Nitro Stylus** | `SliverVineSoilCoprocessor` `0xc23587d6…` | On-chain `check_soil_resistance_stylus` · ArbWasm `0x71` | ✅ Deployed · optional coprocessor |
 | **Solidity Fallback** | `PolicyGuardV2` · `GmxRiskInvariantLib` | `stylusCoprocessor=0` → 100% fail-closed without Stylus activation | ✅ **42161 Live** |
 
-**Parity proof:** [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) · 65k fuzz runs · TS/Rust bitmask equivalence · Cargo `citadel_invariants` **2/2** · `pnpm build:citadel-invariants`
+**Parity proof:** [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) · 65k fuzz runs · TS/Rust bitmask equivalence · Cargo `sanctuary_invariants` **2/2** · `pnpm build:sanctuary-invariants`
 
 **Gas benchmark (Stylus vs naive EVM):** ~**110×** gas reduction · modeled **~313 gas** Stylus opcode vs **~34,540 gas** naive Solidity — see [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md` §3.5.1](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#351-stylus-nitro-opcode-gas-benchmark-layer-2).
 
