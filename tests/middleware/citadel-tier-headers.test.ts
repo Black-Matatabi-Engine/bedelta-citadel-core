@@ -1,8 +1,8 @@
 import { describe, expect, it, afterEach } from "vitest";
 import {
   CITADEL_API_KEY_HEADER,
-  CITADEL_RPS_LIMIT_HEADER,
-  CITADEL_TIER_HEADER,
+  SLIVERVINE_RPS_LIMIT_HEADER,
+  SLIVERVINE_TIER_HEADER,
   PUBLIC_GATEWAY_RPS_LIMIT,
   PUBLIC_GATEWAY_TIER,
   applyPublicApiResponseHeaders,
@@ -22,8 +22,8 @@ describe("rate-limiter / citadel-tier-headers", () => {
   it("V1.0 defaults to public open gateway tier", () => {
     expect(resolveGatewayTier(new Request("https://citadel.local/api/health"))).toBe(PUBLIC_GATEWAY_TIER);
     const res = applyGatewayRateLimitHeaders(new Response("ok"));
-    expect(res.headers.get(CITADEL_TIER_HEADER)).toBe("public");
-    expect(res.headers.get(CITADEL_RPS_LIMIT_HEADER)).toBe(String(PUBLIC_GATEWAY_RPS_LIMIT));
+    expect(res.headers.get(SLIVERVINE_TIER_HEADER)).toBe("public");
+    expect(res.headers.get(SLIVERVINE_RPS_LIMIT_HEADER)).toBe(String(PUBLIC_GATEWAY_RPS_LIMIT));
   });
 
   it("V1.1 preview resolves paid tier from API key prefix", () => {
@@ -49,8 +49,8 @@ describe("rate-limiter / citadel-tier-headers", () => {
     }
     const blocked = enforcePublicGatewayRps(req);
     expect(blocked?.status).toBe(429);
-    expect(blocked?.headers.get(CITADEL_TIER_HEADER)).toBe("public");
-    expect(blocked?.headers.get(CITADEL_RPS_LIMIT_HEADER)).toBe(String(PUBLIC_GATEWAY_RPS_LIMIT));
+    expect(blocked?.headers.get(SLIVERVINE_TIER_HEADER)).toBe("public");
+    expect(blocked?.headers.get(SLIVERVINE_RPS_LIMIT_HEADER)).toBe(String(PUBLIC_GATEWAY_RPS_LIMIT));
   });
 
   it("applyPublicApiResponseHeaders chains grant-audit + engine-mode + tier", () => {
@@ -58,8 +58,8 @@ describe("rate-limiter / citadel-tier-headers", () => {
       headers: { "x-engine-mode": "ARBITRUM_CITADEL" },
     });
     const res = applyPublicApiResponseHeaders(new Response("{}"), req);
-    expect(res.headers.get(CITADEL_TIER_HEADER)).toBe("public");
-    expect(res.headers.get(CITADEL_RPS_LIMIT_HEADER)).toBe("5");
+    expect(res.headers.get(SLIVERVINE_TIER_HEADER)).toBe("public");
+    expect(res.headers.get(SLIVERVINE_RPS_LIMIT_HEADER)).toBe("5");
     expect(res.headers.get("x-engine-mode")).toBe("ARBITRUM_CITADEL");
     expect(res.headers.get("X-Slivervine-Version")).toBeTruthy();
   });

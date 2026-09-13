@@ -1,6 +1,8 @@
 /** V1.0 public open gateway — lightweight IP/header RPS guard + tier response headers. */
-export const CITADEL_TIER_HEADER = "X-Citadel-Tier" as const;
-export const CITADEL_RPS_LIMIT_HEADER = "X-Citadel-RPS-Limit" as const;
+export const SLIVERVINE_TIER_HEADER = "X-SliverVine-Tier" as const;
+export const SLIVERVINE_RPS_LIMIT_HEADER = "X-SliverVine-RPS-Limit" as const;
+export const CITADEL_TIER_HEADER = SLIVERVINE_TIER_HEADER;
+export const CITADEL_RPS_LIMIT_HEADER = SLIVERVINE_RPS_LIMIT_HEADER;
 export const CITADEL_API_KEY_HEADER = "X-Citadel-API-Key" as const;
 
 export const PUBLIC_GATEWAY_TIER = "public" as const;
@@ -68,8 +70,8 @@ export function applyGatewayRateLimitHeaders(
   tier: GatewayTier = PUBLIC_GATEWAY_TIER,
 ): Response {
   const headers = new Headers(response.headers);
-  headers.set(CITADEL_TIER_HEADER, tier);
-  headers.set(CITADEL_RPS_LIMIT_HEADER, String(resolveGatewayRpsLimit(tier)));
+  headers.set(SLIVERVINE_TIER_HEADER, tier);
+  headers.set(SLIVERVINE_RPS_LIMIT_HEADER, String(resolveGatewayRpsLimit(tier)));
   return new Response(response.body, {
     status: response.status,
     statusText: response.statusText,

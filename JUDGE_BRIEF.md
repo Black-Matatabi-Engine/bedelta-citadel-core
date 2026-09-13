@@ -120,7 +120,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 
 SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edge gate **`checkSoilResistance()`** (**p50 ~106µs**) + reflex-core **`rootProtection()`** (**p50 ~15µs** on `--trip`) + immutable **[EIP-712](https://eips.ethereum.org/EIPS/eip-712) consume-once `SliverVineGate`** on Arbitrum One.
 
-**Production highlights:** GMX v2 · Pendle Institutional Sentinel · **5-Core Venue Matrix** · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Stabilizer Sepolia sandbox · **v1.0 public gateway** (`X-Citadel-Tier: public` · 5 RPS).
+**Production highlights:** GMX v2 · Pendle Institutional Sentinel · **5-Core Venue Matrix** · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Stabilizer Sepolia sandbox · **V1.0 0-Friction Public Open Gateway** (no API key; **5 RPS** via `X-SliverVine-Tier: public`). V1.1 KV API Key Metering is Post-Grant roadmap.
 
 ### 5-Core Venue Matrix
 

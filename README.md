@@ -9,6 +9,8 @@
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 >
 > *Former umbrella title "SliverVine Citadel Shield" is retired; **ExoMesh** is the primary architectural surface; **SSRC** is the underlying Stylus/Wasm reflex engine inside it.*
+>
+> **V1.0 Buildathon Baseline:** 0-Friction Public Open Gateway — **no API key required**; Edge IP/header limiter enforces **5 RPS** (`X-SliverVine-Tier: public` · `X-SliverVine-RPS-Limit: 5`). **V1.1** Cloudflare KV API Key Metering ($10–$1,999/mo) is **Post-Grant Commercial Roadmap**, not the submission baseline.
 
 ![Vitest](https://img.shields.io/badge/Vitest-1065%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
