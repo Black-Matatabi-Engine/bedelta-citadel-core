@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   JAVIER_SIGNATURE_LITERAL,
   OWNER_IDENTITY_TAG,
@@ -18,6 +18,13 @@ const TRIPLE_STRING_ENV = {
   OWNER_IDENTITY: OWNER_IDENTITY_TAG,
   JAVIER_SIGNATURE: JAVIER_SIGNATURE_LITERAL,
 } as const;
+
+/** Buildathon submission epoch — 2026-09-12T06:00:00Z = HKT 14:00 (outside tsunami window). */
+const LAYOUT_METRIC_TEST_EPOCH = new Date("2026-09-12T06:00:00.000Z");
+
+beforeEach(() => {
+  vi.setSystemTime(LAYOUT_METRIC_TEST_EPOCH);
+});
 
 afterEach(() => {
   __setLayoutMetricConfigForTests(undefined);
