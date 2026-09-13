@@ -1,7 +1,8 @@
 #!/usr/bin/env tsx
 /**
  * Arbitrum One (42161) — close micro-fill ETH/USD short via GMX v2 MarketDecrease.
- * Dry-run default. Live: CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 WalletA_Pkey=0x… FORCE_EOA_FALLBACK=1
+ * ZeroDev AA when ZeroDev_projectId / ZERODEV_PROJECT_ID is set; EOA when FORCE_EOA_FALLBACK=1.
+ * Dry-run default. Live: CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 WalletA_Pkey=0x…
  */
 import { createPublicClient, http, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
@@ -14,7 +15,12 @@ import { MICRO_FILL_COLLATERAL_USD } from "../src/services/adapters/gmx-micro-fi
 import { GMX_ORDER_TYPE_INDEX } from "../src/services/adapters/gmx-v2-order-payload.types";
 import { shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
 import { printGmxMicroFillError } from "../src/services/adapters/gmx-micro-fill-execution-errors";
-import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
+import {
+  isForceEoaFallbackActive,
+  loadMainnetEnv,
+  resolveMainnetPrivateKey,
+  resolveZeroDevProjectId,
+} from "./_shared/mainnet-env";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 import { loadGmxMicroFillMarketSnapshot } from "./gmx-micro-fill-market-loader";
 import { executeGmxMicroFillDecreaseLive } from "./gmx-micro-fill-decrease-live";
@@ -28,9 +34,17 @@ const allowStaleOracle = (): boolean =>
 function resolveRpc(): string { return (process.env.ARB_MAINNET_RPC_URL ?? DEFAULT_RPC).trim(); }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_GMX_MICRO_FILL === "YES"; }
 
+function resolveDispatchMode(forceEoa: boolean, projectId: string | null): "eoa" | "zerodev" {
+  if (forceEoa || !projectId) return "eoa";
+  return "zerodev";
+}
+
 async function main(): Promise<void> {
   loadMainnetEnv();
   const rpc = resolveRpc();
+  const projectId = resolveZeroDevProjectId();
+  const forceEoa = isForceEoaFallbackActive();
+  const dispatchMode = resolveDispatchMode(forceEoa, projectId);
   const probeBypass = shouldBypassSoftConfirmationProbe();
   const staleOracleOk = allowStaleOracle() || shouldBypassOracleLagDeadlock() || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
@@ -70,11 +84,14 @@ async function main(): Promise<void> {
     orderType: "MarketDecrease",
     sizeDeltaUsd30: orderPayload.numbers.sizeDeltaUsd,
     isLong: orderPayload.isLong,
+    dispatchMode,
+    zeroDevProjectId: projectId ? "set" : "missing",
+    forceEoa,
     dryRun: !armed(),
   });
 
   if (!armed()) {
-    console.log("[gmx-micro-fill-decrease] dry-run — set CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 WalletA_Pkey=0x… FORCE_EOA_FALLBACK=1");
+    console.log("[gmx-micro-fill-decrease] dry-run — set CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 (ZeroDev when ZeroDev_projectId set; EOA when FORCE_EOA_FALLBACK=1)");
     return;
   }
 
@@ -85,6 +102,8 @@ async function main(): Promise<void> {
     longToken: registry.longToken as Hex,
     midPriceUsd: market.midPriceUsd,
     sizeUsd,
+    projectId,
+    forceEoa,
   });
 }
 

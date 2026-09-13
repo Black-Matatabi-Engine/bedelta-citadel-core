@@ -15,6 +15,12 @@ export const MAINNET_PRIVATE_KEY_ENV_KEYS = [
   "PRIVATE_KEY",
 ] as const;
 
+/** ZeroDev Kernel v3 project id lookup order (SSOT). */
+export const ZERODEV_PROJECT_ID_ENV_KEYS = [
+  "ZERODEV_PROJECT_ID",
+  "ZeroDev_projectId",
+] as const;
+
 function parseEnvFile(path: string): Record<string, string> {
   const out: Record<string, string> = {};
   for (const raw of readFileSync(path, "utf8").split("\n")) {
@@ -61,6 +67,24 @@ function applyEnvRecord(record: Record<string, string>, force: boolean): void {
       process.env[key] = value;
     }
   }
+}
+
+/** Resolve ZeroDev project id from env (supports ZeroDev_projectId alias). */
+export function resolveZeroDevProjectId(
+  env: Record<string, string | undefined> = process.env as Record<string, string | undefined>,
+): string | null {
+  for (const key of ZERODEV_PROJECT_ID_ENV_KEYS) {
+    const id = stripEnvQuotes(env[key] ?? "").trim();
+    if (id) return id;
+  }
+  return null;
+}
+
+export function isForceEoaFallbackActive(
+  env: Record<string, string | undefined> = process.env as Record<string, string | undefined>,
+): boolean {
+  const v = stripEnvQuotes(env.FORCE_EOA_FALLBACK ?? "").toLowerCase();
+  return v === "1" || v === "true" || v === "yes";
 }
 
 /** Resolve Wallet A / mainnet signing key from env (supports WalletA_Pkey alias). */

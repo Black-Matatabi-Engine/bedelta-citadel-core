@@ -1,7 +1,8 @@
-/** GMX micro-fill MarketDecrease live broadcast (EOA path). */
+/** GMX micro-fill MarketDecrease live broadcast — ZeroDev AA or EOA dual-mode. */
 import { createPublicClient, http, type Hex } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
+import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { stripGmxOnChainMetadata } from "../src/services/adapters/gmx-create-order-encode";
 import { estimateGmxMarketIncreaseExecutionFeeWei } from "../src/services/adapters/gmx-execution-fee-estimator";
 import {
@@ -18,8 +19,10 @@ import {
 } from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 import { GMX_ORDER_TYPE_INDEX } from "../src/services/adapters/gmx-v2-order-payload.types";
-import { dispatchGmxDecreaseRouterViaEoa } from "./gmx-micro-fill-decrease-eoa";
+import { dispatchGmxDecreaseLive } from "./gmx-micro-fill-decrease-dispatch";
 import { resolveBufferedEip1559Fees } from "./gmx-micro-fill-gas";
+
+const CHAIN_ID = 42161;
 
 export type GmxMicroFillDecreaseLiveInput = {
   rpc: string;
@@ -28,14 +31,21 @@ export type GmxMicroFillDecreaseLiveInput = {
   longToken: Hex;
   midPriceUsd: number;
   sizeUsd: number;
+  projectId: string | null;
+  forceEoa: boolean;
 };
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 
-export async function executeGmxMicroFillDecreaseLive(input: GmxMicroFillDecreaseLiveInput): Promise<Hex> {
+export async function executeGmxMicroFillDecreaseLive(
+  input: GmxMicroFillDecreaseLiveInput,
+): Promise<{ tx: Hex; mode: "zerodev" | "eoa" }> {
   const client = createPublicClient({ chain: arbitrum, transport: http(input.rpc) });
-  const owner = privateKeyToAccount(input.pk).address;
-  let livePayload = bindGmxOrderReceiver(stripGmxOnChainMetadata(input.orderPayload), owner);
+  const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: input.rpc, ownerPrivateKey: input.pk });
+  const eoa = privateKeyToAccount(input.pk).address;
+  const useEoa = input.forceEoa || !input.projectId;
+  const dispatchOwner = useEoa ? eoa : kernel.address;
+  let livePayload = bindGmxOrderReceiver(stripGmxOnChainMetadata(input.orderPayload), dispatchOwner);
   if (livePayload.orderType !== GMX_ORDER_TYPE_INDEX.MarketDecrease) {
     throw new Error("GMX_MICRO_FILL_DECREASE: orderType must be MarketDecrease");
   }
@@ -58,6 +68,9 @@ export async function executeGmxMicroFillDecreaseLive(input: GmxMicroFillDecreas
   });
   livePayload = { ...livePayload, numbers: { ...livePayload.numbers, executionFee: feeEstimate.executionFeeWei } };
   console.log("[gmx-micro-fill-decrease] order pricing", {
+    dispatch: useEoa ? "eoa" : "zerodev",
+    owner: dispatchOwner,
+    kernel: kernel.address,
     isLong: livePayload.isLong,
     orderType: livePayload.orderType,
     sizeDeltaUsd: livePayload.numbers.sizeDeltaUsd,
@@ -65,19 +78,34 @@ export async function executeGmxMicroFillDecreaseLive(input: GmxMicroFillDecreas
     acceptablePrice: livePayload.numbers.acceptablePrice,
     executionFeeWei: feeEstimate.executionFeeWei,
   });
-  const tx = await dispatchGmxDecreaseRouterViaEoa({
-    pk: input.pk, chain: arbitrum, rpc: input.rpc, client, payload: livePayload,
+  const { tx, mode } = await dispatchGmxDecreaseLive({
+    pk: input.pk,
+    chain: arbitrum,
+    rpc: input.rpc,
+    chainId: CHAIN_ID,
+    client,
+    kernel,
+    payload: livePayload,
+    projectId: input.projectId ?? "",
+    forceEoa: useEoa,
   });
   const receipt = await client.waitForTransactionReceipt({ hash: tx });
   console.log("[gmx-micro-fill-decrease] broadcast OK", {
-    owner, tx, status: receipt.status, block: receipt.blockNumber.toString(), sizeUsd: input.sizeUsd, url: arbiscan(tx),
+    mode,
+    owner: mode === "eoa" ? eoa : dispatchOwner,
+    kernel: kernel.address,
+    tx,
+    status: receipt.status,
+    block: receipt.blockNumber.toString(),
+    sizeUsd: input.sizeUsd,
+    url: arbiscan(tx),
   });
   if (receipt.status !== "success") {
     const diag = await decodeGmxFailedTransaction(client, tx, { primaryRpc: input.rpc });
-    printGmxMicroFillError(new Error("Transaction mined with revert status=0"), contextFromPayload(livePayload, owner, "on-chain broadcast revert", {
-      dispatchMode: "eoa", txHash: tx, decodedOnChainRevert: diag?.summary,
+    printGmxMicroFillError(new Error("Transaction mined with revert status=0"), contextFromPayload(livePayload, dispatchOwner, "on-chain broadcast revert", {
+      dispatchMode: mode, txHash: tx, decodedOnChainRevert: diag?.summary,
     }));
     process.exit(1);
   }
-  return tx;
+  return { tx, mode };
 }
