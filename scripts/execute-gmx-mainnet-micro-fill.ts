@@ -1,7 +1,7 @@
 #!/usr/bin/env tsx
 /**
  * Arbitrum One (42161) — calibrated GMX v2 micro-fill via PolicyGuard + Gate (ZeroDev Kernel v3).
- * Dry-run default. Live: CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=… [--size=1]
+ * Dry-run default. Live: CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 WalletA_Pkey=0x… (alias WALLET_A_PRIVATE_KEY / MAINNET_PK) [--size=1] · EOA: FORCE_EOA_FALLBACK=1
  */
 import { createPublicClient, http, keccak256, toHex, type Hex } from "viem";
 import { arbitrum } from "viem/chains";
@@ -11,7 +11,7 @@ import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
 import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 import { calibrateMicroFillExecution, parseMicroFillSize, resolveMicroFillSide } from "./gmx-micro-fill-calibration";
 import { computeGmxPoolImbalanceRatio } from "../src/adapters/gmx/gmx-v2-invariants";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
@@ -39,14 +39,8 @@ function forceEoaFallbackRequested(): boolean {
   const v = (process.env.FORCE_EOA_FALLBACK ?? "").trim().toLowerCase();
   return v === "1" || v === "true" || v === "yes";
 }
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
-
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const RPC = resolveRpc();
   const minDepthUsd = resolveSoilMinDepthUsd({});
   const argv = process.argv.slice(2);
@@ -120,7 +114,7 @@ async function main(): Promise<void> {
 
   await executeGmxMicroFillLive({
     rpc: RPC,
-    pk: resolvePk(),
+    pk: resolveMainnetPrivateKey(),
     agentId: AGENT_ID,
     bindNonce,
     sizeUsd,

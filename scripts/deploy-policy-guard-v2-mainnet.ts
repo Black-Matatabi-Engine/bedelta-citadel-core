@@ -12,7 +12,7 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
-import { loadDotEnv } from "./zerodev-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const CHAIN_ID = 42161;
 const DEFAULT_RPC = "https://arb1.arbitrum.io/rpc";
@@ -43,12 +43,6 @@ function resolveRpc(): string {
   return (process.env.ARB_MAINNET_RPC_URL ?? DEFAULT_RPC).trim();
 }
 
-function resolvePk(): Hex {
-  let pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if ((pk.startsWith('"') && pk.endsWith('"')) || (pk.startsWith("'") && pk.endsWith("'"))) pk = pk.slice(1, -1);
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
 
 function loadArtifact(rel: string): Artifact {
   const raw = JSON.parse(readFileSync(join(process.cwd(), rel), "utf8"));
@@ -76,7 +70,7 @@ async function deployOne(
 }
 
 async function main(): Promise<void> {
-  Object.assign(process.env, loadDotEnv());
+  loadMainnetEnv();
   forgeBuild();
 
   const rpc = resolveRpc();
@@ -97,7 +91,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const account = privateKeyToAccount(resolvePk());
+  const account = privateKeyToAccount(resolveMainnetPrivateKey());
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(rpc) });
   const balance = await client.getBalance({ address: account.address });
   if (balance < 10n ** 15n) throw new Error("deployer ETH balance too low for mainnet gas");

@@ -18,7 +18,7 @@ import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants"
 import { checkSoilResistance } from "../src/services/risk-control";
 import { buildGmxSmartRoutePayloadBinding } from "../src/services/adapters/gmx-smart-route-payload-binding";
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const POLICY_GUARD = "0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b" as Hex;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
@@ -36,11 +36,6 @@ type KernelCall = { to: Hex; value: bigint; data: Hex };
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_SMART_ROUTE_DEMO === "YES"; }
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
 function parseSize(argv: string[]): number {
   const raw = argv.find((a, i) => argv[i - 1] === "--size");
   const n = raw ? Number.parseFloat(raw) : 15;
@@ -67,7 +62,7 @@ async function resolveRegisteredGateSigner(client: ReturnType<typeof createPubli
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const sizeUsd = parseSize(process.argv.slice(2));
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
@@ -79,7 +74,7 @@ async function main(): Promise<void> {
 
   const projectId = process.env.ZERODEV_PROJECT_ID?.trim();
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
-  const pk = resolvePk();
+  const pk = resolveMainnetPrivateKey();
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
   const bytecode = await client.getBytecode({ address: kernel.address });
   const factoryArgs = await kernel.account.getFactoryArgs?.();

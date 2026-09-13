@@ -11,7 +11,7 @@ import {
 } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
-import { loadDotEnv } from "./zerodev-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const CHAIN_ID = 42161;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Address;
@@ -31,12 +31,6 @@ const linkAbi = [
 
 function arbiscanTx(tx: Hash): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_GATE_POLICY_LINK === "YES"; }
-function resolvePk(): Hex {
-  let pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if ((pk.startsWith('"') && pk.endsWith('"')) || (pk.startsWith("'") && pk.endsWith("'"))) pk = pk.slice(1, -1);
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
 function resolveRpc(): string {
   const wss = (process.env.ARBITRUM_WSS_URL ?? "").trim();
   if (!process.env.ARB_MAINNET_RPC_URL?.trim() && wss.startsWith("wss://")) return wss.replace("wss://", "https://");
@@ -50,7 +44,7 @@ async function gateHasNativeSetter(client: ReturnType<typeof createPublicClient>
 }
 
 async function main(): Promise<void> {
-  Object.assign(process.env, loadDotEnv());
+  loadMainnetEnv();
   const rpc = resolveRpc();
   const client = createPublicClient({ chain: arbitrum, transport: http(rpc) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
@@ -63,7 +57,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const account = privateKeyToAccount(resolvePk());
+  const account = privateKeyToAccount(resolveMainnetPrivateKey());
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(rpc) });
   const gateAdmin = await client.readContract({ address: GATE, abi: gateAbi, functionName: "admin" });
   if (gateAdmin.toLowerCase() !== account.address.toLowerCase()) {

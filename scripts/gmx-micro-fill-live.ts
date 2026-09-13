@@ -15,6 +15,7 @@ import {
   computeMicroFillAcceptablePrice,
   computeGmxAcceptablePriceFromOracleRaw,
   ensureGmxCollateralAllowance,
+  GMX_MICRO_FILL_TOKEN_SPENDERS,
   fetchGmxIndexOracleTicker,
   GMX_COLLATERAL_SPENDER_ARBITRUM,
   GMX_USDC_ARBITRUM,
@@ -113,18 +114,23 @@ export async function executeGmxMicroFillLive(input: GmxMicroFillLiveInput): Pro
   });
   const collateralToken = getAddress(livePayload.addresses.initialCollateralToken as Hex);
   const requiredCollateral = BigInt(livePayload.numbers.initialCollateralDeltaAmount);
-  const allowance = await readGmxCollateralAllowance(client, dispatchOwner, collateralToken);
+  const allowanceChecks = await Promise.all(
+    GMX_MICRO_FILL_TOKEN_SPENDERS.map(async (spender) => ({
+      spender,
+      allowance: (await readGmxCollateralAllowance(client, dispatchOwner, collateralToken, spender)).toString(),
+    })),
+  );
   console.log("[gmx-micro-fill] USDC allowance preflight", {
     owner: dispatchOwner,
     dispatch: useEoa ? "eoa" : "kernel",
-    spender: GMX_COLLATERAL_SPENDER_ARBITRUM,
-    allowance: allowance.toString(),
+    spenders: allowanceChecks,
     required: requiredCollateral.toString(),
     sizeDeltaUsd30: MICRO_FILL_SIZE_DELTA_USD_30.toString(),
-    needsApprove: allowance < requiredCollateral,
+    needsApprove: allowanceChecks.some((row) => BigInt(row.allowance) < requiredCollateral),
   });
   await ensureGmxCollateralAllowance({
     client, owner: dispatchOwner, token: collateralToken, required: requiredCollateral,
+    spenders: GMX_MICRO_FILL_TOKEN_SPENDERS,
     pk: useEoa ? input.pk : undefined, chain: arbitrum, rpc: input.rpc,
     resolveFees: () => resolveBufferedEip1559Fees(client),
   });
@@ -155,8 +161,8 @@ export async function executeGmxMicroFillLive(input: GmxMicroFillLiveInput): Pro
     console.warn("[gmx-micro-fill] EOA fallback — skipping Gate/Kernel UserOp path");
   }
 
-  const projectId = process.env.ZERODEV_PROJECT_ID?.trim();
-  if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
+  const projectId = process.env.ZERODEV_PROJECT_ID?.trim() ?? "";
+  if (!projectId && !useEoa) throw new Error("ZERODEV_PROJECT_ID required");
   const { tx, mode } = await dispatchGmxMicroFillLive({
     pk: input.pk, chain: arbitrum, rpc: input.rpc, chainId: CHAIN_ID, client, kernel: kernel as SmartAccount,
     payload: livePayload, preCalls, projectId, forceEoa: useEoa, skipSimulation: true,

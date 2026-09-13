@@ -7,7 +7,7 @@
 | Script | Command | Role | Live arm |
 |--------|---------|------|----------|
 | **Stylus mainnet readiness** | `pnpm deploy:stylus:mainnet` | **Deployed & activated** [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · Tx [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro JIT + ArbWasm `0x71` | [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts) |
-| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuardV2 `0xfd98cadb…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` |
+| **GMX v2 micro-fill harness** | `pnpm execute:gmx:micro-fill --size=1` | Calibrated **$1–$20** GMX v2 increase via PolicyGuardV2 `0xfd98cadb…` + Gate `0xb174…` · **automatic low-OI side calibration** (balanced market leg) · Fail-Closed on `ORACLE_LAG_DEADLOCK` · `GMX_POOL_IMBALANCE_BREACH` | [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 WalletA_Pkey=0x…` (alias: `WALLET_A_PRIVATE_KEY` / `MAINNET_PK` / `PRIVATE_KEY`) · EOA: `FORCE_EOA_FALLBACK=1` |
 | **GMX GM Pool deposit** | `pnpm execute:gmx:gm-deposit` | **Verified Live** — `sendWnt → sendTokens → createDeposit` · ExchangeRouter `0x7dE39…83f1` · ETH/USDC GM `0x70d955…6336` | [`scripts/execute-gmx-mainnet-gm-deposit.ts`](../../scripts/execute-gmx-mainnet-gm-deposit.ts) · Live: `CONFIRM_GMX_GM_DEPOSIT=YES BROADCAST=1 MAINNET_PK=0x…` |
 | **GMX GM Pool withdraw** | `pnpm execute:gmx:gm-withdraw` | **Verified Live** — GM LP approve → GMX v2 Router `0x7452c558…` · `sendWnt → sendTokens(GM) → createWithdrawal` | [`scripts/execute-gmx-mainnet-gm-withdraw.ts`](../../scripts/execute-gmx-mainnet-gm-withdraw.ts) · Live: `CONFIRM_GMX_GM_WITHDRAW=YES BROADCAST=1 MAINNET_PK=0x…` |
 | **GMX Phase A+B+C deploy** | `pnpm tsx scripts/deploy-policy-guard-v2-mainnet.ts` | **Verified Live @ block 503074231–503074255** — PolicyGuardV2 `0xfd98cadb…` · MatrixSwitch `0x4129aee9…` · RiskOracleV2 `0xfadb1475…` | Live: `CONFIRM_POLICY_GUARD_V2_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x…` |
@@ -70,6 +70,20 @@
 | **Activation path** | Nitro Prover **JIT compilation** + `activateProgram` via **ArbWasm precompile `0x0000000000000000000000000000000000000071`** (`cargo stylus activate` SSOT) |
 | **Toolchain** | `cargo-stylus v0.10.9` · `cargo stylus get-initcode` + viem deploy · ChainID **42161** |
 
+### GMX Micro-Fill Live Broadcast (Arbitrum One · 42161) — Verified
+
+> **Harness:** `pnpm execute:gmx:micro-fill --size=1` · Wallet A EOA (`WalletA_Pkey` from `.env`) · **MarketIncrease short** · Block **504625233+**
+
+| Field | Value |
+|-------|-------|
+| **Wallet A (signer)** | `0xdBCD43979e95f386f6405B03e7eB3A094cd36690` |
+| **Side / Notional** | **Short** · **$10** collateral (`MICRO_FILL_COLLATERAL_USD` SSOT) |
+| **Router USDC Approve Tx** | [`0xab349d09cef98bcb29029df83306a31556ef9e3f0dc442e60e118c2a2b37b323`](https://arbiscan.io/tx/0xab349d09cef98bcb29029df83306a31556ef9e3f0dc442e60e118c2a2b37b323) · Spender `GMX_V2_ROUTER` `0x7452c558…` |
+| **ExchangeRouter USDC Approve Tx** | [`0x82964525a2a7ad8392090b0c1c69208159a88096a399c6b94a124a751e26adf9`](https://arbiscan.io/tx/0x82964525a2a7ad8392090b0c1c69208159a88096a399c6b94a124a751e26adf9) |
+| **MarketIncrease Multicall Tx** | [`0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · Block **504625233** · **Success** |
+| **Dispatch mode** | **EOA** (`FORCE_EOA_FALLBACK=1`) · `sendWnt → sendTokens → createOrder` via ExchangeRouter `0x7dE39…` |
+| **Probe bypass (armed run only)** | `ALLOW_STALE_ORACLE=1` · `BYPASS_SOIL_PROBE=true` — dry-run default remains **Fail-Closed** without bypass |
+
 ### GMX Micro-Fill Fail-Closed Evidence (Live Interception Payload)
 
 > **Harness:** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) · **no broadcast** — Soil Resistance + Root Protection tripped pre-mempool.
@@ -111,7 +125,8 @@
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | [`0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 | **Chain** | Arbitrum One (`42161`) |
 | **Status** | **Verified Live** on Arbitrum One (42161) with **Fail-Closed Risk Protection** active |
-| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
+| **GMX Micro-Fill Live Broadcast (`--size=1`)** | **Verified Live** — EOA short MarketIncrease · Tx [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · Block **504625233** |
+| **GMX Micro-Fill Dry-Run (`--size=1`)** | **Fail-Closed** (default) — `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK` · **`lostUsd ≡ 0`** |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — pre-broadcast trip `GMX_POOL_IMBALANCE_BREACH` · no toxic fill submitted · live invariant shield **confirmed active** |
 | **GM Pool I/O Channel Status** | **CLOSED** — deposit + withdraw ExchangeRouter multicall **Verified Live** on `42161` |
 | **GM Deposit Multicall Tx** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** |
@@ -134,7 +149,8 @@
 | **Smart Route Target Chain** | Arbitrum One (`42161`) |
 | **ZeroDev Kernel v3 Smart Route UserOp Hash** | `0x7b72ee9f4dc3f32f08a5de914ecf076c243d895522ecd72d17a2f7b025bc956d` |
 | **ZeroDev Kernel v3 Smart Route UserOp Tx** | `0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a` |
-| **GMX Micro-Fill Live Attempt (`--size=1`)** | **Fail-Closed** — balanced side **`"short"`** ($71 Long vs $58 Short) · `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK:154000ms>30000ms` · **`lostUsd ≡ 0`** · 0 slippage loss |
+| **GMX Micro-Fill Live Broadcast (`--size=1`)** | **Verified Live** — EOA short MarketIncrease · Tx [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · Block **504625233** |
+| **GMX Micro-Fill Dry-Run (`--size=1`)** | **Fail-Closed** (default) — `DEPTH_USD=$129<$100k` · `ORACLE_LAG_DEADLOCK` · **`lostUsd ≡ 0`** |
 | **GMX Fill Live Attempt (prior)** | **Fail-Closed** — `GMX_POOL_IMBALANCE_BREACH` (pre-broadcast; shield active) |
 | **Gate setPolicyGuard Tx** | [`0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Block **503079575** · via `SliverVineGatePolicyLink` `0xe4ef5350963241c49a29e72a4cf093208cd19af0` → PolicyGuardV2 `0xfd98…` |
 | **Gate PolicyLink Deploy Tx** | [`0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9`](https://arbiscan.io/tx/0x7ce414b737c6efed4068034dadebd9f017e1e6eb832aba64e3ba656ac0380ad9) · bootstrap Gate `0xb174…` lacks native setter |

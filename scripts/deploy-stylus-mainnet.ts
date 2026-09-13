@@ -14,7 +14,7 @@ import { deployStylusWasmViaViem, resolveExistingStylusAddress, resolveStylusDep
 import { loadProjectInitcode } from "../src/services/adapters/stylus-wasm-initcode";
 import { createPublicClient, http } from "viem";
 import { arbitrum } from "viem/chains";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const STYLUS_DIR = join(ROOT, "contracts/stylus-probe");
@@ -40,11 +40,6 @@ function resolveRpc(): string {
   return (process.env.ARB_MAINNET_RPC_URL ?? DEFAULT_RPC).trim();
 }
 
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required for deploy");
-  return pk as Hex;
-}
 
 function verifyCompileChain(): void {
   const tests = run("cargo", ["test", "stylus_core", "--release", "--quiet"]);
@@ -75,7 +70,7 @@ function verifyStylusCheck(rpc: string): void {
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const rpc = resolveRpc();
   console.log("[stylus:mainnet] preflight", { chainId: CHAIN_ID, stylusDir: STYLUS_DIR, wasm: WASM_PATH, rpc });
   verifyCompileChain();
@@ -102,7 +97,7 @@ async function main(): Promise<void> {
     return;
   }
   const result = await deployStylusWasmViaViem({
-    rpc, privateKey: resolvePk(), stylusProjectDir: STYLUS_DIR, existingContractAddress: existing,
+    rpc, privateKey: resolveMainnetPrivateKey(), stylusProjectDir: STYLUS_DIR, existingContractAddress: existing,
   });
   console.log("[stylus:mainnet] Stylus Deployed Contract Address:", result.contractAddress);
   if (result.deployTxHash) console.log("[stylus:mainnet] Deployment Transaction Hash:", result.deployTxHash);

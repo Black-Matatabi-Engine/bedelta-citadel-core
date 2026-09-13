@@ -10,7 +10,7 @@ import { gmxV2ArbitrumAdapter } from "../src/services/adapters/gmx-v2-adapter";
 import { checkSoilResistance } from "../src/services/risk-control";
 import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-payload";
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
 const CHAIN_ID = 42161;
@@ -21,12 +21,6 @@ const gateAbi = parseAbi([
   "function acceptAdmin()",
   "function verifyAndConsume((bytes32 payloadHash,address subject,uint8 verdict,uint16 riskBps,uint64 issuedAt,uint64 expiresAt,uint256 nonce) att, bytes[] signatures) returns (bytes32)",
 ]);
-
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required (never commit)");
-  return pk as Hex;
-}
 
 function parseSize(argv: string[]): number {
   const raw = argv.find((a, i) => argv[i - 1] === "--size");
@@ -64,7 +58,7 @@ async function signAttestation(wallet: ReturnType<typeof createWalletClient>, at
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const argv = process.argv.slice(2);
   const sizeUsd = parseSize(argv);
   const rotateAdmin = argv.includes("--rotate-admin");
@@ -97,7 +91,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const account = privateKeyToAccount(resolvePk());
+  const account = privateKeyToAccount(resolveMainnetPrivateKey());
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(RPC) });
   const now = BigInt(Math.floor(Date.now() / 1000));
   const att = {

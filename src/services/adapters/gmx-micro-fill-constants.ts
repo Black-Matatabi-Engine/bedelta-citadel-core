@@ -8,6 +8,12 @@ import { GMX_ORDER_VAULT_ARBITRUM } from "./gmx-market-increase-multicall";
 
 export { GMX_ORDER_VAULT_ARBITRUM, GMX_USDC_ARBITRUM };
 export const GMX_COLLATERAL_SPENDER_ARBITRUM = getAddress(GMX_V2_EXCHANGE_ROUTER_ARBITRUM);
+/** GMX v2 Router — required USDC spender for MarketIncrease sendTokens (≠ ExchangeRouter). */
+export const GMX_V2_ROUTER_ARBITRUM = getAddress("0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6");
+export const GMX_MICRO_FILL_TOKEN_SPENDERS = [
+  GMX_V2_ROUTER_ARBITRUM,
+  GMX_COLLATERAL_SPENDER_ARBITRUM,
+] as const;
 export const MICRO_FILL_MIN_POSITION_USD = 10;
 export const MICRO_FILL_COLLATERAL_USD = 10;
 export const MICRO_FILL_LEVERAGE_X = 1;

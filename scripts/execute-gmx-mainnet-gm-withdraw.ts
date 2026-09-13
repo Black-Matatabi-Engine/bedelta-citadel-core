@@ -13,7 +13,7 @@ import { isBypassSimulationEnabled } from "../src/services/adapters/gmx-micro-fi
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
 import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
 import { shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv } from "./_shared/mainnet-env";
 import {
   auditGmxGmWithdrawAllowanceRows,
   broadcastGmxGmWithdrawMulticall,
@@ -36,7 +36,7 @@ import {
 
 async function main(): Promise<void> {
   try {
-    loadEnvProduction();
+    loadMainnetEnv();
   } catch {
     /* optional */
   }

@@ -1,5 +1,6 @@
 /** CLI arg/env helpers for execute-gmx-mainnet-gm-withdraw.ts */
 import type { Hex } from "viem";
+import { resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 import { toGmxGmToken18 } from "../src/services/adapters/gmx-v2-order-payload-builder-helpers";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 
@@ -29,9 +30,7 @@ export function isGmxGmWithdrawStaleOracleAllowed(argv: string[]): boolean {
 }
 
 export function resolveGmxGmWithdrawPk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required for broadcast");
-  return pk as Hex;
+  return resolveMainnetPrivateKey();
 }
 
 export function readGmxGmWithdrawFlag(argv: string[], name: string): string | undefined {

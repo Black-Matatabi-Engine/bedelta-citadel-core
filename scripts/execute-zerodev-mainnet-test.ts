@@ -14,7 +14,7 @@ import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-payload";
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const POLICY_GUARD = "0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b" as Hex;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
@@ -28,11 +28,6 @@ const gateAbi = parseAbi([
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_ZERODEV_MAINNET === "YES"; }
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
 
 async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: object): Promise<Hex> {
   return wallet.signTypedData({
@@ -44,7 +39,7 @@ async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: objec
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
 
@@ -57,7 +52,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const pk = resolvePk();
+  const pk = resolveMainnetPrivateKey();
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: pk });
   const now = BigInt(Math.floor(Date.now() / 1000));
   const maxNotional = 15_000_000n; // $15 USDC-scale test notional — no GMX pool probe

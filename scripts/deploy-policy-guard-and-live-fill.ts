@@ -18,7 +18,7 @@ import { checkSoilResistance } from "../src/services/risk-control";
 import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-payload";
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { buildKernelAccountWithRiskGate } from "../src/services/aa-adapter/zerodev-kernel-adapter";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
 const CHAIN_ID = 42161;
@@ -33,11 +33,6 @@ const policyAbi = parseAbi(["function validateAgentPolicy(bytes32 agentId, uint2
 
 function arbiscan(tx: string): string { return `https://arbiscan.io/tx/${tx}`; }
 function armed(): boolean { return process.env.BROADCAST === "1" && process.env.CONFIRM_MAINNET_DEPLOY === "YES"; }
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required");
-  return pk as Hex;
-}
 function parseSize(argv: string[]): number {
   const raw = argv.find((a, i) => argv[i - 1] === "--size");
   const n = raw ? Number.parseFloat(raw) : 15;
@@ -54,7 +49,7 @@ async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: objec
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const sizeUsd = parseSize(process.argv.slice(2));
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
@@ -72,7 +67,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const account = privateKeyToAccount(resolvePk());
+  const account = privateKeyToAccount(resolveMainnetPrivateKey());
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(RPC) });
   const art = JSON.parse(readFileSync(join(process.cwd(), "out/SliverVineAgentPolicyGuard.sol/SliverVineAgentPolicyGuard.json"), "utf8"));
   const deployHash = await wallet.deployContract({ abi: art.abi, bytecode: art.bytecode.object as Hex, args: [account.address] });
@@ -108,7 +103,7 @@ async function main(): Promise<void> {
   process.env.USE_ZERODEV_AA = "true";
 
   const order = await gmxV2ArbitrumAdapter.buildUnsignedHedgeOrder({ symbol: "ETH", side: "short", sizeUsd, reduceOnly: false, clientOrderId: `pg-live-${Date.now()}`, maxSlippageBps: 30 });
-  const kernel = await buildKernelAccountWithRiskGate({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: resolvePk(), env: process.env as Record<string, string> });
+  const kernel = await buildKernelAccountWithRiskGate({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: RPC, ownerPrivateKey: resolveMainnetPrivateKey(), env: process.env as Record<string, string> });
   const payloadHash = computeGatedExecutorPayloadHash({
     chainId: CHAIN_ID, executor: GATE, initiator: kernel.address,
     target: (order.payload.addresses?.router ?? "0x0000000000000000000000000000000000000000") as `0x${string}`,

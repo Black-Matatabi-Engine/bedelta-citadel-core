@@ -22,7 +22,7 @@ import { isBypassSimulationEnabled } from "../src/services/adapters/gmx-micro-fi
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
 import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
 import { shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
-import { loadEnvProduction } from "./_shared/mainnet-env";
+import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 import { resolveBufferedEip1559Fees } from "./gmx-micro-fill-dispatch";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 
@@ -41,11 +41,6 @@ function armed(): boolean { return process.env.BROADCAST === "1" && process.env.
 function bypassGasGuard(): boolean { return truthy(process.env.BYPASS_GAS_GUARD); }
 function allowStaleOracle(argv: string[]): boolean {
   return argv.includes("--allow-stale-oracle") || truthy(process.env.ALLOW_STALE_ORACLE);
-}
-function resolvePk(): Hex {
-  const pk = (process.env.MAINNET_PK ?? process.env.PRIVATE_KEY ?? "").trim();
-  if (!pk.startsWith("0x")) throw new Error("MAINNET_PK or PRIVATE_KEY required for broadcast");
-  return pk as Hex;
 }
 function parseAmountUsd(argv: string[]): number {
   const eq = argv.find((a) => a.startsWith("--amount="));
@@ -67,7 +62,7 @@ function validateGuards(staleOracleOk: boolean): { ok: boolean; reasons: string[
 }
 
 async function main(): Promise<void> {
-  try { loadEnvProduction(); } catch { /* optional */ }
+  loadMainnetEnv();
   const argv = process.argv.slice(2);
   const rpc = resolveRpc();
   const amountUsd = parseAmountUsd(argv);
@@ -88,7 +83,7 @@ async function main(): Promise<void> {
 
   const market = getAddress(GMX_ETH_USD_MARKET_TOKEN);
   if (market !== GMX_GM_ETH_USDC_MARKET) throw new Error(`GMX_GM_MARKET_MISMATCH: ${market}`);
-  const receiver = armed() ? privateKeyToAccount(resolvePk()).address : getAddress("0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F");
+  const receiver = armed() ? privateKeyToAccount(resolveMainnetPrivateKey()).address : getAddress("0xbd65d785Dac74EBa9efFdB357b2dC52fCC26EC7F");
   const payload = stripGmxGmDepositOnChainMetadata(
     buildGmxGmUsdcOnlyDepositPayload({ receiver, usdcAmount, marketToken: market }),
   );
@@ -118,7 +113,7 @@ async function main(): Promise<void> {
     return;
   }
 
-  const pk = resolvePk();
+  const pk = resolveMainnetPrivateKey();
   const account = privateKeyToAccount(pk);
   const wallet = createWalletClient({ account, chain: arbitrum, transport: http(rpc) });
   await ensureGmxCollateralAllowance({
