@@ -5,7 +5,7 @@ export const WRK_MSG_GEO_BLOCKED =
   "[SLIVERVINE DEFENSE] Geo-Compliance Circuit Breaker (WRK_ERR_GEO_BLOCKED). Evaluator whitelist: grants@silvervinelabs.com" as const;
 
 /** ISO2 geo block tuple — index scan (no Set alloc on cold path). */
-export const GEO_BLOCKED_ISO2 = ["US", "CU", "IR", "KP", "SY"] as const;
+export const GEO_BLOCKED_ISO2 = ["CU", "IR", "KP", "SY"] as const;
 
 /** Public read-only GET paths — flat tuple for Worker ingress. */
 export const PUBLIC_READ_ONLY_PATHS = [
