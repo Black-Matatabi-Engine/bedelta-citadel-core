@@ -147,7 +147,7 @@ Intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://e
 
 ```bash
 pnpm demo:gmx           # GMX v2 shadow margin · cross-venue slippage · position cap
-pnpm demo:pendle        # Pendle PT/YT sentinel · guarded pool factory
+pnpm demo:pendle -- --trip  # Pendle Institutional Sentinel · oracle TTL · PT maturity guard
 pnpm demo:usdai         # USD.ai collateral · peg drift · oracle age guard
 pnpm demo:hl            # Hyperliquid session key auth · orderbook depth guard
 pnpm demo:variational   # Variational Omni RFQ stale quote & OLP depth guard
@@ -158,7 +158,7 @@ Append `-- --trip` for **FAIL_CLOSED** demonstration (**p50 ~15µs** Wasm `rootP
 | `--venue` key | Protocol | Chain | HUD invariant (sample) |
 |---------------|----------|-------|------------------------|
 | `gmx` | GMX v2 | Arbitrum One 42161 | OI skew / reserve cap · cross-venue slippage fuse |
-| `pendle` | Pendle | Arbitrum One 42161 | \|Yield_current − Yield_oracle\| ≤ 150 bps |
+| `pendle` | Pendle | Arbitrum One 42161 | Oracle TTL > 60s · Yield jitter > 200 bps · PT maturity < 7d |
 | `usdai` / `usd` | USD.ai | Arbitrum One 42161 | Peg drift ≤ 30 bps · oracle age ≤ 2h |
 | `hyperliquid` / `hl` | Hyperliquid | Hyperliquid L1 Perps | Spread ≤ 20 bps · session-key rate cap |
 | `variational` / `var` | Variational Omni RFQ | Arbitrum One 42161 | Quote stale ≤ 500ms · OLP ≤ 15% |
@@ -171,6 +171,7 @@ Implementation SSOT: [`examples/lib/agent-venue-matrix.ts`](../../examples/lib/a
 
 ```bash
 pnpm demo:gmx -- --trip
+pnpm demo:pendle -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 ```
