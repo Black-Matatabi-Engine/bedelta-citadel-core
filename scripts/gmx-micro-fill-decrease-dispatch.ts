@@ -7,10 +7,6 @@ import type { SmartAccount } from "viem/account-abstraction";
 import { buildZeroDevRpcUrl } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-constants";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../src/config/gmx-revenue";
 import { encodeGmxV2RouterDecreaseOrderMulticall } from "../src/services/adapters/gmx-micro-fill-decrease-multicall";
-import {
-  GmxMicroFillExecutionError,
-  contextFromPayload,
-} from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 import { dispatchGmxDecreaseRouterViaEoa } from "./gmx-micro-fill-decrease-eoa";
 import type { KernelCall } from "./gmx-micro-fill-dispatch";

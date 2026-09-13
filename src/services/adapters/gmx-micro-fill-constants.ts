@@ -1,5 +1,5 @@
 /** GMX v2 micro-fill sizing / oracle URL constants. */
-import { getAddress } from "viem";
+import { getAddress, parseEther } from "viem";
 import { GMX_V2_EXCHANGE_ROUTER_ARBITRUM } from "../../config/gmx-revenue";
 import { GMX_ETH_USD_MARKET_TOKEN } from "../../config/gmx-markets";
 import { GMX_USDC_ARBITRUM, USDC_DECIMALS } from "./gmx-v2-order-payload-constants";
@@ -15,6 +15,8 @@ export const GMX_MICRO_FILL_TOKEN_SPENDERS = [
   GMX_COLLATERAL_SPENDER_ARBITRUM,
 ] as const;
 export const MICRO_FILL_MIN_POSITION_USD = 10;
+/** Keeper-safe WNT floor for MarketDecrease executionFee / sendWnt msg.value (Arbitrum 42161). */
+export const GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI = parseEther("0.0008");
 export const MICRO_FILL_COLLATERAL_USD = 10;
 export const MICRO_FILL_LEVERAGE_X = 1;
 export const MICRO_FILL_SIZE_DELTA_USD_30 = 10n * 10n ** 30n;

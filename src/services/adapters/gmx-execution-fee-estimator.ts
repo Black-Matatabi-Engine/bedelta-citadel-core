@@ -3,6 +3,7 @@
  * Reads gas limits from on-chain DataStore; applies Arbitrum 30% buffer (defaultExecutionFeeBufferBps).
  */
 import { GMX_V2_DATASTORE } from "../../adapters/gmx";
+import { GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI } from "./gmx-micro-fill-constants";
 import { DEFAULT_GMX_EXECUTION_FEE_WEI } from "../risk/arbitrum-gas-guard-lib/arbitrum-gas-guard-eval";
 import { hashString } from "./gmx-v2-datastore-lib/gmx-v2-datastore-keys";
 import type { PublicClient } from "viem";
@@ -12,6 +13,7 @@ const FLOAT_PRECISION = 10n ** 30n;
 const ARBITRUM_EXECUTION_FEE_BUFFER_BPS = 3000n;
 const GMX_DATASTORE_KEYS = {
   increaseOrderGasLimit: hashString("INCREASE_ORDER_GAS_LIMIT"),
+  decreaseOrderGasLimit: hashString("DECREASE_ORDER_GAS_LIMIT"),
   singleSwapGasLimit: hashString("SINGLE_SWAP_GAS_LIMIT"),
   estimatedGasFeeBaseAmount: hashString("ESTIMATED_GAS_FEE_BASE_AMOUNT_V2_1"),
   estimatedGasFeePerOraclePrice: hashString("ESTIMATED_GAS_FEE_PER_ORACLE_PRICE"),
@@ -20,6 +22,7 @@ const GMX_DATASTORE_KEYS = {
 
 export type GmxGasLimitsConfig = {
   increaseOrderGasLimit: bigint;
+  decreaseOrderGasLimit: bigint;
   singleSwapGasLimit: bigint;
   estimatedGasFeeBaseAmount: bigint;
   estimatedGasFeePerOraclePrice: bigint;
@@ -53,6 +56,22 @@ export function estimateGmxExecuteIncreaseOrderGasLimit(
     + callbackGasLimit;
 }
 
+export function estimateGmxExecuteDecreaseOrderGasLimit(
+  limits: GmxGasLimitsConfig,
+  swapPathLength: number,
+  callbackGasLimit: bigint,
+): bigint {
+  const decreaseBase = limits.decreaseOrderGasLimit > 0n ? limits.decreaseOrderGasLimit : limits.increaseOrderGasLimit;
+  return decreaseBase
+    + limits.singleSwapGasLimit * BigInt(swapPathLength)
+    + callbackGasLimit;
+}
+
+function resolveGmxExecutionFeeFloorWei(): bigint {
+  const legacy = BigInt(DEFAULT_GMX_EXECUTION_FEE_WEI);
+  return legacy > GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI ? legacy : GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI;
+}
+
 export function adjustGmxGasLimitForEstimate(
   limits: GmxGasLimitsConfig,
   estimatedGasLimit: bigint,
@@ -77,6 +96,7 @@ export async function fetchGmxGasLimitsFromDataStore(
   );
   const out: GmxGasLimitsConfig = {
     increaseOrderGasLimit: 0n,
+    decreaseOrderGasLimit: 0n,
     singleSwapGasLimit: 0n,
     estimatedGasFeeBaseAmount: 0n,
     estimatedGasFeePerOraclePrice: 0n,
@@ -112,7 +132,36 @@ export async function estimateGmxMarketIncreaseExecutionFeeWei(input: {
     gasPriceWei = base + priority;
   }
   const buffered = computeGmxExecutionFeeFromGasLimit(gasLimit, gasPriceWei, input.bufferBps);
-  const floor = BigInt(DEFAULT_GMX_EXECUTION_FEE_WEI);
+  const floor = resolveGmxExecutionFeeFloorWei();
   const executionFee = buffered > floor ? buffered : floor;
   return { executionFeeWei: executionFee.toString(), gasLimit, gasPriceWei };
+}
+
+export async function estimateGmxMarketDecreaseExecutionFeeWei(input: {
+  client: Pick<PublicClient, "call" | "getBlock" | "estimateFeesPerGas">;
+  swapPathLength?: number;
+  callbackGasLimit?: bigint;
+  gasPriceWei?: bigint;
+  bufferBps?: bigint;
+}): Promise<{ executionFeeWei: string; gasLimit: bigint; gasPriceWei: bigint; floorWei: bigint }> {
+  const swapPathLength = input.swapPathLength ?? 0;
+  const callbackGasLimit = input.callbackGasLimit ?? 0n;
+  const limits = await fetchGmxGasLimitsFromDataStore(input.client);
+  const estimated = estimateGmxExecuteDecreaseOrderGasLimit(limits, swapPathLength, callbackGasLimit);
+  const oracleCount = estimateGmxOrderOraclePriceCount(swapPathLength);
+  const gasLimit = adjustGmxGasLimitForEstimate(limits, estimated, oracleCount);
+  let gasPriceWei = input.gasPriceWei ?? 0n;
+  if (gasPriceWei <= 0n) {
+    const [block, fees] = await Promise.all([
+      input.client.getBlock({ blockTag: "latest" }),
+      input.client.estimateFeesPerGas(),
+    ]);
+    const base = block.baseFeePerGas ?? fees.maxFeePerGas ?? 1n;
+    const priority = fees.maxPriorityFeePerGas ?? 0n;
+    gasPriceWei = base + priority;
+  }
+  const buffered = computeGmxExecutionFeeFromGasLimit(gasLimit, gasPriceWei, input.bufferBps);
+  const floor = resolveGmxExecutionFeeFloorWei();
+  const executionFee = buffered > floor ? buffered : floor;
+  return { executionFeeWei: executionFee.toString(), gasLimit, gasPriceWei, floorWei: floor };
 }

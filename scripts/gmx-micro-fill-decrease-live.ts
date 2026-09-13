@@ -4,7 +4,8 @@ import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { stripGmxOnChainMetadata } from "../src/services/adapters/gmx-create-order-encode";
-import { estimateGmxMarketIncreaseExecutionFeeWei } from "../src/services/adapters/gmx-execution-fee-estimator";
+import { estimateGmxMarketDecreaseExecutionFeeWei } from "../src/services/adapters/gmx-execution-fee-estimator";
+import { GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI } from "../src/services/adapters/gmx-micro-fill-constants";
 import {
   applyMicroFillOrderPricing,
   bindGmxOrderReceiver,
@@ -60,7 +61,7 @@ export async function executeGmxMicroFillDecreaseLive(
     acceptablePrice = computeMicroFillAcceptablePrice(input.midPriceUsd, livePayload.isLong);
   }
   livePayload = applyMicroFillOrderPricing(livePayload, acceptablePrice);
-  const feeEstimate = await estimateGmxMarketIncreaseExecutionFeeWei({
+  const feeEstimate = await estimateGmxMarketDecreaseExecutionFeeWei({
     client,
     swapPathLength: livePayload.addresses.swapPath.length,
     callbackGasLimit: BigInt(livePayload.numbers.callbackGasLimit),
@@ -77,6 +78,10 @@ export async function executeGmxMicroFillDecreaseLive(
     collateralDelta: livePayload.numbers.initialCollateralDeltaAmount,
     acceptablePrice: livePayload.numbers.acceptablePrice,
     executionFeeWei: feeEstimate.executionFeeWei,
+    executionFeeEth: `${Number(feeEstimate.executionFeeWei) / 1e18}`,
+    keeperFloorWei: GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI.toString(),
+    datastoreGasLimit: feeEstimate.gasLimit.toString(),
+    gasPriceWei: feeEstimate.gasPriceWei.toString(),
   });
   const { tx, mode } = await dispatchGmxDecreaseLive({
     pk: input.pk,

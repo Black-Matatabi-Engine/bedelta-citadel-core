@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { parseEther } from "viem";
+import { GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI } from "../../src/services/adapters/gmx-micro-fill-constants";
 import { buildGmxV2UnsignedOrderPayload } from "../../src/services/adapters/gmx-v2-order-payload";
 import { GMX_ORDER_TYPE_INDEX } from "../../src/services/adapters/gmx-v2-order-payload.types";
 import {
@@ -11,6 +13,10 @@ import { encodeGmxV2RouterDecreaseOrderMulticall } from "../../src/services/adap
 const MARKET = "0x70d95587d40A2caf56bd97485aB3Eec10Bee6336" as const;
 
 describe("gmx-market-decrease-multicall", () => {
+  it("keeper floor is at least 0.0008 ETH WNT", () => {
+    expect(GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI).toBe(parseEther("0.0008"));
+  });
+
   it("builds sendWnt → createOrder legs for MarketDecrease", () => {
     expect(GMX_MARKET_DECREASE_MULTICALL_METHODS).toEqual(["sendWnt", "createOrder"]);
     const payload = buildGmxV2UnsignedOrderPayload({
