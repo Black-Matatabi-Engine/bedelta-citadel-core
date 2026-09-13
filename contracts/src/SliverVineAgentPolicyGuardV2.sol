@@ -2,8 +2,8 @@
 pragma solidity 0.8.28;
 
 import {SliverVineAgentPolicyGuard} from "./SliverVineAgentPolicyGuard.sol";
-import {CitadelInvariantsPackLib} from "./libs/CitadelInvariantsPackLib.sol";
-import {CitadelInvariantsStylusLib} from "./libs/CitadelInvariantsStylusLib.sol";
+import {SanctuaryInvariantsPackLib} from "./libs/SanctuaryInvariantsPackLib.sol";
+import {SanctuaryInvariantsStylusLib} from "./libs/SanctuaryInvariantsStylusLib.sol";
 import {GmxMulticallDecodeLib} from "./libs/GmxMulticallDecodeLib.sol";
 import {GmxRiskInvariantLib} from "./libs/GmxRiskInvariantLib.sol";
 
@@ -55,8 +55,8 @@ contract SliverVineAgentPolicyGuardV2 is SliverVineAgentPolicyGuard {
         view
     {
         GmxMulticallDecodeLib.ParsedGmxWire memory wire = _parseWire(routerMulticallData);
-        bytes memory packed = CitadelInvariantsPackLib.packWireEval(wire, ctx);
-        (bool invoked, uint256 errMask) = CitadelInvariantsStylusLib.tryEvaluatePacked(stylusCoprocessor, packed);
+        bytes memory packed = SanctuaryInvariantsPackLib.packWireEval(wire, ctx);
+        (bool invoked, uint256 errMask) = SanctuaryInvariantsStylusLib.tryEvaluatePacked(stylusCoprocessor, packed);
         if (!invoked) errMask = GmxRiskInvariantLib.collectWireErrors(wire, ctx);
         if (errMask != 0) revert GmxInvariantTripped(errMask);
     }

@@ -1,5 +1,5 @@
 /**
- * Phase C — TS `gmx-risk-core.ts` vs Rust `citadel_invariants` packed eval parity.
+ * Phase C — TS `gmx-risk-core.ts` vs Rust `sanctuary_invariants` packed eval parity.
  */
 import { execSync } from "node:child_process";
 import { existsSync, readFileSync } from "node:fs";
@@ -9,9 +9,10 @@ import { beforeAll, describe, expect, it } from "vitest";
 import { collectGmxGmRiskInvariantErrors } from "../../src/core/gmx-risk-core";
 
 const PACKED_LEN = 96;
+const MANIFEST = "contracts/sanctuary_invariants/Cargo.toml";
 const WASM_PATH = join(
   dirname(fileURLToPath(import.meta.url)),
-  "../../pkg/citadel_invariants.wasm",
+  "../../pkg/sanctuary_invariants.wasm",
 );
 
 const ERR_EXECUTION_FEE = 1 << 0;
@@ -115,11 +116,11 @@ const VECTORS: PackParams[] = [
 let wasmExports: WasmExports | null = null;
 
 beforeAll(async () => {
-  execSync("cargo test --manifest-path contracts/citadel_invariants/Cargo.toml", {
+  execSync(`cargo test --manifest-path ${MANIFEST}`, {
     stdio: "pipe",
   });
   if (!existsSync(WASM_PATH)) {
-    execSync("pnpm run build:citadel-invariants", { stdio: "pipe" });
+    execSync("pnpm run build:sanctuary-invariants", { stdio: "pipe" });
   }
   const bytes = readFileSync(WASM_PATH);
   const { instance } = await WebAssembly.instantiate(bytes, {});
@@ -139,9 +140,9 @@ function evalWasmGmxMask(packed: Uint8Array): { status: bigint; gmxMask: bigint 
   };
 }
 
-describe("stylus-gmx-parity (TS vs Rust citadel_invariants)", () => {
-  it("cargo test suite passes for citadel_invariants crate", () => {
-    const out = execSync("cargo test --manifest-path contracts/citadel_invariants/Cargo.toml", {
+describe("stylus-gmx-parity (TS vs Rust sanctuary_invariants)", () => {
+  it("cargo test suite passes for sanctuary_invariants crate", () => {
+    const out = execSync(`cargo test --manifest-path ${MANIFEST}`, {
       encoding: "utf8",
     });
     expect(out).toContain("test result: ok");

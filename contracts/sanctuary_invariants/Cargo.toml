@@ -1,9 +1,9 @@
 [package]
-name = "citadel_invariants"
+name = "sanctuary_invariants"
 version = "0.1.0"
 edition = "2021"
 license = "BUSL-1.1"
-description = "Citadel GMX + soil invariant Stylus coprocessor (Phase C)"
+description = "Sanctuary GMX + soil invariant Stylus coprocessor (Phase C)"
 
 [dependencies]
 stylus-sdk = { version = "0.10.7", optional = true }

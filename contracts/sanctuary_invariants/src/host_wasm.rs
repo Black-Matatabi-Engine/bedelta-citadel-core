@@ -6,7 +6,7 @@ fn panic(_: &core::panic::PanicInfo) -> ! {
 }
 
 #[no_mangle]
-pub extern "C" fn citadel_evaluate_packed(input_ptr: *const u8, out_ptr: *mut u8) -> i32 {
+pub extern "C" fn sanctuary_evaluate_packed(input_ptr: *const u8, out_ptr: *mut u8) -> i32 {
     if input_ptr.is_null() || out_ptr.is_null() {
         return -1;
     }
@@ -20,4 +20,10 @@ pub extern "C" fn citadel_evaluate_packed(input_ptr: *const u8, out_ptr: *mut u8
         }
         Err(_) => -2,
     }
+}
+
+/// Legacy alias: citadel_invariants (pre-Sanctuary rename) — one-release CI compat.
+#[no_mangle]
+pub extern "C" fn citadel_evaluate_packed(input_ptr: *const u8, out_ptr: *mut u8) -> i32 {
+    sanctuary_evaluate_packed(input_ptr, out_ptr)
 }

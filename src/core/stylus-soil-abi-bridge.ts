@@ -1,6 +1,6 @@
 /**
  * Edge f64 soil lane ↔ Stylus u64 packed ABI bridge.
- * SSOT: `contracts/citadel_invariants/src/abi.rs` · `soil_eval_u64.rs`.
+ * SSOT: `contracts/sanctuary_invariants/src/abi.rs` · `soil_eval_u64.rs`.
  */
 
 export const STYLUS_PACKED_LEN = 96;

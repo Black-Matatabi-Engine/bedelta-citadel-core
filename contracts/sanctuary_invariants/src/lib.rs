@@ -1,7 +1,7 @@
 #![no_std]
 #![allow(unexpected_cfgs)]
 
-//! CitadelInvariantsCoprocessor — Stylus packed GMX + soil eval (Phase C).
+//! SanctuaryInvariantsCoprocessor — Stylus packed GMX + soil eval (Phase C).
 
 #![cfg_attr(not(any(test, feature = "export-abi")), no_main)]
 
@@ -51,11 +51,11 @@ mod stylus_entry {
 
     sol_storage! {
         #[entrypoint]
-        pub struct CitadelInvariantsCoprocessor {}
+        pub struct SanctuaryInvariantsCoprocessor {}
     }
 
     #[public]
-    impl CitadelInvariantsCoprocessor {
+    impl SanctuaryInvariantsCoprocessor {
         pub fn evaluate_packed(&self, input: Vec<u8>) -> Result<[u8; 32], Vec<u8>> {
             evaluate_packed_core(&input).map_err(|e| e.to_vec())
         }

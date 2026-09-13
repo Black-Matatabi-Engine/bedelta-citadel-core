@@ -5,7 +5,7 @@ import {GmxMulticallDecodeLib} from "./GmxMulticallDecodeLib.sol";
 import {GmxRiskInvariantLib} from "./GmxRiskInvariantLib.sol";
 
 /// @dev Pack 96-byte Stylus calldata from decoded GMX wire + audit context.
-library CitadelInvariantsPackLib {
+library SanctuaryInvariantsPackLib {
     uint256 internal constant PACKED_LEN = 96;
 
     function packWireEval(GmxMulticallDecodeLib.ParsedGmxWire memory wire, GmxRiskInvariantLib.GmxWireContext memory ctx)

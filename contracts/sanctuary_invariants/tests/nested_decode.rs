@@ -1,4 +1,4 @@
-use citadel_invariants::{
+use sanctuary_invariants::{
     decode_nested_fail_closed, BLOCK_OK, BLOCK_TOXIC, FLAG_NEST, FLAG_TOXIC,
 };
 
