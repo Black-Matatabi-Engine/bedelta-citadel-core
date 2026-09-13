@@ -92,6 +92,19 @@
 
 ---
 
+### 🧪 How to Evaluate & Test SliverVine
+
+| Evaluation Target | Execution Method | Physical Substrate |
+|-------------------|------------------|-------------------|
+| **Real-Time Wasm Interception** | `pnpm demo:gmx -- --trip` | Live `soil_core.wasm` (<1.8µs warm) |
+| **End-to-End Macro Flow** | `pnpm demo:e2e` | 4-Step multi-venue HUD |
+| **SDK Integration Test** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 Provider Guard (35/35) |
+| **Audit Provenance Check** | `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" \| jq .` | Static SHA-256 Buildathon archive |
+
+*Note: Primary evaluation path is live CLI execution via `soil_core.wasm` and SDK wrapper (`withExoMeshShield`). The `/api/grant-audit` endpoint is a static Buildathon submission archive only.*
+
+---
+
 ## ⚡ Key Architectural Innovations & Invariants
 
 - **0-Gas Pre-Consensus Sequencer Defense:** Unverified intents are rejected at Edge isolates before Arbitrum Sequencer queues — **0-Gas on fail-closed paths**.

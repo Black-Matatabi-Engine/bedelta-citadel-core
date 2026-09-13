@@ -13,9 +13,11 @@
 **Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs  
 **Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum  
-**Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Dune PEV dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
+**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`)  
+**Audit provenance archive:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — *The `/api/grant-audit` endpoint serves as a verifiable static audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline.*  
+**Dune PEV dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
 
-### Live SSOT Anchors
+### Verification SSOT Anchors
 
 | Anchor | Value |
 |--------|-------|
@@ -187,7 +189,7 @@ Rejected intents surface as **structured, actionable errors** — never silent d
 | **HUD / SPA** | `resolveComplianceAlertsFromReasons()` · `COMPLIANCE_TRIP_ALERTS` in [`compliance-trip-alerts.ts`](../../src/lib/gui-bridge/compliance-trip-alerts.ts) | Title + severity (`critical` / `warning`) + plain-language remediation |
 | **SSE telemetry** | `GET /api/hud-stream` · [`section1-soil-probes.ts`](../../src/lib/gui-bridge/section1-hud-engine/section1-hud-engine-lib/section1-soil-probes.ts) log templates | Live `SOIL_RESISTANCE_PROBE: REJECTED` with reason list |
 | **SDK / decorator** | `withExoMeshShield` (legacy: `withCitadelShield`) · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
-| **Grant audit API** | `GET /api/grant-audit` · Robinhood audit snapshot | `lostUsd: 0` · `tradeAllowed: false` on trip paths |
+| **Grant audit archive** | `GET /api/grant-audit` · static Buildathon telemetry snapshot · Robinhood audit provenance | `lostUsd: 0` · `tradeAllowed: false` on trip paths |
 
 **Example operator messages (UI SSOT):**
 
@@ -706,7 +708,7 @@ USDG on 46630 → evaluateAcrossBridgeTransfer() state machine:
 | **Internal control environment** | Unidirectional `SystemState` · no orphan venue legs (R09 Saga) | [`intent-ledger.ts`](../../src/core/intent-ledger.ts) · `tests/risk-control/*` |
 | **Risk assessment** | Pre-execution `checkSoilResistance()` — depth, spread, slippage | [`soil-resistance.ts`](../../src/services/risk/soil-resistance.ts) · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 | **Control activities** | Session-key scope (`ORDER_EXECUTE` only) · notional cap R07 | [`session-key-gates.ts`](../../src/services/session-key-adapter-lib/session-key-gates.ts) · `SESSION_KEY_NOTIONAL_CAP_USD` |
-| **Monitoring & reporting** | `GET /api/grant-audit` · [Dune PEV dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · 96h telemetry daemon | `pnpm telemetry:96h` · [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Monitoring & reporting** | Static `GET /api/grant-audit` provenance archive · [Dune PEV dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · 96h telemetry daemon | `pnpm telemetry:96h` · [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Fail-safe severance** | R17 daily loss · R20 physical deadlock · signing channel close | [`circuit-breaker.ts`](../../src/services/circuit-breaker.ts) · [`flatten-hardlock.ts`](../../src/core/intent-ledger/flatten-hardlock.ts) |
 
 ### 6.2 `lostUsd ≡ 0` → Principle of Honest Loss Recognition
@@ -801,7 +803,7 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 |-------|-------------------|----------|
 | Full regression | `pnpm test -- --run` | **228 test files | 1064 PASS clean (100%)** |
 | Bridge invariants | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 PASS** |
-| Live audit | `GET /api/grant-audit` | `lostUsd: 0` · guard states exposed |
+| Audit provenance archive | `GET /api/grant-audit` (static snapshot) | `lostUsd: 0` · guard states exposed |
 
 > **Full verification matrix:** [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) — Express → Hybrid Pillar Sets X & Y Inside → Outside
 

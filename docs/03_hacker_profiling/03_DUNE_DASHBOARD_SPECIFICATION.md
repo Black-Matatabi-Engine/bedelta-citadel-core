@@ -3,7 +3,7 @@
 > **Vitest SSOT:** 228 test files | 1064 PASS clean (100%)
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · **Modules:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B)
-**Entity:** SilverVine Labs · **Live SSOT:** `GET /api/grant-audit`
+**Entity:** SilverVine Labs · **Audit provenance archive:** `GET /api/grant-audit` (static Buildathon telemetry snapshot & SHA-256 checkpoint — not a live dynamic market oracle)
 **Audience:** Buildathon evaluators · Dune venue diligence · institutional allocators
 **Reconciliation:** On-chain `SliverVineGate` events + grant-audit `duneTelemetry` KV snapshots.
 
@@ -17,7 +17,7 @@
 | **On-chain ingest source** | Sepolia `SliverVineGate` `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
 | **Decoded events** | `IntentAttested` · `RiskTripBlocked` · `AttestationConsumed` |
 | **PEV metric** | **Prevented Exploit Volume (PEV)** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs (fully operational on Sepolia Gate) |
-| **Off-chain anchor** | `/api/grant-audit` → `duneTelemetry.responseRef` (sha256) |
+| **Off-chain anchor** | Static `/api/grant-audit` snapshot → `duneTelemetry.responseRef` (sha256 provenance) |
 
 > **Clarification:** The live Dune dashboard at [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1):
 > 1. **`IntentAttested`** — real-time EIP-712 intent attestations (PASS / emergency de-leverage greenlights).
@@ -495,7 +495,7 @@ LIMIT 100;
 
 ---
 
-## Live `/api/grant-audit` JSON Example (`duneTelemetry`)
+## Static `/api/grant-audit` Provenance Archive JSON Example (`duneTelemetry`)
 
 ```json
 {

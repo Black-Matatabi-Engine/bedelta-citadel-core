@@ -10,7 +10,9 @@
 | **Protocol** | SliverVine Protocol / SliverVine ExoMesh |
 | **Identity** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum. |
 | **Baseline** | Vitest **199 test files | 868 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
-| **Live proof** | [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit` · [Dune telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Judge primary path** | `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`) |
+| **Audit provenance archive** | [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — static SHA-256 Buildathon snapshot (not a live market oracle) |
+| **Dune telemetry** | [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — Sepolia on-chain event stream |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | ERC-8196 (Final) Sub-ms Policy Gate |
 | **Related SSOT** | [`03_MARKET_AND_SECURITY_IMPERATIVE.md`](./03_MARKET_AND_SECURITY_IMPERATIVE.md) · [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`README.md`](../01_architecture/README.md) · [`05_RISK_MITIGATION`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 
@@ -84,7 +86,7 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 | Time | Visual | VO / on-screen | Anchor |
 |------|--------|----------------|--------|
 | **2:30–2:45** | M1–M6 checklist: Sepolia ✅ · CLI ✅ · RH demo ✅ · GMX fee ✅ · Dune spec ✅ · Mainnet ⏳ | *"Milestones are CLI-verifiable. Mainnet is M6 — we do not pretend it is done."* | [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **2:45–2:55** | Dune 3-query spec card · `GET /api/grant-audit` | *"Dune: three-query production spec plus grant-audit KV reconciliation."* | [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
+| **2:45–2:55** | Dune 3-query spec card · static `GET /api/grant-audit` provenance | *"Dune: three-query production spec plus static grant-audit SHA-256 provenance reconciliation."* | [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **2:55–3:00** | End card · URL · SSOT string | **199 test files \| 868 PASS Clean (100% PASS)** | `pnpm test -- --run` |
 
 **SECTION A forbidden lines:** APY guarantee · 99.82% · “already saved LPs $9.88M” · Stylus mainnet · Hyperliquid as the Arbitrum deployment proof · inbound Robinhood as a product.
@@ -120,12 +122,12 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
 pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 ```
 
-### B.4 `80s–108s` — GMX `uiFeeReceiver` + grant-audit JSON
+### B.4 `80s–108s` — GMX `uiFeeReceiver` + grant-audit provenance archive JSON
 
 | Time | Action | On-screen proof |
 |------|--------|-----------------|
 | **1:20–1:34** | Open GMX v2 payload fixture / HUD debug: `uiFeeReceiver` · **+10 bps**. | Field-level verification |
-| **1:34–1:48** | Browser: `https://bedeltawater.slivervine.xyz/api/grant-audit` · expand JSON. | `provenanceVerified` · SHA-256 · duneTelemetry keys |
+| **1:34–1:48** | Browser: `https://bedeltawater.slivervine.xyz/api/grant-audit` · expand JSON (static Buildathon snapshot). | `provenanceVerified` · SHA-256 · duneTelemetry keys |
 
 ```bash
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .provenanceVerified

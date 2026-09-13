@@ -5,7 +5,8 @@
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine ExoMesh** = the pre-consensus execution safety primitive (Module A).  
 **Entity:** SilverVine Labs · **Protocol brand:** SliverVine Protocol · **Escrow module:** SliverVine Sanctuary (Module B)  
-**Live proof:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
+**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`)  
+**Audit provenance archive:** [Historical Audit Telemetry Snapshot & Provenance Archive](https://bedeltawater.slivervine.xyz/api/grant-audit) — static SHA-256 Buildathon checkpoint (not a live dynamic oracle) · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
 ### Core On-Chain & Deployment Anchors

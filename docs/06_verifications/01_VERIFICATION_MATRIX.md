@@ -2,7 +2,8 @@
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`  
-**Live:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · `GET /api/grant-audit`  
+**DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield`  
+**Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle).  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
 > **Vitest SSOT:** **228 test files | 1065 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
