@@ -7,7 +7,7 @@
 | Field | Locked value | Verify |
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../../README.md) · [`SUBMISSION.md`](../ARB_Buildathon/SUBMISSION.md) |
-| **Vitest baseline** | **228 test files | 1065 PASS clean** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **228 test files | 1066 PASS clean** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Verified commit** | `main` @ **`3f26efa`** (Citadel-Armor SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **163.67 KiB raw | 57.76 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
 | **Phase B — GmxSoilMatrixSwitch** | Single **SLOAD** defense bitmap · **47 LOC** + `DefenseMatrixBitmap` **66 LOC** | [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol) · Forge **8/8** |

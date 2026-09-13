@@ -4,7 +4,7 @@
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
-> **Baseline:** Vitest **228 test files | 1065 PASS clean (100%)** · Worker bundle **57.76 KiB gzip** (163.67 KiB raw · `limitKiB: 150` · `pass: true`) · Wasm [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · SSRC **p50 ~106 µs**
+> **Baseline:** Vitest **228 test files | 1066 PASS clean (100%)** · Worker bundle **57.76 KiB gzip** (163.67 KiB raw · `limitKiB: 150` · `pass: true`) · Wasm [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · SSRC **p50 ~106 µs**
 > **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-Execution Citadel Protection.
 > **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md)
 
@@ -21,7 +21,7 @@
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **228 test files | 1065 PASS clean (100%)** · `pnpm test -- --run` |
+| **Vitest baseline** | **228 test files | 1066 PASS clean (100%)** · `pnpm test -- --run` |
 | **Worker bundle (hot-path)** | **57.76 KiB gzip** (163.67 KiB raw) · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Wasm hot-path** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** |
 | **Shield performance** | **p50 ~106 µs** Edge `checkSoilResistance()` |
@@ -226,7 +226,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 │ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation                          │
 │ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1           │
 │ · Mainnet Ignition Tx 0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6 │
-│ · Vitest SSOT: 228 test files | 1064 PASS clean
+│ · Vitest SSOT: 228 test files | 1066 PASS clean
 └────────────────────────────────────────┬────────────────────────────────────────┘
                                          │
                                          ▼
@@ -249,7 +249,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 
 | Stage | Status | Center of Gravity |
 |-------|--------|-------------------|
-| **A — V1.0** | ✅ Code-Verified (**228 test files | 1064 PASS clean (100%)**) | Arbitrum One GMX v2 / HL Δ-neutral · ExoMesh Wasm · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy gate · Gate [`0xb174118b…`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia + One consume-once Gate |
+| **A — V1.0** | ✅ Code-Verified (**228 test files | 1066 PASS clean (100%)**) | Arbitrum One GMX v2 / HL Δ-neutral · ExoMesh Wasm · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy gate · Gate [`0xb174118b…`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia + One consume-once Gate |
 | **B — V1.5** | ⏳ Roadmap | ERC-8196 (Final) fleet enforcement · EIP-7702 agent onboarding · prompt-injection pipe sever · Variational native hedge PoC |
 | **C — V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/exomesh-agentic-wallet-guard` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
@@ -267,7 +267,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 | **Monetization** | GMX +10 bps `uiFeeReceiver` (builder lane) | Design-partner PoV · no new fee surface required | Institutional CaaS SDK licensing · pre-execution risk-check APIs |
 | **AML / compliance** | Outbound-only Robinhood escort · reverse path blocked | Stronger fleet policy + segregated RWA tranche (planned) | Tenant CaaS policy packs · Robinhood opt-in |
 | **Oracle / sequencer** | <30s oracle lag fail-closed · 600s sequencer grace | Same sensors + storm fallback (planned) | Cross-L2 synchronized telemetry |
-| **Regression bar** | **228 test files | 1064 PASS clean (100%)** | No Wasm rewrite · additive swarm tests | No Wasm rewrite · CaaS SDK contract tests |
+| **Regression bar** | **228 test files | 1066 PASS clean (100%)** | No Wasm rewrite · additive swarm tests | No Wasm rewrite · CaaS SDK contract tests |
 
 ---
 
@@ -363,7 +363,7 @@ export const FRICTION_BUFFER_APY = 0.005 as const; // 0.5% friction buffer
 
 **Design rule:** Citadel Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
 
-**Code anchors:** [`src/services/yield/rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) · [`src/services/adapters/gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts) · [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) · Vitest **228 test files | 1064 PASS clean
+**Code anchors:** [`src/services/yield/rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) · [`src/services/adapters/gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts) · [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) · Vitest **228 test files | 1066 PASS clean
 
 ### 2.6 Real Yield vs. Toxic Inflation
 
@@ -734,7 +734,7 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 | **Stress scenarios** | $100k canonical + **$1M** stress notional (`STRESS_NOTIONAL_USD`) | Same report |
 | **Reverse stress** | Negative proofs — depth breach, soil trip, bridge timeout | `pnpm verify:negative` |
 | **Multi-leg cascade replay** | HF breach · velocity spike · GM LP imbalance · delta drift (GMX · HL · AAVE) | `npx vitest run tests/core/portfolio-cascade-replay.test.ts` **4/4** |
-| **Model validation** | Vitest **228 test files | 1064 PASS clean (100%)** full regression | CI / pre-release |
+| **Model validation** | Vitest **228 test files | 1066 PASS clean (100%)** full regression | CI / pre-release |
 
 ### 6.4 Three Lines of Defense Mapping
 
@@ -801,7 +801,7 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 
 | Check | Command / Surface | Expected |
 |-------|-------------------|----------|
-| Full regression | `pnpm test -- --run` | **228 test files | 1064 PASS clean (100%)** |
+| Full regression | `pnpm test -- --run` | **228 test files | 1066 PASS clean (100%)** |
 | Bridge invariants | `pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts` | **6/6 PASS** |
 | Audit provenance archive | `GET /api/grant-audit` (static snapshot) | `lostUsd: 0` · guard states exposed |
 

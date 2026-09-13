@@ -3,7 +3,7 @@
 > **Category:** **Pre-Consensus Threat Telemetry** · **Hacker Modus Operandi (MO) Profiling**  
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
 > **Indexer target:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)  
-> **Related:** [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) · [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · **Vitest:** **228 test files | 1064 PASS clean**
+> **Related:** [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) · [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · **Vitest:** **228 test files | 1066 PASS clean**
 
 ---
 

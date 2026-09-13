@@ -2,7 +2,7 @@
 
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
-> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **228 test files | 1065 PASS clean**  
+> **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **228 test files | 1066 PASS clean**  
 > **Architecture index:** [`README.md`](../01_architecture/README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **This file**
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
@@ -76,7 +76,7 @@ Citadel binds **ERC-4337** · **EIP-7562** · **EIP-712** · **ERC-1271** · **E
 | **Policy plane** | Solidity modules · off-chain analytics dashboards | **Edge Wasm `soil_core`** + TS gateway · Stylus on-chain **reinforcement** (not substitute) |
 | **Memory model** | Per-RPC heap churn · `BigInt` / object alloc on hot path | **Zero-Allocation Hot-Path Engine** — `INTENT_RING_U32` · `CALLDATA_SCRATCH` · `SOIL_LANE_SCRATCH` · reusable `DataView` FFI buffers |
 | **Batch / agent surface** | `wallet_sendCalls` opaque to legacy guards | **calls[] pointer unpack** · single intent-ring budget per atomic batch |
-| **Proof discipline** | Vendor claims · post-mortem | **228 test files \| 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors · `pnpm demo:gmx -- --trip` live severance |
+| **Proof discipline** | Vendor claims · post-mortem | **228 test files \| 1066 PASS** · `pnpm exec tsc --noEmit` 0 errors · `pnpm demo:gmx -- --trip` live severance |
 
 > **Judge one-liner:** Competitors sell **safer mempools** or **smarter solvers**. ExoMesh sells **involuntary reflex** — toxic intent never reaches the Sequencer queue.
 
@@ -102,7 +102,7 @@ Five standards form the **active C-end / on-chain compliance spine** — each ro
 
 | Anchor | Value |
 |--------|-------|
-| **Vitest baseline** | **228 test files | 1065 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
+| **Vitest baseline** | **228 test files | 1066 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
 | **Wasm hot path** | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · warm exec **< 60 µs** · Edge p50 ~106 µs |
 | **Worker bundle** | **163.67 KiB raw** · **57.76 KiB gzip** hot-path (`pnpm bundle:measure` · `limitKiB: 150` · `pass: true`) |
 | **Arbitrum One Gate** | [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
@@ -381,7 +381,7 @@ Rejected allowance paths throw `RetailGuardRejectedError` **before** RPC broadca
 | **Size budget** | **< 28 KiB** artifact · **57.76 KiB gzip** Worker hot-path bundle (`pnpm bundle:measure`) |
 | **Latency** | Warm exec **< 60 µs** · Edge shield p50 **~106 µs** (`checkSoilResistance()`) |
 | **Parity** | Bitmask + six-lane risk vector semantics mirrored by Stylus `check_soil_resistance_stylus()` |
-| **Verification** | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · `tests/risk-control/*` · Vitest **228 test files | 1065 PASS clean** |
+| **Verification** | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · `tests/risk-control/*` · Vitest **228 test files | 1066 PASS clean** |
 
 Edge Wasm is the **pre-broadcast SSOT**; Stylus coprocessor provides on-chain reinforcement — never a weaker substitute for fail-closed Edge gates.
 

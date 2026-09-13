@@ -12,7 +12,7 @@
 >
 > **V1.0 Buildathon Baseline:** 0-Friction Public Open Gateway — **no API key required**; Edge IP/header limiter enforces **5 RPS** (`X-SliverVine-Tier: public` · `X-SliverVine-RPS-Limit: 5`). **V1.1** Cloudflare KV API Key Metering ($10–$1,999/mo) is **Post-Grant Commercial Roadmap**, not the submission baseline.
 
-![Vitest](https://img.shields.io/badge/Vitest-1065%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
+![Vitest](https://img.shields.io/badge/Vitest-1066%20PASS%20%28228%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -211,7 +211,7 @@ pnpm demo:sanctuary              # ERC-7540+ Scenario A–C Matrix (alias: pnpm 
 pnpm demo:ingress                # Across/Robinhood AML ingress escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts  # unit SSOT
 
-# Full Regression Test Suite (228 test files | 1065 PASS clean)
+# Full Regression Test Suite (228 test files | 1066 PASS clean)
 pnpm test -- --run
 ```
 

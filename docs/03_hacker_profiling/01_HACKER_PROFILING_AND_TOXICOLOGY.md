@@ -2,7 +2,7 @@
 
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
 > **Frameworks:** FBI **Mindhunter** behavioral profiling (MO · signature · escalation) · **Cyber-Biological Immunology** (self-tuning honeypot inoculation · adversarial telemetry vaccine)  
-> **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **228 test files | 1065 PASS clean**  
+> **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **228 test files | 1066 PASS clean**  
 > **Architecture index:** [`README.md`](../01_architecture/README.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
@@ -329,7 +329,7 @@ pnpm demo:gmx -- --trip
 pnpm demo:exomesh -- --trip
 
 # Full regression
-pnpm test -- --run   # 228 files · 1064 PASS
+pnpm test -- --run   # 228 files · 1066 PASS
 ```
 
 ---

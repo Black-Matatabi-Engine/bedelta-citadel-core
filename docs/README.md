@@ -1,7 +1,7 @@
 # SliverVine Protocol — Public Documentation Index
 
 > **Umbrella:** **SliverVine Protocol** · **Module A:** **SliverVine ExoMesh** (~70% Architectural Surface) · **Module B:** **SliverVine Sanctuary** (~30% Architectural Surface) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)**  
-> **Vitest SSOT:** **228 test files | 1065 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
+> **Vitest SSOT:** **228 test files | 1066 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
 
 | # | Directory | Judge-facing scope |
 |---|-----------|-------------------|

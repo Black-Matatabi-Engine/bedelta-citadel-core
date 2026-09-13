@@ -11,7 +11,7 @@
 | **Tier 0 — SDK/CLI Unit & Integration** | `[ExoMesh]` | `pnpm demo:exomesh` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · `withRetailGuardProvider()` · Scenario A–D |
 | **Tier 0 — Module B Vault Standard** | `[Sanctuary]` | `pnpm demo:sanctuary` | ERC-7540+ Async Escort Matrix |
 | **Tier 0 — Module B Treasury Ingress** | `[Sanctuary]` | `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | Pillar Set X Across/AML escort |
-| **Tier 1 — Full Protocol Regression** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1065 PASS** · `pnpm exec tsc --noEmit` 0 errors |
+| **Tier 1 — Full Protocol Regression** | `[ExoMesh]` | `pnpm test -- --run` | **228 files / 1066 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | GMX · Pendle · USD.ai · HL · Variational |
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
@@ -26,7 +26,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
 pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean)
+pnpm test       # Full System Regression Suite (228 test files | 1066 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -51,7 +51,7 @@ pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean
 | `pnpm demo:stabilizer -- --trip` | USDZ de-peg + reserve depletion + 60s cooldown | `FAIL_CLOSED` · `MANDATORY_COOLDOWN_ACTIVE` on retry |
 | `pnpm demo:sanctuary` | **Module B Vault Standard** — ERC-7540+ Scenario A–C | `ALLOW` · `REJECT_OPERATOR` · `REJECT_SLIPPAGE` (`demo:escort` alias) |
 | `pnpm demo:ingress` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort | `lostUsd ≡ 0` · Route A/C HUD |
-| `pnpm test` | Full Vitest regression bar | **228 test files | 1065 PASS clean** |
+| `pnpm test` | Full Vitest regression bar | **228 test files | 1066 PASS clean** |
 
 **`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
 
@@ -92,7 +92,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 | Command | Proves | Expected |
 |---------|--------|----------|
 | Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
-| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **228 test files | 1065 PASS clean** |
+| `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **228 test files | 1066 PASS clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
 

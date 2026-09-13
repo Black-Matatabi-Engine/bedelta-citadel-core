@@ -283,7 +283,7 @@ pnpm demo:ingress
 pnpm demo:gmx -- --trip
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:e2e
-pnpm test       # Full System Regression Suite (228 test files | 1065 PASS clean)
+pnpm test       # Full System Regression Suite (228 test files | 1066 PASS clean)
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

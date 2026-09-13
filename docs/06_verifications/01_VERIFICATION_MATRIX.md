@@ -6,9 +6,9 @@
 **Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle).  
 **Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
 
-> **Vitest SSOT:** **228 test files | 1065 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
+> **Vitest SSOT:** **228 test files | 1066 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
 
-### 📊 Vitest 1065 PASS Suite Composition (Physical Breakdown)
+### 📊 Vitest 1066 PASS Suite Composition (Physical Breakdown)
 
 | Category | File Count | Test Count (`it`) | Assertion Count (`expect`) | Execution Scope |
 | :--- | :--- | :--- | :--- | :--- |
@@ -16,9 +16,9 @@
 | **Grant HUD & Copy SSOT** | 12 | ~30 | ~102 | GUI bridge, certificate copy & design token invariants |
 | **Reference Agent Adapters** | 5 | ~15 | ~64 | Virtuals, ElizaOS, Wayfinder, LangChain harness verification |
 | **Demo Flow Reproducibility** | 3 | ~12 | ~35 | End-to-end scenario validation (GMX, Pendle, Hyperliquid) |
-| **TOTAL VERIFIED GREEN** | **228** | **1,065** | **3,320+** | **100% Green · 0 Trivial/No-op Assertions** |
+| **TOTAL VERIFIED GREEN** | **228** | **1,066** | **3,320+** | **100% Green · 0 Trivial/No-op Assertions** |
 
-> **Engineering honesty:** **1065 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~998 core** ExoMesh/SSRC proofs vs presentation-layer locks.  
+> **Engineering honesty:** **1066 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~998 core** ExoMesh/SSRC proofs vs presentation-layer locks.  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI)  
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **57.76 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
@@ -64,7 +64,7 @@ pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycl
 
 # === Tier 1 — Full Protocol Regression ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # Full Regression Suite (228 test files | 1065 PASS clean)
+pnpm test -- --run                       # Full Regression Suite (228 test files | 1066 PASS clean)
 ```
 
 | Command | Tag | Proves |
@@ -229,8 +229,8 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 ### 🛡️ Proactive OpSec & Anti-Reversing Policy (Commit History Hardening)
 
 > **Notice to Evaluators & Security Auditors:**  
-> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SliverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1065 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
+> To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SliverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**228 test files / 1066 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
 
 ---
 
-*SilverVine Labs · Verification Express Hub · 228 test files | 1065 PASS clean*
+*SilverVine Labs · Verification Express Hub · 228 test files | 1066 PASS clean*

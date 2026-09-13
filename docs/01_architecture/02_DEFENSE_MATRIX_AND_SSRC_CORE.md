@@ -7,7 +7,7 @@
 > - **Physical Deadlock** — toxic intent severed in **p50 ~15µs** before EIP-712 broadcast · **0-Gas** fail-closed
 > - **Zero-Allocation Hot-Path Engine** — pre-allocated **256×4** intent heap · **O(1)** slot hash · **&lt;16 KiB** heap delta / 10k hot-path iterations (Vitest worker isolation) · ~**50,000 ephemeral heap objects/sec eliminated**
 >
-> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **228 test files | 1065 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
+> **Document:** R01–R20 defense matrix · sub-ms `soil_core` Wasm · microsecond moats · risk equations · **Vitest SSOT:** **228 test files | 1066 PASS clean** · **Defense Matrix:** `17 Active | 2 Refactored | 1 Deprecated` · **p50 ~106 µs**
 > **Full Pillar Set Y audit:** [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **Topology:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md)
 
 ## ⚡ Pure-Math Risk Engine Vector Evaluation & Bitmask Parallelism
@@ -241,7 +241,7 @@ $$
 | **Expiry Guard** | [`pendle-pt-expiry-guard.ts`](../../src/adapters/pendle/pendle-pt-expiry-guard.ts) | PT maturity &lt;7d ∧ yield jitter &gt;200bps fail-closed |
 | **AI Pool Factory** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `validateAIPoolSelection()` · maturity ≥7d · yield drift ≤300bps · min liquidity · asset whitelist |
 
-**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) (**&lt;16 KiB** ring-slab gate) · **228 test files | 1065 PASS clean** · coexists with SSRC **p50 ~106µs** budget.
+**Vitest:** [`pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) · [`pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) · [`pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) · [`pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) · [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) (**&lt;16 KiB** ring-slab gate) · **228 test files | 1066 PASS clean** · coexists with SSRC **p50 ~106µs** budget.
 
 #### § USD.ai AI-Compute Yield Collateral (V1.0 Live · Pillar Set Y · USD.ai Collateral Module)
 
