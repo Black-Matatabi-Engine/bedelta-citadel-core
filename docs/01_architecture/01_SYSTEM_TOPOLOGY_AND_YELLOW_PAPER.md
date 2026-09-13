@@ -101,7 +101,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 
 > **Hybrid Pillar Sets X & Y routing:** Pillar Set X (Gatehouse) and Pillar Set X (optional ingress) are summarized inline below; **exhaustive audit-grade specifications** live in the dedicated Pillar Set X & Y component specification documents above. This file retains cross-pillar topology, settlement bounds, and integration anchors.
 
-> *While single components like `checkSoilResistance()` formulas are kept standard and open for transparent FFI `@slivervine/citadel-sdk` adoption across Arbitrum, our core moat lies in the production integration complexity—stitching Rust `#![no_std]` Wasm, Edge Worker execution, and EIP-712 Gate into a sub-ms, fail-closed system.*
+> *While single components like `checkSoilResistance()` formulas are kept standard and open for transparent FFI `@slivervine/exomesh-agentic-wallet-guard` adoption across Arbitrum, our core moat lies in the production integration complexity—stitching Rust `#![no_std]` Wasm, Edge Worker execution, and EIP-712 Gate into a sub-ms, fail-closed system.*
 
 ## ⚔️ Competitive Matrix — Pre-Execution vs. Post-Execution Risk
 
@@ -110,7 +110,7 @@ Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of g
 | **Execution Phase** | Post-execution dashboards & multi-day governance parameter updates | **Pre-execution inline interception** (Sub-ms BEFORE mempool broadcast) |
 | **Latency / Hot-Path** | Minutes to Days (Off-chain simulations + DAO votes) | **p50 ~106 µs** (Rust `#![no_std]` Wasm engine on Edge) |
 | **Protection Level** | Global protocol parameter tuning (LTV, Collateral factors) | **Granular tx-level & LP soil protection** (MEV, RPC jitter, Oracle lag) |
-| **Deployment Model** | Advisory / SaaS Analytics | **Inline Edge Gate & Open-Source Wasm SDK** (`@slivervine/citadel-sdk`) |
+| **Deployment Model** | Advisory / SaaS Analytics | **Inline Edge Gate & Open-Source Wasm SDK** (`@slivervine/exomesh-agentic-wallet-guard`) |
 
 ## 1. Core Product Identity
 

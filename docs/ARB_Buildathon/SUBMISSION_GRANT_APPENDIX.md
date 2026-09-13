@@ -16,7 +16,7 @@
 | Institutional DD / Basel mapping | [Due Diligence Memorandum](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 | **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
-Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/citadel-sdk`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
+Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
 
 ### The Problem
 
@@ -175,7 +175,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 | **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Live Native Agent Integrations** — Wayfinder · ElizaOS · Virtuals · LangChain · Stabilizer ([`src/adapters/`](../../src/adapters/)) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Dune + SHA-256 dual-source `GET /api/grant-audit` · **public open gateway** (`X-Citadel-Tier: public` · 5 RPS) · Worker bundle **57.76 KiB gzip** · **225 test files | 1052 PASS clean** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
-| **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
+| **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/exomesh-agentic-wallet-guard` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
 Optional bridges (Robinhood / Across) are **Pillar Set X Reference Escort Adapters** — they do not define product identity. Aave/Morpho APY figures are *(Hurdle-rate probe only — not a yield-stacking product track)*.
 
@@ -359,7 +359,7 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ## Business Model & GTM Strategy
 
-> **Pricing model boundary:** **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5`) for Buildathon evaluation. **V1.1 = 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) with KV API Key metering (Milestone 1 post-grant). **V2.0 = Institutional CaaS & Orbit Shield** (`@slivervine/citadel-sdk`) — do not conflate with v1.0 gateway or GMX +10 bps `uiFeeReceiver`.
+> **Pricing model boundary:** **v1.0 = Public Open Gateway** (`X-Citadel-Tier: public` · `X-Citadel-RPS-Limit: 5`) for Buildathon evaluation. **V1.1 = 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) with KV API Key metering (Milestone 1 post-grant). **V2.0 = Institutional CaaS & Orbit Shield** (`@slivervine/exomesh-agentic-wallet-guard`) — do not conflate with v1.0 gateway or GMX +10 bps `uiFeeReceiver`.
 
 SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfront) and adopts an **Infra-First, Multi-Tiered Monetization Engine**:
 
@@ -380,7 +380,7 @@ SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfro
 | **Enterprise Dedicated** | **$1,999+** | Custom contract | **1,000+** | Custom | Dedicated Cloudflare Edge nodes · custom Rust/WASM risk modules · private MEV routing |
 
 3. **Pay-per-Intent Micro-Attestation Fee (Adjunct)**:
- * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway (`@slivervine/citadel-sdk`).
+ * AI Agents and Vault Operators connect via SliverVine's Secure RPC Gateway (`@slivervine/exomesh-agentic-wallet-guard`).
  * Charged $0.01 – $0.05 per signed attestation, deducting micro-fees automatically without requiring credit card friction.
 4. **Telemetry & Risk Data API (Data Engine)**:
  * Access to real-time Yield Convexity and Liquidity Void feeds via WebSocket/REST for hedge funds and quant vaults ($199–$1,999/month).
@@ -401,7 +401,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14 — V1.1)**
   - **SliverVine ExoMesh Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to ExoMesh-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
-  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/citadel-sdk` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane.
+  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/exomesh-agentic-wallet-guard` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane.
 
 ---
 

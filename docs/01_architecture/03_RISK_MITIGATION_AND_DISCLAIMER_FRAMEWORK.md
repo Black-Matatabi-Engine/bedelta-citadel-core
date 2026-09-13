@@ -239,7 +239,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
                                          ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
 │ Stage C (V2.0 — ⏳ Design Spec: Institutional CaaS & Orbit Shield)               │
-│ · Modular B2B CaaS — @slivervine/citadel-sdk Wasm core for AI DEX / Orbit L3    │
+│ · Modular B2B CaaS — @slivervine/exomesh-agentic-wallet-guard Wasm core for AI DEX / Orbit L3    │
 │ · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger)   │
 │ · Multi-Chain Edge Reflector Mesh — cross-L2 telemetry + instant kill-switch    │
 └─────────────────────────────────────────────────────────────────────────────────┘
@@ -249,7 +249,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 |-------|--------|-------------------|
 | **A — V1.0** | ✅ Code-Verified (**228 test files | 1064 PASS clean (100%)**) | Arbitrum One GMX v2 / HL Δ-neutral · ExoMesh Wasm · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy gate · Gate [`0xb174118b…`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia + One consume-once Gate |
 | **B — V1.5** | ⏳ Roadmap | ERC-8196 (Final) fleet enforcement · EIP-7702 agent onboarding · prompt-injection pipe sever · Variational native hedge PoC |
-| **C — V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
+| **C — V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — `@slivervine/exomesh-agentic-wallet-guard` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
 ### 1.1 Three-Stage Risk Comparison Matrix
 
@@ -616,7 +616,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 | **Grant E2E Demo** | `pnpm demo:e2e` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
 | **5-TX Verified Proof** | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet 5-TX anchor with notional tiers ($1K / $100K / $1M) |
 | **Negative Proofs** | `pnpm verify:negative` | Confirms soil trips on depth breach (`DEPTH_USD < MIN_DEPTH_USD`) |
-| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/citadel-sdk` `withExoMeshShield` (legacy: `withCitadelShield`) — ALLOW / `--trip` FAIL_CLOSED |
+| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/exomesh-agentic-wallet-guard` `withExoMeshShield` (legacy: `withCitadelShield`) — ALLOW / `--trip` FAIL_CLOSED |
 
 > Production soil fuse on Edge remains **`checkSoilResistance()`** — dry-run harnesses validate adjacent paths without replacing the Worker SSOT.
 

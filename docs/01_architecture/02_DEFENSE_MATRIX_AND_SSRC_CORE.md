@@ -354,7 +354,7 @@ Routing policy: venue selected per risk flags; both paths share the same fail-cl
 
 > **Sequencer Defense Plane A/B:** Plane A = Edge TS/Wasm Gateway (**p50 ~106µs**, **0 gas** pre-broadcast). Plane B = Nitro Stylus `check_soil_resistance_stylus` + [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) on-chain execution inside the sequencer block. Edge remains SSOT for agent hot paths; Stylus provides auditable Nitro-native reinforcement — **not** a substitute for Plane A.
 
-> **Dual-Engine Soil Topology:** SliverVine ExoMesh enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) execution on `@slivervine/citadel-sdk` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
+> **Dual-Engine Soil Topology:** SliverVine ExoMesh enforces dual-engine soil resistance: pure high-throughput TypeScript soil math on Cloudflare Worker hot paths, alongside native [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) execution on `@slivervine/exomesh-agentic-wallet-guard` agent-intent paths. Both engines share identical p50 ~106µs fail-closed thresholds and defense bounds.
 
 - Artifact: [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) (`#![no_std]`) — **soil_core** + **clock_core** C-ABI exports
 - Budget: **&lt;28kb** Cloudflare · hot-path exec **&lt;60µs** · SSRC p50 **~106µs** · clock_core **~1.5 KiB** additive

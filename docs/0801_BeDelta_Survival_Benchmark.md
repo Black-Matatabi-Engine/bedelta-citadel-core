@@ -112,7 +112,7 @@
 | Always-On: `checkSoilResistance` / Saga / Base SLI-TWAP | **ON** |
 | Phase 3 — Anti-Fragile Yield | **BYPASS** |
 | Phase 4 — 30-Path TWAP | **BYPASS** |
-| **Phase 6 — `@slivervine/citadel-sdk`** | **ACTIVE** (`enforceSantenmokuGuard` v1.0.0) |
+| **Phase 6 — `@slivervine/exomesh-agentic-wallet-guard`** | **ACTIVE** (`enforceSantenmokuGuard` v1.0.0) |
 
 | Metric | Baseline (no SDK) | + Phase 6 VaaS Guard | Pure Δ |
 |--------|-------------------|----------------------|--------|
@@ -160,7 +160,7 @@
 | Phase 3 — Anti-Fragile Yield Engine | **ACTIVE** |
 | Phase 4 — TWAPEngineV2 Full-30 Router | **ACTIVE** |
 | Phase 5 — Cross-Asset Funding Rotation | **ACTIVE** |
-| Phase 6 — `@slivervine/citadel-sdk` | **ACTIVE** |
+| Phase 6 — `@slivervine/exomesh-agentic-wallet-guard` | **ACTIVE** |
 
 | Ultimate Metric | Value |
 |-----------------|-------|

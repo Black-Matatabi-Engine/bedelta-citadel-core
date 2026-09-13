@@ -26,7 +26,7 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 | **v1.0 Partial — HL Orderbook Gap Guard** | ✅ Code-Verified | `evaluateHlOrderbookGapGuard()` in [`hl-orderbook-gap-guard.ts`](../../src/services/risk-control-lib/hl-orderbook-gap-guard.ts) · wired via [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) — gap-window leverage scale-down + 2× depth floor |
 | **v1.0 Live — Pendle Institutional Shield** | ✅ Code-Verified Live | **Pillar Set Y Core** — [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) (sync cache · TTL 60s) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) (`hydrateFromOracle`) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · `pendleOracle` / `pendleCrossGuard` → `checkSoilResistance()` · **228 test files | 1065 PASS clean (100%)** |
 | **V1.5 Roadmap Spec** | ⏳ Planned | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) · BTC/USDC isomorphic GM (config-only) |
-| **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/citadel-sdk` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
+| **V2.0 Design Spec** | ⏳ Planned | **Institutional CaaS & Orbit Shield** — `@slivervine/exomesh-agentic-wallet-guard` for AI DEXs / Orbit L3s · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
 
 **ZeroDev AA v1.0 active scope (Opt-In Pillar Set X):** **Native Integration** with **ZeroDev Kernel v3 (ERC-7579)** + **Ultra-Relay Intent Network** — Stage ① Sign-in · ③ Gas ($0.50/op · $10/day) · ④ Scoped Session Keys (ERC-7579 TYPE 1 validator) · ⑤ Execution — `SliverVineRiskOracle` = **ERC-7579 Pre-Execution Hook (TYPE 4)** · Sepolia dry-run verified (`pnpm test:zerodev`). **v0.95 SSOT (`5829e9a`):** HL session-key consume-once nonce + `expiresAt` replay guard · USD.ai `[CLOCK_SSOT_VERIFIED]`. Stage ② Smart Routing = **Reference Harness & Spec** (Vitest). Stages ⑥ Recover · ⑦ Compose = **⏳ Post-Grant Roadmap (V1.5 / V2.0)**. Pillar Set Y ReflexCore (SSRC) and Pillar Set X Arbitrum Native Ingress operate **100% independently** of ZeroDev.
 
@@ -311,7 +311,7 @@ AI Agent Intent (seconds)
 
 | Property | Edge Wasm ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)) | Stylus Coprocessor ([`contracts/stylus-probe/src/lib.rs`](../../contracts/stylus-probe/src/lib.rs)) |
 |----------|----------------------------------|----------------------------------------------------------|
-| **Entry** | `evaluateSoilCore()` via `@slivervine/citadel-sdk` | `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` |
+| **Entry** | `evaluateSoilCore()` via `@slivervine/exomesh-agentic-wallet-guard` | `evaluate_soil_coprocessor(spread_bps, depth_usd, slippage_bps)` |
 | **Math** | TS fallback + Wasm hot path | u128 fixed-point score · quadratic spread/slippage penalty |
 | **Fail-closed** | `depthUsd < minDepthUsd` → trip | `depth_usd < 10_000` → `(false, u64::MAX)` |
 | **Status** | ✅ v1.0 Delivered (Sepolia verified) · p50 ~106 µs | ✅ **Code-Verified Coprocessor** · `cargo test` **9/9 PASS** · Stylus SDK **0.10.7** · on-chain deploy **pending** |
@@ -337,12 +337,12 @@ allowedToSign =
 
 ### 6.5 AI Agent Integration Surface
 
-> *"These framework adapters provide modular integration specifications for pre-execution risk checks via `@slivervine/citadel-sdk` and REST APIs. In v1.0, active fee-capture and liquidity routing are strictly bound to Arbitrum One GMX v2 GM + HL delta-neutral execution; multi-platform agent fee routing is targeted for V2.0 CaaS monetization."*
+> *"These framework adapters provide modular integration specifications for pre-execution risk checks via `@slivervine/exomesh-agentic-wallet-guard` and REST APIs. In v1.0, active fee-capture and liquidity routing are strictly bound to Arbitrum One GMX v2 GM + HL delta-neutral execution; multi-platform agent fee routing is targeted for V2.0 CaaS monetization."*
 
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
 | **Wallet / dApp (C-End)** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · [§0.3](#03-c-end--b-end-integration-v11-ssot) | EIP-1193 pre-consensus intercept · 0-Gas on reject |
-| **B2B agents** | `@slivervine/citadel-sdk` · `verifyAgentIntent()` · `withExoMeshShield` (legacy: `withCitadelShield`) | Apache-2.0 · sub-ms soil gate |
+| **B2B agents** | `@slivervine/exomesh-agentic-wallet-guard` · `verifyAgentIntent()` · `withExoMeshShield` (legacy: `withCitadelShield`) | Apache-2.0 · sub-ms soil gate |
 | **5-Core venues** | GMX · Pendle · USD.ai · Variational · HL guards · [§0.3](#03-c-end--b-end-integration-v11-ssot) | Per-venue `checkSoilResistance()` |
 | **Stabilizer** | ✅ V1.0 Live (Sepolia) — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
 | **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · adapter spec (removed from repo per `docs/logging/0911_chaos_sandbox_audit.md`) · [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20) | `checkSoilResistance()` · Pillar Set X AML escort boundary |
@@ -375,7 +375,7 @@ allowedToSign =
 
 **G11 UI fingerprint:** Demo HUD badge `GateDomainFingerprintBadge` calls `verifyGateDomainSeparator()` ([`src/services/gate-domain-fingerprint.ts`](../../src/services/gate-domain-fingerprint.ts)) to compare on-chain `domainSeparator()` against local EIP-712 recompute — detecting hijacked frontends that point at a forged Gate contract.
 
-**License SSOT (G8):** First-party contracts (`SliverVineGate`, `GatedExecutor`, `SliverVineAgentPolicyGuard`, `SliverVineRiskOracle`, `IngressSafetySwitch`, Stylus coprocessor) = **BUSL-1.1** · `@slivervine/citadel-sdk` = **Apache-2.0**.
+**License SSOT (G8):** First-party contracts (`SliverVineGate`, `GatedExecutor`, `SliverVineAgentPolicyGuard`, `SliverVineRiskOracle`, `IngressSafetySwitch`, Stylus coprocessor) = **BUSL-1.1** · `@slivervine/exomesh-agentic-wallet-guard` = **Apache-2.0**.
 
 ### 6.7 Architectural Benchmark: SliverVine High-Performance Innovations vs. Legacy Web3 Standards
 
