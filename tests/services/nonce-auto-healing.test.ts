@@ -14,7 +14,7 @@ import {
   readActiveSystemState,
 } from "../../src/core/state";
 
-const BASE_TIME = Date.parse("2026-07-25T06:00:00.000Z");
+const BASE_TIME = Date.parse("2026-09-12T06:00:00.000Z");
 
 beforeEach(() => {
   vi.useFakeTimers({ toFake: ["Date"] });

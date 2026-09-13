@@ -39,7 +39,7 @@ function createMockKv(initial = new Map<string, string>()): KVNamespace {
 }
 
 describe("CLOID generator", () => {
-  const fixedNow = new Date("2026-07-24T12:34:56.789Z");
+  const fixedNow = new Date("2026-09-11T12:34:56.789Z");
   const fixedNonce = 0xdeadbeef;
 
   it("generates 128-bit hex CLOIDs with 0x prefix and embedded STM strategy", () => {
@@ -99,7 +99,7 @@ describe("CLOID anti-replay validator", () => {
 
   it("returns false on first pass and true on duplicate in memory cache", async () => {
     const cloid = generateCloid({
-      now: new Date("2026-07-24T12:00:00.000Z"),
+      now: new Date("2026-09-11T12:00:00.000Z"),
       nonce: 1,
     }).hex;
 
@@ -110,7 +110,7 @@ describe("CLOID anti-replay validator", () => {
 
   it("claimCloidAntiReplay blocks duplicates with ROOT14 trigger code", async () => {
     const cloid = generateCloid({
-      now: new Date("2026-07-24T12:00:00.000Z"),
+      now: new Date("2026-09-11T12:00:00.000Z"),
       nonce: 2,
     }).hex;
 
@@ -126,7 +126,7 @@ describe("CLOID anti-replay validator", () => {
 
   it("falls back to KV when memory cache is cold", async () => {
     const cloid = generateCloid({
-      now: new Date("2026-07-24T12:00:00.000Z"),
+      now: new Date("2026-09-11T12:00:00.000Z"),
       nonce: 3,
     }).hex;
     const kv = createMockKv(
@@ -138,7 +138,7 @@ describe("CLOID anti-replay validator", () => {
 
   it("registers CLOIDs into KV with 24h expiration TTL", async () => {
     const cloid = generateCloid({
-      now: new Date("2026-07-24T12:00:00.000Z"),
+      now: new Date("2026-09-11T12:00:00.000Z"),
       nonce: 4,
     }).hex;
     const store = new Map<string, string>();
@@ -173,7 +173,7 @@ describe("CLOID anti-replay validator", () => {
 
   it("assertCloidNotReplayed throws on duplicate CLOID", async () => {
     const cloid = generateCloid({
-      now: new Date("2026-07-24T12:00:00.000Z"),
+      now: new Date("2026-09-11T12:00:00.000Z"),
       nonce: 5,
     }).hex;
 

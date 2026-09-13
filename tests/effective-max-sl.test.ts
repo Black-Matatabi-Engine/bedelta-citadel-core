@@ -38,7 +38,7 @@ describe("Effective Max SL boundary", () => {
 
 describe("Root 17 Choice A daily tracker", () => {
   it("trips when cumulative daily loss exceeds Effective Max SL × 3", () => {
-    const state = createRoot17DailyState(new Date("2026-07-24T12:00:00.000Z"));
+    const state = createRoot17DailyState(new Date("2026-09-11T12:00:00.000Z"));
     const tripped = checkRoot17DailyLimit({
       accountEquityUsd: 10_000,
       state: recordRoot17SlTrip(state, 601),
@@ -49,15 +49,15 @@ describe("Root 17 Choice A daily tracker", () => {
   });
 
   it("trips when daily SL count reaches 3", () => {
-    let state = createRoot17DailyState(new Date("2026-07-24T12:00:00.000Z"));
-    state = recordRoot17SlTrip(state, 10, new Date("2026-07-24T12:00:00.000Z"));
-    state = recordRoot17SlTrip(state, 10, new Date("2026-07-24T12:01:00.000Z"));
-    state = recordRoot17SlTrip(state, 10, new Date("2026-07-24T12:02:00.000Z"));
+    let state = createRoot17DailyState(new Date("2026-09-11T12:00:00.000Z"));
+    state = recordRoot17SlTrip(state, 10, new Date("2026-09-11T12:00:00.000Z"));
+    state = recordRoot17SlTrip(state, 10, new Date("2026-09-11T12:01:00.000Z"));
+    state = recordRoot17SlTrip(state, 10, new Date("2026-09-11T12:02:00.000Z"));
     expect(state.dailySlCount).toBe(3);
     const result = checkRoot17DailyLimit({
       accountEquityUsd: 10_000,
       state,
-      now: new Date("2026-07-24T12:03:00.000Z"),
+      now: new Date("2026-09-11T12:03:00.000Z"),
     });
     expect(result.tripped).toBe(true);
     expect(result.reason).toMatch(/SL_COUNT/);

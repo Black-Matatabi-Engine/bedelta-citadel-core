@@ -4,7 +4,7 @@ import { __setSystemStateForTests, buildBlockedSystemState, readActiveSystemStat
 import { evaluatePublicRiskMock, RiskLevel } from "../../src/v09-public/risk-mock";
 import { assertGrantAuditPayloadClean } from "../../src/v09-public/opsec-boundary";
 
-const BASE_TIME = Date.parse("2026-07-25T06:00:00.000Z");
+const BASE_TIME = Date.parse("2026-09-12T06:00:00.000Z");
 
 describe("v0.9 session key + system state OpSec", () => {
   it("session key nonce stays monotonic under HIGH risk mock", () => {

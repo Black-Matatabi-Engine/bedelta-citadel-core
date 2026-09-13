@@ -10,13 +10,13 @@ describe("RWA settlement lock", () => {
   it("does not lock crypto symbols outside settlement window", () => {
     const result = evaluateRwaSettlementLock({
       symbol: "BTC",
-      at: new Date("2026-07-25T12:00:00.000Z"),
+      at: new Date("2026-09-12T12:00:00.000Z"),
     });
     expect(result.locked).toBe(false);
   });
 
   it("locks HIP-3 symbols within ±5 minutes of UTC funding settlement", () => {
-    const at = new Date("2026-07-25T08:03:00.000Z");
+    const at = new Date("2026-09-12T08:03:00.000Z");
     expect(isRwaSettlementLockWindow(at)).toBe(true);
 
     const result = evaluateRwaSettlementLock({
@@ -35,7 +35,7 @@ describe("RWA settlement lock", () => {
       hlPerp: 100,
       dydxPerp: 100,
       depthUsd: 500_000,
-      at: new Date("2026-07-25T16:02:00.000Z"),
+      at: new Date("2026-09-12T16:02:00.000Z"),
     });
 
     expect(result.tripped).toBe(true);

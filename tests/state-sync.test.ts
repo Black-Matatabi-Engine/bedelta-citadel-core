@@ -90,17 +90,17 @@ describe("state-sync — KV multi-edge SSOT", () => {
     const records: SystemStateKvRecord[] = [
       {
         version: 1,
-        savedAt: "2026-07-26T00:00:01.000Z",
+        savedAt: "2026-09-13T00:00:01.000Z",
         state: healthyState(90),
       },
       {
         version: 1,
-        savedAt: "2026-07-26T00:00:02.000Z",
+        savedAt: "2026-09-13T00:00:02.000Z",
         state: { ...healthyState(40), hardlock: false },
       },
       {
         version: 1,
-        savedAt: "2026-07-26T00:00:03.000Z",
+        savedAt: "2026-09-13T00:00:03.000Z",
         state: { ...healthyState(100), hardlock: true, hudState: "BLOCKED" },
       },
     ];

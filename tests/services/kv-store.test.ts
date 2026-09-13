@@ -60,7 +60,7 @@ describe("kv-store", () => {
     const kv = mockKv();
     const result = await saveMatrixPayloadToKV(kv, {
       success: true,
-      timestamp_hkt: "2026-07-26",
+      timestamp_hkt: "2026-09-13",
       matrix: [],
       data: [],
     });
@@ -73,7 +73,7 @@ describe("kv-store", () => {
   it("appendRiskLogToKV rolls risk telemetry", async () => {
     const kv = mockKv();
     await appendRiskLogToKV(kv, {
-      at: "2026-07-26T00:00:00.000Z",
+      at: "2026-09-13T00:00:00.000Z",
       level: "warn",
       module: "risk-control",
       event: "SOIL_RESISTANCE_TRIP",
