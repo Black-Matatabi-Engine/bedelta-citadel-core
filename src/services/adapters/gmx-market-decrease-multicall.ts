@@ -6,6 +6,7 @@ import { decodeFunctionData, encodeFunctionData, getAddress, type Hex } from "vi
 import type { GmxV2UnsignedOrderPayload } from "./gmx-v2-adapter.types";
 import { encodeGmxCreateOrderCalldata } from "./gmx-create-order-encode";
 import { GMX_ORDER_VAULT_ARBITRUM, gmxRouterAbi } from "./gmx-market-increase-multicall";
+import { GMX_FLOAT_PRECISION } from "./gmx-v2-order-payload-guards";
 
 export const GMX_MARKET_DECREASE_MULTICALL_METHODS = ["sendWnt", "createOrder"] as const;
 
@@ -33,6 +34,11 @@ export function buildGmxMarketDecreaseMulticallCalls(input: {
   orderVault?: Hex;
 }): { calls: Hex[]; msgValue: bigint; executionFee: bigint } {
   const orderVault = input.orderVault ?? GMX_ORDER_VAULT_ARBITRUM;
+  const sizeDeltaUsd = BigInt(input.payload.numbers.sizeDeltaUsd);
+  if (sizeDeltaUsd <= 0n) throw new Error("GMX_DECREASE_SIZE_DELTA: sizeDeltaUsd must be > 0");
+  if (sizeDeltaUsd % GMX_FLOAT_PRECISION !== 0n) {
+    throw new Error("GMX_DECREASE_SIZE_DELTA: sizeDeltaUsd must be 30-dec FLOAT_PRECISION aligned");
+  }
   const executionFee = BigInt(input.payload.numbers.executionFee);
   const calls: Hex[] = [
     encodeFunctionData({ abi: gmxRouterAbi, functionName: "sendWnt", args: [orderVault, executionFee] }),

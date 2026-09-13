@@ -5,12 +5,15 @@ import { arbitrum } from "viem/chains";
 import { buildKernelAccount } from "../src/adapters/arbitrum/zerodev-aa/zerodev-aa-kernel";
 import { stripGmxOnChainMetadata } from "../src/services/adapters/gmx-create-order-encode";
 import { estimateGmxMarketDecreaseExecutionFeeWei } from "../src/services/adapters/gmx-execution-fee-estimator";
-import { GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI } from "../src/services/adapters/gmx-micro-fill-constants";
+import {
+  GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI,
+  MICRO_FILL_DECREASE_SLIPPAGE_BPS,
+} from "../src/services/adapters/gmx-micro-fill-constants";
 import {
   applyMicroFillOrderPricing,
   bindGmxOrderReceiver,
-  computeGmxAcceptablePriceFromOracleRaw,
-  computeMicroFillAcceptablePrice,
+  computeGmxDecreaseAcceptablePriceFromOracleRaw,
+  computeMicroFillDecreaseAcceptablePrice,
   fetchGmxIndexOracleTicker,
 } from "../src/services/adapters/gmx-micro-fill-router-encode";
 import {
@@ -53,12 +56,17 @@ export async function executeGmxMicroFillDecreaseLive(
   let acceptablePrice: bigint;
   try {
     const ticker = await fetchGmxIndexOracleTicker(input.longToken);
-    acceptablePrice = computeGmxAcceptablePriceFromOracleRaw(
-      BigInt(livePayload.isLong ? ticker.maxPrice : ticker.minPrice),
+    const oracleRaw = BigInt(livePayload.isLong ? ticker.minPrice : ticker.maxPrice);
+    acceptablePrice = computeGmxDecreaseAcceptablePriceFromOracleRaw(
+      oracleRaw,
       livePayload.isLong,
+      MICRO_FILL_DECREASE_SLIPPAGE_BPS,
     );
   } catch {
-    acceptablePrice = computeMicroFillAcceptablePrice(input.midPriceUsd, livePayload.isLong);
+    acceptablePrice = computeMicroFillDecreaseAcceptablePrice(
+      input.midPriceUsd,
+      livePayload.isLong,
+    );
   }
   livePayload = applyMicroFillOrderPricing(livePayload, acceptablePrice);
   const feeEstimate = await estimateGmxMarketDecreaseExecutionFeeWei({
@@ -77,6 +85,7 @@ export async function executeGmxMicroFillDecreaseLive(
     sizeDeltaUsd: livePayload.numbers.sizeDeltaUsd,
     collateralDelta: livePayload.numbers.initialCollateralDeltaAmount,
     acceptablePrice: livePayload.numbers.acceptablePrice,
+    decreaseSlippageBps: MICRO_FILL_DECREASE_SLIPPAGE_BPS,
     executionFeeWei: feeEstimate.executionFeeWei,
     executionFeeEth: `${Number(feeEstimate.executionFeeWei) / 1e18}`,
     keeperFloorWei: GMX_MARKET_DECREASE_EXECUTION_FEE_MIN_WEI.toString(),

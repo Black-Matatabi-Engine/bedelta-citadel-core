@@ -8,6 +8,7 @@ import {
   GMX_ORACLE_TICKERS_URL,
   MICRO_FILL_COLLATERAL_USDC,
   MICRO_FILL_SIZE_DELTA_USD_30,
+  MICRO_FILL_DECREASE_SLIPPAGE_BPS,
   MICRO_FILL_SLIPPAGE_BPS,
 } from "./gmx-micro-fill-constants";
 import { BROWSER_MIMIC_USER_AGENT } from "../defense/rpc-whitelist";
@@ -50,6 +51,17 @@ export function computeGmxAcceptablePriceFromOracleRaw(
   return (oraclePriceRaw * factor) / 10_000n;
 }
 
+/** MarketDecrease — long sell accepts lower; short cover accepts higher. */
+export function computeGmxDecreaseAcceptablePriceFromOracleRaw(
+  oraclePriceRaw: bigint,
+  isLong: boolean,
+  slippageBps: number = MICRO_FILL_DECREASE_SLIPPAGE_BPS,
+): bigint {
+  const bps = BigInt(slippageBps);
+  const factor = isLong ? 10_000n - bps : 10_000n + bps;
+  return (oraclePriceRaw * factor) / 10_000n;
+}
+
 export function computeMicroFillAcceptablePrice(
   oraclePriceUsd: number,
   isLong: boolean,
@@ -61,6 +73,22 @@ export function computeMicroFillAcceptablePrice(
   return computeGmxAcceptablePriceFromOracleRaw(
     scaleHumanUsdToGmxIndexPrice30(oraclePriceUsd, indexDecimals),
     isLong,
+  );
+}
+
+export function computeMicroFillDecreaseAcceptablePrice(
+  oraclePriceUsd: number,
+  isLong: boolean,
+  indexDecimals = ETH_INDEX_DECIMALS,
+  slippageBps = MICRO_FILL_DECREASE_SLIPPAGE_BPS,
+): bigint {
+  if (!Number.isFinite(oraclePriceUsd) || oraclePriceUsd <= 0) {
+    throw new Error("computeMicroFillDecreaseAcceptablePrice: invalid oraclePriceUsd");
+  }
+  return computeGmxDecreaseAcceptablePriceFromOracleRaw(
+    scaleHumanUsdToGmxIndexPrice30(oraclePriceUsd, indexDecimals),
+    isLong,
+    slippageBps,
   );
 }
 

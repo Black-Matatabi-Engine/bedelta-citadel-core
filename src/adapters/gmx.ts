@@ -11,6 +11,7 @@ import type {
 export const GMX_MARKETS_INFO_URL = "https://arbitrum-api.gmxinfra.io/markets/info";
 export const ARBITRUM_RPC_URL = "https://arb1.arbitrum.io/rpc";
 export const GMX_V2_DATASTORE = "0xFD70de6b91282D8017aA4E741e9Ae325CAb992d8";
+export const GMX_V2_READER_ARBITRUM = "0xfA26cBb46e2614609406de08CA1Dc7f70a684184";
 export const GMX_MARKET_LIST_CALL =
   "0xf3903b9fcdac201abd09598973b1365dbbaeb65ff0f370d30bb5c7440dc3341f570b2e38";
 export const GMX_ALLOWED_HOSTS = ["arbitrum-api.gmxinfra.io", "arb1.arbitrum.io"] as const;

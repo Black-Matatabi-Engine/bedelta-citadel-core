@@ -25,5 +25,7 @@ export const GMX_ORACLE_TICKERS_URL = "https://arbitrum-api.gmxinfra.io/prices/t
 export const GMX_MARKETS_INFO_URL = "https://arbitrum-api.gmxinfra.io/markets/info";
 export const MICRO_FILL_ETH_USDC_MARKET = getAddress(GMX_ETH_USD_MARKET_TOKEN);
 export const MICRO_FILL_SLIPPAGE_BPS = 100;
+/** MarketDecrease short cover — buy-back slippage (105% oracle cap). */
+export const MICRO_FILL_DECREASE_SLIPPAGE_BPS = 500;
 export const GMX_ORACLE_PRICE_PRECISION_30 = GMX_FLOAT_PRECISION;
 export const GMX_MARKET_INCREASE_TRIGGER_PRICE_30 = 0n;

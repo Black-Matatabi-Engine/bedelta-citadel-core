@@ -11,7 +11,12 @@ import { GMX_MARKET_REGISTRY } from "../src/config/gmx-markets";
 import { refreshArbitrumGasGuard } from "../src/services/risk/arbitrum-gas-guard";
 import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
-import { MICRO_FILL_COLLATERAL_USD } from "../src/services/adapters/gmx-micro-fill-constants";
+import { GMX_USDC_ARBITRUM } from "../src/services/adapters/gmx-v2-order-payload-constants";
+import { MICRO_FILL_COLLATERAL_USD, MICRO_FILL_DECREASE_SLIPPAGE_BPS } from "../src/services/adapters/gmx-micro-fill-constants";
+import {
+  applyGmxDecreasePositionSizing,
+  resolveGmxDecreasePositionPreflight,
+} from "../src/services/adapters/gmx-position-reader";
 import { GMX_ORDER_TYPE_INDEX } from "../src/services/adapters/gmx-v2-order-payload.types";
 import { shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
 import { printGmxMicroFillError } from "../src/services/adapters/gmx-micro-fill-execution-errors";
@@ -60,13 +65,20 @@ async function main(): Promise<void> {
 
   const market = await loadGmxMicroFillMarketSnapshot("ETH");
   const registry = GMX_MARKET_REGISTRY["ETH/USDC"];
-  const sizeUsd = MICRO_FILL_COLLATERAL_USD;
-  const orderPayload = buildGmxV2UnsignedOrderPayload({
-    side: "short",
+  const owner = privateKeyToAccount(resolveMainnetPrivateKey()).address;
+  const position = await resolveGmxDecreasePositionPreflight(client, {
+    account: owner,
+    market: registry.marketToken as Hex,
+    collateralToken: GMX_USDC_ARBITRUM as Hex,
+    isLong: false,
+  });
+  const sizeUsd = Number(position.sizeInUsd) / 1e30;
+  let orderPayload = buildGmxV2UnsignedOrderPayload({
+    side: position.isLong ? "long" : "short",
     sizeUsd,
     reduceOnly: true,
     clientOrderId: `gmx-micro-decrease-${Date.now()}`,
-    maxSlippageBps: 100,
+    maxSlippageBps: MICRO_FILL_DECREASE_SLIPPAGE_BPS,
     marketToken: registry.marketToken,
     midPriceUsd: market.midPriceUsd,
     pool: market.pool,
@@ -75,12 +87,18 @@ async function main(): Promise<void> {
   if (orderPayload.orderType !== GMX_ORDER_TYPE_INDEX.MarketDecrease) {
     throw new Error("GMX_MICRO_FILL_DECREASE: payload must be MarketDecrease");
   }
-
-  const owner = privateKeyToAccount(resolveMainnetPrivateKey()).address;
+  orderPayload = applyGmxDecreasePositionSizing(orderPayload, position);
+  console.log("[gmx-micro-fill-decrease] reader preflight", {
+    owner,
+    positionKey: position.positionKey,
+    sizeInUsd30: position.sizeInUsd.toString(),
+    collateralAmount: position.collateralAmount.toString(),
+    isLong: position.isLong,
+  });
   console.log("[gmx-micro-fill-decrease] preflight OK", {
     owner,
     sizeUsd,
-    side: "short",
+    side: position.isLong ? "long" : "short",
     orderType: "MarketDecrease",
     sizeDeltaUsd30: orderPayload.numbers.sizeDeltaUsd,
     isLong: orderPayload.isLong,
