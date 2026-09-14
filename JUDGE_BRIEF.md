@@ -132,7 +132,8 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 | **Primary module** | SliverVine ExoMesh (Module A) |
 | **Escrow module** | SliverVine Sanctuary (Module B) |
 | **Track** | Promising Products — AI Agents & Financial Primitives |
-| **Arbitrum One Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
+| **SliverVineGate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · `DUAL` (`42161` + `421614`) |
+| **PolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · `MAINNET` only |
 | **Vitest** | **231 test files | 1081 PASS clean** · `pnpm test -- --run` |
 | **Primary SDK Entrypoint** | `@slivervine/exomesh-agentic-wallet-guard` · *EIP-1193+ (Pre-Sign Local Guard) — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
 | **Deep docs** | [`SUBMISSION.md`](./docs/00_ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
@@ -278,6 +279,21 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 | **Consume-once invariant** | [`SliverVineGate.sol/`](SliverVineGate/out/SliverVineGate.sol) — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
 | **Non-custodial gate** | No proxy · no ETH custody · live **42161** |
 | **Composable primitive** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · **EIP-1193+ (Pre-Sign Local Guard)** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
+
+---
+
+## Smart Contract & Deployment Anchors
+
+| Contract | Address | Network badge | Module |
+|----------|---------|---------------|--------|
+| **SliverVineGate** | [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `DUAL` · `42161` + `421614` | A + B |
+| **PolicyGuardV2** | [`0xfd98…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | `MAINNET` · `42161` | A |
+| **GmxSoilMatrixSwitch** | [`0x4129…f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | `MAINNET` · `42161` | A |
+| **SliverVineSoilCoprocessor** | [`0xc235…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) | `MAINNET` · `42161` | A |
+| **IngressSafetySwitch** | [`0x3E42…Fb4B`](https://sepolia.arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) | `SEPOLIA` · `421614` | B |
+| **SliverVineRiskOracle** | [`0x3FFa…D53a4`](https://sepolia.arbiscan.io/address/0x3ffa2539f502682e8145e6eb427ff78d258d53a4) | `SEPOLIA` · `421614` | B |
+
+Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)
 
 ---
 

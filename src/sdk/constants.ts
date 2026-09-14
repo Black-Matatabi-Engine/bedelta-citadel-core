@@ -3,6 +3,7 @@
  * Copyright 2026 SilverVine Labs
  * @slivervine/exomesh-agentic-wallet-guard — brand & EIP-712 domain SSOT.
  */
+import { SLIVERVINE_GATE_DUAL_DEPLOY_ADDRESS } from "../config/contract-deployments";
 import { GMX_UI_FEE_BPS } from "../config/gmx-revenue";
 import { SESSION_KEY_NOTIONAL_CAP_USD } from "../services/session-key-adapter-lib/session-key-types";
 
@@ -13,12 +14,14 @@ export const EIP712_DOMAIN_VERSION = "1" as const;
 export const LOCAL_MOCK_GATE_ADDRESS =
   "0x511E111111111111111111111111111111111111" as const;
 
-/** Arbitrum Sepolia (421614) — verified SliverVineGate (SSOT: docs/00_ARB_Buildathon/SUBMISSION.md). */
-export const SLIVERVINE_GATE_SEPOLIA_ADDRESS =
-  "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as const;
+/** Arbitrum Sepolia (421614) — dual-deployed SliverVineGate. */
+export const SLIVERVINE_GATE_SEPOLIA_ADDRESS = SLIVERVINE_GATE_DUAL_DEPLOY_ADDRESS;
 
-/** Canonical SliverVineGate verifyingContract (Sepolia live anchor). */
-export const SLIVERVINE_GATE_ADDRESS = SLIVERVINE_GATE_SEPOLIA_ADDRESS;
+/** Arbitrum One (42161) — dual-deployed SliverVineGate. */
+export const SLIVERVINE_GATE_MAINNET_ADDRESS = SLIVERVINE_GATE_DUAL_DEPLOY_ADDRESS;
+
+/** Default EIP-712 verifyingContract (Arbitrum One production anchor). */
+export const SLIVERVINE_GATE_ADDRESS = SLIVERVINE_GATE_MAINNET_ADDRESS;
 
 export const ARBITRUM_SEPOLIA_CHAIN_ID = 421614 as const;
 export const ROBINHOOD_TESTNET_CHAIN_ID = 46630 as const;
@@ -33,6 +36,7 @@ export { GMX_UI_FEE_BPS };
 
 export function resolveSliverVineGateAddress(chainId?: number): string {
   if (chainId === ARBITRUM_SEPOLIA_CHAIN_ID) return SLIVERVINE_GATE_SEPOLIA_ADDRESS;
+  if (chainId === ARBITRUM_ONE_CHAIN_ID) return SLIVERVINE_GATE_MAINNET_ADDRESS;
   return SLIVERVINE_GATE_ADDRESS;
 }
 

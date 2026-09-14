@@ -373,6 +373,20 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 ---
 
+## Smart Contract & Deployment Anchors
+
+| Contract | Address | Badge | Module |
+|----------|---------|-------|--------|
+| **SliverVineGate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | `DUAL` · Arbitrum One + Sepolia | ExoMesh + Sanctuary |
+| **SliverVineAgentPolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` | `MAINNET` · `42161` | ExoMesh |
+| **SliverVineSoilCoprocessor** (Stylus) | `0xc23587d6573dd134f95b02b0202ffbf84686625e` | `MAINNET` · `42161` | ExoMesh |
+| **IngressSafetySwitch** | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` | `SEPOLIA` · `421614` | Sanctuary async escort |
+| **SliverVineRiskOracle** | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` | `SEPOLIA` · `421614` | Sanctuary risk flush |
+
+→ Full audited table: [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)
+
+---
+
 ## Live Telemetry & Telemetry Proof
 
 | Layer | Evidence | Judge action |
@@ -393,8 +407,10 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 | **Official Name** | SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) · SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) |
 | **Category** | Promising Products Track — AI Agents & Financial Primitives |
 | **Buildathon** | Arbitrum Open House Singapore Online Buildathon |
-| **Live Gate (Sepolia)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| **Live Gate (Arbitrum One)** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · Mainnet Ignition Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| **SliverVineGate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · badge **`DUAL`** (`42161` + `421614`) · Ignition [`0x54c153…b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+| **PolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · badge **`MAINNET`** (`42161`) |
+| **IngressSafetySwitch** | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` · badge **`SEPOLIA`** (`421614`) |
+| **Deployment matrix SSOT** | [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
 | **Vitest baseline** | **231 test files | 1081 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** · ring-slab heap gate **&lt;16 KiB** ([`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts)) |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` · intent ring slab **&lt;16 KiB** / 10k iterations ([metrics SSOT](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)) |
