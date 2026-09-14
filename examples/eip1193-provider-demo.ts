@@ -319,11 +319,18 @@ async function runScenarioMatrix(ctx: DemoEnvironment, interactive: boolean): Pr
 wrapDemoExecution(async (ctx) => {
   const jsonMode = isDemoJsonArgv();
   const results = await runScenarioMatrix(ctx, !jsonMode);
+  const failClosed = results.find((r) => r.status === "FAIL_CLOSED" || r.status === "CHANNEL_SEVERED");
 
   if (jsonMode) {
     console.log(JSON.stringify(results));
     releaseDemoStdin();
-    process.exit(0);
+    return failClosed
+      ? {
+          tripped: true,
+          reason: failClosed.code ?? "FAIL_CLOSED",
+          reflexLatencyUs: failClosed.wasmUs,
+        }
+      : { tripped: false, reason: "ALLOW_PASSTHROUGH" };
   }
 
   if (!isDemoTripArgv()) {
@@ -332,5 +339,11 @@ wrapDemoExecution(async (ctx) => {
     );
   }
   releaseDemoStdin();
-  process.exit(0);
+  return failClosed
+    ? {
+        tripped: true,
+        reason: failClosed.code ?? "FAIL_CLOSED",
+        reflexLatencyUs: failClosed.wasmUs,
+      }
+    : { tripped: false, reason: "ALLOW_PASSTHROUGH" };
 });

@@ -6,6 +6,8 @@ import {
 import { __resetSoftConfirmationGuardForTests } from "../../src/services/risk/soft-confirmation-guard";
 import { seedSafeArbitrumProbes } from "../../tests/helpers/arbitrum-probe-seed";
 import { ensureSoilWasm } from "../../src/sdk/soil-wasm";
+import { recordDemoCliTelemetry } from "./demo-telemetry";
+import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 import {
   handleDemoExit,
   initDemoEnvironmentClock,
@@ -35,6 +37,7 @@ export interface DemoEnvironment {
 export interface DemoRunResult {
   tripped: boolean;
   reason?: string;
+  reflexLatencyUs?: number;
 }
 
 const GRAY = "\x1b[90m";
@@ -115,17 +118,40 @@ export function initDemoEnvironment(): DemoEnvironment {
   return { nowMs, at, restoreConsole, livingwater: IS_LIVINGWATER_MODE };
 }
 
+function finalizeDemoTelemetry(
+  ctx: DemoEnvironment,
+  tripped: boolean,
+  reason: string,
+  reflexLatencyUs?: number,
+): void {
+  if (ctx.livingwater) return;
+  recordDemoCliTelemetry({
+    nowMs: ctx.nowMs,
+    tripped,
+    reason,
+    reflexLatencyUs,
+  });
+}
+
 export function wrapDemoExecution(
   fn: (ctx: DemoEnvironment) => Promise<DemoRunResult | void> | DemoRunResult | void,
 ): void {
   const ctx = initDemoEnvironment();
   void (async () => {
+    const t0 = hrtimeStart();
     try {
       const result = await fn(ctx);
-      if (result?.tripped) handleDemoExit(true, result.reason ?? "FAIL_CLOSED");
+      const tripped = result?.tripped === true;
+      const reason = result?.reason ?? (tripped ? "FAIL_CLOSED" : "ALLOW_PASSTHROUGH");
+      const reflexLatencyUs = result?.reflexLatencyUs ?? hrtimeElapsedUs(t0);
+      finalizeDemoTelemetry(ctx, tripped, reason, reflexLatencyUs);
+      if (tripped) handleDemoExit(true, reason);
+      process.exit(0);
     } catch (err) {
       if (isDemoInterceptionError(err)) {
-        handleDemoExit(true, demoErrorReason(err));
+        const reason = demoErrorReason(err);
+        finalizeDemoTelemetry(ctx, true, reason, hrtimeElapsedUs(t0));
+        handleDemoExit(true, reason);
         return;
       }
       console.error(`${GRAY}[demo] fatal:${R} ${demoErrorReason(err)}`);
