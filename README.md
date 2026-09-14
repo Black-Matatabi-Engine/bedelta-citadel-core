@@ -35,6 +35,16 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 | **Local in-process reflex** | No Blockaid-class 200–800ms round-trip |
 | **AI retry severance** | 4th rapid submit → `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
+### Key Architectural Moats
+
+- **Dual-Plug Entrypoints:** Native EIP-1193+ provider wrapper (`withRetailGuardProvider`) for web wallets · `withExoMeshShield` TS decorator for AI agent loops (Wayfinder, ElizaOS, Virtuals, LangChain).
+- **Honeypot & Jitter Armor:** 99% synthetic slippage decoy on trap RPC hosts (`evaluateRpcDefenseGate`) · ±2–5 bps soil-threshold jitter against boundary probing.
+- **Observatory Paradox Haircut:** −40 risk-score discount on `close`/`reduce` intents so emergency de-leveraging is never blocked by the Pendle × GMX cross-guard.
+
+In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution against naive DoS loops. Not a global edge product — see honesty notes in the appendix.
+
+→ Deep dive: [`05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md`](./docs/01_architecture/05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md)
+
 **Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **231 test files \| 1081 PASS clean**
 
 > **npm SDK status:** `@slivervine/exomesh-agentic-wallet-guard` is currently **private monorepo-bound** (`"private": true` in [`src/sdk/exomesh-agentic-wallet-guard/package.json`](src/sdk/exomesh-agentic-wallet-guard/package.json)). **Public npmjs release scheduled for Post-Grant Milestone 1.** Until then, import from the monorepo path above.

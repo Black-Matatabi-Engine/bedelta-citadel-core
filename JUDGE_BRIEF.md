@@ -41,6 +41,16 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 That wrap **is** the primary SDK entrypoint. GMX live-fill txs are an **appendix**. `withExoMeshShield` is a **B2B function decorator** for agent code (same soil, different plug).
 
+**Key Architectural Moats (engineering-honest):**
+
+- **Dual-Plug Entrypoints:** EIP-1193+ `withRetailGuardProvider` for wallets · `withExoMeshShield` decorator for AI agent frameworks.
+- **Honeypot & Jitter Armor:** 99% synthetic slippage decoy on trap RPC hosts · ±2–5 bps soil-threshold jitter against boundary probing.
+- **Observatory Paradox Haircut:** −40 score discount on `close`/`reduce` so emergency de-leveraging is not blocked.
+
+In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution against naive DoS loops.
+
+→ [`05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md`](./docs/01_architecture/05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md)
+
 ### 3-Tier EIP/ERC Taxonomy (Problem → Superset → Proof)
 
 | Tier | Status Label | Standards | Judge-facing narrative |
