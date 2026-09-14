@@ -1,5 +1,5 @@
 /**
- * ROOT DEFENSE MATRIX — Tiered Root 20 Penalty Algorithm (Santenmoku v0.8).
+ * ROOT DEFENSE MATRIX — Tiered Root 20 Penalty Algorithm (v1.0 Santenmoku).
  * Score direction: ROOT_DEFENSE 100 (all roots locked) → 0 (physical deadlock).
  */
 

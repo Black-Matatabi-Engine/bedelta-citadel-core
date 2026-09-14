@@ -1,4 +1,4 @@
-/** Santenmoku v0.9 stress harness — deterministic Arbitrum probe seeding. */
+/** v1.0 Santenmoku stress harness — deterministic Arbitrum probe seeding. */
 import { __resetCircuitBreakerForTests } from "../../src/services/circuit-breaker";
 import { __resetCircuitBreakerSeverForTests } from "../../src/services/root-protection-lib/circuit-breaker-sever";
 import {

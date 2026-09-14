@@ -3,7 +3,7 @@
 | 欄位 | 值 |
 |------|-----|
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
-| 協議 / 實體 | **SliverVine Protocol** v0.95 Santenmoku · SilverVine Labs |
+| 協議 / 實體 | **SliverVine Protocol** v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `refactor/docs-master-architecture` @ **`a771b72`**（含 `01_architecture`–`06_verifications` 公開文檔重構 · SSRC 品牌鎖 · 1065 PASS 構成披露） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |

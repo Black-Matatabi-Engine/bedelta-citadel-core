@@ -1,5 +1,5 @@
 /**
- * GET /api/hud-stream — debounced Santenmoku HUD telemetry (JSON or SSE).
+ * GET /api/hud-stream — debounced v1.0 Santenmoku HUD telemetry (JSON or SSE).
  */
 
 import { CORS_JSON_HEADERS } from "../../services/config";

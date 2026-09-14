@@ -14,7 +14,7 @@
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v0.95 Santenmoku Core`  
+**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v1.0 Santenmoku (SSRC)`  
 **DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com) · **Live Telemetry:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)
 
 > **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) · sub-1.8µs warm soil check).

@@ -1,4 +1,4 @@
-/** Santenmoku v0.8/v0.9 — Grant resilience harness (opt-in telemetry, no prod side-effects). */
+/** v1.0 Santenmoku — Grant resilience harness (opt-in telemetry, no prod side-effects). */
 import {
   assertCitadelRiskGate,
   evaluateGatewayRules,

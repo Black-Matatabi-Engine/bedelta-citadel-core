@@ -1,6 +1,10 @@
 {
   "schema": "silvervine.system-metrics.ssot.v1",
-  "generatedAt": "2026-09-14T07:00:00.000Z",
+  "protocol": "SliverVine Protocol",
+  "version": "v1.0",
+  "ssrc_codename": "Santenmoku",
+  "ssrc_full_name": "SliverVine Single Root Core",
+  "generatedAt": "2026-09-14T08:16:00.000Z",
   "test_suite": {
     "test_files_passed": 235,
     "total_tests_passed": 1091,

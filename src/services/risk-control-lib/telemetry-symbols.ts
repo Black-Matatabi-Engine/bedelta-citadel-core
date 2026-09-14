@@ -16,7 +16,7 @@ export function normalizeTelemetrySymbol(symbol: string): string {
   return base || symbol.trim().toUpperCase();
 }
 
-/** True when symbol is in the Santenmoku target-pair whitelist SSOT. */
+/** True when symbol is in the v1.0 Santenmoku target-pair whitelist SSOT. */
 export function isAllowedTelemetrySymbol(symbol: string): boolean {
   return (ALLOWED_SYMBOLS as readonly string[]).includes(
     normalizeTelemetrySymbol(symbol),

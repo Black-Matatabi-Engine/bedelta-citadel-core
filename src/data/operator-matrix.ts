@@ -1,5 +1,5 @@
 /**
- * Santenmoku Operator Matrix — Category Prefix SSOT (UM / BO / RA).
+ * v1.0 Santenmoku Operator Matrix — Category Prefix SSOT (UM / BO / RA).
  */
 
 export * from "./operator-matrix/display-codes";

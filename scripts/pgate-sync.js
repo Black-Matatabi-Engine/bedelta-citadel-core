@@ -14,10 +14,10 @@ const ROOT = join(__dirname, "..");
 const PGATE = join(ROOT, "Pgate.md");
 const WRANGLER = join(ROOT, "wrangler.toml");
 
-const VERSION = "v0.8.0-rc1";
+const VERSION = "v1.0";
 const EXPECTED_TESTS = 398;
 const REQUIRED_DOMAINS = ["silvervinelabs.com", "bedeltawater.slivervine.xyz"];
-const COMMIT_MSG = "chore(pgate): sync production gate audit and metrics v0.8.0-rc1";
+const COMMIT_MSG = "chore(pgate): sync production gate audit and metrics v1.0";
 
 function log(step, msg) {
   console.log(`[pgate:sync] ${step}: ${msg}`);

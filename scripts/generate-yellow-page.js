@@ -21,7 +21,7 @@ const LINE_THRESHOLD = 80;
 function printGenesisBanner() {
   console.log([
     "====================================================",
-    "::  SANTENMOKU  ::  SliverVine Protocol v0.8.0",
+    "::  SANTENMOKU  ::  SliverVine Protocol v1.0",
     "::  :santen[boku  ::  Human-Machine Nexus Active",
     "====================================================",
   ].join("\n"));

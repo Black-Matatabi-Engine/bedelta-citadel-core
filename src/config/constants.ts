@@ -1,5 +1,5 @@
 /**
- * Santenmoku SSOT numeric constants — explicit score direction in names.
+ * v1.0 Santenmoku SSRC numeric constants — explicit score direction in names.
  *
  * HEALTH_CRI_* / ROOT_DEFENSE_* : 100 → 0 (100 = healthy, 0 = deadlock)
  * RISK_INDEX_*                  : 0 → 100 (0 = nominal, 100 = max risk)

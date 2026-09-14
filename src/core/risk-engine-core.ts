@@ -1,4 +1,4 @@
-/** Lean Santenmoku risk engine — barrel re-exports (<180 LOC SSOT). */
+/** Lean v1.0 Santenmoku (SSRC) risk engine — barrel re-exports (<180 LOC SSOT). */
 export { evaluateGlobalRiskPolicy } from "./risk-engine-policy";
 export { checkSoilResistance, isGatewayNominalFastPath } from "./risk-engine-soil";
 

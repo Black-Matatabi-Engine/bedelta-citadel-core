@@ -63,7 +63,7 @@ This document is **invariant-first** (Yellow Paper style): topology, thresholds,
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-Santenmoku is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Variational Omni RFQ on Arbitrum One, plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pruned venues (Uniswap V3 · Aave V3 · Morpho Blue) retain **RESERVED_ABI_V2** Wasm bitmask holes (protocol bits 4–6). Pillar Set Y ReflexCore (SSRC) is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+v1.0 Santenmoku (SSRC) is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Variational Omni RFQ on Arbitrum One, plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pruned venues (Uniswap V3 · Aave V3 · Morpho Blue) retain **RESERVED_ABI_V2** Wasm bitmask holes (protocol bits 4–6). Pillar Set Y ReflexCore (SSRC) is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
 
 **Primary Execution Boundary — 5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Variational (Arbitrum One) + Hyperliquid L1 Session Key Adapter (cross-chain hedge).
 

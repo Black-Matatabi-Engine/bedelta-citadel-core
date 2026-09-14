@@ -5,7 +5,7 @@
 > **Vitest SSOT:** 193 test files | 840 PASS Clean (100% PASS)
 
 **Timestamp:** 2026-08-19T11:34:52.415Z
-**Protocol:** Santenmoku v0.9
+**Protocol:** v1.0 Santenmoku
 **Harness:** `scripts/grant-advanced-resilience-benchmark.ts`
 
 ## Results

@@ -1,5 +1,5 @@
 /**
- * Santenmoku FullDex HMI label formatters — P-GATE, Tensile, Friction, Gateway.
+ * v1.0 Santenmoku FullDex HMI label formatters — P-GATE, Tensile, Friction, Gateway.
  */
 
 import { PGATE_MAX_SLIPPAGE } from "../config/constants";

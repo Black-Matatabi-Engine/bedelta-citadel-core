@@ -36,7 +36,7 @@ export function buildSha256AuditCertificate(
   ].join("\n");
   const unsigned = {
     protocol: "SliverVine" as const,
-    engine: "Santenmoku v0.8" as const,
+    engine: "v1.0 Santenmoku" as const,
     certificateVersion: "c1" as const,
     exportedAt: new Date().toISOString(),
     batchId: batch.id,
@@ -96,7 +96,7 @@ export function buildDryRunPlaybookJson(
 
   return {
     protocol: "SliverVine",
-    engine: "Santenmoku v0.8",
+    engine: "v1.0 Santenmoku",
     playbookVersion: "c15",
     exportedAt: new Date().toISOString(),
     zeroKeyDryRun: true,
@@ -153,7 +153,7 @@ export function exportSilvervineTcaAuditProof(
 ): void {
   const proof: SilvervineTcaAuditProof = {
     protocol: "SliverVine",
-    engine: "Santenmoku v0.8",
+    engine: "v1.0 Santenmoku",
     exportedAt: new Date().toISOString(),
     batchId: batch.id,
     sha256Anchor: computeVerified5TxSha256Anchor(batch.results.fills),

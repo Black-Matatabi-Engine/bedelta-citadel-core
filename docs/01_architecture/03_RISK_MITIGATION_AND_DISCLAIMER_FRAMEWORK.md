@@ -1,7 +1,7 @@
 # SliverVine Protocol: Risk Mitigation, Fail-Closed Security Boundaries & Disclaimer Framework
 
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive
-> **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine
+> **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · v1.0 Santenmoku SSRC
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
 > **Baseline:** Vitest **235 test files | 1091 PASS clean (100%)** · Worker bundle **57.81 KiB gzip** (163.72 KiB raw · `limitKiB: 150` · `pass: true`) · Wasm [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · SSRC **p50 ~106 µs**

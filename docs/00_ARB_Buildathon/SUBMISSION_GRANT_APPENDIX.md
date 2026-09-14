@@ -17,7 +17,7 @@
 | Market & security imperative | [Market & Security Imperative](../05_pitch_and_demos/03_MARKET_AND_SECURITY_IMPERATIVE.md) — Apollo / Navier research · Elevator metaphor |
 | **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
-Built on the Santenmoku internal engine (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
+Built on the v1.0 Santenmoku SSRC (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
 
 ### The Problem
 

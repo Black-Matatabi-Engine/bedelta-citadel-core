@@ -3,7 +3,7 @@
 | 欄位 | 值 |
 |------|-----|
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
-| 協議 / 實體 | SliverVine Protocol / Citadel Shield v0.95 Santenmoku · SilverVine Labs |
+| 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`b27e96e`**（`treasury-escort-router.ts` SSOT · `@slivervine/exomesh-agentic-wallet-guard` rebrand · Core Module A/B 術語） |
 | 對照基線 | [`0910_midnight_Grok_zh.md`](../internal/0910_midnight_Grok_zh.md) 主席加權 **9.28** · [`0910_offwork_pm_Gork_zh.md`](../internal/0910_offwork_pm_Gork_zh.md) **9.12** · 關鍵 doc commit **`afe8903`**（Robinhood ChainId 46630/4663 outbound escort SSOT） |

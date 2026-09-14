@@ -1,4 +1,4 @@
-/** Protocol vector lane indices — Santenmoku f64 layout SSOT. */
+/** Protocol vector lane indices — v1.0 Santenmoku f64 layout SSOT. */
 
 export const PROTO_VECT_LEN = 28;
 export const PROTO_SLOT = 4;

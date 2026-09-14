@@ -6,7 +6,7 @@
 | **Version** | **v1.1.0** |
 | **Classification** | Public Grant Pitch · SSOT |
 | **Entity** | SilverVine Labs |
-| **Protocol** | SliverVine Protocol · ExoMesh + Sanctuary (**v0.95 Santenmoku Core**) |
+| **Protocol** | SliverVine Protocol · ExoMesh + Sanctuary (**v1.0 Santenmoku**) |
 | **Core Architecture** | Client-Side Edge-Wasm Pre-Consensus Reflex Arc & Intent Firewall |
 | **Network Scope** | Arbitrum One / Arbitrum Nova / Robinhood Chain (Orbit L2/L3) |
 | **Core Latency Benchmark** | p50 ~15µs Wasm reflex core / p50 ~106µs E2E ExoMesh Edge |

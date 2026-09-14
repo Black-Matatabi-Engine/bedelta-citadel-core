@@ -1,5 +1,5 @@
 /**
- * Santenmoku v0.8 — shared service interfaces.
+ * v1.0 Santenmoku — shared service interfaces.
  */
 
 export * from "./types/tactical-log";

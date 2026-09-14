@@ -5,7 +5,7 @@
 | 欄位 | 值 |
 |------|-----|
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
-| 協議 / 實體 | SliverVine Protocol / Citadel Shield v0.8 Santenmoku · SilverVine Labs |
+| 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `feat/nextgen-eips-moat` @ **`09cf275`** |
 | 對照基線 | `main` 分支（222 files / 1044 PASS）vs `feat/nextgen-eips-moat`（225 files / 1052 PASS） |

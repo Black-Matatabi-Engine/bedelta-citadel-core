@@ -5,7 +5,7 @@
 | 欄位 | 值 |
 |------|-----|
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
-| 協議 / 實體 | SliverVine Protocol / Citadel Shield v0.8 Santenmoku · SilverVine Labs |
+| 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 評審快照 | `main` @ **`31bd378`**（lineage **`056c125`** stylus hook · **`c1a37d4`** Zero-GC ring slab · **`4e71474`** HUD SSOT 仍為 CLI 證明基線） |
 | 評審性質 | **30 人真實身分面板模擬** · 非公開評審原文 · **非**當事人已出席聲明 |

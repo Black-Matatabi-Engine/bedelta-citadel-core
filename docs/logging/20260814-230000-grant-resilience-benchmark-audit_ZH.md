@@ -6,7 +6,7 @@
 > **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 **時間戳：** 2026-08-19T11:34:52.415Z  
-**協議：** Santenmoku v0.9  
+**協議：** v1.0 Santenmoku  
 **Harness：** `scripts/grant-advanced-resilience-benchmark.ts`
 
 ## 結果

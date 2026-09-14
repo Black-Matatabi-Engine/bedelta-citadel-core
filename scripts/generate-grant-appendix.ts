@@ -22,7 +22,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, "..");
 const OUT = join(ROOT, "docs/GRANT_TECHNICAL_APPENDIX.md");
 const COVERAGE = join(ROOT, "coverage/coverage-summary.json");
-const PROTOCOL_VERSION = "v0.8.0-rc1";
+const PROTOCOL_VERSION = "v1.0";
 const AUTHOR = ":qum[x0sumx]";
 
 function countTestFiles(dir = join(ROOT, "tests")): number {

@@ -1,5 +1,5 @@
 /**
- * Santenmoku Operator Matrix — Category Prefix SSOT (UM / BO / RA).
+ * v1.0 Santenmoku Operator Matrix — Category Prefix SSOT (UM / BO / RA).
  * Scale-down HUD (v0.8–v1.5) shows continuous per-category numbering only.
  */
 

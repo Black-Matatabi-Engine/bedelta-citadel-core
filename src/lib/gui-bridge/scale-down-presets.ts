@@ -1,4 +1,4 @@
-/** Santenmoku Preset Matrix — scale-down operator bundles for Grant HUD. */
+/** v1.0 Santenmoku Preset Matrix — scale-down operator bundles for Grant HUD. */
 import type { OperatorUnlockVersion } from "../../data/operator-matrix";
 import { MODULE_ROADMAP_TAG } from "../../data/operator-matrix/module-roadmap-tags";
 import { GRANT_TOXIC_FILL_MITIGATION_LABEL } from "./grant-ui-ssot";

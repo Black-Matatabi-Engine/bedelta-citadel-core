@@ -8,7 +8,7 @@
  * Effective Max SL USD = (Account Equity × 1%) + $100
  */
 
-/** Santenmoku v0.8 floor — Balance × 1% + $100 */
+/** v1.0 Santenmoku floor — Balance × 1% + $100 */
 export const DYNAMIC_MAX_SL_BASE_USD = 100 as const;
 export const DYNAMIC_MAX_SL_BALANCE_RATE = 0.01 as const;
 

@@ -1,4 +1,4 @@
-/** Group K — adversarial fail-closed boundary cases (Santenmoku v0.9 audit hardening). */
+/** Group K — adversarial fail-closed boundary cases (v1.0 Santenmoku audit hardening). */
 import { evaluateGatewayRules, type GatewayRulesResult } from "../../src/core/risk-engine";
 import type { SoilResistanceInput } from "../../src/services/risk-control";
 import {

@@ -5,7 +5,7 @@
 | 欄位 | 值 |
 |------|-----|
 | 分類 | **內部 OpSec Only · 禁止對外原文發布** |
-| 協議 / 實體 | SliverVine Protocol / Citadel Shield v0.8 Santenmoku · SilverVine Labs |
+| 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `feat/pendle-yield-shield-apis` @ **`9de15dc`**（Pendle Shield API · docs 05 SSOT） |
 | 對照基線 | [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) 主席加權 **9.05** · 生態十席 SC **9.12** · [`0910_60_Persona_Joint_Audit_zh.md`](./0910_60_Persona_Joint_Audit_zh.md) **9.05** |

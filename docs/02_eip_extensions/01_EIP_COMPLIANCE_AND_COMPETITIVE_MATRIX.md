@@ -1,7 +1,7 @@
 # Standard Compliance & ERC/EIP Wiki
 
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive  
-> **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
+> **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · v1.0 Santenmoku SSRC  
 > **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **235 test files | 1091 PASS clean**  
 > **Architecture index:** [`README.md`](../01_architecture/README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **This file**
 

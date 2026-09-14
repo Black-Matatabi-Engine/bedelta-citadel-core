@@ -4,7 +4,7 @@ import { renderGtagHeadSnippet } from "../../lib/gtag-analytics";
 export const GRANT_AUDIT_VERSION_HEADER = "X-Slivervine-Version";
 export const GRANT_AUDIT_DEFENSE_HEADER = "X-Defense-Matrix";
 
-export const GRANT_AUDIT_VERSION = "v0.8-santenmoku";
+export const GRANT_AUDIT_VERSION = "v1.0-santenmoku";
 export const GRANT_AUDIT_DEFENSE_MATRIX = "20-Roots-Active";
 
 export const PUBLIC_AUDIT_ENDPOINTS = [

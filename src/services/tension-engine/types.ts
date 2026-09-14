@@ -1,5 +1,5 @@
 /**
- * Santenmoku Tension Engine types.
+ * v1.0 Santenmoku Tension Engine types.
  */
 
 import type { DemoSimCellResult, DemoSimRole, DemoSimScenario } from "../demo-simulator-service";

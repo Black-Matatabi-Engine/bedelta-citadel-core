@@ -2,7 +2,7 @@
 
 Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robinhood/Across ingress).
 
-> **Release:** **`v0.95 Santenmoku Core`** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)**
+> **Release:** **`v1.0 Santenmoku`** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)**
 
 ## Protocol Documentation Index
 
@@ -39,7 +39,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 | **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified agent intents rejected at **Cloudflare Edge isolates** before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:variational -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:e2e`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#zone-b--sandbox--e2e) |
-| **4** | **Physical Clock Monotonicity** | Edge Wasm ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [Physical Clock Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#311-physical-clock--edge-monotonicity-matrix-v08-santenmoku) |
+| **4** | **Physical Clock Monotonicity** | Edge Wasm ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [Physical Clock Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#311-physical-clock--edge-monotonicity-matrix-v10-santenmoku) |
 | **5** | **SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK (C-End Middleware)** | Apache-2.0 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrapper · 0-Gas pre-consensus intercept for infinite approvals · [Permit2](https://github.com/Uniswap/permit2) · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) phishing · AI agent retry severance (`INTENT_RING_U32`) · [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#37-eip-1193-agentic-wallet-guard-sdk--c-end-eip-1193-middleware) |
 
 ---
@@ -464,4 +464,4 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 
 ---
 
-*SilverVine Labs · SliverVine ExoMesh + Sanctuary · v0.95 Santenmoku Core · 235 test files | 1091 PASS clean*
+*SilverVine Labs · SliverVine ExoMesh + Sanctuary · v1.0 Santenmoku · 235 test files | 1091 PASS clean*

@@ -170,7 +170,7 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 
 **Core modules ([`src/core/`](../../src/core)):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
 
-### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v0.8 Santenmoku)
+### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v1.0 Santenmoku)
 
 SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. **Immunity** means: when any physical clock lies (leap second, NTP step, RPC `block.timestamp` regression, multi-PoP drift), the pre-consensus firewall produces **no negative intervals**, **no fake-fresh oracle ages**, and **no silent state rollback** — untrusted time states **fail-closed**.
 

@@ -31,7 +31,7 @@ export interface SoilResistanceLogEntry {
 
 export interface SilvervineTcaAuditProof {
   protocol: "SliverVine";
-  engine: "Santenmoku v0.8";
+  engine: "v1.0 Santenmoku";
   exportedAt: string;
   batchId: string;
   sha256Anchor: string;
@@ -42,7 +42,7 @@ export interface SilvervineTcaAuditProof {
 
 export interface Sha256AuditCertificate {
   protocol: "SliverVine";
-  engine: "Santenmoku v0.8";
+  engine: "v1.0 Santenmoku";
   certificateVersion: "c1";
   exportedAt: string;
   batchId: string;
@@ -67,7 +67,7 @@ export interface DryRunPlaybookStep {
 
 export interface DryRunPlaybookJson {
   protocol: "SliverVine";
-  engine: "Santenmoku v0.8";
+  engine: "v1.0 Santenmoku";
   playbookVersion: "c15";
   exportedAt: string;
   zeroKeyDryRun: true;

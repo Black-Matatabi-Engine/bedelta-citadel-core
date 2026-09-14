@@ -1,5 +1,5 @@
 #!/usr/bin/env tsx
-/** Santenmoku v0.8/v0.9 — Tier-1 Grant Advanced Resilience & Benchmark harness. */
+/** v1.0 Santenmoku — Tier-1 Grant Advanced Resilience & Benchmark harness. */
 
 import { spawnSync } from "node:child_process";
 import { mkdirSync, writeFileSync } from "node:fs";

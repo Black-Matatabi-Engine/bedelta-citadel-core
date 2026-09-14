@@ -1,5 +1,5 @@
 /**
- * CRI (Cumulative Risk Index) engine — Santenmoku v0.8.
+ * CRI (Cumulative Risk Index) engine — v1.0 Santenmoku.
  * Direction: HEALTH_CRI 100 → 0 (100 = healthy root foundation).
  */
 
