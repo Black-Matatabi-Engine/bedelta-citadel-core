@@ -373,6 +373,19 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 
 ---
 
+## Live Telemetry & Telemetry Proof
+
+| Layer | Evidence | Judge action |
+|-------|----------|--------------|
+| **Master Dune Dashboard** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) | Open widgets 1–6 (Module A counters + charts) |
+| **Module A — SliverVine ExoMesh** | Off-chain pre-consensus 0-Gas firewall · `dataset_exomesh_intercepts` | **262** fail-closed · **$6.57M** protected · **$65.50** gas saved |
+| **Module B — SliverVine Sanctuary** | ERC-7540+ async escort · Sepolia Gate on-chain anchors | `IntentAttested` · `RiskTripBlocked` · PEV panels (Queries 0–3) |
+| **CSV / export SSOT** | `pnpm export:dune` → [`exomesh-dune-telemetry.csv`](../audit/exomesh-dune-telemetry.csv) | Reconcile with Dune upload schema |
+
+Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · internal CSV schema → [`DUNE_TELEMETRY_SPEC.md`](../internal/DUNE_TELEMETRY_SPEC.md)
+
+---
+
 ## Submission Metadata
 
 | Field | Value |
@@ -386,7 +399,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` · intent ring slab **&lt;16 KiB** / 10k iterations ([metrics SSOT](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)) |
 | **Worker bundle (hot-path)** | **57.76 KiB gzip** · **163.67 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
-| **Dune Telemetry** | [Dune Telemetry (Sepolia Live Verification & Production SQL Spec)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **Boundary partition:** Sepolia (`421614`) = ✅ **Active Live Event Stream** · Arbitrum One (`42161`) = ✅ **Contracts Anchored** + **SQL Query Specs Ready for Ingest** (not claimed as live mainnet stream) → [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Dune Telemetry** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) — **Module A (ExoMesh):** ✅ active off-chain live dashboard · **Module B (Sanctuary):** Sepolia (`421614`) on-chain event stream · Arbitrum One (`42161`) contracts anchored + SQL specs ready → [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Verified Commit** | `main` @ **`c1a37d4`** (zero-GC ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **228/1066** Vitest · **Cargo 2/2** · **57.76 KiB gzip** |
 
 > **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 5-Core Venue Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)

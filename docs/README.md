@@ -12,6 +12,6 @@
 | **05** | [`05_pitch_and_demos/`](./05_pitch_and_demos/) | Demo video script · CLI runbook · Market & security imperative |
 | **06** | [`06_verifications/`](./06_verifications/) | Verification matrix · Zero-Allocation Hot-Path benchmark · on-chain anchors |
 
-**Quick links:** [`../JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) · [`../README.md`](../README.md) · [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md)
+**Quick links:** [`../JUDGE_BRIEF.md`](../JUDGE_BRIEF.md) · [`../README.md`](../README.md) · [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md) · [**Master Dune Dashboard**](https://dune.com/silvervinelabs/slivervine-protocol)
 
 **Internal / logging (unchanged):** [`internal/`](./internal/) · [`logging/`](./logging/)

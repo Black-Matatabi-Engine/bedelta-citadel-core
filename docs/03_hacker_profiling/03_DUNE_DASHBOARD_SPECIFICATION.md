@@ -13,17 +13,33 @@
 
 | Field | Value |
 |-------|-------|
-| **Live Query URL** | [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Master Dashboard URL** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) |
+| **Module A (ExoMesh)** | Off-chain pre-consensus **0-Gas firewall** telemetry — `dataset_exomesh_intercepts` · active live panels |
+| **Module B (Sanctuary)** | ERC-7540+ async escort · on-chain Sepolia Gate anchors · PEV / `IntentAttested` / `RiskTripBlocked` |
 | **On-chain ingest source** | Sepolia `SliverVineGate` `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` |
-| **Decoded events** | `IntentAttested` · `RiskTripBlocked` · `AttestationConsumed` |
-| **PEV metric** | **Prevented Exploit Volume (PEV)** — `SUM(blocked_intent_notional_usd)` from `RiskTripBlocked` logs (fully operational on Sepolia Gate) |
 | **Off-chain anchor** | Static `/api/grant-audit` snapshot → `duneTelemetry.responseRef` (sha256 provenance) |
 
-> **Clarification:** The live Dune dashboard at [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) displays **two concurrent on-chain streams** from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1):
-> 1. **`IntentAttested`** — real-time EIP-712 intent attestations (PASS / emergency de-leverage greenlights).
-> 2. **`RiskTripBlocked`** — pre-broadcast fail-closed severance events (toxic intent blocked at 0-Gas; feeds **PEV**).
->
-> The Dune engine **actively ingests decoded events** from the Sepolia Gate and reconciles against live `duneTelemetry` snapshots from the Edge Worker.
+### Dual-Module Telemetry Architecture
+
+| Module | Product | Telemetry layer | Dashboard role |
+|--------|---------|-----------------|----------------|
+| **Module A** | **SliverVine ExoMesh** | Off-chain pre-consensus intercepts (`pnpm export:dune` → `dataset_exomesh_intercepts`) | **Active live dashboard** — capital protected · gas saved · reflex latency · 4-moat breakdown |
+| **Module B** | **SliverVine Sanctuary** | ERC-7540+ async escort · Sepolia Gate on-chain events | On-chain PEV · `IntentAttested` / `RiskTripBlocked` reconciliation panels |
+
+### Live Dashboard Widgets (6 panels)
+
+Published at [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol):
+
+| # | Widget | Type | SSOT metric |
+|---|--------|------|-------------|
+| 1 | **ExoMesh Methodology & Disclosure** | Text — provenance & baseline comparison | Engineering honesty · Module A/B partition |
+| 2 | **Total Capital Protected** | Counter | **$6.57M** — `SUM(potential_loss_saved_usd)` from `dataset_exomesh_intercepts` |
+| 3 | **Total L2 Gas Saved** | Counter | **$65.50** — `SUM(gas_saved_usd)` (~$0.25 per fail-closed intercept) |
+| 4 | **Total Fail-Closed Intercepts** | Counter | **262** — `COUNT(*) FILTER (WHERE status = 'FAIL_CLOSED')` |
+| 5 | **4-Moat Defense Matrix Breakdown** | Pie / Donut | `intercept_type` distribution (`SOIL_RESISTANCE_TRIP` · `HONEYPOT_DECOY` · `OBSERVATORY_HAIRCUT` · `MAX_ATTEMPTS_SEVERED`) |
+| 6 | **Sub-Millisecond Reflex Latency & 5-Venue Distribution** | Bar charts | `reflex_latency_us` percentiles · `venue` heatmap (GMX · Pendle · USD.ai · HL · Variational) |
+
+> **Clarification:** **Module A** panels (widgets 1–6) ingest off-chain ExoMesh CSV (`silvervine.exomesh.dune-telemetry.v1`). **Module B** on-chain streams from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) feed Queries 0–3 (`IntentAttested` · `RiskTripBlocked` · PEV). Do not UNION Module A and Module B without explicit reconciliation ([`SQL_AUDIT_REPORT.md`](../audit/SQL_AUDIT_REPORT.md)).
 
 ### Arbitrum One (`42161`) — Pre-Compiled SQL Spec (Awaiting Live Ingest)
 
@@ -82,7 +98,7 @@ ORDER BY block_number DESC
 LIMIT 50;
 ```
 
-**Dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**Dashboard:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)
 
 ---
 
@@ -123,7 +139,7 @@ $$\text{PEV} = \sum \text{blocked\_intent\_notional\_usd}$$
 
 Sourced exclusively from decoded **`RiskTripBlocked`** event logs emitted by Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1). Each `RiskTripBlocked` log carries the nominal USD notional of the toxic intent severed pre-broadcast (0-Gas fail-closed path).
 
-**Dashboard panel:** [silvervine-citadel-telemetry — PEV](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**Dashboard panel:** [SliverVine Protocol — PEV](https://dune.com/silvervinelabs/slivervine-protocol)
 
 ```sql
 -- PEV (Prevented Exploit Volume) — canonical DuneSQL SSOT

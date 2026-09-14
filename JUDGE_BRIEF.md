@@ -281,6 +281,19 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 ---
 
+## Live Telemetry & Telemetry Proof
+
+| Proof layer | URL / command | What judges see |
+|-------------|---------------|-----------------|
+| **Master Dune Dashboard** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) | Module A live counters + charts · Module B on-chain anchors |
+| **Module A — ExoMesh** | `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | **262** fail-closed · **$6.57M** capital protected · **$65.50** L2 gas saved |
+| **Module B — Sanctuary** | Sepolia Gate [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `IntentAttested` · `RiskTripBlocked` · PEV reconciliation |
+| **Provenance archive** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) | Static SHA-256 Buildathon checkpoint (not a live oracle) |
+
+**Dual-module partition:** **Module A (SliverVine ExoMesh)** = off-chain pre-consensus 0-Gas firewall telemetry (active live dashboard). **Module B (SliverVine Sanctuary)** = ERC-7540+ async escort & on-chain Sepolia Gate anchors. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md).
+
+---
+
 ## Appendix — Security Disclaimers
 
 ### 🛡️ Proactive OpSec & Anti-Reversing Policy (Commit History Hardening)
@@ -290,4 +303,4 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 ---
 
-**SilverVine Labs** · `grants@silvervinelabs.com` · [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)
+**SilverVine Labs** · `grants@silvervinelabs.com` · [**Master Dune Dashboard**](https://dune.com/silvervinelabs/slivervine-protocol)

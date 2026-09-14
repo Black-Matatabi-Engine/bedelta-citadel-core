@@ -97,7 +97,7 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 | **Vitest baseline** | **231 test files | 1081 PASS clean (100%)** |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS** |
 | **Arbitrum Gate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` (Mainnet + Sepolia CREATE2 same-address) |
-| **Dune dashboard** | [https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Dune dashboard** | [https://dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | Aligned with **Finalized ERC-8196 Standard** (Ethereum Standard · Virtuals Protocol co-author) |
 
 **Core invariants:** $\Delta_{\text{net}} \equiv 0$ · $\text{lostUsd} \equiv 0 \quad \forall \text{InFlightBridgeCapital}$ · $t_{\text{reflector\_p50}} \sim 106\,\mu\mathrm{s}$ — [Technical Specification §3.1](../../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#31-microsecond-moats-summary).
@@ -109,11 +109,11 @@ Security diligence is first-class: **3-Tier Security Matrix: 5/0/0 PASS** — se
 SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction Hackathon Verification with Long-Term Commercial Sustainability:
 
 - **Stage 1: Buildathon Verification Phase (Active Now — Pre-9/14)**
-  - **100% Free Public Telemetry**: Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry)) for zero-friction judge and developer auditing.
+  - **100% Free Public Telemetry**: Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol)) for zero-friction judge and developer auditing.
   - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia (`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`).
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14)**
-  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (EIP-1193 wallet hosts, M2M Treasury Funds).
+  - **SliverVine Citadel Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [Dune](https://dune.com/silvervinelabs/slivervine-protocol) remains the **free public visualization dashboard**; paid tiers ($199/mo Pro to $1,999/mo Enterprise) gate programmatic access to Citadel-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (EIP-1193 wallet hosts, M2M Treasury Funds).
   - **V2.0 CaaS rail (Design Spec):** `@slivervine/exomesh-agentic-wallet-guard` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). Live v1.0 builder lane remains GMX **+10 bps `uiFeeReceiver`**.
 
 ---

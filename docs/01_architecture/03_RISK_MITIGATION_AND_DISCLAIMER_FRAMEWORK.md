@@ -15,7 +15,7 @@
 **Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum  
 **Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`)  
 **Audit provenance archive:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — *The `/api/grant-audit` endpoint serves as a verifiable static audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline.*  
-**Dune PEV dashboard:** [SliverVine Citadel Telemetry (Dune)](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
+**Dune PEV dashboard:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
 
 ### Verification SSOT Anchors
 
@@ -708,7 +708,7 @@ USDG on 46630 → evaluateAcrossBridgeTransfer() state machine:
 | **Internal control environment** | Unidirectional `SystemState` · no orphan venue legs (R09 Saga) | [`intent-ledger.ts`](../../src/core/intent-ledger.ts) · `tests/risk-control/*` |
 | **Risk assessment** | Pre-execution `checkSoilResistance()` — depth, spread, slippage | [`soil-resistance.ts`](../../src/services/risk/soil-resistance.ts) · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) |
 | **Control activities** | Session-key scope (`ORDER_EXECUTE` only) · notional cap R07 | [`session-key-gates.ts`](../../src/services/session-key-adapter-lib/session-key-gates.ts) · `SESSION_KEY_NOTIONAL_CAP_USD` |
-| **Monitoring & reporting** | Static `GET /api/grant-audit` provenance archive · [Dune PEV dashboard](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) · 96h telemetry daemon | `pnpm telemetry:96h` · [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
+| **Monitoring & reporting** | Static `GET /api/grant-audit` provenance archive · [Dune PEV dashboard](https://dune.com/silvervinelabs/slivervine-protocol) · 96h telemetry daemon | `pnpm telemetry:96h` · [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Fail-safe severance** | R17 daily loss · R20 physical deadlock · signing channel close | [`circuit-breaker.ts`](../../src/services/circuit-breaker.ts) · [`flatten-hardlock.ts`](../../src/core/intent-ledger/flatten-hardlock.ts) |
 
 ### 6.2 `lostUsd ≡ 0` → Principle of Honest Loss Recognition

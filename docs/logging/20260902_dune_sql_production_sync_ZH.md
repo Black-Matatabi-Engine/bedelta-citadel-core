@@ -9,7 +9,7 @@
 | ----- | ----- |
 | **分支** | `v1.0_push_BDLW` |
 | **SSOT** | [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md) |
-| **Dashboard** | [dune.com/silvervinelabs/silvervine-citadel-telemetry](https://dune.com/silvervinelabs/silvervine-citadel-telemetry) |
+| **Dashboard** | [dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) |
 
 ## 已更新查詢
 
