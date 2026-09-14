@@ -8,11 +8,11 @@
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
-**Release:** **`v0.95 Santenmoku Core`**
+**Release:** **`v1.0 Santenmoku`**
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **235 test files | 1091 PASS clean (100%)** · **Release: v0.95 Santenmoku Core** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.81 KiB gzip** (163.72 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **SSOT Lock:** **235 test files | 1091 PASS clean (100%)** · **Release: v1.0 Santenmoku** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.81 KiB gzip** (163.72 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
 > **Zero-Allocation Hot-Path**: Pre-consensus microsecond execution on static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated**); cold-path warning formatters and error loggers remain standard readable TypeScript.
 
@@ -129,7 +129,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 
 | Field | Value |
 |-------|-------|
-| **Release** | **`v0.95 Santenmoku Core`** |
+| **Release** | **`v1.0 Santenmoku`** |
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Primary module** | SliverVine ExoMesh (Module A) |
 | **Escrow module** | SliverVine Sanctuary (Module B) |

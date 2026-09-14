@@ -1,14 +1,51 @@
 {
   "schema": "silvervine.system-metrics.ssot.v1",
   "protocol": "SliverVine Protocol",
+  "tagline": "ExoMesh Pre-Consensus Intent Firewall for AI Agents on Arbitrum",
   "version": "v1.0",
-  "ssrc_codename": "Santenmoku",
-  "ssrc_full_name": "SliverVine Single Root Core",
+  "version_name": "BeDelta Living Water v1.0",
+  "version_symbol": "BeΔ Living Water",
+  "ssrc_codename": "SSRC",
+  "ssrc_full_name": "Slivervine Stylus ReflexCore",
   "generatedAt": "2026-09-14T08:16:00.000Z",
-  "test_suite": {
-    "test_files_passed": 235,
-    "total_tests_passed": 1091,
-    "status": "100% PASS"
+  "badges": {
+    "vitest": {
+      "test_files_passed": 235,
+      "total_tests_passed": 1091,
+      "status": "100% PASS"
+    },
+    "hot_path": {
+      "alloc": "<16 KiB",
+      "iterations": "10k"
+    },
+    "stylus_probe": {
+      "version": "V2.0",
+      "passed": 9,
+      "total": 9,
+      "stage": "Roadmap"
+    },
+    "coverage": {
+      "target": "risk-control.ts",
+      "percentage": "100%"
+    },
+    "chaos_matrix": {
+      "cases": 255,
+      "total": 255,
+      "mode": "Fail-Closed"
+    },
+    "latency": {
+      "e2e_p50_us": 106,
+      "reflex_p50_us": 15
+    },
+    "typescript": {
+      "errors": 0
+    },
+    "license": "BUSL-1.1",
+    "arbitrum": {
+      "status": "Sepolia Verified",
+      "target_chain_id": 42161,
+      "readiness": "Ready"
+    }
   },
   "bundle_telemetry": {
     "rawKiB": 163.81,

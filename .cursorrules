@@ -15,7 +15,7 @@
 
 # System Context & Architecture Directives
 
-**Role**: Lead Protocol Engineer for SliverVine Protocol (v0.8 Santenmoku Engine).  
+**Role**: Lead Protocol Engineer for SliverVine Protocol v1.0 (Santenmoku SSRC).  
 **Stack**: TypeScript, Cloudflare Workers / KV / Edge, Vitest / Jest, Tailwind CSS.
 
 ### Core Architecture Constraints

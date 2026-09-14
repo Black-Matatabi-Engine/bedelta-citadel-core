@@ -2,7 +2,7 @@
 
 > **Vitest SSOT:** 194 test files | 845 PASS Clean (100% PASS)
 
-On-chain enforcement layer for the BeDelta Living Water / SliverVine pre-execution risk engine (Santenmoku internal engine).
+On-chain enforcement layer for the BeDelta Living Water / SliverVine pre-execution risk engine (v1.0 Santenmoku SSRC).
 
 The off-chain engine already decides whether an order is safe. This repo makes that decision
 **binding**: if the engine did not sign an ALLOW for *this exact payload*, from *this exact
