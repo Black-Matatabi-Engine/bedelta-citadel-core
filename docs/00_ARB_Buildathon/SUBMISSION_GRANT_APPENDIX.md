@@ -8,11 +8,11 @@
 
 | Judge pointer | SSOT document |
 |---------------|---------------|
-| Hybrid Pillar Sets X & Y · R01–R20 | [Architecture index §01–03](../01_architecture/README.md) · [Hybrid Pillar Sets X & Y](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [Defense Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
+| Hybrid Pillar Sets X & Y · R01–R20 | [Architecture index §01–03](../01_architecture/README.md) · [Hybrid Pillar Sets X & Y](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) · [Defense Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
 | CLI Tier 0–5 verification | [Verification Matrix](../06_verifications/01_VERIFICATION_MATRIX.md) |
 | Dune telemetry · SQL panels | [Dune Dashboard Specification](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | Pendle × GMX cross-guard | [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) |
-| [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent policy | [Technical Specification §0.1](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec) |
+| [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) agent policy | [Technical Specification §0.1](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec) |
 | Institutional DD / Basel mapping | [Due Diligence Memorandum](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 | Market & security imperative | [Market & Security Imperative](../05_pitch_and_demos/03_MARKET_AND_SECURITY_IMPERATIVE.md) — Apollo / Navier research · Elevator metaphor |
 | **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
@@ -328,7 +328,7 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 | Pillar | Role | SSOT |
 |--------|------|------|
-| **Gatehouse (Auth)** | **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · `USE_ZERODEV_AA` default-off | `zerodev-aa-*` · Gate attestation · [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
+| **Gatehouse (Auth)** | **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · `USE_ZERODEV_AA` default-off | `zerodev-aa-*` · Gate attestation · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
 | **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort · Robinhood Chain RWA ingress (`46630`/`4663` → `42161`) · **`lostUsd ≡ 0`** · inbound AML block · **ArbOS 61 Elara** reinforcement plane | `src/adapters/across-ingress-bridge.ts` · `contracts/IngressSafetySwitch.sol` |
 | **Shield (CORE MOAT)** | Sub-ms Wasm pre-execution armor · **p50 ~106 µs** · Wasm **<28kb / <60µs** · fail-closed before mempool · **auto `severSigningChannel()` on bitmask trips** · **Stylus 96KB coprocessor ready** (`SliverVineSoilCoprocessor` · 9/9 PASS) · **independent of ZeroDev** | `checkSoilResistance()` · `soil_core.wasm` · `check_soil_resistance_stylus` |
 

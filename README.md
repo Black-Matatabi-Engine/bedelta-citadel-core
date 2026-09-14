@@ -43,7 +43,7 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution against naive DoS loops. Not a global edge product — see honesty notes in the appendix.
 
-→ Deep dive: [`05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md`](./docs/01_architecture/05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md)
+→ Deep dive: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md` §4](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#hidden-engineering-gems-and-invariants)
 
 **Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **231 test files \| 1081 PASS clean**
 

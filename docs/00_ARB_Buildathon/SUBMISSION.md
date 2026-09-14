@@ -132,7 +132,7 @@ forge test --match-contract IntentRingSlabTest
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
 | **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in **Edge** Wasm (`pkg/soil_core.wasm` SHA-256 `67f8fcc7…`) · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
 | **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — **`0xc23587d6573dd134f95b02b0202ffbf84686625e`** · activation [`0x92079e15…`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
-| **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
+| **ZeroDev AA Security Review** | ZeroDev boundary documented · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
 
 > **Bootstrap keys:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.
 
@@ -412,7 +412,7 @@ pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
 #### Innovation & Real Problem Solving — AI Behavioral Safety Substrate
 
 1. **Native LLM Back-off & Retry Intercepts**: Active **60-second cooldown lock** per `agentId` in `withExoMeshShield` (legacy: `withCitadelShield`) ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) prevents token-burning infinite retry loops and **RPC Rate-Limit Self-DoS** when transactions fail closed — `[Citadel Back-off] MANDATORY_COOLDOWN_ACTIVE` surfaced via Retail Guard SDK and B2B decorator (`pnpm demo:agent -- --trip`).
-2. **Non-Semantic Bytecode Predicate Assertions**: Evaluates **raw bytecode parameters** at **p50 ~106µs** Edge Wasm rather than natural language — immune to **Indirect Prompt Injections** at the signing layer ([Technical Specification §0.1](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec)).
+2. **Non-Semantic Bytecode Predicate Assertions**: Evaluates **raw bytecode parameters** at **p50 ~106µs** Edge Wasm rather than natural language — immune to **Indirect Prompt Injections** at the signing layer ([Technical Specification §0.1](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#01-bytecode-predicate-verification-v10-erc-7715-post-grant-design-spec)).
 3. **Dynamic Threshold Obfuscation**: Cryptographic pseudo-random **±2–5 bps jitter** on `MAX_SLIPPAGE` / depth bounds ([`soil-threshold-jitter.ts`](../../src/services/risk-control-lib/soil-threshold-jitter.ts)) prevents MEV searchers from predicting exact **50 bps** cutoff boundaries off-chain.
 
 ---

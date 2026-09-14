@@ -268,7 +268,7 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts  # EIP-1193 Retail Guard 
 | Topic | Path |
 |-------|------|
 | Latency / Defense Matrix | `docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md` |
-| Pillar Set X & Y / ZeroDev | `docs/01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md` |
+| Pillar Set X & Y / ZeroDev | `docs/01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture` |
 | Core Sinking | `README.md` · `src/core/*` |
 | Verification Matrix | `docs/06_verifications/01_VERIFICATION_MATRIX.md` |
 | Internal audit (score baseline) | `docs/internal/0907_PM_Fresh_30_Persona_Audit.md` |

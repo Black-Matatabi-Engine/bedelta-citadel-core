@@ -49,7 +49,7 @@ That wrap **is** the primary SDK entrypoint. GMX live-fill txs are an **appendix
 
 In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution against naive DoS loops.
 
-→ [`05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md`](./docs/01_architecture/05_HIDDEN_ENGINEERING_GEMS_AND_INVARIANTS.md)
+→ [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md` §4](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#hidden-engineering-gems-and-invariants)
 
 ### 3-Tier EIP/ERC Taxonomy (Problem → Superset → Proof)
 

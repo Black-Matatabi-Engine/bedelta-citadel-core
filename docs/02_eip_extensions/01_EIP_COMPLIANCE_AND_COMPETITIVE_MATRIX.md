@@ -3,7 +3,7 @@
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) — Pre-Consensus Intent Firewall & Execution Safety Primitive  
 > **Protocol:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · Santenmoku internal engine  
 > **Document:** Standards Compliance & ERC/EIP Reference Wiki · **Vitest SSOT:** **231 test files | 1081 PASS clean**  
-> **Architecture index:** [`README.md`](../01_architecture/README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **This file**
+> **Architecture index:** [`README.md`](../01_architecture/README.md) · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · **This file**
 
 Official infrastructure standards map — each row links a public ERC/EIP (or venue spec) to Citadel implementation anchors and verification. The **ERC/EIP Standards Reference Wiki** below is the formal deep-dive for AA, attestation, asset-escrow, and on-chain coprocessor standards.
 
@@ -251,22 +251,22 @@ Production guards extend the Pre-Consensus Edge-Wasm reference implementation in
 
 ### ERC-4337 — Account Abstraction & UserOperation Structure
 
-> **Deep specification:** [Technical Specification §2.4](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary) Pillar Set X — ZeroDev Account Abstraction (Kernel v3/v4 · Paymaster · EIP-7562 · v4 Seven Stages roadmap).
+> **Deep specification:** [Technical Specification §2.4](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary) Pillar Set X — ZeroDev Account Abstraction (Kernel v3/v4 · Paymaster · EIP-7562 · v4 Seven Stages roadmap).
 
 | Field | Citadel binding |
 |-------|-----------------|
 | **EntryPoint** | `entryPoint07Address` — SSOT `ZERODEV_ENTRY_POINT_ADDRESS` |
-| **Kernel** | ZeroDev Kernel **v0.3.1** (`ZERODEV_KERNEL_VERSION`) — v4 adapter swap ⏳ Post-Grant (V1.5)（[§2.4.2](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#242-kernel-v3-v4-session-keys-erc-7579-modular-permissions)） |
+| **Kernel** | ZeroDev Kernel **v0.3.1** (`ZERODEV_KERNEL_VERSION`) — v4 adapter swap ⏳ Post-Grant (V1.5)（[§2.4.2](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#242-kernel-v3-v4-session-keys-erc-7579-modular-permissions)） |
 | **UserOp draft** | `sender` · `nonce` · `callData` · optional `factory`/`factoryData` · gas limits · `paymaster`/`paymasterData` · `signature` |
 | **Paymaster** | ZeroDev `zerodev.sponsorUserOperation` — per-op ≤ $0.50 · daily $10 · [`zerodev-aa-gas-ledger.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gas-ledger.ts) |
 | **Pre-broadcast gate** | `verifyAgentIntent()` — `AllowedToSign = Injection ∧ Digest ∧ Soil ∧ Session ∧ Gas ∧ Attestation ∧ Armor ∧ Wasm` |
 | **106 µs decoupling** | Shield (`checkSoilResistance` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)) runs **before** paymaster sign + bundler dispatch — Wasm powers sub-ms latency; ZeroDev is opt-in delivery only |
 
-UserOps are drafted locally, sponsored via ZeroDev paymaster middleware, and submitted only after Edge soil + static-breaker evaluation. Bundler RPC MUST advertise EntryPoint v0.7 (`supportsEntryPoint07`). ZeroDev is the **opt-in non-custodial delivery substrate** (Pillar Set X); ReflexCore (SSRC) Edge is the **pre-broadcast decision SSOT** ([§2.4.1](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#241-role-of-zerodev-scoped-session-keys-gas-sponsorship-pillar-set-x-opt-in-aa-layer)).
+UserOps are drafted locally, sponsored via ZeroDev paymaster middleware, and submitted only after Edge soil + static-breaker evaluation. Bundler RPC MUST advertise EntryPoint v0.7 (`supportsEntryPoint07`). ZeroDev is the **opt-in non-custodial delivery substrate** (Pillar Set X); ReflexCore (SSRC) Edge is the **pre-broadcast decision SSOT** ([§2.4.1](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#241-role-of-zerodev-scoped-session-keys-gas-sponsorship-pillar-set-x-opt-in-aa-layer)).
 
 ### EIP-7562 — Account Abstraction Storage Access Rules
 
-**Zero-Bundler-Rejection Invariant:** Citadel UserOps MUST NOT violate EIP-7562 opcode/storage rules during the validation phase; bundler rejection is treated as a **protocol fault**, not a retry signal. See [Technical Specification §2.4.4](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#244-eip-7562-zero-bundler-rejection-invariant).
+**Zero-Bundler-Rejection Invariant:** Citadel UserOps MUST NOT violate EIP-7562 opcode/storage rules during the validation phase; bundler rejection is treated as a **protocol fault**, not a retry signal. See [Technical Specification §2.4.4](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#244-eip-7562-zero-bundler-rejection-invariant).
 
 | Rule | Enforcement |
 |------|-------------|
@@ -509,7 +509,7 @@ Multi-chain HTTPS/WSS placeholders live in `.env.example` — replace `YOUR_ALCH
 | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Yellow Paper — R01–R20 · Hybrid Pillar Sets X & Y · topology |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries · Basel mapping |
 | [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub |
-| [`02_PILLAR_1_GATEHOUSE_ZERODEV_AA_ANALYSIS.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | Pillar Set X — ZeroDev Kernel v3 AA · EIP-7702 comparative |
+| [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) | Pillar Set X — ZeroDev Kernel v3 AA · EIP-7702 comparative |
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | Pillar Set Y — ReflexCore (SSRC) engine · p50 ~106µs |
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 Defense Matrix · §3.1.1 Physical Clock & Edge Monotonicity |
 | [`../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) | Dual-Engine Map (Engine A Stylus · Engine B Edge Wasm) · FROZEN anchors |

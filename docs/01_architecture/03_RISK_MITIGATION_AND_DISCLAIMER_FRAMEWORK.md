@@ -33,8 +33,8 @@
 
 | Pillar | Role | Spec |
 |--------|------|------|
-| **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
-| **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) |
+| **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
+| **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
 | **Pillar Set Y — SliverVine ExoMesh Engine Substrate** | `checkSoilResistance()` · Wasm · R01–R20 | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
 
 ---
@@ -177,7 +177,7 @@ IN_FLIGHT_BRIDGE_CAPITAL
 
 **Capital location on trip:** Funds stay in the **user's Kernel AA account** (Arbitrum) or **source-chain wallet** (e.g. Robinhood `46630` outbound escort). SliverVine Protocol does not sweep principal into protocol-owned contracts on fail-closed paths.
 
-**Code SSOT:** [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) · [`src/core/capital-invariant-ledger.ts`](../../src/core/capital-invariant-ledger.ts) (`lostUsd` hard-assert = 0) · Pillar Set X audit [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) §2.4.
+**Code SSOT:** [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) · [`src/core/capital-invariant-ledger.ts`](../../src/core/capital-invariant-ledger.ts) (`lostUsd` hard-assert = 0) · Pillar Set X audit [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) §2.4.
 
 #### 0.5.3 User Feedback & Notification Flow (HUD · SDK · Operator Console)
 
@@ -305,7 +305,7 @@ Even in a V2.0 CaaS / Orbit Shield setup, ZeroDev remains the Gatehouse engine:
 | **Scoped Security** | 30s TTL Session Keys · `ORDER_EXECUTE` only | Zero withdrawal scope preserved |
 | **Atomic Composition** | 1-click GM + HL hedge under Citadel gates | EOA → Agent Smart Account · CaaS tenant UserOps |
 
-**Spec SSOT:** [`02_THREE_PILLARS_AND_INGRESS_PIPELINE.md` §2.4](./04_THREE_PILLARS_AND_INGRESS_PIPELINE.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary)
+**Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §2.4](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary)
 
 ### 2.5 Economic Sustainability Philosophy: Why Low Fees Without Depth Destroy Yield
 
@@ -814,5 +814,5 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Yellow Paper — Triangle Liquidity Loop · settlement |
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 Defense Matrix · ReflexCore (SSRC) engine |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ERC/EIP alignment · ArbOS Elara compliance |
-| [`../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md`](../01_architecture/04_THREE_PILLARS_AND_INGRESS_PIPELINE.md) | Pillar Set X Compliance Ingress Firewall Audit |
+| [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) | Pillar Set X Compliance Ingress Firewall Audit |
 | [`../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | `@slivervine/exomesh-agentic-wallet-guard` integration |
