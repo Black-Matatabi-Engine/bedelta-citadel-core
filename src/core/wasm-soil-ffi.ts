@@ -1,7 +1,6 @@
 /** Wasm soil FFI layout SSOT — mirrors `src/wasm/soil_core.rs` · `PROTO_VECT_LEN` lanes. */
-import { PROTO_VECT_LEN } from "./risk-engine-core";
-
-export const WASM_PROTOCOL_LEN = PROTO_VECT_LEN;
+/** Literal SSOT — must match `risk-engine-protocol-slots.ts` + Rust `soil_core.rs` (no barrel import: breaks ESM cycle). */
+export const WASM_PROTOCOL_LEN = 28;
 export const WASM_EXTERNAL_PROBE_LANE = WASM_PROTOCOL_LEN - 2;
 export const WASM_SOIL_OFFSET = WASM_PROTOCOL_LEN;
 export const WASM_SOIL_INPUT_FLOATS = WASM_PROTOCOL_LEN + 8;
