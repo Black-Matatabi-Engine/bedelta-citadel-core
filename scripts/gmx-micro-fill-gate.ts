@@ -57,4 +57,12 @@ export async function resolveRegisteredGateSigner(
   return null;
 }
 
+/** Live GMX fill must bind Gate consume-once — no EOA skip. */
+export function requireGateSignerForGmxFill(signerPk: Hex | null): Hex {
+  if (!signerPk) {
+    throw new Error("GATE_CONSUME_REQUIRED: GMX fill must verifyAndConsume before ExchangeRouter");
+  }
+  return signerPk;
+}
+
 export { GATE as GMX_MICRO_FILL_GATE };

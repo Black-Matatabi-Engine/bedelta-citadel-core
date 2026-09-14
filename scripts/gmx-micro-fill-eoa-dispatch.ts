@@ -13,7 +13,7 @@ import {
   runGmxMicroFillSimulationPreflight,
 } from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
-import { ensureCollateralAllowanceForOwner } from "./gmx-micro-fill-allowance";
+import { ensureCollateralAllowanceForOwner, type KernelCall } from "./gmx-micro-fill-allowance";
 import { sendGmxRouterTx } from "./gmx-micro-fill-gas";
 
 export const WETH_ARBITRUM = getAddress("0x82aF49447D8a07e3bd95BD0d56f35241523fBab1");
@@ -28,12 +28,20 @@ export async function dispatchGmxRouterViaEoa(input: {
   client: ReturnType<typeof createPublicClient>;
   payload: GmxV2UnsignedOrderPayload;
   skipSimulation?: boolean;
+  preCalls?: KernelCall[];
 }): Promise<Hex> {
   const account = privateKeyToAccount(input.pk);
   const payload = bindGmxOrderReceiver(input.payload, account.address);
   const router = encodeGmxV2RouterCreateOrderMulticall(payload);
   const collateralToken = getAddress(payload.addresses.initialCollateralToken as Hex);
   const wallet = createWalletClient({ account, chain: input.chain, transport: http(input.rpc) });
+
+  for (const call of input.preCalls ?? []) {
+    const hash = await wallet.sendTransaction({ to: call.to, data: call.data, value: call.value });
+    const rcpt = await input.client.waitForTransactionReceipt({ hash });
+    if (rcpt.status !== "success") throw new Error(`GATE_CONSUME_FAILED: ${hash}`);
+    console.log("[gmx-micro-fill] Gate/policy pre-call OK", { to: call.to, tx: hash });
+  }
 
   if (collateralToken === WETH_ARBITRUM) {
     const wethBal = await input.client.readContract({

@@ -44,7 +44,7 @@
     Inno 9.26 ├─ ExoMesh 0-Gas + Dual-Plug + 4 moats
     RPS 9.61 ─┴─ SYSTEM_METRICS_SSOT.json + contract matrix
                     │
-    OPEN: npm registry · 30s 片 · BH-7 Chaos · bypass env · Bootstrap rotate
+    OPEN: npm registry · 30s 片 · BH-7 Chaos · Bootstrap rotate
 ```
 
 **核心決策：** 分數反映 **當前可驗證工程狀態**，不是敘事膨脹。禁止把 9.42 讀成「市場獨佔」或「Grant 已到手」。
@@ -96,8 +96,8 @@
 |-----|------|------|
 | npm **實際公開發布** | **OPEN · P1** | `package.json` `private: true` · registry 無包 |
 | 30s Wallet Guard 片 | **OPEN · P1** | 評委仍須跑測試才能「看見」SKU |
-| GMX live **soil bypass 路徑** | **OPEN · SC** | `BYPASS_SOIL_PROBE=true` armed env 仍可執行 |
-| Gate `consumed[digest]` 未護 GMX fill | **OPEN** | 執行路徑 ≠ 守衛路徑 |
+| GMX live **soil bypass 路徑** | **CLOSED** | `BYPASS_SOIL_PROBE` → `SOIL_BYPASS_FORBIDDEN` · soil 強制 fail-closed |
+| Gate `consumed[digest]` 未護 GMX fill | **CLOSED** | live fill 必 `verifyAndConsume`（含 EOA pre-call） |
 | Large-Scale Chaos | **NOT RUN** | BH-7 HIGH（披露） |
 | Bootstrap 密鑰旋轉 | **OPEN · MED** | `0x1111…` / `0x2222…` post-grant milestone |
 | Wallet A ETH 極低 | **OPEN** | BH-25 |
@@ -325,7 +325,7 @@
 | **BH-25** | Wallet A gas | 無法再 live demo | 預檢披露 | **MED** | ON_CHAIN anchors |
 | **BH-26** | 公開數字 drift | 評委不信任 | ✅ **237/1099** SSOT batch | **LOW** | `SYSTEM_METRICS_SSOT.json` |
 | **BH-27** | V1.0 Live Eliza | 集成詐稱 | Direct SDK + ⏳ harness | **LOW** | Grant appendix |
-| **BH-28** | Bypass overlay | 執行當守衛 | 文件 + 終端橫幅 · ⚠️ armed env | **MED−** | `live-harness-warning.ts` |
+| **BH-28** | Bypass overlay | 執行當守衛 | ✅ `SOIL_BYPASS_FORBIDDEN` · Gate `verifyAndConsume` 必綁 | **LOW** | `live-harness-warning.ts` · `gmx-micro-fill-live.ts` |
 | **BH-29** | 無 SKU | 買家走 Blockaid | 首屏 wrap · ⚠️ 無片/未發布 | **MED** | README |
 | **BH-30** | Bootstrap/Stylus 誤讀 | 評委以為未部署 | 深檔 + contract matrix · ⚠️ README 首屏缺 | **MED−** | deployment matrix |
 | **BH-31** | 精簡 README 吃掉誠實 | 評委以為可 `npm i` | ⚠️ C9 README FAIL | **MED** | README |
@@ -338,8 +338,8 @@
 | 等級 | 向量 | 優先級 |
 |------|------|--------|
 | **HIGH（披露）** | BH-7 Large-Scale Chaos | P2 |
-| **MED** | BH-5 · BH-8 · BH-9 · BH-25 · BH-28–31 | **P1** |
-| **LOW** | BH-1–4 · BH-6 · BH-11 · BH-26/27 · BH-32–34 | 維持 **1099 PASS** |
+| **MED** | BH-5 · BH-8 · BH-9 · BH-25 · BH-29–31 | **P1** |
+| **LOW** | BH-1–4 · BH-6 · BH-11 · BH-26–28 · BH-32–34 | 維持 **1099 PASS** |
 | **OOS** | BH-12 post-broadcast MEV | SUBMISSION 已標邊界 |
 
 ```text
@@ -349,7 +349,7 @@
  「$6.57M 憑空捏造」               →    ✅ CSV economic columns + spec
  「合約地址對不上」                →    ✅ contract-deployments.ts
  「GMX tx = 防火牆」               →    ✅ Live Evidence 分軌
- armed bypass 無警告               →    ✅ 終端大橫幅
+ armed bypass 無警告               →    ✅ SOIL_BYPASS_FORBIDDEN + Gate consume
  npm i 就能裝                      →    ⚠️ private: true
 ```
 
@@ -473,7 +473,7 @@ curl -sI https://dune.com/silvervinelabs/slivervine-protocol | head -1
 | **P1** | README 補四行 Honesty Boundaries | **OPEN** |
 | **P1** | 30s：MetaMask wrap → 無限 approve 被擋 | **OPEN** |
 | **P1** | npm **實際** registry 發布 | **OPEN** |
-| **P1** | GMX harness **禁止** bypass 路徑 | **OPEN** |
+| **P1** | GMX harness **禁止** bypass 路徑 | ✅ `SOIL_BYPASS_FORBIDDEN` + Gate consume |
 | **P1** | Wallet A 補 ETH（>0.01） | **OPEN** |
 | **P2** | Large-Scale Chaos 路線圖（不寫入已執行） | BH-7 |
 | **P2** | Bootstrap multisig 旋轉 | post-grant M1 |

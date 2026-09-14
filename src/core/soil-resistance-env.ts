@@ -24,8 +24,15 @@ export function resolveSoilMinDepthUsd(input: {
 export function shouldBypassOracleLagDeadlock(): boolean {
   if (typeof process === "undefined" || !process.env) return false;
   const allow = process.env.ALLOW_STALE_ORACLE;
-  const bypassSoil = process.env.BYPASS_SOIL_PROBE;
-  return allow === "true" || allow === "1" || bypassSoil === "true";
+  return allow === "true" || allow === "1";
+}
+
+/** `BYPASS_SOIL_PROBE` is forbidden — live/harness must fail-closed on soil trip. */
+export function assertSoilProbeBypassForbidden(): void {
+  if (typeof process === "undefined" || !process.env) return;
+  if (process.env.BYPASS_SOIL_PROBE === "true") {
+    throw new Error("SOIL_BYPASS_FORBIDDEN: BYPASS_SOIL_PROBE is disabled — soil probe is mandatory");
+  }
 }
 
 export function shouldBypassSoftConfirmationProbe(): boolean {

@@ -34,7 +34,7 @@ import {
 } from "../src/services/adapters/gmx-micro-fill-execution-errors";
 import type { GmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-adapter.types";
 import { dispatchGmxMicroFillLive, resolveBufferedEip1559Fees, type KernelCall } from "./gmx-micro-fill-dispatch";
-import { GMX_MICRO_FILL_GATE, resolveRegisteredGateSigner, signRiskAttestation } from "./gmx-micro-fill-gate";
+import { GMX_MICRO_FILL_GATE, requireGateSignerForGmxFill, resolveRegisteredGateSigner, signRiskAttestation } from "./gmx-micro-fill-gate";
 
 const POLICY_GUARD = "0xc66f96611a737c4e58706d0955594456eab88959" as Hex;
 const CHAIN_ID = 42161;
@@ -68,7 +68,7 @@ export async function executeGmxMicroFillLive(input: GmxMicroFillLiveInput): Pro
   const kernel = await buildKernelAccount({ chainId: CHAIN_ID, chain: arbitrum, rpcUrl: input.rpc, ownerPrivateKey: input.pk });
   const eoa = privateKeyToAccount(input.pk).address;
   const now = BigInt(Math.floor(Date.now() / 1000));
-  const gateSignerPk = await resolveRegisteredGateSigner(client, input.pk);
+  const gateSignerPk = requireGateSignerForGmxFill(await resolveRegisteredGateSigner(client, input.pk));
   const useEoa = input.forceEoa || (await readUsdcBalance(client, eoa)) >= MICRO_FILL_COLLATERAL_USDC || !gateSignerPk;
   const dispatchOwner = useEoa ? eoa : kernel.address;
   let livePayload = applyMicroFillMinPositionSizing(bindGmxOrderReceiver(input.orderPayload, dispatchOwner));
@@ -142,24 +142,18 @@ export async function executeGmxMicroFillLive(input: GmxMicroFillLiveInput): Pro
     to: POLICY_GUARD, value: 0n,
     data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [input.agentId, BigInt(Math.round(MICRO_FILL_MIN_POSITION_USD * 1e6)), now + 3600n] }),
   }];
-  if (gateSignerPk && !useEoa) {
-    const att = {
-      payloadHash: computeGatedExecutorPayloadHash({
-        chainId: CHAIN_ID, executor: GMX_MICRO_FILL_GATE, initiator: kernel.address,
-        target: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, data: toHex(JSON.stringify(input.orderPayload)), nonce: input.bindNonce,
-      }),
-      subject: kernel.address, verdict: 1, riskBps: 800, issuedAt: now, expiresAt: now + 30n, nonce: input.bindNonce,
-    };
-    const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(input.rpc) });
-    preCalls.push({
-      to: GMX_MICRO_FILL_GATE, value: 0n,
-      data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [await signRiskAttestation(gateWallet, att)]] }),
-    });
-  } else if (!useEoa) {
-    console.warn("[gmx-micro-fill] no Gate signer — proceeding with Kernel-only dispatch");
-  } else {
-    console.warn("[gmx-micro-fill] EOA fallback — skipping Gate/Kernel UserOp path");
-  }
+  const att = {
+    payloadHash: computeGatedExecutorPayloadHash({
+      chainId: CHAIN_ID, executor: GMX_MICRO_FILL_GATE, initiator: dispatchOwner,
+      target: GMX_V2_EXCHANGE_ROUTER_ARBITRUM, data: toHex(JSON.stringify(input.orderPayload)), nonce: input.bindNonce,
+    }),
+    subject: dispatchOwner, verdict: 1, riskBps: 800, issuedAt: now, expiresAt: now + 30n, nonce: input.bindNonce,
+  };
+  const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(input.rpc) });
+  preCalls.push({
+    to: GMX_MICRO_FILL_GATE, value: 0n,
+    data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [await signRiskAttestation(gateWallet, att)]] }),
+  });
 
   const projectId = process.env.ZERODEV_PROJECT_ID?.trim() ?? "";
   if (!projectId && !useEoa) throw new Error("ZERODEV_PROJECT_ID required");

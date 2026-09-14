@@ -50,7 +50,7 @@ export function buildGmxMicroFillErrorSuggestions(cause: unknown, ctx: GmxMicroF
     tips.push(`Approve USDC for ExchangeRouter spender ${GMX_COLLATERAL_SPENDER_ARBITRUM}`);
   }
   if (msg.includes("GUARD_BLOCKED") || msg.includes("CRI_HARDLOCK")) {
-    tips.push("Check oracle lag / gas guard; probe-only: ALLOW_STALE_ORACLE=1 or BYPASS_SOIL_PROBE=true");
+    tips.push("Check oracle lag / gas guard; dry-run only: ALLOW_STALE_ORACLE=1 (BYPASS_SOIL_PROBE is forbidden)");
   }
   if (ctx.decodedOnChainRevert?.includes("[GMX:")) {
     tips.push(`GMX labeled revert: ${ctx.decodedOnChainRevert}`);

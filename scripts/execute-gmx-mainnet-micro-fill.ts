@@ -47,7 +47,6 @@ async function main(): Promise<void> {
   const argv = process.argv.slice(2);
   const probeBypass = shouldBypassSoftConfirmationProbe();
   const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
-  const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true" || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
   printLiveHarnessBypassBanner();
   const sizeUsd = parseMicroFillSize(argv);
@@ -59,7 +58,7 @@ async function main(): Promise<void> {
   const guardVerdict = validateGmxExecutionGuards(staleOracleOk);
   if (!guardVerdict.ok) throw new Error(`GUARD_BLOCKED:${guardVerdict.reasons.join("|")}`);
   if (staleOracleOk || probeBypass) {
-    console.warn("[gmx-micro-fill] probe bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
+    console.warn("[gmx-micro-fill] stale-oracle override armed via ALLOW_STALE_ORACLE (soil probe remains mandatory)");
   }
   if (isBypassSimulationEnabled()) {
     console.warn("[gmx-micro-fill] BYPASS_SIMULATION=true — silent eth_call revert; skipping preflight and proceeding to broadcast");
@@ -70,7 +69,7 @@ async function main(): Promise<void> {
   let side: "long" | "short";
   let guard: ReturnType<typeof calibrateMicroFillExecution>["guard"];
   try {
-    ({ side, guard } = calibrateMicroFillExecution({ market, sizeUsd, preferredSide, bypassSoil }));
+    ({ side, guard } = calibrateMicroFillExecution({ market, sizeUsd, preferredSide }));
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.log(JSON.stringify({

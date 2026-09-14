@@ -20,6 +20,8 @@ import { buildGmxSmartRoutePayloadBinding } from "../src/services/adapters/gmx-s
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
 import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
+import { requireGateSignerForGmxFill, resolveRegisteredGateSigner } from "./gmx-micro-fill-gate";
+import { requireGateSignerForGmxFill, resolveRegisteredGateSigner } from "./gmx-micro-fill-gate";
 
 const POLICY_GUARD = "0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b" as Hex;
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
@@ -52,16 +54,6 @@ async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: objec
   });
 }
 
-async function resolveRegisteredGateSigner(client: ReturnType<typeof createPublicClient>, pk: Hex): Promise<Hex | null> {
-  const candidates = [(process.env.GATE_SIGNER_KEY_0 ?? "").trim(), pk].filter((k) => k.startsWith("0x")) as Hex[];
-  for (const signerPk of candidates) {
-    const addr = privateKeyToAccount(signerPk).address;
-    const ok = await client.readContract({ address: GATE, abi: gateAbi, functionName: "isSigner", args: [addr] });
-    if (ok) return signerPk;
-  }
-  return null;
-}
-
 async function main(): Promise<void> {
   loadMainnetEnv();
   printLiveHarnessBypassBanner();
@@ -70,9 +62,9 @@ async function main(): Promise<void> {
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
 
   const bypassSoil = process.env.BYPASS_SOIL_PROBE === "true";
+  if (bypassSoil) throw new Error("SOIL_BYPASS_FORBIDDEN: BYPASS_SOIL_PROBE is disabled — soil probe is mandatory");
   const soil = checkSoilResistance({ symbol: "ETH", hlSpot: 3500, hlPerp: 3500, dydxPerp: 3498, depthUsd: 500_000, orderSizeUsd: sizeUsd, accountBalanceUsd: 10_000 });
-  if (soil.tripped && !bypassSoil) throw new Error(`SOIL_TRIP: ${soil.reasons.join(",")}`);
-  if (bypassSoil && soil.tripped) console.warn("[smart-route] BYPASS_SOIL_PROBE=true — probe skipped", { reasons: soil.reasons });
+  if (soil.tripped) throw new Error(`SOIL_TRIP: ${soil.reasons.join(",")}`);
 
   const projectId = process.env.ZERODEV_PROJECT_ID?.trim();
   if (!projectId) throw new Error("ZERODEV_PROJECT_ID required");
@@ -107,18 +99,14 @@ async function main(): Promise<void> {
     data: encodeFunctionData({ abi: policyAbi, functionName: "validateAgentPolicy", args: [AGENT_ID, BigInt(Math.round(sizeUsd * 1e6)), now + 3600n] }),
   }];
 
-  const gateSignerPk = await resolveRegisteredGateSigner(client, pk);
-  if (gateSignerPk) {
-    const att = { payloadHash: binding.payloadHash, subject: kernel.address, verdict: 1, riskBps: 1200, issuedAt: now, expiresAt: now + 30n, nonce: bindNonce };
-    const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(RPC) });
-    const gateSig = await signAtt(gateWallet, att);
-    calls.push({
-      to: GATE, value: 0n,
-      data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [gateSig]] }),
-    });
-  } else {
-    console.warn("[smart-route] skip Gate verifyAndConsume — no on-chain registered signer (avoids UnknownSigner 0x5e4b9f75)");
-  }
+  const gateSignerPk = requireGateSignerForGmxFill(await resolveRegisteredGateSigner(client, pk));
+  const att = { payloadHash: binding.payloadHash, subject: kernel.address, verdict: 1, riskBps: 1200, issuedAt: now, expiresAt: now + 30n, nonce: bindNonce };
+  const gateWallet = createWalletClient({ account: privateKeyToAccount(gateSignerPk), chain: arbitrum, transport: http(RPC) });
+  const gateSig = await signAtt(gateWallet, att);
+  calls.push({
+    to: GATE, value: 0n,
+    data: encodeFunctionData({ abi: gateAbi, functionName: "verifyAndConsume", args: [att, [gateSig]] }),
+  });
 
   const callData = await kernel.account.encodeCalls(calls);
   const bundlerRpc = buildZeroDevRpcUrl(projectId, CHAIN_ID);

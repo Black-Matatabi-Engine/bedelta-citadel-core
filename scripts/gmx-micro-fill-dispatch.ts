@@ -73,6 +73,7 @@ export async function dispatchGmxMicroFillLive(input: {
       client: input.client,
       payload: input.payload,
       skipSimulation: input.skipSimulation,
+      preCalls: input.preCalls,
     });
     return { tx, mode: "eoa" };
   }
@@ -107,6 +108,7 @@ export async function dispatchGmxMicroFillLive(input: {
       client: input.client,
       payload: input.payload,
       skipSimulation: input.skipSimulation,
+      preCalls: input.preCalls,
     });
     return { tx, mode: "eoa" };
   }

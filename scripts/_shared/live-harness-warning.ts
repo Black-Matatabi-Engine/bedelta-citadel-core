@@ -1,19 +1,20 @@
-/** High-visibility banner when GMX live-fill bypass env is armed (execution proof ≠ firewall demo). */
+/** High-visibility banner when GMX live-fill stale-oracle env is armed (execution proof ≠ firewall demo). */
+import { assertSoilProbeBypassForbidden } from "../../src/core/soil-resistance-core";
+
 export function isLiveHarnessBypassArmed(): boolean {
-  return (
-    process.env.BYPASS_SOIL_PROBE === "true" ||
-    process.env.ALLOW_STALE_ORACLE === "1" ||
-    process.env.ALLOW_STALE_ORACLE === "true"
-  );
+  assertSoilProbeBypassForbidden();
+  return process.env.ALLOW_STALE_ORACLE === "1" || process.env.ALLOW_STALE_ORACLE === "true";
 }
 
 export function printLiveHarnessBypassBanner(): void {
+  assertSoilProbeBypassForbidden();
   if (!isLiveHarnessBypassArmed()) return;
 
   console.warn(`
   ====================================================================
   [DEMO MONITOR PREVIEW - EXECUTION IS NOT FIREWALL]
-  WARNING: SOIL PROBE OR ORACLE SAFETY CHECKS ARE CURRENTLY BYPASSED.
+  WARNING: STALE-ORACLE OVERRIDE ARMED (ALLOW_STALE_ORACLE).
+  SOIL PROBE REMAINS MANDATORY — BYPASS_SOIL_PROBE IS FORBIDDEN.
   DO NOT USE THIS EXECUTION STATE FOR LIVE-FIRE QUANT TRADING.
   ====================================================================
   `);

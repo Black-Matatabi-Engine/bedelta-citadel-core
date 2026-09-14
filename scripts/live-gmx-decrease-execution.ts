@@ -62,7 +62,7 @@ async function main(): Promise<void> {
   const guardVerdict = validateGmxExecutionGuards(staleOracleOk);
   if (!guardVerdict.ok) throw new Error(`GUARD_BLOCKED:${guardVerdict.reasons.join("|")}`);
   if (staleOracleOk || probeBypass) {
-    console.warn("[gmx-micro-fill-decrease] probe bypass armed via ALLOW_STALE_ORACLE or BYPASS_SOIL_PROBE");
+    console.warn("[gmx-micro-fill-decrease] stale-oracle override armed via ALLOW_STALE_ORACLE (soil probe remains mandatory)");
   }
 
   const market = await loadGmxMicroFillMarketSnapshot("ETH");

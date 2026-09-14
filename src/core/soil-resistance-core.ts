@@ -5,6 +5,7 @@ export {
   resolveEnvMinDepthUsdOverride,
   resolveSoilMinDepthUsd,
   shouldBypassOracleLagDeadlock,
+  assertSoilProbeBypassForbidden,
   shouldBypassSoftConfirmationProbe,
   filterSoftConfirmationProbeReasons,
   filterOracleLagDeadlockReasons,
