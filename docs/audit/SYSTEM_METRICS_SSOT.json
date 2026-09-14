@@ -7,10 +7,10 @@
     "status": "100% PASS"
   },
   "bundle_telemetry": {
-    "rawKiB": 163.72,
-    "gzipKiB": 57.81,
-    "wranglerTotalUploadKiB": 163.72,
-    "wranglerTotalGzipKiB": 57.81,
+    "rawKiB": 163.81,
+    "gzipKiB": 57.88,
+    "wranglerTotalUploadKiB": 163.81,
+    "wranglerTotalGzipKiB": 57.88,
     "limitKiB": 150,
     "leanWarnRawKiB": 285,
     "leanWarnGzipKiB": 71,
