@@ -18,6 +18,7 @@ import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants"
 import { checkSoilResistance } from "../src/services/risk-control";
 import { buildGmxSmartRoutePayloadBinding } from "../src/services/adapters/gmx-smart-route-payload-binding";
 import { buildGmxV2UnsignedOrderPayload } from "../src/services/adapters/gmx-v2-order-payload";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const POLICY_GUARD = "0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b" as Hex;
@@ -63,6 +64,7 @@ async function resolveRegisteredGateSigner(client: ReturnType<typeof createPubli
 
 async function main(): Promise<void> {
   loadMainnetEnv();
+  printLiveHarnessBypassBanner();
   const sizeUsd = parseSize(process.argv.slice(2));
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);

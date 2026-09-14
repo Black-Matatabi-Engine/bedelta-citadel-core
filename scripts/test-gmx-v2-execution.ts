@@ -24,6 +24,7 @@ import {
   resolveOracleLagAuditorNote,
   validateGmxExecutionGuards,
 } from "./gmx-v2-execution-cli";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 
 const METRICS_PATH = resolve("docs/audit/gmx-v2-execution-metrics.json");
 
@@ -39,9 +40,8 @@ async function main(): Promise<void> {
   }
 
   const cli = parseGmxV2ExecutionCli(argv);
-  if (cli.allowStaleOracle) {
-    process.env.ALLOW_STALE_ORACLE = "1";
-  }
+  if (cli.allowStaleOracle) process.env.ALLOW_STALE_ORACLE = "1";
+  printLiveHarnessBypassBanner();
   const t0 = performance.now();
   const mode = cli.liveRead ? "live-read" : "dry-run";
   const executionPath = resolveGmxV2ExecutionPath(cli);

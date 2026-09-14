@@ -28,6 +28,7 @@ import {
 } from "./_shared/mainnet-env";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 import { loadGmxMicroFillMarketSnapshot } from "./gmx-micro-fill-market-loader";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { executeGmxMicroFillDecreaseLive } from "./gmx-micro-fill-decrease-live";
 
 const CHAIN_ID = 42161;
@@ -53,6 +54,7 @@ async function main(): Promise<void> {
   const probeBypass = shouldBypassSoftConfirmationProbe();
   const staleOracleOk = allowStaleOracle() || shouldBypassOracleLagDeadlock() || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
+  printLiveHarnessBypassBanner();
   const client = createPublicClient({ chain: arbitrum, transport: http(rpc) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);
 

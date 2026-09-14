@@ -33,6 +33,7 @@ import {
   resolveGmxGmWithdrawTokenAmount,
   validateGmxGmWithdrawGuards,
 } from "./gmx-gm-withdraw-cli-args";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 
 async function main(): Promise<void> {
   try {
@@ -49,6 +50,7 @@ async function main(): Promise<void> {
   const staleOracleOk =
     isGmxGmWithdrawStaleOracleAllowed(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
+  printLiveHarnessBypassBanner();
 
   const client = createPublicClient({ chain: arbitrum, transport: http(rpc) });
   if ((await client.getChainId()) !== GMX_GM_WITHDRAW_CHAIN_ID) {

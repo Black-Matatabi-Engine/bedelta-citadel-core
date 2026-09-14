@@ -18,6 +18,7 @@ import { checkSoilResistance } from "../src/services/risk-control";
 import { computeGatedExecutorPayloadHash } from "../src/sdk/gated-executor-payload";
 import { EIP712_DOMAIN_NAME, EIP712_DOMAIN_VERSION } from "../src/sdk/constants";
 import { buildKernelAccountWithRiskGate } from "../src/services/aa-adapter/zerodev-kernel-adapter";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 
 const GATE = "0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1" as Hex;
@@ -50,6 +51,7 @@ async function signAtt(wallet: ReturnType<typeof createWalletClient>, att: objec
 
 async function main(): Promise<void> {
   loadMainnetEnv();
+  printLiveHarnessBypassBanner();
   const sizeUsd = parseSize(process.argv.slice(2));
   const client = createPublicClient({ chain: arbitrum, transport: http(RPC) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);

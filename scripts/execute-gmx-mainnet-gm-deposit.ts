@@ -24,6 +24,7 @@ import { refreshSequencerGuard } from "../src/services/risk/sequencer-guard";
 import { shouldBypassOracleLagDeadlock, shouldBypassSoftConfirmationProbe } from "../src/core/soil-resistance-core";
 import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
 import { resolveBufferedEip1559Fees } from "./gmx-micro-fill-dispatch";
+import { printLiveHarnessBypassBanner } from "./_shared/live-harness-warning";
 import { validateGmxExecutionGuards } from "./gmx-v2-execution-cli";
 
 const CHAIN_ID = 42161;
@@ -70,6 +71,7 @@ async function main(): Promise<void> {
   const probeBypass = shouldBypassSoftConfirmationProbe();
   const staleOracleOk = allowStaleOracle(argv) || shouldBypassOracleLagDeadlock() || probeBypass;
   if (staleOracleOk) process.env.ALLOW_STALE_ORACLE = "1";
+  printLiveHarnessBypassBanner();
 
   const client = createPublicClient({ chain: arbitrum, transport: http(rpc) });
   if ((await client.getChainId()) !== CHAIN_ID) throw new Error(`refuse: expected chain ${CHAIN_ID}`);

@@ -162,3 +162,14 @@ pnpm run audit:security                                  # 3-Axis: 5/0/0 PASS
 | **7** | [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | **Module A/B** Dune telemetry · [live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
 
 **Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · Apache-2.0 SDK · BUSL-1.1 contracts → [LICENSE](./LICENSE)
+
+---
+
+## 🛡️ Honesty & Operational Boundaries
+
+| Dimension | Current State | Target / Roadmap |
+| :--- | :--- | :--- |
+| **Admin Multisig** | Bootstrap Safe Admin Active | Timelock + 3/5 Multisig Governance (Post-Grant M1) |
+| **Stylus Coprocessor** | EVM Assembly Fallback Active | WASM Native Stylus Deployment (Arbitrum One) |
+| **Package Registry** | Private (`"private": true` in `package.json`) | Public NPM Release Post-Audit Completion |
+| **Soil Probe Intercept** | Edge Wasm + Fallback Gateway | 100% On-Chain Hard Ingress Gate Verification |
