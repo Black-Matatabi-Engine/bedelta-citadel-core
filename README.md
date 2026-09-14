@@ -55,6 +55,15 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 → Deep dive: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md` §4](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#hidden-engineering-gems-and-invariants)
 
+### Honesty Boundaries
+
+| Topic | Fact |
+|-------|------|
+| **Gate** | [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) — Bootstrap sandbox keys (`0x1111…` / `0x2222…`); **multisig rotation scheduled for Post-Grant Milestone 1** |
+| **Stylus** | `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** ([`GmxRiskInvariantLib.sol`](./contracts/src/libs/GmxRiskInvariantLib.sol)) by design |
+| **Rate limit** | Per-isolate **5 RPS** (`X-SliverVine-Tier: public`) — not a global Cloudflare product limiter |
+| **npm SDK** | `"private": true` in [`package.json`](./src/sdk/exomesh-agentic-wallet-guard/package.json) — **public npmjs release Post-Grant Milestone 1** |
+
 ---
 
 ## Neuromorphic Security Architecture (Cerebrum vs Cerebellum)

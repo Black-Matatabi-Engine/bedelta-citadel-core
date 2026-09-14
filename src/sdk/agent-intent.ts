@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
  *
- * @slivervine/citadel-sdk — verifyAgentIntent
+ * @slivervine/exomesh-agentic-wallet-guard — verifyAgentIntent
  *
  * Production equation:
  *   AllowedToSign = Injection ∧ Digest ∧ Soil ∧ Session ∧ Gas ∧ Attestation ∧ Armor ∧ Wasm

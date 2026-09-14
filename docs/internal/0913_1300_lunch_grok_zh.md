@@ -65,7 +65,7 @@
 | **Reader** | GMX v2 `0xfA26…4184` | 持倉預檢 | `gmx-position-reader.ts` · `hashGmxPositionKey` |
 | **Wallet A** | EOA 簽名者 | 微倉位 SSOT | `0xdBCD43979e95f386f6405B03e7eB3A094cd36690` |
 
-**凍結層（禁止改）：** `SliverVineCitadel` EIP-712 domain · `citadel:intent:v1:` digest 前綴 · `@slivervine/citadel-sdk` · `X-Citadel-API-Key`（已 alias `X-SliverVine-Tier`）。
+**凍結層（禁止改）：** `SliverVineCitadel` EIP-712 domain · `citadel:intent:v1:` digest 前綴 · `@slivervine/exomesh-agentic-wallet-guard` · `X-Citadel-API-Key`（已 alias `X-SliverVine-Tier`）。
 
 ---
 

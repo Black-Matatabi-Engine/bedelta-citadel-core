@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
- * @slivervine/citadel-sdk — public surface (+ legacy risk barrel for Worker).
+ * @slivervine/exomesh-agentic-wallet-guard — public surface (+ legacy risk barrel for Worker).
  */
 export * from "./legacy-risk";
 export { verifyAgentIntent, AGENT_ARMOR_SANDWICH_MAX_BPS } from "./agent-intent";

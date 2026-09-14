@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
- * @slivervine/citadel-sdk — Robinhood Chain audit cut-off snapshot export.
+ * @slivervine/exomesh-agentic-wallet-guard — Robinhood Chain audit cut-off snapshot export.
  */
 import { sha256 } from "@noble/hashes/sha2";
 import { bytesToHex } from "@noble/hashes/utils";

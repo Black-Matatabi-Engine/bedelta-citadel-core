@@ -10,7 +10,7 @@ import {
   type SoilResistanceResult,
 } from "../services/risk-control";
 
-export const RISK_SDK_PACKAGE = "@slivervine/citadel-sdk" as const;
+export const RISK_SDK_PACKAGE = "@slivervine/exomesh-agentic-wallet-guard" as const;
 export const RISK_SDK_VERSION = "1.0.0" as const;
 
 export interface SantenmokuGuardInput {

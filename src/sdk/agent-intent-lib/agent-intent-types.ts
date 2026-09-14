@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
- * @slivervine/citadel-sdk — verifyAgentIntent types
+ * @slivervine/exomesh-agentic-wallet-guard — verifyAgentIntent types
  */
 import type { CitadelSdkPreset } from "../constants";
 import type { CitadelAttestation } from "../attestation";

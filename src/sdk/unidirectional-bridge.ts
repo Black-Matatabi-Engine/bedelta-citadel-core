@@ -2,7 +2,7 @@
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
  *
- * @slivervine/citadel-sdk — assertUnidirectionalBridge
+ * @slivervine/exomesh-agentic-wallet-guard — assertUnidirectionalBridge
  *
  * Route equations:
  * - robinhood(c) ⇔ c ∈ {46630, 4663}

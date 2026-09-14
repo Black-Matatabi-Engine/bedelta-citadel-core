@@ -92,7 +92,7 @@
 
 **最大弱點：Design Partner 證明仍是自證閉環。**
 
-`examples/agent-interceptor-demo.ts` 的 `virtualsAgentExecutionHook()` 是團隊**自己寫的模擬 Agent draft**（`agentId: "virtuals-agent-0xbeef"`、`agentId: "rogue-eliza-0xdead"`），並沒有引用任何真實的 Virtuals Protocol SDK 或 ElizaOS plugin 介面。一個熟悉 AI Agent 生態的 VC 或 DevRel 評審會立刻識別出：**這是「命名像 Virtuals/ElizaOS」的內部測試，不是「與 Virtuals/ElizaOS 集成」**。SUBMISSION.md 用詞「Inaugural Agent Integration」與「Verified via `@slivervine/citadel-sdk`」在字面上暗示了比實際更強的合作關係，這是 PMF 維度最容易被拆穿的一句話。
+`examples/agent-interceptor-demo.ts` 的 `virtualsAgentExecutionHook()` 是團隊**自己寫的模擬 Agent draft**（`agentId: "virtuals-agent-0xbeef"`、`agentId: "rogue-eliza-0xdead"`），並沒有引用任何真實的 Virtuals Protocol SDK 或 ElizaOS plugin 介面。一個熟悉 AI Agent 生態的 VC 或 DevRel 評審會立刻識別出：**這是「命名像 Virtuals/ElizaOS」的內部測試，不是「與 Virtuals/ElizaOS 集成」**。SUBMISSION.md 用詞「Inaugural Agent Integration」與「Verified via `@slivervine/exomesh-agentic-wallet-guard`」在字面上暗示了比實際更強的合作關係，這是 PMF 維度最容易被拆穿的一句話。
 
 ### 3.3 Innovation and Creativity (25%)
 

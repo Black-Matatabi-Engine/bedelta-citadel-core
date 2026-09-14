@@ -1,7 +1,7 @@
 /**
  * SPDX-License-Identifier: Apache-2.0
  * Copyright 2026 SilverVine Labs
- * @slivervine/citadel-sdk — brand & EIP-712 domain SSOT.
+ * @slivervine/exomesh-agentic-wallet-guard — brand & EIP-712 domain SSOT.
  */
 import { GMX_UI_FEE_BPS } from "../config/gmx-revenue";
 import { SESSION_KEY_NOTIONAL_CAP_USD } from "../services/session-key-adapter-lib/session-key-types";

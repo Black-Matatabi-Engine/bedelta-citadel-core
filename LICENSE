@@ -22,8 +22,8 @@ Change License:       Apache License, Version 2.0
 For information about alternative licensing arrangements for the Licensed Work,
 please contact grants@silvervinelabs.com.
 
-Exception — `@slivervine/citadel-sdk`:
-  The public developer harness under `src/sdk/` (package `@slivervine/citadel-sdk`)
+Exception — `@slivervine/exomesh-agentic-wallet-guard`:
+  The public developer harness under `src/sdk/` (package `@slivervine/exomesh-agentic-wallet-guard`)
   is licensed separately under the Apache License, Version 2.0. See `src/sdk/LICENSE`.
 
 Notice

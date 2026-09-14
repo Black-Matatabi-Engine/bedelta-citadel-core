@@ -61,7 +61,7 @@ afterEach(() => {
   __setSystemStateForTests(null);
 });
 
-describe("security audit — @slivervine/citadel-sdk export surface", () => {
+describe("security audit — @slivervine/exomesh-agentic-wallet-guard export surface", () => {
   it("src/sdk source re-exports no private keys or raw secrets", () => {
     expect(SDK_SOURCE).not.toMatch(FORBIDDEN_SOURCE_REEXPORT);
   });

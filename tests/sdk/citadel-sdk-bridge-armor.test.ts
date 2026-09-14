@@ -24,7 +24,7 @@ beforeAll(() => {
   expect(ensureSoilWasm()).toBe(true);
 });
 
-describe("@slivervine/citadel-sdk — bridge & armor", () => {
+describe("@slivervine/exomesh-agentic-wallet-guard — bridge & armor", () => {
   it("outbound 46630/4663→42161 ok; inbound AML blocked", () => {
     for (const src of [ROBINHOOD_TESTNET_CHAIN_ID, ROBINHOOD_MAINNET_CHAIN_ID]) {
       const out = assertUnidirectionalBridge({

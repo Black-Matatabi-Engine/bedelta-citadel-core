@@ -16,7 +16,7 @@ beforeAll(() => {
   expect(ensureSoilWasm()).toBe(true);
 });
 
-describe("@slivervine/citadel-sdk — agent intent", () => {
+describe("@slivervine/exomesh-agentic-wallet-guard — agent intent", () => {
   it("intercepts prompt injection (AI execution drift)", () => {
     const v = verifyAgentIntent({
       intentDigest: DIGEST,
