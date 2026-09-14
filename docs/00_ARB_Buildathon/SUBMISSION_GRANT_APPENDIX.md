@@ -17,7 +17,7 @@
 | Market & security imperative | [Market & Security Imperative](../05_pitch_and_demos/03_MARKET_AND_SECURITY_IMPERATIVE.md) — Apollo / Navier research · Elevator metaphor |
 | **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
-Built on the v1.0 Santenmoku SSRC (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
+Built on the BeDelta Living Water v1.0 · SSRC (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
 
 ### The Problem
 
@@ -193,7 +193,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Direct SDK / EIP-1193 Guard** (`withRetailGuardProvider`) · ⏳ **Framework Adapters Harness Specs** (Wayfinder · ElizaOS · Virtuals · LangChain — `tests/` harness only, not official Live plugins) · 5-Core venue CLI demos · Stabilizer Sepolia sandbox · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · static `GET /api/grant-audit` SHA-256 provenance archive · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · Worker bundle **57.81 KiB gzip** · **235 test files \| 1091 PASS clean** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Direct SDK / EIP-1193 Guard** (`withRetailGuardProvider`) · ⏳ **Framework Adapters Harness Specs** (Wayfinder · ElizaOS · Virtuals · LangChain — `tests/` harness only, not official Live plugins) · 5-Core venue CLI demos · Stabilizer Sepolia sandbox · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · static `GET /api/grant-audit` SHA-256 provenance archive · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · Worker bundle ****57.88 KiB gzip** · **235 test files \| 1091 PASS clean** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — paid policy plane around the **already-shipped** Wallet Guard SKU (`withRetailGuardProvider`) · Orbit L3s · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -410,7 +410,7 @@ SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfro
 5. **Edge Execution Alliance (Partnership Model)**:
  * Acts as the **Sub-ms Intent Execution Edge** for macro risk engines (e.g., Chaos Labs, Gauntlet). Chaos Labs provides macro parameter tuning; SliverVine enforces microsecond off-chain intent protection.
 
-**GMX builder lane (adjacent):** +10 bps `uiFeeReceiver` on unsigned GMX v2 payloads — see [`gmx/GMX_BUILDERS_PITCH.md`](../grants/gmx/GMX_BUILDERS_PITCH.md).
+**GMX builder lane (adjacent):** +10 bps `uiFeeReceiver` on unsigned GMX v2 payloads — see [`gmx/GMX_BUILDERS_PITCH.md`](../0A_grants/gmx/GMX_BUILDERS_PITCH.md).
 
 ---
 
@@ -553,7 +553,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **235 test files | 1091 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **57.81 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
+**Regression bar:** Vitest **235 test files | 1091 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle ****57.88 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
 
 ---
 
@@ -567,9 +567,9 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 | [`../PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) | Dual-wallet production workflow SSOT |
 | [`../01_architecture/README.md`](../01_architecture/README.md) | R01–R20 Defense Matrix · latency benchmarks |
 | [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | Production DuneSQL feed + activity chart (Queries 0–0b) + 3 reconciliation panels · [live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
-| [`../grants/arbitrum/ARBITRUM_ONE_PAGER.md`](../grants/arbitrum/ARBITRUM_ONE_PAGER.md) | One-pager |
-| [`../grants/arbitrum/GRANT_PROPOSAL.md`](../grants/arbitrum/GRANT_PROPOSAL.md) | Scope & roadmap |
-| [`../grants/gmx/GMX_BUILDERS_PITCH.md`](../grants/gmx/GMX_BUILDERS_PITCH.md) | GMX builder economics |
+| [`../0A_grants/arbitrum/ARBITRUM_ONE_PAGER.md`](../0A_grants/arbitrum/ARBITRUM_ONE_PAGER.md) | One-pager |
+| [`../0A_grants/arbitrum/GRANT_PROPOSAL.md`](../0A_grants/arbitrum/GRANT_PROPOSAL.md) | Scope & roadmap |
+| [`../0A_grants/gmx/GMX_BUILDERS_PITCH.md`](../0A_grants/gmx/GMX_BUILDERS_PITCH.md) | GMX builder economics |
 | [`../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Competitive matrix · grant strategy |
 | [`../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) | Judge demo CLI · 5-core venue `--trip` proofs |
 | [§ Threat Model Appendix](#appendix-real-world-threat-model-market-landscape) | Agentic web metrics · case studies · competitive matrix |

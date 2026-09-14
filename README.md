@@ -5,7 +5,7 @@
 ![Vitest](https://img.shields.io/badge/Vitest-1091%20PASS%20%28235%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
-![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
+[![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](src/services/risk-control.ts)
 ![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)
 ![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_p50_15%CE%BCs-blueviolet?logo=speedtest)
 ![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)
@@ -14,10 +14,10 @@
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
-**SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) · SilverVine Labs ·** `v1.0 Santenmoku (SSRC)`  
+**SliverVine Protocol · v1.0 · BeDelta Living Water v1.0 (BeΔ)** · SilverVine Labs · **SSRC:** Slivervine Stylus ReflexCore  
 **DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com) · **Live Telemetry:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)
 
-> **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) · sub-1.8µs warm soil check).
+> **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) · [`src/services/risk-control.ts`](src/services/risk-control.ts) · sub-1.8µs warm soil check).
 > **SliverVine Sanctuary** (Module B) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · Robinhood / Across compliance ingress.
 >
 > **V1.0 Buildathon Baseline:** Public Open Gateway — **no API key** · **5 RPS** (`X-SliverVine-Tier: public`).
@@ -61,7 +61,7 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 | Topic | Fact |
 |-------|------|
-| **Gate** | [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) — Bootstrap sandbox keys (`0x1111…` / `0x2222…`); **multisig rotation scheduled for Post-Grant Milestone 1** |
+| **Gate** | `DUAL` · Arbitrum One [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia [`0xb174…8BF1`](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · ignition [Tx `0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) — Bootstrap sandbox keys (`0x1111…` / `0x2222…`); **multisig rotation scheduled for Post-Grant Milestone 1** · matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
 | **Stylus** | `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** ([`GmxRiskInvariantLib.sol`](./contracts/src/libs/GmxRiskInvariantLib.sol)) by design |
 | **Rate limit** | Per-isolate **5 RPS** (`X-SliverVine-Tier: public`) — not a global Cloudflare product limiter |
 | **npm SDK** | `"private": true` in [`package.json`](./src/sdk/exomesh-agentic-wallet-guard/package.json) — **public npmjs release Post-Grant Milestone 1** |
@@ -125,7 +125,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 | **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` — no async I/O | CLI HUD `Pure Invariant Time` row |
 | **Stylus ReflexCore (SSRC)** | **p50 ~15µs** | `rootProtection()` · `severSigningChannel()` · `soil_core.wasm` | `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge** | **p50 ~106µs** | Cloudflare Worker + TS Gateway + SSRC FFI | `pnpm demo:gmx` |
-| **Worker bundle (hot-path)** | **57.81 KiB gzip** | 163.72 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
+| **Worker bundle (hot-path)** | **57.88 KiB gzip** | 163.81 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
 
 *Zero-Allocation Hot-Path:* Pre-allocated **256×4 ring slab** achieves `<16 KiB` heap delta over 10,000 iterations — `npx vitest run tests/core/intent-sinking-audit.test.ts`.
 

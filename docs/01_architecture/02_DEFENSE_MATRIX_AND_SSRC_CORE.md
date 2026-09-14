@@ -165,12 +165,12 @@ Edge TypeScript executes the **u32 ring hot path**; `syncIntentSlotToWasmSlab()`
 | **NTP Clock Drift Compensator** | `NTP_CLOCK_DRIFT_COMPENSATOR` | Rejects / skew-corrects venue timestamps with **&lt;200ms** drift vs Edge NTP; aligns with Pgate latency fuse (`PGATE_MAX_LATENCY_MS` = 200) |
 | **Cross-Venue Net Slippage TWAP** | `CrossVenueNetSlippage` | When net cross-book slippage **&gt; 0.5%** (`MAX_SLIPPAGE = 0.005`), trips soil + schedules **TWAPEngineV2** path slicing instead of market sweep |
 | **GMX Positive Skew Rebate** | `gmx-v2-balancer` / price-impact soil | Qualifies underweight-side flow · captures **positive skew / price-impact rebate** bps — never conflated with builder UI fee |
-| **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **Zero-Allocation Hot-Path** ring slab for mandate state · legacy paths = thin-shell re-exports · Worker **57.81 KiB gzip** post-sink |
+| **Core Sinking SSOT** | `src/core/*` (intent ring slab + soil/risk modules) | Pure invariants sunk from adapters/services · **Zero-Allocation Hot-Path** ring slab for mandate state · legacy paths = thin-shell re-exports · Worker ****57.88 KiB gzip** post-sink |
 | **Ingress Custom Errors** | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol) | `revert CustomError()` gas-efficient fail-closed · `ERR_*` bytes32 events preserved for telemetry |
 
 **Core modules ([`src/core/`](../../src/core)):** [`intent-core.ts`](../../src/core/intent-core.ts) · [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`intent-core-buffers.ts`](../../src/core/intent-core-buffers.ts) · [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`monotonic-time.ts`](../../src/core/monotonic-time.ts) · [`risk-engine-usdai.ts`](../../src/core/risk-engine-usdai.ts) · [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) · [`delta-neutral-calculator.ts`](../../src/core/delta-neutral-calculator.ts) · [`funding-regime-core.ts`](../../src/core/funding-regime-core.ts).
 
-### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v1.0 Santenmoku)
+### 3.1.1 Physical Clock & Edge Monotonicity Matrix (v1.0 · BeDelta Living Water v1.0 · SSRC)
 
 SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. **Immunity** means: when any physical clock lies (leap second, NTP step, RPC `block.timestamp` regression, multi-PoP drift), the pre-consensus firewall produces **no negative intervals**, **no fake-fresh oracle ages**, and **no silent state rollback** — untrusted time states **fail-closed**.
 

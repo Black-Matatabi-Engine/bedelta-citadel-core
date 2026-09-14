@@ -151,7 +151,7 @@ announceGuardedProvider(window.ethereum, config, {
 
 ### Layer 2: Agent Intent Inspector
 
-Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
+Guards LLM-driven wallets against hallucinated spenders, venue drift, and prompt-injected swaps. See [`02_EXOMESH_PROVIDER_GUARD_SPEC.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
 
 ### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
@@ -302,9 +302,9 @@ pnpm demo:exomesh -- --json                               # CLI structured outpu
 | Document | Role |
 |----------|------|
 | [`README.md`](./README.md) | Documentation index (01 → 04) |
-| [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Competitive matrix · grant strategy |
-| [`03_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) | Competitive positioning · paradigm shift |
-| [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) | LLM / agent threat model |
+| [`04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Competitive matrix · grant strategy |
+| [`05_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) | Competitive positioning · paradigm shift |
+| [`02_EXOMESH_PROVIDER_GUARD_SPEC.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) | LLM / agent threat model |
 | [`../00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon submission SSOT |
 | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | Wasm reflex core · §3.7 |
 

@@ -7,7 +7,7 @@
 **Entity:** SilverVine Labs · **Protocol brand:** SliverVine Protocol · **Escrow module:** SliverVine Sanctuary (Module B)  
 **Judge primary path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e`  
 **Audit provenance archive:** [Historical Audit Telemetry Snapshot & Provenance Archive](https://bedeltawater.slivervine.xyz/api/grant-audit) — static SHA-256 Buildathon checkpoint (not a live dynamic oracle) · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
-**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
+**Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 
 ### Core On-Chain & Deployment Anchors
 
@@ -20,7 +20,7 @@
 | **Mainnet Ignition Tx** | `42161` | [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
 | **SliverVineRiskOracle (Sepolia)** | `421614` | `0x3FFa2539f502682E8145e6Eb427ff78d258D53a4` |
 | **IngressSafetySwitch (Sepolia)** | `421614` | `0x3E4298e2b8d4e30396A54C1817Eb71c9272Ffb4B` |
-| **Wasm hot path** | Edge | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Worker bundle **163.72 KiB raw | 57.81 KiB gzip** · p50 ~106 µs |
+| **Wasm hot path** | Edge | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · ABI **v2** · 28-slot protocol vector · Worker bundle **163.81 KiB raw | 57.88 KiB gzip** · p50 ~106 µs |
 
 ### Core Sinking SSOT ([`src/core/`](../../src/core))
 
@@ -63,7 +63,7 @@ This document is **invariant-first** (Yellow Paper style): topology, thresholds,
 
 ## 0. Unified Institutional Pre-Execution Pipeline
 
-v1.0 Santenmoku (SSRC) is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Variational Omni RFQ on Arbitrum One, plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pruned venues (Uniswap V3 · Aave V3 · Morpho Blue) retain **RESERVED_ABI_V2** Wasm bitmask holes (protocol bits 4–6). Pillar Set Y ReflexCore (SSRC) is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
+v1.0 · BeDelta Living Water v1.0 (SSRC) is a **unified sub-millisecond pre-execution gateway**. **Center of gravity = Arbitrum One** with the **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Variational Omni RFQ on Arbitrum One, plus **Hyperliquid** as an **Independent L1 High-Frequency Orderbook AppChain** cross-chain session-key hedge leg. Pruned venues (Uniswap V3 · Aave V3 · Morpho Blue) retain **RESERVED_ABI_V2** Wasm bitmask holes (protocol bits 4–6). Pillar Set Y ReflexCore (SSRC) is the technical moat. Permissioned chains (e.g. Robinhood Chain) are **supported ingress examples**, not the product identity.
 
 **Primary Execution Boundary — 5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Variational (Arbitrum One) + Hyperliquid L1 Session Key Adapter (cross-chain hedge).
 
@@ -287,7 +287,7 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 | Item | Resolution | Code / doc anchor |
 |------|------------|-------------------|
 | Proprietary vs official ZeroDev plugin | **Resolved in v0.95 SSOT** — Citadel-owned adapter; ERC-7579 typings in [`zerodev-aa-types.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-types.ts) | [`src/adapters/arbitrum/zerodev-aa/`](../../src/adapters/arbitrum/zerodev-aa) |
-| Session key replay (57.81 KiB Worker path) | **Resolved in v0.95 SSOT** — `auditSessionKeyNonceState` + `verifySessionKeyValidity` before broadcast | [`execute-order.ts`](../../src/adapters/hl/session-key-executor/execute-order.ts) · commit `5829e9a` |
+| Session key replay (57.88 KiB Worker path) | **Resolved in v0.95 SSOT** — `auditSessionKeyNonceState` + `verifySessionKeyValidity` before broadcast | [`execute-order.ts`](../../src/adapters/hl/session-key-executor/execute-order.ts) · commit `5829e9a` |
 | `SliverVineRiskOracle` hook classification | **ERC-7579 Pre-Execution Hook** — gate binds oracle status before Ultra-Relay UserOp ingress | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`zerodev-aa-gate-types.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate-types.ts) |
 
 **Demo:** `pnpm demo` — 12 Dual Pillar Set X & Y ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).

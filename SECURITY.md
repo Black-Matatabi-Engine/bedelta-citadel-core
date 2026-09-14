@@ -1,6 +1,6 @@
 # Security Policy — SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
 
-> **Vitest SSOT:** 194 test files | 845 PASS Clean (100% PASS)
+> **Vitest SSOT:** 235 test files | 1091 PASS (100% PASS)
 
 **Entity:** SilverVine Labs · **Contact:** `security@silvervinelabs.com`
 **Official Site:** [silvervinelabs.com](https://silvervinelabs.com) — Defense Matrix portal
@@ -49,7 +49,7 @@ SliverVine Citadel is designed **fail-closed** — ambiguous or unsafe states ha
 
 | Component | Branch / tag | Support |
 |-----------|--------------|---------|
-| bedelta-living-water Worker | `main` | Active |
+| bedelta-citadel-core Worker | `main` | Active |
 | Grant Audit HUD | production deploy | Active |
 
 ---
@@ -59,5 +59,5 @@ SliverVine Citadel is designed **fail-closed** — ambiguous or unsafe states ha
 | Document | Purpose |
 |----------|---------|
 | [docs/01_architecture/README.md](./docs/01_architecture/README.md) | Topology · R01–R20 · KV isolation |
-| [docs/grants/arbitrum/GRANT_PROPOSAL.md](./docs/grants/arbitrum/GRANT_PROPOSAL.md) | Scope & roadmap |
+| [docs/0A_grants/arbitrum/GRANT_PROPOSAL.md](./docs/0A_grants/arbitrum/GRANT_PROPOSAL.md) | Scope & roadmap |
 | [docs/README.md](./docs/README.md) | Audience router |

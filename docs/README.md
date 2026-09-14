@@ -2,8 +2,8 @@
 
 > 📌 **System Metrics SSOT**: Verified via [`audit/SYSTEM_METRICS_SSOT.json`](./audit/SYSTEM_METRICS_SSOT.json)
 
-> **Umbrella:** **SliverVine Protocol** · **Module A:** **SliverVine ExoMesh** (~70% Architectural Surface) · **Module B:** **SliverVine Sanctuary** (~30% Architectural Surface) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)**  
-> **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
+> **Umbrella:** **SliverVine Protocol** · **v1.0 · BeDelta Living Water v1.0** · **Module A:** **SliverVine ExoMesh** (~70%) · **Module B:** **SliverVine Sanctuary** (~30%) · **Engine:** **Slivervine Stylus ReflexCore (SSRC)**  
+> **Metrics SSOT:** [`audit/SYSTEM_METRICS_SSOT.json`](./audit/SYSTEM_METRICS_SSOT.json) — **1091 PASS (235 files)** · **57.88 KiB gzip** · **255/255 Fail-Closed** · **Arbitrum Sepolia Verified (42161 Ready)**
 
 | # | Directory | Judge-facing scope |
 |---|-----------|-------------------|

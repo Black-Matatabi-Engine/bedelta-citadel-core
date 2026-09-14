@@ -1,8 +1,8 @@
 # SliverVine Citadel Gate — SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
 
-> **Vitest SSOT:** 194 test files | 845 PASS Clean (100% PASS)
+> **Vitest SSOT:** 235 test files | 1091 PASS (100% PASS)
 
-On-chain enforcement layer for the BeDelta Living Water / SliverVine pre-execution risk engine (v1.0 Santenmoku SSRC).
+On-chain enforcement layer for the BeDelta Living Water / SliverVine pre-execution risk engine (BeDelta Living Water v1.0 · SSRC).
 
 The off-chain engine already decides whether an order is safe. This repo makes that decision
 **binding**: if the engine did not sign an ALLOW for *this exact payload*, from *this exact
@@ -70,6 +70,15 @@ test/ unit (I1-I12) · fuzz (properties) · invariant (handler) · GatedExecutor
 script/ Deploy.s.sol — deterministic dual-chain CREATE2 deployment
 ```
 
+## On-Chain Anchors (SSOT)
+
+| Contract | Address | Explorer |
+|----------|---------|----------|
+| **SliverVineGate** (`DUAL` · `42161` + `421614`) | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | [Arbitrum One](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Sepolia](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **Mainnet ignition** | Tx `0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6` | [Arbiscan](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) |
+
+Full matrix → [`docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md`](../docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) · code SSOT → [`src/config/contract-deployments.ts`](../src/config/contract-deployments.ts)
+
 ## Deployment
 
 ```bash
@@ -81,7 +90,7 @@ forge script script/Deploy.s.sol:Deploy --rpc-url https://rpc.testnet.chain.robi
 ```
 
 Both runs must print the same addresses. Record them, plus each chain's `domainSeparator()`, in
-`DEPLOYMENTS.md`.
+[`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md).
 
 ## Status
 

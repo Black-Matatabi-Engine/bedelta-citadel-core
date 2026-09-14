@@ -3,7 +3,7 @@
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`
 **Official Site:** [silvervinelabs.com](https://silvervinelabs.com)
-**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
+**Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 **Live DApp:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 
 > **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · **3-Tier Security Matrix: 5/0/0 PASS** · Defense Matrix `17 Active | 2 Refactored | 1 Deprecated` · Wasm Core **<28kb Cloudflare budget, <60µs execution (<150µs P99 tail)** · Gate **`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`** (Mainnet + Sepolia CREATE2 same-address)

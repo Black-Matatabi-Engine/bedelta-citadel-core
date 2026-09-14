@@ -2,7 +2,7 @@
 
 Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robinhood/Across ingress).
 
-> **Release:** **`v1.0 Santenmoku`** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)**
+> **Release:** **`v1.0 · BeDelta Living Water v1.0 (SSRC)`** · **5-Core Venue Matrix:** GMX v2 · Pendle · USD.ai · Hyperliquid · Variational · **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)**
 
 ## Protocol Documentation Index
 
@@ -414,9 +414,9 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 | **Vitest baseline** | **235 test files | 1091 PASS clean** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** · ring-slab heap gate **&lt;16 KiB** ([`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts)) |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` · intent ring slab **&lt;16 KiB** / 10k iterations ([metrics SSOT](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)) |
-| **Worker bundle (hot-path)** | **57.81 KiB gzip** · **163.72 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Worker bundle (hot-path)** | ****57.88 KiB gzip** · **163.81 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) — **Module A (ExoMesh):** ✅ active off-chain live dashboard · **Module B (Sanctuary):** Sepolia (`421614`) on-chain event stream · Arbitrum One (`42161`) contracts anchored + SQL specs ready → [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`c1a37d4`** (zero-GC ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **235/1091** Vitest · **Cargo 2/2** · **57.81 KiB gzip** |
+| **Verified Commit** | `main` @ **`c1a37d4`** (zero-GC ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **235/1091** Vitest · **Cargo 2/2** · ****57.88 KiB gzip** |
 
 > **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 5-Core Venue Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
 
@@ -464,4 +464,4 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 
 ---
 
-*SilverVine Labs · SliverVine ExoMesh + Sanctuary · v1.0 Santenmoku · 235 test files | 1091 PASS clean*
+*SilverVine Labs · SliverVine ExoMesh + Sanctuary · v1.0 · BeDelta Living Water v1.0 (SSRC) · 235 test files | 1091 PASS clean*

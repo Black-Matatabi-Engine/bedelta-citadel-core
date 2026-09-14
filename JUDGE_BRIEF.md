@@ -8,11 +8,11 @@
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
 
-**Release:** **`v1.0 Santenmoku`**
+**Release:** **`v1.0 · BeDelta Living Water v1.0 (SSRC)`**
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **235 test files | 1091 PASS clean (100%)** · **Release: v1.0 Santenmoku** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.81 KiB gzip** (163.72 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+> **SSOT Lock:** **235 test files | 1091 PASS clean (100%)** · **Release: v1.0 · BeDelta Living Water v1.0 (SSRC)** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.88 KiB gzip** (163.81 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
 > **Zero-Allocation Hot-Path**: Pre-consensus microsecond execution on static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated**); cold-path warning formatters and error loggers remain standard readable TypeScript.
 
@@ -129,7 +129,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 
 | Field | Value |
 |-------|-------|
-| **Release** | **`v1.0 Santenmoku`** |
+| **Release** | **`v1.0 · BeDelta Living Water v1.0 (SSRC)`** |
 | **Headline** | Pre-Consensus Intent Firewall & Execution Safety Primitive for AI Agents on Arbitrum |
 | **Primary module** | SliverVine ExoMesh (Module A) |
 | **Escrow module** | SliverVine Sanctuary (Module B) |
@@ -305,7 +305,7 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 |-------------|---------------|-----------------|
 | **Master Dune Dashboard** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) | Module A live counters + charts · Module B on-chain anchors |
 | **Module A — ExoMesh** | `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | **262** fail-closed · **$6.57M** capital protected · **$65.50** L2 gas saved |
-| **Module B — Sanctuary** | Sepolia Gate [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `IntentAttested` · `RiskTripBlocked` · PEV reconciliation |
+| **Module B — Sanctuary** | Sepolia Gate [`0xb174…8BF1`](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `IntentAttested` · `RiskTripBlocked` · PEV reconciliation |
 | **Provenance archive** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) | Static SHA-256 Buildathon checkpoint (not a live oracle) |
 
 **Dual-module partition:** **Module A (SliverVine ExoMesh)** = off-chain pre-consensus 0-Gas firewall telemetry (active live dashboard). **Module B (SliverVine Sanctuary)** = ERC-7540+ async escort & on-chain Sepolia Gate anchors. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md).

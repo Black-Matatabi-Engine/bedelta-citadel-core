@@ -1,7 +1,7 @@
 # WASM Sinking Candidates Audit
 
 > **Audit date:** 2026-09-14 · **SSOT:** `pkg/soil_core.wasm` · `src/wasm/` Rust crate  
-> **Baseline bundle:** 163.72 KiB raw · 57.81 KiB gzip (`SYSTEM_METRICS_SSOT.json`)
+> **Baseline bundle:** 163.81 KiB raw · 57.88 KiB gzip (`SYSTEM_METRICS_SSOT.json`)
 
 ## Executive Summary
 

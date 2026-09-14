@@ -4,7 +4,7 @@
 **Project:** SliverVine Protocol — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum (GMX v2 GM Pool Gateway)
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`
 **Official Site:** [silvervinelabs.com](https://silvervinelabs.com)
-**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
+**Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 **Live HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)
 **Grant Audit:** `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .arbitrumCitadel`
 **Channel:** [t.me/GMXPartners](https://t.me/GMXPartners)

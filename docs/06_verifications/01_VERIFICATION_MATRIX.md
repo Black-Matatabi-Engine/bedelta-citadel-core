@@ -5,7 +5,7 @@
 **DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e`  
 **Live-fire appendix:** [`06_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) — **execution ≠ guard**  
 **Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle).  
-**Repo:** [SilverVineLabs/bedelta-living-water](https://github.com/SilverVineLabs/bedelta-living-water)
+**Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 
 > **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
 
@@ -21,7 +21,7 @@
 
 > **Engineering honesty:** **1091 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~1013 core** ExoMesh/SSRC proofs vs presentation-layer locks.  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI)  
-> **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **57.81 KiB gzip** (`limitKiB: 150` · `pass: true`)
+> **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle ****57.88 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
 
