@@ -2,7 +2,7 @@
 
 > **Audit date:** 2026-09-14  
 > **Scope:** All Markdown under `docs/`, plus `README.md` and `JUDGE_BRIEF.md`  
-> **Off-chain SSOT:** [`src/core/exomesh-dune-telemetry.ts`](../../src/core/exomesh-dune-telemetry.ts) · schema `silvervine.exomesh.dune-telemetry.v1` · export `pnpm export:dune` → `docs/audit/exomesh-dune-telemetry.csv`
+> **Off-chain SSOT:** [`scripts/_shared/exomesh-dune-telemetry.ts`](../../scripts/_shared/exomesh-dune-telemetry.ts) · schema `silvervine.exomesh.dune-telemetry.v1` · export `pnpm export:dune` → `docs/audit/exomesh-dune-telemetry.csv`
 
 ---
 

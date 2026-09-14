@@ -263,7 +263,7 @@ LIMIT 500;
 ## Pre-Consensus ExoMesh Intercepts (Query C0–C3)
 
 **Scope:** Off-chain 0-Gas intercept telemetry — 255/255 chaos matrix · honeypot decoys · grant-audit shadow margin · ExoMesh demo harness.
-**Export SSOT:** [`src/core/exomesh-dune-telemetry.ts`](../../src/core/exomesh-dune-telemetry.ts) · `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](../audit/exomesh-dune-telemetry.csv)
+**Export SSOT:** [`scripts/_shared/exomesh-dune-telemetry.ts`](../../scripts/_shared/exomesh-dune-telemetry.ts) · `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](../audit/exomesh-dune-telemetry.csv)
 **Internal spec:** [`docs/internal/DUNE_TELEMETRY_SPEC.md`](../internal/DUNE_TELEMETRY_SPEC.md)
 **Vitest anchors:** [`tests/chaos/orbit-agentic-failclosed-chaos.test.ts`](../../tests/chaos/orbit-agentic-failclosed-chaos.test.ts) · [`tests/scripts/chaos-blackswan-stress.test.ts`](../../tests/scripts/chaos-blackswan-stress.test.ts) (255/255 fail-closed)
 

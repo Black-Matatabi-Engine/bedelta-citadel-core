@@ -43,5 +43,7 @@
 | [`BUILDATHON_30_JUDGES_SIMULATION_V1_ZH.md`](./BUILDATHON_30_JUDGES_SIMULATION_V1_ZH.md) | 30-judge v1.0 simulation |
 | [`BUILDATHON_30_JUDGES_SIMULATION_ZH.md`](./BUILDATHON_30_JUDGES_SIMULATION_ZH.md) | 30-judge v0.8 simulation |
 | [`BLACK_HAT_MEV_ADVERSARY_ATTACK_AUDIT_ZH.md`](./BLACK_HAT_MEV_ADVERSARY_ATTACK_AUDIT_ZH.md) | Red-team 9-vector audit |
+| [`0914_0900_Grok_zh.md`](./0914_0900_Grok_zh.md) | **0914 09:00 30-persona** · README 152 行 UX · Goldfeder 謙辭 · HEAD `2e2aaded` · **9.73 / 10** |
+| [`0913_midnight_grok_zh.md`](./0913_midnight_grok_zh.md) | **0913 midnight 30-persona** · P0 + OpSec 四項 · HEAD `4d928b3` · **9.72 / 10** |
 | [`0910_Grok_lunch_zh.md`](./0910_Grok_lunch_zh.md) | **0910 lunch red team** · Goldfeder / GMX / memory auditor · HEAD `056c125` · **9.05 / 10** |
 | [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) | **0910 lunch 30-persona** · verified X handles · ring slab / 0-Gas / mainnet anchors · **9.05 / 10** |

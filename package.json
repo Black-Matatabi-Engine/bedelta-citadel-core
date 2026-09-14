@@ -58,6 +58,7 @@
     "verify:5tx": "tsx scripts/verify-5tx.ts",
     "verify:grant": "tsx scripts/verify-5tx-runner.ts",
     "verify:negative": "tsx scripts/verify-negative-proofs.ts",
+    "export:dune": "tsx scripts/export-dune-telemetry.ts",
     "clean:coverage": "node -e \"require('node:fs').rmSync('./coverage', { recursive: true, force: true })\"",
     "dev": "pnpm run build:assets && node scripts/wrangler-dev-guard.mjs",
     "deploy": "pnpm run build:assets && wrangler deploy --minify",
