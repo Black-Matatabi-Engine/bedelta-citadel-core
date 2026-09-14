@@ -1,4 +1,4 @@
-# SliverVine Protocol (BeΔ) — ExoMesh Pre-Consensus Intent Firewall for AI Agents on Arbitrum
+# SliverVine Protocol (BeΔ) — SliverVine ExoMesh — Dual-Plug Pre-Consensus Intent Firewall for AI Agents & Retail on Arbitrum
 
 > 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
 
