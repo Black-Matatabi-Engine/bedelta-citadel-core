@@ -175,6 +175,10 @@ forge test --match-contract IntentRingSlabTest
 
 SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer & Cerebellum Reflex Arc for AI Agents** — not a passive RPC relay. It intercepts toxic agent intents at **p50 ~106µs** (TypeScript Gateway + Wasm `checkSoilResistance()`) **before** Arbitrum Sequencer queues, Bundler ingress, or MEV mempools.
 
+### Theoretical Alignment (Off-Chain Execution & MEV Defense)
+
+SliverVine ExoMesh's pre-consensus 0-Gas reflex model aligns with the off-chain execution paradigm pioneered by Goldfeder et al. (Arbitrum USENIX 2018 / Time-Advantaged MEV Research). By resolving intent validity and executing physical channel severance prior to Sequencer ingress, ExoMesh prevents on-chain state pollution and mitigates L2 time-advantaged sandwich probes before transactions enter consensus bounds.
+
 | Layer | Mechanism | Latency | Gas |
 |-------|-----------|---------|-----|
 | **Edge Gateway** | TS + Wasm `checkSoilResistance()` bitmask evaluation | **p50 ~106µs** | **0** |

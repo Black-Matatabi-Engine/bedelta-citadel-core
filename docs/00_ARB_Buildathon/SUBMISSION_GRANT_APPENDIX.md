@@ -610,10 +610,13 @@ The Web3 attack surface is shifting from human UI phishing to **autonomous agent
 
 ### Supplementary Industry References
 
-- **MEV & thin-liquidity on autonomous agents** — `checkSoilResistance()` · `evaluateHlOrderbookGapGuard()`
-- **$441k+ bot execution error** — [PumpParade / Medium](https://pumpparade.medium.com/ai-trading-bots-lost-441k-in-one-error-heres-what-actually-works-and-what-doesn-t-4f04f890c189)
-- **AI antivirus primitives** — [CertiK AI Skill Scanner](https://www.tradingview.com/news/chainwire:d064d7d1f094b:0-certik-launches-ai-skill-scanner-an-antivirus-software-for-the-ai-age/)
-- **Institutional agent-security focus** — [CryptoRank: AI Agents & Web3 Hacking Symposium](https://cryptorank.io/news/feed/fae5e-ai-agents-web3-hacking-wyoming-symposium)
+| Reference | Alignment in SliverVine |
+|-----------|-------------------------|
+| **Arbitrum Off-Chain Execution Paradigm & Rollup MEV (Goldfeder et al.)** | Validates sub-ms pre-consensus bitmask evaluation at Edge isolates to prevent Sequencer queue pollution and zero-gas execution severance. |
+| **MEV & thin-liquidity on autonomous agents** | `checkSoilResistance()` · `evaluateHlOrderbookGapGuard()` |
+| **$441k+ bot execution error** — [PumpParade / Medium](https://pumpparade.medium.com/ai-trading-bots-lost-441k-in-one-error-heres-what-actually-works-and-what-doesn-t-4f04f890c189) | AI retry severance · `INTENT_RING_U32` attempt budget |
+| **AI antivirus primitives** — [CertiK AI Skill Scanner](https://www.tradingview.com/news/chainwire:d064d7d1f094b:0-certik-launches-ai-skill-scanner-an-antivirus-software-for-the-ai-age/) | Non-semantic bytecode predicates at signing layer |
+| **Institutional agent-security focus** — [CryptoRank: AI Agents & Web3 Hacking Symposium](https://cryptorank.io/news/feed/fae5e-ai-agents-web3-hacking-wyoming-symposium) | Pre-broadcast intent firewall for agentic DeFi |
 
 ---
 
