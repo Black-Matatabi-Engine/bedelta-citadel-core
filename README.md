@@ -125,7 +125,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 | **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` — no async I/O | CLI HUD `Pure Invariant Time` row |
 | **Stylus ReflexCore (SSRC)** | **p50 ~15µs** | `rootProtection()` · `severSigningChannel()` · `soil_core.wasm` | `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge** | **p50 ~106µs** | Cloudflare Worker + TS Gateway + SSRC FFI | `pnpm demo:gmx` |
-| **Worker bundle (hot-path)** | **57.88 KiB gzip** | 163.81 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
+| **Worker bundle (hot-path)** | **58.72 KiB gzip** | 166.51 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
 
 *Zero-Allocation Hot-Path:* Pre-allocated **256×4 ring slab** achieves `<16 KiB` heap delta over 10,000 iterations — `npx vitest run tests/core/intent-sinking-audit.test.ts`.
 

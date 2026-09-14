@@ -62,10 +62,10 @@
     }
   },
   "bundle_telemetry": {
-    "rawKiB": 163.81,
-    "gzipKiB": 57.88,
-    "wranglerTotalUploadKiB": 163.81,
-    "wranglerTotalGzipKiB": 57.88,
+    "rawKiB": 166.51,
+    "gzipKiB": 58.72,
+    "wranglerTotalUploadKiB": 166.51,
+    "wranglerTotalGzipKiB": 58.72,
     "limitKiB": 150,
     "leanWarnRawKiB": 285,
     "leanWarnGzipKiB": 71,
