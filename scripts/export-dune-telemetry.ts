@@ -101,6 +101,7 @@ function main(): void {
   const rows = buildExomeshDuneTelemetryExport();
   const failClosed = rows.filter((row) => row.status === "FAIL_CLOSED").length;
   const gasSavedUsd = rows.reduce((sum, row) => sum + row.gas_saved_usd, 0);
+  const potentialLossSavedUsd = rows.reduce((sum, row) => sum + row.potential_loss_saved_usd, 0);
 
   if (jsonMode) {
     const payload = JSON.stringify(
@@ -110,6 +111,7 @@ function main(): void {
         rowCount: rows.length,
         failClosedCount: failClosed,
         gasSavedUsdTotal: Math.round(gasSavedUsd * 100) / 100,
+        potentialLossSavedUsdTotal: Math.round(potentialLossSavedUsd * 100) / 100,
         rows,
       },
       null,
@@ -127,7 +129,7 @@ function main(): void {
   if (!outPath) writeFileSync(defaultOut, formatDuneTelemetryCsv(rows));
 
   console.error(
-    `[dune-export] rows=${rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} gas_saved_usd=${gasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
+    `[dune-export] rows=${rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} potential_loss_saved_usd=${potentialLossSavedUsd.toFixed(2)} gas_saved_usd=${gasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
   );
 }
 

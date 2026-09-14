@@ -6,6 +6,7 @@ import {
   appendExomeshDuneTelemetryRow,
   rowToCsvLine,
 } from "../../scripts/_shared/exomesh-dune-telemetry-audit";
+import { L2_GAS_SAVED_USD } from "../../scripts/_shared/exomesh-dune-telemetry";
 
 describe("exomesh-dune-telemetry-audit", () => {
   const dirs: string[] = [];
@@ -32,9 +33,12 @@ describe("exomesh-dune-telemetry-audit", () => {
     );
     const text = readFileSync(csv, "utf8");
     expect(text.startsWith("timestamp,venue,intercept_type")).toBe(true);
+    expect(text.includes("potential_loss_saved_usd,gas_saved_usd")).toBe(true);
     expect(text.trim().endsWith(rowToCsvLine(row))).toBe(true);
     expect(row.status).toBe("FAIL_CLOSED");
     expect(row.gas_burned).toBe(0);
+    expect(row.gas_saved_usd).toBe(L2_GAS_SAVED_USD);
+    expect(row.potential_loss_saved_usd).toBeGreaterThanOrEqual(5_000);
   });
 
   it("appends ALLOW row on subsequent writes", () => {
@@ -63,6 +67,8 @@ describe("exomesh-dune-telemetry-audit", () => {
       },
       csv,
     );
+    const allowRow = readFileSync(csv, "utf8").trim().split("\n")[1]!;
+    expect(allowRow.endsWith(",0.00,0.00,ALLOW")).toBe(true);
     expect(readFileSync(csv, "utf8").trim().split("\n").length).toBe(3);
   });
 

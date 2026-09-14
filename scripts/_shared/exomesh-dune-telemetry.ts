@@ -21,17 +21,24 @@ export interface ExomeshDuneTelemetryRow {
   intercept_type: DuneInterceptType;
   reflex_latency_us: number;
   gas_burned: number;
+  potential_loss_saved_usd: number;
   gas_saved_usd: number;
   status: DuneInterceptStatus;
   source: string;
   reason?: string;
 }
 
-const GAS_SAVED_USD: Readonly<Record<DuneInterceptType, number>> = {
-  SOIL_RESISTANCE_TRIP: 0.42,
-  HONEYPOT_DECOY: 0.35,
-  OBSERVATORY_HAIRCUT: 0.55,
-  MAX_ATTEMPTS_SEVERED: 0.68,
+export const DUNE_TELEMETRY_CSV_HEADER =
+  "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,potential_loss_saved_usd,gas_saved_usd,status";
+
+/** Arbitrum L2 counterfactual gas avoided per fail-closed severance (~$0.25). */
+export const L2_GAS_SAVED_USD = 0.25;
+
+const POTENTIAL_LOSS_SAVED_RANGE_USD: Readonly<Record<DuneInterceptType, readonly [number, number]>> = {
+  SOIL_RESISTANCE_TRIP: [5_000, 15_000],
+  HONEYPOT_DECOY: [5_000, 10_000],
+  OBSERVATORY_HAIRCUT: [20_000, 50_000],
+  MAX_ATTEMPTS_SEVERED: [30_000, 50_000],
 };
 
 const LATENCY_SEED_US: Readonly<Record<DuneInterceptType, number>> = {
@@ -114,8 +121,22 @@ export function resolveVenueFromSignal(reason: string, scenarioGroup?: string): 
   }
 }
 
-export function estimateGasSavedUsd(interceptType: DuneInterceptType): number {
-  return GAS_SAVED_USD[interceptType];
+export function estimateGasSavedUsd(
+  _interceptType: DuneInterceptType,
+  status: DuneInterceptStatus = "FAIL_CLOSED",
+): number {
+  return status === "FAIL_CLOSED" ? L2_GAS_SAVED_USD : 0;
+}
+
+export function estimatePotentialLossSavedUsd(
+  interceptType: DuneInterceptType,
+  seed: number,
+  status: DuneInterceptStatus = "FAIL_CLOSED",
+): number {
+  if (status !== "FAIL_CLOSED") return 0;
+  const [min, max] = POTENTIAL_LOSS_SAVED_RANGE_USD[interceptType];
+  const span = max - min;
+  return Math.round(min + ((seed % 97) / 97) * span);
 }
 
 export function seedReflexLatencyUs(interceptType: DuneInterceptType, seed: number): number {
@@ -133,8 +154,14 @@ export function buildTelemetryRow(input: {
   source: string;
   reason?: string;
 }): ExomeshDuneTelemetryRow {
+  const economicsSeed = Math.max(1, Math.floor(input.timestampMs) || Math.round(input.reflexLatencyUs));
   const gasBurned = input.status === "FAIL_CLOSED" ? 0 : 0.000001;
-  const gasSaved = input.status === "FAIL_CLOSED" ? estimateGasSavedUsd(input.interceptType) : 0;
+  const gasSaved = estimateGasSavedUsd(input.interceptType, input.status);
+  const potentialLossSaved = estimatePotentialLossSavedUsd(
+    input.interceptType,
+    economicsSeed,
+    input.status,
+  );
   return {
     timestamp: new Date(input.timestampMs).toISOString(),
     timestampMs: input.timestampMs,
@@ -142,6 +169,7 @@ export function buildTelemetryRow(input: {
     intercept_type: input.interceptType,
     reflex_latency_us: input.reflexLatencyUs,
     gas_burned: gasBurned,
+    potential_loss_saved_usd: potentialLossSaved,
     gas_saved_usd: gasSaved,
     status: input.status,
     source: input.source,
@@ -223,17 +251,20 @@ export function buildGrantAuditTelemetryRows(fetchedAtMs: number): ExomeshDuneTe
   });
 }
 
+export function rowToDuneTelemetryCsvLine(row: ExomeshDuneTelemetryRow): string {
+  return [
+    row.timestamp,
+    row.venue,
+    row.intercept_type,
+    row.reflex_latency_us.toFixed(1),
+    row.gas_burned.toFixed(6),
+    row.potential_loss_saved_usd.toFixed(2),
+    row.gas_saved_usd.toFixed(2),
+    row.status,
+  ].join(",");
+}
+
 export function formatDuneTelemetryCsv(rows: readonly ExomeshDuneTelemetryRow[]): string {
-  const header = "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,status";
-  const body = rows.map((row) =>
-    [
-      row.timestamp,
-      row.venue,
-      row.intercept_type,
-      row.reflex_latency_us.toFixed(1),
-      row.gas_burned.toFixed(6),
-      row.status,
-    ].join(","),
-  );
-  return [header, ...body].join("\n");
+  const body = rows.map((row) => rowToDuneTelemetryCsvLine(row));
+  return [DUNE_TELEMETRY_CSV_HEADER, ...body].join("\n");
 }
