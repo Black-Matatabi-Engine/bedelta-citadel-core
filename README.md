@@ -131,6 +131,33 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 ---
 
+## Installation & Quickstart
+
+```bash
+pnpm install
+```
+
+> ℹ️ **Buildathon Audit Note**: `@slivervine/exomesh-agentic-wallet-guard` is currently loaded via local workspace packages (`private: true`) for reproducible evaluation. NPM public registry distribution is scheduled post-grant.
+
+Import the SDK from the monorepo workspace (not npmjs):
+
+```ts
+import { withRetailGuardProvider } from "@slivervine/exomesh-agentic-wallet-guard";
+```
+
+---
+
+## 🧪 Verification
+
+```bash
+pnpm exec tsc --noEmit
+
+# Run SDK & Risk Engine test suite
+pnpm test
+```
+
+---
+
 ## Quick Verification Reference
 
 ```bash
