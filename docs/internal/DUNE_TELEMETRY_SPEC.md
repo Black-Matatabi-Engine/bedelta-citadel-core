@@ -83,8 +83,26 @@ GROUP BY 1, 2
 ORDER BY blocks DESC;
 ```
 
+## Cloudflare KV Pipeline (Production)
+
+| KV binding | Key | Role |
+|------------|-----|------|
+| `SLIVERVINE_KV` | `telemetry:soak-rolling` | Soak telemetry rolling window |
+| `SLIVERVINE_KV` | `telemetry:risk-log-rolling` | `RiskLogEntry` audit trail |
+| `SLIVERVINE_KV` | `telemetry:exomesh-intercepts` | ExoMesh intercept rows (Dune schema) |
+| `EXECUTION_LOGS_KV` | `exec:grant_audit:latest` | Grant-audit precompute (`GET /api/grant-audit`) |
+
+**Local CLI mirror** (wall-clock `Date.now()` — not JUDGE_SAFE July anchor):
+
+- `docs/audit/exomesh-dune-telemetry.csv` — Dune upload SSOT
+- `docs/audit/exomesh-kv-intercepts.json` — `telemetry:exomesh-intercepts` mirror
+- `docs/audit/exomesh-risk-log-rolling.json` — `telemetry:risk-log-rolling` mirror
+
+`pnpm demo:gmx -- --trip` (and other demos via `wrapDemoExecution`) append to all three.
+
 ## Reconciliation Notes
 
+- **Bulk export (`pnpm export:dune`):** 264 rows stamped across the last 24h ending at `Date.now()` (rolling wall-clock).
 - **Chaos matrix:** 255 deterministic fail-closed cases from `scripts/chaos-blackswan-stress.ts`.
 - **Honeypot decoys:** `HONEYPOT_RPC_HOSTS` trap hosts → `HONEYPOT_DECOY`.
 - **Grant audit shadow margin:** Pendle×GMX probe rows from `buildGrantAuditDuneTelemetry()`.

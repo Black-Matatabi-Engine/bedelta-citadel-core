@@ -126,7 +126,6 @@ function finalizeDemoTelemetry(
 ): void {
   if (ctx.livingwater) return;
   recordDemoCliTelemetry({
-    nowMs: ctx.nowMs,
     tripped,
     reason,
     reflexLatencyUs,

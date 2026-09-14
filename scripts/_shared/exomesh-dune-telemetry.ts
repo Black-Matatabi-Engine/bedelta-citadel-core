@@ -150,7 +150,6 @@ export function buildTelemetryRow(input: {
 }
 
 export function buildChaosMatrixTelemetryRows(
-  evalAtMs: number,
   cases: ReadonlyArray<{
     id?: number;
     scenario: string;
@@ -167,7 +166,7 @@ export function buildChaosMatrixTelemetryRows(
     const seed = caseRow.id ?? rows.length + 1;
     rows.push(
       buildTelemetryRow({
-        timestampMs: evalAtMs + seed,
+        timestampMs: seed,
         venue,
         interceptType,
         reflexLatencyUs: seedReflexLatencyUs(interceptType, seed),
@@ -180,10 +179,10 @@ export function buildChaosMatrixTelemetryRows(
   return rows;
 }
 
-export function buildHoneypotDecoyRows(evalAtMs: number): ExomeshDuneTelemetryRow[] {
+export function buildHoneypotDecoyRows(): ExomeshDuneTelemetryRow[] {
   return HONEYPOT_RPC_HOSTS.map((host, index) =>
     buildTelemetryRow({
-      timestampMs: evalAtMs + 10_000 + index,
+      timestampMs: index,
       venue: "variational",
       interceptType: "HONEYPOT_DECOY",
       reflexLatencyUs: seedReflexLatencyUs("HONEYPOT_DECOY", index + 3),
@@ -194,12 +193,12 @@ export function buildHoneypotDecoyRows(evalAtMs: number): ExomeshDuneTelemetryRo
   );
 }
 
-export function buildGrantAuditTelemetryRows(evalAtMs: number): ExomeshDuneTelemetryRow[] {
-  const telemetry = buildGrantAuditDuneTelemetry(new Date(evalAtMs).toISOString());
+export function buildGrantAuditTelemetryRows(fetchedAtMs: number): ExomeshDuneTelemetryRow[] {
+  const telemetry = buildGrantAuditDuneTelemetry(new Date(fetchedAtMs).toISOString());
   return telemetry.actionLog.map((entry, index) => {
     if (entry.action === "PASS_GREENLIGHT") {
       return buildTelemetryRow({
-        timestampMs: Date.parse(entry.ts) + index,
+        timestampMs: index,
         venue: "pendle",
         interceptType: "SOIL_RESISTANCE_TRIP",
         reflexLatencyUs: seedReflexLatencyUs("SOIL_RESISTANCE_TRIP", index + 40),
@@ -213,7 +212,7 @@ export function buildGrantAuditTelemetryRows(evalAtMs: number): ExomeshDuneTelem
         ? "OBSERVATORY_HAIRCUT"
         : "SOIL_RESISTANCE_TRIP";
     return buildTelemetryRow({
-      timestampMs: Date.parse(entry.ts) + index,
+      timestampMs: index,
       venue: "pendle",
       interceptType,
       reflexLatencyUs: seedReflexLatencyUs(interceptType, index + 40),

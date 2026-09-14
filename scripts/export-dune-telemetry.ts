@@ -15,10 +15,13 @@ import {
   mapRetailCodeToInterceptType,
   type ExomeshDuneTelemetryRow,
 } from "./_shared/exomesh-dune-telemetry";
+import {
+  applyRollingTimestamps,
+  resolveRollingExportEndMs,
+} from "./_shared/exomesh-dune-telemetry-rolling";
 import { CHAOS_ATTACK_COUNT, runMatrixCase } from "./chaos-blackswan-stress";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
-const EVAL_AT_MS = Date.parse("2026-07-25T06:00:00.000Z");
 
 function buildExomeshDemoRows(): ExomeshDuneTelemetryRow[] {
   const demoRows: Array<{
@@ -52,7 +55,7 @@ function buildExomeshDemoRows(): ExomeshDuneTelemetryRow[] {
   ];
   return demoRows.map((row, index) =>
     buildTelemetryRow({
-      timestampMs: EVAL_AT_MS + 50_000 + index,
+      timestampMs: index,
       venue: row.venue,
       interceptType: row.status === "ALLOW" ? "SOIL_RESISTANCE_TRIP" : mapRetailCodeToInterceptType(row.code),
       reflexLatencyUs: row.wasmUs,
@@ -74,7 +77,7 @@ function muteConsole(): () => void {
   };
 }
 
-export function buildExomeshDuneTelemetryExport(evalAtMs = EVAL_AT_MS): ExomeshDuneTelemetryRow[] {
+export function buildExomeshDuneTelemetryExport(endMs = resolveRollingExportEndMs()): ExomeshDuneTelemetryRow[] {
   const restore = muteConsole();
   let chaosCases: ReturnType<typeof runMatrixCase>[];
   try {
@@ -82,12 +85,13 @@ export function buildExomeshDuneTelemetryExport(evalAtMs = EVAL_AT_MS): ExomeshD
   } finally {
     restore();
   }
-  return [
-    ...buildChaosMatrixTelemetryRows(evalAtMs, chaosCases),
-    ...buildHoneypotDecoyRows(evalAtMs),
-    ...buildGrantAuditTelemetryRows(evalAtMs),
+  const rows = [
+    ...buildChaosMatrixTelemetryRows(chaosCases),
+    ...buildHoneypotDecoyRows(),
+    ...buildGrantAuditTelemetryRows(endMs),
     ...buildExomeshDemoRows(),
-  ].sort((a, b) => a.timestampMs - b.timestampMs);
+  ];
+  return applyRollingTimestamps(rows, endMs);
 }
 
 function main(): void {

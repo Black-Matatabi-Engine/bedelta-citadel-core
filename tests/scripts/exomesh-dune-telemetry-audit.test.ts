@@ -21,6 +21,7 @@ describe("exomesh-dune-telemetry-audit", () => {
     const row = appendExomeshDuneTelemetryRow(
       {
         timestampMs: Date.parse("2026-07-25T06:00:00.000Z"),
+        preserveTimestamp: true,
         venue: "gmx",
         status: "FAIL_CLOSED",
         reason: "GMX_FAIL_CLOSED",
@@ -43,6 +44,7 @@ describe("exomesh-dune-telemetry-audit", () => {
     appendExomeshDuneTelemetryRow(
       {
         timestampMs: Date.parse("2026-07-25T06:00:00.000Z"),
+        preserveTimestamp: true,
         venue: "pendle",
         status: "ALLOW",
         reason: "ALLOW_PASSTHROUGH",
@@ -53,6 +55,7 @@ describe("exomesh-dune-telemetry-audit", () => {
     appendExomeshDuneTelemetryRow(
       {
         timestampMs: Date.parse("2026-07-25T06:00:01.000Z"),
+        preserveTimestamp: true,
         venue: "pendle",
         status: "FAIL_CLOSED",
         reason: "SOIL_RESISTANCE_TRIP",
@@ -61,5 +64,19 @@ describe("exomesh-dune-telemetry-audit", () => {
       csv,
     );
     expect(readFileSync(csv, "utf8").trim().split("\n").length).toBe(3);
+  });
+
+  it("defaults to wall-clock timestamp when preserveTimestamp is omitted", () => {
+    const dir = mkdtempSync(join(tmpdir(), "dune-audit-"));
+    dirs.push(dir);
+    const csv = join(dir, "exomesh.csv");
+    const before = Date.now();
+    const row = appendExomeshDuneTelemetryRow(
+      { venue: "gmx", status: "ALLOW", reason: "ALLOW_PASSTHROUGH", source: "demo:live" },
+      csv,
+    );
+    const parsed = Date.parse(row.timestamp);
+    expect(parsed).toBeGreaterThanOrEqual(before);
+    expect(parsed).toBeLessThanOrEqual(Date.now());
   });
 });

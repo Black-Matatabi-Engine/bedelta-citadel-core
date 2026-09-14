@@ -1,6 +1,10 @@
 /** CLI demo → Dune audit CSV bridge (local telemetry trail for judges). */
 import { basename } from "node:path";
-import { appendExomeshDuneTelemetryRow } from "../../scripts/_shared/exomesh-dune-telemetry-audit";
+import {
+  appendExomeshDuneTelemetryRow,
+  resolveTelemetryWallClockMs,
+} from "../../scripts/_shared/exomesh-dune-telemetry-audit";
+import { appendExomeshInterceptKvMirror } from "../../scripts/_shared/exomesh-kv-telemetry-mirror";
 import type { DuneVenue } from "../../scripts/_shared/exomesh-dune-telemetry";
 
 const GRAY = "\x1b[90m";
@@ -40,25 +44,24 @@ export function resolveDemoScriptId(argv: readonly string[] = process.argv): str
 
 export function printDemoTelemetrySyncNote(): void {
   console.log(
-    `\n${GRAY}[ExoMesh Telemetry] Intercept logged locally. Run 'pnpm export:dune' to sync with Dune dashboard schema.${R}`,
+    `\n${GRAY}[ExoMesh Telemetry] Intercept logged (wall-clock) → CSV + KV mirror. Run 'pnpm export:dune' to refresh Dune bulk schema.${R}`,
   );
 }
 
 export function recordDemoCliTelemetry(input: {
-  nowMs: number;
   tripped: boolean;
   reason: string;
   reflexLatencyUs?: number;
   demoId?: string;
 }): void {
   const demoId = input.demoId ?? resolveDemoScriptId();
-  appendExomeshDuneTelemetryRow({
-    timestampMs: input.nowMs,
+  const row = appendExomeshDuneTelemetryRow({
     venue: resolveDemoVenue(),
     status: input.tripped ? "FAIL_CLOSED" : "ALLOW",
     reason: input.reason,
     reflexLatencyUs: input.reflexLatencyUs,
-    source: `demo:${demoId}:${input.tripped ? "trip" : "allow"}`,
+    source: `demo:${demoId}:${input.tripped ? "trip" : "allow"}:${resolveTelemetryWallClockMs()}`,
   });
+  appendExomeshInterceptKvMirror(row);
   printDemoTelemetrySyncNote();
 }

@@ -14,6 +14,11 @@ const CSV_HEADER = "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,
 
 export const DEFAULT_DUNE_TELEMETRY_CSV = join(ROOT, "docs/audit/exomesh-dune-telemetry.csv");
 
+/** Wall-clock SSOT for live CLI / KV telemetry (not JUDGE_SAFE demo replay clock). */
+export function resolveTelemetryWallClockMs(nowMs = Date.now()): number {
+  return nowMs;
+}
+
 export function rowToCsvLine(row: ExomeshDuneTelemetryRow): string {
   return [
     row.timestamp,
@@ -27,19 +32,24 @@ export function rowToCsvLine(row: ExomeshDuneTelemetryRow): string {
 
 export function appendExomeshDuneTelemetryRow(
   input: {
-    timestampMs: number;
+    timestampMs?: number;
     venue: DuneVenue;
     status: "FAIL_CLOSED" | "ALLOW";
     reason: string;
     reflexLatencyUs?: number;
     source: string;
+    /** Set true in unit tests that need deterministic timestamps. */
+    preserveTimestamp?: boolean;
   },
   csvPath = DEFAULT_DUNE_TELEMETRY_CSV,
 ): ExomeshDuneTelemetryRow {
+  const timestampMs = input.preserveTimestamp
+    ? (input.timestampMs ?? resolveTelemetryWallClockMs())
+    : resolveTelemetryWallClockMs(input.timestampMs);
   const interceptType =
     input.status === "ALLOW" ? "SOIL_RESISTANCE_TRIP" : mapReasonToInterceptType(input.reason);
   const row = buildTelemetryRow({
-    timestampMs: input.timestampMs,
+    timestampMs,
     venue: input.venue,
     interceptType,
     reflexLatencyUs: input.reflexLatencyUs ?? (input.status === "FAIL_CLOSED" ? 7.2 : 1.3),
