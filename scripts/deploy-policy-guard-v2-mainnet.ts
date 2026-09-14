@@ -10,6 +10,7 @@ import { join } from "node:path";
 import {
   createPublicClient, createWalletClient, http, zeroAddress, type Address, type Hash, type Hex,
 } from "viem";
+import { STYLUS_SOIL_COPROCESSOR_MAINNET } from "../src/config/contract-deployments";
 import { privateKeyToAccount } from "viem/accounts";
 import { arbitrum } from "viem/chains";
 import { loadMainnetEnv, resolveMainnetPrivateKey } from "./_shared/mainnet-env";
@@ -33,6 +34,13 @@ function log(tag: string, payload: Record<string, unknown>): void {
 
 function armed(): boolean {
   return process.env.BROADCAST === "1" && process.env.CONFIRM_POLICY_GUARD_V2_DEPLOY === "YES";
+}
+
+function resolveStylusCoprocessor(): Address {
+  const raw = (process.env.STYLUS_COPROCESSOR_ADDRESS ?? "").trim();
+  if (raw && raw !== "0x" && raw !== zeroAddress) return raw as Address;
+  if ((process.env.STYLUS_COPROCESSOR_ACTIVE ?? "").trim() === "1") return STYLUS_SOIL_COPROCESSOR_MAINNET;
+  return zeroAddress;
 }
 
 function resolveRpc(): string {
@@ -86,7 +94,7 @@ async function main(): Promise<void> {
     log("dry_run", {
       hint: "CONFIRM_POLICY_GUARD_V2_DEPLOY=YES BROADCAST=1 MAINNET_PK=0x…",
       deployOrder: ["SliverVineRiskOracleV2", "GmxSoilMatrixSwitch", "SliverVineAgentPolicyGuardV2"],
-      stylusCoprocessor: zeroAddress,
+      stylusCoprocessor: resolveStylusCoprocessor(),
     });
     return;
   }
@@ -108,13 +116,14 @@ async function main(): Promise<void> {
 
   const riskOracleV2 = await deployOne(wallet, client, "SliverVineRiskOracleV2", oracleArt, [oracleSigner, sloWindowSec]);
   const matrixSwitch = await deployOne(wallet, client, "GmxSoilMatrixSwitch", matrixArt, [riskOracleV2]);
-  const policyGuardV2 = await deployOne(wallet, client, "SliverVineAgentPolicyGuardV2", policyArt, [guardian, zeroAddress]);
+  const stylusCoprocessor = resolveStylusCoprocessor();
+  const policyGuardV2 = await deployOne(wallet, client, "SliverVineAgentPolicyGuardV2", policyArt, [guardian, stylusCoprocessor]);
 
   log("bundle_summary", {
     chainId: CHAIN_ID,
     SliverVineRiskOracleV2: { address: riskOracleV2, url: arbiscanAddr(riskOracleV2) },
     GmxSoilMatrixSwitch: { address: matrixSwitch, url: arbiscanAddr(matrixSwitch), riskOracle: riskOracleV2 },
-    SliverVineAgentPolicyGuardV2: { address: policyGuardV2, url: arbiscanAddr(policyGuardV2), stylusCoprocessor: zeroAddress, guardian },
+    SliverVineAgentPolicyGuardV2: { address: policyGuardV2, url: arbiscanAddr(policyGuardV2), stylusCoprocessor, guardian },
     legacyPolicyGuardV1: "0xc66f96611a737c4e58706d0955594456eab88959",
   });
 }

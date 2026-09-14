@@ -1,5 +1,11 @@
 /** Pure GMX risk invariants — zero services / viem clients / async RPC (GM wire audit SSOT). */
 import { GMX_IMBALANCE_MAX } from "./risk-engine-limits";
+import {
+  evaluateSanctuaryGmxWireMask,
+  GMX_ERR_EXECUTION_FEE,
+  GMX_ERR_MIN_MARKET_TOKENS,
+  GMX_ERR_POOL_IMBALANCE,
+} from "./sanctuary-wasm-runtime";
 
 /** GMX GasUtils floor — 0.001 ETH WNT (keeper estimator SSOT). */
 export const GMX_MIN_EXECUTION_FEE_WEI = 10n ** 15n;
@@ -81,9 +87,42 @@ function auditMinOutputFloor(
   return null;
 }
 
-/** Shared GM risk invariant errors for deposit / withdraw wire audits. */
-export function collectGmxGmRiskInvariantErrors(
-  ctx: GmxGmRiskAuditContext = {},
+function gmxErrMaskToInvariantErrors(
+  mask: number,
+  ctx: GmxGmRiskAuditContext,
+  wire: {
+    executionFee: bigint;
+    minMarketTokens?: bigint;
+    minLongTokenAmount?: bigint;
+    minShortTokenAmount?: bigint;
+  },
+): string[] {
+  const errors: string[] = [];
+  const slippageBps = ctx.slippageBps ?? 30;
+  if (mask & GMX_ERR_EXECUTION_FEE) {
+    errors.push(
+      `executionFee below GMX minimum invariant (${wire.executionFee} < ${GMX_MIN_EXECUTION_FEE_WEI} wei)`,
+    );
+  }
+  if (mask & GMX_ERR_MIN_MARKET_TOKENS) {
+    const minMarketErr = auditMinOutputFloor(
+      "minMarketTokens",
+      wire.minMarketTokens ?? 0n,
+      ctx.expectedMarketTokens,
+      slippageBps,
+    );
+    if (minMarketErr) errors.push(minMarketErr);
+    else errors.push("minMarketTokens below slippage floor");
+  }
+  if (mask & GMX_ERR_POOL_IMBALANCE) {
+    const maxDelta = ctx.maxImbalanceDelta ?? GMX_IMBALANCE_MAX_RATIO;
+    errors.push(`GMX_POOL_IMBALANCE_GUARD: pool weights fail pure guard (maxDelta=${maxDelta})`);
+  }
+  return errors;
+}
+
+function collectGmxGmRiskInvariantErrorsColdPath(
+  ctx: GmxGmRiskAuditContext,
   wire: {
     executionFee: bigint;
     minMarketTokens?: bigint;
@@ -128,4 +167,19 @@ export function collectGmxGmRiskInvariantErrors(
     }
   }
   return errors;
+}
+
+/** Shared GM risk invariant errors — Worker cold tier routes via `sanctuary_invariants.wasm`. */
+export function collectGmxGmRiskInvariantErrors(
+  ctx: GmxGmRiskAuditContext = {},
+  wire: {
+    executionFee: bigint;
+    minMarketTokens?: bigint;
+    minLongTokenAmount?: bigint;
+    minShortTokenAmount?: bigint;
+  },
+): string[] {
+  const wasmMask = evaluateSanctuaryGmxWireMask(ctx, wire);
+  if (wasmMask !== null) return gmxErrMaskToInvariantErrors(wasmMask, ctx, wire);
+  return collectGmxGmRiskInvariantErrorsColdPath(ctx, wire);
 }

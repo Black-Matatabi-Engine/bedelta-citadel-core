@@ -159,16 +159,17 @@ SliverVine ExoMesh already ships **`soil_core.wasm`** (Rust) for sub-1.8µs warm
 
 ---
 
-## Phase-4 — FINAL SINKING & ON-CHAIN ACTIVATION ROADMAP
+## Phase-4 Completed (2026-09-14) — FINAL SINKING & CODEBASE FREEZE
 
 > **Scope lock:** Phase-4 is the **final** Wasm sinking roadmap phase. No Phase-5 planned.
 
-| # | Deliverable | Target |
-|---|-------------|--------|
-| 1 | **GMX packed eval sink** | Fully route Worker cold-tier GMX soil eval through `sanctuary_invariants.wasm` host export |
-| 2 | **On-chain Stylus activation** | Deploy `0xc235…625e` coprocessor behind `PolicyGuardV2` when `stylusCoprocessor != 0` |
-| 3 | **Strict benchmark lock** | Maintain `<16 KiB / 10k iter` zero-alloc budget on every build |
-| 4 | **Codebase freeze** | Post-Phase-4 freeze for Arbitrum Buildathon & DEX Grant submission |
+| Item | Status | Notes |
+|------|--------|-------|
+| GMX packed eval Wasm sink | ✅ | `sanctuary-wasm-runtime.ts` · Worker cold tier via `collectGmxGmRiskInvariantErrors` |
+| PolicyGuardV2 Stylus gate | ✅ | `policy-guard-stylus-gate.ts` · activates when `stylusCoprocessor != 0` (`0xc235…625e`) |
+| Zero-alloc benchmark lock | ✅ | `<16 KiB / 10k` intent + sanctuary GMX eval (`sanctuary-sinking-audit.test.ts`) |
+| Codebase freeze | ✅ | `docs/audit/CODEBASE_FREEZE.json` · Buildathon & DEX Grant submission lock |
+| Verification | ✅ | tsc clean · **1099 Vitest PASS** (237 files) · `bundle:measure` pass |
 
 ---
 

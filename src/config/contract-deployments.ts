@@ -23,6 +23,10 @@ export const SLIVERVINE_GATE_DUAL_DEPLOY_ADDRESS =
 export const MAINNET_IGNITION_TX =
   "0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6" as const;
 
+/** Engine A — Stylus soil coprocessor (PolicyGuardV2 activation target · Phase-4). */
+export const STYLUS_SOIL_COPROCESSOR_MAINNET =
+  "0xc23587d6573dd134f95b02b0202ffbf84686625e" as const;
+
 export const BOOTSTRAP_IGNITION_SIGNER_A =
   "0x1111111111111111111111111111111111111111" as const;
 export const BOOTSTRAP_IGNITION_SIGNER_B =
@@ -71,10 +75,10 @@ export const MAINNET_DEPLOYMENTS: readonly ContractDeployment[] = [
   },
   {
     name: "SliverVineSoilCoprocessor",
-    address: "0xc23587d6573dd134f95b02b0202ffbf84686625e",
+    address: STYLUS_SOIL_COPROCESSOR_MAINNET,
     network: "mainnet",
     chainIds: [ARBITRUM_ONE_CHAIN_ID],
-    role: "Stylus on-chain soil coprocessor (Engine A)",
+    role: "Stylus on-chain soil coprocessor (Engine A · PolicyGuardV2 stylusCoprocessor gate)",
     source: "scripts/deploy-stylus-mainnet.ts",
   },
 ];
