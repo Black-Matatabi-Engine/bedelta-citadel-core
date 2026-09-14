@@ -9,9 +9,9 @@ SliverVine ExoMesh already ships **`soil_core.wasm`** (Rust) for sub-1.8µs warm
 
 | Priority | Function / Module | Current LOC | Wasm Status | Target Latency |
 |----------|-------------------|-------------|-------------|----------------|
-| **P0** | `evaluateSoilSlippagePacked()` | `soil-resistance-math.ts` | **Partial** — TS mirror of Rust | < 1.1µs |
+| **P0** | `evaluateSoilSlippagePacked()` | `soil-resistance-math.ts` | **✅ Sunk** — Wasm SSOT via `soil-wasm-runtime.ts` | < 1.1µs |
 | **P0** | `intent_core_evaluate_gate()` | `intent-core-ring.ts` | **In-flight** — FFI wired | < 15µs |
-| **P1** | `checkSoilResistance()` external bitmask | `soil-resistance-external.ts` | TS only | < 5µs |
+| **P1** | `checkSoilResistance()` external bitmask | `soil-resistance-external.ts` | **✅ Sunk** — `soil_core_fold_probe_mask` ABI v2 | < 5µs |
 | **P1** | `evalAsyncVaultDrift()` | `soil-resistance-math.ts` | TS bigint | < 0.5µs |
 | **P2** | `computeGatedExecutorPayloadHash()` | `gated-executor-payload.ts` | TS keccak | < 50µs |
 | **P2** | `evaluateBlackSwanRisk()` | `black-swan-guard.ts` | TS float | < 2µs |
@@ -129,16 +129,30 @@ SliverVine ExoMesh already ships **`soil_core.wasm`** (Rust) for sub-1.8µs warm
 | `grant-audit-edge-payload.ts` | 223 | 168 + `grant-audit-edge-citadel.ts` (78) |
 | `exomesh-dune-telemetry.ts` | 270 | 175 + types (47) + map (108) |
 | `chaos-blackswan-stress.ts` | 841 | 57 barrel + 9 submodules (all < 212 LOC) |
+| `live-96h-telemetry-daemon.ts` | 410 | 96 barrel + 5 submodules (all < 185 LOC) |
+| `run-security-matrix.ts` | 289 | 14 barrel + 3 submodules (all < 186 LOC) |
+| `soak-test.ts` | 273 | 3 barrel + 3 submodules (all < 143 LOC) |
 
 ---
 
-## Recommended Phase-2 Roadmap
+## Phase-2 Completed (2026-09-14)
 
-1. **Lock `soil_core` ABI v2** — extend 6×f64 pack with protocol mask u32.
-2. **Delete TS `evaluateSoilSlippagePacked` duplicate** once Wasm path is 100% default in Worker.
-3. **Sink `evalAsyncVaultDrift`** to `sanctuary_invariants.wasm`.
-4. **Benchmark** via `tests/core/intent-sinking-audit.test.ts` — maintain `<16 KiB` / 10k iter budget.
-5. **Stylus coprocessor** (`0xc235…625e`) — on-chain mirror of P0 soil eval for PolicyGuardV2 pre-screen.
+| Item | Status | Notes |
+|------|--------|-------|
+| `computeSoilSlippageMetrics()` Wasm SSOT | ✅ | `src/core/soil-wasm-runtime.ts` · TS fallback cold-path only |
+| `collectExternalSoilFlags` bitmask fold | ✅ | `packInfrastructureProbeBitmask()` → `soil_core_fold_probe_mask` |
+| `soil_core` ABI v2 lane-26 | ✅ | `externalProbeMask` in `wasm-soil-ffi.ts` |
+| Script module splits | ✅ | live-96h / security-matrix / soak-test subdirs |
+| Verification | ✅ | tsc clean · 1091 Vitest PASS |
+
+---
+
+## Recommended Phase-3 Roadmap
+
+1. **Delete TS `evaluateSoilSlippagePacked` duplicate** once Wasm path is 100% default in Worker (cold-path parity tests only).
+2. **Sink `evalAsyncVaultDrift`** to `sanctuary_invariants.wasm`.
+3. **Benchmark** via `tests/core/intent-sinking-audit.test.ts` — maintain `<16 KiB` / 10k iter budget.
+4. **Stylus coprocessor** (`0xc235…625e`) — on-chain mirror of P0 soil eval for PolicyGuardV2 pre-screen.
 
 ---
 

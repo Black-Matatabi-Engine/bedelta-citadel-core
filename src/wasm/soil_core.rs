@@ -4,6 +4,7 @@
 
 const PROTO_VECT_LEN: usize = 28;
 const WASM_SOIL_OFFSET: usize = 28;
+const EXTERNAL_PROBE_LANE: usize = 26;
 const TRIP_CROSS_VENUE: u32 = 1;
 const TRIP_DEPTH: u32 = 2;
 const TRIP_INSUFFICIENT: u32 = 4;
@@ -51,6 +52,10 @@ pub unsafe extern "C" fn soil_core_eval(in_ptr: *const f64, out_ptr: *mut f64) -
         flags |= TRIP_DEPTH;
     }
 
+    let probe_mask = *in_ptr.add(EXTERNAL_PROBE_LANE);
+    if probe_mask != 0.0 {
+        flags |= probe_mask as u32;
+    }
     let protocol_mask = *in_ptr.add(PROTO_VECT_LEN - 1);
     if protocol_mask != 0.0 {
         flags |= TRIP_PROTOCOL;
@@ -113,6 +118,12 @@ pub extern "C" fn eval_async_vault_drift(request_rate: u64, claim_rate: u64, max
     } else {
         0
     }
+}
+
+/// Fold infrastructure probe bitmask — strip accidental math bits (1|2|4), keep external >= 8.
+#[no_mangle]
+pub extern "C" fn soil_core_fold_probe_mask(probe_mask: u32) -> u32 {
+    probe_mask & 0xFFFF_FFF8
 }
 
 /// Module ABI stamp — host verifies Wasm is official soil_core.

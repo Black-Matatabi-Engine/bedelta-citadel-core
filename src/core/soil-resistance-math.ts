@@ -1,7 +1,8 @@
-/** Pure soil slippage lane math — Wasm-aligned 6×f64 pack. */
+/** Pure soil slippage lane math — Wasm SSOT when `soil_core.wasm` loaded. */
 import type { SoilResistanceInput } from "./soil-resistance-types";
 import { MIN_DEPTH_USD, resolveSoilMinDepthUsd } from "./soil-resistance-env";
 import { logSoilCore } from "./core-telemetry";
+import { ensureSoilWasmRuntime, evaluateCoreSoilSlippage } from "./soil-wasm-runtime";
 
 export { MIN_DEPTH_USD };
 export const MAX_SLIPPAGE = 0.005;
@@ -38,6 +39,7 @@ export function packSoilLane(
   return lane;
 }
 
+/** Cold-path TS mirror — parity tests + wasm-unavailable fallback only. */
 export function evaluateSoilSlippagePacked(lane: Float64Array): {
   crossVenueSlippage: number;
   spotPerpSlippage: number;
@@ -74,6 +76,21 @@ export function computeSoilSlippageMetrics(
 ): { crossVenueSlippage: number; spotPerpSlippage: number; tripFlags: number } {
   const slippageFuse = overrides?.maxSlippage ?? input.maxSlippage ?? MAX_SLIPPAGE;
   const minDepthUsd = overrides?.minDepthUsd ?? resolveSoilMinDepthUsd(input);
+
+  if (ensureSoilWasmRuntime()) {
+    const wasm = evaluateCoreSoilSlippage({
+      hlSpot: input.hlSpot,
+      hlPerp: input.hlPerp,
+      dydxPerp: input.dydxPerp,
+      depthUsd: input.depthUsd ?? Number.NaN,
+      orderSizeUsd: input.orderSizeUsd ?? 0,
+      accountBalanceUsd: input.accountBalanceUsd ?? 0,
+      maxSlippage: slippageFuse,
+      minDepthUsd,
+    });
+    if (wasm) return wasm;
+  }
+
   SOIL_LANE_SCRATCH.fill(0);
   packSoilLane(
     input.hlSpot,

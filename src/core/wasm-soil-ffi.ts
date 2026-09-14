@@ -2,6 +2,7 @@
 import { PROTO_VECT_LEN } from "./risk-engine-core";
 
 export const WASM_PROTOCOL_LEN = PROTO_VECT_LEN;
+export const WASM_EXTERNAL_PROBE_LANE = WASM_PROTOCOL_LEN - 2;
 export const WASM_SOIL_OFFSET = WASM_PROTOCOL_LEN;
 export const WASM_SOIL_INPUT_FLOATS = WASM_PROTOCOL_LEN + 8;
 export const WASM_SOIL_INPUT_BYTES = WASM_SOIL_INPUT_FLOATS * 8;
@@ -19,6 +20,8 @@ export interface WasmSoilCoreInput {
   maxSlippage: number;
   minDepthUsd: number;
   protocolMask?: number;
+  /** Infrastructure probe bitmask (lane 26) — folded natively in `soil_core_eval`. */
+  externalProbeMask?: number;
 }
 
 /** Module-load reusable scratch — zero per-invoke `ArrayBuffer` allocation on hot FFI path. */
@@ -26,11 +29,13 @@ export const SOIL_FFI_REUSABLE_BUFFER = new ArrayBuffer(WASM_SOIL_INPUT_BYTES);
 const SOIL_FFI_REUSABLE_VIEW = new DataView(SOIL_FFI_REUSABLE_BUFFER);
 
 const MASK_OFF = (WASM_PROTOCOL_LEN - 1) * 8;
+const PROBE_OFF = WASM_EXTERNAL_PROBE_LANE * 8;
 const SOIL_OFF = WASM_SOIL_OFFSET * 8;
 const SOIL_FFI_U8 = new Uint8Array(SOIL_FFI_REUSABLE_BUFFER);
 const PROTO_VEC_SCRATCH = new Float64Array(WASM_PROTOCOL_LEN);
-const SOIL_FIELD_OFF = {
+const SOIL_FIELD_OFF: Record<keyof WasmSoilCoreInput, number> = {
   protocolMask: MASK_OFF,
+  externalProbeMask: PROBE_OFF,
   hlSpot: SOIL_OFF,
   hlPerp: SOIL_OFF + 8,
   dydxPerp: SOIL_OFF + 16,
@@ -39,7 +44,7 @@ const SOIL_FIELD_OFF = {
   accountBalanceUsd: SOIL_OFF + 40,
   maxSlippage: SOIL_OFF + 48,
   minDepthUsd: SOIL_OFF + 56,
-} as const;
+};
 
 export function wasmSoilInputByteOffset(field: keyof WasmSoilCoreInput): number {
   return SOIL_FIELD_OFF[field];
@@ -67,6 +72,7 @@ export function readProtocolVectorFromView(
 export function encodeWasmSoilInput(input: WasmSoilCoreInput): ArrayBuffer {
   SOIL_FFI_U8.fill(0);
   const view = SOIL_FFI_REUSABLE_VIEW;
+  if (input.externalProbeMask) view.setFloat64(PROBE_OFF, input.externalProbeMask, true);
   if (input.protocolMask) view.setFloat64(MASK_OFF, input.protocolMask, true);
   view.setFloat64(SOIL_OFF, input.hlSpot, true);
   view.setFloat64(SOIL_OFF + 8, input.hlPerp, true);
