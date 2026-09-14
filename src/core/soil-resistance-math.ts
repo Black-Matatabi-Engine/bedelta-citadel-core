@@ -1,24 +1,31 @@
-/** Pure soil slippage lane math — Wasm SSOT when `soil_core.wasm` loaded. */
+/** Pure soil slippage lane math — Wasm SSOT via `soil-wasm-runtime.ts`. */
 import type { SoilResistanceInput } from "./soil-resistance-types";
 import { MIN_DEPTH_USD, resolveSoilMinDepthUsd } from "./soil-resistance-env";
-import { logSoilCore } from "./core-telemetry";
-import { ensureSoilWasmRuntime, evaluateCoreSoilSlippage } from "./soil-wasm-runtime";
+import {
+  evaluatePackedSoilLane,
+  evalAsyncVaultDriftViaWasm,
+} from "./soil-wasm-runtime";
+import {
+  SOIL_IDX_DEPTH_USD,
+  SOIL_IDX_DYDX_PERP,
+  SOIL_IDX_HL_PERP,
+  SOIL_IDX_HL_SPOT,
+  SOIL_IDX_MIN_DEPTH_USD,
+  SOIL_IDX_SLIPPAGE_FUSE,
+  SOIL_PACK_LEN,
+  evaluateSoilSlippagePackedColdPath,
+} from "./soil-slippage-cold-path";
 
 export { MIN_DEPTH_USD };
+export {
+  SOIL_REASON_INSUFFICIENT_DEPTH,
+  SOIL_REASON_CROSS_VENUE,
+  SOIL_REASON_DEPTH_USD,
+} from "./soil-slippage-cold-path";
 export const MAX_SLIPPAGE = 0.005;
 export const VINE_SOIL_MAX_SLIPPAGE = 0.003;
 
-const SOIL_PACK_LEN = 6;
 const SOIL_LANE_SCRATCH = new Float64Array(SOIL_PACK_LEN);
-const SOIL_IDX_HL_SPOT = 0;
-const SOIL_IDX_HL_PERP = 1;
-const SOIL_IDX_DYDX_PERP = 2;
-const SOIL_IDX_DEPTH_USD = 3;
-const SOIL_IDX_SLIPPAGE_FUSE = 4;
-const SOIL_IDX_MIN_DEPTH_USD = 5;
-export const SOIL_REASON_INSUFFICIENT_DEPTH = 1;
-export const SOIL_REASON_CROSS_VENUE = 2;
-export const SOIL_REASON_DEPTH_USD = 4;
 
 export function packSoilLane(
   hlSpot: number,
@@ -39,31 +46,8 @@ export function packSoilLane(
   return lane;
 }
 
-/** Cold-path TS mirror — parity tests + wasm-unavailable fallback only. */
-export function evaluateSoilSlippagePacked(lane: Float64Array): {
-  crossVenueSlippage: number;
-  spotPerpSlippage: number;
-  tripFlags: number;
-} {
-  const hlPerp = lane[SOIL_IDX_HL_PERP];
-  const dydxPerp = lane[SOIL_IDX_DYDX_PERP];
-  const hlSpot = lane[SOIL_IDX_HL_SPOT];
-  const depthUsd = lane[SOIL_IDX_DEPTH_USD];
-  const slippageFuse = lane[SOIL_IDX_SLIPPAGE_FUSE];
-  const minDepthUsd = lane[SOIL_IDX_MIN_DEPTH_USD];
-  const crossVenueSlippage =
-    hlPerp > 0 && dydxPerp > 0 ? Math.abs(dydxPerp - hlPerp) / hlPerp : Number.POSITIVE_INFINITY;
-  const spotPerpSlippage =
-    hlSpot > 0 ? Math.abs(hlPerp - hlSpot) / hlSpot : Number.POSITIVE_INFINITY;
-  let tripFlags = 0;
-  if (hlPerp <= 0 || dydxPerp <= 0) tripFlags |= SOIL_REASON_INSUFFICIENT_DEPTH;
-  if (hlPerp > 0 && dydxPerp > 0 && crossVenueSlippage > slippageFuse) tripFlags |= SOIL_REASON_CROSS_VENUE;
-  if (Number.isFinite(depthUsd) && depthUsd < minDepthUsd) tripFlags |= SOIL_REASON_DEPTH_USD;
-  if (tripFlags !== 0) {
-    logSoilCore("slippage trip", { tripFlags, crossVenueSlippage, depthUsd, minDepthUsd });
-  }
-  return { crossVenueSlippage, spotPerpSlippage, tripFlags };
-}
+/** @parity-only — cold-path mirror; hot path uses `evaluatePackedSoilLane` / Wasm. */
+export const evaluateSoilSlippagePacked = evaluateSoilSlippagePackedColdPath;
 
 export interface SoilSlippageOverrides {
   maxSlippage?: number;
@@ -76,21 +60,6 @@ export function computeSoilSlippageMetrics(
 ): { crossVenueSlippage: number; spotPerpSlippage: number; tripFlags: number } {
   const slippageFuse = overrides?.maxSlippage ?? input.maxSlippage ?? MAX_SLIPPAGE;
   const minDepthUsd = overrides?.minDepthUsd ?? resolveSoilMinDepthUsd(input);
-
-  if (ensureSoilWasmRuntime()) {
-    const wasm = evaluateCoreSoilSlippage({
-      hlSpot: input.hlSpot,
-      hlPerp: input.hlPerp,
-      dydxPerp: input.dydxPerp,
-      depthUsd: input.depthUsd ?? Number.NaN,
-      orderSizeUsd: input.orderSizeUsd ?? 0,
-      accountBalanceUsd: input.accountBalanceUsd ?? 0,
-      maxSlippage: slippageFuse,
-      minDepthUsd,
-    });
-    if (wasm) return wasm;
-  }
-
   SOIL_LANE_SCRATCH.fill(0);
   packSoilLane(
     input.hlSpot,
@@ -101,16 +70,26 @@ export function computeSoilSlippageMetrics(
     minDepthUsd,
     SOIL_LANE_SCRATCH,
   );
-  return evaluateSoilSlippagePacked(SOIL_LANE_SCRATCH);
+  return evaluatePackedSoilLane(SOIL_LANE_SCRATCH);
 }
 
 const ASYNC_VAULT_BPS = 10_000n;
+const U64_MAX = 0xffff_ffff_ffff_ffffn;
 
-/** |claim−request| × 10000 > maxBps × request — fail-closed if request≤0. */
-export function evalAsyncVaultDrift(requestRate: bigint, claimRate: bigint, maxBps: number): boolean {
+function evalAsyncVaultDriftColdPath(requestRate: bigint, claimRate: bigint, maxBps: number): boolean {
   if (requestRate <= 0n || !Number.isFinite(maxBps) || maxBps < 0) return true;
   const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
   return delta * ASYNC_VAULT_BPS > BigInt(maxBps | 0) * requestRate;
+}
+
+/** ERC-7540 async vault drift — Wasm SSOT (`eval_async_vault_drift` in `soil_core.wasm`). */
+export function evalAsyncVaultDrift(requestRate: bigint, claimRate: bigint, maxBps: number): boolean {
+  if (requestRate <= 0n || !Number.isFinite(maxBps) || maxBps < 0) return true;
+  if (requestRate <= U64_MAX && claimRate <= U64_MAX) {
+    const wasm = evalAsyncVaultDriftViaWasm(requestRate, claimRate, maxBps);
+    if (wasm !== null) return wasm;
+  }
+  return evalAsyncVaultDriftColdPath(requestRate, claimRate, maxBps);
 }
 
 export function evalAsyncVaultDriftBps(requestRate: bigint, claimRate: bigint): number {

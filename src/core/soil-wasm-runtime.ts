@@ -11,10 +11,17 @@ import {
   type WasmSoilCoreInput,
 } from "./wasm-soil-ffi";
 import {
+  SOIL_IDX_DEPTH_USD,
+  SOIL_IDX_DYDX_PERP,
+  SOIL_IDX_HL_PERP,
+  SOIL_IDX_HL_SPOT,
+  SOIL_IDX_MIN_DEPTH_USD,
+  SOIL_IDX_SLIPPAGE_FUSE,
   SOIL_REASON_CROSS_VENUE,
   SOIL_REASON_DEPTH_USD,
   SOIL_REASON_INSUFFICIENT_DEPTH,
-} from "./soil-resistance-math";
+  evaluateSoilSlippagePackedColdPath,
+} from "./soil-slippage-cold-path";
 
 const WASM_SOIL_OUT_OFFSET = WASM_SOIL_INPUT_BYTES;
 
@@ -23,6 +30,7 @@ type SoilWasmExports = {
   soil_core_eval: (inPtr: number, outPtr: number) => number;
   soil_core_abi_version: () => number;
   soil_core_fold_probe_mask?: (probeMask: number) => number;
+  eval_async_vault_drift?: (requestRate: bigint, claimRate: bigint, maxBps: bigint) => number;
 };
 
 let exportsRef: SoilWasmExports | null = null;
@@ -141,4 +149,38 @@ export function foldExternalProbeBitmaskViaWasm(probeMask: number): number | nul
     return exportsRef.soil_core_fold_probe_mask(probeMask >>> 0) >>> 0;
   }
   return probeMask >>> 0;
+}
+
+/** Hot-path packed lane eval — Wasm SSOT with cold-path parity fallback. */
+export function evaluatePackedSoilLane(lane: Float64Array): CoreSoilSlippageResult {
+  if (ensureSoilWasmRuntime()) {
+    const wasm = evaluateCoreSoilSlippage({
+      hlSpot: lane[SOIL_IDX_HL_SPOT],
+      hlPerp: lane[SOIL_IDX_HL_PERP],
+      dydxPerp: lane[SOIL_IDX_DYDX_PERP],
+      depthUsd: lane[SOIL_IDX_DEPTH_USD],
+      orderSizeUsd: 0,
+      accountBalanceUsd: 0,
+      maxSlippage: lane[SOIL_IDX_SLIPPAGE_FUSE],
+      minDepthUsd: lane[SOIL_IDX_MIN_DEPTH_USD],
+    });
+    if (wasm) return wasm;
+  }
+  return evaluateSoilSlippagePackedColdPath(lane);
+}
+
+/** ERC-7540 drift trip (1=trip) via `eval_async_vault_drift` — null if export missing. */
+export function evalAsyncVaultDriftViaWasm(
+  requestRate: bigint,
+  claimRate: bigint,
+  maxBps: number,
+): boolean | null {
+  if (!ensureSoilWasmRuntime() || !exportsRef) return null;
+  if (typeof exportsRef.eval_async_vault_drift !== "function") return null;
+  const tripped = exportsRef.eval_async_vault_drift(
+    requestRate,
+    claimRate,
+    BigInt(maxBps | 0),
+  );
+  return tripped !== 0;
 }

@@ -125,3 +125,25 @@ export function stylusSoilTripSemantics(tripFlags: number): SoilTripSemantics {
 export function edgeMaxSlippageToStylusBps(maxSlippage: number): number {
   return Math.round(maxSlippage * EDGE_STYLUS_SLIPPAGE_BPS_RATIO);
 }
+
+/** Map `soil_core_eval` rust flags (1=cross · 2=depth · 4=insufficient · 8=protocol) → Stylus u64 soil mask. */
+export function mapCoreRustTripFlagsToStylusU64(rustTripFlags: number): number {
+  let out = 0;
+  if (rustTripFlags & 1) out |= STYLUS_SOIL_REASON_CROSS;
+  if (rustTripFlags & 2) out |= STYLUS_SOIL_REASON_DEPTH;
+  if (rustTripFlags & 8) out |= STYLUS_SOIL_REASON_PROTOCOL;
+  return out;
+}
+
+/** PolicyGuardV2 pre-screen: pack Edge lane + core soil flags into Stylus 96-byte eval input. */
+export function packPolicyGuardSoilScreen(
+  input: EdgeSoilLaneInput,
+  coreRustTripFlags = 0,
+): Uint8Array {
+  const buf = packStylusSoilFromEdge(input);
+  if (coreRustTripFlags !== 0) {
+    const merged = readU64Le(buf, STYLUS_OFF_PROTOCOL_MASK) | mapCoreRustTripFlagsToStylusU64(coreRustTripFlags);
+    writeU64Le(buf, STYLUS_OFF_PROTOCOL_MASK, merged);
+  }
+  return buf;
+}

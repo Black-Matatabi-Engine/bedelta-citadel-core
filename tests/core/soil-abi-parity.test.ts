@@ -10,14 +10,19 @@ import {
   packStylusSoilFromEdge,
   STYLUS_MAX_SPREAD_BPS,
   STYLUS_MIN_DEPTH_USD,
+  mapCoreRustTripFlagsToStylusU64,
+  packPolicyGuardSoilScreen,
+  STYLUS_SOIL_REASON_PROTOCOL,
   stylusSoilTripSemantics,
 } from "../../src/core/stylus-soil-abi-bridge";
 import {
   evaluateSoilSlippagePacked,
+  evalAsyncVaultDrift,
   packSoilLane,
   SOIL_REASON_CROSS_VENUE,
   SOIL_REASON_DEPTH_USD,
 } from "../../src/core/soil-resistance-math";
+import { evalAsyncVaultDriftViaWasm } from "../../src/core/soil-wasm-runtime";
 import {
   encodeWasmSoilInput,
   SOIL_FFI_REUSABLE_BUFFER,
@@ -31,6 +36,7 @@ const SOIL_LANE = new Float64Array(6);
 type SoilWasmExports = {
   memory: WebAssembly.Memory;
   soil_core_eval: (inPtr: number, outPtr: number) => number;
+  eval_async_vault_drift?: (requestRate: bigint, claimRate: bigint, maxBps: bigint) => number;
 };
 
 let wasmExports: SoilWasmExports;
@@ -225,5 +231,36 @@ describe("soil ABI — golden vector cross-tier parity", () => {
     expect(ts.tripFlags & SOIL_REASON_CROSS_VENUE).toBe(SOIL_REASON_CROSS_VENUE);
     expect(Math.abs(ts.crossVenueSlippage - ratio)).toBeLessThan(1e-12);
     expect(Math.abs(wasm.crossVenueSlippage - ratio) / ratio).toBeLessThan(0.000_001);
+  });
+
+  it("evalAsyncVaultDrift matches soil_core eval_async_vault_drift export", () => {
+    expect(typeof wasmExports.eval_async_vault_drift).toBe("function");
+    const cases = [
+      { req: 1_000_000n, claim: 1_050_000n, maxBps: 400, trip: true },
+      { req: 1_000_000n, claim: 1_010_000n, maxBps: 200, trip: false },
+      { req: 0n, claim: 1n, maxBps: 50, trip: true },
+    ];
+    for (const c of cases) {
+      const ts = evalAsyncVaultDrift(c.req, c.claim, c.maxBps);
+      const wasm = evalAsyncVaultDriftViaWasm(c.req, c.claim, c.maxBps);
+      expect(wasm).toBe(ts);
+      if (c.req > 0n) {
+        expect(wasmExports.eval_async_vault_drift!(c.req, c.claim, BigInt(c.maxBps))).toBe(
+          c.trip ? 1 : 0,
+        );
+      }
+    }
+  });
+
+  it("mapCoreRustTripFlagsToStylusU64 aligns PolicyGuard pre-screen soil mask", () => {
+    const stylus = mapCoreRustTripFlagsToStylusU64(1 | 2 | 8);
+    expect(stylus & STYLUS_SOIL_REASON_PROTOCOL).toBe(STYLUS_SOIL_REASON_PROTOCOL);
+    const packed = packPolicyGuardSoilScreen(
+      { hlPerp: 100, dydxPerp: 100.5, depthUsd: 200_000, maxSlippage: 0.005, minDepthUsd: 100_000 },
+      8,
+    );
+    expect(packed.byteLength).toBe(96);
+    const pure = evaluateStylusSoilU64Pure(packed);
+    expect(pure.tripFlags & STYLUS_SOIL_REASON_PROTOCOL).toBe(STYLUS_SOIL_REASON_PROTOCOL);
   });
 });

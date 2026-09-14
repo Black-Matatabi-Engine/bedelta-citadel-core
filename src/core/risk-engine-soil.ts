@@ -3,9 +3,9 @@ import {
   MAX_SLIPPAGE,
   isTsunamiShieldWindow,
   packSoilLane,
-  evaluateSoilSlippagePacked,
   resolveSoilMinDepthUsd,
 } from "./soil-resistance-core";
+import { evaluatePackedSoilLane } from "./soil-wasm-runtime";
 import type { SoilResistanceInput, SoilResistanceResult } from "./soil-resistance-types";
 import { checkSoilResistance as checkSoilResistanceBase } from "../services/risk-control-lib/soil-resistance";
 import { isXyzOrHip3Key } from "../services/exchanges/asset-classifier-lib/asset-classifier-keywords";
@@ -28,7 +28,7 @@ export function isGatewayNominalFastPath(soil: SoilResistanceInput): boolean {
     soilRef = soil; soilFast = false; return false;
   }
   const lane = packSoilLane(soil.hlSpot, soil.hlPerp, soil.dydxPerp, soil.depthUsd ?? Number.NaN, soil.maxSlippage ?? MAX_SLIPPAGE, resolveSoilMinDepthUsd(soil));
-  if (evaluateSoilSlippagePacked(lane).tripFlags !== 0 || isTsunamiShieldWindow(soil.at)) { soilRef = soil; soilFast = false; return false; }
+  if (evaluatePackedSoilLane(lane).tripFlags !== 0 || isTsunamiShieldWindow(soil.at)) { soilRef = soil; soilFast = false; return false; }
   const wallMs = soil.at?.getTime() ?? Date.now();
   const clockSample = getGlobalMonotonicClock().read(wallMs);
   if (clockSample.anomaly !== null) {
