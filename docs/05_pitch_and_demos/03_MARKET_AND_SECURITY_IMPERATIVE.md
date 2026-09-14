@@ -10,7 +10,7 @@
 | **Core Architecture** | Client-Side Edge-Wasm Pre-Consensus Reflex Arc & Intent Firewall |
 | **Network Scope** | Arbitrum One / Arbitrum Nova / Robinhood Chain (Orbit L2/L3) |
 | **Core Latency Benchmark** | p50 ~15µs Wasm reflex core / p50 ~106µs E2E ExoMesh Edge |
-| **Verification Baseline** | **231 test files / 1081 PASS** (100% clean) |
+| **Verification Baseline** | **235 test files / 1091 PASS** (100% clean) |
 | **Related SSOT** | [`01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md`](./01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md) · [`02_CLI_DEMO_RUNBOOK.md`](./02_CLI_DEMO_RUNBOOK.md) · [`03_RISK_MITIGATION`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) |
 
 ---

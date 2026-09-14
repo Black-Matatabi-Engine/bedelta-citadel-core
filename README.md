@@ -1,6 +1,8 @@
 # SliverVine Protocol (BeΔ) — ExoMesh Pre-Consensus Intent Firewall for AI Agents on Arbitrum
 
-![Vitest](https://img.shields.io/badge/Vitest-1081%20PASS%20%28231%20files%29-brightgreen?logo=vitest)
+> 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
+
+![Vitest](https://img.shields.io/badge/Vitest-1091%20PASS%20%28235%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 ![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)
@@ -45,7 +47,7 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 | **Local in-process reflex** | No Blockaid-class 200–800ms round-trip |
 | **AI retry severance** | 4th rapid submit → `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
-**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **231 test files | 1081 PASS clean**
+**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **235 test files | 1091 PASS clean**
 
 ### Key Architectural Moats
 
@@ -123,7 +125,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 | **Pure Invariant Math** | **~0.5µs–1.1µs** | Isolated `checkSoilResistance()` — no async I/O | CLI HUD `Pure Invariant Time` row |
 | **Stylus ReflexCore (SSRC)** | **p50 ~15µs** | `rootProtection()` · `severSigningChannel()` · `soil_core.wasm` | `pnpm demo:gmx -- --trip` |
 | **E2E ExoMesh Edge** | **p50 ~106µs** | Cloudflare Worker + TS Gateway + SSRC FFI | `pnpm demo:gmx` |
-| **Worker bundle (hot-path)** | **57.76 KiB gzip** | 163.67 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
+| **Worker bundle (hot-path)** | **57.81 KiB gzip** | 163.72 KiB raw · `limitKiB: 150` · pass | `pnpm bundle:measure` |
 
 *Zero-Allocation Hot-Path:* Pre-allocated **256×4 ring slab** achieves `<16 KiB` heap delta over 10,000 iterations — `npx vitest run tests/core/intent-sinking-audit.test.ts`.
 
@@ -141,7 +143,7 @@ pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
-pnpm test -- --run                                       # 231 files | 1081 PASS
+pnpm test -- --run                                       # 235 files | 1091 PASS
 pnpm run audit:security                                  # 3-Axis: 5/0/0 PASS
 ```
 

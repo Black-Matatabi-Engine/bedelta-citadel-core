@@ -124,7 +124,7 @@ SliverVine models **TradFi Total Return Swaps** and **crypto perpetuals** as dis
 
 ## Architectural SSOT & Hardened Metrics
 
-* **Test Suite**: **231 test files | 1081 PASS clean** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../06_verifications/01_VERIFICATION_MATRIX.md).
+* **Test Suite**: **235 test files | 1091 PASS clean** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../06_verifications/01_VERIFICATION_MATRIX.md).
 * **Dual-Demo Architecture**: **`pnpm demo`** — 12 Dual Pillar Set X & Y ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:e2e`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`npx vitest run tests/sdk/retail-guard-provider.test.ts`** — EIP-1193 Retail Guard SDK (35/35 PASS).
 * **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#3-cross-venue-risk-engine-defense-matrix-r01-r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../audit/game_theory_simulation_results.json) *(simulation only; not live savings)*.
@@ -193,7 +193,7 @@ Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 
 | Horizon | Status | Scope |
 |---------|--------|-------|
-| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Direct SDK / EIP-1193 Guard** (`withRetailGuardProvider`) · ⏳ **Framework Adapters Harness Specs** (Wayfinder · ElizaOS · Virtuals · LangChain — `tests/` harness only, not official Live plugins) · 5-Core venue CLI demos · Stabilizer Sepolia sandbox · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · static `GET /api/grant-audit` SHA-256 provenance archive · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · Worker bundle **57.76 KiB gzip** · **231 test files \| 1081 PASS clean** |
+| **V1.0** | ✅ Code-Verified Live Baseline | Arbitrum One GMX v2 ETH/USDC GM + HL 1× short · Wasm `checkSoilResistance()` p50 ~106µs · **V1.0 Direct SDK / EIP-1193 Guard** (`withRetailGuardProvider`) · ⏳ **Framework Adapters Harness Specs** (Wayfinder · ElizaOS · Virtuals · LangChain — `tests/` harness only, not official Live plugins) · 5-Core venue CLI demos · Stabilizer Sepolia sandbox · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-validation · EIP-712 consume-once Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · static `GET /api/grant-audit` SHA-256 provenance archive · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · Worker bundle **57.81 KiB gzip** · **235 test files \| 1091 PASS clean** |
 | **V1.1** | ⏳ Milestone 1 Post-Grant | **KV API Key Metering + 4-Tier SaaS** ($10 / $99 / $299 / $1,999+) · multi-tenant rate limiter |
 | **V1.5** | ⏳ Roadmap Spec | **Sub-ms Agentic Security & Swarms** — ERC-8196 (Final) fleet enforcement · EIP-7702 EOA → Agent Smart Account · Prompt Injection Defense Circuit (`severSigningChannel()` sub-100µs) |
 | **V2.0** | ⏳ Design Spec | **Institutional CaaS & Orbit Shield** — paid policy plane around the **already-shipped** Wallet Guard SKU (`withRetailGuardProvider`) · Orbit L3s · ZeroDev Stage ⑦ Intent Composition (2PC ledger) |
@@ -446,7 +446,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 | ID | Unlock condition (objective) | Venue / track | Status |
 |----|------------------------------|-----------------|--------|
 | **M-Sepolia** | Sepolia Gate + RiskOracle + IngressSafetySwitch verified · `sepoliaDualLegProof` in static `/api/grant-audit` archive | Arbitrum | ✅ Delivered |
-| **M-CLI** | Vitest **231 test files | 1081 PASS clean** | All | ✅ Delivered |
+| **M-CLI** | Vitest **235 test files | 1091 PASS clean** | All | ✅ Delivered |
 | **M-RH-Demo** | `4663` → `42161` outbound Smart Route **Verified Live** · UserOp `0x7b72ee9f…` · Tx [`0x4c4ca136…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · inbound AML blocked · `lostUsd ≡ 0` | Robinhood Chain | ✅ Live-verified |
 | **M-GMX-Fee** | Unsigned GMX v2 payload injects **10 bps** `uiFeeReceiver` | GMX | ✅ Injected · ⏳ `claimUiFees` |
 | **M-Dune** | Publish Dune dashboard per [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | Dune | ✅ [Live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
@@ -516,7 +516,7 @@ pnpm demo       # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
 pnpm demo:e2e   # Tier 3 — 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # Tier 0 — EIP-1193 Retail Guard SDK
 pnpm demo:agent                  # Tier 0 — B2B withExoMeshShield smoke demo
-pnpm test       # Full System Regression Suite (231 test files | 1081 PASS clean)
+pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 cd SliverVineGate && forge test --gas-report && cd ..
 # Static Buildathon provenance archive (not a live market oracle):
@@ -553,7 +553,7 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 + Flash unwind: PASS · RESULT: E2E OK (5/5)
 ```
 
-**Regression bar:** Vitest **231 test files | 1081 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **57.76 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
+**Regression bar:** Vitest **235 test files | 1091 PASS clean** · **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · Forge 60/60 · Cargo Stylus 9/9 · Worker bundle **57.81 KiB gzip** (`pnpm bundle:measure` · pass &lt;75 KiB) · Wasm **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs**.
 
 ---
 

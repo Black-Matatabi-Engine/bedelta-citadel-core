@@ -1,6 +1,6 @@
 # 06 — Verifications
 
-> **Vitest SSOT:** **231 test files | 1081 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
+> **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
 
 | # | Document | Role |
 |---|----------|------|

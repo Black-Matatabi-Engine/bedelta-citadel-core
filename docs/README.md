@@ -1,7 +1,9 @@
 # SliverVine Protocol — Public Documentation Index
 
+> 📌 **System Metrics SSOT**: Verified via [`audit/SYSTEM_METRICS_SSOT.json`](./audit/SYSTEM_METRICS_SSOT.json)
+
 > **Umbrella:** **SliverVine Protocol** · **Module A:** **SliverVine ExoMesh** (~70% Architectural Surface) · **Module B:** **SliverVine Sanctuary** (~30% Architectural Surface) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)**  
-> **Vitest SSOT:** **231 test files | 1081 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
+> **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
 
 | # | Directory | Judge-facing scope |
 |---|-----------|-------------------|

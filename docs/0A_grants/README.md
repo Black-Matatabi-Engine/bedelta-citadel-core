@@ -5,7 +5,7 @@
 **Entity:** SilverVine Labs · `grants@silvervinelabs.com`
 **OpSec:** External-facing grant packs only.
 
-> **Vitest SSOT:** **231 test files | 1081 PASS clean (100%)** · `pnpm test -- --run`.
+> **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm test -- --run`.
 
 | Track | Status | Entry |
 |-------|--------|-------|
