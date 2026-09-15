@@ -1,5 +1,8 @@
 /** Sanctuary ERC-7540+ demo HUD — box-drawn limitation vs enhancement scenarios. */
+/// <reference types="node" />
+import * as readline from "readline/promises";
 import { BOLD, CYAN, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
+import { isDemoJsonArgv, releaseDemoStdin } from "./demo-utils";
 import {
   CORE_BRIGHT_CYAN,
   formatLatencyLabel,
@@ -51,6 +54,36 @@ function boxClose(color: string): void {
 export function printSanctuaryBanner(benchmark: DemoBenchmarkSnapshot): void {
   printModuleBBanner();
   printPerfHierarchyHud(benchmark);
+}
+
+export function printSanctuaryProofHighlights(): void {
+  console.log("");
+  boxOpen(CYAN);
+  boxLine(` ${BOLD}Sanctuary ERC-7540+ — 3 Key Proofs${R}`, CYAN);
+  boxRule(CYAN);
+  boxLine(` ${GREEN}Scenario A${R} ${GRAY}· Valid Whitelisted Escort (drift=2 bps ≤ 50)${R}`, CYAN);
+  boxLine(
+    ` ${RED}Scenario B${R} ${GRAY}· Raw ERC-7540 Operator Hijack 0-Gas Interception (setOperator block)${R}`,
+    CYAN,
+  );
+  boxLine(
+    ` ${RED}Scenario C${R} ${GRAY}· Pending→Claimable High-Slippage Fail-Closed (drift=2000 bps > 50)${R}`,
+    CYAN,
+  );
+  boxClose(CYAN);
+  console.log("");
+}
+
+export async function awaitSanctuaryScenarioTransition(nextId: SanctuaryScenarioId): Promise<void> {
+  if (isDemoJsonArgv() || !process.stdin.isTTY) return;
+  console.log(`\n${GRAY}Press ENTER to advance to next Scenario (${nextId})...${R}`);
+  const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
+  try {
+    await rl.question("");
+  } finally {
+    rl.close();
+    releaseDemoStdin();
+  }
 }
 
 export function printSanctuaryScenario(hud: SanctuaryScenarioHud): void {

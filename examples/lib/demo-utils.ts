@@ -17,6 +17,22 @@ export function parseTripMode(argv: readonly string[] = process.argv): boolean {
 
 export const IS_TRIP_MODE = parseTripMode();
 
+export function isDemoJsonArgv(argv: readonly string[] = process.argv): boolean {
+  return argv.includes("--json");
+}
+
+export function isDemoNonInteractiveArgv(argv: readonly string[] = process.argv): boolean {
+  return argv.includes("--non-interactive") || isDemoJsonArgv(argv);
+}
+
+export function isDemoInteractiveArgv(argv: readonly string[] = process.argv): boolean {
+  return !isDemoNonInteractiveArgv(argv) && Boolean(process.stdin.isTTY);
+}
+
+export function releaseDemoStdin(): void {
+  if (process.stdin.isTTY && !process.stdin.readableEnded) process.stdin.pause();
+}
+
 const R = "\x1b[0m";
 const GREEN = "\x1b[32;1m";
 const RED = "\x1b[31;1m";

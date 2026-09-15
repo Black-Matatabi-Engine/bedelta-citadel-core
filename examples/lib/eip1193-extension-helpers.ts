@@ -17,6 +17,7 @@ import {
 import { sanitizeAccountEquityUsd } from "../../src/services/effective-max-sl";
 import { BOLD, CYAN, GRAY, GREEN, HEALTHY_SOIL, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
 import { captureSoilBenchmark } from "./demo-benchmark";
+import { isDemoJsonArgv, releaseDemoStdin } from "./demo-utils";
 import { printModuleABanner } from "./demo-module-banners";
 import { formatLatencyLabel, measureProbe, printBenchmarkBanner, printWasmShellLatencyBreakdown } from "./demo-timing";
 
@@ -146,9 +147,7 @@ export interface Eip1193ScenarioJsonResult {
   reasonCodes?: string[] | null;
 }
 
-export function isDemoJsonArgv(argv: readonly string[] = process.argv): boolean {
-  return argv.includes("--json");
-}
+export { isDemoJsonArgv, releaseDemoStdin };
 
 export function roundWasmUs(us: number): number {
   return Math.round(us * 10) / 10;
@@ -169,10 +168,6 @@ export async function awaitScenarioRecordingTransition(nextId: Eip1193ScenarioId
     releaseDemoStdin();
   }
   clearDemoTerminal();
-}
-
-export function releaseDemoStdin(): void {
-  if (process.stdin.isTTY && !process.stdin.readableEnded) process.stdin.pause();
 }
 
 export function printProductionPlainTextWarning(warning: string, reasonCode: string): void {
