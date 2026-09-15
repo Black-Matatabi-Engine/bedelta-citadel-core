@@ -12,12 +12,13 @@
 ![TypeScript](https://img.shields.io/badge/TypeScript-0_errors-blue?logo=typescript)
 ![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
 ![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Sepolia_Verified_%2842161_Ready%29-28A0F0?logo=arbitrum)
+[![ZeroDev AA Ready](https://img.shields.io/badge/ZeroDev_AA-Kernel_v3_Ready-00D26A.svg)](https://zerodev.app)
 <!-- SSOT:README_BADGES_END -->
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
 **SliverVine Protocol · v1.0 · BeDelta Living Water v1.0 (BeΔ)** · SilverVine Labs · **SSRC:** Slivervine Stylus ReflexCore  
-**DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com) · **Live Telemetry:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)
+**DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com) · **Live Telemetry:** [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol) · [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress)
 
 > **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) · [`src/services/risk-control.ts`](src/services/risk-control.ts) · sub-1.8µs warm soil check).
 > **SliverVine Sanctuary** (Module B) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · Robinhood / Across compliance ingress.
@@ -139,8 +140,8 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 
 <!-- SSOT:README_DUAL_TELEMETRY_START -->
 > 💡 **Dual Telemetry Architecture**:
-> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append).
-> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
+> - **[Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol)** (`/slivervine-protocol`): Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append).
+> - **[Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress)** (`/slivervine-sepsb-stress`): Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
 
 > 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) — status **INTERFACE_READY** — ready for direct mainnet event ingestion post-buildathon.
 <!-- SSOT:README_DUAL_TELEMETRY_END -->
@@ -162,14 +163,6 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 | **1** | `[Final]` | **EIP-1193+** · **EIP-5792** · **ERC-7540+** | **100% compliant** with standard specs, extended into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary) |
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** (Uniswap/Across) · **ERC-7579** (ZeroDev/Rhinestone) | **Semantic alignment** — not normative Final conformance; production code maps to industrial draft problem spaces |
 | **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | **No implementation claim** — see [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
-
-### Partner & Standards Compliance
-
-| Partner / Stack | Badge | Integration highlight |
-| --------------- | ----- | --------------------- |
-| **ZeroDev** | **ZeroDev AA Ready** | Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker) · `pnpm demo:delta-neutral` (`--zerodev=on` default) |
-
----
 
 ## Performance Verification & Latency Hierarchy
 

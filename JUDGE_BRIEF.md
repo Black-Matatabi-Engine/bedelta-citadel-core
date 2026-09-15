@@ -123,12 +123,6 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** · **ERC-7579** | **Semantic alignment** to Uniswap/Across and ZeroDev/Rhinestone industrial drafts — not normative Final conformance |
 | **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | No implementation claim — [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
-### Partner & Standards Compliance
-
-| Partner / Stack | Badge | Judge-facing proof |
-| --------------- | ----- | ------------------ |
-| **ZeroDev** | **ZeroDev AA Ready** | Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker) · `pnpm demo:delta-neutral` (`--zerodev=on` default · graceful native EIP-1193 fallback) |
-
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │  SLIVERVINE ENHANCED EIP/ERC WORKFLOWS & SECURITY SUPERSETS                  │
@@ -319,8 +313,8 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
 
 > 💡 **Dual Telemetry Architecture**:
-> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
-> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
+> - **[Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol)** (`/slivervine-protocol`): Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
+> - **[Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress)** (`/slivervine-sepsb-stress`): Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
 
 > 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) ready for direct mainnet event ingestion post-buildathon.
 
@@ -476,8 +470,8 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 <!-- SSOT:JUDGE_TELEMETRY_TABLE_START -->
 | Proof layer | URL / command | What judges see |
 |-------------|---------------|-----------------|
-| **Dashboard 1 — Operational Shield** | [**`/slivervine-protocol`**](https://dune.com/silvervinelabs/slivervine-protocol) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |
-| **Dashboard 2 — SEPSB Stress Matrix** | [**`/slivervine-sepsb-stress`**](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | **100% TPR** · **0% FPR** · 5-venue reflex **<50µs** · Intel(R) Core(TM) Ultra 7 155H hardware context |
+| **Dashboard 1 — Operational Shield** | [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol) (`/slivervine-protocol`) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |
+| **Dashboard 2 — SEPSB Stress Matrix** | [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress) (`/slivervine-sepsb-stress`) | **100% TPR** · **0% FPR** · 5-venue reflex **<50µs** · Intel(R) Core(TM) Ultra 7 155H hardware context |
 | **ExoMesh CSV export** | `pnpm export:dune` → [`exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | Operational shield SSOT · daily cumulative append |
 | **SEPSB CSV export** | `pnpm audit:sepsb` → [`sepsb-stress-telemetry.csv`](./docs/audit/sepsb-stress-telemetry.csv) | Deterministic 5-venue benchmark matrix |
 | **On-chain indexer** | `pnpm export:dune:onchain` → [`onchain-dune-telemetry.csv`](./docs/audit/onchain-dune-telemetry.csv) | Gate `0xb174…8BF1` · `IntentAttested` · `SoilResistanceTripped` (`INTERFACE_READY`) |
@@ -499,4 +493,4 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 
 ---
 
-**SilverVine Labs** · `grants@silvervinelabs.com` · [**Master Dune Dashboard**](https://dune.com/silvervinelabs/slivervine-protocol)
+**SilverVine Labs** · `grants@silvervinelabs.com` · [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol) · [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress)

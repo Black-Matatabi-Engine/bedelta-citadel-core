@@ -124,6 +124,7 @@ export function buildReadmeBadges(ssot: SystemMetricsSsot): string {
       "28A0F0",
       "arbitrum",
     ),
+    "[![ZeroDev AA Ready](https://img.shields.io/badge/ZeroDev_AA-Kernel_v3_Ready-00D26A.svg)](https://zerodev.app)",
   ].join("\n");
 }
 
@@ -150,8 +151,8 @@ export function buildDualTelemetryBlock(ssot: SystemMetricsSsot): string {
     .join(", ");
   return [
     "> 💡 **Dual Telemetry Architecture**:",
-    `> - **Operational Shield (\`/${shield?.slug}\`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (\`${shield?.export_command}\` · ${shield?.mode?.replace(/_/g, " ")}).`,
-    `> - **SEPSB Quant Matrix (\`/${sepsb?.slug}\`)**: Deterministic benchmark runner proving ${sepsb?.true_positive_rate_pct}% TPR, ${sepsb?.false_positive_rate_pct}% FPR, and sub-${sepsb?.reflex_latency_cap_us}µs Wasm reflex speeds across ${ssot.sepsb_benchmark.venue_count} venues (${venues}).`,
+    `> - **[Dune Operational Shield](${shield?.url})** (\`/${shield?.slug}\`): Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (\`${shield?.export_command}\` · ${shield?.mode?.replace(/_/g, " ")}).`,
+    `> - **[Dune SEPSB Stress Matrix](${sepsb?.url})** (\`/${sepsb?.slug}\`): Deterministic benchmark runner proving ${sepsb?.true_positive_rate_pct}% TPR, ${sepsb?.false_positive_rate_pct}% FPR, and sub-${sepsb?.reflex_latency_cap_us}µs Wasm reflex speeds across ${ssot.sepsb_benchmark.venue_count} venues (${venues}).`,
     "",
     `> 🔗 **On-Chain Event Indexing**: \`SliverVineGate\` (\`0xb174…8BF1\`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (\`${ssot.onchain_indexer_pipeline.command}\`) — status **${ssot.onchain_indexer_pipeline.status}** — ready for direct mainnet event ingestion post-buildathon.`,
   ].join("\n");
@@ -171,8 +172,8 @@ export function buildJudgeTelemetryTable(ssot: SystemMetricsSsot): string {
   return [
     "| Proof layer | URL / command | What judges see |",
     "|-------------|---------------|-----------------|",
-    `| **Dashboard 1 — Operational Shield** | [**\`/${shield?.slug}\`**](${shield?.url}) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |`,
-    `| **Dashboard 2 — SEPSB Stress Matrix** | [**\`/${sepsb?.slug}\`**](${sepsb?.url}) | **${sepsb?.true_positive_rate_pct}% TPR** · **${sepsb?.false_positive_rate_pct}% FPR** · ${ssot.sepsb_benchmark.venue_count}-venue reflex **<${sepsb?.reflex_latency_cap_us}µs** · ${sepsb?.hardware_context} hardware context |`,
+    `| **Dashboard 1 — Operational Shield** | [Dune Operational Shield](${shield?.url}) (\`/${shield?.slug}\`) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |`,
+    `| **Dashboard 2 — SEPSB Stress Matrix** | [Dune SEPSB Stress Matrix](${sepsb?.url}) (\`/${sepsb?.slug}\`) | **${sepsb?.true_positive_rate_pct}% TPR** · **${sepsb?.false_positive_rate_pct}% FPR** · ${ssot.sepsb_benchmark.venue_count}-venue reflex **<${sepsb?.reflex_latency_cap_us}µs** · ${sepsb?.hardware_context} hardware context |`,
     `| **ExoMesh CSV export** | \`${shield?.export_command}\` → [\`exomesh-dune-telemetry.csv\`](./docs/audit/exomesh-dune-telemetry.csv) | Operational shield SSOT · daily cumulative append |`,
     `| **SEPSB CSV export** | \`${sepsb?.export_command}\` → [\`sepsb-stress-telemetry.csv\`](./docs/audit/sepsb-stress-telemetry.csv) | Deterministic 5-venue benchmark matrix |`,
     `| **On-chain indexer** | \`${onchain.command}\` → [\`onchain-dune-telemetry.csv\`](./docs/audit/onchain-dune-telemetry.csv) | Gate \`0xb174…8BF1\` · \`IntentAttested\` · \`SoilResistanceTripped\` (\`${onchain.status}\`) |`,
