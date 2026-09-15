@@ -110,6 +110,18 @@
     "historical_backtest_runs": 10000,
     "telemetry_rows": 264
   },
+  "system_architecture": {
+    "capabilities": {
+      "x402_compatibility": "ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD"
+    },
+    "tags": [
+      "pre_consensus_risk_engine",
+      "v8_wasm_isolate",
+      "x402_orthogonal",
+      "erc7683_orthogonal",
+      "agentic_commerce_safeguard"
+    ]
+  },
   "benchmark_environment": {
     "detectedAt": "2026-09-15T03:25:27.710Z",
     "platform": "linux",

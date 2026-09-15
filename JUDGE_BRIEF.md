@@ -127,6 +127,16 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 
 ---
 
+## 2. System Invariants & Scope
+
+### Protocol Scope & Boundary
+
+- **Pre-Consensus only**: ExoMesh never settles, routes solvers, or issues HTTP 402 payment receipts — it **fail-closes** toxic intents at the EIP-1193+ signing boundary.
+- **ERC-7683 orthogonality**: Cross-chain intent *settlement & solver formats* are out of scope; ExoMesh runs strictly **before** signatures enter solver/sequencer pipelines.
+- **x402 Ecosystem Compatibility**: Fully orthogonal and complimentary. ExoMesh provides sub-50µs zero-gas protection for AI agents executing automated x402 micro-payments on Arbitrum One / Sepolia, ensuring autonomous agents do not drain wallets via poisoned liquidity or oracle drift traps.
+
+---
+
 ## Submission Snapshot
 
 | Field | Value |
@@ -190,8 +200,9 @@ SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [
 
 > 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) ready for direct mainnet event ingestion post-buildathon.
 
-### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
+### 🔗 Relation to Industry Standards (x402, ERC-7683 & Simulation Engine)
 
+- **Orthogonal to x402 (HTTP 402)**: x402 defines agent payment *intent dispatch*; ExoMesh is the **pre-sign / pre-sequencer risk gate** — not a payment rail.
 - **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
 - **Complementary to Simulation Scanners**: While simulation tools (e.g. Blockaid) take 100–300ms via cloud RPC, SEPSB targets microsecond-class local/edge WASM decisions with 0-Gas rejected paths.
 

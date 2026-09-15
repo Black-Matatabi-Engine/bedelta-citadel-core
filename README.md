@@ -92,6 +92,9 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
     Signature Released          Reflex Deadlock Severed
 ```
 
+> 🤖 **Agentic Commerce Safeguard (x402 & ERC-7683 Orthogonality)**:
+> While **x402** defines HTTP 402 payment intent workflows for AI Autonomous Agents and **ERC-7683** handles cross-chain intent settlement, **SliverVine ExoMesh** operates strictly as the **Pre-Consensus Risk Engine (V8/Wasm Isolate)**. It intercepts high-risk micro-transactions, adverse price impact, and sandwich exploits *before* the agent signs or dispatches payments to the sequencer.
+
 ---
 
 ## 5-Core Venue Execution Matrix
@@ -142,8 +145,9 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 > 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) — status **INTERFACE_READY** — ready for direct mainnet event ingestion post-buildathon.
 <!-- SSOT:README_DUAL_TELEMETRY_END -->
 
-### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
+### 🔗 Relation to Industry Standards (x402, ERC-7683 & Simulation Engine)
 
+- **Orthogonal to x402 (HTTP 402)**: x402 defines agent payment *intent dispatch* over HTTP 402; ExoMesh is the **pre-sign / pre-sequencer risk gate** — not a payment rail — blocking poisoned liquidity and oracle-drift traps on automated micro-payments before wallets sign.
 - **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
 - **Complementary to Simulation Scanners**: While simulation tools (e.g. Blockaid) take 100–300ms via cloud RPC, SEPSB targets microsecond-class local/edge WASM decisions with 0-Gas rejected paths.
 
