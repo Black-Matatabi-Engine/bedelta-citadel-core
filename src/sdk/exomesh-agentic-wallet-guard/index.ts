@@ -109,6 +109,18 @@ export {
   type Eip7702RejectCode,
 } from "./eip7702-auth-guard";
 export { formatRetailWarning } from "./warnings";
+export {
+  REFERRAL_CODE_PREFIX,
+  REFERRAL_HASH_LEN,
+  REFERRAL_PAYMASTER_SLOT_COUNT,
+  REFERRAL_WHITELIST_ROUTES,
+  formatReferralCode,
+  parseReferralCode,
+  resolveWhitelistRoute,
+  resolvePaymasterSlot,
+  buildReferralHookInUrl,
+} from "./referral-code";
+export type { ReferralWhitelistRoute } from "./referral-code";
 export type {
   EIP1193Provider,
   RetailGuardConfig,

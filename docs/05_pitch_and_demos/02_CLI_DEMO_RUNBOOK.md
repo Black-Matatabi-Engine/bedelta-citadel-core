@@ -295,6 +295,29 @@ pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip interce
 
 ---
 
+## Agentic Referral & Whitelist Propagation
+
+Lightweight **growth-layer** CLI — **not** part of Phase-4 Wasm / Gate freeze. Signed codes bind an AI agent id to a **whitelist priority route** and a **ZeroDev Paymaster slot** (0–7). HMAC-SHA256 is local (`SLIVERVINE_REFERRAL_HMAC_SECRET` or a documented dev seed).
+
+| Item | Value |
+|------|--------|
+| Command | `pnpm referral:gen --agent "<id>"` |
+| Code shape | `SV-REF-<unixMs>-<16-hex>` |
+| Persistence | `docs/logging/referral_metrics.json` |
+| JSON | `--json` · stdout object `{ code, agentId, hookInUrl, whitelistPriorityRoute, zerodevPaymasterSlot, signatureHex, totals }` |
+| Hook-in | `--hook-in --source "<label>"` records a referred agent attach |
+
+```bash
+pnpm referral:gen --agent "ZeroDev-Agent-01" --json
+pnpm referral:gen --agent "ZeroDev-Agent-01" --hook-in --source kernel-v3
+```
+
+**Ecosystem role:** referred Kernel / EIP-1193 agents hook in through `https://slivervine.xyz/agentic?ref=SV-REF-…` then still wrap `window.ethereum` with `withRetailGuardProvider` — referral only allocates **priority routing + paymaster slot bookkeeping**, it does **not** bypass `checkSoilResistance()`.
+
+---
+
+---
+
 ## Quick Verification Reference
 
 ```bash

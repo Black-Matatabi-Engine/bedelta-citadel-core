@@ -1,0 +1,36 @@
+{
+  "schema": "silvervine.agentic-referral.metrics.v1",
+  "updatedAt": "2026-09-15T12:05:42.394Z",
+  "chainId": 42161,
+  "totals": {
+    "issued": 2,
+    "hookIns": 0,
+    "paymasterSlotsAllocated": 2
+  },
+  "records": [
+    {
+      "code": "SV-REF-1789473928806-221fe5bc58e12496",
+      "agentId": "ZeroDev-Agent-01",
+      "issuedAt": "2026-09-15T12:05:28.806Z",
+      "unixMs": 1789473928806,
+      "nonceHex": "4db43cb1c8f815b9",
+      "signatureHex": "221fe5bc58e1249648e4679d9a0983aa41ddd707e603167222f32613730405f8",
+      "whitelistPriorityRoute": "eip1193-retail-guard",
+      "zerodevPaymasterSlot": 2,
+      "hookInUrl": "https://slivervine.xyz/agentic?ref=SV-REF-1789473928806-221fe5bc58e12496",
+      "hookIns": []
+    },
+    {
+      "code": "SV-REF-1789473942392-e5841553b84adf9f",
+      "agentId": "ZeroDev-Agent-01",
+      "issuedAt": "2026-09-15T12:05:42.392Z",
+      "unixMs": 1789473942392,
+      "nonceHex": "26ae39b13a470911",
+      "signatureHex": "e5841553b84adf9fe28ee340e9a4af04ea344794d2b85ebaa7f03fc06764c674",
+      "whitelistPriorityRoute": "zerodev-paymaster-priority",
+      "zerodevPaymasterSlot": 5,
+      "hookInUrl": "https://slivervine.xyz/agentic?ref=SV-REF-1789473942392-e5841553b84adf9f",
+      "hookIns": []
+    }
+  ]
+}

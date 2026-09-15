@@ -41,6 +41,7 @@
     "demo:delta-neutral": "tsx scripts/grant-delta-neutral-demo.ts",
     "demo:e2e:arb-native": "tsx scripts/demo-e2e-arb-native.ts --arb-native",
     "demo:data": "tsx scripts/generate-demo-data.ts",
+    "referral:gen": "tsx scripts/referral-gen.ts",
     "telemetry:96h": "tsx scripts/live-96h-telemetry-daemon.ts",
     "build:wasm": "cargo build --manifest-path src/wasm/Cargo.toml --release --target wasm32-unknown-unknown && mkdir -p pkg && cp src/wasm/target/wasm32-unknown-unknown/release/soil_core.wasm pkg/soil_core.wasm",
     "build:stylus": "cd contracts/stylus-probe && cargo test stylus_core --release && cargo build --target wasm32-unknown-unknown --release",
