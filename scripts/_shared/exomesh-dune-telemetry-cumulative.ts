@@ -22,7 +22,10 @@ export function utcExportDateKey(ms: number): string {
 }
 
 export function parseDuneTelemetryCsv(content: string): ExomeshDuneTelemetryRow[] {
-  const lines = content.trim().split("\n").filter((line) => line.length > 0);
+  const lines = content
+    .trim()
+    .split("\n")
+    .filter((line) => line.length > 0 && !line.startsWith("#"));
   if (lines.length <= 1) return [];
   const rows = new Array<ExomeshDuneTelemetryRow>(lines.length - 1);
   for (let index = 1; index < lines.length; index++) {
@@ -50,7 +53,7 @@ function parseDuneTelemetryCsvLine(line: string): ExomeshDuneTelemetryRow {
     intercept_type: interceptType as DuneInterceptType,
     reflex_latency_us: Number.parseFloat(reflexLatencyUs),
     gas_burned: Number.parseFloat(gasBurned),
-    potential_loss_saved_usd: Number.parseFloat(potentialLossSavedUsd),
+    simulated_loss_prevented_usd: Number.parseFloat(potentialLossSavedUsd),
     gas_saved_usd: Number.parseFloat(gasSavedUsd),
     status: status as DuneInterceptStatus,
     source: "csv:historical",
@@ -124,6 +127,7 @@ export function loadCumulativeDuneTelemetry(
 ): ExomeshDuneTelemetryRow[] {
   if (!existsSync(csvPath)) return [];
   const content = readFileSync(csvPath, "utf8");
-  if (!content.trim().startsWith(DUNE_TELEMETRY_CSV_HEADER)) return [];
+  const trimmed = content.trim();
+  if (!trimmed.includes(DUNE_TELEMETRY_CSV_HEADER)) return [];
   return parseDuneTelemetryCsv(content);
 }

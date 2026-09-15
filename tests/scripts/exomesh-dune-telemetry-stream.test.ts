@@ -41,7 +41,7 @@ describe("exomesh-dune-telemetry-stream", () => {
     expect(batch.length).toBe(resolveDailyEventCount(endMs));
     expect(batch[0]!.timestamp.startsWith("2026-09-14")).toBe(true);
     expect(batch[batch.length - 1]!.timestamp).toBe(new Date(endMs).toISOString());
-    expect(batch[0]!.potential_loss_saved_usd).not.toBe(batch[1]!.potential_loss_saved_usd);
+    expect(batch[0]!.simulated_loss_prevented_usd).not.toBe(batch[1]!.simulated_loss_prevented_usd);
   });
 
   it("varies batch size across export dates", () => {

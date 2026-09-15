@@ -33,7 +33,7 @@ Published at [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silv
 | # | Widget | Type | SSOT metric |
 |---|--------|------|-------------|
 | 1 | **ExoMesh Methodology & Disclosure** | Text — provenance & baseline comparison | Engineering honesty · Module A/B partition |
-| 2 | **Total Capital Protected** | Counter | **$6.57M** — `SUM(potential_loss_saved_usd)` from `dataset_exomesh_intercepts` |
+| 2 | **Total Capital Protected** | Counter | **$6.57M** — `SUM(simulated_loss_prevented_usd)` from `dataset_exomesh_intercepts` |
 | 3 | **Total L2 Gas Saved** | Counter | **$65.50** — `SUM(gas_saved_usd)` (~$0.25 per fail-closed intercept) |
 | 4 | **Total Fail-Closed Intercepts** | Counter | **262** — `COUNT(*) FILTER (WHERE status = 'FAIL_CLOSED')` |
 | 5 | **4-Moat Defense Matrix Breakdown** | Pie / Donut | `intercept_type` distribution (`SOIL_RESISTANCE_TRIP` · `HONEYPOT_DECOY` · `OBSERVATORY_HAIRCUT` · `MAX_ATTEMPTS_SEVERED`) |

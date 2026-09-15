@@ -17,15 +17,18 @@ export interface ExomeshDuneTelemetryRow {
   intercept_type: DuneInterceptType;
   reflex_latency_us: number;
   gas_burned: number;
-  potential_loss_saved_usd: number;
+  simulated_loss_prevented_usd: number;
   gas_saved_usd: number;
   status: DuneInterceptStatus;
   source: string;
   reason?: string;
 }
 
+export const DUNE_TELEMETRY_CSV_COMMENT =
+  "# silvervine.exomesh.dune-telemetry.v1 | simulated_loss_prevented_usd: counterfactual notional protected (USD)";
+
 export const DUNE_TELEMETRY_CSV_HEADER =
-  "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,potential_loss_saved_usd,gas_saved_usd,status";
+  "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,simulated_loss_prevented_usd,gas_saved_usd,status";
 
 /** Arbitrum L2 counterfactual gas avoided per fail-closed severance (~$0.25). */
 export const L2_GAS_SAVED_USD = 0.25;

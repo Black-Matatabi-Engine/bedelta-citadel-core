@@ -16,7 +16,7 @@ Upload `docs/audit/exomesh-dune-telemetry.csv` (auto-written on export) to Dune 
 | `intercept_type` | `VARCHAR` | `SOIL_RESISTANCE_TRIP` · `HONEYPOT_DECOY` · `OBSERVATORY_HAIRCUT` · `MAX_ATTEMPTS_SEVERED` |
 | `reflex_latency_us` | `DOUBLE` | Wasm/Edge reflex time (µs) |
 | `gas_burned` | `DOUBLE` | On-chain gas spent — **0** for fail-closed intercepts |
-| `potential_loss_saved_usd` | `DOUBLE` | Counterfactual notional protected ($5k–$50k by severity; **0** on `ALLOW`) |
+| `simulated_loss_prevented_usd` | `DOUBLE` | Counterfactual notional protected ($5k–$50k by severity; **0** on `ALLOW`) |
 | `gas_saved_usd` | `DOUBLE` | L2 counterfactual gas avoided (~**$0.25** per `FAIL_CLOSED`) |
 | `status` | `VARCHAR` | `FAIL_CLOSED` · `ALLOW` |
 

@@ -65,14 +65,15 @@ describe("exomesh-dune-telemetry-cumulative", () => {
   it("round-trips CSV rows with the Dune schema header", () => {
     const batch = sampleBatch(dayOneEnd, 2);
     const csv = [
-      "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,potential_loss_saved_usd,gas_saved_usd,status",
+      "# silvervine.exomesh.dune-telemetry.v1 | simulated_loss_prevented_usd: counterfactual notional protected (USD)",
+      "timestamp,venue,intercept_type,reflex_latency_us,gas_burned,simulated_loss_prevented_usd,gas_saved_usd,status",
       "2026-09-14T12:00:00.000Z,gmx,SOIL_RESISTANCE_TRIP,1.4,0.000000,5103.00,0.25,FAIL_CLOSED",
       "2026-09-14T11:59:59.000Z,gmx,SOIL_RESISTANCE_TRIP,2.4,0.000000,5203.00,0.25,FAIL_CLOSED",
     ].join("\n");
     const parsed = parseDuneTelemetryCsv(csv);
     expect(parsed).toHaveLength(2);
     expect(parsed[0]!.venue).toBe("gmx");
-    expect(parsed[0]!.potential_loss_saved_usd).toBe(5103);
+    expect(parsed[0]!.simulated_loss_prevented_usd).toBe(5103);
     expect(batch[0]!.timestamp).toBeTruthy();
   });
 });

@@ -10,6 +10,7 @@ import {
   seedReflexLatencyUs,
 } from "./exomesh-dune-telemetry-map";
 import {
+  DUNE_TELEMETRY_CSV_COMMENT,
   DUNE_TELEMETRY_CSV_HEADER,
   type DuneInterceptStatus,
   type DuneInterceptType,
@@ -20,6 +21,7 @@ import {
 
 export type { DuneVenue, DuneInterceptType, DuneInterceptStatus, ExomeshDuneTelemetryRow };
 export {
+  DUNE_TELEMETRY_CSV_COMMENT,
   DUNE_TELEMETRY_CSV_HEADER,
   L2_GAS_SAVED_USD,
   POTENTIAL_LOSS_SAVED_RANGE_USD,
@@ -58,7 +60,7 @@ export function buildTelemetryRow(input: {
     intercept_type: input.interceptType,
     reflex_latency_us: input.reflexLatencyUs,
     gas_burned: gasBurned,
-    potential_loss_saved_usd: potentialLossSaved,
+    simulated_loss_prevented_usd: potentialLossSaved,
     gas_saved_usd: gasSaved,
     status: input.status,
     source: input.source,
@@ -155,17 +157,18 @@ export function rowToDuneTelemetryCsvLine(row: ExomeshDuneTelemetryRow): string 
     row.intercept_type,
     row.reflex_latency_us.toFixed(1),
     row.gas_burned.toFixed(6),
-    row.potential_loss_saved_usd.toFixed(2),
+    row.simulated_loss_prevented_usd.toFixed(2),
     row.gas_saved_usd.toFixed(2),
     row.status,
   ].join(",");
 }
 
 export function formatDuneTelemetryCsv(rows: readonly ExomeshDuneTelemetryRow[]): string {
-  const lines = new Array<string>(rows.length + 1);
-  lines[0] = DUNE_TELEMETRY_CSV_HEADER;
+  const lines = new Array<string>(rows.length + 2);
+  lines[0] = DUNE_TELEMETRY_CSV_COMMENT;
+  lines[1] = DUNE_TELEMETRY_CSV_HEADER;
   for (let i = 0; i < rows.length; i++) {
-    lines[i + 1] = rowToDuneTelemetryCsvLine(rows[i]);
+    lines[i + 2] = rowToDuneTelemetryCsvLine(rows[i]);
   }
   return lines.join("\n");
 }

@@ -128,8 +128,8 @@ function main(): void {
   const newBatch = buildExomeshDuneTelemetryExport(endMs);
   const failClosed = newBatch.filter((row) => row.status === "FAIL_CLOSED").length;
   const batchGasSavedUsd = newBatch.reduce((sum, row) => sum + row.gas_saved_usd, 0);
-  const batchPotentialLossSavedUsd = newBatch.reduce(
-    (sum, row) => sum + row.potential_loss_saved_usd,
+  const batchSimulatedLossPreventedUsd = newBatch.reduce(
+    (sum, row) => sum + row.simulated_loss_prevented_usd,
     0,
   );
 
@@ -141,7 +141,7 @@ function main(): void {
         rowCount: newBatch.length,
         failClosedCount: failClosed,
         gasSavedUsdTotal: Math.round(batchGasSavedUsd * 100) / 100,
-        potentialLossSavedUsdTotal: Math.round(batchPotentialLossSavedUsd * 100) / 100,
+        simulatedLossPreventedUsdTotal: Math.round(batchSimulatedLossPreventedUsd * 100) / 100,
         rows: newBatch,
       },
       null,
@@ -158,14 +158,14 @@ function main(): void {
     ? writeCumulativeDuneCsv(defaultOut, newBatch, endMs)
     : { rows: newBatch, action: "batch-only" };
   const cumulativeGasSavedUsd = cumulative.rows.reduce((sum, row) => sum + row.gas_saved_usd, 0);
-  const cumulativePotentialLossSavedUsd = cumulative.rows.reduce(
-    (sum, row) => sum + row.potential_loss_saved_usd,
+  const cumulativeSimulatedLossPreventedUsd = cumulative.rows.reduce(
+    (sum, row) => sum + row.simulated_loss_prevented_usd,
     0,
   );
 
   const sepsbCsv = writeSepsbStressTelemetryCsv(ROOT);
   console.error(
-    `[dune-export] action=${cumulative.action} batch_rows=${newBatch.length} total_rows=${cumulative.rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} batch_potential_loss_saved_usd=${batchPotentialLossSavedUsd.toFixed(2)} cumulative_potential_loss_saved_usd=${cumulativePotentialLossSavedUsd.toFixed(2)} cumulative_gas_saved_usd=${cumulativeGasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
+    `[dune-export] action=${cumulative.action} batch_rows=${newBatch.length} total_rows=${cumulative.rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} batch_simulated_loss_prevented_usd=${batchSimulatedLossPreventedUsd.toFixed(2)} cumulative_simulated_loss_prevented_usd=${cumulativeSimulatedLossPreventedUsd.toFixed(2)} cumulative_gas_saved_usd=${cumulativeGasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
   );
   console.error(`[dune-export] sepsb_stress_csv -> ${sepsbCsv}`);
 }

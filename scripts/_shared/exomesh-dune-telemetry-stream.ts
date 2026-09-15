@@ -49,7 +49,7 @@ function applyStreamVariance(
     timestampMs: streamIndex,
     reflex_latency_us: reflexLatencyUs,
     gas_burned: base.status === "FAIL_CLOSED" ? 0 : 0.000001,
-    potential_loss_saved_usd: potentialLossSavedUsd,
+    simulated_loss_prevented_usd: potentialLossSavedUsd,
     gas_saved_usd: gasSavedUsd,
     source: `${base.source}:stream:${rowSeed}`,
   };

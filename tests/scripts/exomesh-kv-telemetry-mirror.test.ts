@@ -16,7 +16,7 @@ const SAMPLE_ROW: ExomeshDuneTelemetryRow = {
   intercept_type: "SOIL_RESISTANCE_TRIP",
   reflex_latency_us: 7.2,
   gas_burned: 0,
-  potential_loss_saved_usd: 12_000,
+  simulated_loss_prevented_usd: 12_000,
   gas_saved_usd: 0.25,
   status: "FAIL_CLOSED",
   source: "demo:gmx:trip",

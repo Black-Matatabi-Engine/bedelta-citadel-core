@@ -33,12 +33,12 @@ describe("exomesh-dune-telemetry-audit", () => {
     );
     const text = readFileSync(csv, "utf8");
     expect(text.startsWith("timestamp,venue,intercept_type")).toBe(true);
-    expect(text.includes("potential_loss_saved_usd,gas_saved_usd")).toBe(true);
+    expect(text.includes("simulated_loss_prevented_usd,gas_saved_usd")).toBe(true);
     expect(text.trim().endsWith(rowToCsvLine(row))).toBe(true);
     expect(row.status).toBe("FAIL_CLOSED");
     expect(row.gas_burned).toBe(0);
     expect(row.gas_saved_usd).toBe(L2_GAS_SAVED_USD);
-    expect(row.potential_loss_saved_usd).toBeGreaterThanOrEqual(5_000);
+    expect(row.simulated_loss_prevented_usd).toBeGreaterThanOrEqual(5_000);
   });
 
   it("appends ALLOW row on subsequent writes", () => {
