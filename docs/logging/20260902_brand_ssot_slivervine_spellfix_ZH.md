@@ -2,7 +2,7 @@
 
 # Brand SSOT — SliverVine Protocol 拼寫修正（2026-09-02）
 
-> **中文參考譯本** · 英文 SSOT：[`20260902_brand_ssot_slivervine_spellfix.md`](./20260902_brand_ssot_slivervine_spellfix.md)  
+> **中文參考譯本** · 英文 SSOT：[20260902_brand_ssot_slivervine_spellfix.md](./20260902_brand_ssot_slivervine_spellfix.md)  
 > **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 | 欄位      | 值                                                                |

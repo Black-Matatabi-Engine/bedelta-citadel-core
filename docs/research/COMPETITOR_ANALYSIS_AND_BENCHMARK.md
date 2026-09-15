@@ -10,7 +10,7 @@
 | **Document Version** | v1.0 · 2026-09-07 |
 | **Maintainer** | SilverVine Labs R&D |
 
-> **Scope Statement:** This document is for internal R&D and competition strategy only. Competitor capabilities are assessed against public documentation, official SDKs, and industry baselines; it **does not** modify `main` core invariants or production paths. Traditional Chinese reference: [`COMPETITOR_ANALYSIS_AND_BENCHMARK_ZH.md`](./COMPETITOR_ANALYSIS_AND_BENCHMARK_ZH.md).
+> **Scope Statement:** This document is for internal R&D and competition strategy only. Competitor capabilities are assessed against public documentation, official SDKs, and industry baselines; it **does not** modify `main` core invariants or production paths. Traditional Chinese reference: [COMPETITOR_ANALYSIS_AND_BENCHMARK_ZH.md](./COMPETITOR_ANALYSIS_AND_BENCHMARK_ZH.md).
 
 ---
 

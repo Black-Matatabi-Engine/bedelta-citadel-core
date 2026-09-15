@@ -1,6 +1,6 @@
 # Integration Proofs v2 (5-Core Venues · ExoMesh Agentic Guard · B2B Decorator)
 
-> **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) 
+> **SSOT index:** [README.md](./README.md) · **Hub:** [../06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) 
 > **Vitest baseline:** **235 test files | 1091 PASS clean**
 
 ---
@@ -29,15 +29,15 @@ SliverVine ExoMesh ships a **universal wallet middleware** for any EIP-1193 host
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| Provider wrap | [`provider.ts`](../../src/sdk/exomesh-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` — intercepts RPC before broadcast |
-| Calldata parse | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) | Generic DEX selector parsing (Uniswap router = calldata guard, **not** pruned venue adapter) |
-| Guard engine | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) | `checkSoilResistance()` + mandate evaluation |
+| Provider wrap | [provider.ts](../../src/sdk/exomesh-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` — intercepts RPC before broadcast |
+| Calldata parse | [calldata-parser.ts](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) | Generic DEX selector parsing (Uniswap router = calldata guard, **not** pruned venue adapter) |
+| Guard engine | [guard-engine.ts](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) | `checkSoilResistance()` + mandate evaluation |
 
 ```bash
 npx vitest run tests/sdk/retail-guard-provider.test.ts # 35/35 PASS
 ```
 
-**Integration blueprint:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)
+**Integration blueprint:** [docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)
 
 **Execution flow:**
 
@@ -67,11 +67,11 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts # 35/35 PASS
 
 | Venue | Guard module | Demo CLI | Test |
 |-------|--------------|----------|------|
-| **GMX v2** | [`gmx-v2-invariants.ts`](../../src/adapters/gmx/gmx-v2-invariants.ts) | `pnpm demo:gmx` | [`gmx-v2-invariants.test.ts`](../../tests/adapters/gmx-v2-invariants.test.ts) |
-| **Pendle** | [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `pnpm demo:pendle` | pendle adapter tests |
-| **USD.ai** | [`usdai-adapter.ts`](../../src/adapters/usdai/usdai-adapter.ts) | `pnpm demo:usdai` | [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) |
-| **Hyperliquid** | [`hyperliquid-session-guard.ts`](../../src/adapters/hl/hyperliquid-session-guard.ts) | `pnpm demo:hl` | HL session guard tests |
-| **Variational** | [`variational-rfq-adapter.ts`](../../src/adapters/variational-rfq-adapter.ts) | `pnpm demo:variational` | variational RFQ tests |
+| **GMX v2** | [gmx-v2-invariants.ts](../../src/adapters/gmx/gmx-v2-invariants.ts) | `pnpm demo:gmx` | [gmx-v2-invariants.test.ts](../../tests/adapters/gmx-v2-invariants.test.ts) |
+| **Pendle** | [pendle-pool-factory-adapter.ts](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) | `pnpm demo:pendle` | pendle adapter tests |
+| **USD.ai** | [usdai-adapter.ts](../../src/adapters/usdai/usdai-adapter.ts) | `pnpm demo:usdai` | [usdai-adapter.test.ts](../../tests/adapters/usdai-adapter.test.ts) |
+| **Hyperliquid** | [hyperliquid-session-guard.ts](../../src/adapters/hl/hyperliquid-session-guard.ts) | `pnpm demo:hl` | HL session guard tests |
+| **Variational** | [variational-rfq-adapter.ts](../../src/adapters/variational-rfq-adapter.ts) | `pnpm demo:variational` | variational RFQ tests |
 
 ```bash
 pnpm demo:gmx -- --trip
@@ -88,7 +88,7 @@ pnpm demo:perp-loop -- --trip # Loop A: GMX / Pendle / HL / Variational
 pnpm demo:spot-loop -- --trip # Loop B: USD.ai collateral lane
 ```
 
-**Venue rotation SSOT:** [`examples/lib/agent-venue-matrix.ts`](../../examples/lib/agent-venue-matrix.ts)
+**Venue rotation SSOT:** [examples/lib/agent-venue-matrix.ts](../../examples/lib/agent-venue-matrix.ts)
 
 ---
 
@@ -98,9 +98,9 @@ Framework-agnostic B2B integration — no per-framework npm plugins:
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| Decorator | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` — zero-touch pre-broadcast wrapper |
-| Intent verify | [`agent-intent.ts`](../../src/sdk/agent-intent.ts) | `verifyAgentIntent()` — 8-dimension mandate gate |
-| Demo | [`agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) | `pnpm demo:agent` |
+| Decorator | [decorator.ts](../../src/sdk/decorator.ts) | `withExoMeshShield()` — zero-touch pre-broadcast wrapper |
+| Intent verify | [agent-intent.ts](../../src/sdk/agent-intent.ts) | `verifyAgentIntent()` — 8-dimension mandate gate |
+| Demo | [agent-interceptor-demo.ts](../../examples/agent-interceptor-demo.ts) | `pnpm demo:agent` |
 
 ```bash
 pnpm demo:agent
@@ -113,7 +113,7 @@ npx vitest run tests/sdk/decorator.test.ts
 
 | Module | Role |
 |--------|------|
-| [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | Sepolia `421614` 1:1 swap guard · de-peg severance |
+| [stabilizer-adapter.ts](../../src/adapters/stabilizer/stabilizer-adapter.ts) | Sepolia `421614` 1:1 swap guard · de-peg severance |
 
 ```bash
 pnpm demo:stabilizer
@@ -128,11 +128,11 @@ Pruned venue evaluators removed; Wasm ABI v2 retains frozen holes:
 
 | Hole | Location | Status |
 |------|----------|--------|
-| Protocol bits 4–6 | [`risk-flags.ts`](../../src/core/risk-flags.ts) | `@deprecated RESERVED_ABI_V2` |
+| Protocol bits 4–6 | [risk-flags.ts](../../src/core/risk-flags.ts) | `@deprecated RESERVED_ABI_V2` |
 | Vector slots 8–19 | Wasm FFI | Frozen — no new evaluators |
 | Venue indices 2–4 | Intent mandate | Removed from `VENUE_KEY_INDEX` |
 
-See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md).
+See [intent-mandate.ts](../../src/core/intent-mandate.ts) · [docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md).
 
 ---
 
@@ -140,7 +140,7 @@ See [`intent-mandate.ts`](../../src/core/intent-mandate.ts) · [`docs/01_archite
 
 | Audience | Start here |
 |----------|------------|
-| C-end wallet vendors | [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
-| B2B agent integrators | [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) |
+| C-end wallet vendors | [docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| B2B agent integrators | [src/sdk/decorator.ts](../../src/sdk/decorator.ts) |
 | Judge fast-track | `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` |
-| Full CLI map | [`02_CLI_ZONE_MAP.md`](./04_CLI_ZONE_MAP.md) |
+| Full CLI map | [02_CLI_ZONE_MAP.md](./04_CLI_ZONE_MAP.md) |

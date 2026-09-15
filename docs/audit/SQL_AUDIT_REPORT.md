@@ -2,7 +2,7 @@
 
 > **Audit date:** 2026-09-14  
 > **Scope:** All Markdown under `docs/`, plus `README.md` and `JUDGE_BRIEF.md`  
-> **Off-chain SSOT:** [`scripts/_shared/exomesh-dune-telemetry.ts`](../../scripts/_shared/exomesh-dune-telemetry.ts) · schema `silvervine.exomesh.dune-telemetry.v1` · export `pnpm export:dune` → `docs/audit/exomesh-dune-telemetry.csv`
+> **Off-chain SSOT:** [scripts/_shared/exomesh-dune-telemetry.ts](../../scripts/_shared/exomesh-dune-telemetry.ts) · schema `silvervine.exomesh.dune-telemetry.v1` · export `pnpm export:dune` → `docs/audit/exomesh-dune-telemetry.csv`
 
 ---
 
@@ -43,7 +43,7 @@
 
 | # | ID | File | Table | Status |
 |---|-----|------|-------|--------|
-| 1 | **E1** Daily intercept volume | [`docs/internal/DUNE_TELEMETRY_SPEC.md`](../internal/DUNE_TELEMETRY_SPEC.md) §SQL-1 | `dataset_exomesh_intercepts` | ✅ **Valid** — columns match CSV SSOT |
+| 1 | **E1** Daily intercept volume | [docs/internal/DUNE_TELEMETRY_SPEC.md](../internal/DUNE_TELEMETRY_SPEC.md) §SQL-1 | `dataset_exomesh_intercepts` | ✅ **Valid** — columns match CSV SSOT |
 | 2 | **E2** 255/255 chaos reconciliation | same §SQL-2 | `dataset_exomesh_intercepts` | ✅ **Valid** — `source LIKE 'chaos-matrix:%'` matches export |
 | 3 | **E3** Zero-gas economics rollup | same §SQL-3 | `dataset_exomesh_intercepts` | ✅ **Valid** — `gas_burned = 0` + `reflex_latency_us` |
 | 4 | **E4** Venue heatmap (30d) | same §SQL-4 | `dataset_exomesh_intercepts` | ✅ **Valid** — `venue` + `intercept_type` |
@@ -56,7 +56,7 @@ These query **Sepolia Gate** decoded events or grant-audit KV. They are **correc
 
 | # | ID | File | Table(s) | Status | Notes |
 |---|-----|------|----------|--------|-------|
-| 5 | **Q1** PEV canonical | [`docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | `result_citadel_risk_trips` | ⚠️ **On-chain valid** | `RiskTripBlocked` → `blocked_intent_notional_usd`; Sepolia Gate `0xb174…` |
+| 5 | **Q1** PEV canonical | [docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | `result_citadel_risk_trips` | ⚠️ **On-chain valid** | `RiskTripBlocked` → `blocked_intent_notional_usd`; Sepolia Gate `0xb174…` |
 | 6 | **Q1-daily** PEV time-series | same | `result_citadel_risk_trips` | ⚠️ **On-chain valid** | Daily rollup of Q1 |
 | 7 | **Q1b** Toxic flow blocked | same | `result_citadel_risk_trips` + `result_grant_audit_snapshots` | ⚠️ **Hybrid valid** | On-chain + grant-audit KV `duneTelemetry.shadowMarginUsd` |
 | 8 | **Q2** Observatory bypasses | same | `result_slivervine_gate_events` + `result_grant_audit_snapshots` | ⚠️ **Hybrid valid** | `EMERGENCY_DELEVERAGE_ALLOWED` / `action = 2` |
@@ -74,7 +74,7 @@ These query **Sepolia Gate** decoded events or grant-audit KV. They are **correc
 | 13 | **C3** Latency reduction | same | same UNION | ❌ **Stale** | Column `intercept_us` → should be `reflex_latency_us`; 250ms L2 baseline logic still valid conceptually |
 | 14 | **C4** Venue attribution banner | same | **`silvervine_chaos_intercepts` only** | ❌ **Stale** | `sponsor_lane` not in new schema |
 | 15 | **C5** Unified intercepts feed | same | on-chain + **`silvervine_chaos_intercepts`** | ❌ **Stale off-chain half** | Should UNION `dataset_exomesh_intercepts` instead |
-| 16 | **PCTII-1** Daily PCTII rollup | [`docs/03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md`](../03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) §5.1 | **`slivervine_telemetry_events`** | ❌ **Not implemented** | Table spec v1 only; no spell ingest, no export script |
+| 16 | **PCTII-1** Daily PCTII rollup | [docs/03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md](../03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) §5.1 | **`slivervine_telemetry_events`** | ❌ **Not implemented** | Table spec v1 only; no spell ingest, no export script |
 | 17 | **PCTII-2** MO signature heatmap | same §5.2 | **`slivervine_telemetry_events`** | ❌ **Not implemented** | Uses `mo_signature_code`, `gas_saved_wei`, `eval_latency_us` — differs from CSV |
 | 18 | **PCTII-3** PCTII → PEV reconciliation | same §5.3 | `slivervine_telemetry_events` + `result_citadel_risk_trips` | ❌ **Not implemented** | Off-chain arm references non-existent table |
 
@@ -84,7 +84,7 @@ These query **Sepolia Gate** decoded events or grant-audit KV. They are **correc
 
 | # | ID | File | Source | Status | Notes |
 |---|-----|------|--------|--------|-------|
-| 19 | **Q0** Live telemetry feed | `03_DUNE_DASHBOARD_SPECIFICATION.md` | `arbitrum.blocks` + `number % 7/3` | 🎭 **Synthetic** | **Not decoded Gate events.** Docs and [`V0.9_VS_V1.0_ZH.md`](../internal/V0.9_VS_V1.0_ZH.md) acknowledge this. Valid as heartbeat **placeholder** only. |
+| 19 | **Q0** Live telemetry feed | `03_DUNE_DASHBOARD_SPECIFICATION.md` | `arbitrum.blocks` + `number % 7/3` | 🎭 **Synthetic** | **Not decoded Gate events.** Docs and [V0.9_VS_V1.0_ZH.md](../internal/V0.9_VS_V1.0_ZH.md) acknowledge this. Valid as heartbeat **placeholder** only. |
 | 20 | **Q0b** Activity chart | same | `arbitrum.blocks` minute buckets | 🎭 **Synthetic** | Same — BLOCKED/PASS labels are **simulated**, not `RiskTripBlocked` / `IntentAttested` logs |
 
 ---

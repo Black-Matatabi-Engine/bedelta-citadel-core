@@ -39,13 +39,13 @@ Published at [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silv
 | 5 | **4-Moat Defense Matrix Breakdown** | Pie / Donut | `intercept_type` distribution (`SOIL_RESISTANCE_TRIP` · `HONEYPOT_DECOY` · `OBSERVATORY_HAIRCUT` · `MAX_ATTEMPTS_SEVERED`) |
 | 6 | **Sub-Millisecond Reflex Latency & 5-Venue Distribution** | Bar charts | `reflex_latency_us` percentiles · `venue` heatmap (GMX · Pendle · USD.ai · HL · Variational) |
 
-> **Clarification:** **Module A** panels (widgets 1–6) ingest off-chain ExoMesh CSV (`silvervine.exomesh.dune-telemetry.v1`). **Module B** on-chain streams from Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) feed Queries 0–3 (`IntentAttested` · `RiskTripBlocked` · PEV). Do not UNION Module A and Module B without explicit reconciliation ([`SQL_AUDIT_REPORT.md`](../audit/SQL_AUDIT_REPORT.md)).
+> **Clarification:** **Module A** panels (widgets 1–6) ingest off-chain ExoMesh CSV (`silvervine.exomesh.dune-telemetry.v1`). **Module B** on-chain streams from Sepolia Gate [0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) feed Queries 0–3 (`IntentAttested` · `RiskTripBlocked` · PEV). Do not UNION Module A and Module B without explicit reconciliation ([SQL_AUDIT_REPORT.md](../audit/SQL_AUDIT_REPORT.md)).
 
 ### Arbitrum One (`42161`) — Pre-Compiled SQL Spec (Awaiting Live Ingest)
 
 | Field | Status |
 |-------|--------|
-| **Chain** | Arbitrum One `42161` · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
+| **Chain** | Arbitrum One `42161` · Gate [0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) |
 | **Dashboard** | Queries 1–3 below are **pre-compiled DuneSQL** for production PEV / toxic-flow panels |
 | **Live ingest** | **Not yet operational** — awaits mainnet `IntentAttested` / `RiskTripBlocked` business-event indexer activation |
 | **Sepolia parity** | Sepolia stream proves decode + PEV math; 42161 spec is **copy-ready** for venue diligence |
@@ -137,7 +137,7 @@ ORDER BY minute_time ASC;
 
 $$\text{PEV} = \sum \text{blocked\_intent\_notional\_usd}$$
 
-Sourced exclusively from decoded **`RiskTripBlocked`** event logs emitted by Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1). Each `RiskTripBlocked` log carries the nominal USD notional of the toxic intent severed pre-broadcast (0-Gas fail-closed path).
+Sourced exclusively from decoded **`RiskTripBlocked`** event logs emitted by Sepolia Gate [0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1). Each `RiskTripBlocked` log carries the nominal USD notional of the toxic intent severed pre-broadcast (0-Gas fail-closed path).
 
 **Dashboard panel:** [SliverVine Protocol — PEV](https://dune.com/silvervinelabs/slivervine-protocol)
 
@@ -279,9 +279,9 @@ LIMIT 500;
 ## Pre-Consensus ExoMesh Intercepts (Query C0–C3)
 
 **Scope:** Off-chain 0-Gas intercept telemetry — 255/255 chaos matrix · honeypot decoys · grant-audit shadow margin · ExoMesh demo harness.
-**Export SSOT:** [`scripts/_shared/exomesh-dune-telemetry.ts`](../../scripts/_shared/exomesh-dune-telemetry.ts) · `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](../audit/exomesh-dune-telemetry.csv)
-**Internal spec:** [`docs/internal/DUNE_TELEMETRY_SPEC.md`](../internal/DUNE_TELEMETRY_SPEC.md)
-**Vitest anchors:** [`tests/chaos/orbit-agentic-failclosed-chaos.test.ts`](../../tests/chaos/orbit-agentic-failclosed-chaos.test.ts) · [`tests/scripts/chaos-blackswan-stress.test.ts`](../../tests/scripts/chaos-blackswan-stress.test.ts) (255/255 fail-closed)
+**Export SSOT:** [scripts/_shared/exomesh-dune-telemetry.ts](../../scripts/_shared/exomesh-dune-telemetry.ts) · `pnpm export:dune` → [docs/audit/exomesh-dune-telemetry.csv](../audit/exomesh-dune-telemetry.csv)
+**Internal spec:** [docs/internal/DUNE_TELEMETRY_SPEC.md](../internal/DUNE_TELEMETRY_SPEC.md)
+**Vitest anchors:** [tests/chaos/orbit-agentic-failclosed-chaos.test.ts](../../tests/chaos/orbit-agentic-failclosed-chaos.test.ts) · [tests/scripts/chaos-blackswan-stress.test.ts](../../tests/scripts/chaos-blackswan-stress.test.ts) (255/255 fail-closed)
 
 | Panel | Query | Primary source |
 |-------|-------|----------------|
@@ -290,7 +290,7 @@ LIMIT 500;
 | **Zero-Gas Economics** | C2 | `gas_burned = 0` on `FAIL_CLOSED` · `reflex_latency_us` |
 | **Venue Heatmap (30d)** | C3 | `venue` × `intercept_type` blocked count |
 
-> **Layer partition:** Queries **C0–C3** are **off-chain only** (`dataset_exomesh_intercepts`). On-chain PEV remains **Query 1** (`result_citadel_risk_trips`). Do not UNION without explicit reconciliation (see [`SQL_AUDIT_REPORT.md`](../audit/SQL_AUDIT_REPORT.md)).
+> **Layer partition:** Queries **C0–C3** are **off-chain only** (`dataset_exomesh_intercepts`). On-chain PEV remains **Query 1** (`result_citadel_risk_trips`). Do not UNION without explicit reconciliation (see [SQL_AUDIT_REPORT.md](../audit/SQL_AUDIT_REPORT.md)).
 
 **Spell tables (DuneSQL SSOT):**
 
@@ -299,7 +299,7 @@ LIMIT 500;
 | `dune.silvervinelabs.result_citadel_risk_trips` | Decoded `RiskTripBlocked` / `IntentAttested` from Sepolia Gate (on-chain) |
 | `dune.silvervinelabs.dataset_exomesh_intercepts` | ExoMesh off-chain CSV ingest (`silvervine.exomesh.dune-telemetry.v1`) |
 
-**Telemetry parity ([`src/core/gate-telemetry-types.ts`](../../src/core/gate-telemetry-types.ts)):**
+**Telemetry parity ([src/core/gate-telemetry-types.ts](../../src/core/gate-telemetry-types.ts)):**
 
 | TS constant | Value | Off-chain CSV `status` |
 |-------------|-------|------------------------|
@@ -445,7 +445,7 @@ ORDER BY blocks DESC;
 
 ---
 
-## On-Chain Event Schema ([`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol))
+## On-Chain Event Schema ([SliverVineGate.sol/](../../SliverVineGate/out/SliverVineGate.sol))
 
 ```solidity
 event IntentAttested(bytes32 indexed intentHash, address indexed agent, uint8 action, uint256 shadowMarginUsd);
@@ -465,7 +465,7 @@ event RiskTripBlocked(bytes32 indexed intentHash, address indexed agent, string 
 | Milestone | Deliverable |
 |-----------|-------------|
 | **M-Dune** | Dashboard live · `duneTelemetry` in `/api/grant-audit` · gate events indexed |
-| **M-CLI** | Vitest regression · [`tests/api/grant-audit-dune-telemetry.test.ts`](../../tests/api/grant-audit-dune-telemetry.test.ts) |
+| **M-CLI** | Vitest regression · [tests/api/grant-audit-dune-telemetry.test.ts](../../tests/api/grant-audit-dune-telemetry.test.ts) |
 
 ---
 

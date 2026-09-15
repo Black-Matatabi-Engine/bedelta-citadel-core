@@ -3,7 +3,7 @@
 **Document role:** **ExoMesh-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`). 
 **Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**. 
 **Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (ExoMesh-Armor SSOT) · **225 test files | 1052 PASS clean** 
-**Related:** [`VERIFICATION_MATRIX.md`](./06_verifications/01_VERIFICATION_MATRIX.md) · [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md)
+**Related:** [VERIFICATION_MATRIX.md](./06_verifications/01_VERIFICATION_MATRIX.md) · [00_ARB_Buildathon/SUBMISSION.md](./00_ARB_Buildathon/SUBMISSION.md)
 
 ---
 
@@ -17,9 +17,9 @@ SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for
 | **Yield vault** | Wallet B `0xbd65d7…EC7F` | Arbitrum One · GMX v2 GM | **Principal capital custody** · GM LP **deposit / withdraw only** |
 | **Protocol Treasury** | `0xc9BddA…546f` (`uiFeeReceiver`) | Arbitrum One Treasury | **Protocol revenue collection** · +10 bps GMX v2 builder rebate (segregated from Wallet B principal) |
 
-**Protocol revenue stream:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) directly to the dedicated Protocol Treasury (`0xc9BddA...546f`) as `uiFeeReceiver`, completely segregated from Wallet B principal capital (`0xbd65d7...EC7F`) — SSOT [`gmx-revenue.ts`](../src/config/gmx-revenue.ts) · [`gmx-v2-order-payload.ts`](../src/services/adapters/gmx-v2-order-payload.ts).
+**Protocol revenue stream:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) directly to the dedicated Protocol Treasury (`0xc9BddA...546f`) as `uiFeeReceiver`, completely segregated from Wallet B principal capital (`0xbd65d7...EC7F`) — SSOT [gmx-revenue.ts](../src/config/gmx-revenue.ts) · [gmx-v2-order-payload.ts](../src/services/adapters/gmx-v2-order-payload.ts).
 
-Cross-wallet sizing SSOT: [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts). 
+Cross-wallet sizing SSOT: [gmx-cross-wallet-hedge.ts](../src/services/gmx-cross-wallet-hedge.ts). 
 Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[COLD_START_GUARD]`.
 
 ---
@@ -36,7 +36,7 @@ Wallet B is **exclusively** the Arbitrum GM LP yield vault. It must **never** si
 | GM LP → Router `approve` | Hyperliquid session keys |
 | GM Pool `createWithdrawal` multicall | Wallet A hedge keys on Wallet B |
 
-**Enforcement:** global `assertWalletBPerpIsolation()` in [`wallet-isolation-guard.ts`](../src/core/wallet-isolation-guard.ts) — throws `WALLET_B_PERP_FORBIDDEN` on all GMX `createOrder` builder paths.
+**Enforcement:** global `assertWalletBPerpIsolation()` in [wallet-isolation-guard.ts](../src/core/wallet-isolation-guard.ts) — throws `WALLET_B_PERP_FORBIDDEN` on all GMX `createOrder` builder paths.
 
 ### 1.2 Three-leg GM I/O multicall (verified live on 42161)
 
@@ -44,11 +44,11 @@ Production GM I/O uses GMX v2 `ExchangeRouter` multicall on Arbitrum One:
 
 | Leg | Action | Live Tx | SSOT CLI |
 |-----|--------|---------|----------|
-| **1 — Deposit** | `sendWnt` → `sendTokens` → `createDeposit` | [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | `pnpm execute:gmx:gm-deposit` |
-| **2 — Approve** | GM LP token → GMX v2 Router spender | [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) | Part of withdraw prep |
-| **3 — Withdraw** | `sendWnt` → `sendTokens(GM)` → `createWithdrawal` | [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) | `pnpm execute:gmx:gm-withdraw` |
+| **1 — Deposit** | `sendWnt` → `sendTokens` → `createDeposit` | [0xe3155220…](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | `pnpm execute:gmx:gm-deposit` |
+| **2 — Approve** | GM LP token → GMX v2 Router spender | [0x30ec0b7a…](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) | Part of withdraw prep |
+| **3 — Withdraw** | `sendWnt` → `sendTokens(GM)` → `createWithdrawal` | [0xfd3601dc…](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) | `pnpm execute:gmx:gm-withdraw` |
 
-**Code SSOT:** [`gmx-gm-deposit-multicall.ts`](../src/services/adapters/gmx-gm-deposit-multicall.ts) · [`gmx-gm-withdraw-multicall.ts`](../src/services/adapters/gmx-gm-withdraw-multicall.ts)
+**Code SSOT:** [gmx-gm-deposit-multicall.ts](../src/services/adapters/gmx-gm-deposit-multicall.ts) · [gmx-gm-withdraw-multicall.ts](../src/services/adapters/gmx-gm-withdraw-multicall.ts)
 
 ### 1.3 Builder fee revenue model (+10 bps `uiFeeReceiver`)
 
@@ -92,7 +92,7 @@ HL execution is **0-Gas on Arbitrum** (L1 orderbook app-chain). Legacy HL stubs 
 
 | Field | SSOT |
 |-------|------|
-| **Builder** | [`gmx-v2-wallet-a-short-builder.ts`](../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) |
+| **Builder** | [gmx-v2-wallet-a-short-builder.ts](../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) |
 | **CLI** | `pnpm execute:gmx:wallet-a-short-fallback` |
 | **Collateral** | USDC on Arbitrum · Wallet A balance probe |
 | **Live status** | **Simulate only** — Wallet A USDC = 0 on mainnet · **no live fill claims permitted** |
@@ -106,7 +106,7 @@ $$
 \Delta_{\text{net}} = \Delta_{\text{GMX\_GM}} + \Delta_{\text{HL\_Short}} \equiv 0
 $$
 
-[`dual-wallet-structured-log.ts`](../src/services/gmx-cross-wallet-hedge-lib/dual-wallet-structured-log.ts) emits:
+[dual-wallet-structured-log.ts](../src/services/gmx-cross-wallet-hedge-lib/dual-wallet-structured-log.ts) emits:
 
 ```text
 [WALLET_B_GMX_STATE] walletB: 0xc9Bd...546f | ethDeltaSize: X.XXXX ETH | gmLiquidityUsd: $X.XX
@@ -125,8 +125,8 @@ $$
 | Layer | Mechanism | SSOT |
 |-------|-----------|------|
 | **HL margin cushion** | Pre-seed Wallet A with USDC margin on Hyperliquid L1 | Grant narrative: **$100 HL margin** backs ~$1,200 notional short |
-| **5% cross-MMR buffer** | `DEFAULT_CROSS_MMR = 0.05` — liquidation distance floor | [`margin-buffer.test.ts`](../tests/risk-control/margin-buffer.test.ts) |
-| **5–10% NAV buffer** | `evaluateBufferHealth()` — pre-hedged liquidity target | [`buffer-engine.ts`](../src/core/buffer-engine.ts) · `DEFAULT_BUFFER_MIN_PCT = 0.05` · `DEFAULT_BUFFER_MAX_PCT = 0.10` |
+| **5% cross-MMR buffer** | `DEFAULT_CROSS_MMR = 0.05` — liquidation distance floor | [margin-buffer.test.ts](../tests/risk-control/margin-buffer.test.ts) |
+| **5–10% NAV buffer** | `evaluateBufferHealth()` — pre-hedged liquidity target | [buffer-engine.ts](../src/core/buffer-engine.ts) · `DEFAULT_BUFFER_MIN_PCT = 0.05` · `DEFAULT_BUFFER_MAX_PCT = 0.10` |
 
 **Cold-start sequence:**
 
@@ -144,7 +144,7 @@ When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engi
 | Field | SSOT |
 |-------|------|
 | **Error code** | `INSUFFICIENT_WALLETA_HEDGE_MARGIN` |
-| **Module** | [`cross-wallet-cold-start-guard.ts`](../src/services/cross-wallet-cold-start-guard.ts) |
+| **Module** | [cross-wallet-cold-start-guard.ts](../src/services/cross-wallet-cold-start-guard.ts) |
 | **Trigger** | `assertWalletAMarginSufficiency()` — Wallet A `perpsMarginUsd` < `computeJitRebalanceRequiredMarginUsd(orderUsd)` |
 | **Margin formula** | `requiredMarginUsd = orderUsd × DEFAULT_CROSS_MMR (0.05)` |
 | **Telemetry** | `[COLD_START_GUARD] { walletABalanceUsd, requiredMarginUsd, status: "FAIL_CLOSED_PENDING_BRIDGE" }` |
@@ -164,7 +164,7 @@ When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engi
 
 ### 3.4 Cron drift rebalance (`CRON_DRIFT_MIN_USD = 10`)
 
-[`scheduled-gmx-hedge-drift.ts`](../src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-drift.ts):
+[scheduled-gmx-hedge-drift.ts](../src/scheduled-gmx-hedge-lib/scheduled-gmx-hedge-drift.ts):
 
 | Constant | Value | Role |
 |----------|-------|------|
@@ -206,10 +206,10 @@ Micro-deposits below the **$10 aggregate drift threshold** are **batched implici
 
 | Contract | Address | Role |
 |----------|---------|------|
-| **SliverVineAgentPolicyGuardV2** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | GMX wire invariants · `stylusCoprocessor=0` → pure Solidity fallback |
-| **GmxSoilMatrixSwitch** | [`0x4129aee97e68aa3712c56fe9ec48bf369782f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | Single-SLOAD defense bitmap |
-| **SliverVineRiskOracleV2** | [`0xfadb14759a3d3c7e976697de61bf62627f14ec93`](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | `defenseState` bitmap · 300s SLO window |
-| **SliverVineGatePolicyLink** | [`0xe4ef5350963241c49a29e72a4cf093208cd19af0`](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) | Bootstrap Gate `0xb174…` ↔ PolicyGuardV2 binding · setPolicyGuard [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
+| **SliverVineAgentPolicyGuardV2** | [0xfd98cadb7018f692ec58cd4359e0c0399f4f8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | GMX wire invariants · `stylusCoprocessor=0` → pure Solidity fallback |
+| **GmxSoilMatrixSwitch** | [0x4129aee97e68aa3712c56fe9ec48bf369782f99b](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | Single-SLOAD defense bitmap |
+| **SliverVineRiskOracleV2** | [0xfadb14759a3d3c7e976697de61bf62627f14ec93](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) | `defenseState` bitmap · 300s SLO window |
+| **SliverVineGatePolicyLink** | [0xe4ef5350963241c49a29e72a4cf093208cd19af0](https://arbiscan.io/address/0xe4ef5350963241c49a29e72a4cf093208cd19af0) | Bootstrap Gate `0xb174…` ↔ PolicyGuardV2 binding · setPolicyGuard [0x1b158a4a…](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) |
 
 ---
 
@@ -243,9 +243,9 @@ pnpm demo:delta-neutral -- --unwind # + Step 5 R20 exercise
 
 | Document | Role |
 |----------|------|
-| [`VERIFICATION_MATRIX.md`](./06_verifications/01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub · on-chain settlement contracts |
-| [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md) | Grant submission SSOT |
-| [`01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Topology · Δ-neutral loop |
+| [VERIFICATION_MATRIX.md](./06_verifications/01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 verification hub · on-chain settlement contracts |
+| [00_ARB_Buildathon/SUBMISSION.md](./00_ARB_Buildathon/SUBMISSION.md) | Grant submission SSOT |
+| [01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md](./01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Topology · Δ-neutral loop |
 
 ---
 

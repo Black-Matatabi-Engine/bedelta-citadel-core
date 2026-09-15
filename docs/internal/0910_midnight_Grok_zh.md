@@ -13,9 +13,9 @@
 | 本卷主題 | **Option A（合併 3 大前沿 EIP：ERC-7683 / EIP-7702 / ERC-7710） vs Option B（維持 4 大核心 EIP）** |
 | **Option A 總評分** | **9.28 / 10**（加權決策：**建議無懸念選擇 Option A**） |
 | **Option B 總評分** | **9.05 / 10** |
-| 對照前卷 | [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) 主席加權 **9.12** · [`0910_midnight_Grok.md`](./0910_midnight_Grok.md) 英文 trade-off 摘要 |
+| 對照前卷 | [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) 主席加權 **9.12** · [0910_midnight_Grok.md](./0910_midnight_Grok.md) 英文 trade-off 摘要 |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`erc7683-intent-guard.ts` · `eip7702-auth-guard.ts` · `erc7710-intent-expiry.ts` · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`erc7683-intent-guard.ts` · `eip7702-auth-guard.ts` · `erc7710-intent-expiry.ts` · [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#next-gen-eip-defense-matrix-erc-7683-eip-7702-erc-7710)。
 
 ---
 
@@ -217,7 +217,7 @@ Buildathon 提交前最後一道 OpSec 閘門：**是否將 `feat/nextgen-eips-m
 | **PMF** | **9.15** | 7 大 EIP 敘事完整；live fill / Dune 仍封頂 |
 | **Inno** | **9.42** | 全網首個 EIP-1193 Edge-Wasm RI for 7683/7702/7710 |
 | **RPS** | **9.18** | 1052/1052 PASS · 0 TS errors · 8 新增測試全綠 |
-| **加權均分** | **9.28** | 對齊英文 trade-off 文件 [`0910_midnight_Grok.md`](./0910_midnight_Grok.md) |
+| **加權均分** | **9.28** | 對齊英文 trade-off 文件 [0910_midnight_Grok.md](./0910_midnight_Grok.md) |
 
 **主席加權四維（Option B）：**
 
@@ -297,7 +297,7 @@ pnpm test -- --run
 2. **極致護城河**：市面上 99% 項目僅在鏈上使用 EIP-7702/7683，而 SilverVine 是**全網首個 EIP-1193 Edge-Wasm 預共識參考實現**，技術得分可直接獲得 +15~20% 加分。
 3. **30 人全團共識**：Option A 算術平均 **9.26** vs Option B **9.07**（**+0.19**）；主席加權 **9.28** vs **9.05**（**+0.23**）。
 4. **零技術債**：Option A 新增 3 模組 + 8 測試，未引入任何 flaky 或 TS regression — Option B 的 RPS 優勢（+0.20）不構成實質阻礙。
-5. **敘事升維**：從「4 核心 EIP 防護」升格為「7 大 EIP/ERC 完整 Pre-Consensus 防禦矩陣」，與 [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) 的 5-Venue 收斂形成 **垂直 + 水平雙重護城河**。
+5. **敘事升維**：從「4 核心 EIP 防護」升格為「7 大 EIP/ERC 完整 Pre-Consensus 防禦矩陣」，與 [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) 的 5-Venue 收斂形成 **垂直 + 水平雙重護城河**。
 
 **不採用 Option B 的唯一理由**：在 QA 完全對等（兩分支均 100% PASS · 0 TS errors）的前提下，凍結 main 等於**自願放棄已驗證的創新增量** — 不符合 SilverVine Protocol 的 DevRel 與 Grant 戰略定位。
 
@@ -307,11 +307,11 @@ pnpm test -- --run
 
 | 文件 | 角色 |
 |------|------|
-| [`0910_midnight_Grok.md`](./0910_midnight_Grok.md) | 英文 trade-off 摘要（Option A vs B） |
-| [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) | 下班 PM 5-Venue 基線 9.12 |
-| [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) | 午餐 30 人基線 9.05 |
-| [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | 公開 EIP wiki（英文） |
-| [`PERFORMANCE_AND_PARITY_AUDIT.md`](./PERFORMANCE_AND_PARITY_AUDIT.md) | Wasm/Stylus 雙引擎 parity |
+| [0910_midnight_Grok.md](./0910_midnight_Grok.md) | 英文 trade-off 摘要（Option A vs B） |
+| [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) | 下班 PM 5-Venue 基線 9.12 |
+| [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) | 午餐 30 人基線 9.05 |
+| [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | 公開 EIP wiki（英文） |
+| [PERFORMANCE_AND_PARITY_AUDIT.md](./PERFORMANCE_AND_PARITY_AUDIT.md) | Wasm/Stylus 雙引擎 parity |
 
 ---
 

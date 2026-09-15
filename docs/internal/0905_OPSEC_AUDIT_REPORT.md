@@ -296,7 +296,7 @@ Adapter → evaluateGatewayRules / checkSoilResistance
 ## 8. Phase 2 Risk Specification — Spark, Fluid, USD.AI, D2 Finance
 
 > **Classification:** Internal reserve only. **Do not** surface in `README.md`, `JUDGE_BRIEF.md`, or `SUBMISSION.md`.  
-> **Cross-ref:** [`CAPITAL_LOOPS_TOPOLOGY.md`](./CAPITAL_LOOPS_TOPOLOGY.md) §5.
+> **Cross-ref:** [CAPITAL_LOOPS_TOPOLOGY.md](./CAPITAL_LOOPS_TOPOLOGY.md) §5.
 
 ### 8.1 Spark Protocol
 

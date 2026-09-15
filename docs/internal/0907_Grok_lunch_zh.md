@@ -62,8 +62,8 @@
 
 | 項目 | 狀態 | 驗證錨點 |
 |------|------|----------|
-| **Layer inversion** | ✅ | `DefenseMatrixError` 定義於 [`src/core/errors.ts`](../../src/core/errors.ts) · `session-key-guard-core.ts` 改 `from "./errors"` |
-| **Zero side-effect clock** | ✅ | `resolveUsdAiClockSsotPure()` 在 core · `emitUsdAiClockSsotLog()` 在 [`usdai-constants.ts`](../../src/adapters/usdai/usdai-constants.ts) adapter 殼 |
+| **Layer inversion** | ✅ | `DefenseMatrixError` 定義於 [src/core/errors.ts](../../src/core/errors.ts) · `session-key-guard-core.ts` 改 `from "./errors"` |
+| **Zero side-effect clock** | ✅ | `resolveUsdAiClockSsotPure()` 在 core · `emitUsdAiClockSsotLog()` 在 [usdai-constants.ts](../../src/adapters/usdai/usdai-constants.ts) adapter 殼 |
 | **五 sunk 模組** | ✅ | `risk-engine-usdai.ts` · `soil-resistance-core.ts` · `session-key-guard-core.ts` · `delta-neutral-calculator.ts` · `funding-regime-core.ts` |
 | **Solidity Custom Errors** | ✅ | `SliverVineRiskOracle.sol` · `IngressSafetySwitch.sol` · `ERR_*` bytes32 事件保留 |
 | **Clock 30s 硬熔斷** | ✅ | `USDAI_CLOCK_SKEW_MAX_MS = 30_000` · `CLOCK_SKEW_EXCEEDED` |

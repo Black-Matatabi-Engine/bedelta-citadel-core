@@ -2,7 +2,7 @@
 
 > **Schema:** `silvervine.exomesh.dune-telemetry.v1`  
 > **Export:** `pnpm tsx scripts/export-dune-telemetry.ts`  
-> **SSOT:** [`scripts/_shared/exomesh-dune-telemetry.ts`](../../scripts/_shared/exomesh-dune-telemetry.ts)  
+> **SSOT:** [scripts/_shared/exomesh-dune-telemetry.ts](../../scripts/_shared/exomesh-dune-telemetry.ts)  
 > **Live dashboard (Module A):** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)
 
 ## CSV Upload Schema

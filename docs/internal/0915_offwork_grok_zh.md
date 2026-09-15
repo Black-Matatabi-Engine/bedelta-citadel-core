@@ -8,21 +8,21 @@
 | 賽事 | **Arbitrum Open House Singapore Online Buildathon** |
 | **Submission Deadline** | **2026-10-01 23:59 SGT**（官方 T&C） |
 | 分支 / HEAD | `main` @ **`a053bd4f`** · Phase-4 **CODEBASE_FREEZE Active**（`frozenAt: 2026-09-14`） |
-| Codebase State | **Phase-4 CODEBASE_FREEZE Active** — [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) |
+| Codebase State | **Phase-4 CODEBASE_FREEZE Active** — [CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) |
 <!-- SSOT:GROK_HEADER_METRICS_START -->
 | 測試 SSOT | **243 test files \| 1123 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | Bundle SSOT | **166.51 KiB raw · 58.72 KiB gzip**（Pass `< 150 KiB` Lean Warn Limit） |
 | **SEPSB Telemetry SSOT** | **TPR 100% · FPR 0% · Observatory Mis-block 0** · Reflex p50 **0.233µs**（Wasm） · p99 **2.299µs** · `pnpm audit:sepsb` |
-| **SEPSB 5-Venue Distribution** | **gmx (9)** · **hyperliquid (6)** · **pendle (7)** · **usdai (4)** · **variational (5)** — [`sepsb-stress-telemetry.csv`](../audit/sepsb-stress-telemetry.csv) |
+| **SEPSB 5-Venue Distribution** | **gmx (9)** · **hyperliquid (6)** · **pendle (7)** · **usdai (4)** · **variational (5)** — [sepsb-stress-telemetry.csv](../audit/sepsb-stress-telemetry.csv) |
 | Quant Backtest SSOT | Tier 1 **3/3 FAIL_CLOSED** · Tier 2 **2/2** · Tier 3 **10,000 runs · 100% intercept** · Prevented **$1,326,412.79 USD**（simulated） |
-| **Dual Dune Dashboards** | **Dashboard 1:** [`slivervine-protocol`](https://dune.com/silvervinelabs/slivervine-protocol) — Operational Shield · cumulative append · **Dashboard 2:** [`slivervine-sepsb-stress`](https://dune.com/silvervinelabs/slivervine-sepsb-stress) — SEPSB Quant Matrix & 5-Venue SLA |
+| **Dual Dune Dashboards** | **Dashboard 1:** [slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) — Operational Shield · cumulative append · **Dashboard 2:** [slivervine-sepsb-stress](https://dune.com/silvervinelabs/slivervine-sepsb-stress) — SEPSB Quant Matrix & 5-Venue SLA |
 | **On-Chain Indexer** | `pnpm export:dune:onchain` · Gate `0xb174…8BF1` · Status **INTERFACE_READY** |
 <!-- SSOT:GROK_HEADER_METRICS_END -->
-| 英文裁決 SSOT | [`README.md`](../../README.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) · [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
-| CLI Demo SSOT | [`02_CLI_DEMO_RUNBOOK.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) |
+| 英文裁決 SSOT | [README.md](../../README.md) · [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) · [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md) |
+| CLI Demo SSOT | [02_CLI_DEMO_RUNBOOK.md](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) |
 | 前序卷對照 | 0915 10:00（**9.48**）→ 0915 Lunch（**9.50**）→ **本卷 9.60** |
 
-> **本卷用途：** 30 人面板對 **下午 / 下班時段 CLI HUD 標準化、互動式評委 UX、ZeroDev AA Ready 整合、雙 Dune 連結消歧** 做獨立裁決。物理 SSOT：[`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) · [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json) · **不突破** Phase-4 freeze 核心 Wasm / 合約層。
+> **本卷用途：** 30 人面板對 **下午 / 下班時段 CLI HUD 標準化、互動式評委 UX、ZeroDev AA Ready 整合、雙 Dune 連結消歧** 做獨立裁決。物理 SSOT：[SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) · [SEPSB_BENCHMARK_SSOT.json](../audit/SEPSB_BENCHMARK_SSOT.json) · **不突破** Phase-4 freeze 核心 Wasm / 合約層。
 
 **執行摘要：** Checkpoint **17:30 HKT** · HEAD `a053bd4f`。物理指標：**243 / 1123 PASS** · **tsc 0 errors** · SEPSB **TPR 100% / FPR 0%** · Dual Dune 分軌連結已在 README / JUDGE_BRIEF / SUBMISSION **明確標籤化**。**本卷裁決：下午七柱抛光（Seven Pillars of Afternoon Polish）** 把評委體驗從「能跑 demo」升級為「能逐步消化安全證明」—— Tier 0 `demo:exomesh` 旗艦定位、二級 demo 統一 Box-Drawing HUD、`Press ENTER` 互動停頓、純 `--json` 機器可讀輸出、ZeroDev AA Ready 預設開啟且優雅降級。**禁止** 恢復 `demo:e2e` 別名；**禁止** 在 freeze 內改動 `pkg/soil_core.wasm` 或 PolicyGuard ABI。
 
@@ -76,7 +76,7 @@
 | Tier 1 | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix | `--trip` fail-closed |
 | Tier 2 | `demo:sanctuary` · `demo:ingress` · `demo:delta-neutral` | 二級敘事 demo | A/B/C + Box-Drawing |
 
-**文檔錨點：** [`README.md`](../../README.md) Tier 0 段 · [`02_CLI_DEMO_RUNBOOK.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963)
+**文檔錨點：** [README.md](../../README.md) Tier 0 段 · [02_CLI_DEMO_RUNBOOK.md](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963)
 
 ### 柱 3 — 二級 CLI HUD Box-Drawing 統一
 
@@ -130,8 +130,8 @@ pnpm demo:delta-neutral -- --json | jq .
 
 | Dashboard | 標籤 | URL | 用途 |
 |-----------|------|-----|------|
-| **Dashboard 1** | **Dune Operational Shield** | [`/slivervine-protocol`](https://dune.com/silvervinelabs/slivervine-protocol) | Live volume · gas saved · intercept donut |
-| **Dashboard 2** | **Dune SEPSB Stress Matrix** | [`/slivervine-sepsb-stress`](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | TPR/FPR · 5-venue Wasm reflex SLA |
+| **Dashboard 1** | **Dune Operational Shield** | [/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) | Live volume · gas saved · intercept donut |
+| **Dashboard 2** | **Dune SEPSB Stress Matrix** | [/slivervine-sepsb-stress](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | TPR/FPR · 5-venue Wasm reflex SLA |
 
 **已同步文件：** `README.md`（header Live Telemetry + `README_DUAL_TELEMETRY`）· `JUDGE_BRIEF.md`（telemetry table + footer）· `SUBMISSION.md`（Live Telemetry 表 + metadata 行）· `buildDualTelemetryBlock()` / `buildJudgeTelemetryTable()`
 

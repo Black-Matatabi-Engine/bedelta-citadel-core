@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — SliverVine ExoMesh: Pre-Consensus Intent Firewall for AI Agents on Arbitrum
 
-> 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
+> 📌 **System Metrics SSOT**: Verified via [docs/audit/SYSTEM_METRICS_SSOT.json](docs/audit/SYSTEM_METRICS_SSOT.json)
 
 **Primary (Module A · ~70% Architectural Surface):** SliverVine ExoMesh — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · pre-consensus Wasm reflex · ReflexCore (SSRC) soil engine · Defense Layers 1–4 · Pillar Set Y.
 
@@ -90,7 +90,7 @@
 | **C** | **[Module A: ExoMesh]** | Retry storm / circuit breaker | 4th rapid submit severs channel · 5 RPS isolate · Dynamic Max SL (`Balance×1%+$100`) · R20 / CRI hardlock | `retail-guard-provider.test.ts` (4th submit) · `decorator.test.ts` · `root-protection.test.ts` · `edge-security.test.ts` |
 | **D** | **[Module B: Sanctuary]** | Sanctuary vault & cross-chain | ERC-7540 operator hijack · ERC-7683 solver MEV · Across/Robinhood **inbound AML block** | `erc7540-async-escort.test.ts` · `erc7683-intent-guard.test.ts` · `across-ingress-bridge.test.ts` |
 
-Full production catalog (additional vectors) → [`EXOMESH_PRODUCTION_SCENARIO_CATALOG.md`](./docs/00_ARB_Buildathon/EXOMESH_PRODUCTION_SCENARIO_CATALOG.md)
+Full production catalog (additional vectors) → [EXOMESH_PRODUCTION_SCENARIO_CATALOG.md](./docs/00_ARB_Buildathon/EXOMESH_PRODUCTION_SCENARIO_CATALOG.md)
 
 ### Primary SDK Entrypoint — EIP-1193+ Agentic Wallet Guard
 
@@ -176,7 +176,7 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | Standard | **Physical Limitation** | **SliverVine Pre-Consensus Superset** | **Proof** |
 | -------- | ----------------------- | ------------------------------------- | --------- |
 | **[EIP-1193+ (Pre-Sign Local Guard)](https://eips.ethereum.org/EIPS/eip-1193)** `[Final]` | Txs reach Sequencer unchecked — reverts burn gas | **ExoMesh Sub-1.8µs 0-Gas Pre-Consensus Wasm Gate** | `pnpm demo:exomesh` · **35/35** |
-| **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass tx-only guards | [`eip5792-send-calls.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` · one intent-ring attempt per batch | **3/3** |
+| **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** `[Final]` | `wallet_sendCalls` batches bypass tx-only guards | [eip5792-send-calls.ts](./src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) unfolds `calls[]` · one intent-ring attempt per batch | **3/3** |
 | **[ERC-7540](https://eips.ethereum.org/EIPS/eip-7540)** `[Final]` | Pending → Claimable attack window (drift · operator hijack) | **Sanctuary Selector-Level Escort** — `evalAsyncVaultDriftBps` + Whitelisted Operator Lock | `pnpm demo:sanctuary` · **3/3** |
 
 #### Tier 2 — Active Industrial Standards `[De-facto Industrial Draft]`
@@ -191,9 +191,9 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | Standard | Status | **Implementation** | **Proof** |
 | -------- | ------ | ------------------ | --------- |
 | **[ERC-8196+ (Agent Policy Citadel)](https://eips.ethereum.org/EIPS/eip-8196)** | `[Final]` | EIP-1193+ middleware + PolicyGuardV2 anchor | **35/35** · Forge |
-| **Session mandate attenuation** | `[Final]` [ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) · `[Conceptual]` [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) | `INTENT_RING_U32` + [`agentic-auto-roll-gate.ts`](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
-| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | [`eip7702-auth-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
-| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
+| **Session mandate attenuation** | `[Final]` [ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) · `[Conceptual]` [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) | `INTENT_RING_U32` + [agentic-auto-roll-gate.ts](./src/services/api/pendle-shield/agentic-auto-roll-gate.ts) | **7/7** |
+| **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | [eip7702-auth-guard.ts](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
+| **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | [erc7710-intent-expiry.ts](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
 
 **Vitest SSOT:** **243 test files | 1123 PASS clean (100%)** · `pnpm test -- --run`
 
@@ -268,7 +268,7 @@ Risk limits are **fixed and reproducible for judges** (Tier 1 audit defaults) wh
 | **PolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · `MAINNET` only |
 | **Vitest** | **243 test files | 1123 PASS clean** · `pnpm test -- --run` |
 | **Primary SDK Entrypoint** | `@slivervine/exomesh-agentic-wallet-guard` · *EIP-1193+ (Pre-Sign Local Guard) — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
-| **Deep docs** | [`SUBMISSION.md`](./docs/00_ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
+| **Deep docs** | [SUBMISSION.md](./docs/00_ARB_Buildathon/SUBMISSION.md) · [VERIFICATION_MATRIX.md](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
 
 ---
 
@@ -282,13 +282,13 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 | Venue | Protocol | Physical Boundary Guard | CLI Demo Command |
 |-------|----------|----------------------|------------------|
-| `gmx` | **GMX v2** | OI skew / PoolTVL > **0.35** | [`pnpm demo:gmx -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
-| `pendle` | **Pendle** | Oracle TTL > **60s** · Yield jitter > **200 bps** · PT maturity < **7d** | [`pnpm demo:pendle -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
-| `usdai` | **USD.ai** | Peg drift > **30 bps** · oracle age > **2h** | [`pnpm demo:usdai -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
-| `hyperliquid` | **Hyperliquid L1** | Spread > **20 bps** · session-key rate cap | [`pnpm demo:hl -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
-| `variational` | **Variational RFQ** | Quote stale > **500ms** · OLP > **15%** | [`pnpm demo:variational -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| `gmx` | **GMX v2** | OI skew / PoolTVL > **0.35** | [pnpm demo:gmx -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| `pendle` | **Pendle** | Oracle TTL > **60s** · Yield jitter > **200 bps** · PT maturity < **7d** | [pnpm demo:pendle -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| `usdai` | **USD.ai** | Peg drift > **30 bps** · oracle age > **2h** | [pnpm demo:usdai -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| `hyperliquid` | **Hyperliquid L1** | Spread > **20 bps** · session-key rate cap | [pnpm demo:hl -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
+| `variational` | **Variational RFQ** | Quote stale > **500ms** · OLP > **15%** | [pnpm demo:variational -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
 
-**Judge fast-track (FAIL-CLOSED):** [`pnpm demo:gmx -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:pendle -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:variational -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:hl -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix)
+**Judge fast-track (FAIL-CLOSED):** [pnpm demo:gmx -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [pnpm demo:pendle -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [pnpm demo:variational -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [pnpm demo:hl -- --trip](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix)
 
 ## ExoMesh Pre-Consensus Security Benchmark (SEPSB)
 
@@ -310,7 +310,7 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 ```
 
-SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
+SSOT: [SEPSB_BENCHMARK_SSOT.json](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [SEPSB_CORPUS_SNAPSHOT.json](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
 
 > 💡 **Dual Telemetry Architecture**:
 > - **[Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol)** (`/slivervine-protocol`): Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
@@ -324,9 +324,9 @@ SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [
 - **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
 - **Complementary to Simulation Scanners**: While simulation tools (e.g. Blockaid) take 100–300ms via cloud RPC, SEPSB targets microsecond-class local/edge WASM decisions with 0-Gas rejected paths.
 
-**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** [`pnpm demo:exomesh`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963) · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
+**Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** [pnpm demo:exomesh](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963) · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
 
-**ExoMesh Agentic Guard (unit SSOT):** [`npx vitest run tests/sdk/retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
+**ExoMesh Agentic Guard (unit SSOT):** [npx vitest run tests/sdk/retail-guard-provider.test.ts](./tests/sdk/retail-guard-provider.test.ts) — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants
 
 ### Dual-Track Verification (`@slivervine/exomesh-agentic-wallet-guard`)
 
@@ -335,7 +335,7 @@ SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [
 
 | Track | Command | Proves |
 |-------|---------|--------|
-| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from [`warnings.ts`](./src/sdk/exomesh-agentic-wallet-guard/warnings.ts) · 0-Gas pre-consensus intercept (no broadcast) |
+| **Interactive CLI** | `pnpm demo:exomesh` | Scenario **A–D State Matrix** under `JUDGE_SAFE` clock · production `plainTextWarning` from [warnings.ts](./src/sdk/exomesh-agentic-wallet-guard/warnings.ts) · 0-Gas pre-consensus intercept (no broadcast) |
 | **Unit tests** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** reason codes (`VENUE_DRIFT_REJECTED` · `UNAUTHORIZED_SPENDER_REJECTED` · `SLIPPAGE_EXCEEDED` · `DEPTH_INSUFFICIENT` · `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` · `RPC_TRANSPORT_SYNC_FAILED`) |
 
 Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK fail-closed path is covered by unit tests; scenarios **C** and **D** echo live `RetailGuardRejectedError.plainTextWarning` strings.
@@ -345,16 +345,16 @@ Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK 
 | # | Standard | Status | Judge-facing proof |
 |---|----------|--------|-------------------|
 | **1** | **[EIP-1193+ (Pre-Sign Local Guard)](https://eips.ethereum.org/EIPS/eip-1193)** / **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792)** | `[Final]` | `pnpm demo:exomesh` · **35/35** · **3/3** — `eth_sendTransaction` · `eth_signTypedData_v4` · `wallet_sendCalls` |
-| **2** | **[ERC-7540+](https://eips.ethereum.org/EIPS/eip-7540)** | `[Final]` | `pnpm demo:sanctuary` — Selector-Level Async Vault Escort · [`erc7540-async-escort.ts`](./src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) |
-| **3** | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** | `[De-facto Industrial Draft]` | `pnpm demo:ingress` — **Pre-Consensus Solver Integrity Lock** · [`across-ingress-bridge.ts`](./src/adapters/across-ingress-bridge.ts) + [`erc7683-intent-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) |
-| **4** | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | `[De-facto Industrial Draft]` | `pnpm demo:ingress` Route C — **Edge Isomorphic Pre-Execution Hook Policy** · `assertCitadelRiskGate` + [`SliverVineRiskOracle.sol`](./contracts/SliverVineRiskOracle.sol) |
+| **2** | **[ERC-7540+](https://eips.ethereum.org/EIPS/eip-7540)** | `[Final]` | `pnpm demo:sanctuary` — Selector-Level Async Vault Escort · [erc7540-async-escort.ts](./src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) |
+| **3** | **[ERC-7683](https://eips.ethereum.org/EIPS/eip-7683)** | `[De-facto Industrial Draft]` | `pnpm demo:ingress` — **Pre-Consensus Solver Integrity Lock** · [across-ingress-bridge.ts](./src/adapters/across-ingress-bridge.ts) + [erc7683-intent-guard.ts](./src/sdk/exomesh-agentic-wallet-guard/erc7683-intent-guard.ts) |
+| **4** | **[ERC-7579](https://eips.ethereum.org/EIPS/eip-7579)** | `[De-facto Industrial Draft]` | `pnpm demo:ingress` Route C — **Edge Isomorphic Pre-Execution Hook Policy** · `assertCitadelRiskGate` + [SliverVineRiskOracle.sol](./contracts/SliverVineRiskOracle.sol) |
 | **5** | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963)** | `[Final]` | `pnpm demo:exomesh` (Scenario A) · `announceGuardedProvider()` |
 | **6** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | `[Final]` | `pnpm demo:gmx -- --trip` — pre-sign severance · Gate `0xb174…` |
-| **7** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)** | `[Final]` | PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
+| **7** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)** | `[Final]` | PolicyGuardV2 [0xfd98cadb…8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
 | **8** | **[ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) / [Permit2](https://github.com/Uniswap/permit2)** | `[Final]` | Retail guard Vitest — Permit2 approve/permit block paths |
 | **9** | **ZeroDev Kernel v3 AA** | **ZeroDev AA Ready** | `pnpm demo:delta-neutral` — ERC-7715 Session Mandates · ERC-7710 Paymaster 0-Gas · `--zerodev=on\|off` |
 
-Wiki SSOT → [`docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [ERC-8196+ (Agent Policy Citadel)](https://eips.ethereum.org/EIPS/eip-8196) = factual EIP attribution only (not a venue adapter)
+Wiki SSOT → [docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [ERC-8196+ (Agent Policy Citadel)](https://eips.ethereum.org/EIPS/eip-8196) = factual EIP attribution only (not a venue adapter)
 
 ### Core Invariants
 
@@ -419,7 +419,7 @@ pnpm demo:delta-neutral -- --zerodev=off  # Native EIP-1193 signer (AA opt-out)
 | **Zone A** | `[ExoMesh]` | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
 | **Zone B** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia sandbox · macro lifecycle · `demo:sanctuary` (ERC-7540+) · `demo:ingress` (Pillar Set X) |
 
-Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md)
+Full matrix → [docs/06_verifications/01_VERIFICATION_MATRIX.md](./docs/06_verifications/01_VERIFICATION_MATRIX.md) · [docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md)
 
 ### Protocol Core Modules (Architecture SSOT)
 
@@ -432,10 +432,10 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 | Fact | Code / test anchor |
 |------|-------------------|
-| ChainId **`46630`** (testnet) · **`4663`** (mainnet) — **not `46631`** | [`src/sdk/constants.ts`](./src/sdk/constants.ts) |
-| **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:ingress` · [`assertUnidirectionalBridge`](./src/sdk/unidirectional-bridge.ts) |
-| **Inbound AML** `42161 → Robinhood` blocked | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · [`across-ingress-bridge.test.ts`](./tests/adapters/across-ingress-bridge.test.ts) |
-| **Treasury Escort & Collateral Ingress** | [`treasury-escort-router.ts`](./src/adapters/robinhood/treasury-escort-router.ts) · [`treasury-escort-router.test.ts`](./tests/adapters/treasury-escort-router.test.ts) |
+| ChainId **`46630`** (testnet) · **`4663`** (mainnet) — **not `46631`** | [src/sdk/constants.ts](./src/sdk/constants.ts) |
+| **Outbound escort** `46630`/`4663` → `42161` | `pnpm demo:ingress` · [assertUnidirectionalBridge](./src/sdk/unidirectional-bridge.ts) |
+| **Inbound AML** `42161 → Robinhood` blocked | `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · [across-ingress-bridge.test.ts](./tests/adapters/across-ingress-bridge.test.ts) |
+| **Treasury Escort & Collateral Ingress** | [treasury-escort-router.ts](./src/adapters/robinhood/treasury-escort-router.ts) · [treasury-escort-router.test.ts](./tests/adapters/treasury-escort-router.test.ts) |
 | **EIP-1193+ 0-Gas protection (ExoMesh Module A)** | `@slivervine/exomesh-agentic-wallet-guard` · **35/35** · `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
 ---
@@ -444,9 +444,9 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 | Property | Evidence |
 |----------|----------|
-| **Consume-once invariant** | [`SliverVineGate.sol/`](SliverVineGate/out/SliverVineGate.sol) — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
+| **Consume-once invariant** | [SliverVineGate.sol/](SliverVineGate/out/SliverVineGate.sol) — [EIP-712](https://eips.ethereum.org/EIPS/eip-712) replay ⇒ `Replayed()` revert |
 | **Non-custodial gate** | No proxy · no ETH custody · live **42161** |
-| **Composable primitive** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · **EIP-1193+ (Pre-Sign Local Guard)** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
+| **Composable primitive** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · **EIP-1193+ (Pre-Sign Local Guard)** · [docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) |
 
 ---
 
@@ -454,14 +454,14 @@ Full matrix → [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](./docs/06_ve
 
 | Contract | Address | Network badge | Module |
 |----------|---------|---------------|--------|
-| **SliverVineGate** | [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `DUAL` · `42161` + `421614` | A + B |
-| **PolicyGuardV2** | [`0xfd98…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | `MAINNET` · `42161` | A |
-| **GmxSoilMatrixSwitch** | [`0x4129…f99b`](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | `MAINNET` · `42161` | A |
-| **SliverVineSoilCoprocessor** | [`0xc235…625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) | `MAINNET` · `42161` | A |
-| **IngressSafetySwitch** | [`0x3E42…Fb4B`](https://sepolia.arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) | `SEPOLIA` · `421614` | B |
-| **SliverVineRiskOracle** | [`0x3FFa…D53a4`](https://sepolia.arbiscan.io/address/0x3ffa2539f502682e8145e6eb427ff78d258d53a4) | `SEPOLIA` · `421614` | B |
+| **SliverVineGate** | [0xb174…8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `DUAL` · `42161` + `421614` | A + B |
+| **PolicyGuardV2** | [0xfd98…8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | `MAINNET` · `42161` | A |
+| **GmxSoilMatrixSwitch** | [0x4129…f99b](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) | `MAINNET` · `42161` | A |
+| **SliverVineSoilCoprocessor** | [0xc235…625e](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) | `MAINNET` · `42161` | A |
+| **IngressSafetySwitch** | [0x3E42…Fb4B](https://sepolia.arbiscan.io/address/0x3e4298e2b8d4e30396a54c1817eb71c9272ffb4b) | `SEPOLIA` · `421614` | B |
+| **SliverVineRiskOracle** | [0x3FFa…D53a4](https://sepolia.arbiscan.io/address/0x3ffa2539f502682e8145e6eb427ff78d258d53a4) | `SEPOLIA` · `421614` | B |
 
-Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)
+Full matrix → [02_CONTRACT_DEPLOYMENT_MATRIX.md](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)
 
 ---
 
@@ -478,7 +478,7 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 | **Provenance archive** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) | Static SHA-256 Buildathon checkpoint (not a live oracle) |
 <!-- SSOT:JUDGE_TELEMETRY_TABLE_END -->
 
-**Dual telemetry partition:** **Operational Shield** = live off-chain pre-consensus volume & intercept economics. **SEPSB Quant Matrix** = reproducible security benchmark across 5 venues. **On-chain indexer** = EVM event bridge for post-grant mainnet ingestion. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · SSOT → [`SYSTEM_METRICS_SSOT.json`](./docs/audit/SYSTEM_METRICS_SSOT.json).
+**Dual telemetry partition:** **Operational Shield** = live off-chain pre-consensus volume & intercept economics. **SEPSB Quant Matrix** = reproducible security benchmark across 5 venues. **On-chain indexer** = EVM event bridge for post-grant mainnet ingestion. Spec → [03_DUNE_DASHBOARD_SPECIFICATION.md](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · SSOT → [SYSTEM_METRICS_SSOT.json](./docs/audit/SYSTEM_METRICS_SSOT.json).
 
 ---
 

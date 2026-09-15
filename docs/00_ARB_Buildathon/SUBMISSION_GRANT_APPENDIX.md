@@ -1,6 +1,6 @@
 # Grant & Milestone Appendix — SliverVine Protocol (BeΔ)
 
-> **Primary spec:** [`SUBMISSION.md`](./SUBMISSION.md) · **Verification hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · **Judge brief:** [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md)
+> **Primary spec:** [SUBMISSION.md](./SUBMISSION.md) · **Verification hub:** [../06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) · **Judge brief:** [../../JUDGE_BRIEF.md](../../JUDGE_BRIEF.md)
 
 **Official positioning:** Sub-ms 0-Gas Pre-Broadcast Safety Layer (**SliverVine ExoMesh**) & Risk Navigator for AI Agents on Arbitrum.
 
@@ -40,8 +40,8 @@ Full derivations → [Defense Matrix §3.1](../01_architecture/02_DEFENSE_MATRIX
 |-------|-----------|---------------|
 | **SSRC Wasm reflex** | `checkSoilResistance()` · `pkg/soil_core.wasm` | **p50 ~106µs** Edge · **0 gas** on reject |
 | **Physical deadlock** | `rootProtection()` · `severSigningChannel()` | **p50 ~15µs** · **0 gas** |
-| **EIP-1193+ SDK (C-end)** | `withRetailGuardProvider()` | [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
-| **B2B decorator** | `withExoMeshShield()` · `verifyAgentIntent()` | [`decorator.ts`](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
+| **EIP-1193+ SDK (C-end)** | `withRetailGuardProvider()` | [retail-guard-provider.test.ts](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
+| **B2B decorator** | `withExoMeshShield()` · `verifyAgentIntent()` | [decorator.ts](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
 | **Zero-allocation hot-path** | O(1) ring-slab mandate heap · **<16 KiB** / 10k iter | [Ring slab SSOT](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-allocation-hot-path-engine-pre-allocated-ring-slab) |
 
 **Architecture principle:** Upstream pre-consensus severance — signing-channel severance (`severSigningChannel()`) is enforced **upstream** of L2 Sequencer ingress, AA Bundler, and UserOp relayer via EIP-1193 RPC middleware.
@@ -56,9 +56,9 @@ Full derivations → [Defense Matrix §3.1](../01_architecture/02_DEFENSE_MATRIX
 | USD.ai | `pnpm demo:usdai -- --trip` | Collateral guard |
 | Variational | `pnpm demo:variational -- --trip` | RFQ instrument-lane guard |
 
-SDK SSOT → [`../04_sdk_and_integration/README.md`](../04_sdk_and_integration/README.md) · [`01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md).
+SDK SSOT → [../04_sdk_and_integration/README.md](../04_sdk_and_integration/README.md) · [01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md).
 
-**88% pre-broadcast mesh / 12% disclosed systemic residual** — formal scope → [Risk Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee). Competitive detail → [`SUBMISSION.md`](./SUBMISSION.md) · [`../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md).
+**88% pre-broadcast mesh / 12% disclosed systemic residual** — formal scope → [Risk Framework §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee). Competitive detail → [SUBMISSION.md](./SUBMISSION.md) · [../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md](../04_sdk_and_integration/04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md).
 
 ---
 
@@ -75,11 +75,11 @@ SDK SSOT → [`../04_sdk_and_integration/README.md`](../04_sdk_and_integration/R
 
 **Live Smart Route proof:** ZeroDev Kernel v3 UserOp [0x4c4ca1...964a](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) · harness `pnpm tsx scripts/execute-smart-route-live-demo.ts`.
 
-**Bridge regression:** [`across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol).
+**Bridge regression:** [across-ingress-bridge.test.ts](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [IngressSafetySwitch.sol](../../contracts/IngressSafetySwitch.sol).
 
 **E2E macro HUD:** `pnpm demo:delta-neutral` — Gatehouse → Robinhood escort → GMX deposit → HL hedge (**4/4** default; `--unwind` optional Step 5).
 
-Escort SSOT → [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) · [`../PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md).
+Escort SSOT → [../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) · [../PRODUCTION_WORKFLOW_DEEP_DIVE.md](../PRODUCTION_WORKFLOW_DEEP_DIVE.md).
 
 ---
 
@@ -98,7 +98,7 @@ Escort SSOT → [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md
 | **Variational** | `42161` | RFQ instrument-lane zero-alloc guard | ✅ V1.0 Live | `pnpm demo:variational -- --trip` |
 | **Dune telemetry** | Sepolia live · One SQL spec | PEV · `RiskTripBlocked` panels | ✅ Dashboard live | [Dune](https://dune.com/silvervinelabs/slivervine-protocol) |
 
-On-chain anchor detail → [`../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md).
+On-chain anchor detail → [../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md).
 
 ---
 
@@ -125,7 +125,7 @@ On-chain anchor detail → [`../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md`
 | **M2** | SaaS API metering | Milestone 1 post-grant | Cloudflare KV API keys · 4-tier SaaS ($10 / $99 / $299 / $1,999+) | ⏳ Post-grant |
 | **M-Dune** | Telemetry ingest | Ongoing | Sepolia live stream · One SQL spec ready | ✅ [Live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
 
-Grant scope detail → [`../0A_grants/arbitrum/GRANT_PROPOSAL.md`](../0A_grants/arbitrum/GRANT_PROPOSAL.md).
+Grant scope detail → [../0A_grants/arbitrum/GRANT_PROPOSAL.md](../0A_grants/arbitrum/GRANT_PROPOSAL.md).
 
 ---
 
@@ -167,7 +167,7 @@ pnpm run audit:security                                  # 3-Tier matrix
 curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualLegProof
 ```
 
-CLI tier map → [`../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md).
+CLI tier map → [../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md).
 
 ---
 
@@ -175,13 +175,13 @@ CLI tier map → [`../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md`](../05_pitch_an
 
 | Document | Purpose |
 |----------|---------|
-| [`SUBMISSION.md`](./SUBMISSION.md) | Authoritative technical specification |
-| [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 1-page evaluator brief |
-| [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 hub |
-| [`../01_architecture/README.md`](../01_architecture/README.md) | R01–R20 · Hybrid Pillar Sets X & Y |
-| [`../04_sdk_and_integration/README.md`](../04_sdk_and_integration/README.md) | SDK integration index |
-| [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | DuneSQL panels |
-| [`../0A_grants/gmx/GMX_BUILDERS_PITCH.md`](../0A_grants/gmx/GMX_BUILDERS_PITCH.md) | GMX builder economics |
+| [SUBMISSION.md](./SUBMISSION.md) | Authoritative technical specification |
+| [../../JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 1-page evaluator brief |
+| [../06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) | CLI Tier 0–5 hub |
+| [../01_architecture/README.md](../01_architecture/README.md) | R01–R20 · Hybrid Pillar Sets X & Y |
+| [../04_sdk_and_integration/README.md](../04_sdk_and_integration/README.md) | SDK integration index |
+| [../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | DuneSQL panels |
+| [../0A_grants/gmx/GMX_BUILDERS_PITCH.md](../0A_grants/gmx/GMX_BUILDERS_PITCH.md) | GMX builder economics |
 
 ---
 

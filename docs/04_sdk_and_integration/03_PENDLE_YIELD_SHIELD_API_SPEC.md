@@ -2,7 +2,7 @@
 
 > **Document:** 05 — Pendle Yield Shield APIs 
 > **Branch:** `feat/pendle-yield-shield-apis` 
-> **Source:** [`src/services/api/pendle-shield/`](../../src/services/api/pendle-shield/) 
+> **Source:** [src/services/api/pendle-shield/](../../src/services/api/pendle-shield/) 
 > **Verification:** `npx vitest run tests/services/api/pendle-shield.test.ts`
 
 ---
@@ -14,8 +14,8 @@ This specification covers **Option 2** (Cross-Venue Shadow Margin Guard) and **O
 | Option | Status | Module |
 |--------|--------|--------|
 | **1** | ⏳ Reserved | Future yield-router primitive (not in this branch) |
-| **2** | ✅ Live | [`shadow-margin-guard.ts`](../../src/services/api/pendle-shield/shadow-margin-guard.ts) |
-| **3** | ✅ Live | [`agentic-auto-roll-gate.ts`](../../src/services/api/pendle-shield/agentic-auto-roll-gate.ts) |
+| **2** | ✅ Live | [shadow-margin-guard.ts](../../src/services/api/pendle-shield/shadow-margin-guard.ts) |
+| **3** | ✅ Live | [agentic-auto-roll-gate.ts](../../src/services/api/pendle-shield/agentic-auto-roll-gate.ts) |
 | **4–XXX** | 📋 Roadmap | Modular expansion primitives (see §Roadmap) |
 
 ---
@@ -181,15 +181,15 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 | Layer | Binding |
 |-------|---------|
-| **Shadow margin** | `checkSoilResistance({ pendleCrossGuard })` · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) slippage lane |
+| **Shadow margin** | `checkSoilResistance({ pendleCrossGuard })` · [pkg/soil_core.wasm](../../pkg/soil_core.wasm) slippage lane |
 | **Auto-roll** | `INTENT_RING_U32` · `trackAttemptBudgetU32Pure` · `evaluatePendlePtExpiryRisk` |
-| **Registry SSOT** | [`src/adapters/pendle/pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) |
+| **Registry SSOT** | [src/adapters/pendle/pendle-pt-registry.ts](../../src/adapters/pendle/pendle-pt-registry.ts) |
 
 ---
 
 ## Roadmap — Options 4 to XXX (Modular Expansion)
 
-Future Pendle Yield Shield primitives are designed as **independent API modules** under [`src/services/api/pendle-shield/`](../../src/services/api/pendle-shield):
+Future Pendle Yield Shield primitives are designed as **independent API modules** under [src/services/api/pendle-shield/](../../src/services/api/pendle-shield):
 
 | Option | Planned primitive | Integration surface |
 |--------|-------------------|---------------------|
@@ -208,10 +208,10 @@ Each future option ships as: `{name}.ts` + Vitest probe + row in this document +
 
 | # | Document |
 |---|----------|
-| — | [`README.md`](./README.md) |
-| 01 | [`01_SDK_INTEGRATION_BLUEPRINT.md`](./01_SDK_INTEGRATION_BLUEPRINT.md) |
-| 03 | [`03_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) |
-| — | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
+| — | [README.md](./README.md) |
+| 01 | [01_SDK_INTEGRATION_BLUEPRINT.md](./01_SDK_INTEGRATION_BLUEPRINT.md) |
+| 03 | [03_ARCHITECTURE_AND_MOAT.md](./05_ARCHITECTURE_AND_MOAT.md) |
+| — | [../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
 
 ---
 

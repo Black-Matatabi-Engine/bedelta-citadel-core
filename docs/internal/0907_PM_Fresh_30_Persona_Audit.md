@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ `bedelta-citadel-core` · **`d0f5e4d`** |
-| 對照基線 | [`0906_Fresh_30_Persona_Audit.md`](./0906_Fresh_30_Persona_Audit.md) **8.63** · [`0907_AM_Grok_zh.md`](./0907_AM_Grok_zh.md) **8.71** |
+| 對照基線 | [0906_Fresh_30_Persona_Audit.md](./0906_Fresh_30_Persona_Audit.md) **8.63** · [0907_AM_Grok_zh.md](./0907_AM_Grok_zh.md) **8.71** |
 | 測試 SSOT | **199 test files \| 868 PASS Clean (100% PASS)** · `pnpm exec tsc --noEmit` **0 errors** |
 | Worker Bundle | **50.94 KiB gzip** · **143.77 KiB raw** · `limitKiB: 150` · `pass: true` |
 | Core Sinking | 5 模組 `src/core/*` · thin-shell re-export · **24 份公開 Markdown SSOT 同步** |
@@ -79,7 +79,7 @@
 ## 1. 三十人四維細表（0.0–10.0）
 
 總分 = (SC + PMF + Inno + RPS) / 4  
-**Δ 列** = 相對 [`0907_AM_Grok_zh.md`](./0907_AM_Grok_zh.md) **8.71 帶** 的近似位移（本卷為 **新面孔**，非同一人重評）。
+**Δ 列** = 相對 [0907_AM_Grok_zh.md](./0907_AM_Grok_zh.md) **8.71 帶** 的近似位移（本卷為 **新面孔**，非同一人重評）。
 
 ### A. 十位產業領袖（全新身份）
 
@@ -353,4 +353,4 @@
 
 ---
 
-*Prepared by: PM Fresh 30-Persona Stress Panel · 2026-09-07 PM · `docs/internal/0907_PM_Fresh_30_Persona_Audit.md` · HEAD `d0f5e4d` · vs [`0907_AM_Grok_zh.md`](./0907_AM_Grok_zh.md)*
+*Prepared by: PM Fresh 30-Persona Stress Panel · 2026-09-07 PM · `docs/internal/0907_PM_Fresh_30_Persona_Audit.md` · HEAD `d0f5e4d` · vs [0907_AM_Grok_zh.md](./0907_AM_Grok_zh.md)*

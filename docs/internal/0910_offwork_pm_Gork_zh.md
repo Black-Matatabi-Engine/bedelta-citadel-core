@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `feat/pendle-yield-shield-apis` @ **`9de15dc`**（Pendle Shield API · docs 05 SSOT） |
-| 對照基線 | [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) 主席加權 **9.05** · 生態十席 SC **9.12** · [`0910_60_Persona_Joint_Audit_zh.md`](./0910_60_Persona_Joint_Audit_zh.md) **9.05** |
+| 對照基線 | [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) 主席加權 **9.05** · 生態十席 SC **9.12** · [0910_60_Persona_Joint_Audit_zh.md](./0910_60_Persona_Joint_Audit_zh.md) **9.05** |
 | 測試 SSOT | **225 test files \| 1050 tests \| 1049 PASS** · Pendle Shield **7/7 PASS** · SDK Stealth v2 **48/48 PASS** |
 | 本卷主題 | **5 Core Venue 戰略收斂** · Pendle Yield Shield Option 2/3 · Stealth v2 RPC Transport Stream · 文件 01–05 序號化 |
 | **本面板算術平均** | **9.12 / 10** |
@@ -179,7 +179,7 @@
 
 ## 2. Stealth v2 — RPC Transport Stream Watermark
 
-> 內部詳述：[`opsec/0910_LIVING_WATER_MECH_zh.md`](./opsec/0910_LIVING_WATER_MECH_zh.md)
+> 內部詳述：[opsec/0910_LIVING_WATER_MECH_zh.md](./opsec/0910_LIVING_WATER_MECH_zh.md)
 
 | 表面 | 現行 |
 |------|------|
@@ -196,7 +196,7 @@
 
 ## 3. 三十人四維細表（Offwork PM · 0.0–10.0）
 
-**Δ 列** = 相對 [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) **9.05** 帶的近似位移。
+**Δ 列** = 相對 [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) **9.05** 帶的近似位移。
 
 ### A. 五場域核心十席
 
@@ -330,11 +330,11 @@ npx vitest run
 
 | 文件 | 角色 |
 |------|------|
-| [`05_PENDLE_YIELD_SHIELD_API_SPEC.md`](../04_sdk_and_integration/03_PENDLE_YIELD_SHIELD_API_SPEC.md) | 公開 API 規格（英文） |
-| [`opsec/0910_LIVING_WATER_MECH_zh.md`](./opsec/0910_LIVING_WATER_MECH_zh.md) | Stealth v2 內部機制 |
-| [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) | 午餐 30 人基線 9.05 |
-| [`0910_60_Persona_Joint_Audit_zh.md`](./0910_60_Persona_Joint_Audit_zh.md) | 60 人聯合評審 |
-| [`PERFORMANCE_AND_PARITY_AUDIT.md`](./PERFORMANCE_AND_PARITY_AUDIT.md) | Wasm/Stylus 雙引擎 parity |
+| [05_PENDLE_YIELD_SHIELD_API_SPEC.md](../04_sdk_and_integration/03_PENDLE_YIELD_SHIELD_API_SPEC.md) | 公開 API 規格（英文） |
+| [opsec/0910_LIVING_WATER_MECH_zh.md](./opsec/0910_LIVING_WATER_MECH_zh.md) | Stealth v2 內部機制 |
+| [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) | 午餐 30 人基線 9.05 |
+| [0910_60_Persona_Joint_Audit_zh.md](./0910_60_Persona_Joint_Audit_zh.md) | 60 人聯合評審 |
+| [PERFORMANCE_AND_PARITY_AUDIT.md](./PERFORMANCE_AND_PARITY_AUDIT.md) | Wasm/Stylus 雙引擎 parity |
 
 ---
 

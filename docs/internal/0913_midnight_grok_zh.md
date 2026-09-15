@@ -7,12 +7,12 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`4d928b3`**（`docs(opsec): sandbox rotation · Stylus fallback · live harness warnings` · `origin/main` 已同步） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |
-| 對照基線 | [`0913_2300_grok_zh.md`](./0913_2300_grok_zh.md) 主席加權 **9.64** · 本卷初稿 @ `cfd5c0b` **9.71** |
+| 對照基線 | [0913_2300_grok_zh.md](./0913_2300_grok_zh.md) 主席加權 **9.64** · 本卷初稿 @ `cfd5c0b` **9.71** |
 | 測試 SSOT | **231 test files \| 1081 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**（Full Test 2026-09-14 00:32 @ `4d928b3`） |
 | 本卷主題 | **P0 關閉核對** · **OpSec 四項誠實關閉** · **Option A 英雄 SKU** · **Q1 維持 A→B→C** · **分數仍非結論** |
 | **主席加權總分** | **9.72 / 10**（↑ **+0.08** vs 0913 2300 **9.64** · ↑ **+0.01** vs 本卷初稿 **9.71**）— **分數不是本卷結論** |
 
-> **本卷評分用途（繼承 Q3）：** SC / PMF / Inno / RPS 只是 **內部校準儀**。市場鄰近層仍在（Blockaid / Fireblocks / ERC-8196 / ERC-7715）。空檔仍是 **本地 0-Gas、場館感知、EIP-1193 簽署前 mandate**。工程 SSOT：[`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) · [`README.md`](../../README.md) · [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) · [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md)。
+> **本卷評分用途（繼承 Q3）：** SC / PMF / Inno / RPS 只是 **內部校準儀**。市場鄰近層仍在（Blockaid / Fireblocks / ERC-8196 / ERC-7715）。空檔仍是 **本地 0-Gas、場館感知、EIP-1193 簽署前 mandate**。工程 SSOT：[JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) · [README.md](../../README.md) · [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md) · [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md)。
 
 **執行摘要：** 2300 卷抓到「代碼厚、公開薄」。`cfd5c0b` 關閉全部 P0；`4d928b3` 再關四項 OpSec：**Bootstrap 旋轉時間表置頂**（Post-Grant M1）· **`stylusCoprocessor = address(0)` 標為設計內 Pure Solidity Fallback** · **npm SDK 誠實標 `private: true` / Post-Grant 公開發布** · **GMX live harness 終端大橫幅**（`BYPASS_SOIL_PROBE` / `ALLOW_STALE_ORACLE` 時 loud warn → `pnpm demo:gmx -- --trip`）。代碼相對 1300 **無新熱路徑**。**本卷裁決：敘事 + OpSec 邊界已可賣楔子；未關項是 30s 片、npm 實際發布、Wallet A gas、Dune 42161、Gate 未護 GMX fill、soil-bypass **執行路徑本身**（僅加終端警告，未禁路徑）。**
 
@@ -203,7 +203,7 @@ Armed 路徑（仍存在）：`BYPASS_SOIL_PROBE=true` · `ALLOW_STALE_ORACLE=1`
 
 ## 2. 三十人 Persona 四維評分細表（0913 midnight · 校準 · 0.0–10.0）
 
-**Δ 列** = 相對 [`0913_2300_grok_zh.md`](./0913_2300_grok_zh.md)。RPS 席次回升；Maya / Tano PMF 上移；Haga / Marco **幾乎不動**。
+**Δ 列** = 相對 [0913_2300_grok_zh.md](./0913_2300_grok_zh.md)。RPS 席次回升；Maya / Tano PMF 上移；Haga / Marco **幾乎不動**。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -433,8 +433,8 @@ rg 'printLiveHarnessBypassBanner' scripts/
 
 | 事件 | Tx | Block |
 |------|-----|-------|
-| MarketIncrease Short Open | [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
-| MarketDecrease Programmatic 100% Close | [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
+| MarketIncrease Short Open | [0xa37f52c8…](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
+| MarketDecrease Programmatic 100% Close | [0x2e47f4fe…](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
 
 ---
 
@@ -442,12 +442,12 @@ rg 'printLiveHarnessBypassBanner' scripts/
 
 | 文件 | 角色 |
 |------|------|
-| [`0913_2300_grok_zh.md`](./0913_2300_grok_zh.md) | 公開 drift 診斷 · Option A 定義 · **9.64** |
-| [`0913_1300_lunch_grok_zh.md`](./0913_1300_lunch_grok_zh.md) | GMX lifecycle **9.68** |
-| [`0913_1200_grok_zh.md`](./0913_1200_grok_zh.md) | Geo + Sanctuary **9.61** |
-| [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX tx SSOT + 執行≠守衛 |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 brief（已 231/1081） |
-| [`README.md`](../../README.md) | Option A 首屏 |
+| [0913_2300_grok_zh.md](./0913_2300_grok_zh.md) | 公開 drift 診斷 · Option A 定義 · **9.64** |
+| [0913_1300_lunch_grok_zh.md](./0913_1300_lunch_grok_zh.md) | GMX lifecycle **9.68** |
+| [0913_1200_grok_zh.md](./0913_1200_grok_zh.md) | Geo + Sanctuary **9.61** |
+| [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX tx SSOT + 執行≠守衛 |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 brief（已 231/1081） |
+| [README.md](../../README.md) | Option A 首屏 |
 
 ---
 

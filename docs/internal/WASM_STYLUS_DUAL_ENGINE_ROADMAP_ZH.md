@@ -7,7 +7,7 @@
 > **分支：** `v1.0_push_BDLW`  
 > **狀態：** ⏳ V1.0 Design Spec（M6 敘事錨點）  
 > **Baseline：** M4 已交付 `pkg/soil_core.wasm` · p50 **~106 µs** · Pure Math **200 ns** · `verifyAndConsume` **28,043 gas median**  
-> **關聯文件：** [`TECHNICAL_SPECIFICATION.md`](../architecture/TECHNICAL_SPECIFICATION.md) §4.2 · [`HOT_COLD_PATH_DECOUPLING.md`](./HOT_COLD_PATH_DECOUPLING.md)
+> **關聯文件：** [TECHNICAL_SPECIFICATION.md](../architecture/TECHNICAL_SPECIFICATION.md) §4.2 · [HOT_COLD_PATH_DECOUPLING.md](./HOT_COLD_PATH_DECOUPLING.md)
 
 ---
 
@@ -282,10 +282,10 @@ V1.0 引入 **Stylus WASM Smart Contract** 作為 **on-chain reinforcement**：�
 
 | 資源 | 路徑 |
 |------|------|
-| M4 Wasm 核心 | [`src/wasm/soil_core.rs`](../../src/wasm/soil_core.rs) |
-| Wasm 載入器 | [`src/sdk/soil-wasm.ts`](../../src/sdk/soil-wasm.ts) |
-| TS 純數學對照 | [`src/services/risk-control-lib/soil-resistance-math.ts`](../../src/services/risk-control-lib/soil-resistance-math.ts) |
-| 技術規格 §4.2 Stylus | [`docs/architecture/TECHNICAL_SPECIFICATION.md`](../architecture/TECHNICAL_SPECIFICATION.md) |
-| D1 方向聲明 | [`SliverVineGate/MILESTONES.md`](../../SliverVineGate/MILESTONES.md) |
-| Hot/Cold 解耦 | [`docs/internal/HOT_COLD_PATH_DECOUPLING.md`](./HOT_COLD_PATH_DECOUPLING.md) |
+| M4 Wasm 核心 | [src/wasm/soil_core.rs](../../src/wasm/soil_core.rs) |
+| Wasm 載入器 | [src/sdk/soil-wasm.ts](../../src/sdk/soil-wasm.ts) |
+| TS 純數學對照 | [src/services/risk-control-lib/soil-resistance-math.ts](../../src/services/risk-control-lib/soil-resistance-math.ts) |
+| 技術規格 §4.2 Stylus | [docs/architecture/TECHNICAL_SPECIFICATION.md](../architecture/TECHNICAL_SPECIFICATION.md) |
+| D1 方向聲明 | [SliverVineGate/MILESTONES.md](../../SliverVineGate/MILESTONES.md) |
+| Hot/Cold 解耦 | [docs/internal/HOT_COLD_PATH_DECOUPLING.md](./HOT_COLD_PATH_DECOUPLING.md) |
 | Arbitrum Stylus Gas | [docs.arbitrum.io/stylus/concepts/gas-metering](https://docs.arbitrum.io/stylus/concepts/gas-metering) |

@@ -7,7 +7,7 @@
 | Field | Value |
 | ----- | ----- |
 | **Branch** | `v1.0_push_BDLW` |
-| **SSOT** | [`docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
+| **SSOT** | [docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | **Dashboard** | [dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) |
 
 ## Updated queries

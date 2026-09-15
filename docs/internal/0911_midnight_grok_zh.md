@@ -7,12 +7,12 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`f0027e3`**（Pass 1 SSOT 完成；工程源於 `feat/citadel-7540-async-vault`） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |
-| 對照基線 | [`0911_offwork_Grok_zh.md`](../opsec/0911_offwork_Grok_zh.md) 主席加權 **9.35** · [`0910_midnight_Grok_zh.md`](./0910_midnight_Grok_zh.md) **9.28** · [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) **9.12** |
+| 對照基線 | [0911_offwork_Grok_zh.md](../opsec/0911_offwork_Grok_zh.md) 主席加權 **9.35** · [0910_midnight_Grok_zh.md](./0910_midnight_Grok_zh.md) **9.28** · [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) **9.12** |
 | 測試 SSOT | **228 test files \| 1063 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | 本卷主題 | **EIP-5792 `wallet_sendCalls` 批量展開護欄** · **ERC-7540 Async Vault Escort** · Pass 1 雙模組 SSOT（ExoMesh 70% / Sanctuary 30%） |
 | **主席加權總分** | **9.42 / 10**（↑ **+0.07** vs 0911 Offwork **9.35**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`eip5792-send-calls.ts` · `erc7540-async-escort.ts` · `treasury-escort-router.ts` · `@slivervine/exomesh-agentic-wallet-guard` · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`eip5792-send-calls.ts` · `erc7540-async-escort.ts` · `treasury-escort-router.ts` · `@slivervine/exomesh-agentic-wallet-guard` · [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md)。
 
 **執行摘要：** 0911 下班卷封口於 Mini-Chaos + treasury-escort 敘事；本卷在同一 fail-closed 基質上關閉 **EIP-1193 單路徑繞過窗**（5792 `calls[]` 展開）並把 **ERC-7540 異步金庫 operator / 滑點漂移** 鎖進 Sanctuary 決策層。Pass 1 將英雄標題從 Citadel Shield 退役為 **SliverVine ExoMesh**，Escrow 補體為 **SliverVine Sanctuary**。技術債為零。
 
@@ -154,7 +154,7 @@ evaluateRetailRisk() × N  (approve · venue · soil · 7540)
 
 ## 2. 三十人 Persona 四維評分細表（0911 Midnight · 0.0–10.0）
 
-**Δ 列** = 相對 [`0911_offwork_Grok_zh.md`](../opsec/0911_offwork_Grok_zh.md) 該席總分的位移。全團算術均分對齊 **9.42 主席帶** 的上移（核心席對 5792/Wasm 最敏感）。
+**Δ 列** = 相對 [0911_offwork_Grok_zh.md](../opsec/0911_offwork_Grok_zh.md) 該席總分的位移。全團算術均分對齊 **9.42 主席帶** 的上移（核心席對 5792/Wasm 最敏感）。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -221,7 +221,7 @@ evaluateRetailRisk() × N  (approve · venue · soil · 7540)
 
 ## 3. BlackHat 威脅矩陣與殘餘風險審計
 
-> 延續 [`0911_offwork_Grok_zh.md`](../opsec/0911_offwork_Grok_zh.md) §5 · [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) §6 格式。**本卷增量：** BH-2 批次繞過消除 · BH-13/14 升格進 BH-2/BH-5 敘事（仍維持 BH-1–BH-12 編號以利跨卷對照）。
+> 延續 [0911_offwork_Grok_zh.md](../opsec/0911_offwork_Grok_zh.md) §5 · [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) §6 格式。**本卷增量：** BH-2 批次繞過消除 · BH-13/14 升格進 BH-2/BH-5 敘事（仍維持 BH-1–BH-12 編號以利跨卷對照）。
 
 ### 3.1 攻擊向量矩陣（BH-1 – BH-12）
 
@@ -406,15 +406,15 @@ pnpm test -- --run              # Expected: 228 files | 1063 PASS
 
 | 文件 | 角色 |
 |------|------|
-| [`0911_offwork_Grok_zh.md`](../opsec/0911_offwork_Grok_zh.md) | 下班 Mini-Chaos 基線 **9.35** |
-| [`0910_midnight_Grok_zh.md`](./0910_midnight_Grok_zh.md) | Option A 7 EIP **9.28** |
-| [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) | 5-Venue 基線 **9.12** |
-| [`0910_Grok_30_lunch_zh.md`](./0910_Grok_30_lunch_zh.md) | BlackHat 格式錨點 |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 30 秒 brief（ExoMesh / Sanctuary） |
-| [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | `[ExoMesh]` / `[Sanctuary]` CLI hub |
-| [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | ExoMesh 批次護欄 |
-| [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | Sanctuary 異步金庫 escort |
-| [`treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) | Sanctuary 決策層 |
+| [0911_offwork_Grok_zh.md](../opsec/0911_offwork_Grok_zh.md) | 下班 Mini-Chaos 基線 **9.35** |
+| [0910_midnight_Grok_zh.md](./0910_midnight_Grok_zh.md) | Option A 7 EIP **9.28** |
+| [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) | 5-Venue 基線 **9.12** |
+| [0910_Grok_30_lunch_zh.md](./0910_Grok_30_lunch_zh.md) | BlackHat 格式錨點 |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 30 秒 brief（ExoMesh / Sanctuary） |
+| [VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) | `[ExoMesh]` / `[Sanctuary]` CLI hub |
+| [eip5792-send-calls.ts](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | ExoMesh 批次護欄 |
+| [erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | Sanctuary 異步金庫 escort |
+| [treasury-escort-router.ts](../../src/adapters/robinhood/treasury-escort-router.ts) | Sanctuary 決策層 |
 
 ---
 

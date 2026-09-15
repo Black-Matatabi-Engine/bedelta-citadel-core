@@ -2,10 +2,10 @@
 
 > **Classification:** Internal · OpSec compliance  
 > **Status:** Accepted · Phase-4 Codebase Freeze boundary  
-> **SSOT:** [`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) · **Freeze:** [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) **Phase 4 active** (`frozenAt: 2026-09-14`)  
+> **SSOT:** [SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) · **Freeze:** [CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) **Phase 4 active** (`frozenAt: 2026-09-14`)  
 > **Decision:** **Do not implement an x402 payment rail within the Phase-4 freeze window.** Document orthogonality; preserve the verified closed loop.
 
-**Physical anchors (locked):** DUAL Gate [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · ExoMesh (Module A) + Sanctuary (Module B) · `pkg/soil_core.wasm` · `@slivervine/exomesh-agentic-wallet-guard`.
+**Physical anchors (locked):** DUAL Gate [0xb174…8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · ExoMesh (Module A) + Sanctuary (Module B) · `pkg/soil_core.wasm` · `@slivervine/exomesh-agentic-wallet-guard`.
 
 ---
 
@@ -23,7 +23,7 @@
 
 ExoMesh intercepts high-risk micro-transactions, adverse price impact, and sandwich / poisoned-liquidity paths **before** the agent signs or dispatches calldata. If an agent later pays via x402, the same EIP-1193+ wrap still fail-closes toxic txs at **$0 gas**. Implementing x402 *inside* the freeze would duplicate a payment protocol outside the project's core surface and would **not** improve SEPSB TPR/FPR or reflex SLA.
 
-SSOT tag: `system_architecture.capabilities.x402_compatibility = ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD`. Public positioning is documented in [`README.md`](../../README.md) and [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) §2.
+SSOT tag: `system_architecture.capabilities.x402_compatibility = ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD`. Public positioning is documented in [README.md](../../README.md) and [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) §2.
 
 **Engineering conclusion:** Necessity of *implementation* during freeze = **none**. Necessity of *accurate architectural positioning* = **high**.
 
@@ -43,7 +43,7 @@ SSOT tag: `system_architecture.capabilities.x402_compatibility = ORTHOGONAL_PRE_
 **Scope risk (HIGH):** Core surface is already closed-loop and measurable:
 
 - SEPSB: **100% TPR · 0% FPR · Observatory mis-block 0** · Wasm reflex p50 **0.233µs** / p99 **2.299µs** · 5-venue cap **<50µs**
-- Dual telemetry: Operational Shield [`/slivervine-protocol`](https://dune.com/silvervinelabs/slivervine-protocol) vs SEPSB Quant [`/slivervine-sepsb-stress`](https://dune.com/silvervinelabs/slivervine-sepsb-stress)
+- Dual telemetry: Operational Shield [/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) vs SEPSB Quant [/slivervine-sepsb-stress](https://dune.com/silvervinelabs/slivervine-sepsb-stress)
 - Vitest SSOT: **243 files | 1123 PASS** · `pnpm exec tsc --noEmit` **0 errors**
 - Primary SDK: `withRetailGuardProvider` **35/35**
 

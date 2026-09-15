@@ -8,13 +8,13 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`4e71474`**（CLI HUD SSOT · 8 venue demo 對齊 · USDAI init 修復） |
-| 對照基線 | 09-09 PM 晚間 [`0909_PM_60_Persona_Audit.md`](./0909_PM_60_Persona_Audit.md) **9.00** · 09-09 AM Joint **8.96** · 0908 PM **8.93** |
+| 對照基線 | 09-09 PM 晚間 [0909_PM_60_Persona_Audit.md](./0909_PM_60_Persona_Audit.md) **9.00** · 09-09 AM Joint **8.96** · 0908 PM **8.93** |
 | 測試 SSOT（Vitest/Cargo/Forge） | **217 test files \| 967 PASS clean** · `tsc` **0 errors** · Cargo `citadel_invariants` **2/2** · Forge PolicyGuard **9/9** · Forge GmxSoilMatrix **8/8** |
 | 本卷主題 | **Pillar Set Y CLI HUD SSOT** · 8 venue demo 統一 · matrix `perp-loop`/`spot-loop` UX · Pillar Set X vs Y 邊界文件 · `risk-engine-usdai` 循環初始化修復 |
 | **本面板算術平均** | **9.05 / 10** |
 | **主席加權敘事帶** | **9.08 – 9.14 / 10**（持續 **>9.0** · Offchain Labs 對齊加成） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。**Δ vs PM 9.00** 列為相對 09-09 PM 晚間面板的近似位移。英文 SSOT：[`0910_60_Persona_Joint_Audit.md`](./0910_60_Persona_Joint_Audit.md)
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。**Δ vs PM 9.00** 列為相對 09-09 PM 晚間面板的近似位移。英文 SSOT：[0910_60_Persona_Joint_Audit.md](./0910_60_Persona_Joint_Audit.md)
 
 ---
 

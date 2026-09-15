@@ -8,10 +8,10 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ `bedelta-citadel-core` · **`32c6524`** |
-| 對照基線 | [`0905_Grok_M_ZH.md`](./0905_Grok_M_ZH.md)（早間 8.37）· [`0905_46_Grok_zh.md`](./0905_46_Grok_zh.md)（午後 8.52） |
+| 對照基線 | [0905_Grok_M_ZH.md](./0905_Grok_M_ZH.md)（早間 8.37）· [0905_46_Grok_zh.md](./0905_46_Grok_zh.md)（午後 8.52） |
 | 測試 SSOT | **194 test files \| 845 PASS Clean (100% PASS)** |
 | Worker Bundle | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` |
-| 主網 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118b…` · **42161** |
+| 主網 | [Tx 0x54c153e9…](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118b…` · **42161** |
 | 架構 | `docs/architecture/` 五檔規格索引（01–05）+ README + redirect stubs |
 | 新增協議 | **USD.ai** — AI-compute yield collateral · `evaluateUsdAiCollateralGuard()` · `USD_AI_DEPEG_ORACLE_TRIP` |
 | **全團算術平均** | **8.58 / 10** |
@@ -358,4 +358,4 @@ Flashbots 已經給本日 Inno 天花板。GMX / Pendle Owner **戰略上想要 
 
 ---
 
-*Prepared by: Grok 30-Persona Delta Panel · 2026-09-06 · `docs/internal/0906_Grok_M_ZH.md` · vs [`0905_46_Grok_zh.md`](./0905_46_Grok_zh.md) · [`0905_Grok_M_ZH.md`](./0905_Grok_M_ZH.md)*
+*Prepared by: Grok 30-Persona Delta Panel · 2026-09-06 · `docs/internal/0906_Grok_M_ZH.md` · vs [0905_46_Grok_zh.md](./0905_46_Grok_zh.md) · [0905_Grok_M_ZH.md](./0905_Grok_M_ZH.md)*

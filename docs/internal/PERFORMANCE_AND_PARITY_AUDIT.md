@@ -5,7 +5,7 @@
 > **Audit date:** 2026-09-10  
 > **Scope:** `src/core/` · `src/wasm/` · `contracts/` (Solidity + `citadel_invariants` Stylus)  
 > **Auditor role:** Principal Systems Performance Engineer & Compiler Architect  
-> **Related SSOT:** [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../03_ON_CHAIN_MAINNET_ANCHORS.md)
+> **Related SSOT:** [02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [01_ON_CHAIN_MAINNET_ANCHORS.md](../03_ON_CHAIN_MAINNET_ANCHORS.md)
 
 ---
 
@@ -180,7 +180,7 @@ There is **no** `src/core/risk-control.ts`. Soil orchestration lives in **`src/s
 
 ### 3.3 Dual-Engine Boundary (Frozen)
 
-Per [`01_ON_CHAIN_MAINNET_ANCHORS.md`](../03_ON_CHAIN_MAINNET_ANCHORS.md):
+Per [01_ON_CHAIN_MAINNET_ANCHORS.md](../03_ON_CHAIN_MAINNET_ANCHORS.md):
 
 - **Engine A (Stylus):** `SliverVineSoilCoprocessor` `0xc23587…` — on-chain GMX+soil packed eval.
 - **Engine B (Edge Wasm):** `pkg/soil_core.wasm` SHA-256 `67f8fcc7…` — clock + intent + soil C-ABI; **not Stylus-deployable** (no `#[entrypoint]` in Edge cdylib).
@@ -268,4 +268,4 @@ cargo test -p citadel_invariants
 | **P2 Bitwise pure state** | **B+** | Flags + intent masks excellent; soil uses f64 ratios by design |
 | **P3 Cross-tier parity** | **A-** | P0 soil bridge + P1 FNV Wasm hash resolved; clock + multi-flag lanes still Edge-only |
 
-*This document is the internal SSOT for performance sinking and execution parity. Public-facing summaries belong in [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) and [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md).*
+*This document is the internal SSOT for performance sinking and execution parity. Public-facing summaries belong in [02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) and [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md).*

@@ -4,7 +4,7 @@
 > **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex 
 > **Standards compliance (Tier 1 `[Final]`):** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary). See [3-Tier Taxonomy](./01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#3-tier-eiperc-taxonomy).
 > **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626)) 
-> **Verification:** `pnpm demo:sanctuary` → Scenario A–C Matrix `[Sanctuary]` (`demo:escort` alias) · CLI: [`examples/sanctuary-demo.ts`](../../examples/sanctuary-demo.ts)
+> **Verification:** `pnpm demo:sanctuary` → Scenario A–C Matrix `[Sanctuary]` (`demo:escort` alias) · CLI: [examples/sanctuary-demo.ts](../../examples/sanctuary-demo.ts)
 
 ---
 
@@ -31,9 +31,9 @@ Standard DeFi safety tooling (synchronous ERC-4626 share math, instant-redeem sl
  [ Vault contract · async settlement · claim phase ]
 ```
 
-**SSOT:** [`src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) 
+**SSOT:** [src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) 
 **Ingress:** `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` in ExoMesh EIP-1193 middleware 
-**Wiki:** [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-7540--asynchronous-erc-4626-vault-token-sanctuary-escort)
+**Wiki:** [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-7540--asynchronous-erc-4626-vault-token-sanctuary-escort)
 
 ---
 
@@ -135,7 +135,7 @@ if (!isAllowedOperator(parsed.controller, config)) return rejectOperator(parsed.
 
 ### Sanctuary SSOT (BigInt-safe · fail-closed)
 
-Implementation: [`src/core/soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts)
+Implementation: [src/core/soil-resistance-math.ts](../../src/core/soil-resistance-math.ts)
 
 ```typescript
 const ASYNC_VAULT_BPS = 10_000n;
@@ -173,7 +173,7 @@ export function evalAsyncVaultDriftBps(requestRate: bigint, claimRate: bigint): 
 | **Default ceiling** | `erc7540MaxSlippageBps = 50` (0.50%) | Ad-hoc per protocol |
 | **Quote source** | `config.erc7540AsyncQuote` or `resolveErc7540Quote(kind, amount, vault)` | Static oracle only |
 
-**Escort wiring** ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)):
+**Escort wiring** ([erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)):
 
 ```typescript
 const maxBps = quote.maxSlippageBps ?? config.erc7540MaxSlippageBps ?? 50;
@@ -219,10 +219,10 @@ USD.ai sUSDai PROTO_USDAI lane · depeg fuse ERC-7540 async rate drift
 
 | # | Concern | **Industry default** | **SliverVine Sanctuary** | Gas on reject | SSOT | Proof |
 |---|---------|---------------------|---------------------------|---------------|------|-------|
-| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
-| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
-| **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | [`soil-resistance-math.ts`](../../src/core/soil-resistance-math.ts) | 20% drift REJECT test |
-| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
+| **1** | Sync vs async vault model | ERC-4626 instant `deposit`/`redeem` guards only | ERC-7540 **selector escort** on `request*` + `setOperator` | **$0** | [erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `pnpm demo:sanctuary` |
+| **2** | Operator hijack (`0x9cc233d6`) | No wallet-level `setOperator` policy | **Zero-trust** `allowedOperators` whitelist · fail-closed on `approved=true` | **$0** | [calldata-parser.ts](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) + escort | malicious operator REJECT test |
+| **3** | Pending→Claimable drift | Post-claim analytics · float slippage | **`evalAsyncVaultDriftBps`** BigInt bps · default 50 bps ceiling | **$0** | [soil-resistance-math.ts](../../src/core/soil-resistance-math.ts) | 20% drift REJECT test |
+| **4** | EIP-5792 batch bypass | `wallet_sendCalls` skips send-tx guards | ExoMesh unfolds `calls[]` → escort runs per call | **$0** | [eip5792-send-calls.ts](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | 3/3 Vitest |
 | **5** | Pendle / GMX / USD.ai | Per-protocol dashboards | Unified selector guard + venue config (`allowedVenues` + operators) | **$0** | Retail Guard config | `pnpm demo:sanctuary` |
 
 ---
@@ -269,7 +269,7 @@ pnpm demo:ingress
 pnpm test -- --run
 ```
 
-**Unit test SSOT:** `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS** · [`tests/erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts)
+**Unit test SSOT:** `npx vitest run tests/erc7540-async-escort.test.ts` **3/3 PASS** · [tests/erc7540-async-escort.test.ts](../../tests/erc7540-async-escort.test.ts)
 
 ---
 
@@ -286,10 +286,10 @@ pnpm test -- --run
 
 | Document | Purpose |
 |----------|---------|
-| [`../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ERC-7540 wiki entry · ExoMesh competitive matrix |
-| [`../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | EIP-1193 integration · escort config |
-| [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | Tier 0 `[Sanctuary]` CLI zone |
-| [`../00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon Module B architectural surface |
+| [../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ERC-7540 wiki entry · ExoMesh competitive matrix |
+| [../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | EIP-1193 integration · escort config |
+| [../06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) | Tier 0 `[Sanctuary]` CLI zone |
+| [../00_ARB_Buildathon/SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon Module B architectural surface |
 
 ---
 

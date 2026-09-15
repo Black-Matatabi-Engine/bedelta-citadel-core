@@ -13,7 +13,7 @@
 | Phase-4 | **Completed** — GMX Wasm Sink · Stylus Gate (`0xc235…625e`) · `CODEBASE_FREEZE` **active** |
 | 本卷評分機制 | **全額獨立重評 (Zero-Bias Base Evaluation)** — **不繼承任何歷史卷分** |
 
-> **本卷評分用途（Zero-Bias）：** 本卷為 **100% 清盤重評**。SC / PMF / Inno / RPS 僅作 **內部校準儀**，**不引用、不對照、不延續** 任何先前卷次主席分（含 0912–0914 1515 各卷）。物理 SSOT：[`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) · [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) · [`WASM_SINKING_CANDIDATES.md`](../audit/WASM_SINKING_CANDIDATES.md) · [`README.md`](../../README.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) · [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)。
+> **本卷評分用途（Zero-Bias）：** 本卷為 **100% 清盤重評**。SC / PMF / Inno / RPS 僅作 **內部校準儀**，**不引用、不對照、不延續** 任何先前卷次主席分（含 0912–0914 1515 各卷）。物理 SSOT：[SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) · [CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) · [WASM_SINKING_CANDIDATES.md](../audit/WASM_SINKING_CANDIDATES.md) · [README.md](../../README.md) · [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) · [02_CONTRACT_DEPLOYMENT_MATRIX.md](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md)。
 
 **執行摘要：** 本卷對 `origin/main` @ `9421ac10` 執行 **零歷史偏見** 獨立審計。物理指標已鎖定：**237 / 1099 PASS** · **tsc 0 errors** · Bundle **166.55 KiB raw / 58.74 KiB gzip** · Dune 主儀表板 **$6.57M / $65.50 / 262** · 合約矩陣 **DUAL Gate + Mainnet PolicyGuardV2/Stylus/RiskOracleV2 + Sepolia IngressSafetySwitch**。**Phase-4 Completed** — GMX packed eval 已 sink 至 `sanctuary_invariants.wasm` · PolicyGuardV2 Stylus gate 於 `stylusCoprocessor != 0` 啟用 `0xc235…625e` · `docs/audit/CODEBASE_FREEZE.json` **active**。雙模組錨點：**Module A ExoMesh**（Sub-1.8µs Wasm Soil · Dual-Plug · 99% Honeypot · −40 Observatory）與 **Module B Sanctuary**（ERC-7540+ Async Escort · GMX Wasm cold-tier）。**本卷裁決：工程可重現性、Wasm sink 與 freeze lock 已達 Buildathon / DEX Grant 提交級；殘餘風險集中在 npm 實發、Large-Scale Chaos、GMX bypass 路徑與 Bootstrap 密鑰旋轉。**
 
@@ -61,7 +61,7 @@
 | **Module B · 30%** | **SliverVine Sanctuary** | 異步金庫護送 + GMX packed eval | ERC-7540+ · `sanctuary_invariants.wasm` · `pnpm demo:sanctuary` |
 | **Dune 主儀表板** | Master Dashboard | 公開遙測證明 | [dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) |
 | **合約 DUAL** | **SliverVineGate** | `0xb174…8BF1` | Arbitrum One `42161` + Sepolia `421614` |
-| **MAINNET** | PolicyGuardV2 · Stylus · RiskOracleV2 · GmxSoilMatrixSwitch | 42161 生產錨點 | [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
+| **MAINNET** | PolicyGuardV2 · Stylus · RiskOracleV2 · GmxSoilMatrixSwitch | 42161 生產錨點 | [02_CONTRACT_DEPLOYMENT_MATRIX.md](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
 | **SEPOLIA** | RiskOracle · IngressSafetySwitch · GMX DataStore mock | 421614 沙盒流 | 同上 |
 
 **凍結層（禁止改 · Phase-4 CODEBASE_FREEZE）：** `SliverVineCitadel` EIP-712 domain · `citadel:intent:v1:` digest 前綴 · `@slivervine/exomesh-agentic-wallet-guard` 識別符 · `soil-wasm-runtime.ts` · `sanctuary-wasm-runtime.ts` · `policy-guard-stylus-gate.ts` · `contract-deployments.ts` · PolicyGuardV2 Solidity ABI。
@@ -79,8 +79,8 @@
 | Bundle Lean | ✅ | **166.55 KiB raw / 58.74 KiB gzip** · `< 71 KiB` warn pass |
 | Phase-4 GMX Wasm sink | ✅ | `sanctuary-wasm-runtime.ts` · `collectGmxGmRiskInvariantErrors` cold tier |
 | Phase-4 Stylus gate | ✅ | `policy-guard-stylus-gate.ts` · `stylusCoprocessor != 0` → `0xc235…625e` |
-| Codebase freeze | ✅ | [`docs/audit/CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) · phase 4 active |
-| SYSTEM_METRICS_SSOT | ✅ | [`docs/audit/SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) |
+| Codebase freeze | ✅ | [docs/audit/CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) · phase 4 active |
+| SYSTEM_METRICS_SSOT | ✅ | [docs/audit/SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) |
 | Dune 主 URL 統一 | ✅ | `https://dune.com/silvervinelabs/slivervine-protocol` |
 | Dune KPI 對齊 | ✅ | **$6.57M** · **$65.50** · **262** fail-closed · 5 venues · 4 moats |
 | CSV 遙測經濟列 | ✅ | `potential_loss_saved_usd` · `gas_saved_usd` · 264 rows |
@@ -500,8 +500,8 @@ curl -sI https://dune.com/silvervinelabs/slivervine-protocol | head -1
 
 | 事件 | Tx | Block |
 |------|-----|-------|
-| MarketIncrease Short Open | [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
-| MarketDecrease Programmatic 100% Close | [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
+| MarketIncrease Short Open | [0xa37f52c8…](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
+| MarketDecrease Programmatic 100% Close | [0x2e47f4fe…](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
 
 ---
 
@@ -509,16 +509,16 @@ curl -sI https://dune.com/silvervinelabs/slivervine-protocol | head -1
 
 | 文件 | 角色 |
 |------|------|
-| [`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) | 物理指標 SSOT |
-| [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) | Phase-4 freeze lock |
-| [`WASM_SINKING_CANDIDATES.md`](../audit/WASM_SINKING_CANDIDATES.md) | Phase-2–4 sinking roadmap（FINAL） |
-| [`DUNE_TELEMETRY_SPEC.md`](./DUNE_TELEMETRY_SPEC.md) | CSV 列 · SQL · KPI 模型 |
-| [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) | 合約部署矩陣 |
-| [`0914_1515_Grok_zh.md`](./0914_1515_Grok_zh.md) | 歷史卷（**本卷不繼承其分數**） |
-| [`0914_0900_Grok_zh.md`](./0914_0900_Grok_zh.md) | 歷史卷（**本卷不繼承其分數**） |
-| [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX tx SSOT + 執行≠守衛 |
-| [`README.md`](../../README.md) | 公開英雄屏 |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 brief |
+| [SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) | 物理指標 SSOT |
+| [CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) | Phase-4 freeze lock |
+| [WASM_SINKING_CANDIDATES.md](../audit/WASM_SINKING_CANDIDATES.md) | Phase-2–4 sinking roadmap（FINAL） |
+| [DUNE_TELEMETRY_SPEC.md](./DUNE_TELEMETRY_SPEC.md) | CSV 列 · SQL · KPI 模型 |
+| [02_CONTRACT_DEPLOYMENT_MATRIX.md](../01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) | 合約部署矩陣 |
+| [0914_1515_Grok_zh.md](./0914_1515_Grok_zh.md) | 歷史卷（**本卷不繼承其分數**） |
+| [0914_0900_Grok_zh.md](./0914_0900_Grok_zh.md) | 歷史卷（**本卷不繼承其分數**） |
+| [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX tx SSOT + 執行≠守衛 |
+| [README.md](../../README.md) | 公開英雄屏 |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 brief |
 
 ---
 

@@ -246,14 +246,14 @@ Smart Routing 改善的是 **執行路徑與 UX**，不是會計規則。無論�
 
 | 職責 | 檔案 |
 |------|------|
-| Smart Route SSOT | [`src/config/gmx-revenue.ts`](../../src/config/gmx-revenue.ts) |
-| Payload 綁定 | [`src/services/adapters/gmx-smart-route-payload-binding.ts`](../../src/services/adapters/gmx-smart-route-payload-binding.ts) |
-| 鏈下 hash 鏡像 | [`src/sdk/gated-executor-payload.ts`](../../src/sdk/gated-executor-payload.ts) |
-| 鏈上驗證 | [`SliverVineGate/src/GatedExecutor.sol`](../../SliverVineGate/src/GatedExecutor.sol) |
-| R-Chain 決策層 | [`src/adapters/robinhood/r-chain-yield-router.ts`](../../src/adapters/robinhood/r-chain-yield-router.ts) |
-| 單向橋 escort | [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) |
-| SPA 預覽流程 | [`src/components/hud/smart-route-deposit-flow.ts`](../../src/components/hud/smart-route-deposit-flow.ts) |
-| 測試 | [`tests/adapters/gmx-smart-route-payload-binding.test.ts`](../../tests/adapters/gmx-smart-route-payload-binding.test.ts) |
+| Smart Route SSOT | [src/config/gmx-revenue.ts](../../src/config/gmx-revenue.ts) |
+| Payload 綁定 | [src/services/adapters/gmx-smart-route-payload-binding.ts](../../src/services/adapters/gmx-smart-route-payload-binding.ts) |
+| 鏈下 hash 鏡像 | [src/sdk/gated-executor-payload.ts](../../src/sdk/gated-executor-payload.ts) |
+| 鏈上驗證 | [SliverVineGate/src/GatedExecutor.sol](../../SliverVineGate/src/GatedExecutor.sol) |
+| R-Chain 決策層 | [src/adapters/robinhood/r-chain-yield-router.ts](../../src/adapters/robinhood/r-chain-yield-router.ts) |
+| 單向橋 escort | [src/sdk/unidirectional-bridge.ts](../../src/sdk/unidirectional-bridge.ts) |
+| SPA 預覽流程 | [src/components/hud/smart-route-deposit-flow.ts](../../src/components/hud/smart-route-deposit-flow.ts) |
+| 測試 | [tests/adapters/gmx-smart-route-payload-binding.test.ts](../../tests/adapters/gmx-smart-route-payload-binding.test.ts) |
 
 ---
 
@@ -291,7 +291,7 @@ cd SliverVineGate && forge test --match-contract GatedExecutor
 
 ## 7. 參考文件
 
-- [`docs/architecture/TECHNICAL_SPECIFICATION.md`](../architecture/TECHNICAL_SPECIFICATION.md) §2.3 · §4.0 EIP-712
-- [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)
-- [`docs/audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md`](../audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md) §2.4 `lostUsd ≡ 0`
-- [`docs/internal/HOT_COLD_PATH_DECOUPLING.md`](./HOT_COLD_PATH_DECOUPLING.md) — Edge 熱路徑與 Smart Route fetch 路徑協作
+- [docs/architecture/TECHNICAL_SPECIFICATION.md](../architecture/TECHNICAL_SPECIFICATION.md) §2.3 · §4.0 EIP-712
+- [docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)
+- [docs/audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md](../audit/ROBINHOOD_CHAIN_SAFETY_GATE_AUDIT.md) §2.4 `lostUsd ≡ 0`
+- [docs/internal/HOT_COLD_PATH_DECOUPLING.md](./HOT_COLD_PATH_DECOUPLING.md) — Edge 熱路徑與 Smart Route fetch 路徑協作

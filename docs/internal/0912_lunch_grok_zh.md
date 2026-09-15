@@ -7,12 +7,12 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `refactor/docs-master-architecture` @ **`a771b72`**（含 `01_architecture`–`06_verifications` 公開文檔重構 · SSRC 品牌鎖 · 1065 PASS 構成披露） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |
-| 對照基線 | [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) 主席加權 **9.42** · [`0911_offwork_Grok_zh.md`](./opsec/0911_offwork_Grok_zh.md) **9.35** · [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) **9.12** |
+| 對照基線 | [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) 主席加權 **9.42** · [0911_offwork_Grok_zh.md](./opsec/0911_offwork_Grok_zh.md) **9.35** · [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) **9.12** |
 | 測試 SSOT | **228 test files \| 1065 PASS clean (100%)** · **3,320+ physical `expect` assertions** · `pnpm exec tsc --noEmit` **0 errors** |
 | 本卷主題 | **公開文檔 01–06 序號化重構** · **SliverVine Stylus ReflexCore (SSRC)** 引擎品牌鎖 · **Cyber-Biological Immunology** 敘事 · **1065 PASS 物理構成矩陣** · Zero-GC 微秒熱路 |
 | **主席加權總分** | **9.54 / 10**（↑ **+0.12** vs 0911 Midnight **9.42**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**主席加權總分** = 四維算術平均。英文工程 SSOT：`pkg/soil_core.wasm` · `@slivervine/exomesh-agentic-wallet-guard` · [`docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**主席加權總分** = 四維算術平均。英文工程 SSOT：`pkg/soil_core.wasm` · `@slivervine/exomesh-agentic-wallet-guard` · [docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [docs/06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md)。
 
 **執行摘要：** 0911 深夜卷封口於 EIP-5792 + ERC-7540 + ExoMesh/Sanctuary 雙模組；本卷在同一 fail-closed 基質上完成 **評審導航級文檔拓撲重構**、**SSRC 微秒引擎正式命名**、**FBI Mindhunter + Cyber-Immunology 安全敘事標準化**，並首次在 `JUDGE_BRIEF` / `VERIFICATION_MATRIX` 公開 **1065 PASS 物理構成表**（核心 ~998 · HUD ~30 · Reference harness ~15 · Demo ~12）。P1 測試加固：`soil-resistance-latency` 增 p95 上界 · `grant-audit-metrics` 增語義断言 · `decorator` 增未 Mock `checkSoilResistance` 端到端用例。**技術債為零。**
 
@@ -118,10 +118,10 @@
 
 **四份 Master Implementation Docs 新路徑（本卷強調）：**
 
-1. [`docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) — ExoMesh Edge-Wasm 0-Gas Pre-Consensus RI
-2. [`docs/02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) — Sanctuary 異步金庫護欄
-3. [`docs/03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) — Mindhunter × Cyber-Immunology
-4. [`docs/03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md`](../03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) — PCTII · Dune Sepolia PEV
+1. [docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) — ExoMesh Edge-Wasm 0-Gas Pre-Consensus RI
+2. [docs/02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) — Sanctuary 異步金庫護欄
+3. [docs/03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) — Mindhunter × Cyber-Immunology
+4. [docs/03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md](../03_hacker_profiling/02_PRE_CONSENSUS_MO_TELEMETRY_AND_DUNE_SPEC.md) — PCTII · Dune Sepolia PEV
 
 ```text
 [Before]                          [After 0912 Lunch]
@@ -138,7 +138,7 @@
 
 ## 2. 三十人 Persona 四維評分細表（0912 Lunch · 0.0–10.0）
 
-**Δ 列** = 相對 [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.54**。
+**Δ 列** = 相對 [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.54**。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -205,7 +205,7 @@
 
 ## 3. BlackHat 威脅矩陣與殘餘風險審計
 
-> 延續 [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) §3 格式。**本卷增量：** SSRC Zero-GC 熱路 · Cyber-Immunology 疫苗層 · **1065 PASS** 物理断言披露 · BH-2/BH-4 敘事加固。
+> 延續 [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) §3 格式。**本卷增量：** SSRC Zero-GC 熱路 · Cyber-Immunology 疫苗層 · **1065 PASS** 物理断言披露 · BH-2/BH-4 敘事加固。
 
 ### 3.1 攻擊向量矩陣（BH-1 – BH-12）
 
@@ -260,7 +260,7 @@
 | 2 | **99% synthetic slippage** decoy | sub-1ms fail-closed |
 | 3 | 驗證 | `npx vitest run tests/defense/rpc-whitelist.test.ts` `[ExoMesh]` |
 
-**SSOT：** `rpc-fetch-gate-eval.ts` · [`01_HACKER_PROFILING`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) Part II
+**SSOT：** `rpc-fetch-gate-eval.ts` · [01_HACKER_PROFILING](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) Part II
 
 ### Chaos Level C2 — Mindhunter Burst + 5792 Batch Severing
 
@@ -384,14 +384,14 @@ pnpm test -- --run              # Expected: 228 files | 1065 PASS
 
 | 文件 | 角色 |
 |------|------|
-| [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) | 5792/7540 基線 **9.42** |
-| [`0911_offwork_Grok_zh.md`](./opsec/0911_offwork_Grok_zh.md) | Mini-Chaos **9.35** |
-| [`0910_offwork_pm_Gork_zh.md`](./0910_offwork_pm_Gork_zh.md) | 5-Venue **9.12** |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 30 秒 brief · 1065 構成表 |
-| [`docs/README.md`](../README.md) | 公開文檔主索引 01–06 |
-| [`docs/01_architecture/README.md`](../01_architecture/README.md) | 架構子索引 |
-| [`01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | 驗證 Express Hub |
-| [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](../06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | Zero-GC 基準 |
+| [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) | 5792/7540 基線 **9.42** |
+| [0911_offwork_Grok_zh.md](./opsec/0911_offwork_Grok_zh.md) | Mini-Chaos **9.35** |
+| [0910_offwork_pm_Gork_zh.md](./0910_offwork_pm_Gork_zh.md) | 5-Venue **9.12** |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 30 秒 brief · 1065 構成表 |
+| [docs/README.md](../README.md) | 公開文檔主索引 01–06 |
+| [docs/01_architecture/README.md](../01_architecture/README.md) | 架構子索引 |
+| [01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) | 驗證 Express Hub |
+| [02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md](../06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | Zero-GC 基準 |
 
 ---
 

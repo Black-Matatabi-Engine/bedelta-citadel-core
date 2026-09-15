@@ -22,14 +22,14 @@
 
 ## 0. 回訪立場（`4e71474` HUD + `c1a37d4` Ring Slab + `056c125` CI）
 
-相對 [`0907_Grok_lunch_zh.md`](./0907_Grok_lunch_zh.md) 冷評 **8.61**（`2d7426c`），本卷評的是 **結算錨點已 live、熱路徑分配模型已下沉** 的快照。
+相對 [0907_Grok_lunch_zh.md](./0907_Grok_lunch_zh.md) 冷評 **8.61**（`2d7426c`），本卷評的是 **結算錨點已 live、熱路徑分配模型已下沉** 的快照。
 
 | 平面 | SSOT | 本卷判定 |
 |------|------|----------|
 | **Zero-GC Ring Slab** | `intent-core-buffers.ts` · 256×4 `BigInt64Array` + `Uint32Array` · `hashKeyToSlotIndex & 0xFF` | ✅ `<16 KiB` / 10k · worker isolation |
 | **Pre-Consensus 0-Gas** | `soil_core.wasm` · `rootProtection()` · `VENUE_DRIFT_REJECTED` | ✅ Reflex p50 ~15µs · 拒絕路徑 0 L2 gas |
-| **PolicyGuardV2** | [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | ✅ `stylusCoprocessor=0` · Pure Solidity fail-closed |
-| **Stylus coprocessor** | [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) | ✅ Deployed · **optional** Nitro path |
+| **PolicyGuardV2** | [0xfd98cadb7018f692ec58cd4359e0c0399f4f8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) | ✅ `stylusCoprocessor=0` · Pure Solidity fail-closed |
+| **Stylus coprocessor** | [0xc23587d6573dd134f95b02b0202ffbf84686625e](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) | ✅ Deployed · **optional** Nitro path |
 | **Wallet B GM LP** | `0xc9BddABD…546f` | ✅ 三證 Success · 無 HL key |
 | **Wallet A GMX short** | `gmx-v2-wallet-a-short-builder.ts` | ⚠ encode/simulate only · live fill **OPEN** |
 | **42161 Dune ingest** | Sepolia live + One SQL spec | ⚠ **OPEN**（Haga / 遙測人格硬扣） |
@@ -72,8 +72,8 @@
 
 | # | 姓名 | 真實身份與核心機構 | X / 公開身分 | 核心關注與審查視角 |
 |---|------|-------------------|--------------|-------------------|
-| 1 | Dr. Steven Goldfeder | Co-founder & CEO @ Offchain Labs (Arbitrum) | **Verified X** [`@sgoldfed`](https://x.com/sgoldfed)（公開常用；表列 `@StevenGoldfeder` **非**其核實 handle） | Pre-Consensus 0-Gas 防火牆對 Nitro 執行確定性與 Sequencer 隊列衛生 |
-| 2 | Johann Kerbrat | SVP & GM of Crypto @ Robinhood | **Verified X** [`@jkerbrat`](https://x.com/jkerbrat) | 機構/散戶級帳戶安全、合規邊界、RWA 基礎設施衛生 |
+| 1 | Dr. Steven Goldfeder | Co-founder & CEO @ Offchain Labs (Arbitrum) | **Verified X** [@sgoldfed](https://x.com/sgoldfed)（公開常用；表列 `@StevenGoldfeder` **非**其核實 handle） | Pre-Consensus 0-Gas 防火牆對 Nitro 執行確定性與 Sequencer 隊列衛生 |
+| 2 | Johann Kerbrat | SVP & GM of Crypto @ Robinhood | **Verified X** [@jkerbrat](https://x.com/jkerbrat) | 機構/散戶級帳戶安全、合規邊界、RWA 基礎設施衛生 |
 | 3 | Elena Korolev | Core Contributor / Risk @ GMX Synthetics | **Panel role** · GMX Core 席（無公開個人 handle 核實） | Perp 深度、pool-skew、GMX Builder 契合、Δ_net 可執行定義 |
 | 4 | Clara Mendez | Ecosystem Growth @ Arbitrum GMX Builder | **Panel role** · Arbitrum Builder Lead 席 | Mainnet 契約真實部署 + 可重現 CLI 證明面 |
 | 5 | James O'Hara | Keeper Ops & Liquidity @ GMX | **Panel role** · GMX Dev Channel Core 席 | 自動化清算、資本回收、多 venue 資金邊界 |
@@ -82,12 +82,12 @@
 | 8 | Lars Eriksson | Security Auditor @ OpenZeppelin | **Panel role** · OZ 席（`@larnerd` **未能**獨立核實） | 存取控制、防禦矩陣、標準合規 |
 | 9 | Dr. Zara Nyong'o | Core Architect @ ZeroDev (Kernel v3) | **Panel role** · ZeroDev Core 席 | Intent mandate：`allowedVenues[]` · `VENUE_DRIFT_REJECTED` · ERC-7579 邊界 |
 | 10 | Dr. Isabel Costa | Core Contributor @ Pendle | **Panel role** · Pendle Core 席 | 收益代幣化、PT/YT 風險隔離、Sentinel vs 競品敘事 |
-| 11 | A.J. Warner | Chief Strategy Officer @ Offchain Labs | **Verified X** [`@A_J_Warner`](https://x.com/A_J_Warner) | 商業落地、生態戰略、真實 TVL 引入 |
-| 12 | Patrick McCorry | Researcher @ Arbitrum Foundation | **Verified X** [`@paddymccorry`](https://x.com/paddymccorry) | L2 擴展、博弈論安全、糾紛證明、抗審查 |
-| 13 | Ed Felten | Co-founder & Chief Scientist @ Offchain Labs | **Verified X** [`@EdFelten`](https://x.com/EdFelten) | 密碼學/Nitro VM 是否有真實突破 vs 工程 fortify |
-| 14 | Nina Rong | Head of Ecosystem @ Arbitrum Foundation | **Verified X** [`@Web3Nina`](https://x.com/Web3Nina) | 亞太生態適配、協同、公開文件可讀性 |
-| 15 | Tano Kahn | VP of Product @ Offchain Labs | **Verified X** [`@tanokahn`](https://x.com/tanokahn) | DX、SDK、`withExoMeshShield` 門檻 |
-| 16 | Fredrik Haga | Co-founder & CEO @ Dune | **Verified X** [`@hagaetas`](https://x.com/hagaetas)（公開常用；表列 `@haga_fredrik` **非**其核實 handle） | 鏈上透明度、結構化事件、42161 ingest |
+| 11 | A.J. Warner | Chief Strategy Officer @ Offchain Labs | **Verified X** [@A_J_Warner](https://x.com/A_J_Warner) | 商業落地、生態戰略、真實 TVL 引入 |
+| 12 | Patrick McCorry | Researcher @ Arbitrum Foundation | **Verified X** [@paddymccorry](https://x.com/paddymccorry) | L2 擴展、博弈論安全、糾紛證明、抗審查 |
+| 13 | Ed Felten | Co-founder & Chief Scientist @ Offchain Labs | **Verified X** [@EdFelten](https://x.com/EdFelten) | 密碼學/Nitro VM 是否有真實突破 vs 工程 fortify |
+| 14 | Nina Rong | Head of Ecosystem @ Arbitrum Foundation | **Verified X** [@Web3Nina](https://x.com/Web3Nina) | 亞太生態適配、協同、公開文件可讀性 |
+| 15 | Tano Kahn | VP of Product @ Offchain Labs | **Verified X** [@tanokahn](https://x.com/tanokahn) | DX、SDK、`withExoMeshShield` 門檻 |
+| 16 | Fredrik Haga | Co-founder & CEO @ Dune | **Verified X** [@hagaetas](https://x.com/hagaetas)（公開常用；表列 `@haga_fredrik` **非**其核實 handle） | 鏈上透明度、結構化事件、42161 ingest |
 | 17 | TN Lee | Co-founder @ Pendle | **Panel role** · Pendle Co-founder 席（個人 X 本卷不臆造） | PT/YT 時間價值、衍生品互動、邊界誠實 |
 | 18 | Filip Janssen | Foundry Core Contributor | **Panel role** · Foundry / EVM Tooling 席 | fork-trace、狀態模擬、Foundry 覆蓋 |
 | 19 | Amir Hassan | Quant Modeller @ Gauntlet | **Panel role** · Gauntlet Risk 席 | 極端行情、流動性耗盡、對沖效率 |
@@ -97,11 +97,11 @@
 | 23 | Raj Patel | MEV & Protocol Security | **Panel role** · Uniswap/MEV 席 | multicall 腿序、griefing、搶跑 |
 | 24 | Tom Berger | Sequencer Economics | **Panel role** · Sequencer Econ 席 | 優先費、有毒 calldata 過濾成本 |
 | 25 | Dr. Fiona Walsh | Triage Lead @ Immunefi | **Panel role** · Immunefi 席 | 應急響應、狀態熔斷、白帽演練面 |
-| 26 | Arthur Cheong | Founder & CEO @ DeFiance Capital | **Verified X** [`@Arthur_0x`](https://x.com/Arthur_0x) | 資本效率、週期存活、代幣經濟（本協議無原生 token → 扣敘事、加工程） |
-| 27 | Kelvin Koh | Co-founder @ Spartan Group | **Verified X** [`@SpartanBlack_1`](https://x.com/SpartanBlack_1) | 亞太執行力、護城河、團隊交付節奏 |
-| 28 | Jason Choi | Founder @ Tangent / Blockcrunch | **Verified X** [`@mrjasonchoi`](https://x.com/mrjasonchoi) | 真實痛點 vs 樂高堆疊、市場需求 |
-| 29 | Mable Jiang | Partner / Web3 Investor | **Verified X** [`@Mable_Jiang`](https://x.com/Mable_Jiang) | PMF、激勵、社群（本協議 BUSL 核心 vs Apache SDK） |
-| 30 | Arthur Breitman | Core Technologist (Tezos / Modular L2) | **Verified X** [`@ArthurB`](https://x.com/ArthurB) | 形式化驗證、模組化、治理數學健全性 |
+| 26 | Arthur Cheong | Founder & CEO @ DeFiance Capital | **Verified X** [@Arthur_0x](https://x.com/Arthur_0x) | 資本效率、週期存活、代幣經濟（本協議無原生 token → 扣敘事、加工程） |
+| 27 | Kelvin Koh | Co-founder @ Spartan Group | **Verified X** [@SpartanBlack_1](https://x.com/SpartanBlack_1) | 亞太執行力、護城河、團隊交付節奏 |
+| 28 | Jason Choi | Founder @ Tangent / Blockcrunch | **Verified X** [@mrjasonchoi](https://x.com/mrjasonchoi) | 真實痛點 vs 樂高堆疊、市場需求 |
+| 29 | Mable Jiang | Partner / Web3 Investor | **Verified X** [@Mable_Jiang](https://x.com/Mable_Jiang) | PMF、激勵、社群（本協議 BUSL 核心 vs Apache SDK） |
+| 30 | Arthur Breitman | Core Technologist (Tezos / Modular L2) | **Verified X** [@ArthurB](https://x.com/ArthurB) | 形式化驗證、模組化、治理數學健全性 |
 
 **主席：** Clara Mendez（#4）主持證明面；技術副主席 Dr. Steven Goldfeder（#1）。
 
@@ -109,7 +109,7 @@
 
 ## 2. 三十人四維細表（0.0–10.0）
 
-**Δ 列** = 相對 [`0907_Grok_lunch_zh.md`](./0907_Grok_lunch_zh.md) 全團 **8.61** 的近似位移。
+**Δ 列** = 相對 [0907_Grok_lunch_zh.md](./0907_Grok_lunch_zh.md) 全團 **8.61** 的近似位移。
 
 ### A. Offchain Labs / Arbitrum / GMX 核心十席
 

@@ -9,9 +9,9 @@
 
 | Track | Status | Entry |
 |-------|--------|-------|
-| **Buildathon Main Submission** | ✅ Submitted | [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
-| **Arbitrum One-Pager** | ✅ Submitted | [`arbitrum/ARBITRUM_ONE_PAGER.md`](./arbitrum/ARBITRUM_ONE_PAGER.md) |
-| **Arbitrum Grant Scope** | ✅ Submitted | [`arbitrum/GRANT_PROPOSAL.md`](./arbitrum/GRANT_PROPOSAL.md) |
-| **GMX Builders** | ✅ Submitted | [`gmx/GMX_BUILDERS_PITCH.md`](./gmx/GMX_BUILDERS_PITCH.md) |
+| **Buildathon Main Submission** | ✅ Submitted | [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md) |
+| **Arbitrum One-Pager** | ✅ Submitted | [arbitrum/ARBITRUM_ONE_PAGER.md](./arbitrum/ARBITRUM_ONE_PAGER.md) |
+| **Arbitrum Grant Scope** | ✅ Submitted | [arbitrum/GRANT_PROPOSAL.md](./arbitrum/GRANT_PROPOSAL.md) |
+| **GMX Builders** | ✅ Submitted | [gmx/GMX_BUILDERS_PITCH.md](./gmx/GMX_BUILDERS_PITCH.md) |
 
-Shared SSOT: [`../01_architecture/README.md`](../01_architecture/README.md) · [`../04_sdk_and_integration/README.md`](../04_sdk_and_integration/README.md) · Docs router: [`../README.md`](../README.md)
+Shared SSOT: [../01_architecture/README.md](../01_architecture/README.md) · [../04_sdk_and_integration/README.md](../04_sdk_and_integration/README.md) · Docs router: [../README.md](../README.md)

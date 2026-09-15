@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — 評審 30 秒極速簡報 (JUDGE_BRIEF_zh.md)
 
-> 📌 **系統指標 SSOT**: 已透過 [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json) 物理驗證
+> 📌 **系統指標 SSOT**: 已透過 [docs/audit/SYSTEM_METRICS_SSOT.json](docs/audit/SYSTEM_METRICS_SSOT.json) 物理驗證
 > **當前發布版本**: `v1.0 · BeDelta Living Water v1.0 (SSRC)` · **狀態**: Phase-4 Codebase Freeze 活躍 (243 files / 1123 PASS)
 
 ---

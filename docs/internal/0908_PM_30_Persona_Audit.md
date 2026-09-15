@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ `bedelta-citadel-core` · **`fe5ece7`**（`fe5ece78004ec4160aed64b1e7edaef24b3a231e`） |
-| 對照基線 | [`0907_PM_Fresh_30_Persona_Audit.md`](./0907_PM_Fresh_30_Persona_Audit.md) **8.81** · [`0907_1700_0903panel_zh.md`](./0907_1700_0903panel_zh.md) 原團回訪 **9.05**（`99fe1ac` 快照 · **不**作為本卷校準常數） |
+| 對照基線 | [0907_PM_Fresh_30_Persona_Audit.md](./0907_PM_Fresh_30_Persona_Audit.md) **8.81** · [0907_1700_0903panel_zh.md](./0907_1700_0903panel_zh.md) 原團回訪 **9.05**（`99fe1ac` 快照 · **不**作為本卷校準常數） |
 | 測試 SSOT | **211 test files \| 943 PASS** · `pnpm exec tsc --noEmit` **0 errors** · 全量首輪 `usdai-adapter` 亞毫秒時序在 WSL 出現 **1** 次 flake（孤立重跑 **7/7 PASS**） |
 | Q1 單檔約束 | 全部 `gmx-gm-deposit-*` / `gmx-gm-withdraw-*` / error decoder / CLI **<200 LOC**（最大 **187** · `gmx-gm-deposit-multicall.ts` / `execute-gmx-mainnet-gm-withdraw.ts`） |
 | 本卷主題 | GMX v2 ETH/USDC **GM Pool Deposit + Withdraw** 三腿 `multicall` 通道閉環 · CLI 入口 · 錯誤解碼 / Foundry 低階 `.call` revert 追蹤 |
@@ -47,11 +47,11 @@
 
 | # | 事件 | Tx Hash | Block | 狀態 |
 |---|------|---------|-------|------|
-| 1 | **GM Deposit Multicall** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | **503036082** | ✅ Success |
-| 2 | **GM LP → Synthetics Router Approve** | [`0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) | **503038459** | ✅ Success |
-| 3 | **GM Withdraw Multicall Broadcast** | [`0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) | **503038714** | ✅ Success |
+| 1 | **GM Deposit Multicall** | [0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | **503036082** | ✅ Success |
+| 2 | **GM LP → Synthetics Router Approve** | [0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) | **503038459** | ✅ Success |
+| 3 | **GM Withdraw Multicall Broadcast** | [0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) | **503038714** | ✅ Success |
 
-**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · Synthetics Router `0xaBBc7805d812eA10e7D47d54169b8922596f9a0c` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8…7A55` · WithdrawalVault `0x0628D46b…1c55` · SSOT 同步：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)
+**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · Synthetics Router `0xaBBc7805d812eA10e7D47d54169b8922596f9a0c` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8…7A55` · WithdrawalVault `0x0628D46b…1c55` · SSOT 同步：[docs/06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) · [docs/00_ARB_Buildathon/SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md)
 
 歷史面板均分（**僅作機構記憶；本卷不校準常數**）：
 
@@ -117,7 +117,7 @@
 ## 1. 三十人四維細表（0.0–10.0）
 
 總分 = (SC + PMF + Inno + RPS) / 4  
-**Δ 列** = 相對 [`0907_PM_Fresh_30_Persona_Audit.md`](./0907_PM_Fresh_30_Persona_Audit.md) **8.81 帶** 的近似位移（本卷為 **新面孔**，非同一人重評）。
+**Δ 列** = 相對 [0907_PM_Fresh_30_Persona_Audit.md](./0907_PM_Fresh_30_Persona_Audit.md) **8.81 帶** 的近似位移（本卷為 **新面孔**，非同一人重評）。
 
 ### A. 十位產業領袖（全新身份）
 
@@ -325,7 +325,7 @@
 | 檢查項 | 結果 |
 |--------|------|
 | CLI | 預設 dry-run · live 需 `BROADCAST=1` + `CONFIRM_*=YES` |
-| **主網 SSOT** | **已鎖定** — deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · GM I/O 通道 **CLOSED** |
+| **主網 SSOT** | **已鎖定** — deposit [0xe3155220…](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [0x00c371b9…](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · GM I/O 通道 **CLOSED** |
 | 口播規則 | **可以** 引用 §0.1 三筆 Arbiscan tx；**禁止** 把 increase / Gate fill 與 GM I/O 混談 |
 
 **Blackhat 結論：** 09-08 晚 GM Pool I/O **執行層已閉環**；評審若聽到「我們從未 live GM」→ **與 SSOT 不符**。Increase / Gate 路徑仍誠實標 **OPEN**。
@@ -406,11 +406,11 @@
 | Error interpreter | `gmx-error-interpreter.ts` · `gmx-error-registry.ts` · `gmx-error-guidance.ts` |
 | Isolated probe | `gmx-error-isolated-probe.ts` · **149 LOC** |
 | Foundry fork `.call` | `contracts/test/GmxLocalForkTrace.t.sol` · Router `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` |
-| **42161 GM I/O Live Tx SSOT** | Deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Approve [`0x83c4802e…`](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Withdraw [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · **通道 CLOSED** |
+| **42161 GM I/O Live Tx SSOT** | Deposit [0xe3155220…](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Approve [0x83c4802e…](https://arbiscan.io/tx/0x83c4802ecca1037939a943298bb8b22de5f0fcabc0b1257a258cde94677a7a30) · Withdraw [0x00c371b9…](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · **通道 CLOSED** |
 | Tests | `tests/adapters/gmx-gm-deposit-encode.test.ts` · `gmx-gm-withdraw-encode.test.ts` · `gmx-error-interpreter.test.ts` |
 | Vitest / tsc | **211 files \| 943 tests** · `tsc --noEmit` **0 errors** |
 | HEAD | **`fe5ece7`** · `feat(gmx): add GM Pool withdrawal CLI and complete adapter wiring.` |
 
 ---
 
-*Prepared by: 09-08 PM 30-Persona Stress Panel · 2026-09-08 · `docs/internal/0908_PM_30_Persona_Audit.md` · HEAD `fe5ece7` · vs [`0907_PM_Fresh_30_Persona_Audit.md`](./0907_PM_Fresh_30_Persona_Audit.md) · Theme: GMX v2 GM Pool Deposit/Withdraw channel completion under Q1 <200 LOC*
+*Prepared by: 09-08 PM 30-Persona Stress Panel · 2026-09-08 · `docs/internal/0908_PM_30_Persona_Audit.md` · HEAD `fe5ece7` · vs [0907_PM_Fresh_30_Persona_Audit.md](./0907_PM_Fresh_30_Persona_Audit.md) · Theme: GMX v2 GM Pool Deposit/Withdraw channel completion under Q1 <200 LOC*

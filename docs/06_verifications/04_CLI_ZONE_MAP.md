@@ -1,6 +1,6 @@
 # CLI Zone Map (Tier 0–1 Verification + Ops Zones)
 
-> **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
+> **SSOT index:** [README.md](./README.md) · **Hub:** [../06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md)
 
 ## Zone A — 30-Second Express Verification (Fast Track)
 
@@ -16,7 +16,7 @@
 | **Tier 1 — Sovereign Vault GM I/O** | `pnpm demo:e2e:arb-native` · `pnpm execute:gmx:gm-deposit` · `pnpm demo:gmx` · `pnpm demo:hl` | Arbitrum Native USDC GM deposit · live Wallet B multicall |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
 | **Zone B — Sandbox & E2E** | `[Sanctuary]` | `pnpm demo:{stabilizer,e2e,sanctuary,ingress}` | Sepolia Stabilizer · ERC-7540+ · treasury ingress · **4-step Happy Path** (`--unwind` · `--trip` optional) |
-| **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios ([`tests/demo/`](../../tests/demo)) |
+| **Ops Zone — Vitest matrix** | `pnpm demo` | 12 Dual Pillar Set X & Y ANSI scenarios ([tests/demo/](../../tests/demo)) |
 
 All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision).
 
@@ -31,11 +31,11 @@ pnpm test # Full System Regression Suite (235 test files | 1091 PASS clean)
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix ([`tests/demo/`](../../tests/demo)) | **12/12 PASS** · ANSI output |
+| `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix ([tests/demo/](../../tests/demo)) | **12/12 PASS** · ANSI output |
 | `pnpm demo:gmx` | GMX v2 shadow margin · cross-venue slippage · position cap | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:hl` | Hyperliquid session key auth · WS depth guard | `ALLOW` / `--trip` FAIL_CLOSED |
 | `pnpm demo:pendle` | Pendle PT/YT sentinel · guarded pool factory | `ALLOW` / `--trip` FAIL_CLOSED |
-| `pnpm demo:usdai` | USD.ai AI-compute yield collateral guard (`evaluateUsdAiCollateralGuard`) | `ALLOW` / `--trip` FAIL_CLOSED · [`usdai-adapter.test.ts`](../../tests/adapters/usdai-adapter.test.ts) **5/5** |
+| `pnpm demo:usdai` | USD.ai AI-compute yield collateral guard (`evaluateUsdAiCollateralGuard`) | `ALLOW` / `--trip` FAIL_CLOSED · [usdai-adapter.test.ts](../../tests/adapters/usdai-adapter.test.ts) **5/5** |
 | `pnpm demo:variational` | Variational Omni RFQ stale quote & OLP depth guard | `ALLOW` / `--trip` **FAIL_CLOSED** (`VARIATIONAL_STALE_QUOTE_BREACH`) |
 | `pnpm demo:gmx -- --trip` | **Judge fast track** — GMX V2 Arbitrum native hard anchor | **FAIL_CLOSED** · pool skew / price-impact breach |
 | `pnpm demo:variational -- --trip` | **Judge fast track** — Variational multi-venue RFQ gate | **FAIL_CLOSED** · stale quote / OLP breach |
@@ -113,9 +113,9 @@ pnpm demo
 
 | Demo file | Scenarios | Risk surfaces proven |
 |-----------|-----------|----------------------|
-| [`gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) | 4 | Healthy MarketIncrease · toxic price-impact soil trip · Chainlink Data Streams oracle-lag reject + `reduceOnly` delever rescue · 1,000× payload validation benchmark |
-| [`hyperliquid-agent-flow.demo.test.ts`](../../tests/demo/hyperliquid-agent-flow.demo.test.ts) | 4 | Valid `ApproveAgent` EIP-712 · WS stale / latency >200ms soil trip · expired session key / GateLockout · 1,000× session-key validation benchmark |
-| [`pendle-ai-agent-flow.demo.test.ts`](../../tests/demo/pendle-ai-agent-flow.demo.test.ts) | 4 | AI guarded pool PASS · 450bps yield-drift MEV reject · 60s TTL stale oracle · 1,000× `validateAIPoolSelection()` benchmark |
+| [gmx-v2-agent-flow.demo.test.ts](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) | 4 | Healthy MarketIncrease · toxic price-impact soil trip · Chainlink Data Streams oracle-lag reject + `reduceOnly` delever rescue · 1,000× payload validation benchmark |
+| [hyperliquid-agent-flow.demo.test.ts](../../tests/demo/hyperliquid-agent-flow.demo.test.ts) | 4 | Valid `ApproveAgent` EIP-712 · WS stale / latency >200ms soil trip · expired session key / GateLockout · 1,000× session-key validation benchmark |
+| [pendle-ai-agent-flow.demo.test.ts](../../tests/demo/pendle-ai-agent-flow.demo.test.ts) | 4 | AI guarded pool PASS · 450bps yield-drift MEV reject · 60s TTL stale oracle · 1,000× `validateAIPoolSelection()` benchmark |
 
 | Command | Proves | Expected |
 |---------|--------|----------|
@@ -149,9 +149,9 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 |-----------|--------|
 | Kernel v3 / EntryPoint **v0.7** UserOp **draft** path | ✅ Dry-run harness verified |
 | Session scope + Risk Oracle Gate fail-closed | ✅ Offline / mock bundler |
-| Mainnet UserOp broadcast | ✅ **Verified Live** — Robinhood Mainnet Smart Route `4663` → `42161` · UserOp [`0x7b72ee9f…`](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
+| Mainnet UserOp broadcast | ✅ **Verified Live** — Robinhood Mainnet Smart Route `4663` → `42161` · UserOp [0x7b72ee9f…](https://arbiscan.io/tx/0x4c4ca1362d4a50d4684662e633e728401478c29dbef13f49e109e68253b5964a) |
 
-**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar Set Y ReflexCore (SSRC) Engine** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · p50 ~106 µs) and **Pillar Set X Arbitrum Native Ingress** operate **100% independently** of ZeroDev. [`zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) provides pre-bundler UserOp validation when AA is enabled.
+**Narrative:** ZeroDev Kernel v3 is an **Opt-In Pillar Set X Account Abstraction Layer** — scoped 30s session keys and Paymaster gas sponsorship ($0.50/op · $10/day). **Pillar Set Y ReflexCore (SSRC) Engine** ([pkg/soil_core.wasm](../../pkg/soil_core.wasm) · p50 ~106 µs) and **Pillar Set X Arbitrum Native Ingress** operate **100% independently** of ZeroDev. [zerodev-aa-gate.ts](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) provides pre-bundler UserOp validation when AA is enabled.
 
 **v1.0 AA scope:** Stage ① Sign-in · ③ Gas · ④ Authorize · ⑤ Execute (Sepolia verified). Stage ② Smart Routing = Reference Harness. Stages ⑥⑦ = Post-Grant Roadmap.
 
@@ -161,7 +161,7 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 zerodev-aa-gate.test.ts → assertCitadelRiskGate() + evaluateZeroDevGasGuards()
 zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + ExoMesh risk gate
  ├─ zerodev-aa-failover.ts → Arbitrum One health / AA probe route
- ├─ [`zerodev-aa-static-breaker.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-static-breaker.ts) → soil + gas sponsorship limits
+ ├─ [zerodev-aa-static-breaker.ts](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-static-breaker.ts) → soil + gas sponsorship limits
  └─ zerodev-aa-userop.ts → Paymaster + bundler dispatch (after gate PASS)
 ```
 
@@ -169,7 +169,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + ExoMesh risk gate
 
 ### Pillar Set X — Sanctuary Escrow Substrate (Compliance Ingress)
 
-**CLI:** `pnpm demo:ingress` · [`examples/ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts)
+**CLI:** `pnpm demo:ingress` · [examples/ingress-escort-demo.ts](../../examples/ingress-escort-demo.ts)
 
 **Unit SSOT:**
 
@@ -215,7 +215,7 @@ pnpm audit:nightly
 | Unit tests | **60 Passed · 0 Failed** | **60 Passed · 0 Failed** |
 | Property fuzzing | **5 × 1,024 = 5,120** executions | **5 × 65,535 = 327,675** executions |
 | Invariants | **3 × 16,384** stateful calls · 0 counterexamples | same |
-| Core | [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) consume-once attestation · gas-bounded `verifyAndConsume` | same |
+| Core | [SliverVineGate.sol/](../../SliverVineGate/out/SliverVineGate.sol) consume-once attestation · gas-bounded `verifyAndConsume` | same |
 
 **Formal Verification — Native Foundry Invariant Tests**
 
@@ -229,10 +229,10 @@ pnpm audit:nightly
 
 | ID | Guard | Fail-closed budget | Code SSOT |
 |----|-------|-------------------|-----------|
-| **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · [`src/adapters/hl/websocket/websocket-health.ts`](../../src/adapters/hl/websocket/websocket-health.ts) |
-| **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · [`src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts`](../../src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts) |
+| **R04** | PGATE Latency / WS jitter | **200ms** | `PGATE_MAX_LATENCY_MS` · [src/adapters/hl/websocket/websocket-health.ts](../../src/adapters/hl/websocket/websocket-health.ts) |
+| **R03** | HL L2 book stale / RPC probe | **500ms** | `HL_L2_STALE_THRESHOLD_MS` · [src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts](../../src/services/exchanges/hl-l2-book-lib/hl-l2-book-types.ts) |
 
-Related: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
+Related: [02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md)
 
 #### Pendle Institutional Guard (ExoMesh · Pillar Set Y)
 
@@ -249,12 +249,12 @@ pnpm exec vitest run tests/demo/pendle-ai-agent-flow.demo.test.ts
 
 | Test file | Proves | Expected |
 |-----------|--------|----------|
-| [`tests/adapters/pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) | Sync oracle `ingest`/`resolve` · **TTL 60s** stale · `PENDLE_ORACLE_STALE` soil trip | **PASS** |
-| [`tests/adapters/pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) | `resolve*` · `normalize*` · address index · `hydrateFromOracle` | **PASS** |
-| [`tests/risk-control/pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) | `pendleOracle` + `pendleCrossGuard` → `checkSoilResistance()` | **PASS** |
-| [`tests/guards/pendle-gmx-cross-guard.test.ts`](../../tests/guards/pendle-gmx-cross-guard.test.ts) | Shadow Margin cross-guard · Observatory Paradox de-leverage | **PASS** |
-| [`tests/adapters/pendle-pt-expiry-guard.test.ts`](../../tests/adapters/pendle-pt-expiry-guard.test.ts) | PT expiry &lt;7d ∧ jitter &gt;200bps fail-closed · 1,000 fuzz | **PASS** |
+| [tests/adapters/pendle-market-oracle.test.ts](../../tests/adapters/pendle-market-oracle.test.ts) | Sync oracle `ingest`/`resolve` · **TTL 60s** stale · `PENDLE_ORACLE_STALE` soil trip | **PASS** |
+| [tests/adapters/pendle-pt-registry.test.ts](../../tests/adapters/pendle-pt-registry.test.ts) | `resolve*` · `normalize*` · address index · `hydrateFromOracle` | **PASS** |
+| [tests/risk-control/pendle-soil-guard.test.ts](../../tests/risk-control/pendle-soil-guard.test.ts) | `pendleOracle` + `pendleCrossGuard` → `checkSoilResistance()` | **PASS** |
+| [tests/guards/pendle-gmx-cross-guard.test.ts](../../tests/guards/pendle-gmx-cross-guard.test.ts) | Shadow Margin cross-guard · Observatory Paradox de-leverage | **PASS** |
+| [tests/adapters/pendle-pt-expiry-guard.test.ts](../../tests/adapters/pendle-pt-expiry-guard.test.ts) | PT expiry &lt;7d ∧ jitter &gt;200bps fail-closed · 1,000 fuzz | **PASS** |
 
-**Code SSOT:** [`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) · [`core/pendle-types.ts`](../../src/core/pendle-types.ts)
+**Code SSOT:** [pendle-market-oracle-adapter.ts](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [pendle-pt-registry.ts](../../src/adapters/pendle/pendle-pt-registry.ts) · [pendle-gmx-cross-guard.ts](../../src/guards/pendle-gmx-cross-guard.ts) · [core/pendle-types.ts](../../src/core/pendle-types.ts)
 
 ---

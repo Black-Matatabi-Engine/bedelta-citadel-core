@@ -85,7 +85,7 @@ Korolev 要求的是 **Δ_net ≡ 0 在 venue isolation 下的可執行定義**�
 | 腿 | 錢包 | 路徑 | 狀態 |
 |----|------|------|------|
 | **Primary hedge** | Wallet A `0xef0752…960d` | Hyperliquid L1 session-key perp short | 0-Gas pre-broadcast soil |
-| **Native backup short** | 同一 Wallet A | GMX v2 synthetic short · [`gmx-v2-wallet-a-short-builder.ts`](../../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) | **simulate / encode probe only**（USDC=0 → live fill OPEN） |
+| **Native backup short** | 同一 Wallet A | GMX v2 synthetic short · [gmx-v2-wallet-a-short-builder.ts](../../src/services/adapters/gmx-v2-wallet-a-short-builder.ts) | **simulate / encode probe only**（USDC=0 → live fill OPEN） |
 | **GM LP vault** | Wallet B `0xc9BddABD80982d2201376195DD9B85fb7951546f` | GMX v2 GM deposit/withdraw **only** | 主網三證 · 無 HL key · 無 GMX perp |
 
 **機制：**
@@ -97,7 +97,7 @@ Korolev 要求的是 **Δ_net ≡ 0 在 venue isolation 下的可執行定義**�
    編碼 `sendWnt → sendTokens → createOrder` 的 **嚴格順序** multicall。這是 fork/simulate 探針，用於證明 fallback calldata 與 GMX ExchangeRouter 線格式相容，**不是**宣稱 live short 已填。
 
 3. **PolicyGuardV2 Pure Solidity fallback**  
-   [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0`。Nitro Stylus 不可用時，`GmxRiskInvariantLib` 仍 fail-closed。GM 入金仍受 OI skew / pool imbalance soil 約束。
+   [0xfd98cadb7018f692ec58cd4359e0c0399f4f8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0`。Nitro Stylus 不可用時，`GmxRiskInvariantLib` 仍 fail-closed。GM 入金仍受 OI skew / pool imbalance soil 約束。
 
 4. **Δ_net 定義**  
    `Δ_GMX_GM + Δ_HL_Short ≡ 0` 由 cross-wallet hedge cron 維護。極端錯位時：soil trip → 拒絕新風險；既有 GM LP 留在 Wallet B；不得用 multicall 把「對沖腿」與「LP 腿」打成同一原子包（見 §3 Vector 1）。
@@ -129,7 +129,7 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
 # Worker: 50-round JIT warmup · min-of-3 heapUsed · threshold 16 KiB / 10_000 iterations
 ```
 
-`globalThis` singleton（`intent-core-buffers.ts`）保證 Vitest 雙模組圖仍指向同一 slab。C-ABI 與 [`src/wasm/intent_core.rs`](../../src/wasm/intent_core.rs) 的 `4 × i64` heap 對齊；熱路徑讀 `INTENT_RING_U32`，冷路徑 `syncIntentSlotToWasmSlab()`。
+`globalThis` singleton（`intent-core-buffers.ts`）保證 Vitest 雙模組圖仍指向同一 slab。C-ABI 與 [src/wasm/intent_core.rs](../../src/wasm/intent_core.rs) 的 `4 × i64` heap 對齊；熱路徑讀 `INTENT_RING_U32`，冷路徑 `syncIntentSlotToWasmSlab()`。
 
 **Auditor 筆記（模擬）：** 「16 KiB 是 **上限門檻**，不是『零位元組』行銷。JIT warmup 後的 net delta 才算數；5s hook timeout 已在 `stylus-gmx-parity` 用 60s 修掉，避免把 cargo 編譯誤判成產品延遲。」
 

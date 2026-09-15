@@ -11,16 +11,16 @@
 | 測試 SSOT | **243 test files \| 1123 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | Bundle SSOT | **166.51 KiB raw · 58.72 KiB gzip**（Pass `< 150 KiB` Lean Warn Limit） |
 | **SEPSB Telemetry SSOT** | **TPR 100% · FPR 0% · Observatory Mis-block 0** · Reflex p50 **0.233µs**（Wasm） · p99 **2.299µs** · `pnpm audit:sepsb` |
-| **SEPSB 5-Venue Distribution** | **gmx (9)** · **hyperliquid (6)** · **pendle (7)** · **usdai (4)** · **variational (5)** — [`sepsb-stress-telemetry.csv`](../audit/sepsb-stress-telemetry.csv) |
+| **SEPSB 5-Venue Distribution** | **gmx (9)** · **hyperliquid (6)** · **pendle (7)** · **usdai (4)** · **variational (5)** — [sepsb-stress-telemetry.csv](../audit/sepsb-stress-telemetry.csv) |
 | Quant Backtest SSOT | Tier 1 **3/3 FAIL_CLOSED** · Tier 2 **2/2** · Tier 3 **10,000 runs · 100% intercept** · Prevented **$1,326,412.79 USD**（simulated） |
-| **Dual Dune Dashboards** | **Dashboard 1:** [`slivervine-protocol`](https://dune.com/silvervinelabs/slivervine-protocol) — Operational Shield · cumulative append · **Dashboard 2:** [`slivervine-sepsb-stress`](https://dune.com/silvervinelabs/slivervine-sepsb-stress) — SEPSB Quant Matrix & 5-Venue SLA |
+| **Dual Dune Dashboards** | **Dashboard 1:** [slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) — Operational Shield · cumulative append · **Dashboard 2:** [slivervine-sepsb-stress](https://dune.com/silvervinelabs/slivervine-sepsb-stress) — SEPSB Quant Matrix & 5-Venue SLA |
 | **On-Chain Indexer** | `pnpm export:dune:onchain` · Gate `0xb174…8BF1` · Status **INTERFACE_READY** |
 <!-- SSOT:GROK_HEADER_METRICS_END -->
-| Codebase Freeze | **Active** — [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) · phase 4 |
-| 英文裁決 SSOT | [`X402_ARCHITECTURAL_DECISION_RECORD.md`](./X402_ARCHITECTURAL_DECISION_RECORD.md) |
+| Codebase Freeze | **Active** — [CODEBASE_FREEZE.json](../audit/CODEBASE_FREEZE.json) · phase 4 |
+| 英文裁決 SSOT | [X402_ARCHITECTURAL_DECISION_RECORD.md](./X402_ARCHITECTURAL_DECISION_RECORD.md) |
 | SSOT tag | `x402_compatibility = ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD` |
 
-> **本卷用途：** 30 人面板對 **x402 是否必須在 freeze 內寫碼** 做獨立裁決。物理 SSOT：[`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) · [`README.md`](../../README.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) §2。**不繼承** 0915 10:00 卷分（9.48）作為本卷結論，僅作對照。
+> **本卷用途：** 30 人面板對 **x402 是否必須在 freeze 內寫碼** 做獨立裁決。物理 SSOT：[SYSTEM_METRICS_SSOT.json](../audit/SYSTEM_METRICS_SSOT.json) · [README.md](../../README.md) · [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) §2。**不繼承** 0915 10:00 卷分（9.48）作為本卷結論，僅作對照。
 
 **執行摘要：** Checkpoint **12:00** · HEAD `4c2a01c7`。物理指標：**243 / 1123 PASS** · **tsc 0 errors** · SEPSB **TPR 100% / FPR 0%** · Wasm reflex p50 **0.233µs** / p99 **2.299µs** · 5-venue cap **<50µs** · Dual Dune 分軌。**本卷裁決：不在 Phase-4 freeze 內實作 x402 payment rail。** x402 為上游 HTTP 402 意圖分發；ExoMesh 為預簽名 / 預 sequencer V8/Wasm 風控引擎。評委加分項是可重跑閉環，不是未驗證的第二條支付協議。
 
@@ -44,7 +44,7 @@ Agent 之後若走 x402 付款，同一條 EIP-1193+ wrap 仍可在 **$0 Gas** f
 
 ### 1.3 真閉環優於趕工功能
 
-已閉環：**EIP-1193+ Agentic Wallet Guard（35/35）** → Wasm soil（5 核心場館）→ DUAL Gate [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) → Dual Dune（Operational Shield vs SEPSB Quant）→ `pnpm export:dune:onchain`（`INTERFACE_READY`）。公開文檔將 x402 標為 **upstream-compatible**，不是競品軌道。Grant 後若流量到位，只需把 402 intent **映射進既有 wrap**（thin adapter），無需新 soil ISA。
+已閉環：**EIP-1193+ Agentic Wallet Guard（35/35）** → Wasm soil（5 核心場館）→ DUAL Gate [0xb174…8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) → Dual Dune（Operational Shield vs SEPSB Quant）→ `pnpm export:dune:onchain`（`INTERFACE_READY`）。公開文檔將 x402 標為 **upstream-compatible**，不是競品軌道。Grant 後若流量到位，只需把 402 intent **映射進既有 wrap**（thin adapter），無需新 soil ISA。
 
 **評委一句話：** x402 負責付錢；ExoMesh 決定 Agent 能不能簽名。
 

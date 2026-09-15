@@ -8,8 +8,8 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 | `main` @ `bedelta-citadel-core` · HEAD `77f55d7` |
-| 主網 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **42161** |
-| 對照基線 | [`0904_Grok_M_ZH.md`](./0904_Grok_M_ZH.md) · 2026-09-04 早間面板 |
+| 主網 | [Tx 0x54c153e9…](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **42161** |
+| 對照基線 | [0904_Grok_M_ZH.md](./0904_Grok_M_ZH.md) · 2026-09-04 早間面板 |
 | 測試 SSOT（昨） | 173 files / 765 PASS（Zero-GUI 剪枝鎖定） |
 | 測試 SSOT（今） | **193 test files | 840 PASS Clean (100% PASS)**（V1.0 全量回歸；Pendle Factory 測試在內） |
 | Git 隔離 | `origin` → `SilverVineLabs/bedelta-citadel-core` @ `77f55d7` · `living-water` → V0.9 `b739480`（164/735） |
@@ -293,4 +293,4 @@ pnpm tsx examples/agent-interceptor-demo.ts --trip
 
 ---
 
-*Prepared by: Grok 30-Persona Morning Delta Panel · 2026-09-05 · `docs/internal/0905_Grok_M_ZH.md` · vs [`0904_Grok_M_ZH.md`](./0904_Grok_M_ZH.md)*
+*Prepared by: Grok 30-Persona Morning Delta Panel · 2026-09-05 · `docs/internal/0905_Grok_M_ZH.md` · vs [0904_Grok_M_ZH.md](./0904_Grok_M_ZH.md)*

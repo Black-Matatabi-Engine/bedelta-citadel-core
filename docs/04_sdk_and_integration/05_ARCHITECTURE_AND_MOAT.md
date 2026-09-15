@@ -1,9 +1,9 @@
 # Architecture & Competitive Moat — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress` 
-> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) 
+> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress` 
+> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [pkg/soil_core.wasm](../../pkg/soil_core.wasm) 
 > **Package:** `@slivervine/exomesh-agentic-wallet-guard` 
-> **Source:** [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/)
+> **Source:** [src/sdk/exomesh-agentic-wallet-guard/](../../src/sdk/exomesh-agentic-wallet-guard/)
 
 ---
 
@@ -51,11 +51,11 @@
 
 ### Layer 2: Agent Intent Inspector
 
-See [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
+See [04_AI_INTENT_PROTECTION_MODEL.md](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
 
 ### Layer 3: Retry Storm Circuit Breaker (`INTENT_RING_U32`)
 
-`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **Zero-Allocation Hot-Path**, mirrored in Rust ([`intent_core.rs`](../../src/wasm/intent_core.rs)) and Solidity ([`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol)).
+`INTENT_RING_U32` (256-slot FNV-indexed ring) tracks attempt budgets per wallet session — **O(1)**, **Zero-Allocation Hot-Path**, mirrored in Rust ([intent_core.rs](../../src/wasm/intent_core.rs)) and Solidity ([IntentRingSlabLib.sol](../../contracts/src/libs/IntentRingSlabLib.sol)).
 
 ---
 
@@ -78,14 +78,14 @@ announceGuardedProvider(window.ethereum, config, {
 
 ### Layer 4: RPC Transport Stream Sync
 
-[`transport-stream.ts`](../../src/sdk/exomesh-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
+[transport-stream.ts](../../src/sdk/exomesh-agentic-wallet-guard/transport-stream.ts) maintains EIP-1193 **RPC transport stream synchronization** bound to `CALLDATA_SCRATCH` and `INTENT_RING_U32`. Surfaces `RPC_TRANSPORT_SYNC_FAILED` when synchronization cannot be recovered under sustained load.
 
 ---
 
 ## Related Documents
 
-- [`README.md`](./README.md) — documentation index
-- [`01_SDK_INTEGRATION_BLUEPRINT.md`](./01_SDK_INTEGRATION_BLUEPRINT.md) — integration blueprint
-- [`02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) — market intelligence
-- [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) — LLM / agent threat model
-- [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) — Wasm reflex core · §3.7
+- [README.md](./README.md) — documentation index
+- [01_SDK_INTEGRATION_BLUEPRINT.md](./01_SDK_INTEGRATION_BLUEPRINT.md) — integration blueprint
+- [02_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md](./04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) — market intelligence
+- [04_AI_INTENT_PROTECTION_MODEL.md](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) — LLM / agent threat model
+- [../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) — Wasm reflex core · §3.7

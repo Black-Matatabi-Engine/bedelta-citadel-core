@@ -76,6 +76,6 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .arbitrumCita
 
 | Document | Purpose |
 |----------|---------|
-| [`../README.md`](../README.md) | Grants index |
-| [`../../01_architecture/README.md`](../../01_architecture/README.md) | R01–R20 invariants |
-| [`../../00_ARB_Buildathon/SUBMISSION.md`](../../00_ARB_Buildathon/SUBMISSION.md) | Buildathon / Arbitrum submission pack (separate audience) |
+| [../README.md](../README.md) | Grants index |
+| [../../01_architecture/README.md](../../01_architecture/README.md) | R01–R20 invariants |
+| [../../00_ARB_Buildathon/SUBMISSION.md](../../00_ARB_Buildathon/SUBMISSION.md) | Buildathon / Arbitrum submission pack (separate audience) |

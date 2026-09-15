@@ -7,12 +7,12 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`11af218`**（含 Worker bundle **57.76 KiB gzip** 全公開文檔 SSOT · `@slivervine/exomesh-agentic-wallet-guard` 重命名 · 三層 EIP/ERC 分類 · De-Hype 掃描） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |
-| 對照基線 | [`0912_lunch_grok_zh.md`](./0912_lunch_grok_zh.md) 主席加權 **9.54** · [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) **9.42** · [`0911_offwork_Grok_zh.md`](./opsec/0911_offwork_Grok_zh.md) **9.35** |
+| 對照基線 | [0912_lunch_grok_zh.md](./0912_lunch_grok_zh.md) 主席加權 **9.54** · [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) **9.42** · [0911_offwork_Grok_zh.md](./opsec/0911_offwork_Grok_zh.md) **9.35** |
 | 測試 SSOT | **228 test files \| 1065 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | 本卷主題 | **Worker bundle 57.76 KiB gzip 物理 SSOT 同步** · **三層 EIP/ERC 誠實分類** · **Breakthrough → Implementation De-Hype** · **SDK 路徑 `exomesh-agentic-wallet-guard`** · **ExoMesh / Sanctuary 架構中文對齊卷** |
 | **主席加權總分** | **9.58 / 10**（↑ **+0.04** vs 0912 Lunch **9.54**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`pnpm bundle:measure` · `@slivervine/exomesh-agentic-wallet-guard` · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。英文工程 SSOT：`pnpm bundle:measure` · `@slivervine/exomesh-agentic-wallet-guard` · [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)。
 
 **執行摘要：** 0912 午餐卷封口於 `01`–`06` 文檔序號化 + SSRC 品牌鎖 + 1065 構成披露；本卷在同一 fail-closed 基質上完成 **公開文檔物理指標對齊**（`50.94` → **`57.76 KiB gzip`** / **`163.67 KiB raw`**）、**三層 EIP/ERC 誠實分類**（Tier 1 Final · Tier 2 De-facto · Tier 3 Not Implemented）、**De-Hype 全掃**（Breakthrough → Implementation）、**SDK 包名與路徑統一**為 `exomesh-agentic-wallet-guard`，並修正 risk framework 中 Wasm vs Worker bundle 誤標。**技術債為零。**
 
@@ -170,7 +170,7 @@ pnpm bundle:measure
 
 ## 2. 三十人 Persona 四維評分細表（0912 Midnight · 0.0–10.0）
 
-**Δ 列** = 相對 [`0912_lunch_grok_zh.md`](./0912_lunch_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.58**。
+**Δ 列** = 相對 [0912_lunch_grok_zh.md](./0912_lunch_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.58**。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -237,7 +237,7 @@ pnpm bundle:measure
 
 ## 3. BlackHat 威脅矩陣與殘餘風險審計
 
-> 延續 [`0912_lunch_grok_zh.md`](./0912_lunch_grok_zh.md) §3 格式。**本卷增量：** BH-15 文檔指標過期 · BH-16 Tier 2 over-claim · De-Hype 降低 BH-16 殘餘。
+> 延續 [0912_lunch_grok_zh.md](./0912_lunch_grok_zh.md) §3 格式。**本卷增量：** BH-15 文檔指標過期 · BH-16 Tier 2 over-claim · De-Hype 降低 BH-16 殘餘。
 
 ### 3.1 攻擊向量矩陣（BH-1 – BH-12 + 本卷增量）
 
@@ -407,14 +407,14 @@ pnpm test -- --run              # Expected: 228 files | 1065 PASS
 
 | 文件 | 角色 |
 |------|------|
-| [`0912_lunch_grok_zh.md`](./0912_lunch_grok_zh.md) | Docs+SSRC 基線 **9.54** |
-| [`0911_midnight_grok_zh.md`](./0911_midnight_grok_zh.md) | 5792/7540 基線 **9.42** |
-| [`0911_offwork_Grok_zh.md`](./opsec/0911_offwork_Grok_zh.md) | Mini-Chaos **9.35** |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 brief · bundle + 1065 SSOT |
-| [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | 三層 EIP · ExoMesh 矩陣 |
-| [`02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary 技術規範 |
-| [`02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md`](../06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | Zero-GC + bundle 行 |
-| [`exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) | SDK 新路徑 SSOT |
+| [0912_lunch_grok_zh.md](./0912_lunch_grok_zh.md) | Docs+SSRC 基線 **9.54** |
+| [0911_midnight_grok_zh.md](./0911_midnight_grok_zh.md) | 5792/7540 基線 **9.42** |
+| [0911_offwork_Grok_zh.md](./opsec/0911_offwork_Grok_zh.md) | Mini-Chaos **9.35** |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 brief · bundle + 1065 SSOT |
+| [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | 三層 EIP · ExoMesh 矩陣 |
+| [02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary 技術規範 |
+| [02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md](../06_verifications/02_ZERO_ALLOCATION_HOTPATH_BENCHMARK_REPORT.md) | Zero-GC + bundle 行 |
+| [exomesh-agentic-wallet-guard/](../../src/sdk/exomesh-agentic-wallet-guard/) | SDK 新路徑 SSOT |
 
 ---
 

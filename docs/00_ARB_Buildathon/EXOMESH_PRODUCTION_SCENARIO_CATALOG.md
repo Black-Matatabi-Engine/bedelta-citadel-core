@@ -1,8 +1,8 @@
 # ExoMesh Production Scenario Catalog
 
 > Judge appendix — **not** a payment rail. All paths are **pre-sign / pre-sequencer**. 
-> Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors. 
-> **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`) · **SEPSB:** [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json)
+> Core four (A–D) live in [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md). This file lists additional verified vectors. 
+> **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`) · **SEPSB:** [SEPSB_BENCHMARK_SSOT.json](../audit/SEPSB_BENCHMARK_SSOT.json)
 
 **Wasm SSOT:** `pkg/soil_core.wasm` · `tests/wasm/stylus-soil-wasm.test.ts`
 
@@ -30,7 +30,7 @@
 | Scenario | File |
 |----------|------|
 | EIP-7702 malicious / unlisted implementation · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** | `tests/sdk/eip7702-auth-guard.test.ts` · `pnpm demo:delta-neutral` |
-| Prompt injection / session-key clip / Gate attestation tamper | [`tests/sdk/exomesh-sdk-intent.test.ts`](../../tests/sdk/citadel-sdk-intent.test.ts) |
+| Prompt injection / session-key clip / Gate attestation tamper | [tests/sdk/exomesh-sdk-intent.test.ts](../../tests/sdk/citadel-sdk-intent.test.ts) |
 | Venue drift (GMX-approved agent → Pendle) | `tests/core/intent-drift.test.ts` |
 | EIP-6963 fallback wrap · transport bitmark fail-closed | `tests/sdk/retail-guard-provider.test.ts` |
 | Soil trip → 0-Gas Permit2 expiry signal (ERC-7710) | `tests/services/api/erc7710-intent-expiry.test.ts` |

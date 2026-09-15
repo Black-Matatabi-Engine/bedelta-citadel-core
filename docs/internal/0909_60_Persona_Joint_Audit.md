@@ -15,7 +15,7 @@
 | **本面板算術平均** | **8.96 / 10**（維持 · Phase C 增量已納入 SC 維度） |
 | **主席加權敘事帶** | **8.88 – 9.04 / 10**（**逼近 9.0 · 未正式跨線**） |
 
-> 本卷 **60 人聯合面板**（A 組 20 產業領袖 + B 組 40 多樣評審），合成 [`0908_PM_30_Persona_Audit.md`](./0908_PM_30_Persona_Audit.md) 與 [`0907_1700_0903panel_zh.md`](./0907_1700_0903panel_zh.md) 評分機制（SC / PMF / Inno / RPS · 總分 = 四維算術平均）。**0908 §0.1 勘誤：** withdraw tx [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) 鏈上為 **Fail**（`ERC20: insufficient allowance`）；正確 SSOT 見本卷 §0.1。
+> 本卷 **60 人聯合面板**（A 組 20 產業領袖 + B 組 40 多樣評審），合成 [0908_PM_30_Persona_Audit.md](./0908_PM_30_Persona_Audit.md) 與 [0907_1700_0903panel_zh.md](./0907_1700_0903panel_zh.md) 評分機制（SC / PMF / Inno / RPS · 總分 = 四維算術平均）。**0908 §0.1 勘誤：** withdraw tx [0x00c371b9…](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) 鏈上為 **Fail**（`ERC20: insufficient allowance`）；正確 SSOT 見本卷 §0.1。
 
 ---
 
@@ -30,11 +30,11 @@
 | **C** | `citadel_invariants` Rust/Stylus crate | ✅ | Cargo **2/2** · Vitest parity **6/6** · `pnpm build:citadel-invariants` |
 | **C** | `SliverVineAgentPolicyGuardV2` + Stylus fallback libs | ✅ | Stylus staticcall 優先 · revert/`address(0)` → Solidity fallback |
 
-GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) 與 [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)。
+GM I/O 三筆 Arbiscan Success hash 已鎖定於 [VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) 與 [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md)。
 
 | 0908 PM 判定 | **`bbcd6bb` 判定** |
 |--------------|-------------------|
-| GM Withdraw live **Success**（`0x00c371b9…`） | **勘誤 FAIL** → 正確 Success [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
+| GM Withdraw live **Success**（`0x00c371b9…`） | **勘誤 FAIL** → 正確 Success [0xfd3601dc…](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
 | Q1 withdraw CLI **258 LOC 違規** | **已閉環** — 模組化後 **137 LOC** |
 | Phase C Stylus coprocessor | **OPEN** | **100% 完成** @ `bbcd6bb` |
 | Wallet A short fallback | **未 commit** | **已 commit**（`7cabb5f`）· simulate only |
@@ -61,13 +61,13 @@ GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../0
 
 | # | 事件 | Tx Hash | Block | 狀態 |
 |---|------|---------|-------|------|
-| 1 | **GM Deposit Multicall** | [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | **503036082** | ✅ Success |
-| 2 | **GM LP → GMX v2 Router Approve** | [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) | **503051738** | ✅ Success · spender `0x7452c558…` |
-| 3 | **GM Withdraw Multicall** | [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) | **503051752** | ✅ Success |
+| 1 | **GM Deposit Multicall** | [0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) | **503036082** | ✅ Success |
+| 2 | **GM LP → GMX v2 Router Approve** | [0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) | **503051738** | ✅ Success · spender `0x7452c558…` |
+| 3 | **GM Withdraw Multicall** | [0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) | **503051752** | ✅ Success |
 
-**勘誤（0908 舊 SSOT · 勿再引用）：** [`0x00c371b9…`](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block 503038714 · **❌ Fail** · `ERC20: insufficient allowance`
+**勘誤（0908 舊 SSOT · 勿再引用）：** [0x00c371b9…](https://arbiscan.io/tx/0x00c371b98ef9406fc4baab167cd78906b872cc509d87f1880627e9b669ce2aeb) · Block 503038714 · **❌ Fail** · `ERC20: insufficient allowance`
 
-**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · GMX v2 Router `0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` · WithdrawalVault `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` · SSOT：[`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) · [`docs/00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md)
+**錨點合約：** ExchangeRouter `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1` · GMX v2 Router `0x7452c558d45f8afC8c83dAe62C3f8A5BE19c71f6` · GM Market `0x70d95587d40a2caf56bd97485ab3eec10bee6336` · DepositVault `0xF89e77e8Dc11691C9e8757e84aaFbCD8A67d7A55` · WithdrawalVault `0x0628D46b5D145f183AdB6Ef1f2c97eD1C4701c55` · SSOT：[docs/06_verifications/01_VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) · [docs/00_ARB_Buildathon/SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md)
 
 **Wallet A Short Fallback（已 commit · simulate only）：**
 
@@ -128,7 +128,7 @@ GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../0
 ## 1. 六十人四維細表（0.0–10.0）
 
 總分 = (SC + PMF + Inno + RPS) / 4  
-**Δ 列** = 相對 [`0908_PM_30_Persona_Audit.md`](./0908_PM_30_Persona_Audit.md) **8.93 帶** 的近似位移（本卷為 **擴編新面孔**，非同一人重評）。
+**Δ 列** = 相對 [0908_PM_30_Persona_Audit.md](./0908_PM_30_Persona_Audit.md) **8.93 帶** 的近似位移（本卷為 **擴編新面孔**，非同一人重評）。
 
 ### A. 二十位產業領袖（Group A）
 
@@ -459,9 +459,9 @@ GM I/O 三筆 Arbiscan Success hash 已鎖定於 [`VERIFICATION_MATRIX.md`](../0
 | Wallet A short | `pnpm execute:gmx:wallet-a-short-fallback` · **已 commit** |
 | PolicyGuard | `0xc66f96611a737c4e58706d0955594456eab88959` |
 | Stylus Soil | `0xc23587d6573dd134f95b02b0202ffbf84686625e` |
-| GM Deposit Tx | [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) |
-| GM Approve Tx | [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) |
-| GM Withdraw Tx | [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
+| GM Deposit Tx | [0xe3155220…](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) |
+| GM Approve Tx | [0x30ec0b7a…](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) |
+| GM Withdraw Tx | [0xfd3601dc…](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) |
 
 ---
 

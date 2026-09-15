@@ -1,6 +1,6 @@
 # SliverVine Protocol (BeΔ) — SliverVine ExoMesh — Dual-Plug Pre-Consensus Intent Firewall for AI Agents & Retail on Arbitrum
 
-> 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
+> 📌 **System Metrics SSOT**: Verified via [docs/audit/SYSTEM_METRICS_SSOT.json](docs/audit/SYSTEM_METRICS_SSOT.json)
 
 <!-- SSOT:README_BADGES_START -->
 ![Vitest](https://img.shields.io/badge/Vitest-1123_PASS_%28243_files%29-brightgreen?logo=vitest)
@@ -20,7 +20,7 @@
 **SliverVine Protocol · v1.0 · BeDelta Living Water v1.0 (BeΔ)** · SilverVine Labs · **SSRC:** Slivervine Stylus ReflexCore  
 **DApp:** [slivervine.xyz](https://slivervine.xyz) · **Corporate:** [silvervinelabs.com](https://silvervinelabs.com) · **Live Telemetry:** [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol) · [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress)
 
-> **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([`pkg/soil_core.wasm`](pkg/soil_core.wasm) · [`src/services/risk-control.ts`](src/services/risk-control.ts) · sub-1.8µs warm soil check).
+> **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus exoskeleton · **SSRC** ([pkg/soil_core.wasm](pkg/soil_core.wasm) · [src/services/risk-control.ts](src/services/risk-control.ts) · sub-1.8µs warm soil check).
 > **SliverVine Sanctuary** (Module B) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · Robinhood / Across compliance ingress.
 >
 > **V1.0 Buildathon Baseline:** Public Open Gateway — **no API key** · **5 RPS** (`X-SliverVine-Tier: public`).
@@ -29,7 +29,7 @@
 
 ## Primary SDK Entrypoint — EIP-1193+ Agentic Wallet Guard
 
-**Primary product:** Drop-in 1-line safety wrapper for MetaMask, Rabby, Viem, and ZeroDev Kernel agents — [`@slivervine/exomesh-agentic-wallet-guard`](./src/sdk/exomesh-agentic-wallet-guard/).
+**Primary product:** Drop-in 1-line safety wrapper for MetaMask, Rabby, Viem, and ZeroDev Kernel agents — [@slivervine/exomesh-agentic-wallet-guard](./src/sdk/exomesh-agentic-wallet-guard/).
 
 ```ts
 import { withRetailGuardProvider } from "@slivervine/exomesh-agentic-wallet-guard";
@@ -66,10 +66,10 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 
 | Topic | Fact |
 |-------|------|
-| **Gate** | `DUAL` · Arbitrum One [`0xb174…8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia [`0xb174…8BF1`](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · ignition [Tx `0x54c153…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) — Bootstrap sandbox keys (`0x1111…` / `0x2222…`); **multisig rotation scheduled for Post-Grant Milestone 1** · matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
-| **Stylus** | `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** ([`GmxRiskInvariantLib.sol`](./contracts/src/libs/GmxRiskInvariantLib.sol)) by design |
+| **Gate** | `DUAL` · Arbitrum One [0xb174…8BF1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Sepolia [0xb174…8BF1](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · ignition [Tx 0x54c153…](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) — Bootstrap sandbox keys (`0x1111…` / `0x2222…`); **multisig rotation scheduled for Post-Grant Milestone 1** · matrix → [02_CONTRACT_DEPLOYMENT_MATRIX.md](./docs/01_architecture/02_CONTRACT_DEPLOYMENT_MATRIX.md) |
+| **Stylus** | `stylusCoprocessor = address(0)` → **Pure Solidity Fallback** ([GmxRiskInvariantLib.sol](./contracts/src/libs/GmxRiskInvariantLib.sol)) by design |
 | **Rate limit** | Per-isolate **5 RPS** (`X-SliverVine-Tier: public`) — not a global Cloudflare product limiter |
-| **npm SDK** | `"private": true` in [`package.json`](./src/sdk/exomesh-agentic-wallet-guard/package.json) — **public npmjs release Post-Grant Milestone 1** |
+| **npm SDK** | `"private": true` in [package.json](./src/sdk/exomesh-agentic-wallet-guard/package.json) — **public npmjs release Post-Grant Milestone 1** |
 
 ---
 
@@ -110,7 +110,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 | `hyperliquid` | **Hyperliquid L1** | Spread > **20 bps** · session-key rate cap | `pnpm demo:hl -- --trip` |
 | `variational` | **Variational RFQ** | Quote stale > **500ms** · OLP > **15%** | `pnpm demo:variational -- --trip` |
 
-→ SSOT: [`02_CLI_DEMO_RUNBOOK.md`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) · [`01_architecture/README.md`](./docs/01_architecture/README.md)
+→ SSOT: [02_CLI_DEMO_RUNBOOK.md](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md) · [01_architecture/README.md](./docs/01_architecture/README.md)
 
 ---
 
@@ -136,7 +136,7 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 ```
 
-**Audit artifacts:** [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json) · weekly CI via [`.github/workflows/weekly-sepsb-deploy.yml`](./.github/workflows/weekly-sepsb-deploy.yml)
+**Audit artifacts:** [SEPSB_BENCHMARK_SSOT.json](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [SEPSB_CORPUS_SNAPSHOT.json](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json) · weekly CI via [.github/workflows/weekly-sepsb-deploy.yml](./.github/workflows/weekly-sepsb-deploy.yml)
 
 <!-- SSOT:README_DUAL_TELEMETRY_START -->
 > 💡 **Dual Telemetry Architecture**:
@@ -239,13 +239,13 @@ pnpm audit:sepsb                                         # SEPSB benchmark + cor
 
 | Priority | Document | Purpose |
 |----------|----------|---------|
-| **1** | [`JUDGE_BRIEF.md`](./JUDGE_BRIEF.md) | 30-second scorecard |
-| **2** | [`01_VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) | CLI proof index |
-| **3** | [`SUBMISSION.md`](./docs/00_ARB_Buildathon/SUBMISSION.md) | Technical spec entry |
-| **4** | [`01_SDK_INTEGRATION_BLUEPRINT.md`](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | SDK integration |
-| **5** | [`01_architecture/README.md`](./docs/01_architecture/README.md) | Yellow Paper · R01–R20 |
-| **6** | [`01_EIP_COMPLIANCE…`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | EIP/ERC taxonomy |
-| **7** | [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | **Module A/B** Dune telemetry · [live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
+| **1** | [JUDGE_BRIEF.md](./JUDGE_BRIEF.md) | 30-second scorecard |
+| **2** | [01_VERIFICATION_MATRIX.md](./docs/06_verifications/01_VERIFICATION_MATRIX.md) | CLI proof index |
+| **3** | [SUBMISSION.md](./docs/00_ARB_Buildathon/SUBMISSION.md) | Technical spec entry |
+| **4** | [01_SDK_INTEGRATION_BLUEPRINT.md](./docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | SDK integration |
+| **5** | [01_architecture/README.md](./docs/01_architecture/README.md) | Yellow Paper · R01–R20 |
+| **6** | [01_EIP_COMPLIANCE…](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | EIP/ERC taxonomy |
+| **7** | [03_DUNE_DASHBOARD_SPECIFICATION.md](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) | **Module A/B** Dune telemetry · [live dashboard](https://dune.com/silvervinelabs/slivervine-protocol) |
 
 **Protocol & Entity:** SilverVine Labs · `grants@silvervinelabs.com` · Apache-2.0 SDK · BUSL-1.1 contracts → [LICENSE](./LICENSE)
 

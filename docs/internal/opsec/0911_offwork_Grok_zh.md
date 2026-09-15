@@ -6,7 +6,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield v1.0 Santenmoku · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`b27e96e`**（`treasury-escort-router.ts` SSOT · `@slivervine/exomesh-agentic-wallet-guard` rebrand · Core Module A/B 術語） |
-| 對照基線 | [`0910_midnight_Grok_zh.md`](../internal/0910_midnight_Grok_zh.md) 主席加權 **9.28** · [`0910_offwork_pm_Gork_zh.md`](../internal/0910_offwork_pm_Gork_zh.md) **9.12** · 關鍵 doc commit **`afe8903`**（Robinhood ChainId 46630/4663 outbound escort SSOT） |
+| 對照基線 | [0910_midnight_Grok_zh.md](../internal/0910_midnight_Grok_zh.md) 主席加權 **9.28** · [0910_offwork_pm_Gork_zh.md](../internal/0910_offwork_pm_Gork_zh.md) **9.12** · 關鍵 doc commit **`afe8903`**（Robinhood ChainId 46630/4663 outbound escort SSOT） |
 | 測試 SSOT | **226 test files \| 1057 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** |
 | 本卷主題 | **Light-Sandbox EIP-1193 State Matrix** · Mini-Chaos vs Large-Scale Chaos 邊界 · CLI Demo 微調 · 三層 Chaos 執行方法論 |
 | **主席加權總分** | **9.35 / 10**（↑ **+0.07** vs 0910 Midnight Grok **9.28**） |
@@ -248,7 +248,7 @@ pnpm demo:eip1193 -- --json                                  # C2+C3 敘事 JSON
 
 ## 3. 三十人四維細表（0911 Offwork Grok · 0.0–10.0）
 
-**Δ 列** = 相對 [`0910_midnight_Grok_zh.md`](../internal/0910_midnight_Grok_zh.md) **9.28** 帶的近似位移。
+**Δ 列** = 相對 [0910_midnight_Grok_zh.md](../internal/0910_midnight_Grok_zh.md) **9.28** 帶的近似位移。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -333,7 +333,7 @@ pnpm demo:eip1193 -- --json                                  # C2+C3 敘事 JSON
 
 ## 5. BlackHat 對抗分析（0911 快照 · `b27e96e`）
 
-> 本節延續 [`0910_Grok_30_lunch_zh.md`](../internal/0910_Grok_30_lunch_zh.md) §6 與 [`0910_60_Persona_Joint_Audit.md`](../internal/0910_60_Persona_Joint_Audit.md) §4 格式；**0911 增量**聚焦 Core Module A/B · Sandbox CLI · Mini-Chaos 邊界。
+> 本節延續 [0910_Grok_30_lunch_zh.md](../internal/0910_Grok_30_lunch_zh.md) §6 與 [0910_60_Persona_Joint_Audit.md](../internal/0910_60_Persona_Joint_Audit.md) §4 格式；**0911 增量**聚焦 Core Module A/B · Sandbox CLI · Mini-Chaos 邊界。
 
 ### 5.1 攻擊向量矩陣
 
@@ -373,7 +373,7 @@ pnpm demo:eip1193 -- --json                                  # C2+C3 敘事 JSON
 
 ## 6. 三十人評審改進建議摘錄（Persuasion · Nit · 改進行動）
 
-> 格式對齊 [`0910_Grok_30_lunch_zh.md`](../internal/0910_Grok_30_lunch_zh.md) 人格摘錄 · 以下為 **0911 卷高價值 Nit**（團隊回饋：BlackHat + 改進建議最有用）。
+> 格式對齊 [0910_Grok_30_lunch_zh.md](../internal/0910_Grok_30_lunch_zh.md) 人格摘錄 · 以下為 **0911 卷高價值 Nit**（團隊回饋：BlackHat + 改進建議最有用）。
 
 ### 6.1 核心協議十席 — 重點改進
 
@@ -558,13 +558,13 @@ pnpm test -- --run
 
 | 文件 | 角色 |
 |------|------|
-| [`0910_midnight_Grok_zh.md`](../internal/0910_midnight_Grok_zh.md) | 深夜 Option A 基線 **9.28** |
-| [`0910_offwork_pm_Gork_zh.md`](../internal/0910_offwork_pm_Gork_zh.md) | 5-Venue 基線 **9.12** |
-| [`0910_Grok_30_lunch_zh.md`](../internal/0910_Grok_30_lunch_zh.md) | BlackHat §6 · 30 人 Nit 摘錄格式錨點 |
-| [`0910_60_Persona_Joint_Audit.md`](../internal/0910_60_Persona_Joint_Audit.md) | 攻擊向量 §4 · Goldfeder 摘錄 |
-| [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) | 公開驗證 Express Hub（英文） |
-| [`01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | Core Module A · Defense Layers（英文） |
-| [`treasury-escort-router.ts`](../../src/adapters/robinhood/treasury-escort-router.ts) | Core Module B 決策層 SSOT |
+| [0910_midnight_Grok_zh.md](../internal/0910_midnight_Grok_zh.md) | 深夜 Option A 基線 **9.28** |
+| [0910_offwork_pm_Gork_zh.md](../internal/0910_offwork_pm_Gork_zh.md) | 5-Venue 基線 **9.12** |
+| [0910_Grok_30_lunch_zh.md](../internal/0910_Grok_30_lunch_zh.md) | BlackHat §6 · 30 人 Nit 摘錄格式錨點 |
+| [0910_60_Persona_Joint_Audit.md](../internal/0910_60_Persona_Joint_Audit.md) | 攻擊向量 §4 · Goldfeder 摘錄 |
+| [VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md) | 公開驗證 Express Hub（英文） |
+| [01_SDK_INTEGRATION_BLUEPRINT.md](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | Core Module A · Defense Layers（英文） |
+| [treasury-escort-router.ts](../../src/adapters/robinhood/treasury-escort-router.ts) | Core Module B 決策層 SSOT |
 
 ---
 

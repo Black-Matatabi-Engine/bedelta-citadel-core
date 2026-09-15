@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 | `V1.0_b4_Buildaton_Submisson` |
-| 主網 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **42161** |
+| 主網 | [Tx 0x54c153e9…](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · **42161** |
 | 測試 SSOT | 193 test files | 840 PASS Clean (100% PASS) |
 | 面板 | 10 真實產業人格 + 20 多樣化評審（10 男 / 10 女） |
 | **全團算術平均** | **8.14 / 10** |

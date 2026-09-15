@@ -21,10 +21,10 @@
 
 | 升級項 | 狀態 | 證據 |
 |--------|------|------|
-| **Arbitrum One 主網點火** | ✅ 已上鏈 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · chainId **42161** |
+| **Arbitrum One 主網點火** | ✅ 已上鏈 | [Tx 0x54c153e9…](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · chainId **42161** |
 | **Bootstrap Keys 透明披露** | ✅ 已文件化 | SUBMISSION / README / VERIFICATION_MATRIX 脚注 |
-| **`withExoMeshShield` SDK** | ✅ 已交付 | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · 導出於 `@slivervine/exomesh-agentic-wallet-guard` |
-| **Agent Reference Harness** | ✅ 誠實量測 | [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) — uncapped `latencyUs` + Edge p50 對照 |
+| **`withExoMeshShield` SDK** | ✅ 已交付 | [src/sdk/decorator.ts](../src/sdk/decorator.ts) · 導出於 `@slivervine/exomesh-agentic-wallet-guard` |
+| **Agent Reference Harness** | ✅ 誠實量測 | [examples/agent-interceptor-demo.ts](../../examples/agent-interceptor-demo.ts) — uncapped `latencyUs` + Edge p50 對照 |
 | **形式驗證敘事** | ✅ 已中性化 | 原生 Foundry `SliverVineGate.t.sol` + `SliverVineGate.invariant.t.sol`；Halmos 軌道已移除 |
 | **Pendle 邊界** | ✅ 已鎖定 | Safety Sentinel（非 YT 收益競品） |
 | **超級形容詞** | ✅ 已清除 | 無 "World's first" 公開宣稱 |
@@ -47,8 +47,8 @@
 
 ### 1.1 主網點火（加分）
 
-- **Arbiscan One**：Tx [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) — **Success** · **Contract Created** `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
-- **部署腳本**：[`SliverVineGate/script/DeployArbitrumOneGate.s.sol`](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) · [`scripts/deploy-mainnet-gate-ignition.ts`](../../scripts/deploy-mainnet-gate-ignition.ts)
+- **Arbiscan One**：Tx [0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) — **Success** · **Contract Created** `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`
+- **部署腳本**：[SliverVineGate/script/DeployArbitrumOneGate.s.sol](../../SliverVineGate/script/DeployArbitrumOneGate.s.sol) · [scripts/deploy-mainnet-gate-ignition.ts](../../scripts/deploy-mainnet-gate-ignition.ts)
 - **同址敘事**：Sepolia `421614` 與 Arbitrum One `42161` **CREATE2 同址**，評審可並排驗證
 
 ### 1.2 誠實扣分項（必須口播承認）

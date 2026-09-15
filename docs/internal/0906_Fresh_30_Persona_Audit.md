@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ `bedelta-citadel-core` · **`dfae008`** |
-| 對照基線 | [`0905_Grok_M_ZH.md`](./0905_Grok_M_ZH.md) **8.37** · [`0905_46_Grok_zh.md`](./0905_46_Grok_zh.md) **8.52** · [`0906_Grok_M_ZH.md`](./0906_Grok_M_ZH.md) **8.58** |
+| 對照基線 | [0905_Grok_M_ZH.md](./0905_Grok_M_ZH.md) **8.37** · [0905_46_Grok_zh.md](./0905_46_Grok_zh.md) **8.52** · [0906_Grok_M_ZH.md](./0906_Grok_M_ZH.md) **8.58** |
 | 測試 SSOT | **194 test files \| 846 PASS Clean (100% PASS)** |
 | Worker Bundle | **70.88 KiB gzip** · **284.56 KiB raw** · `limitKiB: 150` · `pass: true` |
 | 7-Venue Matrix | `pnpm demo:usdai -- --trip` · USD.ai 第 7 venue · `USD.ai Yield Collateral Fuse: OK/TRIPPED` |
@@ -71,7 +71,7 @@
 ## 1. 三十人四維細表（0.0–10.0）
 
 總分 = (SC + PMF + Inno + RPS) / 4  
-**Δ 列** = 相對 [`0906_Grok_M_ZH.md`](./0906_Grok_M_ZH.md) 同維度產業/多樣化均值的近似位移（本卷為 **新面孔**，非同一人重評）。
+**Δ 列** = 相對 [0906_Grok_M_ZH.md](./0906_Grok_M_ZH.md) 同維度產業/多樣化均值的近似位移（本卷為 **新面孔**，非同一人重評）。
 
 ### A. 十位產業領袖（全新身份）
 
@@ -316,4 +316,4 @@
 
 ---
 
-*Prepared by: Fresh 30-Persona Stress Panel · 2026-09-06 PM · `docs/internal/0906_Fresh_30_Persona_Audit.md` · HEAD `dfae008` · vs [`0906_Grok_M_ZH.md`](./0906_Grok_M_ZH.md)*
+*Prepared by: Fresh 30-Persona Stress Panel · 2026-09-06 PM · `docs/internal/0906_Fresh_30_Persona_Audit.md` · HEAD `dfae008` · vs [0906_Grok_M_ZH.md](./0906_Grok_M_ZH.md)*

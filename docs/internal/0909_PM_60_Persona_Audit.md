@@ -8,7 +8,7 @@
 | 協議 / 實體 | SliverVine Protocol / Citadel Shield · SilverVine Labs |
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`ed485ba`**（Phase A+B+C **主網部署**） |
-| 對照基線 | 09-09 AM Joint [`0909_60_Persona_Joint_Audit.md`](./0909_60_Persona_Joint_Audit.md) **8.96** · 0908 PM **8.93** |
+| 對照基線 | 09-09 AM Joint [0909_60_Persona_Joint_Audit.md](./0909_60_Persona_Joint_Audit.md) **8.96** · 0908 PM **8.93** |
 | 錨點 Commits | `a0a9872` Q1 重構 · `bbcd6bb` Phase C · `ed485ba` 主網合約 |
 | 測試 SSOT | **215 files \| 958 PASS** · `tsc` **0 errors** · Cargo **2/2** · Forge PolicyGuard **9/9** · Forge Matrix **8/8** |
 | Q1 單檔約束 | **全模組 <180 LOC**（含 `gmx-risk-core` · `risk-engine-core` · withdraw CLI **137** · short builder **102**） |
@@ -22,7 +22,7 @@
 
 ## 0. 回訪立場（`ed485ba` · 主網結算平面閉環）
 
-09-09 晚間工程在 **`ed485ba`** 完成 **Phase A+B+C 主網部署**，並將 **雙錢包生產工作流** 寫入 [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) / [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)。
+09-09 晚間工程在 **`ed485ba`** 完成 **Phase A+B+C 主網部署**，並將 **雙錢包生產工作流** 寫入 [SUBMISSION.md](../00_ARB_Buildathon/SUBMISSION.md) / [VERIFICATION_MATRIX.md](../06_verifications/01_VERIFICATION_MATRIX.md)。
 
 | 平面 | SSOT | 09-09 PM 判定 |
 |------|------|---------------|
@@ -198,7 +198,7 @@
 | 4.2 | Wallet A/B 混用 | **LOW** · `wallet-isolation-guard.ts` 全域 `WALLET_B_PERP_FORBIDDEN` · Vitest sweep PASS |
 | 4.3 | Multicall 腿順序 | **HIGH 防禦** · 仍 fail-closed |
 | 4.4 | 「Settlement live」口播成「Hedge live」 | **HIGH 否決風險** · Wallet A short 仍 simulate only |
-| 4.5 | PolicyGuardV2 link Gate | **CLOSED（鏈上）** · PolicyLink `0xe4ef5350…` · setPolicyGuard tx [`0x1b158a4a…`](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Block **503079575** |
+| 4.5 | PolicyGuardV2 link Gate | **CLOSED（鏈上）** · PolicyLink `0xe4ef5350…` · setPolicyGuard tx [0x1b158a4a…](https://arbiscan.io/tx/0x1b158a4a40409e39215b76b5b12693c2802b49b190ecc0be97c986f167b9a182) · Block **503079575** |
 | 4.6 | Pure Solidity fallback 被質疑為「未用 Stylus」 | **LOW** · 設計即 `address(0)` fallback · 文檔已鎖 |
 
 ---

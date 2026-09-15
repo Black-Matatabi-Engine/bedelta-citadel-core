@@ -7,14 +7,14 @@
 | 賽事 | Arbitrum Open House Singapore Online Buildathon |
 | 分支 / HEAD | `main` @ **`25d8e65`**（GMX MarketDecrease 程序化全平倉 tx 入證 · `origin/main` 已同步） |
 | DApp / 企業 | `slivervine.xyz` · `silvervinelabs.com` |
-| 對照基線 | [`0913_1200_grok_zh.md`](./0913_1200_grok_zh.md) 主席加權 **9.61** · [`0912_midnight_Grok_zh.md`](./0912_midnight_Grok_zh.md) **9.58** |
+| 對照基線 | [0913_1200_grok_zh.md](./0913_1200_grok_zh.md) 主席加權 **9.61** · [0912_midnight_Grok_zh.md](./0912_midnight_Grok_zh.md) **9.58** |
 | 測試 SSOT | **230 test files \| 1076 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors** · Cargo `sanctuary_invariants` **2/2** · Forge PolicyGuard **14/14** · `stylus-gmx-parity` **6/6** |
 | 本卷主題 | **GMX v2 42161 開倉→平倉全生命周期 live-fire** · **DataStore 動態 executionFee** · **Reader `getPosition` 30-dec 預檢** · **MarketDecrease +5% buy-back acceptablePrice** · **sanctuary_invariants 已 push** · **Worker geo 單測補齊** |
 | **主席加權總分** | **9.68 / 10**（↑ **+0.07** vs 0913 1200 **9.61**） |
 
-> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。工程 SSOT：[`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) · [`gmx-position-reader.ts`](../../src/services/adapters/gmx-position-reader.ts) · [`gmx-execution-fee-estimator.ts`](../../src/services/adapters/gmx-execution-fee-estimator.ts) · [`live-gmx-decrease-execution.ts`](../../scripts/live-gmx-decrease-execution.ts)。
+> 評分機制：**SC**（安全與正確性）· **PMF**（產品市場契合）· **Inno**（創新）· **RPS**（可重現性與證明面）。**總分** = 四維算術平均。工程 SSOT：[06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) · [gmx-position-reader.ts](../../src/services/adapters/gmx-position-reader.ts) · [gmx-execution-fee-estimator.ts](../../src/services/adapters/gmx-execution-fee-estimator.ts) · [live-gmx-decrease-execution.ts](../../scripts/live-gmx-decrease-execution.ts)。
 
-**執行摘要：** 0913 1200 卷封口於 US geo 解禁 + Phase C 工作樹。本卷在同一 fail-closed 基質上完成 **GMX v2 ETH/USD Short 微倉位全生命周期鏈上驗證**：（1）`MarketIncrease` 開倉 tx [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) Block **504625233**；（2）多輪 `MarketDecrease` 迭代（EOA · ZeroDev→EOA fallback · DataStore executionFee）；（3）**程序化 100% 平倉** tx [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) Block **504631270** — Reader preflight `sizeInUsd` 30-dec + `acceptablePrice` **+5%** buy-back cap，Keeper 執行成功、持倉自 GMX UI 消失。並行：`sanctuary_invariants` **已 commit/push**（`1950383`）· Worker geo 單測 **已補**（`720af2b`）· Vitest **1066→1076**。**技術債：42161 Dune live ingest · 雙 demo 影片 · Bootstrap key 旋轉 · `stylusCoprocessor` 仍 `address(0)`。**
+**執行摘要：** 0913 1200 卷封口於 US geo 解禁 + Phase C 工作樹。本卷在同一 fail-closed 基質上完成 **GMX v2 ETH/USD Short 微倉位全生命周期鏈上驗證**：（1）`MarketIncrease` 開倉 tx [0xa37f52c8…](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) Block **504625233**；（2）多輪 `MarketDecrease` 迭代（EOA · ZeroDev→EOA fallback · DataStore executionFee）；（3）**程序化 100% 平倉** tx [0x2e47f4fe…](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) Block **504631270** — Reader preflight `sizeInUsd` 30-dec + `acceptablePrice` **+5%** buy-back cap，Keeper 執行成功、持倉自 GMX UI 消失。並行：`sanctuary_invariants` **已 commit/push**（`1950383`）· Worker geo 單測 **已補**（`720af2b`）· Vitest **1066→1076**。**技術債：42161 Dune live ingest · 雙 demo 影片 · Bootstrap key 旋轉 · `stylusCoprocessor` 仍 `address(0)`。**
 
 ---
 
@@ -106,12 +106,12 @@
 
 | 階段 | Harness | Tx / Block | 狀態 |
 |------|---------|------------|------|
-| **開倉** | `pnpm execute:gmx:micro-fill` | [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · **504625233** | ✅ Short $10 |
+| **開倉** | `pnpm execute:gmx:micro-fill` | [0xa37f52c8…](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) · **504625233** | ✅ Short $10 |
 | **Router USDC approve** | 雙 spender | `0xab349d09…` · `0x82964525…` | ✅ `GMX_V2_ROUTER` + ExchangeRouter |
 | **平倉迭代 A** | EOA decrease | `0x13b1e559…` · **504626743** | ✅ |
 | **平倉迭代 B** | ZeroDev→EOA | `0xb45b2530…` · **504628125** | ✅ fallback |
 | **平倉迭代 C** | DataStore fee | `0xb8ba76c4…` · **504628529** | ✅ `executionFee` 0.001 ETH |
-| **平倉終局** | Reader + 5% cap | [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) · **504631270** | ✅ **lifecycle closed** |
+| **平倉終局** | Reader + 5% cap | [0x2e47f4fe…](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) · **504631270** | ✅ **lifecycle closed** |
 
 **Wallet A：** `0xdBCD43979e95f386f6405B03e7eB3A094cd36690` · **ETH/USDC market** `0x70d95587d40A2caf56bd97485aB3Eec10Bee6336` · **ExchangeRouter** `0x7dE39FF2e232A2203196788d37e234cF8F1b83f1`。
 
@@ -127,7 +127,7 @@
 | `orderType` | — | `MarketDecrease = 4`（GMX v2 enum） |
 | `executionFee` / `msg.value` | 過低 Keeper 不執行 | DataStore gas limit + 30% buffer · floor **≥0.0008 ETH** |
 
-**Multicall 腿序（Decrease）：** `sendWnt → createOrder`（**無** `sendTokens`）— [`gmx-market-decrease-multicall.ts`](../../src/services/adapters/gmx-market-decrease-multicall.ts)。
+**Multicall 腿序（Decrease）：** `sendWnt → createOrder`（**無** `sendTokens`）— [gmx-market-decrease-multicall.ts](../../src/services/adapters/gmx-market-decrease-multicall.ts)。
 
 ### 1.3 Reader Preflight（`gmx-position-reader.ts`）
 
@@ -156,14 +156,14 @@ resolveGmxDecreasePositionPreflight(client, { account, market, collateralToken, 
 
 ### 1.6 ExoMesh Fail-Closed（dry-run 默認 · live 需明示 bypass）
 
-- **ORACLE_LAG_DEADLOCK**（>30s）· **SOIL_RESISTANCE_TRIP**（depth < $100k）— 見 [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) Fail-Closed 表。
+- **ORACLE_LAG_DEADLOCK**（>30s）· **SOIL_RESISTANCE_TRIP**（depth < $100k）— 見 [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) Fail-Closed 表。
 - Live armed run **僅** 在 `ALLOW_STALE_ORACLE=1` + `BYPASS_SOIL_PROBE=true` 下執行 — 評委 CLI 默認仍 fail-closed。
 
 ---
 
 ## 2. 三十人 Persona 四維評分細表（0913 1300 · 0.0–10.0）
 
-**Δ 列** = 相對 [`0913_1200_grok_zh.md`](./0913_1200_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.68**；GMX 相關席 **+0.08~+0.15**。
+**Δ 列** = 相對 [0913_1200_grok_zh.md](./0913_1200_grok_zh.md) 該席總分位移。全團上移對齊主席加權 **9.68**；GMX 相關席 **+0.08~+0.15**。
 
 ### A. 五場域核心十席（Core Protocol）
 
@@ -230,7 +230,7 @@ resolveGmxDecreasePositionPreflight(client, { account, market, collateralToken, 
 
 ## 3. BlackHat 威脅矩陣與殘餘風險審計
 
-> 延續 [`0913_1200_grok_zh.md`](./0913_1200_grok_zh.md) §3。**本卷增量：** BH-22 Keeper acceptablePrice 方向錯 · BH-23 executionFee 不足 · BH-24 AA 模擬持倉錯地址 · BH-25 Wallet A gas 耗盡。
+> 延續 [0913_1200_grok_zh.md](./0913_1200_grok_zh.md) §3。**本卷增量：** BH-22 Keeper acceptablePrice 方向錯 · BH-23 executionFee 不足 · BH-24 AA 模擬持倉錯地址 · BH-25 Wallet A gas 耗盡。
 
 ### 3.1 攻擊向量矩陣（本卷增量）
 
@@ -351,7 +351,7 @@ pnpm test -- --run              # Expected: 230 files | 1076 PASS
 
 | 優先級 | 行動 | 負責面 |
 |--------|------|--------|
-| **P0** | 對外引用 GMX tx 僅用 [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) SSOT | Docs |
+| **P0** | 對外引用 GMX tx 僅用 [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) SSOT | Docs |
 | **P0** | 維持 **1076/1076 PASS** · 禁止對外拼 **SilverVine Protocol** | Git / Brand |
 | **P1** | Wallet A 補 ETH（>0.01）供後續 live-fire / demo | Ops |
 | **P1** | 雙片 demo（`demo:eip1193` + `pnpm demo:gmx -- --trip`） | RPS |
@@ -376,8 +376,8 @@ pnpm test -- --run              # Expected: 230 files | 1076 PASS
 
 | 事件 | Tx | Block |
 |------|-----|-------|
-| MarketIncrease Short Open | [`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
-| MarketDecrease Programmatic 100% Close | [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
+| MarketIncrease Short Open | [0xa37f52c8…](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) | **504625233** |
+| MarketDecrease Programmatic 100% Close | [0x2e47f4fe…](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) | **504631270** |
 
 ---
 
@@ -385,13 +385,13 @@ pnpm test -- --run              # Expected: 230 files | 1076 PASS
 
 | 文件 | 角色 |
 |------|------|
-| [`0913_1200_grok_zh.md`](./0913_1200_grok_zh.md) | Geo + Sanctuary 工作樹基線 **9.61** |
-| [`0912_midnight_Grok_zh.md`](./0912_midnight_Grok_zh.md) | Bundle + 三層 EIP **9.58** |
-| [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX 全生命周期 tx SSOT |
-| [`gmx-position-reader.ts`](../../src/services/adapters/gmx-position-reader.ts) | Reader preflight |
-| [`live-gmx-decrease-execution.ts`](../../scripts/live-gmx-decrease-execution.ts) | Decrease CLI harness |
-| [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) | 對外 brief |
-| [`worker-error-codes.ts`](../../src/worker/worker-error-codes.ts) | Geo ISO2 SSOT |
+| [0913_1200_grok_zh.md](./0913_1200_grok_zh.md) | Geo + Sanctuary 工作樹基線 **9.61** |
+| [0912_midnight_Grok_zh.md](./0912_midnight_Grok_zh.md) | Bundle + 三層 EIP **9.58** |
+| [06_LIVE_FIRE_EVIDENCE.md](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | GMX 全生命周期 tx SSOT |
+| [gmx-position-reader.ts](../../src/services/adapters/gmx-position-reader.ts) | Reader preflight |
+| [live-gmx-decrease-execution.ts](../../scripts/live-gmx-decrease-execution.ts) | Decrease CLI harness |
+| [JUDGE_BRIEF.md](../../JUDGE_BRIEF.md) | 對外 brief |
+| [worker-error-codes.ts](../../src/worker/worker-error-codes.ts) | Geo ISO2 SSOT |
 
 ---
 

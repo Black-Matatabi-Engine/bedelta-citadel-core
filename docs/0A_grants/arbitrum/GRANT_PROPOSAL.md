@@ -15,10 +15,10 @@
 | **Wallet A — Hyperliquid Short** | `0xef0752…960d` | HL L1 Perps | Session-key 1× ETH short · `executeHlSessionKeyOrder` only (legacy stubs blocked on `IS_MAINNET`) |
 | **Wallet B — Arbitrum GMX Vault** | `0xc9Bdd…546f` | Arbitrum One | GMX GM LP + `uiFeeReceiver` treasury · live delta read for cross-wallet hedge |
 
-**Zero key coupling** — Wallet B telemetry (`[WALLET_B_GMX_STATE]`) sizes Wallet A shorts (`[WALLET_A_HL_STATE]`) until `[CROSS_VENUE_MATCH] Δ_net ≡ 0`. See [`gmx-cross-wallet-hedge.ts`](../../../src/services/gmx-cross-wallet-hedge.ts).
+**Zero key coupling** — Wallet B telemetry (`[WALLET_B_GMX_STATE]`) sizes Wallet A shorts (`[WALLET_A_HL_STATE]`) until `[CROSS_VENUE_MATCH] Δ_net ≡ 0`. See [gmx-cross-wallet-hedge.ts](../../../src/services/gmx-cross-wallet-hedge.ts).
 
 **Audience:** Arbitrum ecosystem / Open House / future Security Grant · **Arbitrum Foundation H1 2026** (Agentic Commerce · ArbOS 61 Elara).
-**Not this pack:** GMX `uiFeeReceiver` economics → [`../gmx/`](../gmx/).
+**Not this pack:** GMX `uiFeeReceiver` economics → [../gmx/](../gmx/).
 
 ### Arbitrum Foundation H1 2026 Strategic Alignment
 
@@ -27,7 +27,7 @@
 | **Agentic Commerce & AI Agents** | **Sub-ms pre-broadcast safety primitive** — `checkSoilResistance()` intercepts toxic agent intents **before** Sequencer mempools or MEV bots observe calldata; `severSigningChannel()` fail-closed for prompt-injection / policy drift | `pkg/soil_core.wasm` · `checkSoilResistance()` · [Technical Specification §6](../../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#6-erc-7579-pre-execution-hook-alignment-ai-agent-reflex-architecture) |
 | **x402 Ecosystem alignment** | Machine-to-machine commerce rails require **0-Gas pre-broadcast risk gates** on agent-initiated Arbitrum txs — SliverVine ExoMesh binds EIP-712 attestations to Gate `verifyingContract` so x402 settlement paths cannot bypass soil / depth / slippage fuses | `SliverVineGate.sol` · `gated-executor-payload.ts` · `GET /api/grant-audit` |
 | **ArbOS 61 Elara compliance** | **Elara ingress compatibility** — protocol-level compliance filtering and transaction-ordering awareness **reinforce** Edge fail-closed (`signingChannelOpen: false`) without replacing pre-broadcast SSOT | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md` § ArbOS/Stylus](../../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor) · `IngressSafetySwitch.sol` |
-| **Stylus coprocessor readiness** | **Rust Wasm soil core** (`#![no_std]` Edge) + **`SliverVineSoilCoprocessor`** (Stylus SDK **0.10.7** · `cargo test` **9/9 PASS**) — on-chain auditable parity with Edge semantics; deploy path via EIP-1967 proxy (additive to immutable Gate) | `pkg/soil_core.wasm` · [`contracts/stylus-probe/src/lib.rs`](../../../contracts/stylus-probe/src/lib.rs) |
+| **Stylus coprocessor readiness** | **Rust Wasm soil core** (`#![no_std]` Edge) + **`SliverVineSoilCoprocessor`** (Stylus SDK **0.10.7** · `cargo test` **9/9 PASS**) — on-chain auditable parity with Edge semantics; deploy path via EIP-1967 proxy (additive to immutable Gate) | `pkg/soil_core.wasm` · [contracts/stylus-probe/src/lib.rs](../../../contracts/stylus-probe/src/lib.rs) |
 
 ---
 
@@ -135,8 +135,8 @@ curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" | jq .sepoliaDualL
 
 | Document | Purpose |
 |----------|---------|
-| [`../../00_ARB_Buildathon/SUBMISSION.md`](../../00_ARB_Buildathon/SUBMISSION.md) | Submission pack |
-| [`ARBITRUM_ONE_PAGER.md`](./ARBITRUM_ONE_PAGER.md) | One-pager |
-| [`../../01_architecture/README.md`](../../01_architecture/README.md) | R01–R20 |
-| [`../../audit/`](../../audit/) | Scorecards |
-| [`../gmx/GMX_BUILDERS_PITCH.md`](../gmx/GMX_BUILDERS_PITCH.md) | GMX-only economics |
+| [../../00_ARB_Buildathon/SUBMISSION.md](../../00_ARB_Buildathon/SUBMISSION.md) | Submission pack |
+| [ARBITRUM_ONE_PAGER.md](./ARBITRUM_ONE_PAGER.md) | One-pager |
+| [../../01_architecture/README.md](../../01_architecture/README.md) | R01–R20 |
+| [../../audit/](../../audit/) | Scorecards |
+| [../gmx/GMX_BUILDERS_PITCH.md](../gmx/GMX_BUILDERS_PITCH.md) | GMX-only economics |

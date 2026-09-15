@@ -2,13 +2,13 @@
 
 # DuneSQL 生產同步 — 即時遙測 Feed 與圖表（2026-09-02）
 
-> **中文參考譯本** · 英文 SSOT：[`20260902_dune_sql_production_sync.md`](./20260902_dune_sql_production_sync.md)  
+> **中文參考譯本** · 英文 SSOT：[20260902_dune_sql_production_sync.md](./20260902_dune_sql_production_sync.md)  
 > **Vitest SSOT：** **840 passed tests** · Worker **70.16 KiB** gzip · **7 protocols** · **4 frameworks** · Milestone 1 PRs
 
 | 欄位 | 值 |
 | ----- | ----- |
 | **分支** | `v1.0_push_BDLW` |
-| **SSOT** | [`docs/telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md`](../telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md) |
+| **SSOT** | [docs/telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md](../telemetry/DUNE_DASHBOARD_SPECIFICATION_ZH.md) |
 | **Dashboard** | [dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol) |
 
 ## 已更新查詢

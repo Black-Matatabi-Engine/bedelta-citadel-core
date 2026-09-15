@@ -3,7 +3,7 @@
 > **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) 
 > **Frameworks:** FBI **Mindhunter** behavioral profiling (MO · signature · escalation) · **Cyber-Biological Immunology** (self-tuning honeypot inoculation · adversarial telemetry vaccine) 
 > **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **235 test files | 1091 PASS clean** 
-> **Architecture index:** [`README.md`](../01_architecture/README.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
+> **Architecture index:** [README.md](../01_architecture/README.md) · [02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
 
@@ -72,13 +72,13 @@ slot[offset + ATTEMPTS]: 0 → 1 → 2 → 3 → 4 (default maxAttempts = 3)
 |----------|-------|
 | **Buffer** | Pre-allocated `Uint32Array` · 256 slots × 4 words · **<16 KiB** / 10k iter (**Zero-Allocation Hot-Path**) |
 | **Hot-path eval** | `trackAttemptBudgetU32Pure()` · `evaluateIntentGateU32Pure()` |
-| **Wasm parity** | `intent_core_evaluate_gate` via [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) |
+| **Wasm parity** | `intent_core_evaluate_gate` via [wasm-adapter.ts](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) |
 | **Reject code** | `MAX_ATTEMPTS_EXCEEDED_SEVERED` · `CHANNEL_SEVERED` |
-| **Chaos tier** | **C2** — [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
+| **Chaos tier** | **C2** — [retail-guard-provider.test.ts](../../tests/sdk/retail-guard-provider.test.ts) **35/35** |
 
 **Mindhunter read:** Burst MO = **disorganized escalation** — the system profiles attempt velocity and applies **physical deadlock** (R20) before the 4th toxic broadcast.
 
-**SSOT:** [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) · [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts)
+**SSOT:** [intent-core-ring.ts](../../src/core/intent-core-ring.ts) · [guard-engine.ts](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts)
 
 ---
 
@@ -107,16 +107,16 @@ return evaluateRetailIntentGate(config, venueBits); // ONE ring attempt per batc
 
 | Layer | Mechanism |
 |-------|-----------|
-| **Calldata dissection** | [`calldata-parser.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) · [`calldata-hex.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts) — u32 selector dispatch on `CALLDATA_SCRATCH` |
-| **Wasm FFI** | [`wasm-adapter.ts`](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) — `DataView` on Wasm linear memory · `BIGINT_U32_LUT` (zero per-gate `BigInt` alloc) |
+| **Calldata dissection** | [calldata-parser.ts](../../src/sdk/exomesh-agentic-wallet-guard/calldata-parser.ts) · [calldata-hex.ts](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts) — u32 selector dispatch on `CALLDATA_SCRATCH` |
+| **Wasm FFI** | [wasm-adapter.ts](../../src/sdk/exomesh-agentic-wallet-guard/wasm-adapter.ts) — `DataView` on Wasm linear memory · `BIGINT_U32_LUT` (zero per-gate `BigInt` alloc) |
 | **Transport entangle** | `bindTransportStreamScratch()` XOR-bind on scratch selector bytes — anti-fork probe |
 | **Intent budget** | Entire batch consumes **one** `INTENT_RING_U32` attempt (not N) |
 
 **Mindhunter read:** Batch masking = **organized crime** MO — concealment via structure. ExoMesh **unwraps** the batch like unpacking a layered dead-drop: each `calls[i]` is individually risk-evaluated; first trip kills the whole batch.
 
-**Chaos tier:** **C2** — [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** · `pnpm demo:exomesh` Scenario D
+**Chaos tier:** **C2** — [eip5792-send-calls.test.ts](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** · `pnpm demo:exomesh` Scenario D
 
-**SSOT:** [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) · [`calldata-hex.ts`](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts)
+**SSOT:** [eip5792-send-calls.ts](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) · [calldata-hex.ts](../../src/sdk/exomesh-agentic-wallet-guard/calldata-hex.ts)
 
 ---
 
@@ -141,9 +141,9 @@ return evaluateRetailIntentGate(config, venueBits); // ONE ring attempt per batc
 
 **Mindhunter read:** Permission drift = **grooming** MO — establish trust delegation before extraction. Sanctuary applies **zero-trust operator whitelist** at broadcast time; revocation (`approved=false`) always allowed.
 
-**Chaos tier:** **C3** — `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` · unit SSOT: [`erc7540-async-escort.test.ts`](../../tests/erc7540-async-escort.test.ts) **3/3**
+**Chaos tier:** **C3** — `pnpm demo:sanctuary` (`demo:escort` alias) `[Sanctuary]` · unit SSOT: [erc7540-async-escort.test.ts](../../tests/erc7540-async-escort.test.ts) **3/3**
 
-**SSOT:** [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [`ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
+**SSOT:** [erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) · [ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
 
@@ -189,8 +189,8 @@ real venue RTT HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 
 | Property | Implementation |
 |----------|----------------|
-| **Trap hosts** | `api.santenmoku-scraper.trap` · `gmx-arbitrum-router.santenmoku-scraper.trap` ([`rpc-allowlist-hosts.ts`](../../src/services/defense/rpc-allowlist-hosts.ts)) |
-| **Gate eval** | `evaluateRpcDefenseGate()` · `isRpcDefenseAuthenticated()` ([`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts)) |
+| **Trap hosts** | `api.santenmoku-scraper.trap` · `gmx-arbitrum-router.santenmoku-scraper.trap` ([rpc-allowlist-hosts.ts](../../src/services/defense/rpc-allowlist-hosts.ts)) |
+| **Gate eval** | `evaluateRpcDefenseGate()` · `isRpcDefenseAuthenticated()` ([rpc-fetch-gate-eval.ts](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts)) |
 | **Decoy payload** | `HONEYPOT_SIMULATED_SLIPPAGE = 0.99` — **99% synthetic slippage** lock |
 | **Status code** | `HONEYPOT_STATUS_CODE = 0x99` · `HONEYPOT_ACTIVE` |
 | **Latency** | **< 1 ms** — no real venue round-trip |
@@ -198,7 +198,7 @@ real venue RTT HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 
 **Adversary outcome:** Forked dashboards · unauthenticated scrapers · copycat frontends ingest **worthless decoy telemetry** — production `SystemState` and venue quotes remain sealed behind session-authenticated paths.
 
-**Verification:** `npx vitest run tests/defense/rpc-whitelist.test.ts` · retail guard honeypot swap/depth trips in [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts)
+**Verification:** `npx vitest run tests/defense/rpc-whitelist.test.ts` · retail guard honeypot swap/depth trips in [retail-guard-provider.test.ts](../../tests/sdk/retail-guard-provider.test.ts)
 
 ---
 
@@ -208,11 +208,11 @@ real venue RTT HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 
 | Ingress signal | Vaccine mechanism | SSOT |
 |----------------|-------------------|------|
-| **MEV / toxic calldata probes** | `collectExternalSoilFlags()` — GMX price impact · cross-spread · Pendle oracle gates OR into `tripFlags` | [`soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) |
-| **Anti-gaming jitter** | `resolveJitteredSoilThresholds()` — ±2–5 bps random walk on `slippageFuse` / `minDepthUsd` prevents threshold-sniping | [`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts) |
-| **Protocol mask propagation** | `seedProtocolMaskScratch()` → external flags → `commitProtocolMaskScratch()` — cross-isolate trip memory | [`protocol-mask-sync.ts`](../../src/core/protocol-mask-sync.ts) |
-| **Trip severance feedback** | `applySoilTripSeverance(true)` on mandate trip — signing channel tightens on observed toxic pattern | [`risk-severance.ts`](../../src/core/risk-severance.ts) |
-| **Honeypot retail path** | Swap/depth honeypot fuses in Retail Guard — `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` at 99% synthetic lanes | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) |
+| **MEV / toxic calldata probes** | `collectExternalSoilFlags()` — GMX price impact · cross-spread · Pendle oracle gates OR into `tripFlags` | [soil-resistance.ts](../../src/services/risk-control-lib/soil-resistance.ts) |
+| **Anti-gaming jitter** | `resolveJitteredSoilThresholds()` — ±2–5 bps random walk on `slippageFuse` / `minDepthUsd` prevents threshold-sniping | [soil-resistance-jitter.ts](../../src/core/soil-resistance-jitter.ts) |
+| **Protocol mask propagation** | `seedProtocolMaskScratch()` → external flags → `commitProtocolMaskScratch()` — cross-isolate trip memory | [protocol-mask-sync.ts](../../src/core/protocol-mask-sync.ts) |
+| **Trip severance feedback** | `applySoilTripSeverance(true)` on mandate trip — signing channel tightens on observed toxic pattern | [risk-severance.ts](../../src/core/risk-severance.ts) |
+| **Honeypot retail path** | Swap/depth honeypot fuses in Retail Guard — `SLIPPAGE_EXCEEDED` / `DEPTH_INSUFFICIENT` at 99% synthetic lanes | [guard-engine.ts](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) |
 
 **Core reflex equation** (unchanged semantics · jittered thresholds):
 
@@ -228,11 +228,11 @@ real venue RTT HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 
 | Level | Immunology phase | Target MO | Verification |
 |-------|------------------|-----------|--------------|
-| **C1** | Decoy inoculation | Unauthenticated RPC scrapers | [`tests/defense/rpc-whitelist.test.ts`](../../tests/defense/rpc-whitelist.test.ts) `[ExoMesh]` |
-| **C2** | Reflex severance vs batch concealment | Burst retry + `wallet_sendCalls` masking | [`retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35** · [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
+| **C1** | Decoy inoculation | Unauthenticated RPC scrapers | [tests/defense/rpc-whitelist.test.ts](../../tests/defense/rpc-whitelist.test.ts) `[ExoMesh]` |
+| **C2** | Reflex severance vs batch concealment | Burst retry + `wallet_sendCalls` masking | [retail-guard-provider.test.ts](../../tests/sdk/retail-guard-provider.test.ts) **35/35** · [eip5792-send-calls.test.ts](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
 | **C3** | Sanctuary async-vault lock | Oracle lag · de-peg · ERC-7540 drift | `pnpm demo:sanctuary` · `pnpm demo:usdai -- --trip` |
 
-> **Honest boundary:** C1–C3 are **in-process Mini-Chaos** proofs. Large-scale K8s / Sequencer outage chaos is **NOT RUN** — disclosed per [`0911_offwork_Grok_zh.md`](../internal/opsec/0911_offwork_Grok_zh.md).
+> **Honest boundary:** C1–C3 are **in-process Mini-Chaos** proofs. Large-scale K8s / Sequencer outage chaos is **NOT RUN** — disclosed per [0911_offwork_Grok_zh.md](../internal/opsec/0911_offwork_Grok_zh.md).
 
 ---
 
@@ -300,12 +300,12 @@ Every reject path in Signatures A · B · C · C1 honeypot · C3 async drift sat
 
 | Framework layer | Concept | Implementation anchor | Reject / trip signal | Verify |
 |-----------------|---------|----------------------|----------------------|--------|
-| **Mindhunter** | Signature A — Burst | [`intent-core-ring.ts`](../../src/core/intent-core-ring.ts) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | [`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts) **11/11** |
-| **Mindhunter** | Signature B — Batch | [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | `SEND_CALLS_BATCH_REJECTED` · per-call codes | [`eip5792-send-calls.test.ts`](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
-| **Mindhunter** | Signature C — Drift | [`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | `pnpm demo:sanctuary` |
-| **Immunology** | Decoy inoculation C1 | [`rpc-fetch-gate-eval.ts`](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) | `HONEYPOT_ACTIVE` · 99% slippage | [`rpc-whitelist.test.ts`](../../tests/defense/rpc-whitelist.test.ts) |
-| **Immunology** | Adversarial telemetry vaccine | [`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts) | Jittered `slippageFuse` · mask commit | [`protocol-mask-sync.test.ts`](../../tests/core/protocol-mask-sync.test.ts) |
-| **ReflexCore (SSRC)** | Sub-1.8µs reflex | [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | `SOIL_TRIPPED` · `rootProtection()` | `pnpm demo:gmx -- --trip` |
+| **Mindhunter** | Signature A — Burst | [intent-core-ring.ts](../../src/core/intent-core-ring.ts) | `MAX_ATTEMPTS_EXCEEDED_SEVERED` | [intent-sinking-audit.test.ts](../../tests/core/intent-sinking-audit.test.ts) **11/11** |
+| **Mindhunter** | Signature B — Batch | [eip5792-send-calls.ts](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | `SEND_CALLS_BATCH_REJECTED` · per-call codes | [eip5792-send-calls.test.ts](../../tests/sdk/eip5792-send-calls.test.ts) **3/3** |
+| **Mindhunter** | Signature C — Drift | [erc7540-async-escort.ts](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) | `ERC7540_OPERATOR_REJECTED` | `pnpm demo:sanctuary` |
+| **Immunology** | Decoy inoculation C1 | [rpc-fetch-gate-eval.ts](../../src/services/defense/rpc-fetch-gate-lib/rpc-fetch-gate-eval.ts) | `HONEYPOT_ACTIVE` · 99% slippage | [rpc-whitelist.test.ts](../../tests/defense/rpc-whitelist.test.ts) |
+| **Immunology** | Adversarial telemetry vaccine | [soil-resistance-jitter.ts](../../src/core/soil-resistance-jitter.ts) | Jittered `slippageFuse` · mask commit | [protocol-mask-sync.test.ts](../../tests/core/protocol-mask-sync.test.ts) |
+| **ReflexCore (SSRC)** | Sub-1.8µs reflex | [pkg/soil_core.wasm](../../pkg/soil_core.wasm) | `SOIL_TRIPPED` · `rootProtection()` | `pnpm demo:gmx -- --trip` |
 
 ---
 
@@ -338,11 +338,11 @@ pnpm test -- --run # 235 files · 1091 PASS
 
 | Document | Purpose |
 |----------|---------|
-| [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-Allocation Hot-Path ring slab · SSRC moats |
-| [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix · EIP compliance |
-| [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary ERC-7540 deep dive |
+| [02_DEFENSE_MATRIX_AND_SSRC_CORE.md](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-Allocation Hot-Path ring slab · SSRC moats |
+| [01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix · EIP compliance |
+| [../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary ERC-7540 deep dive |
 | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) | Honeypot RPC · legacy vs engineered standards |
-| [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
+| [03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
 
 ---
 

@@ -11,10 +11,10 @@
 | **賽事** | Arbitrum Open House Singapore Online Buildathon |
 | **分支 / HEAD** | `V1.0_b4_Buildaton_Submisson` · `1a178f4` |
 | **測試 SSOT** | **193 test files \| 840 PASS Clean (100% PASS)**（`pnpm test -- --run`） |
-| **評審面板** | 20 人（10 男 / 10 女）· 與 [`V0.9_VS_V1.0_ZH.md`](./V0.9_VS_V1.0_ZH.md) 同班 |
+| **評審面板** | 20 人（10 男 / 10 女）· 與 [V0.9_VS_V1.0_ZH.md](./V0.9_VS_V1.0_ZH.md) 同班 |
 | **官方 Rubric** | Smart Contract Quality 25% · Product-Market Fit 25% · Innovation and Creativity 25% · Real Problem Solving 25% |
-| **審計基線 A** | V1.0 敘事鎖定後全團 ≈ **7.7 / 10**（[`V0.9_VS_V1.0_ZH.md`](./V0.9_VS_V1.0_ZH.md)） |
-| **審計基線 B** | P0 修復後、Agent Hook 前全團 ≈ **7.2 / 10**（[`0902_Opus.md`](./0902_Opus.md)） |
+| **審計基線 A** | V1.0 敘事鎖定後全團 ≈ **7.7 / 10**（[V0.9_VS_V1.0_ZH.md](./V0.9_VS_V1.0_ZH.md)） |
+| **審計基線 B** | P0 修復後、Agent Hook 前全團 ≈ **7.2 / 10**（[0902_Opus.md](./0902_Opus.md)） |
 | **本次審計焦點** | Commit `1a178f4` 之後 — Q1 Dune · Q2 Virtuals/ElizaOS · Q3 Mainnet Ignition 腳本 · 200 行壓縮重構 |
 
 ---
@@ -243,7 +243,7 @@ CONFIRM_MAINNET_IGNITION=YES BROADCAST=1 PRIVATE_KEY=0x… \
 
 ## 六、180s Pitch 與 120s Demo 錄製行動計劃
 
-> **SSOT：** [`docs/05_pitch_and_demos/01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md`](../pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md) v1.1.0  
+> **SSOT：** [docs/05_pitch_and_demos/01_DEMO_VIDEO_SCRIPT_AND_STORYBOARD.md](../pitch/GRANT_PITCH_AND_VIDEO_STORYBOARD.md) v1.1.0  
 > **原則：** 先錄 Demo（120s）→ 再用 Demo B-roll 剪 Pitch（180s）→ 節省 50% 時間。
 
 ### 6.1 錄製前準備清單（T-24h）
