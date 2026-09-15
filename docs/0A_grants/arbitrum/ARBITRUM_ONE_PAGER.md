@@ -1,9 +1,9 @@
-# SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum
+# SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety Layer (SliverVine ExoMesh) & Risk Navigator for AI Agents on Arbitrum
 
 **Document:** Arbitrum Technical One-Pager
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
 **GMX v2 Pre-Execution Security Gateway & Underweight Router on Arbitrum One.**
-**Identity:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum.
+**Identity:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety Layer (SliverVine ExoMesh) & Risk Navigator for AI Agents on Arbitrum.
 
 
 | | |
@@ -23,7 +23,7 @@
 
 ## What It Does
 
-Before any GMX DataStore broadcast, the Citadel edge evaluates sequencer health, oracle lag, soil resistance (including **Pendle Institutional Shield** — Component of Pillar Set Y · sync oracle · `PENDLE_ORACLE_STALE` fail-closed), and pool skew — then routes qualified flow to GM pool **underweight sides**, reducing imbalance. Hyperliquid session-key hedging is the Emergency Liquidity Sponge fallback.
+Before any GMX DataStore broadcast, the SliverVine ExoMesh edge evaluates sequencer health, oracle lag, soil resistance (including **Pendle Institutional Shield** — Component of Pillar Set Y · sync oracle · `PENDLE_ORACLE_STALE` fail-closed), and pool skew — then routes qualified flow to GM pool **underweight sides**, reducing imbalance. Hyperliquid session-key hedging is the Emergency Liquidity Sponge fallback.
 
 **Triangle Liquidity Loop:** `Robinhood Chain (Pillar Set X · Component 2 Reference Escort Adapter)` ↔ `Arbitrum One (GMX GM Yield Base)` ↔ `Hyperliquid (1× Short Hedge)`.
 

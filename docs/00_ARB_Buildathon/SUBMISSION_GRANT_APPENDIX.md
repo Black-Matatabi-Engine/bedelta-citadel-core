@@ -8,7 +8,7 @@
 
 | Judge pointer | SSOT document |
 |---------------|---------------|
-| Hybrid Pillar Sets X & Y · R01–R20 | [Architecture index §01–03](../01_architecture/README.md) · [Hybrid Pillar Sets X & Y](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) · [Defense Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
+| Hybrid Pillar Sets X & Y · R01–R20 | [Architecture index §01–03](../01_architecture/README.md) · [Hybrid Pillar Sets X & Y](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) · [Defense Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
 | CLI Tier 0–5 verification | [Verification Matrix](../06_verifications/01_VERIFICATION_MATRIX.md) |
 | Dune telemetry · SQL panels | [Dune Dashboard Specification](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
 | Pendle × GMX cross-guard | [§ Core Risk Decision Matrix](#core-risk-decision-matrix-evaluatependlegmxcrossguard) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts) |
@@ -17,7 +17,7 @@
 | Market & security imperative | [Market & Security Imperative](../05_pitch_and_demos/03_MARKET_AND_SECURITY_IMPERATIVE.md) — Apollo / Navier research · Elevator metaphor |
 | **80/20 boundaries & V2.0 R&D** | [Risk Spectrum §0.1](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md#01-what-slivervine-exomesh-does-and-does-not-guarantee) · [§ 88% Defense Mesh](#88-defense-mesh-12-post-grant-rd-roadmap) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) |
 
-Built on the BeDelta Living Water v1.0 · SSRC (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../../docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
+Built on the BeDelta Living Water v1.0 · SSRC (p50 ~106µs), [`@slivervine/exomesh-agentic-wallet-guard`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md), and consume-once EIP-712 Gate attestation — SliverVine intercepts AI trade intents **before** mempool or bundler ingress. Deep narrative: [Problem / Solution](#the-problem) · [Venue Integration Matrix](#venue-integration-matrix).
 
 ### The Problem
 
@@ -39,18 +39,18 @@ SliverVine shifts risk management from "naive blocking" to **Intent-Aware Naviga
 
 ```
 ┌────────────────────────────────────────────────────────────────┐
-│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s)          │  <-- CoT / Tool Calls / Non-Deterministic
+│ [Cerebrum] LLM Reasoning & Agent Loop (~1.0s - 10.0s) │ <-- CoT / Tool Calls / Non-Deterministic
 └────────────────────────────────────────────────────────────────┘
-                         │ (Intent Payload)
-                         ▼
+ │ (Intent Payload)
+ ▼
 ┌────────────────────────────────────────────────────────────────┐
-│ [ExoMesh Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs)     │  <-- 0.015ms-0.106ms / Deterministic Fail-Closed
+│ [ExoMesh Reflex Arc] Cerebellum Shield (⚡ p50 ~15µs – p50 ~106µs) │ <-- 0.015ms-0.106ms / Deterministic Fail-Closed
 └────────────────────────────────────────────────────────────────┘
-                         │
-           ┌─────────────┴─────────────┐
-           ▼                           ▼
-     [ PASS: p50 ~106µs ]            [ FAIL: p50 ~15µs ]
-    Signature Released          Reflex Deadlock Severed
+ │
+ ┌─────────────┴─────────────┐
+ ▼ ▼
+ [ PASS: p50 ~106µs ] [ FAIL: p50 ~15µs ]
+ Signature Released Reflex Deadlock Severed
 ```
 
 | Dimension | Normal RPC Gateway | SliverVine ExoMesh (SSRC) |
@@ -116,7 +116,7 @@ SliverVine models **TradFi Total Return Swaps** and **crypto perpetuals** as dis
 
 **Memory efficiency:** Hot path writes only into caller-provided `SoilResultSlot`; aligns with `SOIL_LANE_SCRATCH` / `wasm-soil-ffi.ts` reusable buffers — **one FFI round-trip**, no ephemeral `Float64Array` per intent on the reflex arc.
 
-**Verification:** `npx vitest run tests/guards/variational-instrument-guard.zero.test.ts` · architecture SSOT: [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#10-exomesh-pre-consensus-shield--5-core-venue-matrix).
+**Verification:** `npx vitest run tests/guards/variational-instrument-guard.zero.test.ts` · architecture SSOT: [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#10-exomesh-pre-consensus-shield-5-core-venue-matrix).
 
 **V1.0 production scope:** Ephemeral Ignition Signers (`0x1111…`/`0x2222…`) on Mainnet Gate · GMX v2 dry-run/Vitest pre-flight guards · **GM Pool I/O channel CLOSED on 42161** (deposit [0xe31552...4774](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · withdraw [0xfd3601...e410](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410)) · **Pendle Institutional Safety Sentinel** + **Pendle AI Guarded Pool Factory** · **EIP-1193 Retail Guard SDK** + **5-Core Venue guards** · Stabilizer Sepolia · Dune Sepolia live stream + 42161 SQL pre-compiled · **public open gateway** (`X-SliverVine-Tier: public` · 5 RPS) · V1.1 4-tier SaaS roadmap · Stylus V2.0 dual-execution coprocessor (`pnpm build:stylus`; EIP-1967 upgradeable proxy path) · **automated R20 severance on `FLAGS_*` trips** · **30s sliding-window pending OI defense** · Monte Carlo 87.39% toxic flow blocked (10,000-run simulation; nominal modeled capital).
 
@@ -126,7 +126,7 @@ SliverVine models **TradFi Total Return Swaps** and **crypto perpetuals** as dis
 
 * **Test Suite**: **244 test files | 1126 PASS** — re-run `pnpm test -- --run` to confirm. Full matrix: [Verification Matrix](../06_verifications/01_VERIFICATION_MATRIX.md).
 * **Dual-Demo Architecture**: **`pnpm demo`** — 12 Dual Pillar Set X & Y ANSI scenarios (GMX v2 price impact / Data Streams lag / delever · HL EIP-712 session key / WS stale / GateLockout · Pendle AI guarded pool / 60s TTL stale oracle) · zero-I/O sync hot-path **p50 ~106µs** · **`pnpm demo:delta-neutral`** — **4-step Happy Path** macro cross-venue lifecycle (`--unwind` · `--trip` optional) · **`npx vitest run tests/sdk/retail-guard-provider.test.ts`** — EIP-1193 Retail Guard SDK (35/35 PASS).
-* **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#3-cross-venue-risk-engine-defense-matrix-r01-r20).
+* **Formal Verification**: Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · [Technical Specification §3](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#3-cross-venue-risk-engine-defense-matrix-r01r20).
 * **Game-Theoretic Simulation**: 10,000 Monte Carlo runs · **87.39% toxic flow blocked** · $9.88M **nominal simulated** LP capital — [`game_theory_simulation_results.json`](../audit/game_theory_simulation_results.json) *(simulation only; not live savings)*.
 * **Deployments**: Arbitrum One Mainnet Gate [0xb174...8bf1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate [0xb174...8bf1](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification-arbitrum-one-42161) · [Sepolia](#on-chain-verification-arbitrum-sepolia-421614).
 * **0-Gas off-chain severance:** Arbitrum One Gate ([0xb174...8bf1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1)) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. SliverVine ExoMesh risk gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**.
@@ -200,9 +200,9 @@ SliverVine's **production delta-neutral envelope** is not a single-wallet abstra
 
 ```
 User $2,500 USDC ──► Wallet B (Arbitrum)
-                         ├─ $2,400 ──► GMX v2 ETH/USDC GM Pool (long leg)
-                         ├─  +$2.40 ──► Protocol Treasury (uiFeeReceiver · not principal)
-                         └─  $100  ──► HL L1 margin bridge
+ ├─ $2,400 ──► GMX v2 ETH/USDC GM Pool (long leg)
+ ├─ +$2.40 ──► Protocol Treasury (uiFeeReceiver · not principal)
+ └─ $100 ──► HL L1 margin bridge
 Wallet A (Hyperliquid) ◄── session-key 1× short ──► Δ_net ≡ 0
 ```
 
@@ -274,34 +274,34 @@ V1.0 ships **two complementary Pendle integrations** — institutional safety la
 > **DX & Pricing:** AI Agent pool creation and parameter validation through **Pendle AI Guarded Pool Factory** are **100% free from protocol tax**. Metered SaaS Request Credits launch in **V1.1** (Starter **$10/mo** · Pro **$99/mo** · Business **$299/mo** · Enterprise **$1,999+/mo**).
 
 * **Integration (P0/P1 Code-Verified)**:
-  * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
-  * **Shared Types**: [`core/pendle-types.ts`](../../src/core/pendle-types.ts)
+ * **Registry SSOT**: [`pendle-pt-registry.ts`](../../src/adapters/pendle/pendle-pt-registry.ts) · `hydrateFromOracle` · `resolvePendlePtMarketState`
+ * **Shared Types**: [`core/pendle-types.ts`](../../src/core/pendle-types.ts)
 * **Soil Fuse Wiring (Fail-Closed)**: `pendleOracle`, `pendleCrossGuard`, and `pendlePoolFactory` probes wired into `checkSoilResistance()` (`collectExternalSoilFlags`) — emits **`PENDLE_ORACLE_STALE`** when feed is missing, TTL-expired, or carries invalid fields (zero/negative price, etc.)
 * **Performance**: Oracle resolution is **purely cached / synchronous** — no `fetch()` on the hot path; coexists with Shield **p50 ~106µs** budget.
 * **Arbitrum One PT Markets (Registry SSOT)**:
-  * **PT-eETH:** `0x8B330d3A50a624f1fE1744d037048BdBc9664E5D`
-  * **PT-USDC:** `0x156291C6e10E8a1B9f95475A9C0c5E3eCe1d1e44`
+ * **PT-eETH:** `0x8B330d3A50a624f1fE1744d037048BdBc9664E5D`
+ * **PT-USDC:** `0x156291C6e10E8a1B9f95475A9C0c5E3eCe1d1e44`
 * **Mechanism**: Resolves real Pendle PT market parameters from registry (optionally hydrated from oracle), monitors maturity boundaries (&lt;7 days) and yield jitter (&gt;200 bps), integrates dynamic fee curve decay and Shadow Margin cross-guard with Observatory Paradox fix (`close`/`reduce` −40 score discount).
 * **Vitest Coverage**:
-  * [`tests/adapters/pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) — oracle hydration · TTL stale · soil `PENDLE_ORACLE_STALE` trip
-  * [`tests/adapters/pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) — AI pool selection · yield drift · maturity cliff · soil fuse
-  * [`tests/adapters/pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) — `resolve*` · `normalize*` · address indexing
-  * [`tests/risk-control/pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) — `checkSoilResistance()` Pendle fuse integration
-  * [`tests/guards/pendle-gmx-cross-guard.test.ts`](../../tests/guards/pendle-gmx-cross-guard.test.ts) · [`tests/adapters/pendle-pt-expiry-guard.test.ts`](../../tests/adapters/pendle-pt-expiry-guard.test.ts)
+ * [`tests/adapters/pendle-market-oracle.test.ts`](../../tests/adapters/pendle-market-oracle.test.ts) — oracle hydration · TTL stale · soil `PENDLE_ORACLE_STALE` trip
+ * [`tests/adapters/pendle-pool-factory.test.ts`](../../tests/adapters/pendle-pool-factory.test.ts) — AI pool selection · yield drift · maturity cliff · soil fuse
+ * [`tests/adapters/pendle-pt-registry.test.ts`](../../tests/adapters/pendle-pt-registry.test.ts) — `resolve*` · `normalize*` · address indexing
+ * [`tests/risk-control/pendle-soil-guard.test.ts`](../../tests/risk-control/pendle-soil-guard.test.ts) — `checkSoilResistance()` Pendle fuse integration
+ * [`tests/guards/pendle-gmx-cross-guard.test.ts`](../../tests/guards/pendle-gmx-cross-guard.test.ts) · [`tests/adapters/pendle-pt-expiry-guard.test.ts`](../../tests/adapters/pendle-pt-expiry-guard.test.ts)
 
 ### 4. GMX
 
 * **Phase A+B+C on-chain invariant stack:**
-  * **Phase A — [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol)** (**83 LOC**): pure Solidity GMX wire invariants (executionFee floor · slippage floor · pool imbalance) — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts).
-  * **Phase B — [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol)** (**47 LOC**) + [`DefenseMatrixBitmap.sol`](../../contracts/libs/DefenseMatrixBitmap.sol) (**66 LOC**): defense matrix **single SLOAD** bitmap switch · Forge **8/8**.
-  * **Phase C — [`sanctuary_invariants`](../../contracts/sanctuary_invariants/)** Rust/Stylus coprocessor: 96-byte packed `evaluate_packed` · GMX errMask + soil flags · host wasm parity via `pnpm build:sanctuary-invariants` · Cargo **2/2** · Vitest [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6**.
-  * **Phase C integration — [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol)** (**71 LOC**): optional `stylusCoprocessor` staticcall first · revert or `address(0)` → **Solidity fallback** to `GmxRiskInvariantLib` · Forge PolicyGuard **9/9**.
-  * **Mainnet deploy (Verified Live · 42161):** [`scripts/deploy-policy-guard-v2-mainnet.ts`](../../scripts/deploy-policy-guard-v2-mainnet.ts) · `SliverVineRiskOracleV2` [0xfadb...ec93](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) · `GmxSoilMatrixSwitch` [0x4129...f99b](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) · `PolicyGuardV2` [0xfd98...8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0`.
+ * **Phase A — [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol)** (**83 LOC**): pure Solidity GMX wire invariants (executionFee floor · slippage floor · pool imbalance) — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts).
+ * **Phase B — [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol)** (**47 LOC**) + [`DefenseMatrixBitmap.sol`](../../contracts/libs/DefenseMatrixBitmap.sol) (**66 LOC**): defense matrix **single SLOAD** bitmap switch · Forge **8/8**.
+ * **Phase C — [`sanctuary_invariants`](../../contracts/sanctuary_invariants/)** Rust/Stylus coprocessor: 96-byte packed `evaluate_packed` · GMX errMask + soil flags · host wasm parity via `pnpm build:sanctuary-invariants` · Cargo **2/2** · Vitest [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6**.
+ * **Phase C integration — [`SliverVineAgentPolicyGuardV2.sol`](../../contracts/src/SliverVineAgentPolicyGuardV2.sol)** (**71 LOC**): optional `stylusCoprocessor` staticcall first · revert or `address(0)` → **Solidity fallback** to `GmxRiskInvariantLib` · Forge PolicyGuard **9/9**.
+ * **Mainnet deploy (Verified Live · 42161):** [`scripts/deploy-policy-guard-v2-mainnet.ts`](../../scripts/deploy-policy-guard-v2-mainnet.ts) · `SliverVineRiskOracleV2` [0xfadb...ec93](https://arbiscan.io/address/0xfadb14759a3d3c7e976697de61bf62627f14ec93) · `GmxSoilMatrixSwitch` [0x4129...f99b](https://arbiscan.io/address/0x4129aee97e68aa3712c56fe9ec48bf369782f99b) · `PolicyGuardV2` [0xfd98...8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) · `stylusCoprocessor=0`.
 * **Dry-run / Vitest verification (0-Gas pre-flight):** GMX v2 execution guards verified via `pnpm demo` · [`tests/demo/gmx-v2-agent-flow.demo.test.ts`](../../tests/demo/gmx-v2-agent-flow.demo.test.ts) · [`gmx-v2-order-payload-guards.ts`](../../src/services/adapters/gmx-v2-order-payload-guards.ts) — pre-flight severance before live GM pool capital deployment.
 * **GM Pool I/O channel (Verified Live · 42161):** **CLOSED** — Wallet B ETH/USDC GM deposit + withdraw ExchangeRouter multicall paths broadcast on Arbitrum One:
-  * **Deposit multicall:** [0xe31552...4774](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** · `pnpm execute:gmx:gm-deposit`
-  * **GM LP → GMX v2 Router approve:** [0x30ec0b...b00e](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Block **503051738** · spender `0x7452c558…`
-  * **Withdraw multicall:** [0xfd3601...e410](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · Block **503051752** · `pnpm execute:gmx:gm-withdraw`
+ * **Deposit multicall:** [0xe31552...4774](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · Block **503036082** · `pnpm execute:gmx:gm-deposit`
+ * **GM LP → GMX v2 Router approve:** [0x30ec0b...b00e](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · Block **503051738** · spender `0x7452c558…`
+ * **Withdraw multicall:** [0xfd3601...e410](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · Block **503051752** · `pnpm execute:gmx:gm-withdraw`
 * **Mainnet micro-fill harness:** `pnpm execute:gmx:micro-fill --size=1` — calibrated **$1–$20** GMX v2 increase order via PolicyGuardV2 [0xfd98...8781](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) + Gate [0xb174...8bf1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · **automatic low-OI side calibration** (balanced market leg) · Live: `CONFIRM_GMX_MICRO_FILL=YES BROADCAST=1 MAINNET_PK=0x… ZERODEV_PROJECT_ID=…` · [`scripts/execute-gmx-mainnet-micro-fill.ts`](../../scripts/execute-gmx-mainnet-micro-fill.ts)
 * **Mainnet micro-fill Fail-Closed evidence (Live Interception Payload):** `pnpm execute:gmx:micro-fill --size=1` on Arbitrum One (`42161`) — harness intelligently selected **`"short"`** side to balance GM pool (**$71 Long** vs **$58 Short**) · Soil Resistance + Root Protection **successfully intercepted** execution: `DEPTH_USD = $129 < $100,000` min requirement · `GUARD_BLOCKED:ORACLE_LAG_DEADLOCK:154000ms>30000ms` (**154s** stale oracle) · **`lostUsd ≡ 0`** · **0 slippage loss** · no mempool exposure
 * **Stylus mainnet (verified):** `SliverVineSoilCoprocessor` [0xc235...625e](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · activation tx [0x92079e...9397](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) · Nitro Prover JIT + **ArbWasm `0x71`** · `pnpm deploy:stylus:mainnet` · [`scripts/deploy-stylus-mainnet.ts`](../../scripts/deploy-stylus-mainnet.ts)
@@ -349,25 +349,25 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 | Pillar | Role | SSOT |
 |--------|------|------|
-| **Gatehouse (Auth)** | **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** | `zerodev-aa-*` · Gate attestation · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
+| **Gatehouse (Auth)** | **Opt-In Pillar Set X · Component 1 (Gatehouse)** ZeroDev scoped session keys · Kernel v3 · R06 / R07 · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** | `zerodev-aa-*` · Gate attestation · [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) |
 | **Pillar Set X · Component 2 — Compliance Ingress Firewall** | Venue-agnostic unidirectional AML escort · Robinhood Chain RWA ingress (`46630`/`4663` → `42161`) · **`lostUsd ≡ 0`** · inbound AML block · **ArbOS 61 Elara** reinforcement plane | `src/adapters/across-ingress-bridge.ts` · `contracts/IngressSafetySwitch.sol` |
 | **Shield (CORE MOAT)** | Sub-ms Wasm pre-execution armor · **p50 ~106 µs** · Wasm **<28kb / <60µs** · fail-closed before mempool · **auto `severSigningChannel()` on bitmask trips** · **Stylus 96KB coprocessor ready** (`SliverVineSoilCoprocessor` · 9/9 PASS) · **independent of ZeroDev** | `checkSoilResistance()` · `soil_core.wasm` · `check_soil_resistance_stylus` |
 
 ### Competitive Positioning — Four-Dimensional ASCII Matrices (SliverVine Protocol)
 
-**Entity:** SilverVine Labs · **Protocol:** SliverVine Protocol · ExoMesh + Sanctuary (BeΔ)  
+**Entity:** SilverVine Labs · **Protocol:** SliverVine Protocol · ExoMesh + Sanctuary (BeΔ) 
 **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196):** Finalized ERC-8196 Standard — Ethereum Standard.
 
 **Matrix 1 — Execution & Pre-Broadcast Severance Profile**
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Legacy ERC-4337 / OZ       │ Gauntlet / Chaos Labs      │
+│ Dimension │ SliverVine ExoMesh + Sanctuary │ Legacy ERC-4337 / OZ │ Gauntlet / Chaos Labs │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
-│ 1. Latency Profile        │ p50 ~106µs (Sub-ms Edge)   │ 50ms – 500ms+ (Bundler RTT)│ Hours to Days (Parameter) │
-│ 2. Pre-Broadcast Severance│ YES (0-Gas Fail-Closed)     │ NO (Post-validation/mempool│ NO (Post-execution audit) │
-│ 3. Gas Overhead           │ 0 Gas (Edge Rejection)      │ Wasted Bundler Gas         │ On-chain Governance Gas    │
-│ 4. Invariant Enforcement  │ Δnet ≡ 0 & lostUsd ≡ 0      │ Basic Balance Checks       │ Dynamic Risk Parameters    │
+│ 1. Latency Profile │ p50 ~106µs (Sub-ms Edge) │ 50ms – 500ms+ (Bundler RTT)│ Hours to Days (Parameter) │
+│ 2. Pre-Broadcast Severance│ YES (0-Gas Fail-Closed) │ NO (Post-validation/mempool│ NO (Post-execution audit) │
+│ 3. Gas Overhead │ 0 Gas (Edge Rejection) │ Wasted Bundler Gas │ On-chain Governance Gas │
+│ 4. Invariant Enforcement │ Δnet ≡ 0 & lostUsd ≡ 0 │ Basic Balance Checks │ Dynamic Risk Parameters │
 └───────────────────────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
 ```
 
@@ -375,12 +375,12 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Multisig / Timelock        │ Web2 LLM Guardrails        │
+│ Dimension │ SliverVine ExoMesh + Sanctuary │ Multisig / Timelock │ Web2 LLM Guardrails │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
-│ 1. Policy Gate Layer      │ ERC-8196 (Final) Sub-ms Policy Gate│ On-chain Voting / Delay    │ API Proxy (Centralized)    │
-│ 2. Prompt Injection Guard │ R20 Physical Deadlock       │ Vulnerable to Signed Intent│ Bypassable via Jailbreak   │
-│ 3. Key Pipe Severing      │ <1ms `severSigningChannel`  │ N/A (Requires On-chain Tx) │ N/A (No On-chain Hook)     │
-│ 4. Standard Alignment     │ ERC-8196 (Final) Sub-ms Policy Gate · EIP-7562 │ Standard ERC-20 / ERC-721  │ Proprietary REST APIs      │
+│ 1. Policy Gate Layer │ ERC-8196 (Final) Sub-ms Policy Gate│ On-chain Voting / Delay │ API Proxy (Centralized) │
+│ 2. Prompt Injection Guard │ R20 Physical Deadlock │ Vulnerable to Signed Intent│ Bypassable via Jailbreak │
+│ 3. Key Pipe Severing │ <1ms `severSigningChannel` │ N/A (Requires On-chain Tx) │ N/A (No On-chain Hook) │
+│ 4. Standard Alignment │ ERC-8196 (Final) Sub-ms Policy Gate · EIP-7562 │ Standard ERC-20 / ERC-721 │ Proprietary REST APIs │
 └───────────────────────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
 ```
 
@@ -388,12 +388,12 @@ Hyperliquid — an **Independent L1 High-Frequency Orderbook AppChain** that ori
 
 ```text
 ┌───────────────────────────┬─────────────────────────────┬────────────────────────────┬────────────────────────────┐
-│ Dimension                 │ SliverVine ExoMesh + Sanctuary   │ Native DEX Limit Orders    │ Raw Cross-Chain Bridges    │
+│ Dimension │ SliverVine ExoMesh + Sanctuary │ Native DEX Limit Orders │ Raw Cross-Chain Bridges │
 ├───────────────────────────┼─────────────────────────────┼────────────────────────────┼────────────────────────────┤
-│ 1. Cross-Spread Sensing   │ Live GMX/HL Soil Resistance │ Static Slippage Tolerance  │ Blind Asset Relaying       │
-│ 2. Liquidation Defense    │ -40 Haircut (Observatory)   │ Cascading Liquidation Risk │ No Execution Awareness     │
-│ 3. Ingress Accounting     │ `lostUsd ≡ 0` Escort Label  │ Immediate Capital Loss     │ Phantom In-flight Balances│
-│ 4. AML Shielding          │ Blocked Reverse Path (46630)│ Open Protocol Ingress      │ Unfiltered Contamination   │
+│ 1. Cross-Spread Sensing │ Live GMX/HL Soil Resistance │ Static Slippage Tolerance │ Blind Asset Relaying │
+│ 2. Liquidation Defense │ -40 Haircut (Observatory) │ Cascading Liquidation Risk │ No Execution Awareness │
+│ 3. Ingress Accounting │ `lostUsd ≡ 0` Escort Label │ Immediate Capital Loss │ Phantom In-flight Balances│
+│ 4. AML Shielding │ Blocked Reverse Path (46630)│ Open Protocol Ingress │ Unfiltered Contamination │
 └───────────────────────────┴─────────────────────────────┴────────────────────────────┴────────────────────────────┘
 ```
 
@@ -440,12 +440,12 @@ SliverVine rejects unrealistic B2B sales models (e.g. charging DAOs $8k/mo upfro
 SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction Hackathon Verification with Long-Term Commercial Sustainability:
 
 - **Stage 1: Buildathon Verification Phase (Active Now — Pre-9/14)**
-  - **Public Dune Telemetry Dashboard** (read-only, no API key): Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol)) for judge and developer auditing — distinct from paid Edge API tiers.
-  - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia ([0xb174...8bf1](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1)).
+ - **Public Dune Telemetry Dashboard** (read-only, no API key): Open-access Dune Live Telemetry Dashboard ([https://dune.com/silvervinelabs/slivervine-protocol](https://dune.com/silvervinelabs/slivervine-protocol)) for judge and developer auditing — distinct from paid Edge API tiers.
+ - **Sepolia Safety Gate**: Full EIP-712 session key validation and 0-Gas Fail-Closed protection verified on Arbitrum Sepolia ([0xb174...8bf1](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1)).
 
 - **Stage 2: B2B Monetization & Risk API Launch (Post-9/14 — V1.1)**
-  - **SliverVine ExoMesh Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to ExoMesh-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
-  - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/exomesh-agentic-wallet-guard` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane.
+ - **SliverVine ExoMesh Risk API & Bad Debt Calculator (powered by on-chain telemetry & Dune Analytics visualization)**: Monetize SliverVine's proprietary sub-ms risk calculation algorithms and shadow margin telemetry via a B2B API — **not** Dune platform data resale. [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) remains the **public read-only visualization dashboard**; **V1.1** paid Edge API tiers (**Starter $10/mo** · **Pro $99/mo** · **Business $299/mo** · **Enterprise $1,999+/mo**) gate programmatic access to ExoMesh-computed liquidation risk, margin health, and bad-debt savings metrics for vault managers and AI Agent swarms (Wayfinder, Virtuals, M2M Treasury Funds).
+ - **V2.0 CaaS rail (Design Spec — not v1.0):** `@slivervine/exomesh-agentic-wallet-guard` modular Wasm SDK · pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger). **v1.0 operates as public open gateway**; v1.0 GMX **+10 bps `uiFeeReceiver`** remains the live builder lane.
 
 ---
 
@@ -528,16 +528,16 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 
 ```bash
 pnpm install
-pnpm demo:gmx     # Tier 1 — GMX v2 shadow margin (ALLOW)
-pnpm demo:hl      # Tier 1 — Hyperliquid session key (ALLOW)
-pnpm demo:pendle  # Tier 1 — Pendle guarded pool factory (ALLOW)
-pnpm demo:usdai    # Tier 1 — USD.ai collateral guard (ALLOW)
-pnpm demo:pendle   # Tier 1 — Pendle yield guard (ALLOW)
-pnpm demo       # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
-pnpm demo:delta-neutral   # Tier 3 — 4-Step Happy Path · ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)
-npx vitest run tests/sdk/retail-guard-provider.test.ts  # Tier 0 — EIP-1193 Retail Guard SDK
-pnpm demo:agent                  # Tier 0 — B2B withExoMeshShield smoke demo
-pnpm test       # Full System Regression Suite (244 test files | 1126 PASS)
+pnpm demo:gmx # Tier 1 — GMX v2 shadow margin (ALLOW)
+pnpm demo:hl # Tier 1 — Hyperliquid session key (ALLOW)
+pnpm demo:pendle # Tier 1 — Pendle guarded pool factory (ALLOW)
+pnpm demo:usdai # Tier 1 — USD.ai collateral guard (ALLOW)
+pnpm demo:pendle # Tier 1 — Pendle yield guard (ALLOW)
+pnpm demo # Vitest Dual Pillar Set X & Y matrix (12 scenarios)
+pnpm demo:delta-neutral # Tier 3 — 4-Step Happy Path · ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)
+npx vitest run tests/sdk/retail-guard-provider.test.ts # Tier 0 — EIP-1193 Retail Guard SDK
+pnpm demo:agent # Tier 0 — B2B withExoMeshShield smoke demo
+pnpm test # Full System Regression Suite (244 test files | 1126 PASS)
 pnpm run audit:security # 3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)
 cd SliverVineGate && forge test --gas-report && cd ..
 # Static Buildathon provenance archive (not a live market oracle):

@@ -16,7 +16,7 @@
 |-------|--------------|--------|
 | **Official H1** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ): Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum | [`README.md`](../../README.md) · [`SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) |
 | **Vitest baseline** | **235 test files | 1091 PASS clean** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors** |
-| **Verified commit** | `main` @ **`3f26efa`** (Citadel-Armor SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **163.81 KiB raw | 57.88 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
+| **Verified commit** | `main` @ **`3f26efa`** (ExoMesh-Armor SSOT) · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle **163.81 KiB raw | 57.88 KiB gzip** (`limitKiB: 150` · `pass: true`) | `git rev-parse HEAD` · `pnpm bundle:measure` |
 | **Phase A — GmxRiskInvariantLib** | Pure Solidity GMX wire invariants — mirrors [`gmx-risk-core.ts`](../../src/core/gmx-risk-core.ts) · **83 LOC** | [`GmxRiskInvariantLib.sol`](../../contracts/src/libs/GmxRiskInvariantLib.sol) · Forge PolicyGuard **9/9** |
 | **Phase B — GmxSoilMatrixSwitch** | Single **SLOAD** defense bitmap · **47 LOC** + `DefenseMatrixBitmap` **66 LOC** | [`GmxSoilMatrixSwitch.sol`](../../contracts/GmxSoilMatrixSwitch.sol) · Forge **8/8** |
 | **Phase C — sanctuary_invariants** | Stylus/Wasm coprocessor `evaluate_packed` · TS/Rust parity · **PolicyGuardV2** Stylus staticcall + `GmxRiskInvariantLib` fallback | [`contracts/sanctuary_invariants/`](../../contracts/sanctuary_invariants/) · `pnpm build:sanctuary-invariants` · [`stylus-gmx-parity.test.ts`](../../tests/wasm/stylus-gmx-parity.test.ts) **6/6** · Cargo **2/2** |
@@ -92,16 +92,16 @@ SliverVine ExoMesh runs **two independent Wasm engines**. They share risk semant
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Engine B — Off-Chain Cloudflare Edge Wasm Monotonic Core                │
-│ pkg/soil_core.wasm · SHA-256 67f8fcc7… · V8 Isolates · 0 gas          │
-│ Role: sub-ms leap / NTP / RPC regression firewall (clock_core C-ABI)    │
+│ Engine B — Off-Chain Cloudflare Edge Wasm Monotonic Core │
+│ pkg/soil_core.wasm · SHA-256 67f8fcc7… · V8 Isolates · 0 gas │
+│ Role: sub-ms leap / NTP / RPC regression firewall (clock_core C-ABI) │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                │ pre-broadcast intent (fail-closed)
-                                ▼
+ │ pre-broadcast intent (fail-closed)
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Engine A — On-Chain Arbitrum Stylus Coprocessor (Nitro)                 │
-│ SliverVineSoilCoprocessor 0xc23587… · ArbWasm 0x71 · on-chain verify    │
-│ Role: pre-consensus state validation · Stylus soil bitmask coprocessor  │
+│ Engine A — On-Chain Arbitrum Stylus Coprocessor (Nitro) │
+│ SliverVineSoilCoprocessor 0xc23587… · ArbWasm 0x71 · on-chain verify │
+│ Role: pre-consensus state validation · Stylus soil bitmask coprocessor │
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 

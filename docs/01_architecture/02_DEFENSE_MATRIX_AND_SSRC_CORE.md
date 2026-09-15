@@ -36,7 +36,7 @@ $$
 
 ```text
 Intent → pack Float64Array[28] → Wasm bitmask eval → tripFlags (u64) → severSigningChannel()
-         └─ single FFI hop ─┘     └─ parallel OR across all protocol bits ─┘
+ └─ single FFI hop ─┘ └─ parallel OR across all protocol bits ─┘
 ```
 
 ### Zero-Latency Fail-Closed Parallelism
@@ -77,10 +77,10 @@ High-frequency AI-agent intent validation (`evaluateIntentMandateGate` · `evalu
 ```text
 slot[i] @ offset = (hashKeyToSlotIndex(key) & 0xFF) × 4
 ┌────────────┬────────┬─────────────────┬──────────────┐
-│ attempts   │ flags  │ allowed_mask    │ target_bit   │
-│ u32[0]     │ u32[1] │ u32[2]          │ u32[3]       │
+│ attempts │ flags │ allowed_mask │ target_bit │
+│ u32[0] │ u32[1] │ u32[2] │ u32[3] │
 └────────────┴────────┴─────────────────┴──────────────┘
-         ↔ Rust [`intent_core.rs`](../../src/wasm/intent_core.rs) 4 × i64 @ `heap_ptr`
+ ↔ Rust [`intent_core.rs`](../../src/wasm/intent_core.rs) 4 × i64 @ `heap_ptr`
 ```
 
 ### O(1) Numeric Slot Hashing (No `Map` Churn)
@@ -108,7 +108,7 @@ $$
 | **Determinism / layout** | Same file (6 additional cases) | C-ABI slot packing · `hashKeyToSlotIndex` mask · `resetIntentRingSlab` |
 
 ```bash
-npx vitest run tests/core/intent-sinking-audit.test.ts   # 8/8 PASS · includes <16 KiB worker gate
+npx vitest run tests/core/intent-sinking-audit.test.ts # 8/8 PASS · includes <16 KiB worker gate
 ```
 
 ### Foundry On-Chain Ring Slab Fuzz Proof ([`IntentRingSlabLib.sol`](../../contracts/src/libs/IntentRingSlabLib.sol))
@@ -184,11 +184,11 @@ SliverVine ExoMesh does **not** require HKG, SIN, NTP, or RPC clocks to agree. *
 
 ```text
 Cloudflare Edge (performance.now / injected nowMs)
-        │ C-ABI FFI (i64 pointer parity)
-        ▼
+ │ C-ABI FFI (i64 pointer parity)
+ ▼
 pkg/soil_core.wasm — clock_core_read · clock_core_rpc_ingest · clock_core_resolve_wall_age
-        │ optional Nitro path
-        ▼
+ │ optional Nitro path
+ ▼
 Arbitrum Stylus (contracts/stylus-probe) — cargo stylus check / deploy
 ```
 
@@ -332,15 +332,15 @@ Python-verified **48-day runway** under sustained negative funding. Automated 3-
 
 | Engine | Venue | Role |
 |--------|-------|------|
-| **Arbitrum Citadel** (primary) | GMX v2 GM pools, Arbitrum One | Pre-execution gate · underweight-side routing |
-| **Hyperliquid Native** (cross-chain L1) | Independent L1 HF orderbook perps · session-key signing · spread/size/rate-limit guard | Emergency Liquidity Sponge when Citadel flags trip |
+| **Arbitrum ExoMesh** (primary) | GMX v2 GM pools, Arbitrum One | Pre-execution gate · underweight-side routing |
+| **Hyperliquid Native** (cross-chain L1) | Independent L1 HF orderbook perps · session-key signing · spread/size/rate-limit guard | Emergency Liquidity Sponge when ExoMesh flags trip |
 
 Routing policy: venue selected per risk flags; both paths share the same fail-closed envelope. On-chain attestation consume-once: [`SliverVineGate.sol/`](../../SliverVineGate/out/SliverVineGate.sol) (`verifyAndConsume`).
 
 1. **Ingress** — [`worker-fetch.ts`](../../src/worker-fetch.ts) / [`worker-scheduled.ts`](../../src/worker-scheduled.ts).
 2. **Pre-execution** — sequencer → oracle-lag → `checkSoilResistance()` (depth, cross-spread, slippage fuse, **Pendle oracle / cross-guard soil probes**).
 3. **Routing** — underweight GM qualification → unsigned payload with optional builder hooks.
-4. **Hedge** — session-key HL leg when Citadel trips.
+4. **Hedge** — session-key HL leg when ExoMesh trips.
 5. **State** — unidirectional `SystemState`; 2PC intent ledger → KV.
 
 <a id="35-wasm-soil-core-m4-summary"></a>
@@ -375,7 +375,7 @@ Run: `pnpm tsx scripts/benchmark-stylus-opcode.ts` · SSOT: [`stylus_core.rs`](.
 
 ### 3.7 ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension
 
-> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
+> **SSOT:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) · **License:** Apache-2.0 wrapper · Wasm IP core [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) 
 > **Vitest:** `npx vitest run tests/sdk/` → **48/48 PASS** (5 files)
 
 The **ExoMesh Agentic Guard** (`@slivervine/exomesh-agentic-wallet-guard`) — an **EIP-1193/5792/6963 Agentic Wallet Guard Extension** — packages ExoMesh's pre-consensus reflex arc as **ultra-lightweight browser middleware** compliant with standard EIP-1193 / EIP-5792 / EIP-6963 specs, extended into a **0-Gas pre-consensus superset**. No Cloudflare Worker required for C-end wallet and agentic wallet integrations.
@@ -401,14 +401,14 @@ The **ExoMesh Agentic Guard** (`@slivervine/exomesh-agentic-wallet-guard`) — a
 
 ```text
 dApp → withRetailGuardProvider(config)
-     → evaluateRpcTransportProtocol
-     → parseTransactionCalldata (Permit2 / ERC20 / swap)
-     → evaluateRetailApproveGate | evaluateRetailSoilGate | evaluateRetailIntentGate
-     → [PASS] baseProvider.request()
-     → [FAIL] RetailGuardRejectedError + plainTextWarning
+ → evaluateRpcTransportProtocol
+ → parseTransactionCalldata (Permit2 / ERC20 / swap)
+ → evaluateRetailApproveGate | evaluateRetailSoilGate | evaluateRetailIntentGate
+ → [PASS] baseProvider.request()
+ → [FAIL] RetailGuardRejectedError + plainTextWarning
 ```
 
-→ Integration blueprint: [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)  
+→ Integration blueprint: [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) 
 → Competitive moat: [`docs/04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md`](../04_sdk_and_integration/05_ARCHITECTURE_AND_MOAT.md)
 
 ### 3.6 Financial Risk Parameters & Epoch Operations
@@ -431,26 +431,26 @@ SliverVine risk thresholds are **deterministic for judges and auditors today**, 
 
 ```text
 ┌────────────────────────────────────────────────────────────────────────────┐
-│ TIER 1 — Deterministic Audit Phase (Judge / Vitest SSOT)                 │
-│ Fixed default soil fuses · depth floors · venue caps                       │
-│ 100% reproducible FAIL_CLOSED proofs (`pnpm demo:gmx -- --trip`)           │
-│ Jitter disabled under VITEST=true for bit-exact regression               │
+│ TIER 1 — Deterministic Audit Phase (Judge / Vitest SSOT) │
+│ Fixed default soil fuses · depth floors · venue caps │
+│ 100% reproducible FAIL_CLOSED proofs (`pnpm demo:gmx -- --trip`) │
+│ Jitter disabled under VITEST=true for bit-exact regression │
 └────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼ live pool / oracle feeds (off hot-path config)
+ │
+ ▼ live pool / oracle feeds (off hot-path config)
 ┌────────────────────────────────────────────────────────────────────────────┐
-│ TIER 2 — Real-Time Off-Chain Feed (Zero-Gas Edge Worker)                   │
-│ Cloudflare Worker + SSRC Wasm adjusts slippage / depth gates per venue     │
-│ Liquidity-aware tightening — no on-chain gas · pre-broadcast only         │
-│ SSOT: checkSoilResistance() · worker-fetch / worker-scheduled ingress      │
+│ TIER 2 — Real-Time Off-Chain Feed (Zero-Gas Edge Worker) │
+│ Cloudflare Worker + SSRC Wasm adjusts slippage / depth gates per venue │
+│ Liquidity-aware tightening — no on-chain gas · pre-broadcast only │
+│ SSOT: checkSoilResistance() · worker-fetch / worker-scheduled ingress │
 └────────────────────────────────────────────────────────────────────────────┘
-                                    │
-                                    ▼ black-swan / governance signal
+ │
+ ▼ black-swan / governance signal
 ┌────────────────────────────────────────────────────────────────────────────┐
-│ TIER 3 — On-Chain Emergency Governance (Stylus + RiskOracle)             │
-│ Stylus Coprocessor + SliverVineRiskOracle hard circuit breaker             │
-│ PolicyGuardV2 / IngressSafetySwitch STATUS_SHUTDOWN flush inside block     │
-│ Last-resort severance when off-chain feeds cannot be trusted               │
+│ TIER 3 — On-Chain Emergency Governance (Stylus + RiskOracle) │
+│ Stylus Coprocessor + SliverVineRiskOracle hard circuit breaker │
+│ PolicyGuardV2 / IngressSafetySwitch STATUS_SHUTDOWN flush inside block │
+│ Last-resort severance when off-chain feeds cannot be trusted │
 └────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -608,12 +608,12 @@ Not one of the five core invariants above, but referenced from README:
 ### 4.7 Verification Index
 
 ```bash
-npx vitest run tests/sdk/retail-guard-provider.test.ts   # Dual-plug C-end
-npx vitest run tests/sdk/decorator.test.ts                 # Dual-plug B2B
-npx vitest run tests/defense/rpc-whitelist.test.ts         # Honeypot
+npx vitest run tests/sdk/retail-guard-provider.test.ts # Dual-plug C-end
+npx vitest run tests/sdk/decorator.test.ts # Dual-plug B2B
+npx vitest run tests/defense/rpc-whitelist.test.ts # Honeypot
 npx vitest run tests/risk-control/soil-threshold-jitter.test.ts
 npx vitest run tests/guards/pendle-gmx-cross-guard.test.ts # Observatory
-npx vitest run tests/services/session-key-gates.test.ts    # Session caps
-npx vitest run tests/core/protocol-mask-sync.test.ts       # KV mask sync
+npx vitest run tests/services/session-key-gates.test.ts # Session caps
+npx vitest run tests/core/protocol-mask-sync.test.ts # KV mask sync
 ```
 

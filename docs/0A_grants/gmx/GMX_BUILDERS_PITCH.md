@@ -1,7 +1,7 @@
 # GMX Builders Program — Application Pack
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)
-**Project:** SliverVine Protocol — Sub-ms 0-Gas Pre-Broadcast Safety Citadel & Risk Navigator for AI Agents on Arbitrum (GMX v2 GM Pool Gateway)
+**Project:** SliverVine Protocol — Sub-ms 0-Gas Pre-Broadcast Safety Layer (SliverVine ExoMesh) & Risk Navigator for AI Agents on Arbitrum (GMX v2 GM Pool Gateway)
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`
 **Official Site:** [silvervinelabs.com](https://silvervinelabs.com)
 **Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
@@ -17,7 +17,7 @@
 
 ## Executive Summary
 
-SliverVine ships an open-source **GMX v2 Pre-Execution Security Gateway & Underweight Router** on Arbitrum One. Before any GMX DataStore broadcast, the Citadel edge evaluates soil resistance (slippage / depth / cross-spread), sequencer health, and pool skew — then routes qualified flow to GM pool **underweight sides** that reduce imbalance.
+SliverVine ships an open-source **GMX v2 Pre-Execution Security Gateway & Underweight Router** on Arbitrum One. Before any GMX DataStore broadcast, the SliverVine ExoMesh edge evaluates soil resistance (slippage / depth / cross-spread), sequencer health, and pool skew — then routes qualified flow to GM pool **underweight sides** that reduce imbalance.
 
 Every unsigned increase / decrease / deposit payload injects **+10 bps `uiFeeReceiver`** (SliverVine Treasury via `GMX_UI_FEE_RECEIVER`) + optional **25% referral rebate** — protocol-native builder accrual, no custody.
 

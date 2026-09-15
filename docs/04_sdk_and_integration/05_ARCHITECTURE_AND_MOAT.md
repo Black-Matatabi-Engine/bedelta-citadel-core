@@ -1,13 +1,13 @@
 # Architecture & Competitive Moat — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress`  
-> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
-> **Package:** `@slivervine/exomesh-agentic-wallet-guard`  
+> **Product module:** SliverVine ExoMesh (Module A) · **Escrow complement:** SliverVine Sanctuary owns **Sanctuary Async Escort (ERC-7540+)** path ([`erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)) · verify: `pnpm demo:sanctuary` · treasury ingress: `pnpm demo:ingress` 
+> **License:** Apache-2.0 (TypeScript wrapper) · proprietary reflex math in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) 
+> **Package:** `@slivervine/exomesh-agentic-wallet-guard` 
 > **Source:** [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/)
 
 ---
 
-## Paradigm Shift: Server Simulation vs. ReflexCore (SSRC) Pre-Consensus Policy Reflex
+## pre-consensus ingress severance: Server Simulation vs. ReflexCore (SSRC) Pre-Consensus Policy Reflex
 
 | Dimension | Server Simulation (Blockaid, Blowfish, WalletConnect Scan) | ReflexCore (SSRC) Pre-Consensus Policy Reflex (ExoMesh Wallet Guard) |
 |-----------|--------------------------------------------------------------|--------------------------------------------------------|
@@ -22,16 +22,16 @@
 
 ```text
 [Legacy Stack]
-  dApp → wallet popup → sign → broadcast → Blockaid/Blowfish simulation → warning (too late)
+ dApp → wallet popup → sign → broadcast → Blockaid/Blowfish simulation → warning (too late)
 
 [Wallet Guard Stack]
-  dApp → withRetailGuardProvider / announceGuardedProvider (EIP-6963)
-       → eip5792-send-calls (wallet_sendCalls unfold)
-       → calldata-parser (u32 selectors: ERC20 · Permit2 · routers)
-       → guard-engine (approve · venue · soil · intent gates)
-       → wasm-adapter → ReflexCore (SSRC) · soil_core.wasm
-       → [PASS] forward to MetaMask / Rabby / injected provider
-       → [FAIL] RetailGuardRejectedError + plainTextWarning (0-Gas)
+ dApp → withRetailGuardProvider / announceGuardedProvider (EIP-6963)
+ → eip5792-send-calls (wallet_sendCalls unfold)
+ → calldata-parser (u32 selectors: ERC20 · Permit2 · routers)
+ → guard-engine (approve · venue · soil · intent gates)
+ → wasm-adapter → ReflexCore (SSRC) · soil_core.wasm
+ → [PASS] forward to MetaMask / Rabby / injected provider
+ → [FAIL] RetailGuardRejectedError + plainTextWarning (0-Gas)
 ```
 
 ---
@@ -63,16 +63,16 @@ See [`04_AI_INTENT_PROTECTION_MODEL.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md).
 
 ```typescript
 import {
-  withRetailGuardProvider,
-  announceGuardedProvider,
-  resolveInjectedEthereum,
+ withRetailGuardProvider,
+ announceGuardedProvider,
+ resolveInjectedEthereum,
 } from "@slivervine/exomesh-agentic-wallet-guard";
 
 const guarded = withRetailGuardProvider(window.ethereum, config);
 
 announceGuardedProvider(window.ethereum, config, {
-  name: "EIP-1193 Agentic Wallet Guard",
-  rdns: "io.slivervine.agenticretailwalletguard",
+ name: "EIP-1193+ Agentic Wallet Guard",
+ rdns: "io.slivervine.agenticretailwalletguard",
 });
 ```
 

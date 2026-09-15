@@ -11,5 +11,5 @@
 | **05** | [`05_ADAPTER_INTEGRATION_PROOFS.md`](./05_ADAPTER_INTEGRATION_PROOFS.md) | ExoMesh Agentic Guard (EIP-1193/5792/6963+) · 5-core venue proofs · `withExoMeshShield` |
 | **06** | [`06_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) | GM I/O txs · micro-fill · mainnet live evidence |
 
-**Grant path:** [`../PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) → Hub → `01` + `06`  
+**Grant path:** [`../PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md) → Hub → `01` + `06` 
 **Buildathon path:** [`../../JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) → Hub → `04` + `05`

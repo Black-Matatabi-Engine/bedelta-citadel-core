@@ -1,17 +1,17 @@
 # Pre-Consensus MO Telemetry & Dune Specification
 
-> **Category:** **Pre-Consensus Threat Telemetry** · **Hacker Modus Operandi (MO) Profiling**  
-> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
-> **Indexer target:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol)  
-> **Module A (ExoMesh):** off-chain pre-consensus 0-Gas firewall telemetry — **active live dashboard**.  
-> **Module B (Sanctuary):** ERC-7540+ async escort & on-chain Sepolia Gate anchors.  
+> **Category:** **Pre-Consensus Threat Telemetry** · **Hacker Modus Operandi (MO) Profiling** 
+> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) 
+> **Indexer target:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) 
+> **Module A (ExoMesh):** off-chain pre-consensus 0-Gas firewall telemetry — **active live dashboard**. 
+> **Module B (Sanctuary):** ERC-7540+ async escort & on-chain Sepolia Gate anchors. 
 > **Related:** [`06_HACKER_PROFILING_AND_TOXICOLOGY.md`](../03_hacker_profiling/01_HACKER_PROFILING_AND_TOXICOLOGY.md) · [`../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · **Vitest:** **231 test files | 1081 PASS clean**
 
 ---
 
 ## 1. Category Definition — Pre-Consensus Threat Telemetry
 
-### 1.1 Post-Mortem vs Pre-Crime — The Analytics Paradigm Shift
+### 1.1 Post-Mortem vs Pre-Crime — The Analytics pre-consensus ingress severance
 
 | Dimension | **Traditional blockchain analytics** (尸檢 · Autopsy Data) | **SliverVine Pre-Consensus Telemetry** (預防 · Pre-Crime Intelligence) |
 |-----------|--------------------------------------------------------------|------------------------------------------------------------------------|
@@ -23,21 +23,21 @@
 | **Industry analog** | CERT incident reports · Chainalysis post-hack | **CVE-style MO registry** · Agent Resilience Benchmark |
 
 ```text
-TRADITIONAL (Autopsy)                    SLIVERVINE (Pre-Crime)
-─────────────────────                    ───────────────────────
-[ Tx broadcast ]                         [ EIP-1193 request() ]
-       │                                          │
-       ▼                                          ▼
-[ Mempool / Sequencer ]                  [ ExoMesh evaluateRetailRisk() ]
-       │                                          │
-       ▼                                    ┌─────┴─────┐
-[ Revert / Exploit ]                       │           │
-       │                              FAIL_CLOSED    ALLOW
-       ▼                                   │           │
-[ Dune: decode logs ]                      ▼           ▼
-       │                            slivervine_    baseProvider
-       ▼                            telemetry_      .request()
-尸檢 Autopsy Data                   events (0-Gas)   (rare)
+TRADITIONAL (Autopsy) SLIVERVINE (Pre-Crime)
+───────────────────── ───────────────────────
+[ Tx broadcast ] [ EIP-1193 request() ]
+ │ │
+ ▼ ▼
+[ Mempool / Sequencer ] [ ExoMesh evaluateRetailRisk() ]
+ │ │
+ ▼ ┌─────┴─────┐
+[ Revert / Exploit ] │ │
+ │ FAIL_CLOSED ALLOW
+ ▼ │ │
+[ Dune: decode logs ] ▼ ▼
+ │ slivervine_ baseProvider
+ ▼ telemetry_ .request()
+尸檢 Autopsy Data events (0-Gas) (rare)
 ```
 
 **Thesis:** Web3 security indexers have historically measured **damage**. SliverVine ExoMesh measures **prevented damage** — forming a **Pre-Crime Threat Intelligence Index (PCTII)**: a time-series of toxic intents **intercepted** at the EIP-1193 boundary, classified by **MO signature**, and reconciled against on-chain `RiskTripBlocked` / off-chain `GET /api/grant-audit` snapshots.
@@ -69,27 +69,27 @@ PCTII is the **numerator factory** for PEV: each `mo_signature_code` row carries
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Edge Worker / SDK — withRetailGuardProvider()                             │
-│   evaluateRetailRisk() → RetailGuardRejectedError | ALLOW                 │
+│ Edge Worker / SDK — withRetailGuardProvider() │
+│ evaluateRetailRisk() → RetailGuardRejectedError | ALLOW │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                ▼
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ Telemetry Emitter (event-bus)                                           │
-│   recordPreConsensusMoEvent()  ← NEW (spec v1)                          │
-│   recordTelemetrySoilTrip()    ← existing counter                       │
+│ Telemetry Emitter (event-bus) │
+│ recordPreConsensusMoEvent() ← NEW (spec v1) │
+│ recordTelemetrySoilTrip() ← existing counter │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                ▼
-┌──────────────────────┐   ┌──────────────────────┐   ┌─────────────────┐
-│ KV / Analytics Bus   │   │ GET /api/grant-audit │   │ Sepolia Gate    │
-│ slivervine_telemetry │   │ duneTelemetry block  │   │ RiskTripBlocked │
-│ _events batch        │   │ responseRef sha256   │   │ (optional emit) │
-└──────────┬───────────┘   └──────────┬───────────┘   └────────┬────────┘
-           │                          │                        │
-           └──────────────────────────┼────────────────────────┘
-                                      ▼
-                         Dune Indexer / Spell (`dune.silvervinelabs.*`)
-                                      ▼
-                         PCTII Dashboard · MO heatmaps · PEV rollup
+ ▼
+┌──────────────────────┐ ┌──────────────────────┐ ┌─────────────────┐
+│ KV / Analytics Bus │ │ GET /api/grant-audit │ │ Sepolia Gate │
+│ slivervine_telemetry │ │ duneTelemetry block │ │ RiskTripBlocked │
+│ _events batch │ │ responseRef sha256 │ │ (optional emit) │
+└──────────┬───────────┘ └──────────┬───────────┘ └────────┬────────┘
+ │ │ │
+ └──────────────────────────┼────────────────────────┘
+ ▼
+ Dune Indexer / Spell (`dune.silvervinelabs.*`)
+ ▼
+ PCTII Dashboard · MO heatmaps · PEV rollup
 ```
 
 **Existing anchors today:**
@@ -172,9 +172,9 @@ Pre-consensus severance means **`baseProvider.request()` is never invoked** — 
 
 ```typescript
 // Spec — mirrors deriveTripEvtHash() in eip1193-extension-helpers.ts
-event_id   = sha256(`${schema_version}:${agent_id}:${mo_signature_code}:${block_epoch}:${selector_u32 ?? "0x0"}`)
-agent_id   = sha256(`retail:${walletAddress.trim().toLowerCase()}`)
-             // parity: hashRetailWalletSlotIndex() uses same normalized wallet
+event_id = sha256(`${schema_version}:${agent_id}:${mo_signature_code}:${block_epoch}:${selector_u32 ?? "0x0"}`)
+agent_id = sha256(`retail:${walletAddress.trim().toLowerCase()}`)
+ // parity: hashRetailWalletSlotIndex() uses same normalized wallet
 ```
 
 **Privacy rule:** Raw wallet addresses are **never** written to Dune. Only `agent_id` hashes and optional truncated `0x` prefix (`0xabcd…`) in human dashboards.
@@ -185,27 +185,27 @@ Emitted by Edge Worker / SDK telemetry hook on every `RetailGuardRejectedError`:
 
 ```json
 {
-  "schema_version": "silvervine.telemetry.events.v1",
-  "timestamp": "2026-09-12T04:39:00.000Z",
-  "block_epoch": 1757654340,
-  "chain_id": 42161,
-  "agent_id": "sha256:a1b2c3…",
-  "mo_signature_code": "ERC7540_OPERATOR_REJECTED",
-  "vector_type": "OPERATOR_HIJACK",
-  "mindhunter_signature": "SIG_C_DRIFT",
-  "eip1193_method": "eth_sendTransaction",
-  "selector_u32": "0x9cc233d6",
-  "venue_bit": 4,
-  "intent_ring_attempts": 1,
-  "eval_latency_us": 42.5,
-  "wasm_latency_us": 1.2,
-  "notional_usd_at_risk": 12500.0,
-  "gas_saved_wei": "630000000000000",
-  "gas_price_wei": "2000000000",
-  "estimated_gas_units": 180000,
-  "gate_action_code": 1,
-  "plain_text_warning": "ALERT: ERC-7540 async vault operator 0xbbbb… is not whitelisted — setOperator blocked (0-Gas).",
-  "response_ref": "sha256:…"
+ "schema_version": "silvervine.telemetry.events.v1",
+ "timestamp": "2026-09-12T04:39:00.000Z",
+ "block_epoch": 1757654340,
+ "chain_id": 42161,
+ "agent_id": "sha256:a1b2c3…",
+ "mo_signature_code": "ERC7540_OPERATOR_REJECTED",
+ "vector_type": "OPERATOR_HIJACK",
+ "mindhunter_signature": "SIG_C_DRIFT",
+ "eip1193_method": "eth_sendTransaction",
+ "selector_u32": "0x9cc233d6",
+ "venue_bit": 4,
+ "intent_ring_attempts": 1,
+ "eval_latency_us": 42.5,
+ "wasm_latency_us": 1.2,
+ "notional_usd_at_risk": 12500.0,
+ "gas_saved_wei": "630000000000000",
+ "gas_price_wei": "2000000000",
+ "estimated_gas_units": 180000,
+ "gate_action_code": 1,
+ "plain_text_warning": "ALERT: ERC-7540 async vault operator 0xbbbb… is not whitelisted — setOperator blocked (0-Gas).",
+ "response_ref": "sha256:…"
 }
 ```
 
@@ -270,14 +270,14 @@ Sourced from [`RetailGuardReasonCode`](../../src/sdk/exomesh-agentic-wallet-guar
 -- PCTII — Pre-Consensus Threat Intelligence Index (daily rollup)
 -- Source table: dune.silvervinelabs.slivervine_telemetry_events (spell ingest)
 SELECT
-  date_trunc('day', timestamp) AS day,
-  COUNT(*) AS pre_consensus_rejects,
-  COUNT(DISTINCT agent_id) AS unique_agents_profiled,
-  SUM(CAST(gas_saved_wei AS DECIMAL(38,0))) AS total_gas_saved_wei,
-  SUM(notional_usd_at_risk) AS prevented_notional_usd,
-  approx_percentile(eval_latency_us, 0.5) AS p50_eval_latency_us
+ date_trunc('day', timestamp) AS day,
+ COUNT(*) AS pre_consensus_rejects,
+ COUNT(DISTINCT agent_id) AS unique_agents_profiled,
+ SUM(CAST(gas_saved_wei AS DECIMAL(38,0))) AS total_gas_saved_wei,
+ SUM(notional_usd_at_risk) AS prevented_notional_usd,
+ approx_percentile(eval_latency_us, 0.5) AS p50_eval_latency_us
 FROM dune.silvervinelabs.slivervine_telemetry_events
-WHERE gate_action_code = 1  -- FAIL_CLOSED
+WHERE gate_action_code = 1 -- FAIL_CLOSED
 GROUP BY 1
 ORDER BY 1 DESC;
 ```
@@ -286,12 +286,12 @@ ORDER BY 1 DESC;
 
 ```sql
 SELECT
-  mo_signature_code,
-  vector_type,
-  mindhunter_signature,
-  COUNT(*) AS event_count,
-  SUM(notional_usd_at_risk) AS usd_at_risk,
-  SUM(CAST(gas_saved_wei AS DECIMAL(38,0))) AS gas_saved_wei
+ mo_signature_code,
+ vector_type,
+ mindhunter_signature,
+ COUNT(*) AS event_count,
+ SUM(notional_usd_at_risk) AS usd_at_risk,
+ SUM(CAST(gas_saved_wei AS DECIMAL(38,0))) AS gas_saved_wei
 FROM dune.silvervinelabs.slivervine_telemetry_events
 WHERE timestamp >= now() - interval '7' day
 GROUP BY 1, 2, 3
@@ -303,26 +303,26 @@ ORDER BY event_count DESC;
 ```sql
 -- Reconcile off-chain PCTII with on-chain RiskTripBlocked PEV
 WITH off_chain AS (
-  SELECT
-    date_trunc('day', timestamp) AS day,
-    SUM(notional_usd_at_risk) AS pctii_usd
-  FROM dune.silvervinelabs.slivervine_telemetry_events
-  WHERE gate_action_code = 1
-  GROUP BY 1
+ SELECT
+ date_trunc('day', timestamp) AS day,
+ SUM(notional_usd_at_risk) AS pctii_usd
+ FROM dune.silvervinelabs.slivervine_telemetry_events
+ WHERE gate_action_code = 1
+ GROUP BY 1
 ),
 on_chain AS (
-  SELECT
-    date_trunc('day', block_time) AS day,
-    SUM(blocked_intent_notional_usd) AS pev_usd
-  FROM dune.silvervinelabs.result_citadel_risk_trips
-  WHERE evt_name = 'RiskTripBlocked'
-  GROUP BY 1
+ SELECT
+ date_trunc('day', block_time) AS day,
+ SUM(blocked_intent_notional_usd) AS pev_usd
+ FROM dune.silvervinelabs.result_citadel_risk_trips
+ WHERE evt_name = 'RiskTripBlocked'
+ GROUP BY 1
 )
 SELECT
-  COALESCE(o.day, c.day) AS day,
-  o.pctii_usd,
-  c.pev_usd,
-  ABS(COALESCE(o.pctii_usd, 0) - COALESCE(c.pev_usd, 0)) AS reconciliation_delta_usd
+ COALESCE(o.day, c.day) AS day,
+ o.pctii_usd,
+ c.pev_usd,
+ ABS(COALESCE(o.pctii_usd, 0) - COALESCE(c.pev_usd, 0)) AS reconciliation_delta_usd
 FROM off_chain o
 FULL OUTER JOIN on_chain c ON o.day = c.day
 ORDER BY 1 DESC;

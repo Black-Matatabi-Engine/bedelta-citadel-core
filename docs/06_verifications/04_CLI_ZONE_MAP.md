@@ -24,9 +24,9 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 
 ```bash
 pnpm install
-pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
-pnpm demo:delta-neutral   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
-pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean)
+pnpm demo # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
+pnpm demo:delta-neutral # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
+pnpm test # Full System Regression Suite (235 test files | 1091 PASS clean)
 ```
 
 | Command | Proves | Expected |
@@ -42,7 +42,7 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 | `pnpm demo:hl -- --trip` | **Judge fast track** — Hyperliquid L1 primary hedge path | **FAIL_CLOSED** · session-key / depth guard |
 | `pnpm demo:perp-loop -- --trip` | Loop A perp/yield stack (GMX / Pendle / HL / Variational) | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:spot-loop -- --trip` | Loop B USD.ai collateral lane | **FAIL_CLOSED** · p50 ~15µs reflex core |
-| `pnpm demo:delta-neutral` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
+| `pnpm demo:delta-neutral` | 4-step ExoMesh ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
 | `pnpm demo:delta-neutral -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
 | `pnpm demo:delta-neutral -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | ExoMesh Agentic Guard (EIP-1193/5792/6963+) | **35/35 PASS** |
@@ -56,9 +56,9 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 **`demo:delta-neutral` expected terminal highlights** (GitHub `diff` syntax):
 
 ```diff
-+  ┌─ SliverVine Protocol · ExoMesh + Sanctuary ─────────────────────┐
-+  │  Sepolia Gate · p50 ~106µs · Δnet ≡ 0 · lostUsd ≡ 0            │
-+  └────────────────────────────────────────────────────────────────┘
++ ┌─ SliverVine Protocol · ExoMesh + Sanctuary ─────────────────────┐
++ │ Sepolia Gate · p50 ~106µs · Δnet ≡ 0 · lostUsd ≡ 0 │
++ └────────────────────────────────────────────────────────────────┘
 + Step 1: allowedToSign=true · elapsed=106µs · Δnet ≡ 0
 + Step 2: Escort PASS · lostUsd ≡ 0
 - AML_INBOUND_TO_ROBINHOOD_BLOCKED (inbound 42161→46630)
@@ -70,8 +70,8 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 **Optional modes:**
 
 ```diff
-+ pnpm demo:delta-neutral -- --unwind   # Step 5 ExoMesh R20 unwind · RESULT: E2E OK (5/5)
-+ pnpm demo:delta-neutral -- --trip     # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
++ pnpm demo:delta-neutral -- --unwind # Step 5 ExoMesh R20 unwind · RESULT: E2E OK (5/5)
++ pnpm demo:delta-neutral -- --trip # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
 ```
 
 **Legacy stress diff** (`--unwind` only — Step 5 soil exercise):
@@ -91,7 +91,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| Default `docker run` | 4-step Citadel **`demo:delta-neutral`** Happy Path inside container | `[tier0] demo:delta-neutral PASS` |
+| Default `docker run` | 4-step SliverVine ExoMesh **`demo:delta-neutral`** Happy Path inside container | `[tier0] demo:delta-neutral PASS` |
 | `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **235 test files | 1091 PASS clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
@@ -159,7 +159,7 @@ Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight re
 
 ```text
 zerodev-aa-gate.test.ts → assertCitadelRiskGate() + evaluateZeroDevGasGuards()
-zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
+zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + ExoMesh risk gate
  ├─ zerodev-aa-failover.ts → Arbitrum One health / AA probe route
  ├─ [`zerodev-aa-static-breaker.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-static-breaker.ts) → soil + gas sponsorship limits
  └─ zerodev-aa-userop.ts → Paymaster + bundler dispatch (after gate PASS)
@@ -185,7 +185,7 @@ pnpm exec vitest run tests/adapters/across-ingress-bridge.test.ts
 
 **Narrative:** Robinhood Chain (`46630`/`4663`) Across ingress is a **Pillar Set X Reference Escort Adapter** — not product identity. Inbound AML block enforces fail-closed unidirectional isolation before capital reaches Arbitrum deployable NAV.
 
-Related: [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture)
+Related: [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture)
 
 ---
 
@@ -239,7 +239,7 @@ Related: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MA
 Zero-I/O sync oracle + fail-closed soil wiring within the existing Shield **p50 ~106µs** budget.
 
 ```bash
-pnpm demo   # 12 Dual Pillar Set X & Y ANSI scenarios (recommended first)
+pnpm demo # 12 Dual Pillar Set X & Y ANSI scenarios (recommended first)
 pnpm exec vitest run tests/adapters/pendle-market-oracle.test.ts
 pnpm exec vitest run tests/adapters/pendle-pt-registry.test.ts
 pnpm exec vitest run tests/risk-control/pendle-soil-guard.test.ts

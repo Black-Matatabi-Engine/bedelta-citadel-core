@@ -1,9 +1,9 @@
 # AI Agent Intent Protection — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **License:** Apache-2.0 wrapper · proprietary reflex math compiled in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)  
+> **License:** Apache-2.0 wrapper · proprietary reflex math compiled in [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) 
 > **Package:** `@slivervine/exomesh-agentic-wallet-guard`
 
-The EIP-1193 Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction`, `eth_signTypedData_v4`, and [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
+The EIP-1193+ Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex arc** for AI-assisted retail wallets. It intercepts EIP-1193 `eth_sendTransaction`, `eth_signTypedData_v4`, and [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) `wallet_sendCalls` **before** the host wallet signs — enforcing fail-closed gates with **zero on-chain gas** on rejection paths.
 
 ## Threat Model — LLM / Agent Hallucination Classes
 
@@ -19,11 +19,11 @@ The EIP-1193 Agentic Wallet Guard SDK is a **pre-broadcast involuntary reflex ar
 
 ```text
 [EIP-1193 Provider] → withRetailGuardProvider (Apache-2.0 TS)
-    → calldata-parser (bitwise u32 selectors)
-    → guard-engine (policy + scratch buffers)
-    → wasm-adapter → pkg/soil_core.wasm (proprietary reflex math)
-    → [PASS] forward to base wallet provider
-    → [FAIL] RetailGuardRejectedError + plainTextWarning (0-Gas)
+ → calldata-parser (bitwise u32 selectors)
+ → guard-engine (policy + scratch buffers)
+ → wasm-adapter → pkg/soil_core.wasm (proprietary reflex math)
+ → [PASS] forward to base wallet provider
+ → [FAIL] RetailGuardRejectedError + plainTextWarning (0-Gas)
 ```
 
 ## Scratch Buffer SSOT

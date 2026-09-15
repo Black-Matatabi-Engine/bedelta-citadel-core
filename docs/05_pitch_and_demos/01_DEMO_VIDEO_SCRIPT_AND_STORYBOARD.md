@@ -36,10 +36,10 @@ AI Agents arrive at an Arbitrum DEX **transport station** (GMX v2 GM + session-k
  RAINSTORM (3σ / MEV / prompt injection)
  │
  ┌─────────┼─────────┐
- ▼         ▼         ▼
- Option A  Option B  Option C — SliverVine ExoMesh
+ ▼ ▼ ▼
+ Option A Option B Option C — SliverVine ExoMesh
  Fail-Open Fail-Slow 0-Gas pre-broadcast shield
- SOAKED    STUCK     DRY · lostUsd≡0 · 106µs Wasm
+ SOAKED STUCK DRY · lostUsd≡0 · 106µs Wasm
 ```
 
 ---
@@ -173,5 +173,5 @@ Start CLI map: [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verific
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Allocator diligence · 88%/12% |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | Option C stress + 60 invariants |
 
-**Prepared by:** SilverVine Labs · HackQuest dual-video SSOT  
+**Prepared by:** SilverVine Labs · HackQuest dual-video SSOT 
 **Last updated:** 2026-09-02 · Branch: `V1.0_b4_Buildaton_Submisson`

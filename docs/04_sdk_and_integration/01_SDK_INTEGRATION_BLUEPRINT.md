@@ -1,11 +1,11 @@
 # `@slivervine/exomesh-agentic-wallet-guard` — Integration Blueprint
 
-**Official Name:** ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension  
-**Product module:** SliverVine ExoMesh (Module A)  
-**Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents  
-**License:** Apache-2.0 · **Entity:** SilverVine Labs  
-**Package:** `@slivervine/exomesh-agentic-wallet-guard`  
-**Source:** [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/)  
+**Official Name:** ExoMesh Agentic Guard (EIP-1193/5792/6963+) — EIP-1193/5792/6963 Agentic Wallet Guard Extension 
+**Product module:** SliverVine ExoMesh (Module A) 
+**Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents 
+**License:** Apache-2.0 · **Entity:** SilverVine Labs 
+**Package:** `@slivervine/exomesh-agentic-wallet-guard` 
+**Source:** [`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) 
 **Buildathon role:** **Primary C-End Middleware deliverable** — EIP-1193 pre-consensus reflex arc for Robinhood Chain, Omni-EVM AI agents, and retail wallets
 
 > **Standards compliance:** SliverVine Protocol is **100% compliant** with standard [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) and [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary).
@@ -32,23 +32,23 @@ Ultra-lightweight **EIP-1193 provider middleware** that intercepts `eth_sendTran
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ dApp / Wallet / AI Copilot (any EIP-1193 host)                  │
+│ dApp / Wallet / AI Copilot (any EIP-1193 host) │
 └────────────────────────────┬────────────────────────────────────┘
-                             ▼
+ ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ @slivervine/exomesh-agentic-wallet-guard (Apache-2.0)           │
-│ Universal EIP-1193 Pre-Consensus Guard                          │
+│ @slivervine/exomesh-agentic-wallet-guard (Apache-2.0) │
+│ Universal EIP-1193 Pre-Consensus Guard │
 │ ├─ withRetailGuardProvider / announceGuardedProvider (EIP-6963) │
-│ ├─ transport-stream.ts — RPC transport stream sync            │
-│ ├─ eip5792-send-calls.ts — EIP-5792 wallet_sendCalls unfold     │
-│ ├─ calldata-parser.ts — ERC20 · Permit2 · router u32 selectors  │
-│ ├─ guard-engine.ts — approve · venue · soil · intent gates      │
-│ └─ wasm-adapter.ts → pkg/soil_core.wasm (optional IP core)      │
+│ ├─ transport-stream.ts — RPC transport stream sync │
+│ ├─ eip5792-send-calls.ts — EIP-5792 wallet_sendCalls unfold │
+│ ├─ calldata-parser.ts — ERC20 · Permit2 · router u32 selectors │
+│ ├─ guard-engine.ts — approve · venue · soil · intent gates │
+│ └─ wasm-adapter.ts → pkg/soil_core.wasm (optional IP core) │
 └────────────────────────────┬────────────────────────────────────┘
-                             │ [PASS] forward request
-                             ▼
+ │ [PASS] forward request
+ ▼
 ┌─────────────────────────────────────────────────────────────────┐
-│ MetaMask / Rabby / injected EIP-1193 provider                   │
+│ MetaMask / Rabby / injected EIP-1193 provider │
 └─────────────────────────────────────────────────────────────────┘
 ```
 
@@ -86,44 +86,44 @@ This SDK is **Universal EIP-1193 Pre-Consensus Middleware** — chain-agnostic a
 
 ```typescript
 import {
-  withRetailGuardProvider,
-  announceGuardedProvider,
-  resolveInjectedEthereum,
-  type RetailGuardConfig,
+ withRetailGuardProvider,
+ announceGuardedProvider,
+ resolveInjectedEthereum,
+ type RetailGuardConfig,
 } from "@slivervine/exomesh-agentic-wallet-guard";
 
 const config: RetailGuardConfig = {
-  walletAddress: "0xYourWallet…",
-  allowedVenues: [
-    "0xGmxRouter…",
-    "0xUniswapRouter…", // generic DEX calldata guard — not the pruned Uniswap V3 venue adapter
-    "0xUsdcToken…",
-    "0x000000000022d473030f116ddee9f6b43ac78b6", // Permit2
-  ],
-  allowedSpenders: ["0xTrustedSpender…"],
-  contractVenueIndex: {
-    "0xgmxrouter…": 0,
-    "0xuniswaprouter…": 1,
-    "0xusdctoken…": 2,
-    "0x000000000022d473030f116ddee9f6b43ac78b6": 3,
-  },
-  allowedVenueMask: 0b1111,
-  maxApprovalUsd: 10_000,
-  soilQuote: {
-    hlSpot: 3500,
-    hlPerp: 3500,
-    dydxPerp: 3498,
-    depthUsd: 500_000,
-    maxSlippage: 0.005,
-    minDepthUsd: 100_000,
-  },
+ walletAddress: "0xYourWallet…",
+ allowedVenues: [
+ "0xGmxRouter…",
+ "0xUniswapRouter…", // generic DEX calldata guard — not the pruned Uniswap V3 venue adapter
+ "0xUsdcToken…",
+ "0x000000000022d473030f116ddee9f6b43ac78b6", // Permit2
+ ],
+ allowedSpenders: ["0xTrustedSpender…"],
+ contractVenueIndex: {
+ "0xgmxrouter…": 0,
+ "0xuniswaprouter…": 1,
+ "0xusdctoken…": 2,
+ "0x000000000022d473030f116ddee9f6b43ac78b6": 3,
+ },
+ allowedVenueMask: 0b1111,
+ maxApprovalUsd: 10_000,
+ soilQuote: {
+ hlSpot: 3500,
+ hlPerp: 3500,
+ dydxPerp: 3498,
+ depthUsd: 500_000,
+ maxSlippage: 0.005,
+ minDepthUsd: 100_000,
+ },
 };
 
 const guarded = withRetailGuardProvider(window.ethereum, config);
 
 await guarded.request({
-  method: "eth_sendTransaction",
-  params: [{ from: config.walletAddress, to: "0xGmxRouter…", value: "0x0" }],
+ method: "eth_sendTransaction",
+ params: [{ from: config.walletAddress, to: "0xGmxRouter…", value: "0x0" }],
 });
 ```
 
@@ -131,8 +131,8 @@ await guarded.request({
 
 ```typescript
 announceGuardedProvider(window.ethereum, config, {
-  name: "EIP-1193 Agentic Wallet Guard",
-  rdns: "io.slivervine.agenticretailwalletguard",
+ name: "EIP-1193+ Agentic Wallet Guard",
+ rdns: "io.slivervine.agenticretailwalletguard",
 });
 ```
 
@@ -207,7 +207,7 @@ Scenario A: 🟢 ALLOW_PASSTHROUGH (Healthy Intent)
 │ [EIP-712] DOMAIN: ChainId: 42161 (Arbitrum One) | Verifier: VERIFIED
 │ WASM REFLEX: ⚡ 2.1µs Pure Wasm Core Soil Check -> CLEAN (0-Gas Allowed)
 └────────────────────────────────────────────────────────────────────────────────────────┘
-  [FORWARD] [EIP-1193] Guarded Provider -> Dispatched to Sequencer RPC
+ [FORWARD] [EIP-1193] Guarded Provider -> Dispatched to Sequencer RPC
 
 RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)
 ```
@@ -231,10 +231,10 @@ Scenario C: 🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)
 
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │ 🚨 PRE-CONSENSUS FAIL-CLOSED PROOF
-│  ▸ WASM REFLEX TIME : ⚡ 0.6µs Pure Wasm Core (Sub-10ms Wasm Core Execution)
-│  ▸ GAS BURNED       : 0.000000 ETH (0 Bytes Broadcasted to Sequencer)
-│  ▸ CAPITAL PROTECTED: $2,500.00 USDC (lostUsd = $0.00 · 100% Principal Preserved)
-│  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via [EIP-1193] Middleware
+│ ▸ WASM REFLEX TIME : ⚡ 0.6µs Pure Wasm Core (Sub-10ms Wasm Core Execution)
+│ ▸ GAS BURNED : 0.000000 ETH (0 Bytes Broadcasted to Sequencer)
+│ ▸ CAPITAL PROTECTED: $2,500.00 USDC (lostUsd = $0.00 · 100% Principal Preserved)
+│ ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via [EIP-1193] Middleware
 └────────────────────────────────────────────────────────────────────────────────────────┘
 
 RESULT: 🛑 FAIL_CLOSED_INTERCEPT (0-Gas Intercepted BEFORE RPC Ingress)
@@ -253,7 +253,7 @@ Scenario D: 🔒 CHANNEL_SEVERED (Hot-Key Circuit Breaker)
 
 [CIRCUIT BREAKER] R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (0-Gas)
 [CHANNEL SEVER] 4th Rapid Attack Attempt -> EIP-712 Signature Channel SEVERED (MAX_ATTEMPTS_EXCEEDED_SEVERED)
-  [CHANNEL STATE] isRetailGuardChannelSevered=true · follow-up=CHANNEL_SEVERED
+ [CHANNEL STATE] isRetailGuardChannelSevered=true · follow-up=CHANNEL_SEVERED
 
 RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1)
 ```
@@ -276,9 +276,9 @@ RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb1
 ## Testing
 
 ```bash
-npx vitest run tests/sdk/retail-guard-provider.test.ts   # Tier 0 SSOT — 35/35 · 7/7 reason codes
-npx vitest run tests/sdk/                                 # Full SDK suite — 48/48 PASS
-pnpm demo:exomesh -- --json                               # CLI structured output (CI / Dune)
+npx vitest run tests/sdk/retail-guard-provider.test.ts # Tier 0 SSOT — 35/35 · 7/7 reason codes
+npx vitest run tests/sdk/ # Full SDK suite — 48/48 PASS
+pnpm demo:exomesh -- --json # CLI structured output (CI / Dune)
 ```
 
 **Retail guard baseline:** **35/35 PASS** — exhaustive `RetailGuardReasonCode` coverage:
@@ -303,7 +303,7 @@ pnpm demo:exomesh -- --json                               # CLI structured outpu
 |----------|------|
 | [`README.md`](./README.md) | Documentation index (01 → 04) |
 | [`04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md`](./04_MARKET_INTELLIGENCE_AND_COMPETITOR_AUDIT.md) | Competitive matrix · grant strategy |
-| [`05_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) | Competitive positioning · paradigm shift |
+| [`05_ARCHITECTURE_AND_MOAT.md`](./05_ARCHITECTURE_AND_MOAT.md) | Competitive positioning · pre-consensus ingress severance |
 | [`02_EXOMESH_PROVIDER_GUARD_SPEC.md`](./02_EXOMESH_PROVIDER_GUARD_SPEC.md) | LLM / agent threat model |
 | [`../00_ARB_Buildathon/SUBMISSION.md`](../00_ARB_Buildathon/SUBMISSION.md) | Buildathon submission SSOT |
 | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | Wasm reflex core · §3.7 |

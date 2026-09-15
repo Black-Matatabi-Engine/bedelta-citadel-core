@@ -1,10 +1,10 @@
 # SliverVine Protocol (BeΔ) — Verification Matrix (Express Hub)
 
-**Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)  
-**Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`  
-**DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral`  
-**Live-fire appendix:** [`06_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) — **execution ≠ guard**  
-**Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle).  
+**Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) 
+**Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com` 
+**DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral` 
+**Live-fire appendix:** [`06_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) — **execution ≠ guard** 
+**Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle). 
 **Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 
 > **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **0 errors**
@@ -19,8 +19,8 @@
 | **Demo Flow Reproducibility** | 3 | ~12 | ~35 | End-to-end scenario validation (GMX, Pendle, Hyperliquid) |
 | **TOTAL VERIFIED GREEN** | **231** | **1,081** | **3,320+** | **100% Green · 0 Trivial/No-op Assertions** |
 
-> **Engineering honesty:** **1091 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~1013 core** ExoMesh/SSRC proofs vs presentation-layer locks.  
-> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI)  
+> **Engineering honesty:** **1091 PASS** is a full-repo regression gate. Grant HUD and reference-agent harness rows are disclosed separately so judges can weight **~1013 core** ExoMesh/SSRC proofs vs presentation-layer locks. 
+> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI) 
 > **Verified commit:** `main` @ **`3f26efa`** · baseline **`572e5cd`** (Phase A+B+C mainnet) · Worker bundle ****57.88 KiB gzip** (`limitKiB: 150` · `pass: true`)
 
 ---
@@ -43,29 +43,29 @@
 ```bash
 pnpm install
 # === [ExoMesh] Tier 0 — SDK/CLI Unit & Integration ===
-npx vitest run tests/sdk/retail-guard-provider.test.ts   # ../../tests/sdk/retail-guard-provider.test.ts
-npx vitest run tests/sdk/eip5792-send-calls.test.ts      # ../../tests/sdk/eip5792-send-calls.test.ts
-pnpm demo:exomesh                         # Scenario A–D State Matrix (JUDGE_SAFE clock) — see ../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md
+npx vitest run tests/sdk/retail-guard-provider.test.ts # ../../tests/sdk/retail-guard-provider.test.ts
+npx vitest run tests/sdk/eip5792-send-calls.test.ts # ../../tests/sdk/eip5792-send-calls.test.ts
+pnpm demo:exomesh # Scenario A–D State Matrix (JUDGE_SAFE clock) — see ../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md
 
 # === [ExoMesh] Tier 1 — 5-Core Venue FAIL_CLOSED proofs ===
 pnpm demo:gmx -- --trip
 pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
-pnpm demo:perp-loop -- --trip            # Zone A Loop A: GMX / Pendle / HL / Variational
-pnpm demo:spot-loop -- --trip             # Zone A Loop B: USD.ai collateral lane
+pnpm demo:perp-loop -- --trip # Zone A Loop A: GMX / Pendle / HL / Variational
+pnpm demo:spot-loop -- --trip # Zone A Loop B: USD.ai collateral lane
 
 # === [Sanctuary] Tier 0 — Module B Vault Standard (ERC-7540+) ===
-pnpm demo:sanctuary                      # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
+pnpm demo:sanctuary # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
 # === [Sanctuary] Tier 0 — Module B Treasury Ingress (Pillar Set X) ===
-pnpm demo:ingress                        # Across/Robinhood AML ingress escort (lostUsd ≡ $0)
-npx vitest run tests/adapters/treasury-escort-router.test.ts   # ../../tests/adapters/treasury-escort-router.test.ts
+pnpm demo:ingress # Across/Robinhood AML ingress escort (lostUsd ≡ $0)
+npx vitest run tests/adapters/treasury-escort-router.test.ts # ../../tests/adapters/treasury-escort-router.test.ts
 
 # === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
-pnpm demo:delta-neutral                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:delta-neutral # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
 
 # === Tier 1 — Full Protocol Regression ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
-pnpm test -- --run                       # Full Regression Suite (235 test files | 1091 PASS clean)
+pnpm test -- --run # Full Regression Suite (235 test files | 1091 PASS clean)
 ```
 
 | Command | Tag | Proves |
@@ -229,7 +229,7 @@ Derivations → [`architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_archit
 
 ### 🛡️ Proactive OpSec & Anti-Reversing Policy (Commit History Hardening)
 
-> **Notice to Evaluators & Security Auditors:**  
+> **Notice to Evaluators & Security Auditors:** 
 > To prevent hostile anti-reversing forensics and protect proprietary `SSRC Wasm` binary fuses, pre-sinking implementation commits have been squashed and sanitized in accordance with SliverVine Protocol's strict OpSec Release Policy. All protocol invariants are 100% verified via deterministic Vitest suite (**235 test files / 1091 PASS / 3,320+ physical assertions**) and Stylus C-ABI parity tests.
 
 ---

@@ -1,7 +1,7 @@
 # ExoMesh Production Scenario Catalog
 
-> Judge appendix — **not** a payment rail. All paths are **pre-sign / pre-sequencer**.  
-> Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors.  
+> Judge appendix — **not** a payment rail. All paths are **pre-sign / pre-sequencer**. 
+> Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors. 
 > **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`) · **SEPSB:** [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json)
 
 **Wasm SSOT:** `pkg/soil_core.wasm` · `tests/wasm/stylus-soil-wasm.test.ts`

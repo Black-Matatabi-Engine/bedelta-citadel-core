@@ -1,7 +1,7 @@
 # Market Intelligence & Competitor Audit — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-> **Document:** 02 — Market Intelligence Whitepaper  
-> **Package:** `@slivervine/exomesh-agentic-wallet-guard` · **License:** Apache-2.0  
+> **Document:** 02 — Market Intelligence Whitepaper 
+> **Package:** `@slivervine/exomesh-agentic-wallet-guard` · **License:** Apache-2.0 
 > **Buildathon role:** Primary **C-End Middleware** deliverable for Arbitrum Open House
 
 ---
@@ -14,7 +14,7 @@ The Wallet Guard SDK occupies a **structural gap** between server-side transacti
 
 ## Competitive Matrix — Server Simulation vs. Edge Pre-Consensus Reflex
 
-| Dimension | Blockaid / Blowfish / WC Scan | EIP-1193 Agentic Wallet Guard |
+| Dimension | Blockaid / Blowfish / WC Scan | EIP-1193+ Agentic Wallet Guard |
 |-----------|-------------------------------|----------------------------------------|
 | **Execution locus** | Remote SaaS / RPC simulation farm | In-browser EIP-1193 middleware |
 | **Latency** | 200–800 ms round-trip | **< 0.014 ms** policy reflex (u32 ring + scratch) |
@@ -67,7 +67,7 @@ The SDK is **chain-agnostic at the EIP-1193 layer** — any EVM wallet injecting
 
 | Brand | Audience | Positioning |
 |-------|----------|-------|
-| **EIP-1193 Agentic Wallet Guard** | Grant reviewers · brokerage pilots | Involuntary reflex arc for 50M+ retail wallets |
+| **EIP-1193+ Agentic Wallet Guard** | Grant reviewers · brokerage pilots | Involuntary reflex arc for 50M+ retail wallets |
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | Wallet vendors · dApp integrators | Omni-chain middleware under Apache-2.0 |
 
 ### IP Boundary

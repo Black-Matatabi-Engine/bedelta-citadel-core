@@ -1,6 +1,6 @@
 # Contract Deployment Matrix — Mainnet & Sepolia SSOT
 
-> **Code SSOT:** [`src/config/contract-deployments.ts`](../../src/config/contract-deployments.ts) · **SDK re-exports:** [`src/sdk/constants.ts`](../../src/sdk/constants.ts)  
+> **Code SSOT:** [`src/config/contract-deployments.ts`](../../src/config/contract-deployments.ts) · **SDK re-exports:** [`src/sdk/constants.ts`](../../src/sdk/constants.ts) 
 > **Extended proofs:** [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) · [`SUBMISSION_GRANT_APPENDIX.md`](../00_ARB_Buildathon/SUBMISSION_GRANT_APPENDIX.md)
 
 **Audit date:** 2026-09-14 · **Networks:** Arbitrum One `42161` · Arbitrum Sepolia `421614`
@@ -96,6 +96,6 @@ See [`.env.example`](../../.env.example) for full RPC / WSS placeholders.
 pnpm exec tsc --noEmit
 pnpm test -- --run
 cd SliverVineGate && forge test
-pnpm deploy:stylus:mainnet          # dry-run Stylus preflight
-pnpm tsx scripts/deploy-sepolia-gate.sol  # Sepolia Gate (Forge)
+pnpm deploy:stylus:mainnet # dry-run Stylus preflight
+pnpm tsx scripts/deploy-sepolia-gate.sol # Sepolia Gate (Forge)
 ```

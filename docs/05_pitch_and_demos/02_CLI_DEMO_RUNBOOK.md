@@ -1,9 +1,9 @@
 # SliverVine Protocol (BeΔ) — ExoMesh CLI Demo Guide
 
-> **Buildathon Primary (The Shield):** `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`  
-> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI).  
-> **Venue SSOT:** **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Hyperliquid · Variational.  
-> **Vitest SSOT:** **226 test files | 1057 PASS clean** on `pnpm test -- --run`.  
+> **Buildathon Primary (The Shield):** `pnpm demo:exomesh` · `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` 
+> **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Wasm Reflex Core (**<20µs warm path**) · **p50 ~106µs** E2E ExoMesh Edge gate (Worker + TS Gateway + Wasm FFI). 
+> **Venue SSOT:** **5-Core Venue Matrix** — GMX v2 · Pendle · USD.ai · Hyperliquid · Variational. 
+> **Vitest SSOT:** **226 test files | 1057 PASS clean** on `pnpm test -- --run`. 
 > All standalone demos measure latency via `process.hrtime.bigint()` (µs precision) — no hardcoded timing outputs.
 
 ---
@@ -23,7 +23,7 @@
 
 ## Tier 0 — ExoMesh Agentic Guard (EIP-1193/5792/6963+)
 
-**Package:** `@slivervine/exomesh-agentic-wallet-guard`  
+**Package:** `@slivervine/exomesh-agentic-wallet-guard` 
 **Slogan:** Universal EIP-1193 Pre-Consensus Guard — Tailor-made for Robinhood Chain & Omni-EVM AI Agents
 
 ### Dual-Track Verification
@@ -35,10 +35,10 @@
 | **Unit SSOT** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | **35/35 PASS** · exhaustive **7/7** `RetailGuardReasonCode` coverage |
 
 ```bash
-pnpm demo:exomesh                         # Interactive Scenario A–D (JUDGE_SAFE clock)
-pnpm demo:exomesh -- --json               # CI / Dune structured output
-pnpm demo:exomesh -- --trip               # Scenario C–D shortcut only
-npx vitest run tests/sdk/retail-guard-provider.test.ts   # 35/35 PASS · 7/7 reason codes
+pnpm demo:exomesh # Interactive Scenario A–D (JUDGE_SAFE clock)
+pnpm demo:exomesh -- --json # CI / Dune structured output
+pnpm demo:exomesh -- --trip # Scenario C–D shortcut only
+npx vitest run tests/sdk/retail-guard-provider.test.ts # 35/35 PASS · 7/7 reason codes
 ```
 
 ### Scenario A–D State Matrix (`pnpm demo:exomesh`)
@@ -75,7 +75,7 @@ Scenario A: 🟢 ALLOW_PASSTHROUGH (Healthy Intent)
 │ [EIP-712] DOMAIN: ChainId: 42161 (Arbitrum One) | Verifier: VERIFIED
 │ WASM REFLEX: ⚡ 2.1µs Pure Wasm Core Soil Check -> CLEAN (0-Gas Allowed)
 └────────────────────────────────────────────────────────────────────────────────────────┘
-  [FORWARD] [EIP-1193] Guarded Provider -> Dispatched to Sequencer RPC
+ [FORWARD] [EIP-1193] Guarded Provider -> Dispatched to Sequencer RPC
 
 RESULT: 🟢 EIP-1193 PASSTHROUGH ALLOWED (Pre-Consensus Verified Clean)
 ```
@@ -99,10 +99,10 @@ Scenario C: 🛑 FAIL_CLOSED_INTERCEPT (Toxic Intent Interception)
 
 ┌────────────────────────────────────────────────────────────────────────────────────────┐
 │ 🚨 PRE-CONSENSUS FAIL-CLOSED PROOF
-│  ▸ WASM REFLEX TIME : ⚡ 0.6µs Pure Wasm Core (Sub-10ms Wasm Core Execution)
-│  ▸ GAS BURNED       : 0.000000 ETH (0 Bytes Broadcasted to Sequencer)
-│  ▸ CAPITAL PROTECTED: $2,500.00 USDC (lostUsd = $0.00 · 100% Principal Preserved)
-│  ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via [EIP-1193] Middleware
+│ ▸ WASM REFLEX TIME : ⚡ 0.6µs Pure Wasm Core (Sub-10ms Wasm Core Execution)
+│ ▸ GAS BURNED : 0.000000 ETH (0 Bytes Broadcasted to Sequencer)
+│ ▸ CAPITAL PROTECTED: $2,500.00 USDC (lostUsd = $0.00 · 100% Principal Preserved)
+│ ▸ PROVIDER ISOLATED: Aborted at Browser/SDK Layer via [EIP-1193] Middleware
 └────────────────────────────────────────────────────────────────────────────────────────┘
 
 RESULT: 🛑 FAIL_CLOSED_INTERCEPT (0-Gas Intercepted BEFORE RPC Ingress)
@@ -121,7 +121,7 @@ Scenario D: 🔒 CHANNEL_SEVERED (Hot-Key Circuit Breaker)
 
 [CIRCUIT BREAKER] R17 Hot Key Signature Channel SEVERED — All subsequent signing requests hard-blocked (0-Gas)
 [CHANNEL SEVER] 4th Rapid Attack Attempt -> EIP-712 Signature Channel SEVERED (MAX_ATTEMPTS_EXCEEDED_SEVERED)
-  [CHANNEL STATE] isRetailGuardChannelSevered=true · follow-up=CHANNEL_SEVERED
+ [CHANNEL STATE] isRetailGuardChannelSevered=true · follow-up=CHANNEL_SEVERED
 
 RESULT: 🔒 CHANNEL_SEVERED (Signature Pipeline Permanently Closed · Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1)
 ```
@@ -147,11 +147,11 @@ Intercepts `eth_sendTransaction` / `eth_signTypedData_v4` / [EIP-5792](https://e
 ## Tier 1 — 5-Core Venue Matrix
 
 ```bash
-pnpm demo:gmx           # GMX v2 shadow margin · cross-venue slippage · position cap
-pnpm demo:pendle -- --trip  # Pendle Institutional Sentinel · oracle TTL · PT maturity guard
-pnpm demo:usdai         # USD.ai collateral · peg drift · oracle age guard
-pnpm demo:hl            # Hyperliquid session key auth · orderbook depth guard
-pnpm demo:variational   # Variational Omni RFQ stale quote & OLP depth guard
+pnpm demo:gmx # GMX v2 shadow margin · cross-venue slippage · position cap
+pnpm demo:pendle -- --trip # Pendle Institutional Sentinel · oracle TTL · PT maturity guard
+pnpm demo:usdai # USD.ai collateral · peg drift · oracle age guard
+pnpm demo:hl # Hyperliquid session key auth · orderbook depth guard
+pnpm demo:variational # Variational Omni RFQ stale quote & OLP depth guard
 ```
 
 Append `-- --trip` for **FAIL_CLOSED** demonstration (**p50 ~15µs** Wasm `rootProtection()`).
@@ -187,13 +187,13 @@ pnpm demo:hl -- --trip
 ## Zone A — Strategy Loop Guards (Loop A / Loop B)
 
 ```bash
-pnpm demo:perp-loop                              # Loop A: GMX / Pendle / HL / Variational
-pnpm demo:perp-loop -- --trip                    # Loop A FAIL_CLOSED · p50 ~15µs rootProtection()
-pnpm demo:perp-loop -- --hedge=variational       # Variational Omni RFQ hedge leg only
-pnpm demo:perp-loop -- --hedge=hyperliquid       # Hyperliquid L1 hedge leg only
-pnpm demo:spot-loop                              # Loop B: USD.ai collateral lane
-pnpm demo:spot-loop -- --trip                    # Loop B FAIL_CLOSED · p50 ~15µs rootProtection()
-pnpm demo:perp-loop -- --healthy-only            # Nominal PASS (no R20 sever)
+pnpm demo:perp-loop # Loop A: GMX / Pendle / HL / Variational
+pnpm demo:perp-loop -- --trip # Loop A FAIL_CLOSED · p50 ~15µs rootProtection()
+pnpm demo:perp-loop -- --hedge=variational # Variational Omni RFQ hedge leg only
+pnpm demo:perp-loop -- --hedge=hyperliquid # Hyperliquid L1 hedge leg only
+pnpm demo:spot-loop # Loop B: USD.ai collateral lane
+pnpm demo:spot-loop -- --trip # Loop B FAIL_CLOSED · p50 ~15µs rootProtection()
+pnpm demo:perp-loop -- --healthy-only # Nominal PASS (no R20 sever)
 ```
 
 | Loop | Venues | Role |
@@ -228,7 +228,7 @@ const execute = withExoMeshShield(async (intent) => agent.swap(intent));
 ```
 
 ```bash
-pnpm demo:agent    # withExoMeshShield + verifyAgentIntent smoke demo
+pnpm demo:agent # withExoMeshShield + verifyAgentIntent smoke demo
 ```
 
 SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts)
@@ -252,13 +252,13 @@ SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-i
 | **Wallet B — Arbitrum Vault / GMX GM Lane** | Default `0xc9Bdd…546f` | Arbitrum One | **$2,500** user vault · **$2,400** GMX GM deposit · **$100** HL margin gateway |
 
 ```bash
-pnpm demo:delta-neutral                     # Pillar Set X — 4-Step Happy Path (`--zerodev=on` default)
-pnpm demo:delta-neutral -- --zerodev=off    # Native EIP-1193 signer (AA opt-out)
-pnpm demo:delta-neutral -- --json           # Pure JSON export (includes zerodev AA state)
-pnpm demo:delta-neutral -- --unwind         # Pillar Set X — 5-Step Emergency Capital Unwind
-pnpm demo:delta-neutral -- --trip           # Pillar Set X — Step 1 soil-trip fail-closed intercept
-pnpm demo:perp-loop -- --trip     # Pillar Set Y — Loop A reflex demo
-pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
+pnpm demo:delta-neutral # Pillar Set X — 4-Step Happy Path (`--zerodev=on` default)
+pnpm demo:delta-neutral -- --zerodev=off # Native EIP-1193 signer (AA opt-out)
+pnpm demo:delta-neutral -- --json # Pure JSON export (includes zerodev AA state)
+pnpm demo:delta-neutral -- --unwind # Pillar Set X — 5-Step Emergency Capital Unwind
+pnpm demo:delta-neutral -- --trip # Pillar Set X — Step 1 soil-trip fail-closed intercept
+pnpm demo:perp-loop -- --trip # Pillar Set Y — Loop A reflex demo
+pnpm demo:spot-loop -- --trip # Pillar Set Y — Loop B reflex demo
 ```
 
 ---
@@ -266,14 +266,14 @@ pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
 ## Zone B — Sandbox & E2E
 
 ```bash
-pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
-pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
-pnpm demo:sanctuary               # Module B Vault Standard — ERC-7540+ Scenario A–C (interactive ENTER pauses · `--json`)
-pnpm demo:ingress                 # Module B Treasury Ingress — Scenario A–C box HUD (interactive ENTER pauses · `--json`)
-pnpm demo:delta-neutral                     # 4-Step Happy Path Lifecycle (`--zerodev=on` default · `--json`)
-pnpm demo:delta-neutral -- --zerodev=off    # Native EIP-1193 signer (AA disabled)
-pnpm demo:delta-neutral -- --unwind         # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
-pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
+pnpm demo:stabilizer # Sepolia Stabilizer 1:1 swap guard
+pnpm demo:stabilizer -- --trip # USDZ de-peg + reserve depletion + 60s cooldown
+pnpm demo:sanctuary # Module B Vault Standard — ERC-7540+ Scenario A–C (interactive ENTER pauses · `--json`)
+pnpm demo:ingress # Module B Treasury Ingress — Scenario A–C box HUD (interactive ENTER pauses · `--json`)
+pnpm demo:delta-neutral # 4-Step Happy Path Lifecycle (`--zerodev=on` default · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off # Native EIP-1193 signer (AA disabled)
+pnpm demo:delta-neutral -- --unwind # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
+pnpm demo:delta-neutral -- --trip # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
 ```
 
 ---
@@ -324,25 +324,25 @@ pnpm referral:gen --agent "ZeroDev-Agent-01" --hook-in --source kernel-v3
 pnpm install
 
 # Tier 0 — Fully Demo (Flagship · Module A + B · Scenario A–D)
-pnpm demo:exomesh                 # EIP-1193+ Agentic Guard · interactive Scenario A–D matrix
-pnpm demo:exomesh -- --json       # CI / Dune structured output
+pnpm demo:exomesh # EIP-1193+ Agentic Guard · interactive Scenario A–D matrix
+pnpm demo:exomesh -- --json # CI / Dune structured output
 
 # Tier 1 — 5-Venue Fast-Track Proofs (0-Gas FAIL_CLOSED)
-pnpm demo:gmx -- --trip           # GMX v2 FAIL_CLOSED proof
-pnpm demo:pendle -- --trip        # Pendle Institutional Sentinel FAIL_CLOSED proof
-pnpm demo:usdai -- --trip         # USD.ai Collateral FAIL_CLOSED proof
-pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
-pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
+pnpm demo:gmx -- --trip # GMX v2 FAIL_CLOSED proof
+pnpm demo:pendle -- --trip # Pendle Institutional Sentinel FAIL_CLOSED proof
+pnpm demo:usdai -- --trip # USD.ai Collateral FAIL_CLOSED proof
+pnpm demo:hl -- --trip # Hyperliquid Session Guard FAIL_CLOSED proof
+pnpm demo:variational -- --trip # Variational RFQ FAIL_CLOSED proof
 
 # Tier 2 — Specific Standards & Strategy Use Cases
-pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort (`--json` · interactive pauses)
-pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress (`--json` · Scenario A–C)
-pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle (`--zerodev=on` · `--json`)
-pnpm demo:delta-neutral -- --zerodev=off  # Native EIP-1193 signer
+pnpm demo:sanctuary # Module B · ERC-7540+ Async Vault Escort (`--json` · interactive pauses)
+pnpm demo:ingress # Module B · Across/Robinhood AML Compliance Ingress (`--json` · Scenario A–C)
+pnpm demo:delta-neutral # Multi-venue delta-neutral hedge lifecycle (`--zerodev=on` · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off # Native EIP-1193 signer
 
 # Unit Verification & Full Test Suite
-npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
-pnpm test -- --run                                       # 243 files | 1123 PASS
+npx vitest run tests/sdk/retail-guard-provider.test.ts # 35/35
+pnpm test -- --run # 243 files | 1123 PASS
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

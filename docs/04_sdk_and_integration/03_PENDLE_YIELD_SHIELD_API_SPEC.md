@@ -1,8 +1,8 @@
 # Pendle Yield Shield API Specification
 
-> **Document:** 05 — Pendle Yield Shield APIs  
-> **Branch:** `feat/pendle-yield-shield-apis`  
-> **Source:** [`src/services/api/pendle-shield/`](../../src/services/api/pendle-shield/)  
+> **Document:** 05 — Pendle Yield Shield APIs 
+> **Branch:** `feat/pendle-yield-shield-apis` 
+> **Source:** [`src/services/api/pendle-shield/`](../../src/services/api/pendle-shield/) 
 > **Verification:** `npx vitest run tests/services/api/pendle-shield.test.ts`
 
 ---
@@ -34,29 +34,29 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 ```json
 {
-  "marketKeyOrAddress": "PT-eETH",
-  "gmxPos": {
-    "collateralAmount": 100,
-    "collateralTokenPriceUsd": 3500,
-    "sizeNotionalUsd": 50000,
-    "intent": "open"
-  },
-  "hlHedge": {
-    "perpNotionalUsd": 100000,
-    "marginUsedUsd": 10000,
-    "unrealizedPnlUsd": -2000,
-    "intent": "open"
-  },
-  "assetUsdPrice": 3500,
-  "useOracle": false,
-  "soil": {
-    "symbol": "ETH",
-    "hlSpot": 3500,
-    "hlPerp": 3500,
-    "dydxPerp": 3500,
-    "depthUsd": 200000,
-    "disableThresholdJitter": true
-  }
+ "marketKeyOrAddress": "PT-eETH",
+ "gmxPos": {
+ "collateralAmount": 100,
+ "collateralTokenPriceUsd": 3500,
+ "sizeNotionalUsd": 50000,
+ "intent": "open"
+ },
+ "hlHedge": {
+ "perpNotionalUsd": 100000,
+ "marginUsedUsd": 10000,
+ "unrealizedPnlUsd": -2000,
+ "intent": "open"
+ },
+ "assetUsdPrice": 3500,
+ "useOracle": false,
+ "soil": {
+ "symbol": "ETH",
+ "hlSpot": 3500,
+ "hlPerp": 3500,
+ "dydxPerp": 3500,
+ "depthUsd": 200000,
+ "disableThresholdJitter": true
+ }
 }
 ```
 
@@ -64,22 +64,22 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 ```json
 {
-  "ok": true,
-  "api": "pendle-shield/shadow-margin",
-  "option": 2,
-  "result": {
-    "passed": true,
-    "effectiveScore": 42,
-    "shadowMarginUsd": 185420.5,
-    "dynamicLtv": 0.27,
-    "action": "PASS_GREENLIGHT",
-    "hlStressBps": 120,
-    "hlHedgeBufferUsd": 500,
-    "crossVenueShadowMarginUsd": 185920.5,
-    "soilTripped": false,
-    "soilReasons": [],
-    "registrySymbol": "PT-eETH"
-  }
+ "ok": true,
+ "api": "pendle-shield/shadow-margin",
+ "option": 2,
+ "result": {
+ "passed": true,
+ "effectiveScore": 42,
+ "shadowMarginUsd": 185420.5,
+ "dynamicLtv": 0.27,
+ "action": "PASS_GREENLIGHT",
+ "hlStressBps": 120,
+ "hlHedgeBufferUsd": 500,
+ "crossVenueShadowMarginUsd": 185920.5,
+ "soilTripped": false,
+ "soilReasons": [],
+ "registrySymbol": "PT-eETH"
+ }
 }
 ```
 
@@ -107,13 +107,13 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 ```json
 {
-  "action": "PT_ROLL_FORWARD",
-  "agentId": "eliza-agent-001",
-  "sourceMarketKeyOrAddress": "PT-eETH",
-  "targetMarketKeyOrAddress": "PT-USDC",
-  "rollAmountPt": 10.5,
-  "agentImpliedYieldBps": 420,
-  "oracleImpliedYieldBps": 430
+ "action": "PT_ROLL_FORWARD",
+ "agentId": "eliza-agent-001",
+ "sourceMarketKeyOrAddress": "PT-eETH",
+ "targetMarketKeyOrAddress": "PT-USDC",
+ "rollAmountPt": 10.5,
+ "agentImpliedYieldBps": 420,
+ "oracleImpliedYieldBps": 430
 }
 ```
 
@@ -129,17 +129,17 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 ```json
 {
-  "ok": true,
-  "api": "pendle-shield/auto-roll",
-  "option": 3,
-  "verdict": {
-    "passed": true,
-    "zeroGasBlocked": false,
-    "attempts": 1,
-    "channelSevered": false,
-    "yieldDriftBps": 10,
-    "daysToTargetMaturity": 400
-  }
+ "ok": true,
+ "api": "pendle-shield/auto-roll",
+ "option": 3,
+ "verdict": {
+ "passed": true,
+ "zeroGasBlocked": false,
+ "attempts": 1,
+ "channelSevered": false,
+ "yieldDriftBps": 10,
+ "daysToTargetMaturity": 400
+ }
 }
 ```
 
@@ -147,19 +147,19 @@ Bind **Pendle PT collateral health** with **GMX v2** margin exposure and optiona
 
 ```json
 {
-  "ok": false,
-  "api": "pendle-shield/auto-roll",
-  "option": 3,
-  "verdict": {
-    "passed": false,
-    "zeroGasBlocked": true,
-    "code": "YIELD_DRIFT_REJECTED",
-    "message": "YIELD_DRIFT_REJECTED",
-    "attempts": 2,
-    "channelSevered": false,
-    "yieldDriftBps": 350,
-    "daysToTargetMaturity": 0
-  }
+ "ok": false,
+ "api": "pendle-shield/auto-roll",
+ "option": 3,
+ "verdict": {
+ "passed": false,
+ "zeroGasBlocked": true,
+ "code": "YIELD_DRIFT_REJECTED",
+ "message": "YIELD_DRIFT_REJECTED",
+ "attempts": 2,
+ "channelSevered": false,
+ "yieldDriftBps": 350,
+ "daysToTargetMaturity": 0
+ }
 }
 ```
 

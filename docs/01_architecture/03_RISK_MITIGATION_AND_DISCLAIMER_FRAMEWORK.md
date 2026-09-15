@@ -5,16 +5,16 @@
 > **Document Status:** Official SSOT for Arbitrum Foundation · ZeroDev Grant Committees · Institutional allocators
 > **Version:** v1.0 → v2.0 Roadmap Alignment
 > **Baseline:** Vitest **235 test files | 1091 PASS clean (100%)** · Worker bundle **57.88 KiB gzip** (163.81 KiB raw · `limitKiB: 150` · `pass: true`) · Wasm [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) **< 28 KiB** · SSRC **p50 ~106 µs**
-> **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-Execution Citadel Protection.
+> **Core Principle:** Honest Accounting, Physical Invariants (`lostUsd ≡ 0`), and Venue-Agnostic Pre-ExoMesh Execution Shield Protection.
 > **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md)
 
 > **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution. **SliverVine ExoMesh** is the pre-consensus execution safety primitive that binds both.
 
-**Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
-**Entity:** SilverVine Labs  
-**Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum  
-**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral` · `withExoMeshShield` (live `soil_core.wasm`)  
-**Audit provenance archive:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — *The `/api/grant-audit` endpoint serves as a verifiable static audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline.*  
+**Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ) 
+**Entity:** SilverVine Labs 
+**Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum 
+**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral` · `withExoMeshShield` (live `soil_core.wasm`) 
+**Audit provenance archive:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — *The `/api/grant-audit` endpoint serves as a verifiable static audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline.* 
 **Dune PEV dashboard:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
 
 ### Verification SSOT Anchors
@@ -33,8 +33,8 @@
 
 | Pillar | Role | Spec |
 |--------|------|------|
-| **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
-| **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) |
+| **Pillar Set X — Gatehouse** | ZeroDev Kernel v3 · EIP-712 · session scopes | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) |
+| **Pillar Set X — Compliance Ingress Firewall** | AML escort · outbound-only · `lostUsd ≡ 0` | [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) |
 | **Pillar Set Y — SliverVine ExoMesh Engine Substrate** | `checkSoilResistance()` · Wasm · R01–R20 | [`../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) |
 
 ---
@@ -44,9 +44,6 @@
 > **Effective scope:** This section applies to all readers — grant evaluators, institutional allocators, AI-agent integrators, and fund-of-funds diligence teams. By referencing this framework, you acknowledge that **no software can eliminate 100% of systemic crypto, market, or adversarial risks**.
 
 <a id="01-what-slivervine-exomesh-does-and-does-not-guarantee"></a>
-<a id="01-what-slivervine-citadel-shield-does-and-does-not-guarantee"></a>
-
-> **Anchor redirect:** `§0.1` was formerly `#01-what-slivervine-citadel-shield-does-and-does-not-guarantee` (legacy Citadel Shield product name). Both anchors resolve here.
 
 ### 0.1 What SliverVine ExoMesh Does — and Does Not — Guarantee
 
@@ -103,7 +100,7 @@ $$
 | **Oracle lag / manipulation** | Stale GMX / HL marks · >30s feed drift | `ORACLE_LAG_DEADLOCK` · fail-closed before payload construction | Oracle compromise beyond threshold · feed censorship |
 | **MEV / sandwich / toxic flow** | Block-builder reordering · liquidity extraction | Soil slippage fuse · TWAP path slicing · PGATE latency fuse | Tail-event MEV beyond modeled depth · private order-flow wars |
 | **Bridge / cross-chain** | Across settlement delay · escort path compromise | `IN_FLIGHT_BRIDGE_CAPITAL` · `lostUsd ≡ 0` · 1h timeout fail-closed | Bridge smart-contract exploit · counterparty insolvency |
-| **Basis / funding drift** | GMX GM vs HL short divergence | Dual-leg Δ tracking · Citadel Safety Buffer · hurdle gate | Persistent negative funding · venue-specific insolvency |
+| **Basis / funding drift** | GMX GM vs HL short divergence | Dual-leg Δ tracking · ExoMesh Safety Buffer · hurdle gate | Persistent negative funding · venue-specific insolvency |
 | **AI-specific attack surface** | **Prompt injection** · rogue LLM intent generation · agent credential drift | Pillar Set X scoped session keys · R20 physical deadlock · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) policy pre-validation · V1.5 prompt-injection circuit (roadmap) | Novel adversarial ML · compromised upstream agent orchestrator · social-engineering of operator keys |
 
 ### 0.3 Interceptor Mesh Coverage (88% Pre-Broadcast)
@@ -139,18 +136,18 @@ SliverVine ExoMesh evaluates every intent at the **Edge** via `checkSoilResistan
 
 **Fund safety mechanics:**
 
-1. **Funds remain in the user's custody** — EOA, ZeroDev Kernel smart account, or source-chain wallet. Citadel is **non-custodial**; rejection does not move principal.
+1. **Funds remain in the user's custody** — EOA, ZeroDev Kernel smart account, or source-chain wallet. SliverVine ExoMesh is **non-custodial**; rejection does not move principal.
 2. **No mempool pollution** — toxic intents are severed at `signingChannelOpen: false` / `severSigningChannel()`; Arbitrum sequencer gas is not spent on doomed trades.
 3. **Live mainnet proof (42161):** GMX fill attempted under live pool stress correctly tripped **`GMX_POOL_IMBALANCE_BREACH`** pre-broadcast — confirming the fail-closed invariant shield is **active in production** (see [`VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) `[MAINNET_LIVE_EXECUTION_EVIDENCE]`).
 
 ```text
 Operator intent
-  → checkSoilResistance() + venue guards (p50 ~106µs)
-  → [ PASS ]  → payload / UserOp assembly → optional Gate attestation → broadcast
-  → [ TRIP ]  → RiskLimitExceeded / soil reasons
-              → NO calldata signed for venue
-              → NO UserOp to bundler
-              → user funds unchanged · gas cost = 0
+ → checkSoilResistance() + venue guards (p50 ~106µs)
+ → [ PASS ] → payload / UserOp assembly → optional Gate attestation → broadcast
+ → [ TRIP ] → RiskLimitExceeded / soil reasons
+ → NO calldata signed for venue
+ → NO UserOp to bundler
+ → user funds unchanged · gas cost = 0
 ```
 
 #### 0.5.2 In-Flight & Cross-Chain Escort Handling (`lostUsd ≡ 0`)
@@ -160,24 +157,24 @@ Pillar Set X Compliance Ingress Firewall enforces **honest bridge accounting** �
 | State | `capitalLabel` | `deployable` | `lostUsd` | Operator action |
 |-------|----------------|--------------|-----------|-----------------|
 | **Bridge initiated** | `IN_FLIGHT_BRIDGE_CAPITAL` | `false` | `0` | Wait for escort settlement; no naked GMX/HL leg opens |
-| **Bridge settled** | `DEPLOYABLE` (post-escort) | `true` | `0` | Citadel re-runs soil + venue guards before venue broadcast |
+| **Bridge settled** | `DEPLOYABLE` (post-escort) | `true` | `0` | ExoMesh re-runs soil + venue guards before venue broadcast |
 | **Bridge timeout (>1h)** | `BRIDGE_TIMEOUT_FAIL_CLOSED` | `false` | `0` | Fail-closed — no delta-neutral open; capital remains on source chain or Kernel account |
 
 **State machine (Pillar Set X reference escort):**
 
 ```text
 IN_FLIGHT_BRIDGE_CAPITAL
-  ├─ settled within DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS (3_600_000 ms = 1h)
-  │    → escort OK · lostUsd ≡ 0 · proceed to Pillar Set Y soil gate
-  └─ elapsed > 1h without settlement
-       → BRIDGE_TIMEOUT_FAIL_CLOSED
-       → refuse naked positions · lostUsd ≡ 0
-       → funds NOT trapped in Citadel contracts (non-custodial escort labels only)
+ ├─ settled within DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS (3_600_000 ms = 1h)
+ │ → escort OK · lostUsd ≡ 0 · proceed to Pillar Set Y soil gate
+ └─ elapsed > 1h without settlement
+ → BRIDGE_TIMEOUT_FAIL_CLOSED
+ → refuse naked positions · lostUsd ≡ 0
+ → funds NOT trapped in ExoMesh escort labels (non-custodial escort labels only)
 ```
 
 **Capital location on trip:** Funds stay in the **user's Kernel AA account** (Arbitrum) or **source-chain wallet** (e.g. Robinhood `46630` outbound escort). SliverVine Protocol does not sweep principal into protocol-owned contracts on fail-closed paths.
 
-**Code SSOT:** [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) · [`src/core/capital-invariant-ledger.ts`](../../src/core/capital-invariant-ledger.ts) (`lostUsd` hard-assert = 0) · Pillar Set X audit [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) §2.4.
+**Code SSOT:** [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · [`src/sdk/unidirectional-bridge.ts`](../../src/sdk/unidirectional-bridge.ts) · [`src/core/capital-invariant-ledger.ts`](../../src/core/capital-invariant-ledger.ts) (`lostUsd` hard-assert = 0) · Pillar Set X audit [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) §2.4.
 
 #### 0.5.3 User Feedback & Notification Flow (HUD · SDK · Operator Console)
 
@@ -210,7 +207,7 @@ Rejected intents surface as **structured, actionable errors** — never silent d
 
 **SliverVine Protocol** acknowledges a fundamental law of distributed systems: **Cross-chain risk, bridge latency, and basis drift cannot be magically erased by software; they must be quantified, isolated, and economically absorbed.**
 
-This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — from the **code-verified V1.0 AI Agent ExoMesh on Arbitrum**, through **V1.5 sub-ms agentic security / [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarms**, to **V2.0 institutional Citadel-as-a-Service (CaaS) & Orbit Shield** — plus **60 Reflective Architectural Invariants**, each status-badged as **✅ Code-Verified** (v1.0 baseline) or **⏳ Roadmap Spec** (V1.5/V2.0). Aave/Morpho APY figures, where mentioned, are *(Hurdle-rate probe only — not a yield-stacking product track)*. Optional bridges are **Pillar Set X Reference Escort Adapters**.
+This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — from the **code-verified V1.0 AI Agent ExoMesh on Arbitrum**, through **V1.5 sub-ms agentic security / [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarms**, to **V2.0 institutional ExoMesh-as-a-Service (CaaS) & Orbit Shield** — plus **60 Reflective Architectural Invariants**, each status-badged as **✅ Code-Verified** (v1.0 baseline) or **⏳ Roadmap Spec** (V1.5/V2.0). Aave/Morpho APY figures, where mentioned, are *(Hurdle-rate probe only — not a yield-stacking product track)*. Optional bridges are **Pillar Set X Reference Escort Adapters**.
 
 ---
 
@@ -220,30 +217,30 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ Stage A (V1.0 — ✅ Code-Verified Live Baseline)                                 │
-│ · Arbitrum One Primary + GMX v2 / HL Delta-Neutral Engine                       │
-│ · Wasm Hot-Path Shield: p50 ~106µs · <28KiB pkg/soil_core.wasm                  │
-│ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation                          │
-│ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1           │
+│ Stage A (V1.0 — ✅ Code-Verified Live Baseline) │
+│ · Arbitrum One Primary + GMX v2 / HL Delta-Neutral Engine │
+│ · Wasm Hot-Path Shield: p50 ~106µs · <28KiB pkg/soil_core.wasm │
+│ · ERC-8196 (Final) Sub-ms Policy Gate — policy pre-validation │
+│ · EIP-712 Consume-Once Gate 0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1 │
 │ · Mainnet Ignition Tx 0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6 │
 │ · Vitest SSOT: 235 test files | 1091 PASS clean
 └────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                                         ▼
+ │
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ Stage B (V1.5 — ⏳ Roadmap: Sub-ms Agentic Security & ERC-8196 (Final) Sub-ms Policy Gate swarms)           │
-│ · ERC-8196 (Final) Sub-ms Policy Gate Fleet Enforcement — multi-agent policy gates vs rogue LLM execution  │
-│ · EIP-7702 Zero-Friction Onboarding — EOA → Agent Smart Account, no token move  │
-│ · Prompt Injection Defense Circuit — sub-100µs severSigningChannel()            │
-│ · Variational Perp Native Hedge PoC — Arbitrum shadow hedge, less cross-L1 RPC  │
+│ Stage B (V1.5 — ⏳ Roadmap: Sub-ms Agentic Security & ERC-8196 (Final) Sub-ms Policy Gate swarms) │
+│ · ERC-8196 (Final) Sub-ms Policy Gate Fleet Enforcement — multi-agent policy gates vs rogue LLM execution │
+│ · EIP-7702 Zero-Friction Onboarding — EOA → Agent Smart Account, no token move │
+│ · Prompt Injection Defense Circuit — sub-100µs severSigningChannel() │
+│ · Variational Perp Native Hedge PoC — Arbitrum shadow hedge, less cross-L1 RPC │
 └────────────────────────────────────────┬────────────────────────────────────────┘
-                                         │
-                                         ▼
+ │
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────────────┐
-│ Stage C (V2.0 — ⏳ Design Spec: Institutional CaaS & Orbit Shield)               │
-│ · Modular B2B CaaS — @slivervine/exomesh-agentic-wallet-guard Wasm core for AI DEX / Orbit L3    │
-│ · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger)   │
-│ · Multi-Chain Edge Reflector Mesh — cross-L2 telemetry + instant kill-switch    │
+│ Stage C (V2.0 — ⏳ Design Spec: Institutional CaaS & Orbit Shield) │
+│ · Modular B2B CaaS — @slivervine/exomesh-agentic-wallet-guard Wasm core for AI DEX / Orbit L3 │
+│ · Pre-execution risk checks · ZeroDev Stage ⑦ Intent Composition (2PC ledger) │
+│ · Multi-Chain Edge Reflector Mesh — cross-L2 telemetry + instant kill-switch │
 └─────────────────────────────────────────────────────────────────────────────────┘
 ```
 
@@ -257,7 +254,7 @@ This document outlines SliverVine Protocol's 3-Stage Evolutionary Roadmap — fr
 
 | Risk Dimension | Stage A (V1.0 — ✅ Code-Verified) | Stage B (V1.5 — ⏳ Roadmap) | Stage C (V2.0 — ⏳ Design Spec) |
 |----------------|-----------------------------------|-----------------------------|--------------------------------|
-| **Product posture** | Sub-ms 0-Gas pre-broadcast Citadel for AI Agents on Arbitrum | Multi-agent [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarm security | Institutional CaaS + Orbit Shield mesh |
+| **Product posture** | Sub-ms 0-Gas pre-broadcast SliverVine ExoMesh for AI Agents on Arbitrum | Multi-agent [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) swarm security | Institutional CaaS + Orbit Shield mesh |
 | **Shield latency** | Wasm hot-path p50 ~106µs · `<28KiB` `soil_core.wasm` | Same Shield · **sub-100µs** `severSigningChannel()` on LLM invariant breach | Same Shield · mesh-propagated kill-switch |
 | **Agent policy** | [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) pre-validation · EIP-712 consume-once Gate `0xb174…` | **Fleet enforcement** — multi-agent policy delegation vs rogue LLM | Plug-and-play policy SDK for third-party agent wallets |
 | **AA / onboarding** | ZeroDev Kernel v3 · Paymaster · Smart Routing | **EIP-7702** EOA → Agent Smart Account (no token migration) · Kernel v4 adapter | Single-chain Intent Compose across Orbit L3s |
@@ -285,14 +282,14 @@ When funds cross via Across Bridge, SliverVine Protocol labels capital as `IN_FL
 
 **Code SSOT:** [`arbitrum-yield-ingress-ops.ts`](../../src/adapters/arbitrum/arbitrum-yield-ingress-lib/arbitrum-yield-ingress-ops.ts) · [`src/services/yield/rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) (`FRICTION_BUFFER_APY`)
 
-### 2.3 Two-Tiered Yield System & Citadel Safety Buffer
+### 2.3 Two-Tiered Yield System & ExoMesh Safety Buffer
 
 > **V1.0 yield SSOT:** Allocator-facing HUD anchors to **Dynamic Target Range 8.2% ~ 11.8% APY** (non-guaranteed), governed by **Hurdle Gate** `FRICTION_BUFFER_APY = 0.005` (0.5% friction buffer) in [`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts). Tier caps below describe component mechanics — not guaranteed totals.
 
 | Tier | Mechanism | Cap / Rule |
 |------|-----------|------------|
 | **Robinhood (Pillar Set X Reference Escort Adapter)** | Optional outbound compliance channel (`46630`/`4663` → `42161`) · `lostUsd ≡ 0` | Not a yield product · does not raise TVL cap |
-| **Citadel Safety Buffer** | GMX v2 builder fee (**+10 bps `uiFeeReceiver`** via `GMX_UI_FEE_BPS`) + skew arbitrage surplus | Absorbs bridge fees, basis risk, and MEV slippage |
+| **ExoMesh Safety Buffer** | GMX v2 builder fee (**+10 bps `uiFeeReceiver`** via `GMX_UI_FEE_BPS`) + skew arbitrage surplus | Absorbs bridge fees, basis risk, and MEV slippage |
 | **Hurdle Gate** | Rebalance / performance fee crystallization | `FRICTION_BUFFER_APY = 0.005` — deploy only above friction-adjusted excess |
 
 ### 2.4 Evolution of ZeroDev: From Bridge Router to Intent Composer
@@ -303,7 +300,7 @@ Even in a V2.0 CaaS / Orbit Shield setup, ZeroDev remains the Gatehouse engine:
 |------------|--------------|-------------------------|
 | **Gas-Free Sponsorship** | Paymaster + daily caps | Same, extended to AI agent fleets |
 | **Scoped Security** | 30s TTL Session Keys · `ORDER_EXECUTE` only | Zero withdrawal scope preserved |
-| **Atomic Composition** | 1-click GM + HL hedge under Citadel gates | EOA → Agent Smart Account · CaaS tenant UserOps |
+| **Atomic Composition** | 1-click GM + HL hedge under ExoMesh gates | EOA → Agent Smart Account · CaaS tenant UserOps |
 
 **Spec SSOT:** [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §2.4](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#24-pillar-set-x-opt-in-zerodev-account-abstraction-integration-summary)
 
@@ -361,7 +358,7 @@ export const FRICTION_BUFFER_APY = 0.005 as const; // 0.5% friction buffer
  ⇔ capital deployment allowed (else park in Native Earn · fail-closed)
 ```
 
-**Design rule:** Citadel Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
+**Design rule:** ExoMesh Safety Buffer and builder UI fee exist to **capture real economic surplus** from GMX v2 skew routing — not to mask slippage with emissions. The 0.5% Hurdle Gate ensures **net gains always outpace friction** before Delta-Neutral capital is deployed or rebalanced.
 
 **Code anchors:** [`src/services/yield/rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts) · [`src/services/adapters/gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts) · [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) · Vitest **235 test files | 1091 PASS clean
 
@@ -398,7 +395,7 @@ The HUD **Dynamic Target Range** is derived **solely from exogenous Delta-Neutra
 | **GMX v2 ETH/USDC GM Base** | **4.5%** | **6.5%** | GMX trader swap, borrow & closing fees |
 | **Skew Rebate & Builder Fee** | **1.0%** (+10 bps UI fee included) | **1.8%** | Positive skew price-impact rebate + `uiFeeReceiver` (+10 bps) |
 | **Hyperliquid 1× Short Funding** | **3.2%** | **4.2%** | Counterparty long-side funding payment on HL orderbook |
-| **Friction & Rebalance Costs** | **−0.5%** (`FRICTION_BUFFER_APY`) | **−0.7%** | Absorbed by Citadel Safety Buffer (basis & slippage) |
+| **Friction & Rebalance Costs** | **−0.5%** (`FRICTION_BUFFER_APY`) | **−0.7%** | Absorbed by ExoMesh Safety Buffer (basis & slippage) |
 | **Net Strategy APY Range** | **8.2%** | **11.8%** | **Exogenous Delta-Neutral Cash Flow (Zero Token Emissions)** |
 
 > **Evaluator defense narrative:** Unlike speculative emission vaults, SliverVine ExoMesh's **8.2% ~ 11.8%** target range is mathematically grounded in real GMX trading fees, skew rebates, and Hyperliquid short funding rates, guarded by our **0.5% Hurdle Gate** (`FRICTION_BUFFER_APY = 0.005`). Capital deploys only when `targetNetApy > nativeEarnApy + FRICTION_BUFFER_APY` ([`rebalance-rules.ts`](../../src/services/yield/rebalance-rules.ts)).
@@ -422,7 +419,7 @@ Real yield stack (conceptual):
  Base floor ← Aave / Morpho USDC earn (~4–5% *(Hurdle-rate probe only — not a yield-stacking product track)*)
  + GMX surplus ← +10 bps uiFeeReceiver (GMX_UI_FEE_BPS) + venue-native skew rebate (up to ~5 bps; separate)
  + HL funding ← 1× short funding cushion (hourly · regime-dependent)
- − friction ← bridge · basis · MEV · slippage (Citadel Safety Buffer absorbs)
+ − friction ← bridge · basis · MEV · slippage (ExoMesh Safety Buffer absorbs)
  > hurdle ← Native Earn + FRICTION_BUFFER_APY (0.5%) before DN redeploy
 ```
 
@@ -432,7 +429,7 @@ Real yield stack (conceptual):
 |-------------|-----------|
 | **No emission token as yield source** | Prevents reflexive APY divorced from venue cash flows |
 | **Hurdle Gate before DN deployment** | `resolveCapitalAllocation()` parks capital in Native Earn when `targetNetApy ≤ hurdle + 0.5%` |
-| **Citadel Safety Buffer absorbs friction** | Real surplus must cover bridge/basis/MEV — not be masked by mint-and-dump |
+| **ExoMesh Safety Buffer absorbs friction** | Real surplus must cover bridge/basis/MEV — not be masked by mint-and-dump |
 | **Storm fallback to Aave/Morpho (optional probe)** | When GMX skew + HL funding compress, capital **may park at risk-free probe** *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | **Honest HUD band** | 8.2–11.8% is a **target range**, not a guaranteed emission-backed APY |
 
@@ -468,7 +465,7 @@ Real yield stack (conceptual):
 | 5 | ✅ | **AML Inbound Isolation** | `42161 → 46630/4663` inbound blocked · `AML_INBOUND_TO_ROBINHOOD_BLOCKED` |
 | 6 | ✅ | **Settlement Window Honesty** | GMX 3–5 min · HL withdrawal 15 min — capital held in-flight, not mis-booked |
 | 7 | ✅ | **Non-Custodial Escrow** | User principal never booked as protocol-owned; Kernel account SSOT |
-| 8 | ✅ | **Basis Risk Quantification** | Cross-venue delta tracked; friction absorbed by Citadel Safety Buffer |
+| 8 | ✅ | **Basis Risk Quantification** | Cross-venue delta tracked; friction absorbed by ExoMesh Safety Buffer |
 | 9 | ✅ | **Across Bridge SSOT** | `evaluateAcrossBridgeTransfer()` + `evaluateBridgeTimeout()` pure functions |
 | 10 | ✅ | **Ingress Safety Switch** | On-chain **[`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol)** address-level oracle flush + blacklist · inbound AML at Edge adapter |
 
@@ -497,7 +494,7 @@ Real yield stack (conceptual):
 | 24 | ⏳ | **Dynamic Hurdle Rate** | Optional performance fee only on yield exceeding Aave probe + 1.5% *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | 25 | ✅ | **Builder UI Fee** | +10 bps `uiFeeReceiver` on every GMX v2 payload (v1.0 active) |
 | 26 | ✅ | **Skew Neutralizer Premium** | Positive skew / price-impact rebate — never conflated with UI fee |
-| 27 | ✅ | **Citadel Safety Buffer** | Excess GMX yield absorbs bridge fees, basis drift, MEV slippage |
+| 27 | ✅ | **ExoMesh Safety Buffer** | Excess GMX yield absorbs bridge fees, basis drift, MEV slippage |
 | 28 | ⏳ | **Risk-Free Storm Probe** | Optional 4%~5% Aave/Morpho probe during 3σ / oracle-lag / sequencer grace *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | 29 | ⏳ | **Performance Fee (optional accounting)** | 10% of excess yield above Aave probe — not on v1.0 UI fee path *(Hurdle-rate probe only — not a yield-stacking product track)* |
 | 30 | ⏳ | **CaaS Monetization** | B2B Wasm Firewall license · institutional SDK licensing |
@@ -557,7 +554,7 @@ SliverVine Protocol treats **simulation as a first-class risk artifact** — not
 
 ### 4.1 Survival Benchmark (HL Mainnet L2 + Dual-Radar)
 
-The **Survival Benchmark** is a 30-day lookback institutional stress report that fuses Hyperliquid mainnet L2 orderbook walks, Binance basis, funding history, and Citadel soil audits.
+The **Survival Benchmark** is a 30-day lookback institutional stress report that fuses Hyperliquid mainnet L2 orderbook walks, Binance basis, funding history, and ExoMesh soil audits.
 
 | Parameter | Value | SSOT |
 |-----------|-------|------|
@@ -586,7 +583,7 @@ pnpm tsx scripts/generate-survival-report.ts
 
 ### 4.2 ZeroDev AA Gate Regression ([`zerodev-aa-gate.test.ts`](../../tests/adapters/zerodev-aa-gate.test.ts))
 
-The ZeroDev Citadel risk gate is an **opt-in CLI/SDK pre-broadcast envelope** (not mounted on the Worker hot path). Its Vitest suite proves fail-closed behavior before any UserOp reaches a bundler.
+The ZeroDev ExoMesh risk gate is an **opt-in CLI/SDK pre-broadcast envelope** (not mounted on the Worker hot path). Its Vitest suite proves fail-closed behavior before any UserOp reaches a bundler.
 
 | Test case | Assertion | Risk control |
 |-----------|-----------|--------------|
@@ -603,7 +600,7 @@ pnpm exec vitest run tests/adapters/zerodev-aa-gate.test.ts
 
 ```text
 zerodev-aa-gate.test.ts → assertCitadelRiskGate() + evaluateZeroDevGasGuards()
-zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
+zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + ExoMesh risk gate
  ├─ zerodev-aa-failover.ts → Arbitrum One health / AA probe route
  ├─ zerodev-aa-static-breaker.ts → soil + gas sponsorship limits
  └─ zerodev-aa-userop.ts → Paymaster + bundler dispatch (after gate PASS)
@@ -615,7 +612,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 |---------|----------------|-------|
 | **ZeroDev AA Dry-Run** | `pnpm test:zerodev` → [`tests/adapters/zerodev-aa-dryrun-harness.test.ts`](../../tests/adapters/zerodev-aa-dryrun-harness.test.ts) | Kernel v3 EP 0.7 UserOp draft · session-key clip audit · Risk Oracle Gate simulation |
 | **HL Panic Sandbox** | `pnpm tsx scripts/dry-run-sandbox.ts` | In-memory HL testnet stress → counter-attack → EIP-712 session-key pipeline (< 5ms hot path target) |
-| **Grant E2E Demo** | `pnpm demo:delta-neutral` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
+| **Grant E2E Demo** | `pnpm demo:delta-neutral` (default **dry-run**) | Full ExoMesh pipeline simulation; pass `--live` only for controlled mainnet ignition |
 | **5-TX Verified Proof** | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet 5-TX anchor with notional tiers ($1K / $100K / $1M) |
 | **Negative Proofs** | `pnpm verify:negative` | Confirms soil trips on depth breach (`DEPTH_USD < MIN_DEPTH_USD`) |
 | **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/exomesh-agentic-wallet-guard` `withExoMeshShield` — ALLOW / `--trip` FAIL_CLOSED |
@@ -644,7 +641,7 @@ npx vitest run tests/core/portfolio-cascade-replay.test.ts
 
 ## 5. Comparative Analysis: Arbitrum Native vs. Pillar Set X Reference Escort Adapter
 
-V1.0 operates two **distinct capital ingress modes**. They share the same Citadel pre-execution envelope. Robinhood / Across is a **Pillar Set X Reference Escort Adapter** — not product identity.
+V1.0 operates two **distinct capital ingress modes**. They share the same ExoMesh pre-execution envelope. Robinhood / Across is a **Pillar Set X Reference Escort Adapter** — not product identity.
 
 ### 5.1 Capacity Limits
 
@@ -680,7 +677,7 @@ USDG on 46630 → evaluateAcrossBridgeTransfer() state machine:
 |-------|----------------|-------------|-----------|
 | Pre-bridge | `AVAILABLE` | No (not on Arb yet) | **0** |
 | In transit | `IN_FLIGHT_BRIDGE_CAPITAL` | **No** — naked positions forbidden | **0** |
-| Settled | `SETTLED` | Yes — full Citadel envelope | **0** |
+| Settled | `SETTLED` | Yes — full SliverVine ExoMesh envelope | **0** |
 | Timeout | `BRIDGE_TIMEOUT_FAIL_CLOSED` | **No** — fail-closed severance | **0** |
 
 **Code SSOT:** `evaluateAcrossBridgeTransfer()` in [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · Vitest **6/6 PASS**.
@@ -701,7 +698,7 @@ USDG on 46630 → evaluateAcrossBridgeTransfer() state machine:
 
 > **Disclaimer:** This mapping is an **architectural alignment narrative** for grant committees and institutional due diligence — not a claim of regulatory certification. SliverVine Protocol implements controls that **rhyme with** Basel III operational-risk and ICAAP stress-testing principles.
 
-### 6.1 Basel III Operational Risk → Citadel Fail-Closed Controls
+### 6.1 Basel III Operational Risk → SliverVine ExoMesh Fail-Closed Controls
 
 | Basel III concept | SliverVine Protocol control | Code / test anchor |
 |-------------------|-------------|-------------------|
@@ -750,7 +747,7 @@ lostUsd: number; // Always 0 — pending bridge liquidity is never booked as los
 
 | Layer | Compliance function | Transaction-ordering awareness | Status |
 |-------|---------------------|-------------------------------|--------|
-| **Edge Citadel (SSOT)** | `checkSoilResistance()` · R01–R20 · signing channel severance | Pre-broadcast intent ordering · UserOp gate before bundler | ✅ v1.0 Delivered (Sepolia verified) |
+| **Edge ExoMesh (SSOT)** | `checkSoilResistance()` · R01–R20 · signing channel severance | Pre-broadcast intent ordering · UserOp gate before bundler | ✅ v1.0 Delivered (Sepolia verified) |
 | **Pillar Set X AML Firewall + ArbOS Elara** | Outbound-only Robinhood escort · `AML_INBOUND_TO_ROBINHOOD_BLOCKED` · Elara ingress drops non-compliant / blacklisted senders before GM payload construction | Sequencer / ArbOS ordering sensor alignment · complements **[`IngressSafetySwitch.sol`](../../contracts/IngressSafetySwitch.sol)** | ⏳ V1.0 Design Spec ([`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#arbos-stylus-alignment-code-verified-on-chain-coprocessor)) |
 | **UI reactive HUD** | `LivingWaterShieldCard` · `AMLShieldCard` · `SmartRoutingDepositCard` tranche switcher | Trip banners · Tranche A native vs Tranche B bridge state machine | ✅ v1.0 UI SSOT |
 
@@ -781,14 +778,14 @@ Evaluators should trace claims in this document to the following SSOT paths:
 | Pillar | Claim | Code SSOT | Test Anchor |
 |--------|-------|-----------|-------------|
 | **Bridge accounting** | `IN_FLIGHT_BRIDGE_CAPITAL` · `lostUsd ≡ 0` | [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) | [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) (6/6) |
-| **ZeroDev AA gate** | Citadel risk gate before UserOp · failover · gas ledger | [`src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) (`zerodev-aa/zerodev-aa-gate.ts`) | [`tests/adapters/zerodev-aa-gate.test.ts`](../../tests/adapters/zerodev-aa-gate.test.ts) |
+| **ZeroDev AA gate** | ExoMesh risk gate before UserOp · failover · gas ledger | [`src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) (`zerodev-aa/zerodev-aa-gate.ts`) | [`tests/adapters/zerodev-aa-gate.test.ts`](../../tests/adapters/zerodev-aa-gate.test.ts) |
 | **Smart Routing calldata** | USDG → GMX `ExchangeRouter` · `payloadHash()` binding · **Reference Harness** (production baseline = Arbitrum One Native Ingress) | [`src/services/adapters/gmx-smart-route-payload-binding.ts`](../../src/services/adapters/gmx-smart-route-payload-binding.ts) | [`tests/adapters/gmx-smart-route-payload-binding.test.ts`](../../tests/adapters/gmx-smart-route-payload-binding.test.ts) |
 | **ReflexCore (SSRC)** | p50 ~106 µs pre-execution fuse | [`src/services/risk-control-lib/soil-resistance.ts`](../../src/services/risk-control-lib/soil-resistance.ts) · [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) | `tests/risk-control/*` |
 
 **ZeroDev AA execution path (read order):**
 
 ```text
-zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
+zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + ExoMesh risk gate
  ├─ zerodev-aa-failover.ts → Arbitrum One health / AA probe route
  ├─ zerodev-aa-static-breaker.ts → soil + gas sponsorship limits
  └─ zerodev-aa-userop.ts → Paymaster + bundler dispatch (after gate PASS)
@@ -797,7 +794,7 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
  └─ gated-executor-payload.ts → computeGatedExecutorPayloadHash() → SliverVineGate
 ```
 
-> **Note:** [`zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) is an opt-in CLI/SDK Citadel risk gate — not mounted on the Worker hot path. Production soil fuse remains `checkSoilResistance()` on Edge.
+> **Note:** [`zerodev-aa-gate.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate.ts) is an opt-in CLI/SDK ExoMesh risk gate — not mounted on the Worker hot path. Production soil fuse remains `checkSoilResistance()` on Edge.
 
 | Check | Command / Surface | Expected |
 |-------|-------------------|----------|
@@ -814,5 +811,5 @@ gmx-smart-route-payload-binding.ts → buildGmxSmartRoutePayloadBinding()
 | [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md`](./01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md) | Yellow Paper — Triangle Liquidity Loop · settlement |
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](./02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 Defense Matrix · ReflexCore (SSRC) engine |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ERC/EIP alignment · ArbOS Elara compliance |
-| [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) | Pillar Set X Compliance Ingress Firewall Audit |
+| [`../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture`](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) | Pillar Set X Compliance Ingress Firewall Audit |
 | [`../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) | `@slivervine/exomesh-agentic-wallet-guard` integration |

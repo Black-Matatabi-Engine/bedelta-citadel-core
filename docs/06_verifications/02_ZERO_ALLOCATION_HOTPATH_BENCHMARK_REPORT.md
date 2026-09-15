@@ -3,7 +3,7 @@
 > ℹ️ **Engineering Honesty & Physical Measurement Note**:
 > Microsecond timing targets (`p50 ~15µs SSRC` / `p50 ~106µs Edge`) reflect production Edge Worker design targets and active telemetry budget caps (`REFLEX_BUDGET_US ≤15µs`). Local CLI readings (`pnpm demo:gmx`, `pnpm demo:exomesh`) run single-sample probes subject to OS kernel scheduling, CPU frequency scaling, and Node.js V8 JIT warmup jitter. Such variations in local microsecond measurements are physical inevitabilities of non-realtime operating environments.
 
-> **Product:** **SliverVine ExoMesh** (Module A) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm))  
+> **Product:** **SliverVine ExoMesh** (Module A) · **Engine:** **SliverVine Stylus ReflexCore (SSRC)** ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm)) 
 > **Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm exec tsc --noEmit` **0 errors**
 
 > **Zero-Allocation Hot-Path (engineering SSOT):** The pre-consensus microsecond execution phase operates on pre-allocated static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated** on the RPC reflex arc), while non-critical cold paths (user warning formatters, error loggers) remain standard readable TypeScript.
@@ -45,8 +45,8 @@ SliverVine ExoMesh eliminates ephemeral heap churn on the AI-agent reflex arc by
 npx vitest run tests/core/intent-sinking-audit.test.ts
 
 # Full regression bar
-pnpm test -- --run          # 235 files | 1091 PASS
-pnpm exec tsc --noEmit      # 0 errors
+pnpm test -- --run # 235 files | 1091 PASS
+pnpm exec tsc --noEmit # 0 errors
 ```
 
 ---

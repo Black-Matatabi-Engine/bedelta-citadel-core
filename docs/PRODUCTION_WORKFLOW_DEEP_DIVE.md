@@ -1,15 +1,15 @@
-# 🏛️ SliverVine Citadel — Production Workflow Deep Dive (Citadel-Armor Sovereign Vault SSOT)
+# 🏛️ SliverVine ExoMesh — Production Workflow Deep Dive (ExoMesh-Armor Sovereign Vault SSOT)
 
-**Document role:** **Citadel-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`).  
-**Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**.  
-**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (Citadel-Armor SSOT) · **225 test files | 1052 PASS clean**  
+**Document role:** **ExoMesh-Armor Sovereign Vault** technical SSOT — authoritative English reference for the dual-wallet **Sovereign Delta Pool** on Arbitrum One (`42161`). 
+**Live MVP thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — GMX v2 GM Pool (ETH/USDC) Real Yield + **1× Hyperliquid perp short** hedge until **Δ_net ≡ 0**. 
+**Verified commits:** `572e5cd` (Phase A+B+C mainnet deploy) · `3f26efa` (ExoMesh-Armor SSOT) · **225 test files | 1052 PASS clean** 
 **Related:** [`VERIFICATION_MATRIX.md`](./06_verifications/01_VERIFICATION_MATRIX.md) · [`00_ARB_Buildathon/SUBMISSION.md`](./00_ARB_Buildathon/SUBMISSION.md)
 
 ---
 
 ## Executive Summary
 
-SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** (Sovereign Delta Pool) is our live MVP proving that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
+SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **ExoMesh-Armor Sovereign Vault** (Sovereign Delta Pool) is our live MVP proving that **active sub-ms circuit breaking** delivers GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
 
 | Plane | Wallet | Venue | Responsibility |
 |-------|--------|-------|----------------|
@@ -19,7 +19,7 @@ SliverVine Citadel is the **Pre-Consensus Intent Execution Calibration Layer for
 
 **Protocol revenue stream:** Every unsigned GMX v2 payload injects **+10 bps** (`GMX_UI_FEE_BPS`) directly to the dedicated Protocol Treasury (`0xc9BddA...546f`) as `uiFeeReceiver`, completely segregated from Wallet B principal capital (`0xbd65d7...EC7F`) — SSOT [`gmx-revenue.ts`](../src/config/gmx-revenue.ts) · [`gmx-v2-order-payload.ts`](../src/services/adapters/gmx-v2-order-payload.ts).
 
-Cross-wallet sizing SSOT: [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts).  
+Cross-wallet sizing SSOT: [`gmx-cross-wallet-hedge.ts`](../src/services/gmx-cross-wallet-hedge.ts). 
 Telemetry tags: `[WALLET_B_GMX_STATE]` · `[WALLET_A_HL_STATE]` · `[CROSS_VENUE_MATCH]` · `[COLD_START_GUARD]`.
 
 ---
@@ -64,10 +64,10 @@ Production GM I/O uses GMX v2 `ExchangeRouter` multicall on Arbitrum One:
 
 ```
 User intent
-    → checkSoilResistance()          (Edge · p50 ~106µs · 0-Gas fail-closed)
-    → GMX wire guards                (pool imbalance · oracle lag · depth)
-    → ExchangeRouter multicall       (Wallet B broadcast)
-    → emit [WALLET_B_GMX_STATE]      (cron / hedge telemetry)
+ → checkSoilResistance() (Edge · p50 ~106µs · 0-Gas fail-closed)
+ → GMX wire guards (pool imbalance · oracle lag · depth)
+ → ExchangeRouter multicall (Wallet B broadcast)
+ → emit [WALLET_B_GMX_STATE] (cron / hedge telemetry)
 ```
 
 GMX keeper settlement remains protocol-native two-stage semantics; **user-side I/O channel SSOT is closed** once deposit + withdraw multicalls are confirmed on-chain.
@@ -150,7 +150,7 @@ When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engi
 | **Telemetry** | `[COLD_START_GUARD] { walletABalanceUsd, requiredMarginUsd, status: "FAIL_CLOSED_PENDING_BRIDGE" }` |
 | **Cron behavior** | `executeGmxCrossWalletHedge` catches guard · logs skip · **no unhedged GM delta added** |
 
-**Rationale:** Citadel never opens an HL short without settled margin cushion. Operators must **re-seed Wallet A** before scaling Wallet B GM deposits — preventing naked delta exposure during cold-start or bridge-pending windows.
+**Rationale:** SliverVine ExoMesh never opens an HL short without settled margin cushion. Operators must **re-seed Wallet A** before scaling Wallet B GM deposits — preventing naked delta exposure during cold-start or bridge-pending windows.
 
 ### 3.3 In-flight JIT bridge / pending settlement buffer
 
@@ -179,14 +179,14 @@ When Wallet A HL margin is **below the JIT rebalance threshold**, the hedge engi
 ```text
 fetch GMX Wallet B ETH delta (USD)
 fetch HL Wallet A ETH short (USD)
-    │
-    ├─ soil.tripped? ──YES──► CRON_FLASH_UNWIND + severSigningChannel()
-    │
-    ├─ overhedgeUsd > $10? ──YES──► executeGmxCrossWalletUnwind (reduce-only HL cover)
-    │
-    ├─ driftUsd > $10? ──YES──► executeGmxCrossWalletHedge (HL IOC short)
-    │
-    └─ else ──► CRON_SKIP_BALANCED (within ±$10 deadband)
+ │
+ ├─ soil.tripped? ──YES──► CRON_FLASH_UNWIND + severSigningChannel()
+ │
+ ├─ overhedgeUsd > $10? ──YES──► executeGmxCrossWalletUnwind (reduce-only HL cover)
+ │
+ ├─ driftUsd > $10? ──YES──► executeGmxCrossWalletHedge (HL IOC short)
+ │
+ └─ else ──► CRON_SKIP_BALANCED (within ±$10 deadband)
 ```
 
 Micro-deposits below the **$10 aggregate drift threshold** are **batched implicitly** by the cron deadband.
@@ -200,7 +200,7 @@ Micro-deposits below the **$10 aggregate drift threshold** are **batched implici
 | **Over-hedge** | Reduce-only HL cover via `executeGmxCrossWalletUnwind` | No new deposit until balanced | `[CROSS_VENUE_MATCH] action=COVER` |
 | **Wallet A margin exhausted** | `INSUFFICIENT_WALLETA_HEDGE_MARGIN` · hedge skipped | **Freeze further unhedged GM deposits** at policy layer | `[COLD_START_GUARD]` FAIL_CLOSED |
 
-**Emergency freeze semantics:** When Wallet A trips (margin buffer below 5% cross-MMR or soil severance), Citadel enters **read-only observer mode** — `tradeAllowed: false` until soil, sequencer, and `rootProtection` gates clear.
+**Emergency freeze semantics:** When Wallet A trips (margin buffer below 5% cross-MMR or soil severance), SliverVine ExoMesh enters **read-only observer mode** — `tradeAllowed: false` until soil, sequencer, and `rootProtection` gates clear.
 
 ### 3.6 On-chain settlement plane (Phase A+B+C · Live Mainnet 42161)
 
@@ -223,18 +223,18 @@ pnpm exec vitest run tests/services/dual-wallet-telemetry.test.ts
 pnpm exec vitest run tests/services/scheduled-gmx-hedge.test.ts
 
 # Tier 1 — Mainnet native GM deposit demonstrations
-pnpm demo:e2e:arb-native              # Arbitrum One USDC direct GM deposit simulate (Wallet B probe)
+pnpm demo:e2e:arb-native # Arbitrum One USDC direct GM deposit simulate (Wallet B probe)
 pnpm demo:e2e:arb-native -- --gm-amount=10
-pnpm execute:gmx:gm-deposit         # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
-pnpm execute:gmx:gm-withdraw        # Wallet B live withdraw
+pnpm execute:gmx:gm-deposit # Wallet B live deposit (CONFIRM_GMX_GM_DEPOSIT=YES)
+pnpm execute:gmx:gm-withdraw # Wallet B live withdraw
 
 # Hedge engine
-pnpm execute:gmx:wallet-a-short-fallback   # Wallet A GMX fallback (simulate only)
-pnpm tsx scripts/hedge-gmx.ts              # Cross-wallet hedge dry-run
+pnpm execute:gmx:wallet-a-short-fallback # Wallet A GMX fallback (simulate only)
+pnpm tsx scripts/hedge-gmx.ts # Cross-wallet hedge dry-run
 
 # Macro lifecycle HUD
-pnpm demo:delta-neutral                       # 4-step Happy Path (Robinhood escort narrative)
-pnpm demo:delta-neutral -- --unwind           # + Step 5 R20 exercise
+pnpm demo:delta-neutral # 4-step Happy Path (Robinhood escort narrative)
+pnpm demo:delta-neutral -- --unwind # + Step 5 R20 exercise
 ```
 
 ---
@@ -249,4 +249,4 @@ pnpm demo:delta-neutral -- --unwind           # + Step 5 R20 exercise
 
 ---
 
-*SilverVine Labs · Citadel-Armor Sovereign Vault SSOT · HEAD `3f26efa` · 225 test files | 1052 PASS clean*
+*SilverVine Labs · ExoMesh-Armor Sovereign Vault SSOT · HEAD `3f26efa` · 225 test files | 1052 PASS clean*

@@ -1,8 +1,8 @@
 # Hacker Profiling & Cyber-Biological Immunology Framework
 
-> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B)  
-> **Frameworks:** FBI **Mindhunter** behavioral profiling (MO · signature · escalation) · **Cyber-Biological Immunology** (self-tuning honeypot inoculation · adversarial telemetry vaccine)  
-> **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **235 test files | 1091 PASS clean**  
+> **Product:** **SliverVine ExoMesh** (Module A) · **SliverVine Sanctuary** (Module B) 
+> **Frameworks:** FBI **Mindhunter** behavioral profiling (MO · signature · escalation) · **Cyber-Biological Immunology** (self-tuning honeypot inoculation · adversarial telemetry vaccine) 
+> **Defense SSOT:** R01–R20 Defense Matrix · `checkSoilResistance()` · **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · **Sanctuary Async Escort (ERC-7540+)** · **Vitest:** **235 test files | 1091 PASS clean** 
 > **Architecture index:** [`README.md`](../01_architecture/README.md) · [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) · [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md)
 
 ---
@@ -21,13 +21,13 @@ In cyber-biological immunology, the strongest defense is **adaptive**: the syste
 **Mindhunter** adds the investigative layer: every on-chain adversary exhibits a **modus operandi (MO)** — burst retries, batch concealment, permission drift. ExoMesh does not wait for post-mortem analytics; it **profiles signatures in-process** and severs at the reflex boundary.
 
 ```text
-                    MINDHUNTER (profile)           IMMUNOLOGY (counter)
-                    ─────────────────              ────────────────────
-Signature A Burst   → INTENT_RING_U32              → 4th-strike severance
-Signature B Batch   → EIP-5792 calls[] unfold      → calldata dissection
-Signature C Drift   → ERC-7540 setOperator lock      → Sanctuary zero-trust
-Scraper / fork MO   → C1 honeypot 99% slippage      → decoy inoculation
-MEV probe MO        → jittered soil thresholds       → adversarial telemetry vaccine
+ MINDHUNTER (profile) IMMUNOLOGY (counter)
+ ───────────────── ────────────────────
+Signature A Burst → INTENT_RING_U32 → 4th-strike severance
+Signature B Batch → EIP-5792 calls[] unfold → calldata dissection
+Signature C Drift → ERC-7540 setOperator lock → Sanctuary zero-trust
+Scraper / fork MO → C1 honeypot 99% slippage → decoy inoculation
+MEV probe MO → jittered soil thresholds → adversarial telemetry vaccine
 ```
 
 ---
@@ -60,12 +60,12 @@ ExoMesh treats the **EIP-1193 provider boundary** as the behavioral interview ro
 **ExoMesh counter — `INTENT_RING_U32` bitwise 4th-strike severance:**
 
 ```text
-slot[offset + ATTEMPTS]:  0 → 1 → 2 → 3 → 4  (default maxAttempts = 3)
-                                              ↑
-                                    4th attempt: INTENT_FLAG_SEVER_CHANNEL
-                                    → MAX_ATTEMPTS_EXCEEDED_SEVERED
-                                    → channelSevered = true (guard-engine.ts)
-                                    → baseProvider.request() NEVER called again
+slot[offset + ATTEMPTS]: 0 → 1 → 2 → 3 → 4 (default maxAttempts = 3)
+ ↑
+ 4th attempt: INTENT_FLAG_SEVER_CHANNEL
+ → MAX_ATTEMPTS_EXCEEDED_SEVERED
+ → channelSevered = true (guard-engine.ts)
+ → baseProvider.request() NEVER called again
 ```
 
 | Property | Value |
@@ -97,12 +97,12 @@ slot[offset + ATTEMPTS]:  0 → 1 → 2 → 3 → 4  (default maxAttempts = 3)
 ```typescript
 // eip5792-send-calls.ts — reuse TX_PARAMS pointer; no per-call array alloc
 for (let i = 0; i < len; i++) {
-  TX_PARAMS[0] = tx;  // in-place envelope bind
-  const reject = evaluateRetailRisk(config, "eth_sendTransaction", TX_PARAMS, SKIP_OPTS);
-  if (reject) return reject;  // 0-Gas · entire batch aborted
-  venueBits |= resolveVenueBitFromContract(tx.to, config.contractVenueIndex);
+ TX_PARAMS[0] = tx; // in-place envelope bind
+ const reject = evaluateRetailRisk(config, "eth_sendTransaction", TX_PARAMS, SKIP_OPTS);
+ if (reject) return reject; // 0-Gas · entire batch aborted
+ venueBits |= resolveVenueBitFromContract(tx.to, config.contractVenueIndex);
 }
-return evaluateRetailIntentGate(config, venueBits);  // ONE ring attempt per batch
+return evaluateRetailIntentGate(config, venueBits); // ONE ring attempt per batch
 ```
 
 | Layer | Mechanism |
@@ -169,16 +169,16 @@ The immune system does not merely **block** pathogens — it **studies** them to
 
 ```text
 [ Unauthenticated scraper / forked frontend ]
-        │
-        ▼
+ │
+ ▼
 evaluateRpcDefenseGate(url) ──► isHoneyPotHost(host)?
-        │                              │
-        │ NO (authenticated)           │ YES
-        ▼                              ▼
-Production RPC allowlist          HONEYPOT_ACTIVE
-real venue RTT                    HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
-                                  HoneyPotCircuitBreakError
-                                  sub-1ms fail-closed
+ │ │
+ │ NO (authenticated) │ YES
+ ▼ ▼
+Production RPC allowlist HONEYPOT_ACTIVE
+real venue RTT HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
+ HoneyPotCircuitBreakError
+ sub-1ms fail-closed
 ```
 
 ---
@@ -243,13 +243,13 @@ real venue RTT                    HONEYPOT_SIMULATED_SLIPPAGE = 0.99 (99%)
 ExoMesh occupies **Temporal Tier T3** — the only execution class that operates at **microsecond** scale **before** Arbitrum Sequencer / bundler ingress:
 
 ```text
-T1  On-chain settlement (≥ 1 block · ~250 ms Arbitrum)
-T2  Bundler / mempool queue (50–500 ms+)
-T3  ExoMesh pre-consensus reflex ← SSRC SEVERANCE
-    ├─ Pure invariant math     ~0.5–1.1 µs
-    ├─ SSRC soil_core warm     < 1.8 µs (demo wasmUs lane)
-    ├─ ReflexCore severance    p50 ~15 µs (FAIL_CLOSED)
-    └─ E2E ExoMesh Edge gate   p50 ~106 µs (ALLOW path)
+T1 On-chain settlement (≥ 1 block · ~250 ms Arbitrum)
+T2 Bundler / mempool queue (50–500 ms+)
+T3 ExoMesh pre-consensus reflex ← SSRC SEVERANCE
+ ├─ Pure invariant math ~0.5–1.1 µs
+ ├─ SSRC soil_core warm < 1.8 µs (demo wasmUs lane)
+ ├─ ReflexCore severance p50 ~15 µs (FAIL_CLOSED)
+ └─ E2E ExoMesh Edge gate p50 ~106 µs (ALLOW path)
 ```
 
 | Stage | Action | Attacker visibility |
@@ -274,24 +274,24 @@ Every reject path in Signatures A · B · C · C1 honeypot · C3 async drift sat
 
 ```text
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ MINDHUNTER PROFILING LAYER (behavioral MO)                               │
-│  Sig-A Burst ──► INTENT_RING_U32 ──► 4th-strike sever                  │
-│  Sig-B Batch ──► eip5792 calls[] unfold ──► per-tx risk + 1 ring debit   │
-│  Sig-C Drift ──► ERC-7540 operator lock ──► Sanctuary async bps        │
+│ MINDHUNTER PROFILING LAYER (behavioral MO) │
+│ Sig-A Burst ──► INTENT_RING_U32 ──► 4th-strike sever │
+│ Sig-B Batch ──► eip5792 calls[] unfold ──► per-tx risk + 1 ring debit │
+│ Sig-C Drift ──► ERC-7540 operator lock ──► Sanctuary async bps │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                ▼
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ IMMUNOLOGY LAYER (adversarial ingress)                                   │
-│  C1 Honeypot ──► 99% synthetic slippage decoy                            │
-│  Vaccine ──► jittered thresholds + protocol mask + trip severance        │
+│ IMMUNOLOGY LAYER (adversarial ingress) │
+│ C1 Honeypot ──► 99% synthetic slippage decoy │
+│ Vaccine ──► jittered thresholds + protocol mask + trip severance │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                ▼
+ ▼
 ┌─────────────────────────────────────────────────────────────────────────┐
-│ REFLEXCORE (SSRC) · ExoMesh T3 reflex                                    │
-│  soil_core.wasm < 1.8µs · rootProtection p50 ~15µs · 0-Gas sever       │
+│ REFLEXCORE (SSRC) · ExoMesh T3 reflex │
+│ soil_core.wasm < 1.8µs · rootProtection p50 ~15µs · 0-Gas sever │
 └───────────────────────────────┬─────────────────────────────────────────┘
-                                ▼
-              [ Arbitrum Sequencer — only PASS intents arrive ]
+ ▼
+ [ Arbitrum Sequencer — only PASS intents arrive ]
 ```
 
 ---
@@ -329,7 +329,7 @@ pnpm demo:gmx -- --trip
 pnpm demo:exomesh -- --trip
 
 # Full regression
-pnpm test -- --run   # 235 files · 1091 PASS
+pnpm test -- --run # 235 files · 1091 PASS
 ```
 
 ---
@@ -341,7 +341,7 @@ pnpm test -- --run   # 235 files · 1091 PASS
 | [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md`](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md) | R01–R20 matrix · Zero-Allocation Hot-Path ring slab · SSRC moats |
 | [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) | ExoMesh competitive matrix · EIP compliance |
 | [`../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md`](../02_eip_extensions/02_ERC7540_ASYNC_ESCORT_IMPLEMENTATION.md) | Sanctuary ERC-7540 deep dive |
-| [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) | Honeypot RPC · legacy vs engineered standards |
+| [`01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md` §Ingress](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-three-pillar-architecture) | Honeypot RPC · legacy vs engineered standards |
 | [`03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md`](../01_architecture/03_RISK_MITIGATION_AND_DISCLAIMER_FRAMEWORK.md) | 88%/12% risk spectrum · fail-closed boundaries |
 
 ---

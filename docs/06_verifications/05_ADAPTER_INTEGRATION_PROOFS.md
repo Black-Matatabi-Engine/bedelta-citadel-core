@@ -1,6 +1,6 @@
 # Integration Proofs v2 (5-Core Venues · ExoMesh Agentic Guard · B2B Decorator)
 
-> **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)  
+> **SSOT index:** [`README.md`](./README.md) · **Hub:** [`../06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md) 
 > **Vitest baseline:** **235 test files | 1091 PASS clean**
 
 ---
@@ -9,11 +9,11 @@
 
 ```text
 ┌─────────────────────────────────────────────────────────────────┐
-│ (a) C-End: ExoMesh Agentic Guard (EIP-1193/5792/6963+)          │
-│     withRetailGuardProvider() → eth_sendTransaction intercept   │
+│ (a) C-End: ExoMesh Agentic Guard (EIP-1193/5792/6963+) │
+│ withRetailGuardProvider() → eth_sendTransaction intercept │
 ├─────────────────────────────────────────────────────────────────┤
-│ (b) 5-Core Venue Guards + Demo CLIs                             │
-│     GMX · Pendle · USD.ai · HL · Variational                    │
+│ (b) 5-Core Venue Guards + Demo CLIs │
+│ GMX · Pendle · USD.ai · HL · Variational │
 ├─────────────────────────────────────────────────────────────────┤
 │ (c) B2B: withExoMeshShield / verifyAgentIntent (framework-agnostic)│
 └─────────────────────────────────────────────────────────────────┘
@@ -25,7 +25,7 @@
 
 ## (a) ExoMesh Agentic Guard (EIP-1193/5792/6963+) — C-End Middleware
 
-Citadel ships a **universal wallet middleware** for any EIP-1193 host (dApp · wallet · AI copilot):
+SliverVine ExoMesh ships a **universal wallet middleware** for any EIP-1193 host (dApp · wallet · AI copilot):
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
@@ -34,7 +34,7 @@ Citadel ships a **universal wallet middleware** for any EIP-1193 host (dApp · w
 | Guard engine | [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) | `checkSoilResistance()` + mandate evaluation |
 
 ```bash
-npx vitest run tests/sdk/retail-guard-provider.test.ts   # 35/35 PASS
+npx vitest run tests/sdk/retail-guard-provider.test.ts # 35/35 PASS
 ```
 
 **Integration blueprint:** [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md)
@@ -43,22 +43,22 @@ npx vitest run tests/sdk/retail-guard-provider.test.ts   # 35/35 PASS
 
 ```text
 [ EIP-1193 Host (Wallet / dApp / AI Copilot) ]
-                    │
-                    ▼
-        withRetailGuardProvider()  (provider.ts)
-                    │
-                    ▼
-        evaluateTransactionIntent()  (guard-engine.ts)
-                    │
-                    ▼
-        checkSoilResistance()  (p50 ~106µs E2E · p50 ~15µs reflex on --trip)
-                    │
-          ┌─────────┴─────────┐
-          ▼                   ▼
-     FAIL_CLOSED           ALLOW
-     (0-Gas intercept)         │
-                               ▼
-                    [ Wallet broadcast · Arbitrum 42161 ]
+ │
+ ▼
+ withRetailGuardProvider() (provider.ts)
+ │
+ ▼
+ evaluateTransactionIntent() (guard-engine.ts)
+ │
+ ▼
+ checkSoilResistance() (p50 ~106µs E2E · p50 ~15µs reflex on --trip)
+ │
+ ┌─────────┴─────────┐
+ ▼ ▼
+ FAIL_CLOSED ALLOW
+ (0-Gas intercept) │
+ ▼
+ [ Wallet broadcast · Arbitrum 42161 ]
 ```
 
 ---
@@ -84,8 +84,8 @@ pnpm demo:variational -- --trip
 **Strategy loops:**
 
 ```bash
-pnpm demo:perp-loop -- --trip    # Loop A: GMX / Pendle / HL / Variational
-pnpm demo:spot-loop -- --trip     # Loop B: USD.ai collateral lane
+pnpm demo:perp-loop -- --trip # Loop A: GMX / Pendle / HL / Variational
+pnpm demo:spot-loop -- --trip # Loop B: USD.ai collateral lane
 ```
 
 **Venue rotation SSOT:** [`examples/lib/agent-venue-matrix.ts`](../../examples/lib/agent-venue-matrix.ts)

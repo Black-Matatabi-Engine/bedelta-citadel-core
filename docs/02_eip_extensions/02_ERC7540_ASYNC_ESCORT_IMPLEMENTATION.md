@@ -1,9 +1,9 @@
 # Sanctuary Async Escort (ERC-7540+) — Technical Specification
 
-> **Product:** **SliverVine Sanctuary** (Module B · ~30% Architectural Surface) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · async vault selector guard · Robinhood / Across compliance ingress  
-> **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex  
+> **Product:** **SliverVine Sanctuary** (Module B · ~30% Architectural Surface) — **Sanctuary Async Escort (ERC-7540+)** · Treasury escort · async vault selector guard · Robinhood / Across compliance ingress 
+> **Complement:** **SliverVine ExoMesh** (Module A) — **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** pre-consensus Wasm reflex 
 > **Standards compliance (Tier 1 `[Final]`):** SliverVine Protocol is **100% compliant** with standard [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) and [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) / [EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) specs, while extending them into **0-Gas pre-consensus security supersets** (ExoMesh & Sanctuary). See [3-Tier Taxonomy](./01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#3-tier-eiperc-taxonomy).
-> **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626))  
+> **Standard:** [ERC-7540](https://eips.ethereum.org/EIPS/eip-7540) — Asynchronous Tokenized Vault Standard (extends [ERC-4626](https://eips.ethereum.org/EIPS/eip-4626)) 
 > **Verification:** `pnpm demo:sanctuary` → Scenario A–C Matrix `[Sanctuary]` (`demo:escort` alias) · CLI: [`examples/sanctuary-demo.ts`](../../examples/sanctuary-demo.ts)
 
 ---
@@ -20,19 +20,19 @@ Standard DeFi safety tooling (synchronous ERC-4626 share math, instant-redeem sl
 
 ```text
 [ Agent / Wallet Intent: requestDeposit · requestRedeem · setOperator ]
-        │
-        ▼  ← Sanctuary intercept (pre-Sequencer · 0-Gas on reject)
+ │
+ ▼ ← Sanctuary intercept (pre-Sequencer · 0-Gas on reject)
 ┌────────────────────────────────────────────────────────────────────┐
-│ calldata-parser (u32 selector) → erc7540-async-escort.ts            │
-│   · OPERATOR_REJECTED        — non-whitelisted operator/controller  │
-│   · ASYNC_SLIPPAGE_DRIFT     — Pending→Claimable bps > maxBps      │
+│ calldata-parser (u32 selector) → erc7540-async-escort.ts │
+│ · OPERATOR_REJECTED — non-whitelisted operator/controller │
+│ · ASYNC_SLIPPAGE_DRIFT — Pending→Claimable bps > maxBps │
 └───────────────────────────────┬────────────────────────────────────┘
-                                ▼  (PASS only)
-              [ Vault contract · async settlement · claim phase ]
+ ▼ (PASS only)
+ [ Vault contract · async settlement · claim phase ]
 ```
 
-**SSOT:** [`src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts)  
-**Ingress:** `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` in ExoMesh EIP-1193 middleware  
+**SSOT:** [`src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts`](../../src/sdk/exomesh-agentic-wallet-guard/erc7540-async-escort.ts) 
+**Ingress:** `evaluateErc7540FromParsedCalldata()` via `evaluateRetailRisk()` in ExoMesh EIP-1193 middleware 
 **Wiki:** [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#erc-7540--asynchronous-erc-4626-vault-token-sanctuary-escort)
 
 ---
@@ -50,22 +50,22 @@ Standard DeFi safety tooling (synchronous ERC-4626 share math, instant-redeem sl
 ### The Pending → Claimable Death Window
 
 ```text
-ERC-4626 (sync)                    ERC-7540 (async)
-─────────────                      ───────────────────────────────────
-  deposit()                            requestDeposit(assets, controller, owner)
-      │                                        │
-      ▼                                        ▼
-  shares minted                          [ PENDING ]
-  (same block)                               │
-                                             │  ← ATTACK WINDOW
-                                             │     · operator hijack
-                                             │     · NAV / yield drift
-                                             │     · solver / keeper delay
-                                             ▼
-                                       [ CLAIMABLE ]
-                                             │
-                                             ▼
-                                       deposit(assets, receiver)  // claim
+ERC-4626 (sync) ERC-7540 (async)
+───────────── ───────────────────────────────────
+ deposit() requestDeposit(assets, controller, owner)
+ │ │
+ ▼ ▼
+ shares minted [ PENDING ]
+ (same block) │
+ │ ← ATTACK WINDOW
+ │ · operator hijack
+ │ · NAV / yield drift
+ │ · solver / keeper delay
+ ▼
+ [ CLAIMABLE ]
+ │
+ ▼
+ deposit(assets, receiver) // claim
 ```
 
 **Industry default:** Portfolio trackers, ERC-4626 share-price widgets, and swap slippage guards evaluate **spot** state. They do not model **async state machines** where the economic outcome is determined **between** `request*` and `claim*`.
@@ -102,9 +102,9 @@ Prompt-injected agent wallets may emit `setOperator` hidden inside [EIP-5792](ht
 ```typescript
 // erc7540-async-escort.ts — fail-closed operator policy
 if (parsed.kind === "erc7540_set_operator") {
-  return parsed.approved && !isAllowedOperator(parsed.operator, config)
-    ? rejectOperator(parsed.operator)   // ERC7540_OPERATOR_REJECTED
-    : null;
+ return parsed.approved && !isAllowedOperator(parsed.operator, config)
+ ? rejectOperator(parsed.operator) // ERC7540_OPERATOR_REJECTED
+ : null;
 }
 if (!isAllowedOperator(parsed.controller, config)) return rejectOperator(parsed.controller);
 ```
@@ -116,7 +116,7 @@ if (!isAllowedOperator(parsed.controller, config)) return rejectOperator(parsed.
 | **`approved === false`** | Revocation always allowed (de-approval path) |
 | **`approved === true` + unknown operator** | `ERC7540_OPERATOR_REJECTED` · 0-Gas · plain-text user alert |
 
-**Reject code:** `ERC7540_OPERATOR_REJECTED`  
+**Reject code:** `ERC7540_OPERATOR_REJECTED` 
 **User alert:** `ALERT: ERC-7540 async vault operator {addr} is not whitelisted — setOperator blocked (0-Gas).`
 
 **Verification:** `pnpm demo:sanctuary` Scenario B — malicious `setOperator(MALICIOUS, true)` → **REJECT** before mock provider receives `request()`.
@@ -142,15 +142,15 @@ const ASYNC_VAULT_BPS = 10_000n;
 
 /** Trip when |claim − request| × 10000 > maxBps × request — fail-closed if request ≤ 0. */
 export function evalAsyncVaultDrift(requestRate: bigint, claimRate: bigint, maxBps: number): boolean {
-  if (requestRate <= 0n || !Number.isFinite(maxBps) || maxBps < 0) return true;
-  const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
-  return delta * ASYNC_VAULT_BPS > BigInt(maxBps | 0) * requestRate;
+ if (requestRate <= 0n || !Number.isFinite(maxBps) || maxBps < 0) return true;
+ const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
+ return delta * ASYNC_VAULT_BPS > BigInt(maxBps | 0) * requestRate;
 }
 
 export function evalAsyncVaultDriftBps(requestRate: bigint, claimRate: bigint): number {
-  if (requestRate <= 0n) return Number.POSITIVE_INFINITY;
-  const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
-  return Number((delta * ASYNC_VAULT_BPS) / requestRate);
+ if (requestRate <= 0n) return Number.POSITIVE_INFINITY;
+ const delta = claimRate > requestRate ? claimRate - requestRate : requestRate - claimRate;
+ return Number((delta * ASYNC_VAULT_BPS) / requestRate);
 }
 ```
 
@@ -204,11 +204,11 @@ Sanctuary ERC-7540 escort is **selector-level protection** for async vault flows
 | **USD.ai / sUSDai** | RWA yield-bearing **async** share vaults · sUSDai peg-sensitive claim rate | GPU-oracle / NAV decoupling during async delay · `USD_AI_DEPEG_ORACLE_TRIP` class drift | Async drift gate surfaces peg slip **before** broadcast · operator lock prevents delegated claim to attacker |
 
 ```text
-                    ExoMesh (Module A)              Sanctuary (Module B)
-                    ─────────────────              ────────────────────
-Pendle PT/YT roll   soil · venue · intent ring     ERC-7540 operator + async bps
-GMX GM deposit      cross-venue slippage · depth    ERC-7540 controller + async bps
-USD.ai sUSDai       PROTO_USDAI lane · depeg fuse   ERC-7540 async rate drift
+ ExoMesh (Module A) Sanctuary (Module B)
+ ───────────────── ────────────────────
+Pendle PT/YT roll soil · venue · intent ring ERC-7540 operator + async bps
+GMX GM deposit cross-venue slippage · depth ERC-7540 controller + async bps
+USD.ai sUSDai PROTO_USDAI lane · depeg fuse ERC-7540 async rate drift
 ```
 
 **Design rule:** ExoMesh answers *"Is this venue / soil / intent safe right now?"* Sanctuary answers *"Is this async vault request safe across the Pending→Claimable window?"* Both must PASS for broadcast.
@@ -233,18 +233,18 @@ USD.ai sUSDai       PROTO_USDAI lane · depeg fuse   ERC-7540 async rate drift
 
 ```typescript
 interface RetailGuardConfig {
-  allowedOperators?: readonly string[];     // ERC-7540 operator/controller whitelist
-  erc7540MaxSlippageBps?: number;           // default 50 bps
-  erc7540AsyncQuote?: {
-    requestAmountWei: bigint;
-    claimableAmountWei: bigint;
-    maxSlippageBps?: number;
-  };
-  resolveErc7540Quote?: (
-    kind: "deposit" | "redeem",
-    amountWei: bigint,
-    vault: string,
-  ) => Erc7540AsyncQuote | null;
+ allowedOperators?: readonly string[]; // ERC-7540 operator/controller whitelist
+ erc7540MaxSlippageBps?: number; // default 50 bps
+ erc7540AsyncQuote?: {
+ requestAmountWei: bigint;
+ claimableAmountWei: bigint;
+ maxSlippageBps?: number;
+ };
+ resolveErc7540Quote?: (
+ kind: "deposit" | "redeem",
+ amountWei: bigint,
+ vault: string,
+ ) => Erc7540AsyncQuote | null;
 }
 ```
 
@@ -260,7 +260,7 @@ interface RetailGuardConfig {
 
 ```bash
 # Sanctuary ERC-7540 escort interactive CLI (Scenario A–C)
-pnpm demo:sanctuary              # alias: pnpm demo:escort
+pnpm demo:sanctuary # alias: pnpm demo:escort
 
 # Treasury bridge escort HUD
 pnpm demo:ingress
