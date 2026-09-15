@@ -31,7 +31,7 @@
 | **Settlement — MatrixSwitch** | `0x4129aee97e68aa3712c56fe9ec48bf369782f99b` | ✅ single SLOAD · bound RiskOracleV2 |
 | **Settlement — RiskOracleV2** | `0xfadb14759a3d3c7e976697de61bf62627f14ec93` | ✅ Blocks 503074231–503074255 |
 | **Pillar Set Y — CLI HUD** | `matrix-cross-venue-demo.ts` · `venue-demo-hud.ts` · 8× `*-demo.ts` | ✅ 純文字 BENCHMARK box · E2E Shield vs Reflex Core 標籤 · 標準化 `--trip` breach tree |
-| **Pillar Set X — E2E Harness** | `scripts/grant-e2e-citadel-demo.ts` | ✅ `pnpm demo:e2e` 4/4 · `pnpm demo:e2e -- --unwind` 5/5 Step R20 回收 |
+| **Pillar Set X — E2E Harness** | `scripts/grant-delta-neutral-demo.ts` | ✅ `pnpm demo:delta-neutral` 4/4 · `pnpm demo:delta-neutral -- --unwind` 5/5 Step R20 回收 |
 
 ```text
 9.00 (PM Evening) ──+0.05──► 9.05 (0910 Joint)
@@ -277,7 +277,7 @@ SoilResistanceInput → intent-mandate (host) → intent-core (pure TypedArray)
 | 0:08 | *Pillar Set Y：pre-consensus firewall — `pnpm demo:wayfinder` · E2E Shield p50 ~106µs。* |
 | 0:16 | *Physical deadlock：`pnpm demo:spot-loop -- --trip` · Reflex Core p50 ~15µs · 0-Gas 攔截。* |
 | 0:24 | *八個原生 venue — 一套 HUD：`pnpm demo:gmx` 至 `pnpm demo:variational` — happy 與 trip。* |
-| 0:32 | *Pillar Set X：Sovereign Vault — `pnpm demo:e2e` 四步 · 可選 `--unwind` Step 5 資本回收。* |
+| 0:32 | *Pillar Set X：Sovereign Vault — `pnpm demo:delta-neutral` 四步 · 可選 `--unwind` Step 5 資本回收。* |
 | 0:40 | *主網結算：PolicyGuardV2 `0xfd98…` · Matrix `0x4129…` · Oracle `0xfadb…` — Pure Solidity fallback。* |
 | 0:48 | *Wallet B 僅 GM — Arbiscan：`0xe315…` · `0x30ec…` · `0xfd36…`。* |
 | +6s | **`217/967`** · Cargo **2/2** · Forge **9+8** · `tsc` **0 errors** |

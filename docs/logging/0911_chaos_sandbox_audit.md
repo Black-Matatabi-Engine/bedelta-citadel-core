@@ -74,5 +74,5 @@ Targeted verify: `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test
 | **Safety backup** | `archive/v0.8-full-adapters-backup` pushed to `origin` (pre-prune snapshot) |
 | **git rm (7 files)** | `examples/adapters/*` HUD CLI duplicates (×5) · `crewai-autogen-adapter.py` · `mock-analytics-generator.ts` |
 | **package.json** | Added `"demo:wayfinder": "tsx examples/wayfinder-agent-demo.ts"` |
-| **Preserved** | `src/adapters/{elizaos,virtuals,wayfinder,langchain}/*` · `examples/*-agent-demo.ts` · `pnpm demo:e2e` |
+| **Preserved** | `src/adapters/{elizaos,virtuals,wayfinder,langchain}/*` · `examples/*-agent-demo.ts` · `pnpm demo:delta-neutral` |
 | **Verify** | `npx vitest run tests/chaos/orbit-agentic-failclosed-chaos.test.ts` |

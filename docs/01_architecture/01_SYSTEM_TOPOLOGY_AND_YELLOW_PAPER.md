@@ -5,7 +5,7 @@
 
 **Philosophy — BeΔ (BeDelta Living Water v1.0):** **Be** is inspired by Bruce Lee's *"Be Water, My Friend"* — fluid, adaptive intent routing and friction-free multi-chain execution. **Δ (Delta)** denotes **market delta-neutrality** and risk-neutral execution — neutralizing directional exposure. **SliverVine** = fragmented intent protection & steel trading execution · **SliverVine ExoMesh** = the pre-consensus execution safety primitive (Module A).  
 **Entity:** SilverVine Labs · **Protocol brand:** SliverVine Protocol · **Escrow module:** SliverVine Sanctuary (Module B)  
-**Judge primary path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e`  
+**Judge primary path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral`  
 **Audit provenance archive:** [Historical Audit Telemetry Snapshot & Provenance Archive](https://bedeltawater.slivervine.xyz/api/grant-audit) — static SHA-256 Buildathon checkpoint (not a live dynamic oracle) · [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz)  
 **Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
 
@@ -290,7 +290,7 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 | Session key replay (57.88 KiB Worker path) | **Resolved in v0.95 SSOT** — `auditSessionKeyNonceState` + `verifySessionKeyValidity` before broadcast | [`execute-order.ts`](../../src/adapters/hl/session-key-executor/execute-order.ts) · commit `5829e9a` |
 | `SliverVineRiskOracle` hook classification | **ERC-7579 Pre-Execution Hook** — gate binds oracle status before Ultra-Relay UserOp ingress | [`SliverVineRiskOracle.sol`](../../contracts/SliverVineRiskOracle.sol) · [`zerodev-aa-gate-types.ts`](../../src/adapters/arbitrum/zerodev-aa/zerodev-aa-gate-types.ts) |
 
-**Demo:** `pnpm demo` — 12 Dual Pillar Set X & Y ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:e2e` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
+**Demo:** `pnpm demo` — 12 Dual Pillar Set X & Y ANSI scenarios (GMX · HL · Pendle · p50 ~106µs) · `pnpm demo:delta-neutral` — **4-step Happy Path** grant E2E (Intent+Deadman → Robinhood escort → GMX underweight → HL Session hedge) · optional `--unwind` (Step 5 R20) · `--trip` (Step 1 intercept).
 
 ### 0.3 C-End & B-End Integration (v1.1 SSOT)
 
@@ -383,7 +383,7 @@ Anchors: [`gmx-smart-route-payload-binding.ts`](../../src/services/adapters/gmx-
 
 ### 2.4 Pillar Set X — Opt-In ZeroDev Account Abstraction (Integration Summary)
 
-> **Full Pillar Set X specification:** [Ingress & Three-Pillar Architecture](#ingress-and-three-pillar-architecture) — ZeroDev Kernel v3 session keys, EIP-7702 comparative analysis, `sessionOk` / `allowedToSign` dry-run scope (`pnpm run demo:e2e`), and `pnpm test:zerodev` harness. This section retains integration anchors only.
+> **Full Pillar Set X specification:** [Ingress & Three-Pillar Architecture](#ingress-and-three-pillar-architecture) — ZeroDev Kernel v3 session keys, EIP-7702 comparative analysis, `sessionOk` / `allowedToSign` dry-run scope (`pnpm run demo:delta-neutral`), and `pnpm test:zerodev` harness. This section retains integration anchors only.
 
 > **Status:** v1.0 production SSOT = **Kernel v3** (`ZERODEV_KERNEL_VERSION` v0.3.1 · EntryPoint v0.7); **Kernel v4** = post-grant V1.5 alignment path (Gatehouse adapter upgrade only — **no rewrite** of Shield / Wasm / EIP-712 Gate).
 

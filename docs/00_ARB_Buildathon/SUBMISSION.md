@@ -22,7 +22,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 |-------------------|------------------|-------------------|
 | **C-End Wallet Guard (installable SKU)** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 wrap of `eth_sendTransaction` · **35/35** · `withRetailGuardProvider` |
 | **Fail-closed soil (no broadcast)** | `pnpm demo:gmx -- --trip` | Live `soil_core.wasm` (<1.8µs warm) · **not** the GMX live-fill harness |
-| **End-to-End Macro Flow** | `pnpm demo:e2e` | 4-Step multi-venue HUD |
+| **End-to-End Macro Flow** | `pnpm demo:delta-neutral` | 4-Step multi-venue HUD |
 | **GMX execution appendix** | [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | Chain txs — **execution ≠ guard** |
 | **Audit Provenance Check** | `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" \| jq .` | Static SHA-256 Buildathon archive |
 
@@ -38,7 +38,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 |---|-----------------|---------------------------------------|----------------------|
 | **1** | **0-Gas Pre-Consensus Sequencer Defense** | Unverified agent intents rejected at **Cloudflare Edge isolates** before Arbitrum Sequencer ingress — **zero on-chain gas** on fail-closed paths | [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:variational -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) |
-| **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:e2e`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#zone-b--sandbox--e2e) |
+| **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:delta-neutral`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#zone-b--sandbox--e2e) |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [Physical Clock Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#311-physical-clock--edge-monotonicity-matrix-v10-santenmoku) |
 | **5** | **SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK (C-End Middleware)** | Apache-2.0 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrapper · 0-Gas pre-consensus intercept for infinite approvals · [Permit2](https://github.com/Uniswap/permit2) · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) phishing · AI agent retry severance (`INTENT_RING_U32`) · [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#37-eip-1193-agentic-wallet-guard-sdk--c-end-eip-1193-middleware) |
 
@@ -366,10 +366,10 @@ SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for
 ```bash
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate (42161)
 pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
-pnpm demo:e2e                         # 4-step cross-wallet Happy Path HUD
+pnpm demo:delta-neutral                         # 4-step cross-wallet Happy Path HUD
 ```
 
-> **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault lifecycle (`pnpm demo:e2e`) provides supplementary mainnet execution evidence.
+> **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault lifecycle (`pnpm demo:delta-neutral`) provides supplementary mainnet execution evidence.
 
 ---
 

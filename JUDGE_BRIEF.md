@@ -361,7 +361,7 @@ $$
 |-------------------|------------------|-------------------|
 | **Primary SDK Entrypoint (EIP-1193+)** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193+ wrap · **35/35** |
 | **Fail-closed soil (no broadcast)** | `pnpm demo:gmx -- --trip` | `soil_core.wasm` · not the live-fill harness |
-| **End-to-End Macro Flow** | `pnpm demo:e2e` | 4-Step multi-venue HUD |
+| **End-to-End Macro Flow** | `pnpm demo:delta-neutral` | 4-Step multi-venue HUD |
 | **Audit Provenance Check** | `curl -s "https://bedeltawater.slivervine.xyz/api/grant-audit" \| jq .` | Static SHA-256 Buildathon archive |
 
 *Note: Judge primary path is Wallet Guard unit + `demo:gmx -- --trip`. `withExoMeshShield` is the B2B decorator. `/api/grant-audit` is a static archive. GMX mainnet fills ≠ firewall proof.*
@@ -395,7 +395,7 @@ pnpm demo:sanctuary              # ERC-7540+ Scenario A–C (alias: pnpm demo:es
 pnpm demo:ingress                # Across/Robinhood AML ingress escort (lostUsd ≡ 0)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
 
-pnpm demo:e2e
+pnpm demo:delta-neutral
 ```
 
 | Tier | Tag | Commands | Scope |

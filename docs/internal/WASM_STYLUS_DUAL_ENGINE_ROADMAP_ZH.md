@@ -209,7 +209,7 @@ V1.0 引入 **Stylus WASM Smart Contract** 作為 **on-chain reinforcement**：�
 
 ### 4.4 驗收標準
 
-- [ ] Sepolia 部署地址可公開驗證（`pnpm demo:e2e` 擴展）
+- [ ] Sepolia 部署地址可公開驗證（`pnpm demo:delta-neutral` 擴展）
 - [ ] 65,535 fuzz：Edge Wasm 輸出 ≡ Stylus 合約輸出（逐 byte）
 - [ ] Warm eval gas **≤ 12,000**（`forge test` + Stylus gas report）
 - [ ] `verifyAndConsume` 整合測試綠燈（Forge I1–I12 不回歸）
@@ -244,7 +244,7 @@ V1.0 引入 **Stylus WASM Smart Contract** 作為 **on-chain reinforcement**：�
 | 2 | `npx tsx scripts/grant-advanced-resilience-benchmark.ts` | p50 latency · Pure Math < 50 ns |
 | 3 | `cd SliverVineGate && forge test --match-contract SliverVineGate -vv` | verifyAndConsume gas report |
 | 4 | `cargo stylus test`（V1.0） | Sepolia breaker eval · ~12k gas |
-| 5 | `pnpm run demo:e2e` | 5-step grant E2E · soil trip 可視化 |
+| 5 | `pnpm run demo:delta-neutral` | 5-step grant E2E · soil trip 可視化 |
 
 ### 5.3 M6 交付物對照
 

@@ -238,7 +238,7 @@ SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-i
 
 | Pillar | CLI entry | Scope | What `--unwind` means here |
 |--------|-----------|-------|----------------------------|
-| **Pillar Set X** | `pnpm demo:e2e` | Sovereign Vault **capital lifecycle** — Robinhood escort → GMX GM deposit → HL delta-neutral hedge | **`pnpm demo:e2e -- --unwind`** appends Step 5 R20 Emergency Unwind (`RESULT: E2E OK (5/5)`) |
+| **Pillar Set X** | `pnpm demo:delta-neutral` | Sovereign Vault **capital lifecycle** — Robinhood escort → GMX GM deposit → HL delta-neutral hedge | **`pnpm demo:delta-neutral -- --unwind`** appends Step 5 R20 Emergency Unwind (`RESULT: E2E OK (5/5)`) |
 | **Pillar Set Y** | `pnpm demo:spot-loop` · `pnpm demo:perp-loop` | **Pre-consensus intent guards** — zero-gas FAIL_CLOSED *before* broadcast | **No `--unwind` flag.** Use `--trip` for reflex-core deadlock. |
 
 ---
@@ -251,9 +251,9 @@ SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-i
 | **Wallet B — Arbitrum Vault / GMX GM Lane** | Default `0xc9Bdd…546f` | Arbitrum One | **$2,500** user vault · **$2,400** GMX GM deposit · **$100** HL margin gateway |
 
 ```bash
-pnpm demo:e2e                     # Pillar Set X — 4-Step Happy Path
-pnpm demo:e2e -- --unwind         # Pillar Set X — 5-Step Emergency Capital Unwind
-pnpm demo:e2e -- --trip           # Pillar Set X — Step 1 soil-trip fail-closed intercept
+pnpm demo:delta-neutral                     # Pillar Set X — 4-Step Happy Path
+pnpm demo:delta-neutral -- --unwind         # Pillar Set X — 5-Step Emergency Capital Unwind
+pnpm demo:delta-neutral -- --trip           # Pillar Set X — Step 1 soil-trip fail-closed intercept
 pnpm demo:perp-loop -- --trip     # Pillar Set Y — Loop A reflex demo
 pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
 ```
@@ -267,9 +267,9 @@ pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
 pnpm demo:sanctuary               # Module B Vault Standard — ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
 pnpm demo:ingress                 # Module B Treasury Ingress — Pillar Set X Across/AML escort (lostUsd ≡ $0)
-pnpm demo:e2e                     # 4-Step Happy Path Lifecycle (RESULT: E2E OK 4/4)
-pnpm demo:e2e -- --unwind         # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
-pnpm demo:e2e -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
+pnpm demo:delta-neutral                     # 4-Step Happy Path Lifecycle (RESULT: E2E OK 4/4)
+pnpm demo:delta-neutral -- --unwind         # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
+pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
 ```
 
 ---
@@ -283,7 +283,7 @@ pnpm demo:sanctuary
 pnpm demo:ingress
 pnpm demo:gmx -- --trip
 npx vitest run tests/sdk/retail-guard-provider.test.ts
-pnpm demo:e2e
+pnpm demo:delta-neutral
 pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean)
 ```
 

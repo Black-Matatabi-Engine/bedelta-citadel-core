@@ -1,13 +1,13 @@
 #!/usr/bin/env tsx
 /**
- * Unified E2E Citadel Demo — 5-step institutional trade lifecycle (grant auditor CLI).
+ * Delta-Neutral Multi-Venue Escort Demo — 4-step institutional trade lifecycle (grant auditor CLI).
  *
  * Usage:
- *   pnpm demo:e2e
- *   pnpm demo:e2e --hedge-live
- *   pnpm demo:e2e --livingwater
- *   pnpm demo:e2e --trip
- *   pnpm demo:e2e --unwind
+ *   pnpm demo:delta-neutral
+ *   pnpm demo:delta-neutral --hedge-live
+ *   pnpm demo:delta-neutral --livingwater
+ *   pnpm demo:delta-neutral --trip
+ *   pnpm demo:delta-neutral --unwind
  */
 import { E2E_PROOF_REL_PATH, IS_E2E_UNWIND_MODE, parseE2eMode } from "../examples/lib/e2e-demo-constants";
 import {

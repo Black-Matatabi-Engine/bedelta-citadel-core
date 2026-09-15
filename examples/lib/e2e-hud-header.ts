@@ -23,7 +23,7 @@ const BANNER_GATE_LABEL = "Arbitrum Sepolia / Robinhood Gate";
 export function paintE2eBanner(): void {
   e2eDoubleBoxOpen(
     [
-      ` ${BOLD}SliverVine Protocol — Dual-Module E2E Lifecycle${RESET}`,
+      ` ${BOLD}SliverVine Protocol — Delta-Neutral Multi-Venue Escort Lifecycle${RESET}`,
       " Module A (ExoMesh ~70%) + Module B (Sanctuary ~30%) · Pillar Set Y & X",
       ` ${BANNER_GATE_LABEL} · p50 ~106µs · ${E2E_LOST_USD_INVARIANT}`,
     ],

@@ -16,4 +16,4 @@ RUN pnpm install --frozen-lockfile --ignore-scripts
 
 COPY . .
 
-CMD ["sh", "-c", "echo '[tier0] demo:e2e start' && pnpm run demo:e2e && echo '[tier0] demo:e2e PASS'"]
+CMD ["sh", "-c", "echo '[tier0] demo:delta-neutral start' && pnpm run demo:delta-neutral && echo '[tier0] demo:delta-neutral PASS'"]

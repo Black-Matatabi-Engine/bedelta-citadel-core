@@ -2,7 +2,7 @@
 
 **Official Name:** SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs · **Contact:** `grants@silvervinelabs.com`  
-**DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:e2e`  
+**DApp HUD:** [bedeltawater.slivervine.xyz](https://bedeltawater.slivervine.xyz) · **Primary judge path:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral`  
 **Live-fire appendix:** [`06_LIVE_FIRE_EVIDENCE.md`](./06_LIVE_FIRE_EVIDENCE.md) — **execution ≠ guard**  
 **Audit provenance archive:** [Historical Audit Telemetry Snapshot](https://bedeltawater.slivervine.xyz/api/grant-audit) — `GET /api/grant-audit` serves as a verifiable **static** audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline (not a dynamic real-time market oracle).  
 **Repo:** [Black-Matatabi-Engine/bedelta-citadel-core](https://github.com/Black-Matatabi-Engine/bedelta-citadel-core)
@@ -61,7 +61,7 @@ pnpm demo:ingress                        # Across/Robinhood AML ingress escort (
 npx vitest run tests/adapters/treasury-escort-router.test.ts   # ../../tests/adapters/treasury-escort-router.test.ts
 
 # === Zone B — Sandbox & E2E (Sovereign Vault POC) ===
-pnpm demo:e2e                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
+pnpm demo:delta-neutral                            # 4-Step Delta-Neutral Capital Lifecycle (GMX + HL)
 
 # === Tier 1 — Full Protocol Regression ===
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
@@ -83,7 +83,7 @@ pnpm test -- --run                       # Full Regression Suite (235 test files
 | `pnpm demo:perp-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop A perp/yield stack R20 severance |
 | `pnpm demo:spot-loop -- --trip` | `[ExoMesh]` | **p50 ~15µs reflex core** · Loop B spot/lending vault R20 severance |
 | `pnpm demo` | `[ExoMesh]` | 12 Dual Pillar Set X & Y ANSI scenarios |
-| `pnpm demo:e2e` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
+| `pnpm demo:delta-neutral` | `[Sanctuary]` | 4-step Happy Path macro lifecycle |
 | `pnpm demo:ingress` | `[Sanctuary]` | **Module B Treasury Ingress** — ERC-7683 Solver Pre-flight Capital Lock · Pillar Set X Compliance Pre-Execution Strategy (Edge Isomorphic) · [`ingress-escort-demo.ts`](../../examples/ingress-escort-demo.ts) |
 | `pnpm demo:e2e:arb-native` | `[ExoMesh]` | Arbitrum One USDC GM deposit simulate |
 | `pnpm execute:gmx:gm-deposit` | `[ExoMesh]` | Wallet B live GM deposit (`CONFIRM_GMX_GM_DEPOSIT=YES`) |

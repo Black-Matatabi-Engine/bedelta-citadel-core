@@ -13,7 +13,7 @@
 
 ## 0. Path 2 — Root E2E Verifier (Isolated Docker)
 
-> **Fastest path:** see root README **Path 1** (`pnpm install && pnpm run demo:e2e`) — ~3 seconds with host Node/pnpm.
+> **Fastest path:** see root README **Path 1** (`pnpm install && pnpm run demo:delta-neutral`) — ~3 seconds with host Node/pnpm.
 
 From repository root — **not** the sidecar image:
 
@@ -21,12 +21,12 @@ From repository root — **not** the sidecar image:
 docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 ```
 
-> **WSL2 / Linux User Note:** If executing Docker directly inside WSL2 without Docker Desktop integration, run commands with `sudo` (e.g., `sudo docker build -t slivervine-citadel . && sudo docker run --rm slivervine-citadel`), or leverage **Path 1 (`pnpm run demo:e2e`)** for instant 3-second host verification without containers.
+> **WSL2 / Linux User Note:** If executing Docker directly inside WSL2 without Docker Desktop integration, run commands with `sudo` (e.g., `sudo docker build -t slivervine-citadel . && sudo docker run --rm slivervine-citadel`), or leverage **Path 1 (`pnpm run demo:delta-neutral`)** for instant 3-second host verification without containers.
 
 | Item | Value |
 |------|-------|
 | Dockerfile | [`../Dockerfile`](../Dockerfile) (repo root) |
-| Default CMD | `pnpm run demo:e2e` → `[tier0] demo:e2e PASS` |
+| Default CMD | `pnpm run demo:delta-neutral` → `[tier0] demo:delta-neutral PASS` |
 | Full Vitest bar | `docker run --rm slivervine-citadel pnpm test` → **225 test files | 1052 PASS clean (100%)** |
 | Isolation | No host Node 22 / pnpm / WSL required |
 

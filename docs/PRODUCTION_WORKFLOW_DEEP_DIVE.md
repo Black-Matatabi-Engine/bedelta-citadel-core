@@ -233,8 +233,8 @@ pnpm execute:gmx:wallet-a-short-fallback   # Wallet A GMX fallback (simulate onl
 pnpm tsx scripts/hedge-gmx.ts              # Cross-wallet hedge dry-run
 
 # Macro lifecycle HUD
-pnpm demo:e2e                       # 4-step Happy Path (Robinhood escort narrative)
-pnpm demo:e2e -- --unwind           # + Step 5 R20 exercise
+pnpm demo:delta-neutral                       # 4-step Happy Path (Robinhood escort narrative)
+pnpm demo:delta-neutral -- --unwind           # + Step 5 R20 exercise
 ```
 
 ---

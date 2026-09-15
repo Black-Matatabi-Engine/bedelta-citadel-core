@@ -13,7 +13,7 @@
 **Official Name:** SliverVine ExoMesh (Module A) · SliverVine Sanctuary (Module B) on **SliverVine Protocol** (BeDelta Living Water v1.0 / BeΔ)  
 **Entity:** SilverVine Labs  
 **Positioning:** Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh for AI Agents on Arbitrum  
-**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`)  
+**Judge primary path:** `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral` · `withExoMeshShield` (live `soil_core.wasm`)  
 **Audit provenance archive:** `GET /api/grant-audit` · [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — *The `/api/grant-audit` endpoint serves as a verifiable static audit snapshot and SHA-256 provenance checkpoint for the Buildathon submission baseline.*  
 **Dune PEV dashboard:** [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) — **PEV tracking fully operational** on-chain via Sepolia Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) (`RiskTripBlocked` → `SUM(blocked_intent_notional_usd)`)
 
@@ -615,7 +615,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 |---------|----------------|-------|
 | **ZeroDev AA Dry-Run** | `pnpm test:zerodev` → [`tests/adapters/zerodev-aa-dryrun-harness.test.ts`](../../tests/adapters/zerodev-aa-dryrun-harness.test.ts) | Kernel v3 EP 0.7 UserOp draft · session-key clip audit · Risk Oracle Gate simulation |
 | **HL Panic Sandbox** | `pnpm tsx scripts/dry-run-sandbox.ts` | In-memory HL testnet stress → counter-attack → EIP-712 session-key pipeline (< 5ms hot path target) |
-| **Grant E2E Demo** | `pnpm demo:e2e` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
+| **Grant E2E Demo** | `pnpm demo:delta-neutral` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
 | **5-TX Verified Proof** | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet 5-TX anchor with notional tiers ($1K / $100K / $1M) |
 | **Negative Proofs** | `pnpm verify:negative` | Confirms soil trips on depth breach (`DEPTH_USD < MIN_DEPTH_USD`) |
 | **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/exomesh-agentic-wallet-guard` `withExoMeshShield` (legacy: `withCitadelShield`) — ALLOW / `--trip` FAIL_CLOSED |

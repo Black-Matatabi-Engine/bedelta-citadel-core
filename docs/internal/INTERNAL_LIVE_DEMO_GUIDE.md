@@ -9,7 +9,7 @@
 Append `--livingwater` or `--live` after the demo script arguments (pnpm requires `--` before flags):
 
 ```bash
-pnpm demo:e2e -- --livingwater
+pnpm demo:delta-neutral -- --livingwater
 pnpm demo:escort -- --livingwater
 pnpm demo:gmx -- --trip
 pnpm demo:usdai -- --livingwater
@@ -27,7 +27,7 @@ Combine with existing flags:
 
 ```bash
 pnpm demo:escort -- --trip --livingwater
-pnpm demo:e2e -- --livingwater --hedge-live   # live clock + real HL hedge (requires session env)
+pnpm demo:delta-neutral -- --livingwater --hedge-live   # live clock + real HL hedge (requires session env)
 ```
 
 ## Mode Comparison
@@ -47,7 +47,7 @@ pnpm demo:e2e -- --livingwater --hedge-live   # live clock + real HL hedge (requ
 - Harness wiring: `examples/lib/demo-harness.ts` → `initDemoEnvironment()` / `wrapDemoExecution()`
 - All `demo:*` scripts route through the harness automatically.
 
-### `demo:e2e` Notes
+### `demo:delta-neutral` Notes
 
 - **HL hedge live mode** uses `--hedge-live` (not `--live`, which is reserved for Living Water).
 - Living Water skips `resetProbes()` so sequencer / soft-confirmation guards hit real RPC paths.

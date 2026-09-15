@@ -10,7 +10,7 @@
 | **Protocol** | SliverVine Protocol / SliverVine ExoMesh |
 | **Identity** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) is a Sub-ms 0-Gas Pre-Broadcast Safety ExoMesh & Risk Navigator for AI Agents on Arbitrum. |
 | **Baseline** | Vitest **199 test files | 868 PASS Clean (100% PASS)** · Wasm **p50 ~106 µs** · chaos **255/255** |
-| **Judge primary path** | `pnpm demo:gmx -- --trip` · `pnpm demo:e2e` · `withExoMeshShield` (live `soil_core.wasm`) |
+| **Judge primary path** | `pnpm demo:gmx -- --trip` · `pnpm demo:delta-neutral` · `withExoMeshShield` (live `soil_core.wasm`) |
 | **Audit provenance archive** | [bedeltawater.slivervine.xyz/api/grant-audit](https://bedeltawater.slivervine.xyz/api/grant-audit) — static SHA-256 Buildathon snapshot (not a live market oracle) |
 | **Dune telemetry** | [SliverVine Protocol Master Dashboard (Dune)](https://dune.com/silvervinelabs/slivervine-protocol) — Sepolia on-chain event stream |
 | **[ERC-8196](https://eips.ethereum.org/EIPS/eip-8196)** | ERC-8196 (Final) Sub-ms Policy Gate |

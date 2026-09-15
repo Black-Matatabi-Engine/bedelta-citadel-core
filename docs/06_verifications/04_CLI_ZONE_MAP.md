@@ -25,7 +25,7 @@ All standalone CLIs measure latency via `process.hrtime.bigint()` (µs precision
 ```bash
 pnpm install
 pnpm demo       # Primary Judge Showcase (12 Dual Pillar Set X & Y Scenarios)
-pnpm demo:e2e   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
+pnpm demo:delta-neutral   # 4-Step Happy Path Macro Lifecycle CLI (--unwind · --trip optional)
 pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean)
 ```
 
@@ -42,9 +42,9 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 | `pnpm demo:hl -- --trip` | **Judge fast track** — Hyperliquid L1 primary hedge path | **FAIL_CLOSED** · session-key / depth guard |
 | `pnpm demo:perp-loop -- --trip` | Loop A perp/yield stack (GMX / Pendle / HL / Variational) | **FAIL_CLOSED** · p50 ~15µs reflex core |
 | `pnpm demo:spot-loop -- --trip` | Loop B USD.ai collateral lane | **FAIL_CLOSED** · p50 ~15µs reflex core |
-| `pnpm demo:e2e` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
-| `pnpm demo:e2e -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
-| `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
+| `pnpm demo:delta-neutral` | 4-step Citadel ANSI HUD dry-run (Happy Path SSOT) | `RESULT: E2E OK (4/4)` |
+| `pnpm demo:delta-neutral -- --unwind` | Optional Step 5 ExoMesh R20 unwind exercise | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:delta-neutral -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | ExoMesh Agentic Guard (EIP-1193/5792/6963+) | **35/35 PASS** |
 | `pnpm demo:agent` | B2B `withExoMeshShield` (legacy: `withCitadelShield`) smoke demo | `ALLOW` / intent gate |
 | `pnpm demo:stabilizer` | Standalone Stabilizer Sepolia 1:1 swap guard | `ALLOW` · zero-slippage clearance |
@@ -53,7 +53,7 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 | `pnpm demo:ingress` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort | `lostUsd ≡ 0` · Route A/C HUD |
 | `pnpm test` | Full Vitest regression bar | **235 test files | 1091 PASS clean** |
 
-**`demo:e2e` expected terminal highlights** (GitHub `diff` syntax):
+**`demo:delta-neutral` expected terminal highlights** (GitHub `diff` syntax):
 
 ```diff
 +  ┌─ SliverVine Protocol · ExoMesh + Sanctuary ─────────────────────┐
@@ -70,8 +70,8 @@ pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean
 **Optional modes:**
 
 ```diff
-+ pnpm demo:e2e -- --unwind   # Step 5 ExoMesh R20 unwind · RESULT: E2E OK (5/5)
-+ pnpm demo:e2e -- --trip     # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
++ pnpm demo:delta-neutral -- --unwind   # Step 5 ExoMesh R20 unwind · RESULT: E2E OK (5/5)
++ pnpm demo:delta-neutral -- --trip     # Step 1 soil-trip intercept · E2E FAIL at Gatehouse
 ```
 
 **Legacy stress diff** (`--unwind` only — Step 5 soil exercise):
@@ -91,7 +91,7 @@ docker build -t slivervine-citadel . && docker run --rm slivervine-citadel
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| Default `docker run` | 4-step Citadel **`demo:e2e`** Happy Path inside container | `[tier0] demo:e2e PASS` |
+| Default `docker run` | 4-step Citadel **`demo:delta-neutral`** Happy Path inside container | `[tier0] demo:delta-neutral PASS` |
 | `docker run --rm slivervine-citadel pnpm test` | Full Vitest regression (host-free) | **235 test files | 1091 PASS clean** |
 
 **Why Docker Path:** Eliminates judge laptop Node version drift, pnpm store corruption, and missing WSL deps — same PASS bar, hermetic container.
@@ -121,17 +121,17 @@ pnpm demo
 |---------|--------|----------|
 | `pnpm demo` | Dual Pillar Set X & Y micro E2E matrix | **12/12 PASS** · colorful ANSI console output |
 
-### (b) Macro Lifecycle E2E Suite — `pnpm demo:e2e`
+### (b) Macro Lifecycle E2E Suite — `pnpm demo:delta-neutral`
 
 ```bash
-pnpm demo:e2e
+pnpm demo:delta-neutral
 ```
 
 | Command | Proves | Expected |
 |---------|--------|----------|
-| `pnpm demo:e2e` | 4-step cross-venue agent hedge Happy Path (SSOT) | `RESULT: E2E OK (4/4)` |
-| `pnpm demo:e2e -- --unwind` | Optional Step 5 R20 panic flash unwind | `RESULT: E2E OK (5/5)` |
-| `pnpm demo:e2e -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
+| `pnpm demo:delta-neutral` | 4-step cross-venue agent hedge Happy Path (SSOT) | `RESULT: E2E OK (4/4)` |
+| `pnpm demo:delta-neutral -- --unwind` | Optional Step 5 R20 panic flash unwind | `RESULT: E2E OK (5/5)` |
+| `pnpm demo:delta-neutral -- --trip` | Step 1 soil-trip stress intercept | `E2E FAIL` at Gatehouse |
 
 Steps (Happy Path): Intent + Deadman → Robinhood escort → GMX underweight rebalance → HL session hedge. Optional `--unwind` adds Step 5 ExoMesh R20 exercise; `--trip` stress-tests Step 1 Gatehouse intercept.
 
