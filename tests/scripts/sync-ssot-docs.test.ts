@@ -2,12 +2,14 @@ import { readFileSync } from "fs";
 import { join } from "path";
 import { describe, expect, it } from "vitest";
 import {
+  applyVitestGlobalSync,
   buildReadmeBadges,
   buildSepsbTable,
   loadSystemMetricsSsot,
   replaceMarkedBlock,
   shieldsEncode,
   shieldsStaticBadge,
+  syncMarkdownFile,
 } from "../../scripts/_shared/sync-ssot-docs-lib";
 
 const ROOT = process.cwd();
@@ -54,5 +56,27 @@ describe("sync-ssot-docs", () => {
     const readme = readFileSync(join(ROOT, "README.md"), "utf8");
     expect(readme).toContain("<!-- SSOT:README_BADGES_START -->");
     expect(readme).toContain("<!-- SSOT:README_SEPSB_TABLE_END -->");
+  });
+
+  it("applyVitestGlobalSync scrubs legacy 235/1091/1120 drift", () => {
+    const stale =
+      "**235 test files | 1091 PASS clean** · headline **1091 PASS** · (**235 test files / 1091 PASS / 3,320+**) · # 235 test files | 1120 PASS clean";
+    const synced = applyVitestGlobalSync(stale, ssot.badges.vitest.test_files_passed, ssot.badges.vitest.total_tests_passed);
+    expect(synced).not.toMatch(/\b(235|1091|1120)\b/);
+    expect(synced).toContain(`${ssot.badges.vitest.test_files_passed} test files`);
+    expect(synced).toContain(`${ssot.badges.vitest.total_tests_passed} PASS`);
+  });
+
+  it("JUDGE_BRIEF and README have no stale vitest counts after sync", () => {
+    syncMarkdownFile(ROOT, "JUDGE_BRIEF.md", ssot);
+    syncMarkdownFile(ROOT, "README.md", ssot);
+    const judge = readFileSync(join(ROOT, "JUDGE_BRIEF.md"), "utf8");
+    const readme = readFileSync(join(ROOT, "README.md"), "utf8");
+    const expectSsot = `${ssot.badges.vitest.test_files_passed} test files | ${ssot.badges.vitest.total_tests_passed} PASS`;
+    expect(judge).toContain(expectSsot);
+    expect(readme).toContain(expectSsot);
+    expect(judge).not.toMatch(/\b(1091|1120) PASS\b/);
+    expect(judge).not.toMatch(/\b235 test files\b/);
+    expect(readme).not.toMatch(/\b(1091|1120) PASS\b/);
   });
 });
