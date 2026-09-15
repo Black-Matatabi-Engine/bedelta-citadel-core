@@ -12,6 +12,7 @@ const TARGETS = [
   "README.md",
   "JUDGE_BRIEF.md",
   "docs/internal/0915_1000_Grok_zh.md",
+  "docs/internal/0915_lunch_Gork_zh.md",
   "docs/audit/0915_1000_Grok_zh.md",
 ];
 

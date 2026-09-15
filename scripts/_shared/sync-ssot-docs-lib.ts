@@ -257,7 +257,7 @@ export function syncMarkdownFile(root: string, relativePath: string, ssot: Syste
     content = applyVitestGlobalSync(content, v.test_files_passed, v.total_tests_passed);
   }
 
-  if (relativePath.endsWith("0915_1000_Grok_zh.md")) {
+  if (relativePath.endsWith("0915_1000_Grok_zh.md") || relativePath.endsWith("0915_lunch_Gork_zh.md")) {
     content = replaceMarkedBlock(content, "GROK_HEADER_METRICS", buildGrokHeaderMetrics(ssot));
     content = applyVitestGlobalSync(content, v.test_files_passed, v.total_tests_passed);
     content = content.replace(
