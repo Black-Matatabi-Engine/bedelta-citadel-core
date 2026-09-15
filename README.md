@@ -220,9 +220,10 @@ pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
 pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
 # Tier 2 — Specific Standards & Strategy Use Cases
-pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort
-pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress
-pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle
+pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort (Scenario A–C · `--json`)
+pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress (Scenario A–C · `--json`)
+pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle (`--zerodev=on` default · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off  # Native EIP-1193 signer (AA disabled)
 
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35

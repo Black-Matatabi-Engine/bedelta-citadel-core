@@ -398,12 +398,13 @@ pnpm demo:variational -- --trip
 pnpm demo:hl -- --trip
 
 # [Sanctuary] Tier 0 — Module B Vault Standard (ERC-7540+)
-pnpm demo:sanctuary              # ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
+pnpm demo:sanctuary              # ERC-7540+ Scenario A–C (alias: pnpm demo:escort · `--json`)
 # [Sanctuary] Tier 0 — Module B Treasury Ingress (Pillar Set X)
-pnpm demo:ingress                # Across/Robinhood AML ingress escort (lostUsd ≡ 0)
+pnpm demo:ingress                # Across/Robinhood AML ingress escort (Scenario A–C · `--json`)
 npx vitest run tests/adapters/treasury-escort-router.test.ts
 
-pnpm demo:delta-neutral
+pnpm demo:delta-neutral          # Pillar Set X lifecycle (`--zerodev=on` default · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off  # Native EIP-1193 signer (AA opt-out)
 ```
 
 | Tier | Tag | Commands | Scope |

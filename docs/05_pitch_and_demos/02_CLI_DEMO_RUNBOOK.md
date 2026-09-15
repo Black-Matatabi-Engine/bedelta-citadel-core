@@ -14,7 +14,7 @@
 |------|----------|-------|
 | **Tier 0 — Fully Demo** | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` | **Flagship interactive entrypoint** · Scenario A–D (Module A + B) · `@slivervine/exomesh-agentic-wallet-guard` |
 | **Tier 1 — 5-Venue Fast-Track Proofs** | `pnpm demo:{gmx,pendle,usdai,hl,variational} -- --trip` | 0-Gas **FAIL_CLOSED** venue proofs · Wasm `checkSoilResistance()` |
-| **Tier 2 — Specific Standards & Strategy** | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `pnpm demo:delta-neutral` | ERC-7540+ Async Vault · Across/Robinhood AML · Multi-venue delta-neutral hedge |
+| **Tier 2 — Specific Standards & Strategy** | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `pnpm demo:delta-neutral` | ERC-7540+ Async Vault · Across/Robinhood AML · Multi-venue delta-neutral hedge · see **Secondary Demo Flags** below |
 | **Tier 3 — Full Regression** | `pnpm test -- --run` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm exec tsc --noEmit` | **243 files / 1123 PASS** · SDK **35/35** · 0 TS errors |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
 | **Zone B — Sandbox** | `pnpm demo:stabilizer` · `pnpm demo:sanctuary` | Sepolia stabilizer · Module B vault escort |
@@ -252,7 +252,9 @@ SSOT: [`src/sdk/decorator.ts`](../../src/sdk/decorator.ts) · [`examples/agent-i
 | **Wallet B — Arbitrum Vault / GMX GM Lane** | Default `0xc9Bdd…546f` | Arbitrum One | **$2,500** user vault · **$2,400** GMX GM deposit · **$100** HL margin gateway |
 
 ```bash
-pnpm demo:delta-neutral                     # Pillar Set X — 4-Step Happy Path
+pnpm demo:delta-neutral                     # Pillar Set X — 4-Step Happy Path (`--zerodev=on` default)
+pnpm demo:delta-neutral -- --zerodev=off    # Native EIP-1193 signer (AA opt-out)
+pnpm demo:delta-neutral -- --json           # Pure JSON export (includes zerodev AA state)
 pnpm demo:delta-neutral -- --unwind         # Pillar Set X — 5-Step Emergency Capital Unwind
 pnpm demo:delta-neutral -- --trip           # Pillar Set X — Step 1 soil-trip fail-closed intercept
 pnpm demo:perp-loop -- --trip     # Pillar Set Y — Loop A reflex demo
@@ -266,12 +268,28 @@ pnpm demo:spot-loop -- --trip     # Pillar Set Y — Loop B reflex demo
 ```bash
 pnpm demo:stabilizer              # Sepolia Stabilizer 1:1 swap guard
 pnpm demo:stabilizer -- --trip    # USDZ de-peg + reserve depletion + 60s cooldown
-pnpm demo:sanctuary               # Module B Vault Standard — ERC-7540+ Scenario A–C (alias: pnpm demo:escort)
-pnpm demo:ingress                 # Module B Treasury Ingress — Pillar Set X Across/AML escort (lostUsd ≡ $0)
-pnpm demo:delta-neutral                     # 4-Step Happy Path Lifecycle (RESULT: E2E OK 4/4)
+pnpm demo:sanctuary               # Module B Vault Standard — ERC-7540+ Scenario A–C (interactive ENTER pauses · `--json`)
+pnpm demo:ingress                 # Module B Treasury Ingress — Scenario A–C box HUD (interactive ENTER pauses · `--json`)
+pnpm demo:delta-neutral                     # 4-Step Happy Path Lifecycle (`--zerodev=on` default · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off    # Native EIP-1193 signer (AA disabled)
 pnpm demo:delta-neutral -- --unwind         # 5-Step Emergency Capital Unwind (RESULT: E2E OK 5/5)
 pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip intercept (FAIL_CLOSED abort)
 ```
+
+---
+
+## Secondary Demo Flags (Tier 2 Module B)
+
+| Demo | Flag | Behavior |
+|------|------|----------|
+| `pnpm demo:sanctuary` | `--json` | Pure JSON stdout · persists `docs/logging/last_sanctuary_run.json` |
+| `pnpm demo:sanctuary` | *(default interactive)* | ENTER pauses between Scenario A → B → C |
+| `pnpm demo:sanctuary` | `--non-interactive` | Skip ENTER pauses |
+| `pnpm demo:ingress` | `--json` | Pure scenarios JSON array stdout · persists `docs/logging/last_ingress_run.json` |
+| `pnpm demo:ingress` | *(default interactive)* | ENTER pauses between Scenario A → B → C |
+| `pnpm demo:delta-neutral` | `--zerodev=on` *(default)* | ZeroDev Kernel v3 + ERC-7715 Session Mandates + ERC-7710 Paymaster 0-Gas; graceful native EIP-1193 fallback on RPC/paymaster failure |
+| `pnpm demo:delta-neutral` | `--zerodev=off` | Native EIP-1193 signer only · logs `[AA STATE] ZeroDev Account Abstraction Disabled` |
+| `pnpm demo:delta-neutral` | `--json` | Pure JSON payload stdout (includes `zerodev` state) · persists `docs/logging/last_delta_neutral_run.json` |
 
 ---
 
@@ -292,9 +310,10 @@ pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
 pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
 # Tier 2 — Specific Standards & Strategy Use Cases
-pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort
-pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress
-pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle
+pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort (`--json` · interactive pauses)
+pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress (`--json` · Scenario A–C)
+pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle (`--zerodev=on` · `--json`)
+pnpm demo:delta-neutral -- --zerodev=off  # Native EIP-1193 signer
 
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35

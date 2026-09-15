@@ -4,6 +4,8 @@
  *
  * Usage:
  *   pnpm demo:delta-neutral
+ *   pnpm demo:delta-neutral --zerodev=on   # default — Kernel v3 AA + ERC-7715/7710
+ *   pnpm demo:delta-neutral --zerodev=off  # native EIP-1193 signer
  *   pnpm demo:delta-neutral --json
  *   pnpm demo:delta-neutral --hedge-live
  *   pnpm demo:delta-neutral --livingwater
@@ -11,6 +13,10 @@
  *   pnpm demo:delta-neutral --unwind
  */
 import { E2E_PROOF_REL_PATH, IS_E2E_UNWIND_MODE, parseE2eMode } from "../examples/lib/e2e-demo-constants";
+import {
+  logDeltaNeutralZeroDevState,
+  resolveDeltaNeutralZeroDevState,
+} from "../examples/lib/delta-neutral-zerodev";
 import {
   saveDeltaNeutralRunPayload,
   type DeltaNeutralRunPayload,
@@ -45,6 +51,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
   const jsonMode = isDemoJsonArgv();
   const mode = parseE2eMode(process.argv.slice(2));
   const timestamp = new Date(nowMs).toISOString();
+  const zerodev = await resolveDeltaNeutralZeroDevState(process.argv.slice(2));
 
   if (IS_TRIP_MODE) {
     const tripPayload: DeltaNeutralRunPayload = {
@@ -53,6 +60,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
       tripped: true,
       mode,
       timestamp,
+      zerodev,
       proof: null,
       tripReason: "FAIL_CLOSED",
     };
@@ -66,6 +74,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     paintE2eBanner();
     logE2eHeaderMode(mode);
     logE2eHeaderClock(IS_LIVINGWATER_MODE);
+    logDeltaNeutralZeroDevState(zerodev);
     logE2ePipelineRoadmap();
     if (!IS_LIVINGWATER_MODE) resetProbes(nowMs);
     runE2eTripIntercept(nowMs);
@@ -78,14 +87,17 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     return runE2ePipeline(mode, nowMs, at, { includeUnwind: IS_E2E_UNWIND_MODE });
   };
 
-  const steps = jsonMode ? await withSilentConsole(runPipeline) : await (async () => {
-    e2eLog("");
-    paintE2eBanner();
-    logE2eHeaderMode(mode);
-    logE2eHeaderClock(IS_LIVINGWATER_MODE);
-    logE2ePipelineRoadmap();
-    return runPipeline();
-  })();
+  const steps = jsonMode
+    ? await withSilentConsole(runPipeline)
+    : await (async () => {
+        e2eLog("");
+        paintE2eBanner();
+        logE2eHeaderMode(mode);
+        logE2eHeaderClock(IS_LIVINGWATER_MODE);
+        logDeltaNeutralZeroDevState(zerodev);
+        logE2ePipelineRoadmap();
+        return runPipeline();
+      })();
 
   const proof = buildE2eProofPayload(mode, steps);
   const allOk = evaluateE2ePipelineOk(steps);
@@ -95,6 +107,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     tripped: false,
     mode,
     timestamp,
+    zerodev,
     proof,
   };
 

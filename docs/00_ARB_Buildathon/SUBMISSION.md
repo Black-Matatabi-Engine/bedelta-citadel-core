@@ -366,7 +366,9 @@ SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for
 ```bash
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate (42161)
 pnpm execute:gmx:gm-deposit           # Wallet B live GM deposit multicall
-pnpm demo:delta-neutral                         # 4-step cross-wallet Happy Path HUD
+pnpm demo:delta-neutral                         # 4-step cross-wallet Happy Path HUD (`--zerodev=on` default)
+pnpm demo:delta-neutral -- --zerodev=off        # Native EIP-1193 signer (AA disabled)
+pnpm demo:delta-neutral -- --json               # Pure JSON export + zerodev state
 ```
 
 > **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault lifecycle (`pnpm demo:delta-neutral`) provides supplementary mainnet execution evidence.
