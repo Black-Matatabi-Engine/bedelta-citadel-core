@@ -1,7 +1,8 @@
 # ExoMesh Production Scenario Catalog
 
 > Judge appendix — **not** a payment rail. All paths are **pre-sign / pre-sequencer**.  
-> Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors.
+> Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors.  
+> **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`)
 
 **Wasm SSOT:** `pkg/soil_core.wasm` · `tests/wasm/stylus-soil-wasm.test.ts`
 
@@ -11,7 +12,7 @@
 
 | Scenario | File |
 |----------|------|
-| EIP-7702 malicious / unlisted implementation | `tests/sdk/eip7702-auth-guard.test.ts` |
+| EIP-7702 malicious / unlisted implementation · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** | `tests/sdk/eip7702-auth-guard.test.ts` · `pnpm demo:delta-neutral` |
 | Prompt injection / session-key clip / Gate attestation tamper | `tests/sdk/citadel-sdk-intent.test.ts` |
 | Venue drift (GMX-approved agent → Pendle) | `tests/core/intent-drift.test.ts` |
 | EIP-6963 fallback wrap · transport bitmark fail-closed | `tests/sdk/retail-guard-provider.test.ts` |
@@ -37,7 +38,7 @@
 | CRI hardlock 403 | `session-cap.test.ts` |
 | 255-case chaos matrix | `chaos-blackswan-stress.test.ts` |
 | Orbit: expired session+gas cap · ArbOS calldata tax · Stylus `FLAG_TOXIC` | `orbit-agentic-failclosed-chaos.test.ts` |
-| Soil bypass forbid · &lt;16 KiB / 10k hot path | `soil-bypass-forbid.test.ts` · `intent-sinking-audit.test.ts` |
+| Soil bypass forbid · Zero-Allocation Hot-Path / Zero-GC Heap Delta (<16 KiB) / 10k | `soil-bypass-forbid.test.ts` · `intent-sinking-audit.test.ts` |
 | Flash unwind / nonce heal | `flash-unwind.test.ts` · `nonce-auto-healing.test.ts` |
 
 ## D+ — Sanctuary extras
