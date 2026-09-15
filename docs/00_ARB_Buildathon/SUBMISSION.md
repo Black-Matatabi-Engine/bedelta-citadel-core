@@ -20,7 +20,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 
 | Evaluation Target | Execution Method | Physical Substrate |
 |-------------------|------------------|-------------------|
-| **C-End Wallet Guard (installable SKU)** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 wrap of `eth_sendTransaction` · **35/35** · `withRetailGuardProvider` |
+| **Drop-in EIP-1193 Provider Middleware** | `npx vitest run tests/sdk/retail-guard-provider.test.ts` | EIP-1193 wrap of `eth_sendTransaction` · **35/35** · `withRetailGuardProvider` |
 | **Fail-closed soil (no broadcast)** | `pnpm demo:gmx -- --trip` | Live `soil_core.wasm` (<1.8µs warm) · **not** the GMX live-fill harness |
 | **End-to-End Macro Flow** | `pnpm demo:delta-neutral` | 4-Step multi-venue HUD · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** |
 | **GMX execution appendix** | [`06_LIVE_FIRE_EVIDENCE.md`](../06_verifications/06_LIVE_FIRE_EVIDENCE.md) | Chain txs — **execution ≠ guard** |
@@ -28,7 +28,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 
 *Note: Judge primary path is **Wallet Guard unit + `demo:gmx -- --trip`**. `withExoMeshShield` is the B2B decorator (agent hook), not the MetaMask wrap. `/api/grant-audit` is a static archive only. Mainnet GMX fills are an execution appendix.*
 
-> **Note on Live Evidence:** Mainnet GMX transaction hashes ([`0xa37f52c8…`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) open & [`0x2e47f4fe…`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) close) demonstrate complete **42161 mainnet execution capability**. Pre-consensus guard failure modes are verified via **non-bypass** CLI demos (`pnpm demo:gmx -- --trip`) and unit tests ([`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35**).
+> **Note on Live Evidence:** Mainnet GMX transaction hashes ([`0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a`](https://arbiscan.io/tx/0xa37f52c857614ea47f2da8c6f1831fbf0f76ed39e881e716f0f077e9feab0e1a) open & [`0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45`](https://arbiscan.io/tx/0x2e47f4fe1cc7c1579e1c450d92264c444c854f1b28a80dab31761a504c5bcb45) close) demonstrate complete **42161 mainnet execution capability**. Pre-consensus guard failure modes are verified via **non-bypass** CLI demos (`pnpm demo:gmx -- --trip`) and unit tests ([`tests/sdk/retail-guard-provider.test.ts`](../../tests/sdk/retail-guard-provider.test.ts) **35/35**).
 
 ---
 
@@ -40,7 +40,7 @@ Escrow complement: **SliverVine Sanctuary** (treasury escort · ERC-7540 · Robi
 | **2** | **Mainnet Deployed Anchors & Pure Solidity Fallback** | Arbitrum One (`42161`) live contracts · optional Stylus coprocessor · **100% fail-closed** via Solidity path when `stylusCoprocessor=0` | Stylus `SliverVineSoilCoprocessor` [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · `PolicyGuardV2` [`0xfd98cadb7018f692ec58cd4359e0c0399f4f8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) → [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) |
 | **3** | **Hyperliquid → GMX V2 Native Liquidity Routing** | Deterministic fallback from external L1 primary hedge to **Arbitrum-native GMX GM pools**; preserves **Δ_net ≡ 0** under venue isolation | [`pnpm demo:hl -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:delta-neutral`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#zone-b--sandbox--e2e) |
 | **4** | **Physical Clock Monotonicity** | Edge Wasm ([`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) · `clock_core`) fail-closed against leap seconds · NTP step-back · RPC `block.timestamp` regression | `pnpm build:wasm` · [`tests/clock-monotonicity.test.ts`](../../tests/clock-monotonicity.test.ts) **14/14** · [Physical Clock Matrix](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#311-physical-clock--edge-monotonicity-matrix-v10-santenmoku) |
-| **5** | **SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK (C-End Middleware)** | Apache-2.0 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrapper · 0-Gas pre-consensus intercept for infinite approvals · [Permit2](https://github.com/Uniswap/permit2) · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) phishing · AI agent retry severance (`INTENT_RING_U32`) · [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#37-eip-1193-agentic-wallet-guard-sdk--c-end-eip-1193-middleware) |
+| **5** | **SliverVine ExoMesh — EIP-1193 Agentic Wallet Guard SDK (Drop-in Provider Middleware)** | Apache-2.0 [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) wrapper · 0-Gas pre-consensus intercept for infinite approvals · [Permit2](https://github.com/Uniswap/permit2) · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) phishing · AI agent retry severance (`INTENT_RING_U32`) · [EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) multi-provider discovery · RPC transport stream sync | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35 PASS** · [`docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`](../04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md) · [Defense Matrix § Wallet Guard](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#37-eip-1193-agentic-wallet-guard-sdk--c-end-eip-1193-middleware) |
 
 ---
 
@@ -69,14 +69,14 @@ Wiki SSOT → [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensio
 
 | Capability | Implementation | User outcome |
 |------------|----------------|--------------|
-| **0-Gas pre-consensus intercept** | `withRetailGuardProvider` · `calldata-parser` (ERC20 · [Permit2](https://github.com/Uniswap/permit2) `0x2a0886f7` / `0x87517c45`) | Infinite approve / untrusted spender blocked **before** wallet popup |
+| **0-Gas pre-consensus intercept** | `withRetailGuardProvider` · `calldata-parser` (ERC20 · [Permit2](https://github.com/Uniswap/permit2)) | Infinite approve / untrusted spender blocked **before** wallet popup |
 | **AI agent intent protection** | `evaluateRetailRisk` · `INTENT_RING_U32` attempt budget | 4th rapid submit severs channel — blocks FOMO / panic retry storms |
 | **[EIP-6963](https://eips.ethereum.org/EIPS/eip-6963) discovery** | `announceGuardedProvider` | Guarded provider discoverable alongside MetaMask / Rabby injectors |
 | **RPC transport stream sync** | `transport-stream.ts` | [EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) transport lane monitor; `RPC_TRANSPORT_SYNC_FAILED` fail-closed on sync recovery |
 | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712) Permit guard** | `eth_signTypedData_v4` venue + spender gates | Anti-phishing for `verifyingContract` drift |
 | **[EIP-5792](https://eips.ethereum.org/EIPS/eip-5792) batch guard** | `wallet_sendCalls` unfold via [`eip5792-send-calls.ts`](../../src/sdk/exomesh-agentic-wallet-guard/eip5792-send-calls.ts) | Agent atomic batches cannot bypass 1193 · 0-Gas reject |
 
-**Verification (commits `b7c33d8` · `2216da7`):**
+**Verification:**
 
 ```bash
 npx vitest run tests/sdk/retail-guard-provider.test.ts
@@ -124,15 +124,15 @@ forge test --match-contract IntentRingSlabTest
 
 ---
 
-## v0.95 SSOT Security Patches (Commit `5829e9a`)
+## Security & Invariant Protections
 
-| Patch | Resolution | Telemetry |
+| Protection | Resolution | Telemetry |
 |-------|------------|-----------|
 | **Session Key Replay Guard** | `executeHlSessionKeyOrder` — consume-once nonce (`auditSessionKeyNonceState`) + `expiresAt <= nowMs` before broadcast | `[WALLET_A_HL_STATE]` |
 | **Clock SSOT** | `resolveUsdAiClockSsot()` — `nowMs ?? Date.now()` · **hard skew >30s → `CLOCK_SKEW_EXCEEDED`** | `[CLOCK_SSOT_VERIFIED]` |
 | **Monotonic Clock Wasm Core** | `clock_core.rs` C-ABI (`clock_core_read`, `clock_core_rpc_ingest`) · obfuscated proprietary math in **Edge** Wasm (`pkg/soil_core.wasm` SHA-256 `67f8fcc7…`) · fail-closed leap protection | `pnpm build:wasm` · `tests/clock-monotonicity.test.ts` **14/14** |
-| **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — **[`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e)** · activation [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
-| **ZeroDev AA Security Review** | **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** · replay + clock items **Resolved in v0.95 SSOT** | [`02_PILLAR_1` audit](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) · [`0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad`](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
+| **Stylus Mainnet Soil Coprocessor** | On-chain Nitro path — [`0xc23587d6573dd134f95b02b0202ffbf84686625e`](https://arbiscan.io/address/0xc23587d6573dd134f95b02b0202ffbf84686625e) · activation [`0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397`](https://arbiscan.io/tx/0x92079e150697717af75b0b750ff80be36d06212337189ef368bf65fead6c9397) | [`03_ON_CHAIN_MAINNET_ANCHORS.md`](../06_verifications/03_ON_CHAIN_MAINNET_ANCHORS.md) · `pnpm tsx scripts/deploy-stylus-mainnet.ts` |
+| **ZeroDev AA Security Review** | **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** · replay + clock items **audit items closed in production SSOT** | [`02_PILLAR_1` audit](../01_architecture/01_SYSTEM_TOPOLOGY_AND_YELLOW_PAPER.md#ingress-and-three-pillar-architecture) · [`0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad`](https://arbiscan.io/tx/0xc7659e299e4961279f03b9cafa988dc082d7f9baf107bcd7b62812e8dfb54aad) |
 
 > **Bootstrap keys:** Initial mainnet deployment utilizes Bootstrap Ignition Keys ([`0x1111…1111`](https://arbiscan.io/address/0x1111111111111111111111111111111111111111) / [`0x2222…2222`](https://arbiscan.io/address/0x2222222222222222222222222222222222222222)) for public verification. Production multisig rotation via native governance.
 
@@ -350,18 +350,18 @@ SliverVine ExoMesh defines **exact in-scope bounds** for AI-agent intent drift �
 
 ---
 
-## 🏛️ Citadel-Armor Sovereign Vault (Live MVP Strategy)
+## 🏛️ SliverVine Sanctuary — Sovereign Delta Pool (Module B)
 
-SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **Citadel-Armor Sovereign Vault** (Sovereign Delta Pool) is the live mainnet MVP demonstrating that **active microsecond circuit breaking** unlocks GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
+SliverVine ExoMesh is the **Pre-Consensus Intent Execution Calibration Layer for AI Agents**. The **SliverVine Sanctuary — Sovereign Delta Pool (Module B)** is the live mainnet MVP demonstrating that **active microsecond circuit breaking** unlocks GMX v2 Real Yield with **near-zero drawdown** and **maximum Sharpe Ratio**.
 
-| Lane | Wallet | Venue | Role |
-|------|--------|-------|------|
-| **Wallet A — Hedge Engine (Primary)** | `0xef0752…960d` | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) session keys · `executeGmxCrossWalletHedge` |
-| **Wallet B — GM LP Yield Vault** | `0xc9Bdd…546f` (`uiFeeReceiver`) | Arbitrum One **GMX V2** | GM LP deposit/withdraw only · **+10 bps builder fee** · **primary Arbitrum-native backup anchor** when HL is isolated |
+| Lane | Venue | Role |
+|------|-------|------|
+| **Hedge Engine Signer (Wallet A)** | Hyperliquid L1 Perps | 0-Gas **1× ETH short** · [EIP-712](https://eips.ethereum.org/EIPS/eip-712) session keys · `executeGmxCrossWalletHedge` |
+| **GM Vault Operator (Wallet B)** | Arbitrum One **GMX V2** | GM LP deposit/withdraw only · **+10 bps builder fee** · **primary Arbitrum-native backup anchor** when HL is isolated · `uiFeeReceiver` treasury lane |
 
 **Financial thesis:** **Near-Zero Drawdown, Maximum Sharpe Ratio via Active Microsecond Circuit Breaking** — `checkSoilResistance()` severs toxic paths at **p50 ~106µs** before they impact vault NAV; cross-wallet hedge cron maintains **Δ_net ≡ 0**.
 
-**Live mainnet proofs:** GM deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · approve [`0x30ec0b7a…`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · withdraw [`0xfd3601dc…`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md)
+**Live mainnet proofs:** GM deposit [`0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774`](https://arbiscan.io/tx/0xe3155220e464c375329838bb5ca8498226b8c8fa32c11929b7605070f7be4774) · approve [`0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e`](https://arbiscan.io/tx/0x30ec0b7a9493f0c43edb257fd40f6d6f9258401e206357f3db7574b11071b00e) · withdraw [`0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410`](https://arbiscan.io/tx/0xfd3601dce5c2407d371186d8a24829994547ec8810f4a20c3e798d2fb67ae410) · → [`PRODUCTION_WORKFLOW_DEEP_DIVE.md`](../PRODUCTION_WORKFLOW_DEEP_DIVE.md)
 
 ```bash
 pnpm demo:e2e:arb-native              # Arbitrum Native USDC GM deposit simulate (42161)
@@ -371,7 +371,7 @@ pnpm demo:delta-neutral -- --zerodev=off        # Native EIP-1193 signer (AA dis
 pnpm demo:delta-neutral -- --json               # Pure JSON export + zerodev state
 ```
 
-> **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Vault lifecycle (`pnpm demo:delta-neutral`) provides supplementary mainnet execution evidence.
+> **Primary verification path:** Pre-consensus firewall proofs — `pnpm demo:gmx -- --trip` · `pnpm demo:variational -- --trip` · `pnpm demo:hl -- --trip`. Sovereign Delta Pool lifecycle (`pnpm demo:delta-neutral`) provides supplementary mainnet execution evidence.
 
 ---
 
@@ -417,9 +417,9 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 | **Vitest baseline** | **244 test files | 1126 PASS** · `pnpm test -- --run` · `pnpm exec tsc --noEmit` **tsc 0 errors** · ring-slab heap gate **&lt;16 KiB** ([`intent-sinking-audit.test.ts`](../../tests/core/intent-sinking-audit.test.ts)) |
 | **Security matrix** | **3-Tier Security Matrix: 5/0/0 PASS (Vitest, Forge, Slither, Aderyn, pnpm-audit)** · `pnpm run audit:security` |
 | **Wasm Core Budget** | **<28kb Cloudflare budget, <60µs execution** · Shield **p50 ~106µs** · `pkg/soil_core.wasm` · intent ring slab **&lt;16 KiB** / 10k iterations ([metrics SSOT](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#zero-gc-pre-allocated-ring-slab-memory-engine)) |
-| **Worker bundle (hot-path)** | ****57.88 KiB gzip** · **163.81 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
+| **Worker bundle (hot-path)** | **58.72 KiB gzip** · **166.51 KiB raw** · `limitKiB: 150` · `pass: true` (`pnpm bundle:measure`) |
 | **Dune Telemetry** | [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol) · [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress) — **Module A (ExoMesh):** ✅ active off-chain live dashboard · **Module B (Sanctuary):** Sepolia (`421614`) on-chain event stream · Arbitrum One (`42161`) contracts anchored + SQL specs ready → [`DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) |
-| **Verified Commit** | `main` @ **`c1a37d4`** (Zero-Allocation Hot-Path ring slab) · baseline **`572e5cd`** (Phase A+B+C mainnet) · **244/1126** Vitest · **Cargo 2/2** · ****57.88 KiB gzip** |
+| **Production baseline** | Phase A+B+C mainnet verified · **244 test files | 1126 PASS** · **Cargo 2/2** · **58.72 KiB gzip** Worker bundle |
 
 > **Extended tables** (core modules · ZeroDev audit closure · H1 2026 alignment · production declarations · 5-Core Venue Matrix invariants) → [`SUBMISSION_GRANT_APPENDIX.md`](./SUBMISSION_GRANT_APPENDIX.md)
 
@@ -431,7 +431,7 @@ Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](../03_hacker_profiling/03_DUNE_D
 
 | Review dimension | Verification evidence (CLI / code) |
 |------------------|-------------------------------------|
-| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once [EIP-712](https://eips.ethereum.org/EIPS/eip-712)) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Arbiscan Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **244 test files | 1126 PASS** |
+| **Smart Contract Quality** | **Lean On-Chain Gate by Design** — dual-contract core [`SliverVineGate.sol`](../../SliverVineGate/src/SliverVineGate.sol) (consume-once [EIP-712](https://eips.ethereum.org/EIPS/eip-712)) + [`SliverVineAgentPolicyGuard.sol`](../../contracts/src/SliverVineAgentPolicyGuard.sol) ([ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) policy pre-screen) · immutable · non-custodial · no proxy — keeps Edge `checkSoilResistance()` at **p50 ~106µs** · **Arbitrum One Mainnet Ignition Gate: Verified Non-Custodial Gate on ChainID 42161** — Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [`0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Consume-once and replay-denial invariant lemmas 100% code-verified via native Foundry test suite ([`SliverVineGate.t.sol`](../../SliverVineGate/test/SliverVineGate.t.sol) & [`SliverVineGate.invariant.t.sol`](../../SliverVineGate/test/SliverVineGate.invariant.t.sol)) · **244 test files | 1126 PASS** |
 | **Real Problem Solving** | AI Agent pre-broadcast death window — 0-Gas fail-closed sub-ms severance via `checkSoilResistance()` before Bundler / mempool · **AI Behavioral Safety Substrate** (LLM back-off cooldown + dynamic threshold jitter) · `lostUsd ≡ 0` in-flight invariant |
 | **Innovation and Creativity** | **Pre-Consensus Intent Firewall** for AI Agents on Arbitrum — **Pre-Consensus Intent Clearing** (p50 ~106µs, before Sequencer queues · 0-Gas) · **Zero-Allocation Hot-Path Ring Slab Memory Engine** (pre-allocated **256×4** mandate heap · **&lt;16 KiB** / 10k iterations · [C-ABI parity](../01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#c-abi-parity--rust-wasm--arbitrum-stylus-coprocessors)) · **PEV (Prevented Exploit Volume)** telemetry primitive for Dune/indexers · **Yield Safety Sentinel** for Pendle PT/YT (expiry blackhole / oracle decoupling guard — not a yield competitor) · **Zero-Touch Plugin Standard**: `withExoMeshShield` (legacy: `withCitadelShield`) ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · Wasm Edge (`pkg/soil_core.wasm`) · [ERC-8196](https://eips.ethereum.org/EIPS/eip-8196) (Final) |
 | **Product-Market Fit** | **GMX V2 primary Arbitrum-native perp backup** + HL external L1 primary hedge · GMX +10 bps `uiFeeReceiver` builder lane ([`gmx-v2-order-payload.ts`](../../src/services/adapters/gmx-v2-order-payload.ts)) · **5-Core Venue firewall** (GMX · Pendle · USD.ai · Variational · HL) · `allowedVenues[]` + `VENUE_DRIFT_REJECTED` mandate · **Opt-In Pillar Set X · Component 1 (Gatehouse)** **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (EIP-7702 = ⏳ V1.5 post-grant) · **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193) Retail Guard SDK** + **5-Core Venue guards** · Stabilizer Sepolia ([`src/sdk/exomesh-agentic-wallet-guard/`](../../src/sdk/exomesh-agentic-wallet-guard/) · `pnpm demo:{gmx,pendle,usdai,variational,hl,stabilizer}`) · **`withExoMeshShield` (legacy: `withCitadelShield`)** zero-touch decorator ([`src/sdk/decorator.ts`](../../src/sdk/decorator.ts)) · **Pendle Pillar Set Y (V1.0)** — **Institutional Safety Sentinel** (60s TTL Oracle Fuse · 200bps Jitter Guard) + **AI Guarded Pool Factory** (`validateAIPoolSelection()` · 5 Invariants) ([`pendle-market-oracle-adapter.ts`](../../src/adapters/pendle/pendle-market-oracle-adapter.ts) · [`pendle-pool-factory-adapter.ts`](../../src/adapters/pendle/pendle-pool-factory-adapter.ts) · [`pendle-gmx-cross-guard.ts`](../../src/guards/pendle-gmx-cross-guard.ts)) |
