@@ -63,5 +63,4 @@ export function recordDemoCliTelemetry(input: {
     source: `demo:${demoId}:${input.tripped ? "trip" : "allow"}:${resolveTelemetryWallClockMs()}`,
   });
   appendExomeshInterceptKvMirror(row);
-  printDemoTelemetrySyncNote();
 }

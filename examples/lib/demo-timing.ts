@@ -95,15 +95,61 @@ function padVisible(text: string, width: number): string {
   return text + " ".repeat(pad);
 }
 
+const PERF_BOX_W = 74;
+
+function perfBoxLine(inner: string, color = GRAY): void {
+  const pad = Math.max(0, PERF_BOX_W - 2 - stripAnsi(inner).length);
+  console.log(`${color}│${R}${inner}${" ".repeat(pad)}${color}│${R}`);
+}
+
+function perfBoxRule(color = GRAY): void {
+  console.log(`${color}├${"─".repeat(PERF_BOX_W - 2)}┤${R}`);
+}
+
+function perfBoxOpen(title: string, color = GRAY): void {
+  console.log(`${color}┌${"─".repeat(PERF_BOX_W - 2)}┐${R}`);
+  perfBoxLine(` ${BOLD}${title}${R}`, color);
+}
+
+function perfBoxClose(color = GRAY): void {
+  console.log(`${color}└${"─".repeat(PERF_BOX_W - 2)}┘${R}`);
+}
+
 export function printPerfHierarchyHud(snapshot: DemoBenchmarkSnapshot): void {
-  console.log(`${BOLD}⚡ PERF HIERARCHY (Single-Sample Active CLI vs Edge SSOT Target):${R}`);
-  console.log(`   1. Pure Core (Math)   : ${snapshot.pureInvariantUs.toFixed(1)}µs  (Target: ~0.5-1.1µs warm · ±1µs CLI noise)`);
-  console.log(`   2. Full Matrix (FFI)  : ${snapshot.fullMatrixUs.toFixed(1)}µs  (Target: p50 ~15µs SSRC · ±5µs CLI noise)`);
-  console.log(`   3. E2E Provider (SDK) : ${snapshot.e2eHarnessUs.toFixed(1)}µs  (Target: p50 ~106µs Edge)`);
-  console.log(`   ${GRAY}[Memory]: Zero-Allocation Hot-Path (0 Ephemeral Heap Objects/sec)${R}`);
-  console.log(`\n${GRAY}ℹ️  [Engineering Honesty Disclaimer]:${R}`);
-  console.log(`${GRAY}   CLI µs metrics are active single-sample probes subject to OS/CPU jitter.${R}`);
-  console.log(`${GRAY}   Production SSOT = Edge Worker design bands (SSRC p50 ~15µs budget / Edge p50 ~106µs).${R}`);
+  const ffiDeltaUs = Math.max(0.1, snapshot.fullMatrixUs - snapshot.pureInvariantUs);
+  perfBoxOpen("⚡ PERF HIERARCHY — CLI Active Probe (single-sample)", CORE_BRIGHT_CYAN);
+  perfBoxLine(
+    ` ${GRAY}L1 Pure Core (Math)${R}     : ${CORE_BRIGHT_CYAN}${snapshot.pureInvariantUs.toFixed(1)}µs${R}  ${GRAY}← invariant math only${R}`,
+    CORE_BRIGHT_CYAN,
+  );
+  perfBoxLine(
+    ` ${GRAY}L2 FFI Boundary (Δ)${R}    : ${CORE_BRIGHT_CYAN}${ffiDeltaUs.toFixed(1)}µs${R}  ${GRAY}← Full Matrix − Pure Core${R}`,
+    CORE_BRIGHT_CYAN,
+  );
+  perfBoxLine(
+    ` ${GRAY}L3 Full Matrix (FFI)${R}   : ${GUARD_BRIGHT_GREEN}${snapshot.fullMatrixUs.toFixed(1)}µs${R}  ${GRAY}← checkSoilResistance()${R}`,
+    CORE_BRIGHT_CYAN,
+  );
+  perfBoxLine(
+    ` ${GRAY}L4 E2E Provider (SDK)${R}  : ${EXEC_BRIGHT_YELLOW}${snapshot.e2eHarnessUs.toFixed(1)}µs${R}  ${GRAY}← harness + I/O shell${R}`,
+    CORE_BRIGHT_CYAN,
+  );
+  perfBoxRule(CORE_BRIGHT_CYAN);
+  perfBoxLine(` ${GRAY}[Memory] Zero-Allocation Hot-Path (0 ephemeral heap objects/sec)${R}`, CORE_BRIGHT_CYAN);
+  perfBoxClose(CORE_BRIGHT_CYAN);
+
+  perfBoxOpen("Production SSOT Targets (decoupled · Edge Worker design bands)", GRAY);
+  perfBoxLine(` ${GRAY}SSRC Wasm Reflex p50${R}       : ${CORE_BRIGHT_CYAN}${REFLEX_CORE_TARGET}${R}`, GRAY);
+  perfBoxLine(` ${GRAY}Edge Worker E2E p50${R}        : ${EXEC_BRIGHT_YELLOW}${E2E_SHIELD_TARGET}${R}`, GRAY);
+  perfBoxClose(GRAY);
+
+  console.log(`\n${GRAY}ℹ  Engineering Honesty: CLI probes are single-sample Node.js active measurements.${R}`);
+  console.log(
+    `${GRAY}   Subject to V8 JIT warmup variance, event-loop scheduling, and CPU frequency scaling${R}`,
+  );
+  console.log(
+    `${GRAY}   (e.g. Intel i7 turbo bins). SSOT bands above are production Edge targets — not CLI probes.${R}`,
+  );
 }
 
 export function printDynamicBenchmarkBreakdown(snapshot: DemoBenchmarkSnapshot): void {
