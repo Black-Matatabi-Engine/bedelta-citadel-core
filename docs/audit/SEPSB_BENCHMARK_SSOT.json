@@ -1,11 +1,12 @@
 {
-  "schema": "silvervine.p0-scorecard.ssot.v1",
+  "schema": "silvervine.sepsb-benchmark.ssot.v1",
   "protocol": "SliverVine Protocol",
-  "harness": "p0-scorecard-runner",
-  "standard": "SPSS",
-  "generatedAt": "2026-09-15T00:12:04.100Z",
+  "harness": "sepsb-benchmark-runner",
+  "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
+  "standard_version": "SEPSB-v1.0-Santenmoku",
+  "generatedAt": "2026-09-15T00:14:57.271Z",
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T00:12:04.100Z",
+    "detectedAt": "2026-09-15T00:14:57.271Z",
     "platform": "linux",
     "arch": "x64",
     "nodeVersion": "v24.18.0",
@@ -21,8 +22,8 @@
   "metrics": {
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.326,
-    "reflexLatencyP99Us": 1.237,
+    "reflexLatencyP50Us": 0.284,
+    "reflexLatencyP99Us": 1.226,
     "observatoryParadoxMisblockCount": 0,
     "latencyIterations": 10000
   },
@@ -88,7 +89,7 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.48000000000000004%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.5499999999999999%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
     },
     {
       "id": "toxic-pendle-gmx-open-thin-liquidity",
@@ -112,7 +113,7 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "DEPTH_USD=50000<99970|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "DEPTH_USD=50000<100050|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
     },
     {
       "id": "benign-normal-transfer-gmx",

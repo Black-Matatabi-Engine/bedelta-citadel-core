@@ -1,4 +1,4 @@
-/** SPSS P0 corpus evaluator — maps fixtures to live guard lanes (no frozen Wasm edits). */
+/** SEPSB corpus evaluator — maps fixtures to live guard lanes (no frozen Wasm edits). */
 import { evaluateGatewayRules } from "../src/core/risk-engine";
 import { FLAGS_CLEAR, FLAGS_IMBALANCE_TRIP, FLAGS_YIELD_SHOCK } from "../src/core/risk-flags";
 import { evaluateGmxFlags, evaluatePendleFlags } from "../src/core/risk-engine-flag-evaluators";
@@ -17,7 +17,7 @@ import {
   UINT256_MAX,
   type RetailGuardConfig,
 } from "../src/sdk/exomesh-agentic-wallet-guard";
-import type { P0CorpusCase, P0ExpectedVerdict } from "./p0-scorecard-types";
+import type { SepsbCorpusCase, SepsbExpectedVerdict } from "./sepsb-benchmark-types";
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const GMX = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -45,7 +45,7 @@ export function baseRetailConfig(overrides: Partial<RetailGuardConfig> = {}): Re
   };
 }
 
-function verdict(blocked: boolean): P0ExpectedVerdict {
+function verdict(blocked: boolean): SepsbExpectedVerdict {
   return blocked ? "block" : "allow";
 }
 
@@ -65,7 +65,7 @@ function gmxPos(overrides: Partial<GMXPositionState> = {}): GMXPositionState {
   return { collateralAmount: 100, collateralTokenPriceUsd: 3000, sizeNotionalUsd: 100_000, intent: "open", ...overrides };
 }
 
-export function evaluateP0Case(caseRow: P0CorpusCase): { actual: P0ExpectedVerdict; detail?: string } {
+export function evaluateSepsbCase(caseRow: SepsbCorpusCase): { actual: SepsbExpectedVerdict; detail?: string } {
   __resetRetailGuardStateForTests();
   const p = caseRow.payload;
 
@@ -103,8 +103,8 @@ export function evaluateP0Case(caseRow: P0CorpusCase): { actual: P0ExpectedVerdi
         if (!row || typeof row !== "object") return row;
         const tx = { ...(row as Record<string, unknown>) };
         const preset = String(tx.dataPreset ?? "");
-        if (preset === "permit2_phishing") tx.data = P0_FIXTURE_ENCODERS.permit2Phishing();
-        if (preset === "infinite_approve") tx.data = P0_FIXTURE_ENCODERS.infiniteApprove();
+        if (preset === "permit2_phishing") tx.data = SEPSB_FIXTURE_ENCODERS.permit2Phishing();
+        if (preset === "infinite_approve") tx.data = SEPSB_FIXTURE_ENCODERS.infiniteApprove();
         delete tx.dataPreset;
         return tx;
       });
@@ -152,7 +152,7 @@ export function evaluateP0Case(caseRow: P0CorpusCase): { actual: P0ExpectedVerdi
   }
 }
 
-export const P0_FIXTURE_ENCODERS = {
+export const SEPSB_FIXTURE_ENCODERS = {
   infiniteApprove: () => encodeApproveCalldata(MALICIOUS, UINT256_MAX),
   permit2Phishing: () => encodePermit2ApproveCalldata(USDC, MALICIOUS, UINT160_MAX),
 };

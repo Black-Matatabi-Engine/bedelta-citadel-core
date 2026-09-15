@@ -1,8 +1,8 @@
-/** SPSS P0 corpus + scorecard SSOT types. */
+/** SEPSB corpus + benchmark SSOT types. */
 import type { BenchmarkEnvironment } from "../src/utils/hardware-detector";
 
-export type P0ExpectedVerdict = "block" | "allow";
-export type P0CorpusLane =
+export type SepsbExpectedVerdict = "block" | "allow";
+export type SepsbCorpusLane =
   | "retail_risk"
   | "retail_approve"
   | "retail_venue"
@@ -12,36 +12,37 @@ export type P0CorpusLane =
   | "pendle_flags"
   | "pendle_gmx_cross";
 
-export interface P0CorpusCase {
+export interface SepsbCorpusCase {
   id: string;
   category: string;
-  lane: P0CorpusLane;
-  expected: P0ExpectedVerdict;
+  lane: SepsbCorpusLane;
+  expected: SepsbExpectedVerdict;
   observatoryParadox?: boolean;
   payload: Record<string, unknown>;
 }
 
-export interface P0CorpusFile {
+export interface SepsbCorpusFile {
   schema: string;
   label: "toxic" | "benign";
-  cases: P0CorpusCase[];
+  cases: SepsbCorpusCase[];
 }
 
-export interface P0CaseResult {
+export interface SepsbCaseResult {
   id: string;
   category: string;
-  expected: P0ExpectedVerdict;
-  actual: P0ExpectedVerdict;
+  expected: SepsbExpectedVerdict;
+  actual: SepsbExpectedVerdict;
   pass: boolean;
   observatoryParadox?: boolean;
   detail?: string;
 }
 
-export interface P0ScorecardSsot {
-  schema: "silvervine.p0-scorecard.ssot.v1";
+export interface SepsbBenchmarkSsot {
+  schema: "silvervine.sepsb-benchmark.ssot.v1";
   protocol: "SliverVine Protocol";
-  harness: "p0-scorecard-runner";
-  standard: "SPSS";
+  harness: "sepsb-benchmark-runner";
+  benchmark_title: "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)";
+  standard_version: "SEPSB-v1.0-Santenmoku";
   generatedAt: string;
   benchmark_environment: BenchmarkEnvironment;
   corpus: {
@@ -63,5 +64,5 @@ export interface P0ScorecardSsot {
   };
   verdict: "PASS" | "FAIL";
   killSwitchTriggered: boolean;
-  caseResults: P0CaseResult[];
+  caseResults: SepsbCaseResult[];
 }

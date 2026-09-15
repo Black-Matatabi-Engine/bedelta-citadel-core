@@ -1,24 +1,24 @@
 #!/usr/bin/env tsx
-/** SPSS P0 Pre-Consensus Security Standard — autonomous scorecard harness. */
+/** SEPSB — SliverVine ExoMesh Pre-Consensus Security Benchmark harness. */
 import { readFileSync, writeFileSync, mkdirSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeSoilSlippageMetrics } from "../src/core/soil-resistance-math";
 import { detectBenchmarkEnvironment } from "../src/utils/hardware-detector";
-import { evaluateP0Case } from "./p0-scorecard-eval";
-import type { P0CaseResult, P0CorpusFile, P0ScorecardSsot } from "./p0-scorecard-types";
+import { evaluateSepsbCase } from "./sepsb-benchmark-eval";
+import type { SepsbBenchmarkSsot, SepsbCaseResult, SepsbCorpusFile } from "./sepsb-benchmark-types";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TOXIC_PATH = join(ROOT, "tests/p0/corpus/toxic-set.json");
 const BENIGN_PATH = join(ROOT, "tests/p0/corpus/benign-set.json");
-const SCORECARD_PATH = join(ROOT, "docs/audit/P0_SCORECARD_SSOT.json");
+const SSOT_PATH = join(ROOT, "docs/audit/SEPSB_BENCHMARK_SSOT.json");
 const METRICS_PATH = join(ROOT, "docs/audit/SYSTEM_METRICS_SSOT.json");
 const LATENCY_ITERS = 10_000;
 const TPR_MIN = 99.5;
 const FPR_MAX = 0.5;
 
-function loadCorpus(path: string): P0CorpusFile {
-  return JSON.parse(readFileSync(path, "utf8")) as P0CorpusFile;
+function loadCorpus(path: string): SepsbCorpusFile {
+  return JSON.parse(readFileSync(path, "utf8")) as SepsbCorpusFile;
 }
 
 function percentile(sorted: number[], p: number): number {
@@ -26,9 +26,9 @@ function percentile(sorted: number[], p: number): number {
   return sorted[idx] ?? 0;
 }
 
-function runCorpus(file: P0CorpusFile): P0CaseResult[] {
+function runCorpus(file: SepsbCorpusFile): SepsbCaseResult[] {
   return file.cases.map((caseRow) => {
-    const { actual, detail } = evaluateP0Case(caseRow);
+    const { actual, detail } = evaluateSepsbCase(caseRow);
     const pass = actual === caseRow.expected;
     return {
       id: caseRow.id,
@@ -62,7 +62,7 @@ function measureReflexLatencyUs(): { p50: number; p99: number } {
   return { p50: Number(percentile(samplesUs, 50).toFixed(3)), p99: Number(percentile(samplesUs, 99).toFixed(3)) };
 }
 
-function computeRates(toxic: P0CaseResult[], benign: P0CaseResult[]) {
+function computeRates(toxic: SepsbCaseResult[], benign: SepsbCaseResult[]) {
   const tp = toxic.filter((r) => r.actual === "block").length;
   const fn = toxic.length - tp;
   const fp = benign.filter((r) => r.actual === "block").length;
@@ -85,11 +85,12 @@ function main(): void {
       ? "PASS"
       : "FAIL";
 
-  const scorecard: P0ScorecardSsot = {
-    schema: "silvervine.p0-scorecard.ssot.v1",
+  const report: SepsbBenchmarkSsot = {
+    schema: "silvervine.sepsb-benchmark.ssot.v1",
     protocol: "SliverVine Protocol",
-    harness: "p0-scorecard-runner",
-    standard: "SPSS",
+    harness: "sepsb-benchmark-runner",
+    benchmark_title: "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
+    standard_version: "SEPSB-v1.0-Santenmoku",
     generatedAt: env.detectedAt,
     benchmark_environment: env,
     corpus: { toxicCases: toxic.length, benignCases: benign.length },
@@ -107,20 +108,30 @@ function main(): void {
     caseResults: [...toxic, ...benign],
   };
 
-  mkdirSync(dirname(SCORECARD_PATH), { recursive: true });
-  writeFileSync(SCORECARD_PATH, `${JSON.stringify(scorecard, null, 2)}\n`);
+  mkdirSync(dirname(SSOT_PATH), { recursive: true });
+  writeFileSync(SSOT_PATH, `${JSON.stringify(report, null, 2)}\n`);
 
   const metrics = JSON.parse(readFileSync(METRICS_PATH, "utf8")) as Record<string, unknown>;
   metrics.benchmark_environment = env;
   metrics.generatedAt = env.detectedAt;
+  metrics.sepsb_benchmark = {
+    ssot: "docs/audit/SEPSB_BENCHMARK_SSOT.json",
+    benchmark_title: report.benchmark_title,
+    standard_version: report.standard_version,
+    verdict: report.verdict,
+    truePositiveRatePct: report.metrics.truePositiveRatePct,
+    falsePositiveRatePct: report.metrics.falsePositiveRatePct,
+    reflexLatencyP50Us: report.metrics.reflexLatencyP50Us,
+    reflexLatencyP99Us: report.metrics.reflexLatencyP99Us,
+  };
   writeFileSync(METRICS_PATH, `${JSON.stringify(metrics, null, 2)}\n`);
 
-  console.log(`[P0] TPR ${scorecard.metrics.truePositiveRatePct}% (target >= ${TPR_MIN}%)`);
-  console.log(`[P0] FPR ${scorecard.metrics.falsePositiveRatePct}% (target <= ${FPR_MAX}%${killSwitch ? " KILL-SWITCH" : ""})`);
-  console.log(`[P0] Reflex p50 ${latency.p50}µs · p99 ${latency.p99}µs (${LATENCY_ITERS} iter)`);
-  console.log(`[P0] Observatory mis-block ${rates.observatoryMisblock} (max 0)`);
-  console.log(`[P0] Verdict ${verdict}`);
-  console.log(`[SSOT] ${SCORECARD_PATH}`);
+  console.log(`[SEPSB] TPR ${report.metrics.truePositiveRatePct}% (target >= ${TPR_MIN}%)`);
+  console.log(`[SEPSB] FPR ${report.metrics.falsePositiveRatePct}% (target <= ${FPR_MAX}%${killSwitch ? " KILL-SWITCH" : ""})`);
+  console.log(`[SEPSB] Reflex p50 ${latency.p50}µs · p99 ${latency.p99}µs (${LATENCY_ITERS} iter)`);
+  console.log(`[SEPSB] Observatory mis-block ${rates.observatoryMisblock} (max 0)`);
+  console.log(`[SEPSB] Verdict ${verdict}`);
+  console.log(`[SSOT] ${SSOT_PATH}`);
   if (verdict !== "PASS") process.exitCode = 1;
 }
 
