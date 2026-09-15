@@ -179,8 +179,10 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
 
 > 💡 **Dual Telemetry Architecture**:
-> - **Operational Shield Dashboard (`/slivervine-protocol`)**: Live telemetry tracking real-world volume, gas savings ($65.50), and intercept count (262).
-> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner tracking TPR (100%), FPR (0%), and sub-microsecond Wasm reflex latency across 5 core venues.
+> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
+> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
+
+> 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) ready for direct mainnet event ingestion post-buildathon.
 
 ### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
 
@@ -330,12 +332,14 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 
 | Proof layer | URL / command | What judges see |
 |-------------|---------------|-----------------|
-| **Master Dune Dashboard** | [**SliverVine Protocol Master Dashboard (Dune)**](https://dune.com/silvervinelabs/slivervine-protocol) | Module A live counters + charts · Module B on-chain anchors |
-| **Module A — ExoMesh** | `pnpm export:dune` → [`docs/audit/exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | **262** fail-closed · **$6.57M** capital protected · **$65.50** L2 gas saved |
-| **Module B — Sanctuary** | Sepolia Gate [`0xb174…8BF1`](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) | `IntentAttested` · `RiskTripBlocked` · PEV reconciliation |
+| **Dashboard 1 — Operational Shield** | [**`/slivervine-protocol`**](https://dune.com/silvervinelabs/slivervine-protocol) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |
+| **Dashboard 2 — SEPSB Stress Matrix** | [**`/slivervine-sepsb-stress`**](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | **100% TPR** · **0% FPR** · 5-venue reflex **<50µs** · Intel Ultra 7 155H hardware context |
+| **ExoMesh CSV export** | `pnpm export:dune` → [`exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | Operational shield SSOT · daily cumulative append |
+| **SEPSB CSV export** | `pnpm audit:sepsb` → [`sepsb-stress-telemetry.csv`](./docs/audit/sepsb-stress-telemetry.csv) | Deterministic 5-venue benchmark matrix |
+| **On-chain indexer** | `pnpm export:dune:onchain` → [`onchain-dune-telemetry.csv`](./docs/audit/onchain-dune-telemetry.csv) | Gate `0xb174…8BF1` · `IntentAttested` · `SoilResistanceTripped` (`INTERFACE_READY`) |
 | **Provenance archive** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) | Static SHA-256 Buildathon checkpoint (not a live oracle) |
 
-**Dual-module partition:** **Module A (SliverVine ExoMesh)** = off-chain pre-consensus 0-Gas firewall telemetry (active live dashboard). **Module B (SliverVine Sanctuary)** = ERC-7540+ async escort & on-chain Sepolia Gate anchors. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md).
+**Dual telemetry partition:** **Operational Shield** = live off-chain pre-consensus volume & intercept economics. **SEPSB Quant Matrix** = reproducible security benchmark across 5 venues. **On-chain indexer** = EVM event bridge for post-grant mainnet ingestion. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · SSOT → [`SYSTEM_METRICS_SSOT.json`](./docs/audit/SYSTEM_METRICS_SSOT.json).
 
 ---
 

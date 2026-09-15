@@ -7,12 +7,45 @@
   "version_symbol": "BeΔ Living Water",
   "ssrc_codename": "SSRC",
   "ssrc_full_name": "Slivervine Stylus ReflexCore",
-  "generatedAt": "2026-09-15T03:25:27.710Z",
+  "generatedAt": "2026-09-15T04:17:00.000Z",
   "badges": {
     "vitest": {
-      "test_files_passed": 238,
-      "total_tests_passed": 1103,
+      "test_files_passed": 241,
+      "total_tests_passed": 1112,
       "status": "100% PASS"
+    },
+    "dune_telemetry": {
+      "architecture": "dual_dashboard",
+      "dashboards": [
+        {
+          "id": "operational_shield",
+          "slug": "slivervine-protocol",
+          "url": "https://dune.com/silvervinelabs/slivervine-protocol",
+          "role": "Operational Shield",
+          "export_command": "pnpm export:dune",
+          "csv_ssot": "docs/audit/exomesh-dune-telemetry.csv",
+          "mode": "daily_cumulative_append",
+          "features": [
+            "live_operational_volume",
+            "gas_saved_usd",
+            "fail_closed_intercept_donut",
+            "simulated_loss_prevented_usd"
+          ]
+        },
+        {
+          "id": "sepsb_stress_matrix",
+          "slug": "slivervine-sepsb-stress",
+          "url": "https://dune.com/silvervinelabs/slivervine-sepsb-stress",
+          "role": "SEPSB Quant Matrix",
+          "export_command": "pnpm audit:sepsb",
+          "csv_ssot": "docs/audit/sepsb-stress-telemetry.csv",
+          "true_positive_rate_pct": 100,
+          "false_positive_rate_pct": 0,
+          "venues": ["gmx", "pendle", "usdai", "hyperliquid", "variational"],
+          "reflex_latency_cap_us": 50,
+          "hardware_context": "Intel(R) Core(TM) Ultra 7 155H"
+        }
+      ]
     },
     "historical_backtest": {
       "tier1_scenarios_passed": "3/3 FAIL_CLOSED",
@@ -97,6 +130,22 @@
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
     "reflexLatencyP50Us": 0.233,
-    "reflexLatencyP99Us": 2.299
+    "reflexLatencyP99Us": 2.299,
+    "venue_count": 5,
+    "venue_reflex_latency_cap_us": 50,
+    "hardware_context": "Intel(R) Core(TM) Ultra 7 155H"
+  },
+  "onchain_indexer_pipeline": {
+    "status": "INTERFACE_READY",
+    "script": "scripts/fetch-onchain-dune-telemetry.ts",
+    "command": "pnpm export:dune:onchain",
+    "csv_ssot": "docs/audit/onchain-dune-telemetry.csv",
+    "gate_contract": "0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1",
+    "networks": ["arbitrum_one", "arbitrum_sepolia"],
+    "indexed_events": ["IntentAttested", "SoilResistanceTripped"],
+    "on_chain_event_aliases": {
+      "SoilResistanceTripped": "RiskTripBlocked"
+    },
+    "readiness_note": "Pre-consensus ready to index live mainnet IntentAttested and SoilResistanceTripped logs post-grant"
   }
 }

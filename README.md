@@ -127,8 +127,10 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 **Audit artifacts:** [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json) · weekly CI via [`.github/workflows/weekly-sepsb-deploy.yml`](./.github/workflows/weekly-sepsb-deploy.yml)
 
 > 💡 **Dual Telemetry Architecture**:
-> - **Operational Shield Dashboard (`/slivervine-protocol`)**: Live telemetry tracking real-world volume, gas savings ($65.50), and intercept count (262).
-> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner tracking TPR (100%), FPR (0%), and sub-microsecond Wasm reflex latency across 5 core venues.
+> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
+> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
+
+> 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) ready for direct mainnet event ingestion post-buildathon.
 
 ### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
 
