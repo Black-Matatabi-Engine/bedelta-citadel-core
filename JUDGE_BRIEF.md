@@ -12,9 +12,11 @@
 
 ## JUDGE_BRIEF — 30-Second Buildathon Brief
 
-> **SSOT Lock:** **235 test files | 1091 PASS clean (100%)** · **Release: v1.0 · BeDelta Living Water v1.0 (SSRC)** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **57.88 KiB gzip** (163.81 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
+<!-- SSOT:JUDGE_SSOT_LOCK_START -->
+> **SSOT Lock:** **243 test files | 1120 PASS clean (100%)** · **Release: v1.0 · BeDelta Living Water v1.0 (SSRC)** · **3-Axis Security Scorecard: 5/0/0 PASS** · Gate [`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1`](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Wasm **<28kb / <60µs** · Worker bundle **58.72 KiB gzip** (166.51 KiB raw · `limitKiB: 150` · `pass: true`) · ABI **v2** · 28-protocol-slot FFI (RESERVED_ABI_V2 holes preserved)  
 > **Latency classes:** **~0.5µs–1.1µs** Pure Invariant Math · **p50 ~15µs** Stylus ReflexCore (SSRC) warm path (**<20µs**) · **p50 ~106µs** E2E ExoMesh Edge (Worker + TS Gateway + SSRC FFI)  
 > **Zero-Allocation Hot-Path**: Pre-consensus microsecond execution on static `Uint32Array` slabs and Wasm linear memory with **zero ephemeral heap allocations** (~**50,000 ephemeral heap objects/sec eliminated**); cold-path warning formatters and error loggers remain standard readable TypeScript.
+<!-- SSOT:JUDGE_SSOT_LOCK_END -->
 
 ---
 
@@ -85,9 +87,9 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | **[EIP-7702](https://eips.ethereum.org/EIPS/eip-7702)** | `[Final]` | [`eip7702-auth-guard.ts`](./src/sdk/exomesh-agentic-wallet-guard/eip7702-auth-guard.ts) | **3/3** |
 | **[ERC-7710](https://eips.ethereum.org/EIPS/eip-7710)** | `[De-facto Industrial Draft]` | [`erc7710-intent-expiry.ts`](./src/services/api/pendle-shield/erc7710-intent-expiry.ts) + `rootProtection()` | **2/2** |
 
-**Vitest SSOT:** **235 test files | 1091 PASS clean (100%)** · `pnpm test -- --run`
+**Vitest SSOT:** **243 test files | 1120 PASS clean (100%)** · `pnpm test -- --run`
 
-### 📊 Vitest 1091 PASS Suite Composition (Physical Breakdown)
+### 📊 Vitest 1120 PASS Suite Composition (Physical Breakdown)
 
 | Category | File Count | Test Count (`it`) | Assertion Count (`expect`) | Execution Scope |
 | :--- | :--- | :--- | :--- | :--- |
@@ -136,7 +138,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 | **Track** | Promising Products — AI Agents & Financial Primitives |
 | **SliverVineGate** | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · `DUAL` (`42161` + `421614`) |
 | **PolicyGuardV2** | `0xfd98cadb7018f692ec58cd4359e0c0399f4f8781` · `MAINNET` only |
-| **Vitest** | **235 test files | 1091 PASS clean** · `pnpm test -- --run` |
+| **Vitest** | **243 test files | 1120 PASS clean** · `pnpm test -- --run` |
 | **Primary SDK Entrypoint** | `@slivervine/exomesh-agentic-wallet-guard` · *EIP-1193+ (Pre-Sign Local Guard) — Tailor-made for Robinhood Chain & Omni-EVM AI Agents* · **35/35** retail guard tests |
 | **Deep docs** | [`SUBMISSION.md`](./docs/00_ARB_Buildathon/SUBMISSION.md) · [`VERIFICATION_MATRIX.md`](./docs/06_verifications/01_VERIFICATION_MATRIX.md) |
 
@@ -164,13 +166,17 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 **What it is:** A measurable, reproducible benchmark for pre-consensus intent firewalls that decide transaction intent safety *before* signature release and *before* L2 sequencer ingress.
 
+<!-- SSOT:JUDGE_SEPSB_TABLE_START -->
 | Metric | Target | Achieved (SSOT) |
 |--------|--------|-----------------|
-| Reflex Latency (p50) | ≤ 20µs | **0.326µs** (Wasm) |
+| Reflex Latency (p50) | ≤ 20µs | **0.233µs** (Wasm) |
+| Reflex Latency (p99) | ≤ 50µs | **2.299µs** (Wasm) |
 | End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
 | True Positive Rate (TPR) | ≥ 99.5% | **100%** |
-| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0.0%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0%** |
 | Observatory Paradox Mis-block Count | 0 | **0** |
+| 5-Venue Reflex Cap | < 50µs | **<50µs** (Intel(R) Core(TM) Ultra 7 155H) |
+<!-- SSOT:JUDGE_SEPSB_TABLE_END -->
 
 ```bash
 pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
@@ -248,7 +254,7 @@ $$
 npx vitest run tests/sdk/retail-guard-provider.test.ts
 pnpm demo:gmx -- --trip
 
-pnpm test -- --run          # 235 test files | 1091 PASS clean
+pnpm test -- --run          # 243 test files | 1120 PASS clean
 pnpm run audit:security     # 3-Axis Security Scorecard: 5/0/0 PASS
 
 # [ExoMesh] Tier 0 — SDK / CLI Unit & Integration
@@ -276,7 +282,7 @@ pnpm demo:e2e
 | **Tier 0** | `[ExoMesh]` | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `npx vitest run tests/sdk/eip5792-send-calls.test.ts` | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** · Scenario A–D matrix + **35/35** unit SSOT |
 | **Tier 0** | `[Sanctuary]` | `pnpm demo:sanctuary` | **Module B Vault Standard** — ERC-7540+ Async Escort Matrix |
 | **Tier 0** | `[Sanctuary]` | `pnpm demo:ingress` · `npx vitest run tests/adapters/treasury-escort-router.test.ts` | **Module B Treasury Ingress** — Pillar Set X Across/AML escort |
-| **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **235 files / 1091 PASS** · `pnpm exec tsc --noEmit` 0 errors |
+| **Tier 1** | `[ExoMesh]` | `pnpm test -- --run` | **243 files / 1120 PASS** · `pnpm exec tsc --noEmit` 0 errors |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:gmx -- --trip` · `demo:variational -- --trip` · `demo:hl -- --trip` | 5-core FAIL_CLOSED proofs |
 | **Tier 1** | `[ExoMesh]` | `pnpm demo:{gmx,hl,pendle,usdai,variational}` | 5-Core Venue Matrix |
 | **Zone A** | `[ExoMesh]` | `pnpm demo:{perp-loop,spot-loop}` | Cross-venue reflex demos |
@@ -330,14 +336,16 @@ Full matrix → [`02_CONTRACT_DEPLOYMENT_MATRIX.md`](./docs/01_architecture/02_C
 
 ## Live Telemetry & Telemetry Proof
 
+<!-- SSOT:JUDGE_TELEMETRY_TABLE_START -->
 | Proof layer | URL / command | What judges see |
 |-------------|---------------|-----------------|
 | **Dashboard 1 — Operational Shield** | [**`/slivervine-protocol`**](https://dune.com/silvervinelabs/slivervine-protocol) | Live volume · gas saved · fail-closed intercept donut · cumulative append CSV |
-| **Dashboard 2 — SEPSB Stress Matrix** | [**`/slivervine-sepsb-stress`**](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | **100% TPR** · **0% FPR** · 5-venue reflex **<50µs** · Intel Ultra 7 155H hardware context |
+| **Dashboard 2 — SEPSB Stress Matrix** | [**`/slivervine-sepsb-stress`**](https://dune.com/silvervinelabs/slivervine-sepsb-stress) | **100% TPR** · **0% FPR** · 5-venue reflex **<50µs** · Intel(R) Core(TM) Ultra 7 155H hardware context |
 | **ExoMesh CSV export** | `pnpm export:dune` → [`exomesh-dune-telemetry.csv`](./docs/audit/exomesh-dune-telemetry.csv) | Operational shield SSOT · daily cumulative append |
 | **SEPSB CSV export** | `pnpm audit:sepsb` → [`sepsb-stress-telemetry.csv`](./docs/audit/sepsb-stress-telemetry.csv) | Deterministic 5-venue benchmark matrix |
 | **On-chain indexer** | `pnpm export:dune:onchain` → [`onchain-dune-telemetry.csv`](./docs/audit/onchain-dune-telemetry.csv) | Gate `0xb174…8BF1` · `IntentAttested` · `SoilResistanceTripped` (`INTERFACE_READY`) |
 | **Provenance archive** | [`GET /api/grant-audit`](https://bedeltawater.slivervine.xyz/api/grant-audit) | Static SHA-256 Buildathon checkpoint (not a live oracle) |
+<!-- SSOT:JUDGE_TELEMETRY_TABLE_END -->
 
 **Dual telemetry partition:** **Operational Shield** = live off-chain pre-consensus volume & intercept economics. **SEPSB Quant Matrix** = reproducible security benchmark across 5 venues. **On-chain indexer** = EVM event bridge for post-grant mainnet ingestion. Spec → [`03_DUNE_DASHBOARD_SPECIFICATION.md`](./docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md) · SSOT → [`SYSTEM_METRICS_SSOT.json`](./docs/audit/SYSTEM_METRICS_SSOT.json).
 

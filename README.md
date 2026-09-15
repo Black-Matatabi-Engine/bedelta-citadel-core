@@ -2,15 +2,17 @@
 
 > 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
 
-![Vitest](https://img.shields.io/badge/Vitest-1091%20PASS%20%28235%20files%29-brightgreen?logo=vitest)
+<!-- SSOT:README_BADGES_START -->
+![Vitest](https://img.shields.io/badge/Vitest-1120%20PASS%20%28243%20files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_(Roadmap)-blue?logo=rust)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](src/services/risk-control.ts)
-![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail--Closed-blue?logo=github)
+![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail-Closed-blue?logo=github)
 ![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106%CE%BCs_|_Reflex_p50_15%CE%BCs-blueviolet?logo=speedtest)
 ![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)
-![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
-![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Sepolia_Verified_(42161_Ready)-28A0F0?logo=arbitrum)
+![License](https://img.shields.io/badge/License-BUSL-1.1-orange)
+![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Sepolia%20Verified%20(42161%20Ready)-28A0F0?logo=arbitrum)
+<!-- SSOT:README_BADGES_END -->
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
 
@@ -47,7 +49,9 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 | **Local in-process reflex** | No Blockaid-class 200–800ms round-trip |
 | **AI retry severance** | 4th rapid submit → `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
-**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **235 test files | 1091 PASS clean**
+<!-- SSOT:README_VITEST_LINE_START -->
+**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **243 test files | 1120 PASS clean**
+<!-- SSOT:README_VITEST_LINE_END -->
 
 ### Key Architectural Moats
 
@@ -110,13 +114,17 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 **What it is:** A measurable, reproducible benchmark for pre-consensus intent firewalls that decide transaction intent safety *before* signature release and *before* L2 sequencer ingress.
 
+<!-- SSOT:README_SEPSB_TABLE_START -->
 | Metric | Target | Achieved (SSOT) |
 |--------|--------|-----------------|
-| Reflex Latency (p50) | ≤ 20µs | **0.326µs** (Wasm) |
+| Reflex Latency (p50) | ≤ 20µs | **0.233µs** (Wasm) |
+| Reflex Latency (p99) | ≤ 50µs | **2.299µs** (Wasm) |
 | End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
 | True Positive Rate (TPR) | ≥ 99.5% | **100%** |
-| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0.0%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0%** |
 | Observatory Paradox Mis-block Count | 0 | **0** |
+| 5-Venue Reflex Cap | < 50µs | **<50µs** (Intel(R) Core(TM) Ultra 7 155H) |
+<!-- SSOT:README_SEPSB_TABLE_END -->
 
 **Verification:**
 
@@ -126,11 +134,13 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 
 **Audit artifacts:** [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json) · weekly CI via [`.github/workflows/weekly-sepsb-deploy.yml`](./.github/workflows/weekly-sepsb-deploy.yml)
 
+<!-- SSOT:README_DUAL_TELEMETRY_START -->
 > 💡 **Dual Telemetry Architecture**:
-> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append mode).
+> - **Operational Shield (`/slivervine-protocol`)**: Dynamic operational feed tracking nominal volume, saved execution gas, and intercept counts (`pnpm export:dune` · daily cumulative append).
 > - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner proving 100% TPR, 0% FPR, and sub-50µs Wasm reflex speeds across 5 venues (GMX, Pendle, USD.ai, Hyperliquid, Variational).
 
-> 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) ready for direct mainnet event ingestion post-buildathon.
+> 🔗 **On-Chain Event Indexing**: `SliverVineGate` (`0xb174…8BF1`) is equipped with standard EVM event emitters. The protocol includes an active on-chain indexer interface (`pnpm export:dune:onchain`) — status **INTERFACE_READY** — ready for direct mainnet event ingestion post-buildathon.
+<!-- SSOT:README_DUAL_TELEMETRY_END -->
 
 ### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
 
@@ -203,7 +213,9 @@ pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
-pnpm test -- --run                                       # 235 files | 1091 PASS
+<!-- SSOT:README_TEST_CMD_START -->
+pnpm test -- --run                                       # 243 files | 1120 PASS
+<!-- SSOT:README_TEST_CMD_END -->
 pnpm run audit:security                                  # 3-Axis: 5/0/0 PASS
 pnpm audit:sepsb                                         # SEPSB benchmark + corpus snapshot
 ```
