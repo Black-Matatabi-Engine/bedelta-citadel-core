@@ -12,11 +12,12 @@
 
 | Tier | Commands | Scope |
 |------|----------|-------|
-| **Tier 0 — SDK/CLI Unit & Integration** | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` | `@slivervine/exomesh-agentic-wallet-guard` · Scenario A–D matrix + **35/35** unit SSOT |
-| **Tier 1 — Full Protocol Regression** | `pnpm test -- --run` · `pnpm exec tsc --noEmit` | **226 files / 1057 PASS** · 0 TS errors |
-| **Tier 1 — 5-Core Venues** | `pnpm demo:{gmx,pendle,usdai,hl,variational}` · `--trip` | Native protocol guards · FAIL_CLOSED proofs |
+| **Tier 0 — Fully Demo** | `pnpm demo:exomesh` · `pnpm demo:exomesh -- --json` | **Flagship interactive entrypoint** · Scenario A–D (Module A + B) · `@slivervine/exomesh-agentic-wallet-guard` |
+| **Tier 1 — 5-Venue Fast-Track Proofs** | `pnpm demo:{gmx,pendle,usdai,hl,variational} -- --trip` | 0-Gas **FAIL_CLOSED** venue proofs · Wasm `checkSoilResistance()` |
+| **Tier 2 — Specific Standards & Strategy** | `pnpm demo:sanctuary` · `pnpm demo:ingress` · `pnpm demo:delta-neutral` | ERC-7540+ Async Vault · Across/Robinhood AML · Multi-venue delta-neutral hedge |
+| **Tier 3 — Full Regression** | `pnpm test -- --run` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` · `pnpm exec tsc --noEmit` | **243 files / 1123 PASS** · SDK **35/35** · 0 TS errors |
 | **Zone A — Strategy Loops** | `pnpm demo:{perp-loop,spot-loop}` · `--trip` | Loop A perp/yield · Loop B USD.ai collateral |
-| **Zone B — Sandbox & E2E** | `pnpm demo:{stabilizer,e2e,escort}` | Sepolia sandbox · macro lifecycle · bridge escort |
+| **Zone B — Sandbox** | `pnpm demo:stabilizer` · `pnpm demo:sanctuary` | Sepolia stabilizer · Module B vault escort |
 
 ---
 
@@ -274,17 +275,30 @@ pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip interce
 
 ---
 
-## Quick verification paths
+## Quick Verification Reference
 
 ```bash
 pnpm install
-pnpm demo:exomesh
-pnpm demo:sanctuary
-pnpm demo:ingress
-pnpm demo:gmx -- --trip
-npx vitest run tests/sdk/retail-guard-provider.test.ts
-pnpm demo:delta-neutral
-pnpm test       # Full System Regression Suite (235 test files | 1091 PASS clean)
+
+# Tier 0 — Fully Demo (Flagship · Module A + B · Scenario A–D)
+pnpm demo:exomesh                 # EIP-1193+ Agentic Guard · interactive Scenario A–D matrix
+pnpm demo:exomesh -- --json       # CI / Dune structured output
+
+# Tier 1 — 5-Venue Fast-Track Proofs (0-Gas FAIL_CLOSED)
+pnpm demo:gmx -- --trip           # GMX v2 FAIL_CLOSED proof
+pnpm demo:pendle -- --trip        # Pendle Institutional Sentinel FAIL_CLOSED proof
+pnpm demo:usdai -- --trip         # USD.ai Collateral FAIL_CLOSED proof
+pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
+pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
+
+# Tier 2 — Specific Standards & Strategy Use Cases
+pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort
+pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress
+pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle
+
+# Unit Verification & Full Test Suite
+npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
+pnpm test -- --run                                       # 243 files | 1123 PASS
 ```
 
 Optional benchmark: `npx tsx scripts/grant-advanced-resilience-benchmark.ts`

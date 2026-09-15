@@ -208,12 +208,21 @@ pnpm test
 ## Quick Verification Reference
 
 ```bash
-# 1-Line 5-Venue Trip Verification (0-Gas Pre-Consensus Interceptions)
+# Tier 0 — Fully Demo (Flagship · Module A + B · Scenario A–D)
+pnpm demo:exomesh                 # EIP-1193+ Agentic Guard · interactive Scenario A–D matrix
+pnpm demo:exomesh -- --json       # CI / Dune structured output
+
+# Tier 1 — 5-Venue Fast-Track Proofs (0-Gas FAIL_CLOSED)
 pnpm demo:gmx -- --trip           # GMX v2 FAIL_CLOSED proof
 pnpm demo:pendle -- --trip        # Pendle Institutional Sentinel FAIL_CLOSED proof
 pnpm demo:usdai -- --trip         # USD.ai Collateral FAIL_CLOSED proof
 pnpm demo:hl -- --trip            # Hyperliquid Session Guard FAIL_CLOSED proof
 pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
+
+# Tier 2 — Specific Standards & Strategy Use Cases
+pnpm demo:sanctuary               # Module B · ERC-7540+ Async Vault Escort
+pnpm demo:ingress                 # Module B · Across/Robinhood AML Compliance Ingress
+pnpm demo:delta-neutral           # Multi-venue delta-neutral hedge lifecycle
 
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
