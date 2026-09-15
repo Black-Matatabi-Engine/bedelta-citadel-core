@@ -123,6 +123,54 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** · **ERC-7579** | **Semantic alignment** to Uniswap/Across and ZeroDev/Rhinestone industrial drafts — not normative Final conformance |
 | **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | No implementation claim — [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
+```text
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  SLIVERVINE ENHANCED EIP/ERC WORKFLOWS & SECURITY SUPERSETS                  │
+│  Standard spec  →  0-Gas pre-consensus primitive  (not a competing rail)     │
+└──────────────────────────────────────────────────────────────────────────────┘
+
+ [ 1. EIP-1193 / EIP-5792 / EIP-6963 ]  ──►  standard wallet & batched calls
+           │
+           ▼  ★ [Module A: ExoMesh] Enhancement
+           │  · Pre-Sign Local Guard (client wrap · 0-Gas)
+           │  · Proof: 35/35 · intercept Permit2 phishing & toxic batches
+           │
+ ──────────────────────────────────────────────────────────────────────────────
+ [ 2. ERC-7540  (Module B: Sanctuary) ]  ──►  standard async vault request
+           │
+           ▼  ★ [Module B: Sanctuary] Enhancement
+           │  · Selector-level Async Vault Escort
+           │  · Blocks operator hijack / capital drift in pending→claimable
+           │
+ ──────────────────────────────────────────────────────────────────────────────
+ [ 3. ERC-7683  (Cross-Chain Intent) ]  ──►  standard solver / settlement format
+           │
+           ▼  ★ SliverVine Enhancement (orthogonal to settlement)
+           │  · Pre-Consensus Solver Pre-flight Capital Lock (IN_FLIGHT→SETTLED)
+           │  · Scrubs solver MEV / slippage before envelope hits solvers
+           │
+ ──────────────────────────────────────────────────────────────────────────────
+ [ 4. ERC-7579  (Modular Accounts) ]  ──►  standard modular smart accounts
+           │
+           ▼  ★ SliverVine Enhancement
+           │  · Edge Isomorphic Pre-Execution Hook Policy
+           │  · Anchors PolicyGuardV2 + RiskOracle compliance pre-check
+           │
+ ──────────────────────────────────────────────────────────────────────────────
+ [ 5. EIP-712 & Permit2 / ERC-2612 ]  ──►  standard typed-data & allowances
+           │
+           ▼  ★ SliverVine Enhancement
+           │  · Consume-once typed-data + Gate replay denial
+           │  · SliverVineGate Replayed() + event emit on Arbitrum One
+           │
+ ──────────────────────────────────────────────────────────────────────────────
+ [ 6. EIP-7702 / ERC-7710 ]  ──►  account upgrade & intent expiry
+           │
+           ▼  ★ SliverVine Enhancement
+           │  · Intent Expiry & Root Protection (channel kill)
+           │  · On R17 daily-loss / R20 deadlock: sever signing pipeline
+```
+
 #### Tier 1 — Finalized Core Standards `[Final]`
 
 | Standard | **Physical Limitation** | **SliverVine Pre-Consensus Superset** | **Proof** |
