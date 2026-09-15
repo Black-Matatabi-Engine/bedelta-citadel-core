@@ -7,7 +7,7 @@
   "version_symbol": "BeΔ Living Water",
   "ssrc_codename": "SSRC",
   "ssrc_full_name": "Slivervine Stylus ReflexCore",
-  "generatedAt": "2026-09-15T03:23:24.628Z",
+  "generatedAt": "2026-09-15T03:25:27.710Z",
   "badges": {
     "vitest": {
       "test_files_passed": 238,
@@ -78,10 +78,10 @@
     "telemetry_rows": 264
   },
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T03:23:24.628Z",
+    "detectedAt": "2026-09-15T03:25:27.710Z",
     "platform": "linux",
     "arch": "x64",
-    "nodeVersion": "v24.18.0",
+    "nodeVersion": "v22.23.1",
     "cpuModel": "Intel(R) Core(TM) Ultra 7 155H",
     "cpuCores": 22,
     "cpuSpeedMhz": 0,
@@ -96,7 +96,7 @@
     "verdict": "PASS",
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.293,
-    "reflexLatencyP99Us": 1.145
+    "reflexLatencyP50Us": 0.233,
+    "reflexLatencyP99Us": 2.299
   }
 }
