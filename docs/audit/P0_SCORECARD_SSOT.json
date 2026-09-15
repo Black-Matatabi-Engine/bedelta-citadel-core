@@ -1,0 +1,195 @@
+{
+  "schema": "silvervine.p0-scorecard.ssot.v1",
+  "protocol": "SliverVine Protocol",
+  "harness": "p0-scorecard-runner",
+  "standard": "SPSS",
+  "generatedAt": "2026-09-15T00:12:04.100Z",
+  "benchmark_environment": {
+    "detectedAt": "2026-09-15T00:12:04.100Z",
+    "platform": "linux",
+    "arch": "x64",
+    "nodeVersion": "v24.18.0",
+    "cpuModel": "Intel(R) Core(TM) Ultra 7 155H",
+    "cpuCores": 22,
+    "cpuSpeedMhz": 0,
+    "totalMemoryMb": 7694
+  },
+  "corpus": {
+    "toxicCases": 10,
+    "benignCases": 10
+  },
+  "metrics": {
+    "truePositiveRatePct": 100,
+    "falsePositiveRatePct": 0,
+    "reflexLatencyP50Us": 0.326,
+    "reflexLatencyP99Us": 1.237,
+    "observatoryParadoxMisblockCount": 0,
+    "latencyIterations": 10000
+  },
+  "targets": {
+    "tprMinPct": 99.5,
+    "fprMaxPct": 0.5,
+    "observatoryMisblockMax": 0
+  },
+  "verdict": "PASS",
+  "killSwitchTriggered": false,
+  "caseResults": [
+    {
+      "id": "toxic-infinite-approve-erc20",
+      "category": "infinite_approve",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "UNAUTHORIZED_SPENDER_REJECTED"
+    },
+    {
+      "id": "toxic-permit2-infinite-approve",
+      "category": "permit2_phishing",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "UNAUTHORIZED_SPENDER_REJECTED"
+    },
+    {
+      "id": "toxic-domain-drift-eip712",
+      "category": "domain_drift",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "VENUE_DRIFT_REJECTED"
+    },
+    {
+      "id": "toxic-ai-4th-strike-retry",
+      "category": "ai_4th_strike_retry",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "MAX_ATTEMPTS_OR_DRIFT"
+    },
+    {
+      "id": "toxic-gmx-oi-skew",
+      "category": "gmx_oi_skew",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "flags=3"
+    },
+    {
+      "id": "toxic-pendle-oracle-lag",
+      "category": "pendle_oracle_lag",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "flags=9"
+    },
+    {
+      "id": "toxic-soil-cross-venue",
+      "category": "soil_cross_venue",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.48000000000000004%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+    },
+    {
+      "id": "toxic-pendle-gmx-open-thin-liquidity",
+      "category": "pendle_gmx_open_violation",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "FAIL_CLOSED_BLOCK"
+    },
+    {
+      "id": "toxic-venue-drift-contract",
+      "category": "venue_drift",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "VENUE_DRIFT_REJECTED"
+    },
+    {
+      "id": "toxic-shallow-depth-honeypot",
+      "category": "depth_insufficient",
+      "expected": "block",
+      "actual": "block",
+      "pass": true,
+      "detail": "DEPTH_USD=50000<99970|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+    },
+    {
+      "id": "benign-normal-transfer-gmx",
+      "category": "normal_transfer",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true
+    },
+    {
+      "id": "benign-gmx-increase",
+      "category": "gmx_increase",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true
+    },
+    {
+      "id": "benign-gmx-decrease",
+      "category": "gmx_decrease",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true,
+      "detail": "flags=0"
+    },
+    {
+      "id": "benign-pendle-swap",
+      "category": "pendle_swap",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true,
+      "detail": "flags=0"
+    },
+    {
+      "id": "benign-trusted-infinite-approve",
+      "category": "trusted_approve",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true
+    },
+    {
+      "id": "benign-uniswap-swap-clean-soil",
+      "category": "uniswap_swap",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true
+    },
+    {
+      "id": "benign-observatory-emergency-close",
+      "category": "observatory_emergency_close",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true,
+      "observatoryParadox": true,
+      "detail": "EMERGENCY_DELEVERAGE_ALLOWED"
+    },
+    {
+      "id": "benign-observatory-reduce-position",
+      "category": "observatory_reduce",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true,
+      "observatoryParadox": true,
+      "detail": "EMERGENCY_DELEVERAGE_ALLOWED"
+    },
+    {
+      "id": "benign-eip712-allowlisted-permit",
+      "category": "eip712_permit",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true
+    },
+    {
+      "id": "benign-gmx-healthy-open",
+      "category": "gmx_open_healthy",
+      "expected": "allow",
+      "actual": "allow",
+      "pass": true,
+      "detail": "PASS_GREENLIGHT"
+    }
+  ]
+}

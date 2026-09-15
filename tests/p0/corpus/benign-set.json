@@ -1,0 +1,123 @@
+{
+  "schema": "silvervine.p0.corpus.benign.v1",
+  "label": "benign",
+  "cases": [
+    {
+      "id": "benign-normal-transfer-gmx",
+      "category": "normal_transfer",
+      "lane": "retail_risk",
+      "expected": "allow",
+      "payload": {
+        "method": "eth_sendTransaction",
+        "params": [{ "from": "0x1111111111111111111111111111111111111111", "to": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "value": "0x0" }]
+      }
+    },
+    {
+      "id": "benign-gmx-increase",
+      "category": "gmx_increase",
+      "lane": "retail_risk",
+      "expected": "allow",
+      "payload": {
+        "method": "eth_sendTransaction",
+        "params": [
+          {
+            "from": "0x1111111111111111111111111111111111111111",
+            "to": "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "data": "0x7ebc83b20000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "skipIntentGate": true
+      }
+    },
+    {
+      "id": "benign-gmx-decrease",
+      "category": "gmx_decrease",
+      "lane": "gmx_flags",
+      "expected": "allow",
+      "payload": { "oiLong": 520, "oiShort": 480, "tvl": 2000, "collateral": 1.2 }
+    },
+    {
+      "id": "benign-pendle-swap",
+      "category": "pendle_swap",
+      "lane": "pendle_flags",
+      "expected": "allow",
+      "payload": { "yieldCurrent": 0.051, "yieldOracle": 0.05 }
+    },
+    {
+      "id": "benign-trusted-infinite-approve",
+      "category": "trusted_approve",
+      "lane": "retail_approve",
+      "expected": "allow",
+      "payload": {
+        "token": "0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f",
+        "spender": "0xdddddddddddddddddddddddddddddddddddddddd",
+        "amountWei": "115792089237316195423570985008687907853269984665640564039457584007913129639935",
+        "infinite": true
+      }
+    },
+    {
+      "id": "benign-uniswap-swap-clean-soil",
+      "category": "uniswap_swap",
+      "lane": "retail_risk",
+      "expected": "allow",
+      "payload": {
+        "method": "eth_sendTransaction",
+        "params": [
+          {
+            "from": "0x1111111111111111111111111111111111111111",
+            "to": "0xcccccccccccccccccccccccccccccccccccccccc",
+            "data": "0x38ed1739000000000000000000000000000000000000000000000000000000000000000000"
+          }
+        ],
+        "skipIntentGate": true
+      }
+    },
+    {
+      "id": "benign-observatory-emergency-close",
+      "category": "observatory_emergency_close",
+      "lane": "pendle_gmx_cross",
+      "expected": "allow",
+      "observatoryParadox": true,
+      "payload": {
+        "ptMarket": { "expiry": 1700086400, "historicalYield24h": 0.06, "liquidityConstant": 100 },
+        "gmxPos": { "intent": "close", "sizeNotionalUsd": 100000 },
+        "assetUsdPrice": 3000
+      }
+    },
+    {
+      "id": "benign-observatory-reduce-position",
+      "category": "observatory_reduce",
+      "lane": "pendle_gmx_cross",
+      "expected": "allow",
+      "observatoryParadox": true,
+      "payload": {
+        "ptMarket": { "expiry": 1700086400, "historicalYield24h": 0.06, "liquidityConstant": 100 },
+        "gmxPos": { "intent": "reduce", "sizeNotionalUsd": 100000 },
+        "assetUsdPrice": 3000
+      }
+    },
+    {
+      "id": "benign-eip712-allowlisted-permit",
+      "category": "eip712_permit",
+      "lane": "retail_risk",
+      "expected": "allow",
+      "payload": {
+        "method": "eth_signTypedData_v4",
+        "params": [
+          "0x1111111111111111111111111111111111111111",
+          "{\"domain\":{\"name\":\"Permit\",\"version\":\"1\",\"chainId\":42161,\"verifyingContract\":\"0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f\"},\"types\":{\"Permit\":[{\"name\":\"spender\",\"type\":\"address\"}]},\"primaryType\":\"Permit\",\"message\":{\"spender\":\"0xdddddddddddddddddddddddddddddddddddddddd\"}}"
+        ]
+      }
+    },
+    {
+      "id": "benign-gmx-healthy-open",
+      "category": "gmx_open_healthy",
+      "lane": "pendle_gmx_cross",
+      "expected": "allow",
+      "payload": {
+        "gmxPos": { "intent": "open", "sizeNotionalUsd": 50000 },
+        "assetUsdPrice": 3000
+      }
+    }
+  ]
+}

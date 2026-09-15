@@ -1,0 +1,112 @@
+{
+  "schema": "silvervine.p0.corpus.toxic.v1",
+  "label": "toxic",
+  "cases": [
+    {
+      "id": "toxic-infinite-approve-erc20",
+      "category": "infinite_approve",
+      "lane": "retail_risk",
+      "expected": "block",
+      "payload": {
+        "method": "eth_sendTransaction",
+        "params": [
+          {
+            "from": "0x1111111111111111111111111111111111111111",
+            "to": "0xaf88d065e77c1c973b2696121c3f3f3f3f3f3f3f",
+            "data": "0x095ea7b3000000000000000000000000bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff"
+          }
+        ],
+        "skipIntentGate": true
+      }
+    },
+    {
+      "id": "toxic-permit2-infinite-approve",
+      "category": "permit2_phishing",
+      "lane": "retail_risk",
+      "expected": "block",
+      "payload": {
+        "method": "eth_sendTransaction",
+        "params": [
+          {
+            "from": "0x1111111111111111111111111111111111111111",
+            "to": "0x000000000022d473030f116ddee9f6b43ac78b6",
+            "dataPreset": "permit2_phishing"
+          }
+        ],
+        "skipIntentGate": true
+      }
+    },
+    {
+      "id": "toxic-domain-drift-eip712",
+      "category": "domain_drift",
+      "lane": "retail_risk",
+      "expected": "block",
+      "payload": {
+        "method": "eth_signTypedData_v4",
+        "params": [
+          "0x1111111111111111111111111111111111111111",
+          "{\"domain\":{\"name\":\"Permit\",\"version\":\"1\",\"chainId\":42161,\"verifyingContract\":\"0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\"},\"types\":{\"Permit\":[{\"name\":\"spender\",\"type\":\"address\"}]},\"primaryType\":\"Permit\",\"message\":{\"spender\":\"0xdddddddddddddddddddddddddddddddddddddddd\"}}"
+        ]
+      }
+    },
+    {
+      "id": "toxic-ai-4th-strike-retry",
+      "category": "ai_4th_strike_retry",
+      "lane": "retail_intent_strike",
+      "expected": "block",
+      "payload": { "maxAttempts": 3, "strikes": 4, "venueBit": 1 }
+    },
+    {
+      "id": "toxic-gmx-oi-skew",
+      "category": "gmx_oi_skew",
+      "lane": "gmx_flags",
+      "expected": "block",
+      "payload": { "oiLong": 1800, "oiShort": 200, "tvl": 2000, "collateral": 1.2 }
+    },
+    {
+      "id": "toxic-pendle-oracle-lag",
+      "category": "pendle_oracle_lag",
+      "lane": "pendle_flags",
+      "expected": "block",
+      "payload": { "yieldCurrent": 0.08, "yieldOracle": 0.05 }
+    },
+    {
+      "id": "toxic-soil-cross-venue",
+      "category": "soil_cross_venue",
+      "lane": "gateway_soil",
+      "expected": "block",
+      "payload": {
+        "symbol": "ETH",
+        "soil": { "hlSpot": 3500, "hlPerp": 3500, "dydxPerp": 3000, "depthUsd": 500000, "orderSizeUsd": 500, "accountBalanceUsd": 10000, "maxSlippage": 0.005 }
+      }
+    },
+    {
+      "id": "toxic-pendle-gmx-open-thin-liquidity",
+      "category": "pendle_gmx_open_violation",
+      "lane": "pendle_gmx_cross",
+      "expected": "block",
+      "payload": {
+        "ptMarket": { "expiry": 1700086400, "historicalYield24h": 0.06, "liquidityConstant": 100 },
+        "gmxPos": { "intent": "open", "sizeNotionalUsd": 100000 },
+        "assetUsdPrice": 3000
+      }
+    },
+    {
+      "id": "toxic-venue-drift-contract",
+      "category": "venue_drift",
+      "lane": "retail_venue",
+      "expected": "block",
+      "payload": { "contract": "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb" }
+    },
+    {
+      "id": "toxic-shallow-depth-honeypot",
+      "category": "depth_insufficient",
+      "lane": "gateway_soil",
+      "expected": "block",
+      "payload": {
+        "symbol": "ETH",
+        "soil": { "hlSpot": 3500, "hlPerp": 3500, "dydxPerp": 3498, "depthUsd": 50000, "orderSizeUsd": 500, "accountBalanceUsd": 10000, "maxSlippage": 0.005 }
+      }
+    }
+  ]
+}
