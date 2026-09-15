@@ -71,7 +71,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
       return { tripped: true, reason: "FAIL_CLOSED", suppressInterceptBanner: true };
     }
     e2eLog("");
-    paintE2eBanner();
+    paintE2eBanner(zerodev);
     logE2eHeaderMode(mode);
     logE2eHeaderClock(IS_LIVINGWATER_MODE);
     logDeltaNeutralZeroDevState(zerodev);
@@ -91,7 +91,7 @@ wrapDemoExecution(async ({ nowMs, at }) => {
     ? await withSilentConsole(runPipeline)
     : await (async () => {
         e2eLog("");
-        paintE2eBanner();
+        paintE2eBanner(zerodev);
         logE2eHeaderMode(mode);
         logE2eHeaderClock(IS_LIVINGWATER_MODE);
         logDeltaNeutralZeroDevState(zerodev);

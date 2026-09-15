@@ -59,6 +59,12 @@ SliverVine ExoMesh ships a **[EIP-1193](https://eips.ethereum.org/EIPS/eip-1193)
 | **[ERC-7715](https://eips.ethereum.org/EIPS/eip-7715) / [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226)** — Attenuated Session Mandates & Spending Caps | No zero-gas enforcement for multi-agent delegation decay · cumulative spend caps unenforced until post-execution audit | [`agentic-auto-roll-gate.ts`](../../src/services/api/pendle-shield/agentic-auto-roll-gate.ts) (Pendle Shield Option 3) uses [`INTENT_RING_U32`](../../src/core/intent-core-buffers.ts) ring-buffers to track spend attempts at the RPC layer · [`session-key-guard-core.ts`](../../src/core/session-key-guard-core.ts) clips session TTL · severs channels **prior to signing** | `npx vitest run tests/services/api/pendle-shield.test.ts` **7/7 PASS** · `npx vitest run tests/core/intent-sinking-audit.test.ts` **8/8 PASS** |
 | **[EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) / [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105)** — Pre-Consensus 0-Gas Gateway | Transactions enter mempools blind — users exposed to L2 Sequencer reordering/MEV without a 0-Gas withdrawal mechanism | SliverVine acts as a **Client-Side Preconf Gateway** — [`soil-resistance-core.ts`](../../src/core/soil-resistance-core.ts) + [`pkg/soil_core.wasm`](../../pkg/soil_core.wasm) simulate preconfirmations in Wasm · [`guard-engine.ts`](../../src/sdk/exomesh-agentic-wallet-guard/guard-engine.ts) aborts unsafe transactions locally before network broadcast · **p50 ~15µs** reflex severance on `--trip` | `npx vitest run tests/core/protocol-mask-sync.test.ts` **6/6 PASS** · [`pnpm demo:gmx -- --trip`](../05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) |
 
+### Partner & Standards Compliance
+
+| Partner / Stack | Badge | Integration highlight |
+| --------------- | ----- | --------------------- |
+| **ZeroDev** | **ZeroDev AA Ready** | Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker) · `pnpm demo:delta-neutral` (`--zerodev=on` default) |
+
 Wiki SSOT → [`01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](../02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#emerging-standards--edge-wasm-reference-implementations-erc-8196-erc-77158226-eip-80798105)
 
 ---

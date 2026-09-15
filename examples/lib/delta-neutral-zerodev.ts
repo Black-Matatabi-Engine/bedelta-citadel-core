@@ -24,6 +24,20 @@ const DISABLED_LOG = "[AA STATE] ZeroDev Account Abstraction Disabled (--zerodev
 const ACTIVE_LOG =
   "[AA STATE] ZeroDev Kernel v3 · ERC-7715 Session Mandates · ERC-7710 Paymaster · 0-Gas Sponsored";
 
+export const ZERODEV_AA_READY_BADGE =
+  "ZeroDev AA Ready · Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker)";
+
+export const ZERODEV_AA_BANNER_READY =
+  "Account Abstraction: 🟢 ZeroDev Kernel v3 Ready · ERC-7715 Mandates Active";
+
+export function formatZeroDevAaBannerLine(state: DeltaNeutralZeroDevState): string {
+  if (state.active) return ZERODEV_AA_BANNER_READY;
+  if (!state.requested) {
+    return "Account Abstraction: ⚪ ZeroDev Disabled (--zerodev=off) · Native EIP-1193 Signer";
+  }
+  return "Account Abstraction: 🟡 ZeroDev AA Ready (degraded) · Native EIP-1193 Fallback";
+}
+
 export function parseZeroDevRequested(argv: readonly string[] = process.argv): boolean {
   for (const arg of argv) {
     if (!arg.startsWith("--zerodev=")) continue;

@@ -290,6 +290,8 @@ pnpm demo:delta-neutral -- --trip           # Step 1 Gatehouse soil-trip interce
 | `pnpm demo:delta-neutral` | `--zerodev=on` *(default)* | ZeroDev Kernel v3 + ERC-7715 Session Mandates + ERC-7710 Paymaster 0-Gas; graceful native EIP-1193 fallback on RPC/paymaster failure |
 | `pnpm demo:delta-neutral` | `--zerodev=off` | Native EIP-1193 signer only · logs `[AA STATE] ZeroDev Account Abstraction Disabled` |
 | `pnpm demo:delta-neutral` | `--json` | Pure JSON payload stdout (includes `zerodev` state) · persists `docs/logging/last_delta_neutral_run.json` |
+| `pnpm demo:delta-neutral` | *(HUD badge)* | Banner line: `Account Abstraction: 🟢 ZeroDev Kernel v3 Ready · ERC-7715 Mandates Active` |
+| `pnpm demo:{gmx,hl,pendle,usdai,variational}` | *(preflight)* | `[AA] 🟢 ZeroDev AA Ready` badge in venue pre-flight header |
 
 ---
 

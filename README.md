@@ -163,6 +163,12 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** (Uniswap/Across) · **ERC-7579** (ZeroDev/Rhinestone) | **Semantic alignment** — not normative Final conformance; production code maps to industrial draft problem spaces |
 | **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | **No implementation claim** — see [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
+### Partner & Standards Compliance
+
+| Partner / Stack | Badge | Integration highlight |
+| --------------- | ----- | --------------------- |
+| **ZeroDev** | **ZeroDev AA Ready** | Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker) · `pnpm demo:delta-neutral` (`--zerodev=on` default) |
+
 ---
 
 ## Performance Verification & Latency Hierarchy

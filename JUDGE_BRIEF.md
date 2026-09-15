@@ -123,6 +123,12 @@ In-memory per-isolate rate limiter (5 RPS) protecting downstream Wasm execution 
 | **2** | `[De-facto Industrial Draft]` | **ERC-7683** · **ERC-7579** | **Semantic alignment** to Uniswap/Across and ZeroDev/Rhinestone industrial drafts — not normative Final conformance |
 | **3** | `[Unrelated Draft — Not Implemented]` | [EIP-8105](https://eips.ethereum.org/EIPS/eip-8105) · [EIP-8079](https://eips.ethereum.org/EIPS/eip-8079) · [ERC-8226](https://eips.ethereum.org/EIPS/eip-8226) · [ERC-8118](https://eips.ethereum.org/EIPS/eip-8118) | No implementation claim — [wiki §](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md#conceptual-industry-alignment-targets-draft--emerging-eips) |
 
+### Partner & Standards Compliance
+
+| Partner / Stack | Badge | Judge-facing proof |
+| --------------- | ----- | ------------------ |
+| **ZeroDev** | **ZeroDev AA Ready** | Kernel v3 AA · ERC-7715 Session Mandates · Paymaster 0-Gas Sponsored (ERC-7710 Expiry Sinker) · `pnpm demo:delta-neutral` (`--zerodev=on` default · graceful native EIP-1193 fallback) |
+
 ```text
 ┌──────────────────────────────────────────────────────────────────────────────┐
 │  SLIVERVINE ENHANCED EIP/ERC WORKFLOWS & SECURITY SUPERSETS                  │
@@ -352,6 +358,7 @@ Scenario **B** (`DEGRADED_WARN`) is a **demo-only monitor preview** — the SDK 
 | **6** | **[EIP-712](https://eips.ethereum.org/EIPS/eip-712)** | `[Final]` | `pnpm demo:gmx -- --trip` — pre-sign severance · Gate `0xb174…` |
 | **7** | **[ERC-4337](https://eips.ethereum.org/EIPS/eip-4337)** | `[Final]` | PolicyGuardV2 [`0xfd98cadb…8781`](https://arbiscan.io/address/0xfd98cadb7018f692ec58cd4359e0c0399f4f8781) |
 | **8** | **[ERC-2612](https://eips.ethereum.org/EIPS/eip-2612) / [Permit2](https://github.com/Uniswap/permit2)** | `[Final]` | Retail guard Vitest — Permit2 approve/permit block paths |
+| **9** | **ZeroDev Kernel v3 AA** | **ZeroDev AA Ready** | `pnpm demo:delta-neutral` — ERC-7715 Session Mandates · ERC-7710 Paymaster 0-Gas · `--zerodev=on\|off` |
 
 Wiki SSOT → [`docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md`](./docs/02_eip_extensions/01_EIP_COMPLIANCE_AND_COMPETITIVE_MATRIX.md) · [ERC-8196+ (Agent Policy Citadel)](https://eips.ethereum.org/EIPS/eip-8196) = factual EIP attribution only (not a venue adapter)
 

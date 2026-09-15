@@ -2,6 +2,7 @@
 import { GMX_POOL_IMBALANCE_MAX_RATIO } from "../../src/adapters/gmx/gmx-v2-invariants";
 import { HL_SPREAD_MAX_BPS } from "../../src/core/risk-engine-limits";
 import { BOLD, CYAN, GRAY, GREEN, R, RED, YELLOW } from "../adapters/citadel-ansi-hud";
+import { ZERODEV_AA_READY_BADGE } from "./delta-neutral-zerodev";
 import {
   CORE_BRIGHT_CYAN,
   formatLatencyLabel,
@@ -43,9 +44,14 @@ function boxClose(color = CYAN): void {
   console.log(`${color}└${"─".repeat(BOX_W - 2)}┘${R}`);
 }
 
+export function printVenueZeroDevAaBadge(): void {
+  console.log(`  ${CYAN}${BOLD}[AA]${R} ${GREEN}🟢 ${ZERODEV_AA_READY_BADGE}${R}`);
+}
+
 export function printVenuePreflightHeader(pass = true): void {
   const label = pass ? "Step 1 — Pre-flight validation (PASS)" : "Invariant Breach Interception";
   console.log(`\n${pass ? YELLOW : RED}${BOLD}${label}${R}`);
+  printVenueZeroDevAaBadge();
 }
 
 export function printVenueRow(venue: string, ok: boolean, detail: string): void {
