@@ -178,6 +178,10 @@ pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
 
 SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
 
+> 💡 **Dual Telemetry Architecture**:
+> - **Operational Shield Dashboard (`/slivervine-protocol`)**: Live telemetry tracking real-world volume, gas savings ($65.50), and intercept count (262).
+> - **SEPSB Quant Matrix (`/slivervine-sepsb-stress`)**: Deterministic benchmark runner tracking TPR (100%), FPR (0%), and sub-microsecond Wasm reflex latency across 5 core venues.
+
 ### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
 
 - **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
