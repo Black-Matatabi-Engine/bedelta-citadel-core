@@ -131,6 +131,27 @@ SliverVine models **TradFi Total Return Swaps** and **crypto perpetuals** as dis
 * **Deployments**: Arbitrum One Mainnet Gate [0xb174...8bf1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · [Ignition Tx](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Arbitrum Sepolia Gate [0xb174...8bf1](https://sepolia.arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1) · Robinhood Chain `46630`/`4663` — [On-Chain Verification](#on-chain-verification-arbitrum-one-42161) · [Sepolia](#on-chain-verification-arbitrum-sepolia-421614).
 * **0-Gas off-chain severance:** Arbitrum One Gate ([0xb174...8bf1](https://arbiscan.io/address/0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1)) **engineered for 0-Gas Pre-Execution Off-Chain Severance**. Citadel Risk Gates halt compromised payload signatures at the Edge **prior to mempool submission**, preserving **L2 state space cleanliness**.
 
+### SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)
+
+| Metric | Target | Achieved (SSOT) |
+|--------|--------|-----------------|
+| Reflex Latency (p50) | ≤ 20µs | **0.233µs** (Wasm) |
+| Reflex Latency (p99) | ≤ 50µs | **2.299µs** (Wasm) |
+| End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
+| True Positive Rate (TPR) | ≥ 99.5% | **100%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0%** |
+| Observatory Paradox Mis-block Count | 0 | **0** |
+| 5-Venue Reflex Cap | < 50µs | **<50µs** (Intel(R) Core(TM) Ultra 7 155H) |
+
+**Data provenance (verification CLI):**
+
+| Metric lane | Source command |
+|-------------|----------------|
+| **Wasm Reflex Latency** | `pnpm build:wasm` · `npx vitest run tests/clock-monotonicity.test.ts` |
+| **5-Venue TPR / FPR** | `pnpm test -- --run` (**244 test files \| 1126 PASS**) |
+
+SSOT: [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](../audit/SEPSB_CORPUS_SNAPSHOT.json) · `pnpm audit:sepsb`
+
 ### Core Risk Invariants (Judge Quick Reference)
 
 $$

@@ -389,6 +389,33 @@ pnpm demo:delta-neutral -- --json               # Pure JSON export + zerodev sta
 
 ---
 
+## SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)
+
+**What it is:** A measurable, reproducible benchmark for pre-consensus intent firewalls that decide transaction intent safety *before* signature release and *before* L2 sequencer ingress.
+
+| Metric | Target | Achieved (SSOT) |
+|--------|--------|-----------------|
+| Reflex Latency (p50) | ≤ 20µs | **0.233µs** (Wasm) |
+| Reflex Latency (p99) | ≤ 50µs | **2.299µs** (Wasm) |
+| End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
+| True Positive Rate (TPR) | ≥ 99.5% | **100%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0%** |
+| Observatory Paradox Mis-block Count | 0 | **0** |
+| 5-Venue Reflex Cap | < 50µs | **<50µs** (Intel(R) Core(TM) Ultra 7 155H) |
+
+**Data provenance (verification CLI):**
+
+| Metric lane | Source command |
+|-------------|----------------|
+| **Wasm Reflex Latency** | `pnpm build:wasm` · `npx vitest run tests/clock-monotonicity.test.ts` |
+| **5-Venue TPR / FPR** | `pnpm test -- --run` (**244 test files \| 1126 PASS**) |
+
+**Audit artifacts:** [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](../audit/SEPSB_CORPUS_SNAPSHOT.json) · `pnpm audit:sepsb`
+
+> **Dual Telemetry:** [Dune SEPSB Stress Matrix](https://dune.com/silvervinelabs/slivervine-sepsb-stress) indexes deterministic benchmark exports; operational intercept counters live on [Dune Operational Shield](https://dune.com/silvervinelabs/slivervine-protocol).
+
+---
+
 ## Live Telemetry & Telemetry Proof
 
 | Layer | Evidence | Judge action |

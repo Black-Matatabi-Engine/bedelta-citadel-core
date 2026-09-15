@@ -2,9 +2,26 @@
 
 > Judge appendix — **not** a payment rail. All paths are **pre-sign / pre-sequencer**.  
 > Core four (A–D) live in [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md). This file lists additional verified vectors.  
-> **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`)
+> **SSOT:** Vitest **244 test files | 1126 PASS** · **Zero-Allocation Hot-Path** / **Zero-GC Heap Delta (<16 KiB)** · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** (`pnpm demo:delta-neutral`) · **SEPSB:** [`SEPSB_BENCHMARK_SSOT.json`](../audit/SEPSB_BENCHMARK_SSOT.json)
 
 **Wasm SSOT:** `pkg/soil_core.wasm` · `tests/wasm/stylus-soil-wasm.test.ts`
+
+---
+
+## SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)
+
+| Metric | Target | Achieved (SSOT) |
+|--------|--------|-----------------|
+| True Positive Rate (TPR) | ≥ 99.5% | **100%** |
+| False Positive Rate (FPR) | ≤ 0.5% | **0%** |
+| Reflex Latency (p50) | ≤ 20µs | **0.233µs** (Wasm) |
+
+**Data provenance (verification CLI):**
+
+| Metric lane | Source command |
+|-------------|----------------|
+| **Wasm Reflex Latency** | `pnpm build:wasm` · `npx vitest run tests/clock-monotonicity.test.ts` |
+| **5-Venue TPR / FPR** | `pnpm test -- --run` (**244 test files \| 1126 PASS**) |
 
 ---
 
