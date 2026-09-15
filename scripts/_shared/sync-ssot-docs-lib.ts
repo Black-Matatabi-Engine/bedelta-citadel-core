@@ -69,14 +69,25 @@ function gateLink(address: string): string {
   return `[\`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1\`](https://arbiscan.io/address/${address})`;
 }
 
-/** shields.io segment — encodeURIComponent skips `(` `)`; markdown treats `)` as URL end. */
-function shieldsEncode(value: string): string {
-  return encodeURIComponent(value).replace(/\(/g, "%28").replace(/\)/g, "%29");
+/** shields.io badge segment — official `-`/`_`/space rules + percent escapes for markdown safety. */
+export function shieldsEncode(text: string): string {
+  return text
+    .replace(/%/g, "%25")
+    .replace(/</g, "%3C")
+    .replace(/>/g, "%3E")
+    .replace(/#/g, "%23")
+    .replace(/\(/g, "%28")
+    .replace(/\)/g, "%29")
+    .replace(/\//g, "%2F")
+    .replace(/\|/g, "%7C")
+    .replace(/_/g, "__")
+    .replace(/-/g, "--")
+    .replace(/ /g, "_");
 }
 
-/** shields.io static badge — encode label/message so markdown `)` does not truncate URLs. */
+/** shields.io static badge URL. */
 export function shieldsStaticBadge(label: string, message: string, color: string, logo?: string): string {
-  const query = logo ? `?logo=${shieldsEncode(logo)}` : "";
+  const query = logo ? `?logo=${encodeURIComponent(logo)}` : "";
   return `https://img.shields.io/badge/${shieldsEncode(label)}-${shieldsEncode(message)}-${color}${query}`;
 }
 
@@ -95,7 +106,7 @@ export function buildReadmeBadges(ssot: SystemMetricsSsot): string {
     shieldsMarkdown("Vitest", "Vitest", `${v.total_tests_passed} PASS (${v.test_files_passed} files)`, "brightgreen", "vitest"),
     shieldsMarkdown("Zero-Alloc Hot-Path", "Zero-Alloc Hot-Path", `${hp.alloc} / ${hp.iterations} iterations`, "blue", "vitest"),
     shieldsMarkdown("V2.0 Stylus Probe", "V2.0 Stylus Probe", `${sp.passed}/${sp.total} PASS (${sp.stage})`, "blue", "rust"),
-    `[![risk-control.ts coverage](${shieldsStaticBadge("risk--control.ts", `${ssot.badges.coverage.percentage} coverage`, "success", "vitest")})](src/services/risk-control.ts)`,
+    `[![risk-control.ts coverage](${shieldsStaticBadge("risk-control.ts", `${ssot.badges.coverage.percentage} coverage`, "success", "vitest")})](src/services/risk-control.ts)`,
     shieldsMarkdown("Chaos Matrix", "Chaos Matrix", `${cm.cases}/${cm.total} ${cm.mode}`, "blue", "github"),
     shieldsMarkdown(
       "Benchmark Latency",

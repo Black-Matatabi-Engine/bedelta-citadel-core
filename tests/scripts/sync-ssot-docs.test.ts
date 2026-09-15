@@ -6,6 +6,7 @@ import {
   buildSepsbTable,
   loadSystemMetricsSsot,
   replaceMarkedBlock,
+  shieldsEncode,
   shieldsStaticBadge,
 } from "../../scripts/_shared/sync-ssot-docs-lib";
 
@@ -32,13 +33,15 @@ describe("sync-ssot-docs", () => {
     expect(badges).toContain(String(ssot.badges.vitest.test_files_passed));
   });
 
-  it("URL-encodes shield badge messages so markdown parentheses do not truncate links", () => {
+  it("applies Shields.io double-dash escaping and percent-encodes markdown-breaking chars", () => {
+    expect(shieldsEncode("Zero-Alloc Hot-Path")).toBe("Zero--Alloc_Hot--Path");
+    expect(shieldsEncode("<16 KiB / 10k iterations")).toBe("%3C16_KiB_%2F_10k_iterations");
     const url = shieldsStaticBadge("V2.0 Stylus Probe", "9/9 PASS (Roadmap)", "blue", "rust");
-    expect(url).toContain("%28Roadmap%29");
+    expect(url).toContain("9%2F9_PASS_%28Roadmap%29");
     expect(url).not.toContain("(Roadmap)");
-    const badges = buildReadmeBadges(ssot);
-    expect(badges).toContain("%28");
-    expect(badges).toContain("%29");
+    expect(shieldsStaticBadge("Zero-Alloc Hot-Path", "<16 KiB / 10k iterations", "blue")).toBe(
+      "https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16_KiB_%2F_10k_iterations-blue",
+    );
   });
 
   it("builds SEPSB table with reflex p50/p99 from SSOT", () => {

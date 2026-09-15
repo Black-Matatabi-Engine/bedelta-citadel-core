@@ -3,15 +3,15 @@
 > 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
 
 <!-- SSOT:README_BADGES_START -->
-![Vitest](https://img.shields.io/badge/Vitest-1120%20PASS%20%28243%20files%29-brightgreen?logo=vitest)
-![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero-Alloc%20Hot-Path-%3C16%20KiB%20%2F%2010k%20iterations-blue?logo=vitest)
-![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0%20Stylus%20Probe-9%2F9%20PASS%20%28Roadmap%29-blue?logo=rust)
-[![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25%20coverage-success?logo=vitest)](src/services/risk-control.ts)
-![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-255%2F255%20Fail-Closed-blue?logo=github)
-![Benchmark Latency](https://img.shields.io/badge/Latency-E2E%20p50%20106%C2%B5s%20%7C%20Reflex%20p50%2015%C2%B5s-blueviolet?logo=speedtest)
-![TypeScript](https://img.shields.io/badge/TypeScript-0%20errors-blue?logo=typescript)
-![License](https://img.shields.io/badge/License-BUSL-1.1-orange)
-![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum%20One%20Gate-Sepolia%20Verified%20%2842161%20Ready%29-28A0F0?logo=arbitrum)
+![Vitest](https://img.shields.io/badge/Vitest-1120_PASS_%28243_files%29-brightgreen?logo=vitest)
+![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16_KiB_%2F_10k_iterations-blue?logo=vitest)
+![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_%28Roadmap%29-blue?logo=rust)
+[![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25_coverage-success?logo=vitest)](src/services/risk-control.ts)
+![Chaos Matrix](https://img.shields.io/badge/Chaos_Matrix-255%2F255_Fail--Closed-blue?logo=github)
+![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_106µs_%7C_Reflex_p50_15µs-blueviolet?logo=speedtest)
+![TypeScript](https://img.shields.io/badge/TypeScript-0_errors-blue?logo=typescript)
+![License](https://img.shields.io/badge/License-BUSL--1.1-orange)
+![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-Sepolia_Verified_%2842161_Ready%29-28A0F0?logo=arbitrum)
 <!-- SSOT:README_BADGES_END -->
 
 ![SliverVine ExoMesh — Detox Sanctuary](public/brand/Detox_Sanctuary_wm.webp)
