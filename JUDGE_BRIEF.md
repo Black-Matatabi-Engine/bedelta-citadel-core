@@ -235,6 +235,14 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 └─────────────────────────────────────────────────────────────────────────┘
 ```
 
+<a id="dynamic-risk-parameter-update-architecture"></a>
+
+### §3 Dynamic Risk Parameter Update Architecture
+
+Risk limits are **fixed and reproducible for judges** (Tier 1 audit defaults) while remaining **production-adaptive** via zero-gas Edge Worker liquidity feeds (Tier 2) and on-chain emergency governance through Stylus + `SliverVineRiskOracle` (Tier 3). Public parameters prove auditability; **±2–5 bps Soil Threshold Jitter** and microsecond Wasm severance form the uncopyable boundary-defense moat against fuse probing.
+
+→ Full Text-UI diagram & tier table: [`02_DEFENSE_MATRIX_AND_SSRC_CORE.md` §3.6.1](./docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md#dynamic-risk-parameter-update-architecture)
+
 ---
 
 ## 2. System Invariants & Scope

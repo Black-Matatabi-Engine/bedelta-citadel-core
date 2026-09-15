@@ -423,6 +423,47 @@ dApp → withRetailGuardProvider(config)
 | **Vault Operational Spec (V1.0 Roadmap)** | Epoch batching | **4-hour** epoch windows for cross-venue execution | ⏳ Planned |
 | **Vault Operational Spec (V1.0 Roadmap)** | Deposit cooldown | **24-hour** minimum hold to prevent flash arbitrage | ⏳ Planned |
 
+<a id="dynamic-risk-parameter-update-architecture"></a>
+
+### 3.6.1 Dynamic Risk Parameter Update Architecture
+
+SliverVine risk thresholds are **deterministic for judges and auditors today**, yet **dynamically tunable in production** without breaking the pre-consensus fail-closed contract. Public numbers prove reproducibility; private execution physics prevent copy-paste bypass.
+
+```text
+┌────────────────────────────────────────────────────────────────────────────┐
+│ TIER 1 — Deterministic Audit Phase (Judge / Vitest SSOT)                 │
+│ Fixed default soil fuses · depth floors · venue caps                       │
+│ 100% reproducible FAIL_CLOSED proofs (`pnpm demo:gmx -- --trip`)           │
+│ Jitter disabled under VITEST=true for bit-exact regression               │
+└────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼ live pool / oracle feeds (off hot-path config)
+┌────────────────────────────────────────────────────────────────────────────┐
+│ TIER 2 — Real-Time Off-Chain Feed (Zero-Gas Edge Worker)                   │
+│ Cloudflare Worker + SSRC Wasm adjusts slippage / depth gates per venue     │
+│ Liquidity-aware tightening — no on-chain gas · pre-broadcast only         │
+│ SSOT: checkSoilResistance() · worker-fetch / worker-scheduled ingress      │
+└────────────────────────────────────────────────────────────────────────────┘
+                                    │
+                                    ▼ black-swan / governance signal
+┌────────────────────────────────────────────────────────────────────────────┐
+│ TIER 3 — On-Chain Emergency Governance (Stylus + RiskOracle)             │
+│ Stylus Coprocessor + SliverVineRiskOracle hard circuit breaker             │
+│ PolicyGuardV2 / IngressSafetySwitch STATUS_SHUTDOWN flush inside block     │
+│ Last-resort severance when off-chain feeds cannot be trusted               │
+└────────────────────────────────────────────────────────────────────────────┘
+```
+
+| Tier | What changes | Who consumes it | Verification |
+|------|----------------|-----------------|--------------|
+| **1 — Audit defaults** | Published fuse constants in repo + SSOT JSON | Judges · CI · `pnpm test` | **243 files \| 1123 PASS** · deterministic jitter-off |
+| **2 — Edge feed** | Per-venue depth / slippage inputs at Worker ingress | Live agents · retail guard · venue demos | `pnpm demo:gmx -- --trip` · SEPSB matrix |
+| **3 — On-chain breaker** | Governance-flushed oracle status · emergency halt | Sequencer Plane B · mainnet PolicyGuard | `pnpm tsx scripts/benchmark-stylus-opcode.ts` · Gate `0xb174…8BF1` |
+
+**Defense moat (engineering honesty):** Publishing Tier-1 parameters does **not** expose an exploitable static boundary. Each live `checkSoilResistance()` call applies **±2–5 bps Soil Threshold Jitter** ([`soil-resistance-jitter.ts`](../../src/core/soil-resistance-jitter.ts)) to `slippageFuse` and `minDepthUsd`, plus **microsecond Wasm reflex** execution — an adversary cannot probe the exact fuse edge with manipulated RPC quotes and replay the result. The jitter band and sub-15µs severance path are the **physical moat**; the public table is the **auditability guarantee**.
+
+**Verify:** `npx vitest run tests/risk-control/soil-threshold-jitter.test.ts` · `pnpm demo:exomesh` · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md#dynamic-risk-parameter-update-architecture)
+
 ---
 
 <a id="hidden-engineering-gems-and-invariants"></a>
