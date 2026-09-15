@@ -1,7 +1,12 @@
 /** SEPSB corpus evaluator — maps fixtures to live guard lanes (no frozen Wasm edits). */
 import { evaluateGatewayRules } from "../src/core/risk-engine";
 import { FLAGS_CLEAR, FLAGS_IMBALANCE_TRIP, FLAGS_YIELD_SHOCK } from "../src/core/risk-flags";
-import { evaluateGmxFlags, evaluatePendleFlags } from "../src/core/risk-engine-flag-evaluators";
+import {
+  evaluateGmxFlags,
+  evaluateHlSessionFlags,
+  evaluatePendleFlags,
+} from "../src/core/risk-engine-flag-evaluators";
+import { evaluateUsdAiFlags, evaluateVariationalFlags } from "../src/core/risk-engine-flag-alt";
 import { PROTO_GMX, packProtocolLane } from "../src/core/risk-engine-protocol-slots";
 import { evaluatePendleGmxCrossGuard } from "../src/guards/pendle-gmx-cross-guard";
 import type { GMXPositionState, PTMarketState } from "../src/core/pendle-types";
@@ -146,6 +151,38 @@ export function evaluateSepsbCase(caseRow: SepsbCorpusCase): { actual: SepsbExpe
     case "pendle_gmx_cross": {
       const result = evaluatePendleGmxCrossGuard(ptMarket(p.ptMarket as Partial<PTMarketState> | undefined), gmxPos(p.gmxPos as Partial<GMXPositionState> | undefined), Number(p.assetUsdPrice ?? 3000));
       return { actual: verdict(!result.passed), detail: result.action };
+    }
+    case "usdai_flags": {
+      const flags = evaluateUsdAiFlags({
+        oracleAgeMs: Number(p.oracleAgeMs ?? 0),
+        pegDriftBps: Number(p.pegDriftBps ?? 0),
+        navDeviationBps: Number(p.navDeviationBps ?? 0),
+        pegVelocityBpsPerSec: p.pegVelocityBpsPerSec !== undefined ? Number(p.pegVelocityBpsPerSec) : undefined,
+      });
+      return { actual: verdict(flags !== FLAGS_CLEAR), detail: `flags=${flags}` };
+    }
+    case "hyperliquid_flags": {
+      const flags = evaluateHlSessionFlags(
+        Boolean(p.sessionValid ?? true),
+        Number(p.orderSize ?? 1),
+        Number(p.maxSize ?? 100),
+        Number(p.spreadBps ?? 10),
+        Number(p.rpm ?? 30),
+      );
+      return { actual: verdict(flags !== FLAGS_CLEAR), detail: `flags=${flags}` };
+    }
+    case "variational_flags": {
+      const nowMs = Number(p.nowMs ?? NOW_MS);
+      const flags = evaluateVariationalFlags({
+        quotePriceUsd: Number(p.quotePriceUsd ?? 3000),
+        oracleMarkUsd: Number(p.oracleMarkUsd ?? 3000),
+        quoteTimestampMs: Number(p.quoteTimestampMs ?? nowMs),
+        nowMs,
+        tradeSizeUsd: Number(p.tradeSizeUsd ?? 1000),
+        olpDepthUsd: Number(p.olpDepthUsd ?? 100_000),
+        longTailAsset: p.longTailAsset !== false,
+      });
+      return { actual: verdict(flags !== FLAGS_CLEAR), detail: `flags=${flags}` };
     }
     default:
       return { actual: "allow", detail: "UNKNOWN_LANE" };

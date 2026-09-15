@@ -2,7 +2,7 @@
   "schema": "silvervine.sepsb-corpus-snapshot.v1",
   "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
   "standard_version": "SEPSB-v1.0-Santenmoku",
-  "generatedAt": "2026-09-15T01:19:34.373Z",
+  "generatedAt": "2026-09-15T01:35:44.479Z",
   "sources": {
     "toxic": "tests/p0/corpus/toxic-set.json",
     "benign": "tests/p0/corpus/benign-set.json"
@@ -15,6 +15,7 @@
         {
           "id": "toxic-infinite-approve-erc20",
           "category": "infinite_approve",
+          "venue": "gmx",
           "lane": "retail_risk",
           "expected": "block",
           "payload": {
@@ -32,6 +33,7 @@
         {
           "id": "toxic-permit2-infinite-approve",
           "category": "permit2_phishing",
+          "venue": "gmx",
           "lane": "retail_risk",
           "expected": "block",
           "payload": {
@@ -49,6 +51,7 @@
         {
           "id": "toxic-domain-drift-eip712",
           "category": "domain_drift",
+          "venue": "pendle",
           "lane": "retail_risk",
           "expected": "block",
           "payload": {
@@ -62,6 +65,7 @@
         {
           "id": "toxic-ai-4th-strike-retry",
           "category": "ai_4th_strike_retry",
+          "venue": "hyperliquid",
           "lane": "retail_intent_strike",
           "expected": "block",
           "payload": {
@@ -73,6 +77,7 @@
         {
           "id": "toxic-gmx-oi-skew",
           "category": "gmx_oi_skew",
+          "venue": "gmx",
           "lane": "gmx_flags",
           "expected": "block",
           "payload": {
@@ -85,6 +90,7 @@
         {
           "id": "toxic-pendle-oracle-lag",
           "category": "pendle_oracle_lag",
+          "venue": "pendle",
           "lane": "pendle_flags",
           "expected": "block",
           "payload": {
@@ -93,8 +99,91 @@
           }
         },
         {
+          "id": "toxic-usdai-peg-drift",
+          "category": "usdai_peg_drift",
+          "venue": "usdai",
+          "lane": "usdai_flags",
+          "expected": "block",
+          "payload": {
+            "oracleAgeMs": 1000,
+            "pegDriftBps": 45,
+            "navDeviationBps": 5
+          }
+        },
+        {
+          "id": "toxic-usdai-oracle-stale",
+          "category": "usdai_oracle_stale",
+          "venue": "usdai",
+          "lane": "usdai_flags",
+          "expected": "block",
+          "payload": {
+            "oracleAgeMs": 8000000,
+            "pegDriftBps": 5,
+            "navDeviationBps": 5
+          }
+        },
+        {
+          "id": "toxic-hyperliquid-spread-jitter",
+          "category": "hyperliquid_spread_jitter",
+          "venue": "hyperliquid",
+          "lane": "hyperliquid_flags",
+          "expected": "block",
+          "payload": {
+            "sessionValid": true,
+            "orderSize": 1,
+            "maxSize": 100,
+            "spreadBps": 35,
+            "rpm": 30
+          }
+        },
+        {
+          "id": "toxic-hyperliquid-session-velocity",
+          "category": "hyperliquid_session_velocity",
+          "venue": "hyperliquid",
+          "lane": "hyperliquid_flags",
+          "expected": "block",
+          "payload": {
+            "sessionValid": false,
+            "orderSize": 1,
+            "maxSize": 100,
+            "spreadBps": 10,
+            "rpm": 30
+          }
+        },
+        {
+          "id": "toxic-variational-stale-quote",
+          "category": "variational_stale_quote",
+          "venue": "variational",
+          "lane": "variational_flags",
+          "expected": "block",
+          "payload": {
+            "quotePriceUsd": 3000,
+            "oracleMarkUsd": 3000,
+            "quoteTimestampMs": 1699999000000,
+            "nowMs": 1700000000000,
+            "tradeSizeUsd": 1000,
+            "olpDepthUsd": 100000
+          }
+        },
+        {
+          "id": "toxic-variational-olp-threshold",
+          "category": "variational_olp_threshold",
+          "venue": "variational",
+          "lane": "variational_flags",
+          "expected": "block",
+          "payload": {
+            "quotePriceUsd": 3000,
+            "oracleMarkUsd": 3000,
+            "quoteTimestampMs": 1700000000000,
+            "nowMs": 1700000000000,
+            "tradeSizeUsd": 50000,
+            "olpDepthUsd": 100000
+          }
+        },
+        {
           "id": "toxic-soil-cross-venue",
           "category": "soil_cross_venue",
+          "venue": "hyperliquid",
           "lane": "gateway_soil",
           "expected": "block",
           "payload": {
@@ -113,6 +202,7 @@
         {
           "id": "toxic-pendle-gmx-open-thin-liquidity",
           "category": "pendle_gmx_open_violation",
+          "venue": "pendle",
           "lane": "pendle_gmx_cross",
           "expected": "block",
           "payload": {
@@ -131,6 +221,7 @@
         {
           "id": "toxic-venue-drift-contract",
           "category": "venue_drift",
+          "venue": "variational",
           "lane": "retail_venue",
           "expected": "block",
           "payload": {
@@ -140,6 +231,7 @@
         {
           "id": "toxic-shallow-depth-honeypot",
           "category": "depth_insufficient",
+          "venue": "gmx",
           "lane": "gateway_soil",
           "expected": "block",
           "payload": {
@@ -164,6 +256,7 @@
         {
           "id": "benign-normal-transfer-gmx",
           "category": "normal_transfer",
+          "venue": "gmx",
           "lane": "retail_risk",
           "expected": "allow",
           "payload": {
@@ -180,6 +273,7 @@
         {
           "id": "benign-gmx-increase",
           "category": "gmx_increase",
+          "venue": "gmx",
           "lane": "retail_risk",
           "expected": "allow",
           "payload": {
@@ -197,6 +291,7 @@
         {
           "id": "benign-gmx-decrease",
           "category": "gmx_decrease",
+          "venue": "gmx",
           "lane": "gmx_flags",
           "expected": "allow",
           "payload": {
@@ -209,6 +304,7 @@
         {
           "id": "benign-pendle-swap",
           "category": "pendle_swap",
+          "venue": "pendle",
           "lane": "pendle_flags",
           "expected": "allow",
           "payload": {
@@ -217,8 +313,91 @@
           }
         },
         {
+          "id": "benign-usdai-vault-deposit",
+          "category": "usdai_vault_deposit",
+          "venue": "usdai",
+          "lane": "usdai_flags",
+          "expected": "allow",
+          "payload": {
+            "oracleAgeMs": 60000,
+            "pegDriftBps": 8,
+            "navDeviationBps": 5
+          }
+        },
+        {
+          "id": "benign-usdai-peg-stable",
+          "category": "usdai_peg_stable",
+          "venue": "usdai",
+          "lane": "usdai_flags",
+          "expected": "allow",
+          "payload": {
+            "oracleAgeMs": 120000,
+            "pegDriftBps": 12,
+            "navDeviationBps": 10
+          }
+        },
+        {
+          "id": "benign-hyperliquid-rfq-clean",
+          "category": "hyperliquid_rfq_clean",
+          "venue": "hyperliquid",
+          "lane": "hyperliquid_flags",
+          "expected": "allow",
+          "payload": {
+            "sessionValid": true,
+            "orderSize": 5,
+            "maxSize": 100,
+            "spreadBps": 12,
+            "rpm": 45
+          }
+        },
+        {
+          "id": "benign-hyperliquid-session-key",
+          "category": "hyperliquid_session_key",
+          "venue": "hyperliquid",
+          "lane": "hyperliquid_flags",
+          "expected": "allow",
+          "payload": {
+            "sessionValid": true,
+            "orderSize": 2,
+            "maxSize": 50,
+            "spreadBps": 8,
+            "rpm": 20
+          }
+        },
+        {
+          "id": "benign-variational-trade-clean",
+          "category": "variational_trade_clean",
+          "venue": "variational",
+          "lane": "variational_flags",
+          "expected": "allow",
+          "payload": {
+            "quotePriceUsd": 3000,
+            "oracleMarkUsd": 3000,
+            "quoteTimestampMs": 1700000000000,
+            "nowMs": 1700000000200,
+            "tradeSizeUsd": 5000,
+            "olpDepthUsd": 200000
+          }
+        },
+        {
+          "id": "benign-variational-rfq-normal",
+          "category": "variational_rfq_normal",
+          "venue": "variational",
+          "lane": "variational_flags",
+          "expected": "allow",
+          "payload": {
+            "quotePriceUsd": 2998,
+            "oracleMarkUsd": 3000,
+            "quoteTimestampMs": 1700000000000,
+            "nowMs": 1700000000100,
+            "tradeSizeUsd": 2000,
+            "olpDepthUsd": 150000
+          }
+        },
+        {
           "id": "benign-trusted-infinite-approve",
           "category": "trusted_approve",
+          "venue": "gmx",
           "lane": "retail_approve",
           "expected": "allow",
           "payload": {
@@ -229,25 +408,9 @@
           }
         },
         {
-          "id": "benign-uniswap-swap-clean-soil",
-          "category": "uniswap_swap",
-          "lane": "retail_risk",
-          "expected": "allow",
-          "payload": {
-            "method": "eth_sendTransaction",
-            "params": [
-              {
-                "from": "0x1111111111111111111111111111111111111111",
-                "to": "0xcccccccccccccccccccccccccccccccccccccccc",
-                "data": "0x38ed1739000000000000000000000000000000000000000000000000000000000000000000"
-              }
-            ],
-            "skipIntentGate": true
-          }
-        },
-        {
           "id": "benign-observatory-emergency-close",
           "category": "observatory_emergency_close",
+          "venue": "pendle",
           "lane": "pendle_gmx_cross",
           "expected": "allow",
           "observatoryParadox": true,
@@ -267,6 +430,7 @@
         {
           "id": "benign-observatory-reduce-position",
           "category": "observatory_reduce",
+          "venue": "pendle",
           "lane": "pendle_gmx_cross",
           "expected": "allow",
           "observatoryParadox": true,
@@ -286,6 +450,7 @@
         {
           "id": "benign-eip712-allowlisted-permit",
           "category": "eip712_permit",
+          "venue": "pendle",
           "lane": "retail_risk",
           "expected": "allow",
           "payload": {
@@ -299,6 +464,7 @@
         {
           "id": "benign-gmx-healthy-open",
           "category": "gmx_open_healthy",
+          "venue": "gmx",
           "lane": "pendle_gmx_cross",
           "expected": "allow",
           "payload": {
@@ -323,8 +489,8 @@
         "pass": true,
         "detail": "UNAUTHORIZED_SPENDER_REJECTED",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 1335.618
+        "venue": "gmx",
+        "reflexLatencyUs": 1251.63
       },
       {
         "id": "toxic-permit2-infinite-approve",
@@ -334,8 +500,8 @@
         "pass": true,
         "detail": "UNAUTHORIZED_SPENDER_REJECTED",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 284.171
+        "venue": "gmx",
+        "reflexLatencyUs": 311.823
       },
       {
         "id": "toxic-domain-drift-eip712",
@@ -345,8 +511,8 @@
         "pass": true,
         "detail": "VENUE_DRIFT_REJECTED",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 172.788
+        "venue": "pendle",
+        "reflexLatencyUs": 114.089
       },
       {
         "id": "toxic-ai-4th-strike-retry",
@@ -356,8 +522,8 @@
         "pass": true,
         "detail": "MAX_ATTEMPTS_OR_DRIFT",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 275.461
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 210.488
       },
       {
         "id": "toxic-gmx-oi-skew",
@@ -368,7 +534,7 @@
         "detail": "flags=3",
         "setType": "toxic",
         "venue": "gmx",
-        "reflexLatencyUs": 855.202
+        "reflexLatencyUs": 1551.094
       },
       {
         "id": "toxic-pendle-oracle-lag",
@@ -379,7 +545,73 @@
         "detail": "flags=9",
         "setType": "toxic",
         "venue": "pendle",
-        "reflexLatencyUs": 32.466
+        "reflexLatencyUs": 30.308
+      },
+      {
+        "id": "toxic-usdai-peg-drift",
+        "category": "usdai_peg_drift",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=524289",
+        "setType": "toxic",
+        "venue": "usdai",
+        "reflexLatencyUs": 29.469
+      },
+      {
+        "id": "toxic-usdai-oracle-stale",
+        "category": "usdai_oracle_stale",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=262145",
+        "setType": "toxic",
+        "venue": "usdai",
+        "reflexLatencyUs": 5.327
+      },
+      {
+        "id": "toxic-hyperliquid-spread-jitter",
+        "category": "hyperliquid_spread_jitter",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=513",
+        "setType": "toxic",
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 24.05
+      },
+      {
+        "id": "toxic-hyperliquid-session-velocity",
+        "category": "hyperliquid_session_velocity",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=129",
+        "setType": "toxic",
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 8.68
+      },
+      {
+        "id": "toxic-variational-stale-quote",
+        "category": "variational_stale_quote",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=4097",
+        "setType": "toxic",
+        "venue": "variational",
+        "reflexLatencyUs": 77.273
+      },
+      {
+        "id": "toxic-variational-olp-threshold",
+        "category": "variational_olp_threshold",
+        "expected": "block",
+        "actual": "block",
+        "pass": true,
+        "detail": "flags=8193",
+        "setType": "toxic",
+        "venue": "variational",
+        "reflexLatencyUs": 10.436
       },
       {
         "id": "toxic-soil-cross-venue",
@@ -387,10 +619,10 @@
         "expected": "block",
         "actual": "block",
         "pass": true,
-        "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.48000000000000004%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
+        "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.54%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 7100.629
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 9553.034
       },
       {
         "id": "toxic-pendle-gmx-open-thin-liquidity",
@@ -400,8 +632,8 @@
         "pass": true,
         "detail": "FAIL_CLOSED_BLOCK",
         "setType": "toxic",
-        "venue": "gmx",
-        "reflexLatencyUs": 152.369
+        "venue": "pendle",
+        "reflexLatencyUs": 168.093
       },
       {
         "id": "toxic-venue-drift-contract",
@@ -411,8 +643,8 @@
         "pass": true,
         "detail": "VENUE_DRIFT_REJECTED",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 32.957
+        "venue": "variational",
+        "reflexLatencyUs": 37.039
       },
       {
         "id": "toxic-shallow-depth-honeypot",
@@ -420,10 +652,10 @@
         "expected": "block",
         "actual": "block",
         "pass": true,
-        "detail": "DEPTH_USD=50000<100020|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
+        "detail": "DEPTH_USD=50000<99980|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
         "setType": "toxic",
-        "venue": "exomesh",
-        "reflexLatencyUs": 444.974
+        "venue": "gmx",
+        "reflexLatencyUs": 402.042
       }
     ],
     "benignResults": [
@@ -434,8 +666,8 @@
         "actual": "allow",
         "pass": true,
         "setType": "benign",
-        "venue": "exomesh",
-        "reflexLatencyUs": 287.215
+        "venue": "gmx",
+        "reflexLatencyUs": 272.459
       },
       {
         "id": "benign-gmx-increase",
@@ -445,7 +677,7 @@
         "pass": true,
         "setType": "benign",
         "venue": "gmx",
-        "reflexLatencyUs": 46.455
+        "reflexLatencyUs": 51.59
       },
       {
         "id": "benign-gmx-decrease",
@@ -456,7 +688,7 @@
         "detail": "flags=0",
         "setType": "benign",
         "venue": "gmx",
-        "reflexLatencyUs": 14.261
+        "reflexLatencyUs": 11.555
       },
       {
         "id": "benign-pendle-swap",
@@ -467,7 +699,73 @@
         "detail": "flags=0",
         "setType": "benign",
         "venue": "pendle",
-        "reflexLatencyUs": 28.687
+        "reflexLatencyUs": 3.219
+      },
+      {
+        "id": "benign-usdai-vault-deposit",
+        "category": "usdai_vault_deposit",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "usdai",
+        "reflexLatencyUs": 5.209
+      },
+      {
+        "id": "benign-usdai-peg-stable",
+        "category": "usdai_peg_stable",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "usdai",
+        "reflexLatencyUs": 2.309
+      },
+      {
+        "id": "benign-hyperliquid-rfq-clean",
+        "category": "hyperliquid_rfq_clean",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 3.011
+      },
+      {
+        "id": "benign-hyperliquid-session-key",
+        "category": "hyperliquid_session_key",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "hyperliquid",
+        "reflexLatencyUs": 1.214
+      },
+      {
+        "id": "benign-variational-trade-clean",
+        "category": "variational_trade_clean",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "variational",
+        "reflexLatencyUs": 8.57
+      },
+      {
+        "id": "benign-variational-rfq-normal",
+        "category": "variational_rfq_normal",
+        "expected": "allow",
+        "actual": "allow",
+        "pass": true,
+        "detail": "flags=0",
+        "setType": "benign",
+        "venue": "variational",
+        "reflexLatencyUs": 4.309
       },
       {
         "id": "benign-trusted-infinite-approve",
@@ -476,18 +774,8 @@
         "actual": "allow",
         "pass": true,
         "setType": "benign",
-        "venue": "exomesh",
-        "reflexLatencyUs": 53.524
-      },
-      {
-        "id": "benign-uniswap-swap-clean-soil",
-        "category": "uniswap_swap",
-        "expected": "allow",
-        "actual": "allow",
-        "pass": true,
-        "setType": "benign",
-        "venue": "uniswap",
-        "reflexLatencyUs": 122.157
+        "venue": "gmx",
+        "reflexLatencyUs": 20.313
       },
       {
         "id": "benign-observatory-emergency-close",
@@ -499,7 +787,7 @@
         "detail": "EMERGENCY_DELEVERAGE_ALLOWED",
         "setType": "benign",
         "venue": "pendle",
-        "reflexLatencyUs": 18.051
+        "reflexLatencyUs": 13.636
       },
       {
         "id": "benign-observatory-reduce-position",
@@ -511,7 +799,7 @@
         "detail": "EMERGENCY_DELEVERAGE_ALLOWED",
         "setType": "benign",
         "venue": "pendle",
-        "reflexLatencyUs": 6.995
+        "reflexLatencyUs": 5.907
       },
       {
         "id": "benign-eip712-allowlisted-permit",
@@ -520,8 +808,8 @@
         "actual": "allow",
         "pass": true,
         "setType": "benign",
-        "venue": "exomesh",
-        "reflexLatencyUs": 104.943
+        "venue": "pendle",
+        "reflexLatencyUs": 108.652
       },
       {
         "id": "benign-gmx-healthy-open",
@@ -532,7 +820,7 @@
         "detail": "PASS_GREENLIGHT",
         "setType": "benign",
         "venue": "gmx",
-        "reflexLatencyUs": 24.175
+        "reflexLatencyUs": 19.769
       }
     ]
   }

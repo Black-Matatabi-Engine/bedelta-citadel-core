@@ -2,6 +2,8 @@
 import type { BenchmarkEnvironment } from "../src/utils/hardware-detector";
 
 export type SepsbExpectedVerdict = "block" | "allow";
+export type SepsbCoreVenue = "gmx" | "pendle" | "usdai" | "hyperliquid" | "variational";
+
 export type SepsbCorpusLane =
   | "retail_risk"
   | "retail_approve"
@@ -10,11 +12,15 @@ export type SepsbCorpusLane =
   | "gateway_soil"
   | "gmx_flags"
   | "pendle_flags"
-  | "pendle_gmx_cross";
+  | "pendle_gmx_cross"
+  | "usdai_flags"
+  | "hyperliquid_flags"
+  | "variational_flags";
 
 export interface SepsbCorpusCase {
   id: string;
   category: string;
+  venue: SepsbCoreVenue;
   lane: SepsbCorpusLane;
   expected: SepsbExpectedVerdict;
   observatoryParadox?: boolean;

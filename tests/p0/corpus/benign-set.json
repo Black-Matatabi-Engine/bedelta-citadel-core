@@ -5,6 +5,7 @@
     {
       "id": "benign-normal-transfer-gmx",
       "category": "normal_transfer",
+      "venue": "gmx",
       "lane": "retail_risk",
       "expected": "allow",
       "payload": {
@@ -15,6 +16,7 @@
     {
       "id": "benign-gmx-increase",
       "category": "gmx_increase",
+      "venue": "gmx",
       "lane": "retail_risk",
       "expected": "allow",
       "payload": {
@@ -32,6 +34,7 @@
     {
       "id": "benign-gmx-decrease",
       "category": "gmx_decrease",
+      "venue": "gmx",
       "lane": "gmx_flags",
       "expected": "allow",
       "payload": { "oiLong": 520, "oiShort": 480, "tvl": 2000, "collateral": 1.2 }
@@ -39,13 +42,77 @@
     {
       "id": "benign-pendle-swap",
       "category": "pendle_swap",
+      "venue": "pendle",
       "lane": "pendle_flags",
       "expected": "allow",
       "payload": { "yieldCurrent": 0.051, "yieldOracle": 0.05 }
     },
     {
+      "id": "benign-usdai-vault-deposit",
+      "category": "usdai_vault_deposit",
+      "venue": "usdai",
+      "lane": "usdai_flags",
+      "expected": "allow",
+      "payload": { "oracleAgeMs": 60000, "pegDriftBps": 8, "navDeviationBps": 5 }
+    },
+    {
+      "id": "benign-usdai-peg-stable",
+      "category": "usdai_peg_stable",
+      "venue": "usdai",
+      "lane": "usdai_flags",
+      "expected": "allow",
+      "payload": { "oracleAgeMs": 120000, "pegDriftBps": 12, "navDeviationBps": 10 }
+    },
+    {
+      "id": "benign-hyperliquid-rfq-clean",
+      "category": "hyperliquid_rfq_clean",
+      "venue": "hyperliquid",
+      "lane": "hyperliquid_flags",
+      "expected": "allow",
+      "payload": { "sessionValid": true, "orderSize": 5, "maxSize": 100, "spreadBps": 12, "rpm": 45 }
+    },
+    {
+      "id": "benign-hyperliquid-session-key",
+      "category": "hyperliquid_session_key",
+      "venue": "hyperliquid",
+      "lane": "hyperliquid_flags",
+      "expected": "allow",
+      "payload": { "sessionValid": true, "orderSize": 2, "maxSize": 50, "spreadBps": 8, "rpm": 20 }
+    },
+    {
+      "id": "benign-variational-trade-clean",
+      "category": "variational_trade_clean",
+      "venue": "variational",
+      "lane": "variational_flags",
+      "expected": "allow",
+      "payload": {
+        "quotePriceUsd": 3000,
+        "oracleMarkUsd": 3000,
+        "quoteTimestampMs": 1700000000000,
+        "nowMs": 1700000000200,
+        "tradeSizeUsd": 5000,
+        "olpDepthUsd": 200000
+      }
+    },
+    {
+      "id": "benign-variational-rfq-normal",
+      "category": "variational_rfq_normal",
+      "venue": "variational",
+      "lane": "variational_flags",
+      "expected": "allow",
+      "payload": {
+        "quotePriceUsd": 2998,
+        "oracleMarkUsd": 3000,
+        "quoteTimestampMs": 1700000000000,
+        "nowMs": 1700000000100,
+        "tradeSizeUsd": 2000,
+        "olpDepthUsd": 150000
+      }
+    },
+    {
       "id": "benign-trusted-infinite-approve",
       "category": "trusted_approve",
+      "venue": "gmx",
       "lane": "retail_approve",
       "expected": "allow",
       "payload": {
@@ -56,25 +123,9 @@
       }
     },
     {
-      "id": "benign-uniswap-swap-clean-soil",
-      "category": "uniswap_swap",
-      "lane": "retail_risk",
-      "expected": "allow",
-      "payload": {
-        "method": "eth_sendTransaction",
-        "params": [
-          {
-            "from": "0x1111111111111111111111111111111111111111",
-            "to": "0xcccccccccccccccccccccccccccccccccccccccc",
-            "data": "0x38ed1739000000000000000000000000000000000000000000000000000000000000000000"
-          }
-        ],
-        "skipIntentGate": true
-      }
-    },
-    {
       "id": "benign-observatory-emergency-close",
       "category": "observatory_emergency_close",
+      "venue": "pendle",
       "lane": "pendle_gmx_cross",
       "expected": "allow",
       "observatoryParadox": true,
@@ -87,6 +138,7 @@
     {
       "id": "benign-observatory-reduce-position",
       "category": "observatory_reduce",
+      "venue": "pendle",
       "lane": "pendle_gmx_cross",
       "expected": "allow",
       "observatoryParadox": true,
@@ -99,6 +151,7 @@
     {
       "id": "benign-eip712-allowlisted-permit",
       "category": "eip712_permit",
+      "venue": "pendle",
       "lane": "retail_risk",
       "expected": "allow",
       "payload": {
@@ -112,6 +165,7 @@
     {
       "id": "benign-gmx-healthy-open",
       "category": "gmx_open_healthy",
+      "venue": "gmx",
       "lane": "pendle_gmx_cross",
       "expected": "allow",
       "payload": {

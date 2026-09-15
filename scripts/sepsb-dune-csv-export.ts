@@ -4,7 +4,7 @@ import { dirname, join } from "node:path";
 import type { BenchmarkEnvironment } from "../src/utils/hardware-detector";
 import { detectBenchmarkEnvironment } from "../src/utils/hardware-detector";
 import { evaluateSepsbCase } from "./sepsb-benchmark-eval";
-import type { SepsbCaseResult, SepsbCorpusCase, SepsbCorpusFile } from "./sepsb-benchmark-types";
+import type { SepsbCaseResult, SepsbCorpusCase, SepsbCorpusFile, SepsbCoreVenue } from "./sepsb-benchmark-types";
 
 export const SEPSB_STRESS_CSV_PATH = "docs/audit/sepsb-stress-telemetry.csv";
 const CSV_HEADER =
@@ -21,12 +21,15 @@ export interface SepsbDuneCsvInput {
   env: BenchmarkEnvironment;
 }
 
-function resolveVenue(caseRow: SepsbCorpusCase): string {
-  const cat = caseRow.category.toLowerCase();
-  if (cat.includes("gmx") || caseRow.lane === "gmx_flags") return "gmx";
-  if (cat.includes("pendle") || caseRow.lane === "pendle_flags" || caseRow.lane === "pendle_gmx_cross") return "pendle";
-  if (cat.includes("uniswap")) return "uniswap";
-  return "exomesh";
+const CORE_VENUES = new Set<SepsbCoreVenue>(["gmx", "pendle", "usdai", "hyperliquid", "variational"]);
+
+function resolveVenue(caseRow: SepsbCorpusCase): SepsbCoreVenue {
+  if (CORE_VENUES.has(caseRow.venue)) return caseRow.venue;
+  throw new Error(`SEPSB_CORPUS_INVALID_VENUE:${caseRow.id}:${caseRow.venue}`);
+}
+
+function formatRatePct(rate: number): string {
+  return rate.toFixed(1);
 }
 
 export function formatHardwareSpec(env: BenchmarkEnvironment): string {
@@ -60,8 +63,8 @@ export function evaluateSepsbCorpus(file: SepsbCorpusFile): SepsbCaseResult[] {
 
 export function exportSepsbDuneCsv(input: SepsbDuneCsvInput, outPath: string): void {
   const hardwareSpec = formatHardwareSpec(input.env);
-  const tpr = Number(input.tprRate.toFixed(4));
-  const fpr = Number(input.fprRate.toFixed(4));
+  const tpr = formatRatePct(input.tprRate);
+  const fpr = formatRatePct(input.fprRate);
   const rows: string[] = [CSV_HEADER];
 
   for (const file of [input.toxicFile, input.benignFile]) {
