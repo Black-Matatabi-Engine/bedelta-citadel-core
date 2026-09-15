@@ -21,10 +21,8 @@ import {
   mapRetailCodeToInterceptType,
   type ExomeshDuneTelemetryRow,
 } from "./_shared/exomesh-dune-telemetry";
-import {
-  applyRollingTimestamps,
-  resolveRollingExportEndMs,
-} from "./_shared/exomesh-dune-telemetry-rolling";
+import { resolveRollingExportEndMs } from "./_shared/exomesh-dune-telemetry-rolling";
+import { materializeDailyStreamBatch } from "./_shared/exomesh-dune-telemetry-stream";
 import { CHAOS_ATTACK_COUNT, runMatrixCase } from "./chaos-blackswan-stress";
 import { writeSepsbStressTelemetryCsv } from "./sepsb-dune-csv-export";
 
@@ -84,7 +82,7 @@ function muteConsole(): () => void {
   };
 }
 
-export function buildExomeshDuneTelemetryExport(endMs = resolveRollingExportEndMs()): ExomeshDuneTelemetryRow[] {
+function buildExomeshTelemetryBasePool(endMs: number): ExomeshDuneTelemetryRow[] {
   const restore = muteConsole();
   let chaosCases: ReturnType<typeof runMatrixCase>[];
   try {
@@ -92,13 +90,16 @@ export function buildExomeshDuneTelemetryExport(endMs = resolveRollingExportEndM
   } finally {
     restore();
   }
-  const rows = [
+  return [
     ...buildChaosMatrixTelemetryRows(chaosCases),
     ...buildHoneypotDecoyRows(),
     ...buildGrantAuditTelemetryRows(endMs),
     ...buildExomeshDemoRows(),
   ];
-  return applyRollingTimestamps(rows, endMs);
+}
+
+export function buildExomeshDuneTelemetryExport(endMs = resolveRollingExportEndMs()): ExomeshDuneTelemetryRow[] {
+  return materializeDailyStreamBatch(buildExomeshTelemetryBasePool(endMs), endMs);
 }
 
 function writeCumulativeDuneCsv(

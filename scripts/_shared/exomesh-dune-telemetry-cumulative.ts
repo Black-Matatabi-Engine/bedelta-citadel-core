@@ -10,11 +10,12 @@ import {
 
 export interface DuneTelemetryExportMeta {
   lastExportDate: string;
-  batchSize: number;
+  lastBatchSize: number;
   batchCount: number;
+  totalRows: number;
 }
 
-export type DuneCumulativeMergeAction = "created" | "appended" | "replaced";
+export type DuneCumulativeMergeAction = "created" | "appended";
 
 export function utcExportDateKey(ms: number): string {
   return new Date(ms).toISOString().slice(0, 10);
@@ -59,9 +60,17 @@ function parseDuneTelemetryCsvLine(line: string): ExomeshDuneTelemetryRow {
 export function readDuneTelemetryExportMeta(metaPath: string): DuneTelemetryExportMeta | null {
   if (!existsSync(metaPath)) return null;
   try {
-    const parsed = JSON.parse(readFileSync(metaPath, "utf8")) as DuneTelemetryExportMeta;
-    if (!parsed.lastExportDate || !parsed.batchSize) return null;
-    return parsed;
+    const parsed = JSON.parse(readFileSync(metaPath, "utf8")) as Partial<DuneTelemetryExportMeta> & {
+      batchSize?: number;
+    };
+    const lastBatchSize = parsed.lastBatchSize ?? parsed.batchSize;
+    if (!parsed.lastExportDate || !lastBatchSize) return null;
+    return {
+      lastExportDate: parsed.lastExportDate,
+      lastBatchSize,
+      batchCount: parsed.batchCount ?? 1,
+      totalRows: parsed.totalRows ?? lastBatchSize,
+    };
   } catch {
     return null;
   }
@@ -80,32 +89,33 @@ export function mergeCumulativeDuneBatches(
   endMs: number,
   meta: DuneTelemetryExportMeta | null,
 ): { rows: ExomeshDuneTelemetryRow[]; action: DuneCumulativeMergeAction; meta: DuneTelemetryExportMeta } {
-  const batchSize = newBatch.length;
   const exportDate = utcExportDateKey(endMs);
+  const lastBatchSize = newBatch.length;
 
   if (historical.length === 0) {
     return {
       rows: [...newBatch],
       action: "created",
-      meta: { lastExportDate: exportDate, batchSize, batchCount: 1 },
+      meta: {
+        lastExportDate: exportDate,
+        lastBatchSize,
+        batchCount: 1,
+        totalRows: lastBatchSize,
+      },
     };
   }
 
-  if (meta?.lastExportDate === exportDate && historical.length >= batchSize) {
-    const preserved = historical.slice(0, -batchSize);
-    const batchCount = Math.max(1, Math.floor(preserved.length / batchSize) + 1);
-    return {
-      rows: [...preserved, ...newBatch],
-      action: "replaced",
-      meta: { lastExportDate: exportDate, batchSize, batchCount },
-    };
-  }
-
-  const batchCount = Math.floor(historical.length / batchSize) + 1;
+  const batchCount = (meta?.batchCount ?? 0) + 1;
+  const totalRows = historical.length + lastBatchSize;
   return {
     rows: [...historical, ...newBatch],
     action: "appended",
-    meta: { lastExportDate: exportDate, batchSize, batchCount },
+    meta: {
+      lastExportDate: exportDate,
+      lastBatchSize,
+      batchCount,
+      totalRows,
+    },
   };
 }
 

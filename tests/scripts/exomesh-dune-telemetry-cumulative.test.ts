@@ -36,27 +36,30 @@ describe("exomesh-dune-telemetry-cumulative", () => {
     const dayTwo = sampleBatch(dayTwoEnd);
     const merged = mergeCumulativeDuneBatches(dayOne, dayTwo, dayTwoEnd, {
       lastExportDate: utcExportDateKey(dayOneEnd),
-      batchSize: dayOne.length,
+      lastBatchSize: dayOne.length,
       batchCount: 1,
+      totalRows: dayOne.length,
     });
     expect(merged.action).toBe("appended");
     expect(merged.rows).toHaveLength(dayOne.length + dayTwo.length);
     expect(merged.meta.batchCount).toBe(2);
+    expect(merged.meta.totalRows).toBe(dayOne.length + dayTwo.length);
   });
 
-  it("replaces the current-day batch on same-day reruns", () => {
+  it("appends again on same-day reruns without deleting history", () => {
     const dayOne = sampleBatch(dayOneEnd);
     const dayTwo = sampleBatch(dayTwoEnd);
     const first = mergeCumulativeDuneBatches(dayOne, dayTwo, dayTwoEnd, {
       lastExportDate: utcExportDateKey(dayOneEnd),
-      batchSize: dayOne.length,
+      lastBatchSize: dayOne.length,
       batchCount: 1,
+      totalRows: dayOne.length,
     });
-    const rerun = sampleBatch(dayTwoEnd + 60_000);
+    const rerun = sampleBatch(dayTwoEnd + 60_000, 4);
     const merged = mergeCumulativeDuneBatches(first.rows, rerun, dayTwoEnd + 60_000, first.meta);
-    expect(merged.action).toBe("replaced");
-    expect(merged.rows).toHaveLength(dayOne.length + rerun.length);
-    expect(merged.meta.batchCount).toBe(2);
+    expect(merged.action).toBe("appended");
+    expect(merged.rows).toHaveLength(dayOne.length + dayTwo.length + rerun.length);
+    expect(merged.meta.batchCount).toBe(3);
   });
 
   it("round-trips CSV rows with the Dune schema header", () => {
