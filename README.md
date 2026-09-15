@@ -3,7 +3,7 @@
 > 📌 **System Metrics SSOT**: Verified via [`docs/audit/SYSTEM_METRICS_SSOT.json`](docs/audit/SYSTEM_METRICS_SSOT.json)
 
 <!-- SSOT:README_BADGES_START -->
-![Vitest](https://img.shields.io/badge/Vitest-1120_PASS_%28243_files%29-brightgreen?logo=vitest)
+![Vitest](https://img.shields.io/badge/Vitest-1121_PASS_%28243_files%29-brightgreen?logo=vitest)
 ![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-%3C16_KiB_%2F_10k_iterations-blue?logo=vitest)
 ![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-9%2F9_PASS_%28Roadmap%29-blue?logo=rust)
 [![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-100%25_coverage-success?logo=vitest)](src/services/risk-control.ts)
@@ -50,7 +50,7 @@ await ethereum.request({ method: "eth_sendTransaction", params: [tx] });
 | **AI retry severance** | 4th rapid submit → `MAX_ATTEMPTS_EXCEEDED_SEVERED` |
 
 <!-- SSOT:README_VITEST_LINE_START -->
-**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **243 test files | 1120 PASS clean**
+**Verify:** `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** · `pnpm demo:gmx -- --trip` · **Vitest SSOT:** **243 test files | 1121 PASS clean**
 <!-- SSOT:README_VITEST_LINE_END -->
 
 ### Key Architectural Moats
@@ -218,7 +218,7 @@ pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 # Unit Verification & Full Test Suite
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
 <!-- SSOT:README_TEST_CMD_START -->
-pnpm test -- --run                                       # 243 files | 1120 PASS
+pnpm test -- --run                                       # 243 files | 1121 PASS
 <!-- SSOT:README_TEST_CMD_END -->
 pnpm run audit:security                                  # 3-Axis: 5/0/0 PASS
 pnpm audit:sepsb                                         # SEPSB benchmark + corpus snapshot
