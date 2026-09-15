@@ -2,13 +2,14 @@
 import { ensureSoilWasm } from "../../src/sdk";
 import { checkSoilResistance } from "../../src/services/risk-control";
 import { DEMO_ETH_MID, DEMO_TOKEN, DEMO_VAULT_CAPITAL_USD } from "./e2e-demo-constants";
+import { MODULE_A_TAG } from "./e2e-hud-box";
 import { e2eLog, fmtE2eUsd, logE2eStep } from "./e2e-hud-renderer";
 import { formatE2eSoilTripReasons } from "./e2e-hud-step-theme";
 
 export function runE2eStep1TripIntercept(demoNowMs: number): void {
-  logE2eStep(1, "ExoMesh Pre-Execution Gatehouse & ReflexCore (SSRC)", [
-    "[Pillar Set Y: Pre-Consensus Firewall] checkSoilResistance() — simulated tsunami / slippage anomaly injected",
-    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA · ERC-7715 Session Mandates / EIP-7702 Code Auth",
+  logE2eStep(1, "ExoMesh Pre-Execution Gatehouse & ReflexCore (SSRC)", MODULE_A_TAG, [
+    "Pillar Set Y: Pre-Consensus Intent Clearing · checkSoilResistance() — tsunami / slippage injected",
+    "Pillar Set X: Account Ingress · ZeroDev Kernel v3 AA · ERC-7715 Session Mandates",
   ]);
   e2eLog(`Vault Capital: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN} | Asset Pair: ETH/USDC`);
   ensureSoilWasm();

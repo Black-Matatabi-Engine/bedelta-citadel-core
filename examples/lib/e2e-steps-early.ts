@@ -41,6 +41,7 @@ import {
 } from "./e2e-demo-constants";
 import { E2E_PROTOCOL_TREASURY_RECEIVER_SHORT } from "./e2e-financial-accounting";
 import type { E2eStep1Result, E2eStep2Result, E2eStep3Result } from "./e2e-demo-types";
+import { MODULE_A_TAG, MODULE_B_TAG } from "./e2e-hud-box";
 import {
   e2eLog,
   fmtE2eUsd,
@@ -52,9 +53,9 @@ import { formatWasmP50BandStatus, sampleWasmSoilLatencyUs } from "./e2e-wasm-ben
 import { hrtimeElapsedUs, hrtimeStart } from "./demo-timing";
 
 export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
-  logE2eStep(1, "ExoMesh Pre-Execution Gatehouse & ReflexCore (SSRC)", [
-    "[Pillar Set Y: Pre-Consensus Firewall] checkSoilResistance() sub-ms Wasm Intent Clearing",
-    "[Pillar Set X: Account Ingress] ZeroDev Kernel v3 AA · ERC-7715 Session Mandates / EIP-7702 Code Auth",
+  logE2eStep(1, "ExoMesh Pre-Execution Gatehouse & ReflexCore (SSRC)", MODULE_A_TAG, [
+    "Pillar Set Y: Pre-Consensus Intent Clearing · checkSoilResistance()",
+    "Pillar Set X: Account Ingress · ZeroDev Kernel v3 AA · ERC-7715 Session Mandates",
   ]);
   e2eLog(`Vault Capital: ${fmtE2eUsd(DEMO_VAULT_CAPITAL_USD)} ${DEMO_TOKEN} | Asset Pair: ETH/USDC`);
   ensureSoilWasm();
@@ -133,11 +134,9 @@ export function runStep1CitadelPreExec(demoNowMs: number): E2eStep1Result {
 }
 
 export function runStep2RobinhoodEscort(demoNowMs: number): E2eStep2Result {
-  logE2eStep(
-    2,
-    "Unidirectional Compliance Escort — AML Inbound Firewall",
-    "[Pillar Set X: Compliance Escort] ERC-7683 Cross-Chain Intent Guard (Across Fast Intent Escort)",
-  );
+  logE2eStep(2, "Unidirectional Compliance Escort — AML Inbound Firewall", MODULE_B_TAG, [
+    "Pillar Set X: Compliance Escort · Robinhood → Arbitrum Outbound Escort & Inbound AML Block",
+  ]);
   const outbound = assertUnidirectionalBridge({
     sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
     destChainId: ARBITRUM_ONE_CHAIN_ID,
@@ -176,7 +175,10 @@ export function runStep3GmxUnderweightRebalance(): E2eStep3Result {
   logE2eStep(
     3,
     "[Wallet B] GMX v2 GM Pool Liquidity Provision & Builder Fee Rebase",
-    `[Wallet B — Arbitrum GMX GM Vault] LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
+    MODULE_A_TAG,
+    [
+      `Pillar Set Y: GMX GM Pool Liquidity Provision · LP deposit (+${GMX_BUILDER_FEE_BPS} bps uiFeeReceiver builder lane)`,
+    ],
   );
   e2eLog(`[Wallet B] Arbitrum GMX GM Vault — GM Pool Deposit: ${fmtE2eUsd(GMX_GM_DEPOSITED_USD)} ${DEMO_TOKEN} (ETH/USDC)`);
   e2eLog(

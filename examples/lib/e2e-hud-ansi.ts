@@ -14,6 +14,7 @@ export const BOLD_YELLOW = "\x1b[1m\x1b[33m";
 export const BOLD_RED = "\x1b[1m\x1b[31m";
 export const RED_BOLD = "\x1b[1m\x1b[31m";
 export const ORANGE = "\x1b[38;5;208m";
+export const GRAY = "\x1b[90m";
 export const useColor = process.env.NO_COLOR !== "1";
 
 export function wrap(color: string, text: string): string {

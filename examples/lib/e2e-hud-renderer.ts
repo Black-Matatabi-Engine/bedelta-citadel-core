@@ -23,6 +23,7 @@ import {
   useColor,
   wrap,
 } from "./e2e-hud-ansi";
+import { e2eBoxStepBlock } from "./e2e-hud-box";
 import { e2eStepThemeColor } from "./e2e-hud-step-theme";
 
 export {
@@ -98,12 +99,15 @@ export function fmtE2eUsd(amount: number, decimals = 2): string {
   return `$${amount.toLocaleString("en-US", { minimumFractionDigits: decimals, maximumFractionDigits: decimals })}`;
 }
 
-export function logE2eStep(n: number, title: string, architecture: string | string[]): void {
+export function logE2eStep(
+  n: number,
+  title: string,
+  moduleTag: string,
+  pillarLines: string | readonly string[],
+): void {
   e2eLogColored("");
-  e2eLogColored(wrap(e2eStepThemeColor(n), `── Step ${n}: ${title} ──`));
-  for (const line of Array.isArray(architecture) ? architecture : [architecture]) {
-    e2eLog(`    Architecture: ${line}`);
-  }
+  const lines = Array.isArray(pillarLines) ? pillarLines : [pillarLines];
+  e2eBoxStepBlock(n, title, moduleTag, lines, e2eStepThemeColor(n));
 }
 
 export function e2eLogHlSession(line: string, tone: "live" | "fallback"): void {

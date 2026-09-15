@@ -32,6 +32,7 @@ import {
   type E2eDemoMode,
 } from "./e2e-demo-constants";
 import type { E2eStep4Result, E2eStep5Result } from "./e2e-demo-types";
+import { MODULE_A_TAG } from "./e2e-hud-box";
 import {
   e2eLog,
   e2eLogHlSession,
@@ -62,11 +63,9 @@ function runHlLiveSandboxFallback(): E2eStep4Result {
 }
 
 export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep4Result> {
-  logE2eStep(
-    4,
-    "[Wallet A] Hyperliquid 1x Short Session Key Delta-Neutral Hedge",
-    "[Wallet A — Hyperliquid L1 Perps] Session Key short — cross-venue Δnet ≡ 0 vs [Wallet B] GMX GM long",
-  );
+  logE2eStep(4, "[Wallet A] Hyperliquid Delta-Neutral Short Hedge", MODULE_A_TAG, [
+    "Pillar Set Y: Hyperliquid Delta-Neutral Short Hedge · cross-venue Δnet ≡ 0 vs [Wallet B] GMX GM long",
+  ]);
   e2eLog(
     `[Wallet A] Hedge Requirement: Match [Wallet B] GMX ${fmtE2eUsd(GMX_ETH_LONG_EXPOSURE_USD)} Long │ Target: Hyperliquid L1 Perps`,
   );
@@ -134,11 +133,9 @@ export async function runStep4HlSessionHedge(mode: E2eDemoMode): Promise<E2eStep
 }
 
 export function runStep5R20PanicFlash(demoAt: Date): E2eStep5Result {
-  logE2eStep(
-    5,
-    "ExoMesh R20 Exercise — R20 Physical Deadlock & Panic Flash Unwind",
-    "[Pillar Set Y: Pre-Consensus Firewall] Always-On Circuit Breaker · Demonstrating Emergency 0-Gas Unwind",
-  );
+  logE2eStep(5, "ExoMesh R20 Exercise — R20 Physical Deadlock & Panic Flash Unwind", MODULE_A_TAG, [
+    "Pillar Set Y: Pre-Consensus Firewall · Always-On Circuit Breaker · Emergency 0-Gas Unwind",
+  ]);
   __resetCircuitBreakerSeverForTests();
   const toxicSoil = checkSoilResistance({
     symbol: "ETH-PERP",
