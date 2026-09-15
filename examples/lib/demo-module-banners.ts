@@ -6,19 +6,19 @@ const BOX_W_MIN = 92;
 export const MODULE_A_BANNER_LINES = [
   "🛡️ SliverVine ExoMesh (Module A · ~70% Architectural Surface)",
   "ExoMesh Agentic Guard (EIP-1193/5792/6963+) · Pre-Consensus Exoskeleton",
-  "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm + Arbitrum Stylus Coprocessor (Sub-1.8µs Warm Path)",
+  "Engine: SliverVine Stylus ReflexCore (SSRC) · soil_core.wasm + Arbitrum Stylus Coprocessor (Zero-Allocation Hot-Path)",
 ] as const;
 
 export const MODULE_B_BANNER_LINES = [
   "🏛️ SliverVine Sanctuary (Module B · ~30% Architectural Surface)",
   "Sanctuary Async Escort (ERC-7540+) · Async Vault Selector Guard",
-  "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
+  "Engine: SliverVine Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;
 
 export const MODULE_B_INGRESS_BANNER_LINES = [
   "🏛️ SliverVine Sanctuary — Treasury Escort Router (Pillar Set X Ingress)",
   "Across / Robinhood AML Compliance Ingress · In-Flight Capital Escort",
-  "Engine: Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
+  "Engine: SliverVine Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;
 
 export const OPSEC_FFI_FOOTNOTE =
