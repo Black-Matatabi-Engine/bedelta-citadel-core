@@ -160,6 +160,29 @@ SliverVine is a **pre-consensus execution safety primitive** — E2E ExoMesh Edg
 
 **Judge fast-track (FAIL-CLOSED):** [`pnpm demo:gmx -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:pendle -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:variational -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix) · [`pnpm demo:hl -- --trip`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-1--5-core-venue-matrix)
 
+## ExoMesh Pre-Consensus Security Benchmark (SEPSB)
+
+**What it is:** A measurable, reproducible benchmark for pre-consensus intent firewalls that decide transaction intent safety *before* signature release and *before* L2 sequencer ingress.
+
+| Metric | Target | Achieved (SSOT) |
+|--------|--------|-----------------|
+| Reflex Latency (p50) | ≤ 20µs | **0.326µs** (Wasm) |
+| End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
+| True Positive Rate (TPR) | ≥ 99.5% | **100%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0.0%** |
+| Observatory Paradox Mis-block Count | 0 | **0** |
+
+```bash
+pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
+```
+
+SSOT: [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json)
+
+### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
+
+- **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
+- **Complementary to Simulation Scanners**: While simulation tools (e.g. Blockaid) take 100–300ms via cloud RPC, SEPSB targets microsecond-class local/edge WASM decisions with 0-Gas rejected paths.
+
 **Tier 0 ExoMesh Agentic Guard (EIP-1193/5792/6963+) CLI:** [`pnpm demo:exomesh`](./docs/05_pitch_and_demos/02_CLI_DEMO_RUNBOOK.md#tier-0--exomesh-agentic-guard-eip-119357926963) · `pnpm demo:exomesh -- --json` · `pnpm demo:exomesh -- --trip`
 
 **ExoMesh Agentic Guard (unit SSOT):** [`npx vitest run tests/sdk/retail-guard-provider.test.ts`](./tests/sdk/retail-guard-provider.test.ts) — **35/35 PASS** · all **7** `RetailGuardReasonCode` variants

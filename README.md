@@ -106,6 +106,33 @@ All production lanes are protected by Wasm `checkSoilResistance()`. Pruned legac
 
 ---
 
+## ExoMesh Pre-Consensus Security Benchmark (SEPSB)
+
+**What it is:** A measurable, reproducible benchmark for pre-consensus intent firewalls that decide transaction intent safety *before* signature release and *before* L2 sequencer ingress.
+
+| Metric | Target | Achieved (SSOT) |
+|--------|--------|-----------------|
+| Reflex Latency (p50) | ≤ 20µs | **0.326µs** (Wasm) |
+| End-to-End Edge Latency (p50) | ≤ 120µs | p50 ~106µs |
+| True Positive Rate (TPR) | ≥ 99.5% | **100%** |
+| False Positive Rate (FPR) | ≤ 0.5% (kill-switch) | **0.0%** |
+| Observatory Paradox Mis-block Count | 0 | **0** |
+
+**Verification:**
+
+```bash
+pnpm audit:sepsb    # Run full SEPSB benchmark & export JSON snapshot
+```
+
+**Audit artifacts:** [`SEPSB_BENCHMARK_SSOT.json`](./docs/audit/SEPSB_BENCHMARK_SSOT.json) · [`SEPSB_CORPUS_SNAPSHOT.json`](./docs/audit/SEPSB_CORPUS_SNAPSHOT.json) · weekly CI via [`.github/workflows/weekly-sepsb-deploy.yml`](./.github/workflows/weekly-sepsb-deploy.yml)
+
+### 🔗 Relation to Industry Standards (ERC-7683 & Simulation Engine)
+
+- **Orthogonal to ERC-7683**: ERC-7683 defines cross-chain intent *settlement & solver formats*. SliverVine ExoMesh operates strictly *before* settlement, acting as a sub-microsecond pre-consensus firewall before signatures enter solver/sequencer pipelines.
+- **Complementary to Simulation Scanners**: While simulation tools (e.g. Blockaid) take 100–300ms via cloud RPC, SEPSB targets microsecond-class local/edge WASM decisions with 0-Gas rejected paths.
+
+---
+
 ## Standards Compliance — 3-Tier EIP/ERC Taxonomy
 
 > **Engineering honesty:** SliverVine is an **Off-Chain Client/Edge Pre-Consensus Intent Firewall**. Read the **Status** column before citing any EIP/ERC claim.
@@ -172,6 +199,7 @@ pnpm demo:variational -- --trip   # Variational RFQ FAIL_CLOSED proof
 npx vitest run tests/sdk/retail-guard-provider.test.ts  # 35/35
 pnpm test -- --run                                       # 235 files | 1091 PASS
 pnpm run audit:security                                  # 3-Axis: 5/0/0 PASS
+pnpm audit:sepsb                                         # SEPSB benchmark + corpus snapshot
 ```
 
 ---
