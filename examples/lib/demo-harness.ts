@@ -38,6 +38,8 @@ export interface DemoRunResult {
   tripped: boolean;
   reason?: string;
   reflexLatencyUs?: number;
+  /** Suppress CITADEL GUARD intercept banner (e.g. pure --json stdout). */
+  suppressInterceptBanner?: boolean;
 }
 
 const GRAY = "\x1b[90m";
@@ -144,7 +146,7 @@ export function wrapDemoExecution(
       const reason = result?.reason ?? (tripped ? "FAIL_CLOSED" : "ALLOW_PASSTHROUGH");
       const reflexLatencyUs = result?.reflexLatencyUs ?? hrtimeElapsedUs(t0);
       finalizeDemoTelemetry(ctx, tripped, reason, reflexLatencyUs);
-      if (tripped) handleDemoExit(true, reason);
+      if (tripped && !result?.suppressInterceptBanner) handleDemoExit(true, reason);
       process.exit(0);
     } catch (err) {
       if (isDemoInterceptionError(err)) {

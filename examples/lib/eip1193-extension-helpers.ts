@@ -1,5 +1,6 @@
 /** Shared ANSI helpers for EIP-1193 / EIP-6963 extension demo CLI. */
-import * as readline from "node:readline/promises";
+/// <reference types="node" />
+import * as readline from "readline/promises";
 import { keccak_256 } from "@noble/hashes/sha3";
 import {
   CAPITAL_DEFAULT_TOKEN,
@@ -138,7 +139,11 @@ export interface Eip1193ScenarioJsonResult {
   status: string;
   wasmUs: number;
   code: string | null;
+  /** Primary production alert (warnings.ts) — final reject for multi-step scenarios. */
   plainTextWarning?: string | null;
+  /** Full ordered production alert chain (e.g. Scenario D sever + channel). */
+  plainTextWarnings?: string[] | null;
+  reasonCodes?: string[] | null;
 }
 
 export function isDemoJsonArgv(argv: readonly string[] = process.argv): boolean {

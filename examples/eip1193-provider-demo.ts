@@ -52,6 +52,7 @@ import {
 } from "./lib/eip1193-extension-helpers";
 import { printOpSecFootnote } from "./lib/demo-module-banners";
 import { hrtimeElapsedUs, hrtimeStart } from "./lib/demo-timing";
+import { saveExomeshRunPayload } from "./lib/exomesh-run-persister";
 import { isDemoTripArgv, wrapDemoExecution, type DemoEnvironment } from "./lib/demo-harness";
 
 const RETAIL_GUARD_AGENT_ID = "retail-guard";
@@ -229,6 +230,8 @@ async function runScenarioC({ interactive, ctx }: ScenarioCtxOpts): Promise<Eip1
     wasmUs,
     code: thrown.code,
     plainTextWarning: thrown.plainTextWarning,
+    plainTextWarnings: [thrown.plainTextWarning],
+    reasonCodes: [thrown.code],
   };
 }
 
@@ -284,6 +287,8 @@ async function runScenarioD({ interactive }: ScenarioOpts): Promise<Eip1193Scena
     wasmUs,
     code: channelErr.code,
     plainTextWarning: channelErr.plainTextWarning,
+    plainTextWarnings: [severErr.plainTextWarning, channelErr.plainTextWarning],
+    reasonCodes: [severErr.code, channelErr.code],
   };
 }
 
@@ -320,17 +325,20 @@ wrapDemoExecution(async (ctx) => {
   const jsonMode = isDemoJsonArgv();
   const results = await runScenarioMatrix(ctx, !jsonMode);
   const failClosed = results.find((r) => r.status === "FAIL_CLOSED" || r.status === "CHANNEL_SEVERED");
+  const timestamp = new Date(ctx.nowMs).toISOString();
 
   if (jsonMode) {
-    console.log(JSON.stringify(results));
+    saveExomeshRunPayload(results, timestamp);
+    process.stdout.write(`${JSON.stringify(results, null, 2)}\n`);
     releaseDemoStdin();
     return failClosed
       ? {
           tripped: true,
           reason: failClosed.code ?? "FAIL_CLOSED",
           reflexLatencyUs: failClosed.wasmUs,
+          suppressInterceptBanner: true,
         }
-      : { tripped: false, reason: "ALLOW_PASSTHROUGH" };
+      : { tripped: false, reason: "ALLOW_PASSTHROUGH", suppressInterceptBanner: true };
   }
 
   if (!isDemoTripArgv()) {
