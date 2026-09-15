@@ -32,6 +32,59 @@
 
 **One-liner:** LLM emits toxic intent → ExoMesh severs signing **before** Sequencer queues → `pnpm demo:gmx -- --trip` · `npx vitest run tests/sdk/retail-guard-provider.test.ts`
 
+### Text-UI — Zero-Gas Pre-Consensus Reflex Happy Path
+
+```text
+================================================================================
+ SLIVERVINE EXOMESH — 4 CORE SCENARIOS & ZERO-GAS REFLEX HAPPY PATH
+================================================================================
+
+ [ USER / AI AGENT ]  -->  (broadcast tx / x402 intent* / DApp request)
+         |
+         v
+ +-----------------------------------------------------------------------+
+ |  EIP-1193+ CLIENT-SIDE INTERCEPTION  (local wrap · 0-Gas pre-sign)    |
+ +-----------------------------------------------------------------------+
+         |
+         v  (V8 / Wasm isolate · zero-alloc hot path · <50µs soil cap)
+ +-----------------------------------------------------------------------+
+ |  PRE-CONSENSUS REFLEX CORE  checkSoilResistance()  (pkg/soil_core.wasm)|
+ +-----------------------------------------------------------------------+
+         |
+    +----+--------+---------------+----------------+
+    |             |               |                |
+    v             v               v                v
+ [A] Retail     [B] 5-Core      [C] Retry        [D] Cross-chain
+ Permit2        Venue Drift     Storm /          & Vault Escort
+ Poisoning      & Haircut       Circuit Breaker  (Sanctuary)
+    |             |               |                |
+    +------+------+-------+-------+----------------+
+           |
+           v
+     ( Verdict Engine )
+           |
+     +-----+-----+
+     |           |
+     v           v
+ FAIL_CLOSED   HAPPY PATH
+ toxic slip    soil-clean
+ / phishing    ALLOW sign
+ / lag         -> L2 sequencer
+ 0-Gas; never  / Gate attest
+ on-chain
+================================================================================
+ * x402 = orthogonal HTTP 402 dispatch (not implemented in freeze). Same wrap still gates sign.
+```
+
+| ID | Core scenario | What we intercept | Proof (Vitest) |
+|----|---------------|-------------------|----------------|
+| **A** | Retail / Permit2 poisoning | Infinite approve · Permit2 · EIP-712 domain drift · EIP-5792 toxic batch | `tests/sdk/retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** |
+| **B** | 5-venue drift & Observatory haircut | GMX impact / Pendle oracle+expiry / USD.ai depeg / HL spread+WS / Variational stale quote — **close/reduce not mis-blocked** | `pnpm demo:gmx -- --trip` · `pendle-soil-guard.test.ts` · `usdai-adapter.test.ts` · `variational-rfq-adapter.test.ts` · `stylus-soil-wasm.test.ts` |
+| **C** | Retry storm / circuit breaker | 4th rapid submit severs channel · 5 RPS isolate · Dynamic Max SL (`Balance×1%+$100`) · R20 / CRI hardlock | `retail-guard-provider.test.ts` (4th submit) · `decorator.test.ts` · `root-protection.test.ts` · `edge-security.test.ts` |
+| **D** | Sanctuary vault & cross-chain | ERC-7540 operator hijack · ERC-7683 solver MEV · Across/Robinhood **inbound AML block** | `erc7540-async-escort.test.ts` · `erc7683-intent-guard.test.ts` · `across-ingress-bridge.test.ts` |
+
+Full production catalog (additional vectors) → [`EXOMESH_PRODUCTION_SCENARIO_CATALOG.md`](./docs/00_ARB_Buildathon/EXOMESH_PRODUCTION_SCENARIO_CATALOG.md)
+
 ### Primary SDK Entrypoint — EIP-1193+ Agentic Wallet Guard
 
 Drop-in 1-line safety wrapper for MetaMask, Rabby, Viem, and ZeroDev Kernel agents. Halts toxic calldata locally in **0-Gas pre-sign phase**. Not a new chain. Not “install SliverVine Protocol.” Wrap the wallet the agent already uses:
