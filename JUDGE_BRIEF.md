@@ -243,7 +243,7 @@ SliverVine occupies **T3** — the only latency class that operates at **microse
 
 - **Pre-Consensus only**: ExoMesh never settles, routes solvers, or issues HTTP 402 payment receipts — it **fail-closes** toxic intents at the EIP-1193+ signing boundary.
 - **ERC-7683 orthogonality**: Cross-chain intent *settlement & solver formats* are out of scope; ExoMesh runs strictly **before** signatures enter solver/sequencer pipelines.
-- **x402 Ecosystem Compatibility**: Fully orthogonal and complimentary. ExoMesh provides sub-50µs zero-gas protection for AI agents executing automated x402 micro-payments on Arbitrum One / Sepolia, ensuring autonomous agents do not drain wallets via poisoned liquidity or oracle drift traps. Judge strategy brief → [`X402_ORTHOGONALITY_AND_FOCUS_BRIEF.md`](./docs/00_ARB_Buildathon/X402_ORTHOGONALITY_AND_FOCUS_BRIEF.md) (**no x402 rail in Phase-4 freeze**).
+- **x402 Ecosystem Compatibility**: Fully orthogonal and complimentary. ExoMesh provides sub-50µs zero-gas protection for AI agents executing automated x402 micro-payments on Arbitrum One / Sepolia, ensuring autonomous agents do not drain wallets via poisoned liquidity or oracle drift traps. **No x402 payment rail in Phase-4 freeze** — ExoMesh is the pre-consensus safeguard, not an HTTP 402 facilitator (see README § Industry Standards).
 
 ---
 

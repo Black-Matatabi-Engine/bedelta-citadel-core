@@ -17,7 +17,7 @@
 | **On-Chain Indexer** | `pnpm export:dune:onchain` · Gate `0xb174…8BF1` · Status **INTERFACE_READY** |
 <!-- SSOT:GROK_HEADER_METRICS_END -->
 | Codebase Freeze | **Active** — [`CODEBASE_FREEZE.json`](../audit/CODEBASE_FREEZE.json) · phase 4 |
-| 英文裁決 SSOT | [`X402_ORTHOGONALITY_AND_FOCUS_BRIEF.md`](../00_ARB_Buildathon/X402_ORTHOGONALITY_AND_FOCUS_BRIEF.md) |
+| 英文裁決 SSOT | [`X402_ARCHITECTURAL_DECISION_RECORD.md`](./X402_ARCHITECTURAL_DECISION_RECORD.md) |
 | SSOT tag | `x402_compatibility = ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD` |
 
 > **本卷用途：** 30 人面板對 **x402 是否必須在 freeze 內寫碼** 做獨立裁決。物理 SSOT：[`SYSTEM_METRICS_SSOT.json`](../audit/SYSTEM_METRICS_SSOT.json) · [`README.md`](../../README.md) · [`JUDGE_BRIEF.md`](../../JUDGE_BRIEF.md) §2。**不繼承** 0915 10:00 卷分（9.48）作為本卷結論，僅作對照。
