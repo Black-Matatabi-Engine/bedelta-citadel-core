@@ -35,45 +35,48 @@
 ### Text-UI — Zero-Gas Pre-Consensus Reflex Happy Path
 
 ```text
-================================================================================
- SLIVERVINE EXOMESH — 4 CORE SCENARIOS & ZERO-GAS REFLEX HAPPY PATH
-================================================================================
+┌──────────────────────────────────────────────────────────────────────────────┐
+│  SLIVERVINE EXOMESH — 4 CORE SCENARIOS & ZERO-GAS REFLEX HAPPY PATH          │
+│  SSOT: 243 test files | 1123 PASS clean (100%)  ·  Phase-4 CODEBASE_FREEZE  │
+└──────────────────────────────────────────────────────────────────────────────┘
 
- [ USER / AI AGENT ]  -->  (broadcast tx / x402 intent* / DApp request)
-         |
-         v
- +-----------------------------------------------------------------------+
- |  EIP-1193+ CLIENT-SIDE INTERCEPTION  (local wrap · 0-Gas pre-sign)    |
- +-----------------------------------------------------------------------+
-         |
-         v  (V8 / Wasm isolate · zero-alloc hot path · <50µs soil cap)
- +-----------------------------------------------------------------------+
- |  PRE-CONSENSUS REFLEX CORE  checkSoilResistance()  (pkg/soil_core.wasm)|
- +-----------------------------------------------------------------------+
-         |
-    +----+--------+---------------+----------------+
-    |             |               |                |
-    v             v               v                v
- [A] Retail     [B] 5-Core      [C] Retry        [D] Cross-chain
- Permit2        Venue Drift     Storm /          & Vault Escort
- Poisoning      & Haircut       Circuit Breaker  (Sanctuary)
-    |             |               |                |
-    +------+------+-------+-------+----------------+
-           |
-           v
-     ( Verdict Engine )
-           |
-     +-----+-----+
-     |           |
-     v           v
- FAIL_CLOSED   HAPPY PATH
- toxic slip    soil-clean
- / phishing    ALLOW sign
- / lag         -> L2 sequencer
- 0-Gas; never  / Gate attest
- on-chain
-================================================================================
- * x402 = orthogonal HTTP 402 dispatch (not implemented in freeze). Same wrap still gates sign.
+  [ USER / AI AGENT ]  ──►  (broadcast tx / x402 intent* / DApp request)
+           │
+           ▼
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  EIP-1193+ CLIENT-SIDE INTERCEPTION  (local wrap · 0-Gas pre-sign)       │
+  └──────────────────────────────────────────────────────────────────────────┘
+           │
+           ▼  (V8 / Wasm isolate · zero-alloc hot path · <50µs soil cap)
+  ┌──────────────────────────────────────────────────────────────────────────┐
+  │  PRE-CONSENSUS REFLEX CORE  checkSoilResistance()  (pkg/soil_core.wasm)  │
+  └──────────────────────────────────────────────────────────────────────────┘
+           │
+     ┌─────┴──────────┬────────────────┬─────────────────┐
+     ▼                ▼                ▼                 ▼
+  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌──────────────┐
+  │ [A] Retail │  │ [B] 5-Core │  │ [C] Retry  │  │ [D] Cross-   │
+  │ Permit2    │  │ Venue Drift│  │ Storm /    │  │ chain & Vault│
+  │ Poisoning  │  │ & Haircut  │  │ Circuit Brk│  │ Escort       │
+  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘  └──────┬───────┘
+        │               │               │                │
+        └───────┬───────┴───────┬───────┴────────┬───────┘
+                │               │                │
+                └───────────────┼────────────────┘
+                                ▼
+                   ( Verdict Engine )
+                         │
+              ┌──────────┴──────────┐
+              ▼                     ▼
+     ┌─────────────────┐   ┌──────────────────┐
+     │ FAIL_CLOSED     │   │ HAPPY PATH       │
+     │ toxic slip /    │   │ soil-clean ALLOW │
+     │ phishing / lag  │   │ sign → L2 seq.   │
+     │ 0-Gas; never    │   │ / Gate attest    │
+     │ on-chain        │   │                  │
+     └─────────────────┘   └──────────────────┘
+
+  * x402 = orthogonal HTTP 402 dispatch (not implemented in freeze). Same wrap still gates sign.
 ```
 
 | ID | Core scenario | What we intercept | Proof (Vitest) |
