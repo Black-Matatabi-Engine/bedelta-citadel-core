@@ -101,7 +101,7 @@
 | 痛點 | 表現 | 評審風險 |
 |------|------|----------|
 | 散落目錄 | `docs/citadel/` · `docs/telemetry/` · `docs/pitch/` · 根目錄 `VERIFICATION_MATRIX.md` | 30 秒內找不到 SSOT |
-| 未序號化 | `docs/architecture/01–07` 與 `docs/sdk/` 平行存在 | Module A/B 映射模糊 |
+| 未序號化 | `docs/architecture/01–07` 與 `docs/04_sdk_and_integration/` 平行存在 | Module A/B 映射模糊 |
 | 品牌混用 | Citadel Shield / Wasm Shield / ExoMesh 交替 | PMF 敘事不一致 |
 | 安全敘事 | Tang-Sect / Cyber-Zen 武俠隱喻 | 國際評審 OpSec 文化摩擦 |
 

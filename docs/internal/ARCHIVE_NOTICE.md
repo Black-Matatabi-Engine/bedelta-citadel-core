@@ -7,7 +7,7 @@ Dated persona audits under `docs/internal/` (`0902_*` through `0910_*`, `GROK_*`
 **Current product SSOT:**
 
 - [`docs/architecture/`](../architecture/)
-- [`docs/sdk/`](../sdk/)
+- [`docs/04_sdk_and_integration/`](../04_sdk_and_integration/README.md)
 - [`docs/SSOT_VOCABULARY.md`](../SSOT_VOCABULARY.md)
 - [`docs/06_verifications/01_VERIFICATION_MATRIX.md`](../06_verifications/01_VERIFICATION_MATRIX.md)
 

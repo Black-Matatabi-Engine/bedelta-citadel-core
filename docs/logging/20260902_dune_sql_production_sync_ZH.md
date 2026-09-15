@@ -23,7 +23,7 @@
 - `docs/03_hacker_profiling/03_DUNE_DASHBOARD_SPECIFICATION.md`
 - `docs/00_ARB_Buildathon/SUBMISSION.md`
 - `docs/06_verifications/01_VERIFICATION_MATRIX.md`
-- `docs/sdk/CITADEL_SDK_BLUEPRINT.md`
+- `docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`
 - `docs/01_architecture/README.md`
 
 ## Brand SSOT

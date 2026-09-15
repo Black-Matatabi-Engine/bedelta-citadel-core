@@ -96,7 +96,7 @@ Wrangler dry-run 與本地 gzip 一致；`nodejs_compat` 已移除（Phase C 優
 
 ```
  M docs/01_architecture/README.md
- M docs/sdk/CITADEL_SDK_BLUEPRINT.md
+ M docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md
  M src/sdk/index.ts
  M src/sdk/robinhood-audit-snapshot.ts
 ?? tests/sdk/daily-robinhood-compliance-report.test.ts

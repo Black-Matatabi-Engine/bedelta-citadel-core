@@ -6,7 +6,7 @@
 
 **日期：** 2026-08-25  
 **分支：** `v1.0_push_BDLW`  
-**範圍：** `docs/sdk/CITADEL_SDK_BLUEPRINT.md`
+**範圍：** `docs/04_sdk_and_integration/01_SDK_INTEGRATION_BLUEPRINT.md`
 
 ---
 

@@ -97,7 +97,7 @@
 | **Option 1 刻意跳過** | ✅ | 產品線留白 · `05_PENDLE_YIELD_SHIELD_API_SPEC.md` §Roadmap |
 | **Pendle API Vitest** | ✅ | `tests/services/api/pendle-shield.test.ts` **7/7 PASS** |
 | **Stealth v2 Transport Stream** | ✅ | `transport-stream.ts` · `RPC_TRANSPORT_SYNC_FAILED` · SDK **48/48 PASS** |
-| **docs/sdk 01–05 序號** | ✅ | `README.md` 導航 · EIP wiki EIP-1193/6963 |
+| **docs/04_sdk_and_integration 01–05 序號** | ✅ | `README.md` 導航 · EIP wiki EIP-1193/6963 |
 | **5-Venue 敘事收斂** | ✅ | 本卷 SSOT · SUBMISSION 仍保留 8-venue 歷史（需漸進同步） |
 | **全量 Vitest** | ✅ | **1049/1050 PASS**（1 flaky 見下） |
 

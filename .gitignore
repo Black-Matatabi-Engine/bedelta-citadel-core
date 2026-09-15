@@ -74,8 +74,6 @@ san
 !docs/audit/negative-proofs-artifact.json
 !docs/audit/chaos-blackswan-metrics.json
 !docs/audit/zerodev-aa-metrics.json
-!docs/sdk/
-!docs/sdk/**
 
 # Internal scorecards / self-audits (local-only; do not publish)
 
