@@ -10,7 +10,7 @@ import type { DualWalletTelemetrySnapshot } from "./dual-wallet-telemetry";
 
 export const GRANT_AUDIT_LIVE_COMBINED_TVL_USD = 1302.39;
 
-const LIVE_FETCHED_AT = "2026-08-08T00:00:00.000Z";
+const LIVE_FETCHED_AT = "2026-09-15T04:52:00.000Z";
 
 export const GRANT_AUDIT_LIVE_TVL_FALLBACK: DualWalletTelemetrySnapshot = {
   walletA: {

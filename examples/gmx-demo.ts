@@ -76,7 +76,11 @@ wrapDemoExecution(({ at }) => {
   withMatrixHudMute(() => (trip ? runTrip(at) : runHealthy(at)));
   printVenueRow("GMX v2", !trip, trip ? "price impact trip · pool skew breach" : "shadow margin ok · cross-venue slippage clear");
   if (trip) {
-    finalizeVenueTrip(GMX_TRIP_BREACHES, benchmark);
+    finalizeVenueTrip(GMX_TRIP_BREACHES, benchmark, {
+      moduleTag: "[Module A: ExoMesh]",
+      title: "GMX v2 Soil Resistance Interception",
+      reasonCode: "GMX_FAIL_CLOSED",
+    });
     printOpSecFootnote();
     return { tripped: true, reason: "GMX_FAIL_CLOSED" };
   }

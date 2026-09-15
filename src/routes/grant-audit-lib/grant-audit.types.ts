@@ -10,6 +10,7 @@ import type { ProvenanceVerifiedTrades } from "./grant-audit-provenance";
 import type { SepoliaDualLegProof } from "./sepolia-dual-leg-proof.types";
 import type { ZeroDevAaGatewayBadgeStatus } from "../../adapters/arbitrum/zerodev-aa/zerodev-aa-gate-types";
 import type { GrantAuditDuneTelemetry } from "./grant-audit-dune-telemetry";
+import type { GrantAuditSsotLock } from "./grant-audit-ssot-lock";
 
 export type { GrantAuditDuneTelemetry } from "./grant-audit-dune-telemetry";
 export type {
@@ -71,5 +72,6 @@ export interface GrantAuditPayload {
   gmxBuilderProof: GmxBuilderProof;
   zeroDevAaGateway: ZeroDevAaGatewayBadgeStatus;
   duneTelemetry: GrantAuditDuneTelemetry;
+  ssotLock: GrantAuditSsotLock;
   error?: string;
 }

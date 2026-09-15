@@ -13,6 +13,7 @@ import { attachProvenanceVerifiedTrades } from "./grant-audit-provenance";
 import type { GrantAuditPayload } from "./grant-audit.types";
 import { attachSepoliaDualLegProof } from "./grant-audit-v0-telemetry-fallback";
 import { buildGrantAuditDuneTelemetry } from "./grant-audit-dune-telemetry";
+import { GRANT_AUDIT_SSOT_LOCK } from "./grant-audit-ssot-lock";
 import { buildZeroDevAaGatewayStatus } from "./grant-audit-zerodev-aa";
 import { evaluateZeroDevAaGatewayBadge } from "../../adapters/arbitrum/zerodev-aa/zerodev-aa-gateway-badge";
 import {
@@ -107,5 +108,6 @@ export function buildGrantAuditSwrFallbackPayload(
       depthUsd: 200_000,
     }),
     duneTelemetry: buildGrantAuditDuneTelemetry(fetchedAt),
+    ssotLock: GRANT_AUDIT_SSOT_LOCK,
   }));
 }

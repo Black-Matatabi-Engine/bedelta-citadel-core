@@ -8,8 +8,8 @@ import {
 import type { GrantAuditExecution, GrantAuditPreset } from "../grant-audit-view-types";
 import type { SepoliaDualLegProof } from "../../../../routes/grant-audit-lib/sepolia-dual-leg-proof.types";
 
-export const V0_VITEST_PASS = 953;
-export const V0_VITEST_FILES = 167;
+export const V0_VITEST_PASS = 1123;
+export const V0_VITEST_FILES = 243;
 
 export function buildDefaultExecutions(
   gmPoolUsd: number,

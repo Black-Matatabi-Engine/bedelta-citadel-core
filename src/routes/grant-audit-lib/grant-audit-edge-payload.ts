@@ -25,6 +25,7 @@ import {
   GMX_UNDERWEIGHT_REBALANCE_LABEL,
 } from "./gmx-builder-proof";
 import type { GrantAuditPayload } from "./grant-audit.types";
+import { GRANT_AUDIT_SSOT_LOCK } from "./grant-audit-ssot-lock";
 
 function resolvePrimaryHash(txHashes: readonly string[]): string | null {
   for (let i = 0; i < txHashes.length; i++) {
@@ -163,5 +164,6 @@ export function buildGrantAuditEdgePayload(
       ptDaysToExpiry: 30,
       marginHealthRatio: 1,
     },
+    ssotLock: GRANT_AUDIT_SSOT_LOCK,
   };
 }

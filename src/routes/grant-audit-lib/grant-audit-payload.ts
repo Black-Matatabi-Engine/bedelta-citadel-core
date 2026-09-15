@@ -22,6 +22,7 @@ import { attachSepoliaDualLegProof } from "./grant-audit-v0-telemetry-fallback";
 import { extractTxHashes, proveZeroDelta } from "./grant-audit-zero-delta";
 import { buildZeroDevAaGatewayStatus } from "./grant-audit-zerodev-aa";
 import { buildGrantAuditDuneTelemetry } from "./grant-audit-dune-telemetry";
+import { GRANT_AUDIT_SSOT_LOCK } from "./grant-audit-ssot-lock";
 
 /** Build Zero-Trust grant audit JSON from EXECUTION_LOGS_KV. */
 export async function buildGrantAuditPayload(
@@ -108,6 +109,7 @@ export async function buildGrantAuditPayload(
       fetchedAt,
       zeroDevAaGateway: buildZeroDevAaGatewayStatus(env),
       duneTelemetry: buildGrantAuditDuneTelemetry(fetchedAt),
+      ssotLock: GRANT_AUDIT_SSOT_LOCK,
     }));
   } catch (error) {
     const message = error instanceof Error ? error.message : "Grant audit assembly failed";

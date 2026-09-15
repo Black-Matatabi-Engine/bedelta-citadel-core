@@ -41,6 +41,7 @@ describe("grant-audit dune telemetry", () => {
         action: string;
         actionLog: Array<{ action: string }>;
       };
+      ssotLock: { generatedAt: string; vitestPass: number; version: string };
     };
     expect(res.status).toBe(200);
     expect(body.duneTelemetry.responseRef).toMatch(/^sha256:/);
@@ -50,5 +51,8 @@ describe("grant-audit dune telemetry", () => {
       body.duneTelemetry.action,
     );
     expect(body.duneTelemetry.actionLog.length).toBeGreaterThan(0);
+    expect(body.ssotLock.generatedAt.startsWith("2026-09-15")).toBe(true);
+    expect(body.ssotLock.vitestPass).toBe(1123);
+    expect(body.ssotLock.version).toContain("BeDelta Living Water v1.0");
   });
 });
