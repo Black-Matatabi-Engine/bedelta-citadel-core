@@ -30,7 +30,7 @@
 | Scenario | File |
 |----------|------|
 | EIP-7702 malicious / unlisted implementation · **ZeroDev Kernel v3 AA Ready (Default ON in macro lifecycle)** | `tests/sdk/eip7702-auth-guard.test.ts` · `pnpm demo:delta-neutral` |
-| Prompt injection / session-key clip / Gate attestation tamper | `tests/sdk/citadel-sdk-intent.test.ts` |
+| Prompt injection / session-key clip / Gate attestation tamper | [`tests/sdk/exomesh-sdk-intent.test.ts`](../../tests/sdk/citadel-sdk-intent.test.ts) |
 | Venue drift (GMX-approved agent → Pendle) | `tests/core/intent-drift.test.ts` |
 | EIP-6963 fallback wrap · transport bitmark fail-closed | `tests/sdk/retail-guard-provider.test.ts` |
 | Soil trip → 0-Gas Permit2 expiry signal (ERC-7710) | `tests/services/api/erc7710-intent-expiry.test.ts` |
