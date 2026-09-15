@@ -7,6 +7,12 @@ import { writeFileSync } from "node:fs";
 import { join, dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 import {
+  loadCumulativeDuneTelemetry,
+  mergeCumulativeDuneBatches,
+  readDuneTelemetryExportMeta,
+  writeDuneTelemetryExportMeta,
+} from "./_shared/exomesh-dune-telemetry-cumulative";
+import {
   buildChaosMatrixTelemetryRows,
   buildGrantAuditTelemetryRows,
   buildHoneypotDecoyRows,
@@ -95,43 +101,70 @@ export function buildExomeshDuneTelemetryExport(endMs = resolveRollingExportEndM
   return applyRollingTimestamps(rows, endMs);
 }
 
+function writeCumulativeDuneCsv(
+  csvPath: string,
+  newBatch: ExomeshDuneTelemetryRow[],
+  endMs: number,
+): { rows: ExomeshDuneTelemetryRow[]; action: string } {
+  const metaPath = `${csvPath}.meta.json`;
+  const historical = loadCumulativeDuneTelemetry(csvPath);
+  const merged = mergeCumulativeDuneBatches(
+    historical,
+    newBatch,
+    endMs,
+    readDuneTelemetryExportMeta(metaPath),
+  );
+  writeFileSync(csvPath, formatDuneTelemetryCsv(merged.rows));
+  writeDuneTelemetryExportMeta(metaPath, merged.meta);
+  return { rows: merged.rows, action: merged.action };
+}
+
 function main(): void {
   const jsonMode = process.argv.includes("--json");
   const outIdx = process.argv.indexOf("--out");
   const outPath = outIdx >= 0 ? process.argv[outIdx + 1] : undefined;
-  const rows = buildExomeshDuneTelemetryExport();
-  const failClosed = rows.filter((row) => row.status === "FAIL_CLOSED").length;
-  const gasSavedUsd = rows.reduce((sum, row) => sum + row.gas_saved_usd, 0);
-  const potentialLossSavedUsd = rows.reduce((sum, row) => sum + row.potential_loss_saved_usd, 0);
+  const endMs = resolveRollingExportEndMs();
+  const newBatch = buildExomeshDuneTelemetryExport(endMs);
+  const failClosed = newBatch.filter((row) => row.status === "FAIL_CLOSED").length;
+  const batchGasSavedUsd = newBatch.reduce((sum, row) => sum + row.gas_saved_usd, 0);
+  const batchPotentialLossSavedUsd = newBatch.reduce(
+    (sum, row) => sum + row.potential_loss_saved_usd,
+    0,
+  );
 
   if (jsonMode) {
     const payload = JSON.stringify(
       {
         schema: "silvervine.exomesh.dune-telemetry.v1",
         generatedAt: new Date().toISOString(),
-        rowCount: rows.length,
+        rowCount: newBatch.length,
         failClosedCount: failClosed,
-        gasSavedUsdTotal: Math.round(gasSavedUsd * 100) / 100,
-        potentialLossSavedUsdTotal: Math.round(potentialLossSavedUsd * 100) / 100,
-        rows,
+        gasSavedUsdTotal: Math.round(batchGasSavedUsd * 100) / 100,
+        potentialLossSavedUsdTotal: Math.round(batchPotentialLossSavedUsd * 100) / 100,
+        rows: newBatch,
       },
       null,
       2,
     );
     if (outPath) writeFileSync(outPath, payload);
     else console.log(payload);
-  } else {
-    const csv = formatDuneTelemetryCsv(rows);
-    if (outPath) writeFileSync(outPath, csv);
-    else console.log(csv);
+  } else if (outPath) {
+    writeFileSync(outPath, formatDuneTelemetryCsv(newBatch));
   }
 
   const defaultOut = join(ROOT, "docs/audit/exomesh-dune-telemetry.csv");
-  if (!outPath) writeFileSync(defaultOut, formatDuneTelemetryCsv(rows));
+  const cumulative = !outPath
+    ? writeCumulativeDuneCsv(defaultOut, newBatch, endMs)
+    : { rows: newBatch, action: "batch-only" };
+  const cumulativeGasSavedUsd = cumulative.rows.reduce((sum, row) => sum + row.gas_saved_usd, 0);
+  const cumulativePotentialLossSavedUsd = cumulative.rows.reduce(
+    (sum, row) => sum + row.potential_loss_saved_usd,
+    0,
+  );
 
   const sepsbCsv = writeSepsbStressTelemetryCsv(ROOT);
   console.error(
-    `[dune-export] rows=${rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} potential_loss_saved_usd=${potentialLossSavedUsd.toFixed(2)} gas_saved_usd=${gasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
+    `[dune-export] action=${cumulative.action} batch_rows=${newBatch.length} total_rows=${cumulative.rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} batch_potential_loss_saved_usd=${batchPotentialLossSavedUsd.toFixed(2)} cumulative_potential_loss_saved_usd=${cumulativePotentialLossSavedUsd.toFixed(2)} cumulative_gas_saved_usd=${cumulativeGasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
   );
   console.error(`[dune-export] sepsb_stress_csv -> ${sepsbCsv}`);
 }
