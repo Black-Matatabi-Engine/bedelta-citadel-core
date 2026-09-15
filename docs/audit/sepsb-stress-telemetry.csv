@@ -1,0 +1,21 @@
+case_id,set_type,venue,expected_verdict,actual_verdict,is_correct,reflex_latency_us,tpr_rate,fpr_rate,hardware_spec,timestamp
+toxic-infinite-approve-erc20,toxic,exomesh,block,block,true,1335.618,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-permit2-infinite-approve,toxic,exomesh,block,block,true,284.171,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-domain-drift-eip712,toxic,exomesh,block,block,true,172.788,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-ai-4th-strike-retry,toxic,exomesh,block,block,true,275.461,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-gmx-oi-skew,toxic,gmx,block,block,true,855.202,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-pendle-oracle-lag,toxic,pendle,block,block,true,32.466,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-soil-cross-venue,toxic,exomesh,block,block,true,7100.629,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-pendle-gmx-open-thin-liquidity,toxic,gmx,block,block,true,152.369,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-venue-drift-contract,toxic,exomesh,block,block,true,32.957,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+toxic-shallow-depth-honeypot,toxic,exomesh,block,block,true,444.974,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-normal-transfer-gmx,benign,exomesh,allow,allow,true,287.215,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-gmx-increase,benign,gmx,allow,allow,true,46.455,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-gmx-decrease,benign,gmx,allow,allow,true,14.261,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-pendle-swap,benign,pendle,allow,allow,true,28.687,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-trusted-infinite-approve,benign,exomesh,allow,allow,true,53.524,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-uniswap-swap-clean-soil,benign,uniswap,allow,allow,true,122.157,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-observatory-emergency-close,benign,pendle,allow,allow,true,18.051,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-observatory-reduce-position,benign,pendle,allow,allow,true,6.995,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-eip712-allowlisted-permit,benign,exomesh,allow,allow,true,104.943,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z
+benign-gmx-healthy-open,benign,gmx,allow,allow,true,24.175,100,0,Intel(R) Core(TM) Ultra 7 155H|22c|x64|linux|v24.18.0,2026-09-15T01:19:34.373Z

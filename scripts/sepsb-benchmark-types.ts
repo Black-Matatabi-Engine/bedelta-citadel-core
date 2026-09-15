@@ -35,6 +35,9 @@ export interface SepsbCaseResult {
   pass: boolean;
   observatoryParadox?: boolean;
   detail?: string;
+  setType?: "toxic" | "benign";
+  venue?: string;
+  reflexLatencyUs?: number;
 }
 
 export interface SepsbCorpusSnapshot {

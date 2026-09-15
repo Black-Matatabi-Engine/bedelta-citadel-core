@@ -20,6 +20,7 @@ import {
   resolveRollingExportEndMs,
 } from "./_shared/exomesh-dune-telemetry-rolling";
 import { CHAOS_ATTACK_COUNT, runMatrixCase } from "./chaos-blackswan-stress";
+import { writeSepsbStressTelemetryCsv } from "./sepsb-dune-csv-export";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 
@@ -128,9 +129,11 @@ function main(): void {
   const defaultOut = join(ROOT, "docs/audit/exomesh-dune-telemetry.csv");
   if (!outPath) writeFileSync(defaultOut, formatDuneTelemetryCsv(rows));
 
+  const sepsbCsv = writeSepsbStressTelemetryCsv(ROOT);
   console.error(
     `[dune-export] rows=${rows.length} fail_closed=${failClosed}/${CHAOS_ATTACK_COUNT} potential_loss_saved_usd=${potentialLossSavedUsd.toFixed(2)} gas_saved_usd=${gasSavedUsd.toFixed(2)} -> ${outPath ?? defaultOut}`,
   );
+  console.error(`[dune-export] sepsb_stress_csv -> ${sepsbCsv}`);
 }
 
 main();

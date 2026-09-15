@@ -4,9 +4,9 @@
   "harness": "sepsb-benchmark-runner",
   "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
   "standard_version": "SEPSB-v1.0-Santenmoku",
-  "generatedAt": "2026-09-15T00:19:42.464Z",
+  "generatedAt": "2026-09-15T01:19:34.373Z",
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T00:19:42.464Z",
+    "detectedAt": "2026-09-15T01:19:34.373Z",
     "platform": "linux",
     "arch": "x64",
     "nodeVersion": "v24.18.0",
@@ -22,8 +22,8 @@
   "metrics": {
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.31,
-    "reflexLatencyP99Us": 2.334,
+    "reflexLatencyP50Us": 0.269,
+    "reflexLatencyP99Us": 1.035,
     "observatoryParadoxMisblockCount": 0,
     "latencyIterations": 10000
   },
@@ -41,7 +41,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "UNAUTHORIZED_SPENDER_REJECTED"
+      "detail": "UNAUTHORIZED_SPENDER_REJECTED",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 1335.618
     },
     {
       "id": "toxic-permit2-infinite-approve",
@@ -49,7 +52,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "UNAUTHORIZED_SPENDER_REJECTED"
+      "detail": "UNAUTHORIZED_SPENDER_REJECTED",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 284.171
     },
     {
       "id": "toxic-domain-drift-eip712",
@@ -57,7 +63,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "VENUE_DRIFT_REJECTED"
+      "detail": "VENUE_DRIFT_REJECTED",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 172.788
     },
     {
       "id": "toxic-ai-4th-strike-retry",
@@ -65,7 +74,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "MAX_ATTEMPTS_OR_DRIFT"
+      "detail": "MAX_ATTEMPTS_OR_DRIFT",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 275.461
     },
     {
       "id": "toxic-gmx-oi-skew",
@@ -73,7 +85,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "flags=3"
+      "detail": "flags=3",
+      "setType": "toxic",
+      "venue": "gmx",
+      "reflexLatencyUs": 855.202
     },
     {
       "id": "toxic-pendle-oracle-lag",
@@ -81,7 +96,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "flags=9"
+      "detail": "flags=9",
+      "setType": "toxic",
+      "venue": "pendle",
+      "reflexLatencyUs": 32.466
     },
     {
       "id": "toxic-soil-cross-venue",
@@ -89,7 +107,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.54%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.48000000000000004%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 7100.629
     },
     {
       "id": "toxic-pendle-gmx-open-thin-liquidity",
@@ -97,7 +118,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "FAIL_CLOSED_BLOCK"
+      "detail": "FAIL_CLOSED_BLOCK",
+      "setType": "toxic",
+      "venue": "gmx",
+      "reflexLatencyUs": 152.369
     },
     {
       "id": "toxic-venue-drift-contract",
@@ -105,7 +129,10 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "VENUE_DRIFT_REJECTED"
+      "detail": "VENUE_DRIFT_REJECTED",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 32.957
     },
     {
       "id": "toxic-shallow-depth-honeypot",
@@ -113,21 +140,30 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "DEPTH_USD=50000<100020|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "DEPTH_USD=50000<100020|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING",
+      "setType": "toxic",
+      "venue": "exomesh",
+      "reflexLatencyUs": 444.974
     },
     {
       "id": "benign-normal-transfer-gmx",
       "category": "normal_transfer",
       "expected": "allow",
       "actual": "allow",
-      "pass": true
+      "pass": true,
+      "setType": "benign",
+      "venue": "exomesh",
+      "reflexLatencyUs": 287.215
     },
     {
       "id": "benign-gmx-increase",
       "category": "gmx_increase",
       "expected": "allow",
       "actual": "allow",
-      "pass": true
+      "pass": true,
+      "setType": "benign",
+      "venue": "gmx",
+      "reflexLatencyUs": 46.455
     },
     {
       "id": "benign-gmx-decrease",
@@ -135,7 +171,10 @@
       "expected": "allow",
       "actual": "allow",
       "pass": true,
-      "detail": "flags=0"
+      "detail": "flags=0",
+      "setType": "benign",
+      "venue": "gmx",
+      "reflexLatencyUs": 14.261
     },
     {
       "id": "benign-pendle-swap",
@@ -143,21 +182,30 @@
       "expected": "allow",
       "actual": "allow",
       "pass": true,
-      "detail": "flags=0"
+      "detail": "flags=0",
+      "setType": "benign",
+      "venue": "pendle",
+      "reflexLatencyUs": 28.687
     },
     {
       "id": "benign-trusted-infinite-approve",
       "category": "trusted_approve",
       "expected": "allow",
       "actual": "allow",
-      "pass": true
+      "pass": true,
+      "setType": "benign",
+      "venue": "exomesh",
+      "reflexLatencyUs": 53.524
     },
     {
       "id": "benign-uniswap-swap-clean-soil",
       "category": "uniswap_swap",
       "expected": "allow",
       "actual": "allow",
-      "pass": true
+      "pass": true,
+      "setType": "benign",
+      "venue": "uniswap",
+      "reflexLatencyUs": 122.157
     },
     {
       "id": "benign-observatory-emergency-close",
@@ -166,7 +214,10 @@
       "actual": "allow",
       "pass": true,
       "observatoryParadox": true,
-      "detail": "EMERGENCY_DELEVERAGE_ALLOWED"
+      "detail": "EMERGENCY_DELEVERAGE_ALLOWED",
+      "setType": "benign",
+      "venue": "pendle",
+      "reflexLatencyUs": 18.051
     },
     {
       "id": "benign-observatory-reduce-position",
@@ -175,14 +226,20 @@
       "actual": "allow",
       "pass": true,
       "observatoryParadox": true,
-      "detail": "EMERGENCY_DELEVERAGE_ALLOWED"
+      "detail": "EMERGENCY_DELEVERAGE_ALLOWED",
+      "setType": "benign",
+      "venue": "pendle",
+      "reflexLatencyUs": 6.995
     },
     {
       "id": "benign-eip712-allowlisted-permit",
       "category": "eip712_permit",
       "expected": "allow",
       "actual": "allow",
-      "pass": true
+      "pass": true,
+      "setType": "benign",
+      "venue": "exomesh",
+      "reflexLatencyUs": 104.943
     },
     {
       "id": "benign-gmx-healthy-open",
@@ -190,7 +247,10 @@
       "expected": "allow",
       "actual": "allow",
       "pass": true,
-      "detail": "PASS_GREENLIGHT"
+      "detail": "PASS_GREENLIGHT",
+      "setType": "benign",
+      "venue": "gmx",
+      "reflexLatencyUs": 24.175
     }
   ]
 }

@@ -5,13 +5,8 @@ import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { computeSoilSlippageMetrics } from "../src/core/soil-resistance-math";
 import { detectBenchmarkEnvironment } from "../src/utils/hardware-detector";
-import { evaluateSepsbCase } from "./sepsb-benchmark-eval";
-import type {
-  SepsbBenchmarkSsot,
-  SepsbCaseResult,
-  SepsbCorpusFile,
-  SepsbCorpusSnapshot,
-} from "./sepsb-benchmark-types";
+import { evaluateSepsbCorpus, exportSepsbDuneCsv, SEPSB_STRESS_CSV_PATH } from "./sepsb-dune-csv-export";
+import type { SepsbBenchmarkSsot, SepsbCaseResult, SepsbCorpusFile, SepsbCorpusSnapshot } from "./sepsb-benchmark-types";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TOXIC_PATH = join(ROOT, "tests/p0/corpus/toxic-set.json");
@@ -32,22 +27,6 @@ function loadCorpus(path: string): SepsbCorpusFile {
 function percentile(sorted: number[], p: number): number {
   const idx = Math.min(sorted.length - 1, Math.max(0, Math.ceil((p / 100) * sorted.length) - 1));
   return sorted[idx] ?? 0;
-}
-
-function runCorpus(file: SepsbCorpusFile): SepsbCaseResult[] {
-  return file.cases.map((caseRow) => {
-    const { actual, detail } = evaluateSepsbCase(caseRow);
-    const pass = actual === caseRow.expected;
-    return {
-      id: caseRow.id,
-      category: caseRow.category,
-      expected: caseRow.expected,
-      actual,
-      pass,
-      observatoryParadox: caseRow.observatoryParadox,
-      detail,
-    };
-  });
 }
 
 function measureReflexLatencyUs(): { p50: number; p99: number } {
@@ -106,8 +85,8 @@ function main(): void {
   const env = detectBenchmarkEnvironment();
   const toxicFile = loadCorpus(TOXIC_PATH);
   const benignFile = loadCorpus(BENIGN_PATH);
-  const toxic = runCorpus(toxicFile);
-  const benign = runCorpus(benignFile);
+  const toxic = evaluateSepsbCorpus(toxicFile);
+  const benign = evaluateSepsbCorpus(benignFile);
   const rates = computeRates(toxic, benign);
   const latency = measureReflexLatencyUs();
   const killSwitch = rates.fpr > FPR_MAX;
@@ -142,6 +121,20 @@ function main(): void {
   mkdirSync(dirname(SSOT_PATH), { recursive: true });
   writeFileSync(SSOT_PATH, `${JSON.stringify(report, null, 2)}\n`);
   exportCorpusSnapshot(env.detectedAt, toxicFile, benignFile, toxic, benign, verdict);
+  const stressCsvPath = join(ROOT, SEPSB_STRESS_CSV_PATH);
+  exportSepsbDuneCsv(
+    {
+      timestamp: env.detectedAt,
+      toxicFile,
+      benignFile,
+      toxicResults: toxic,
+      benignResults: benign,
+      tprRate: rates.tpr,
+      fprRate: rates.fpr,
+      env,
+    },
+    stressCsvPath,
+  );
 
   const metrics = JSON.parse(readFileSync(METRICS_PATH, "utf8")) as Record<string, unknown>;
   metrics.benchmark_environment = env;
@@ -149,6 +142,7 @@ function main(): void {
   metrics.sepsb_benchmark = {
     ssot: "docs/audit/SEPSB_BENCHMARK_SSOT.json",
     corpus_snapshot: "docs/audit/SEPSB_CORPUS_SNAPSHOT.json",
+    stress_telemetry_csv: SEPSB_STRESS_CSV_PATH,
     benchmark_title: report.benchmark_title,
     standard_version: report.standard_version,
     verdict: report.verdict,
@@ -166,6 +160,7 @@ function main(): void {
   console.log(`[SEPSB] Verdict ${verdict}`);
   console.log(`[SSOT] ${SSOT_PATH}`);
   console.log(`[SSOT] ${CORPUS_SNAPSHOT_PATH}`);
+  console.log(`[SSOT] ${stressCsvPath}`);
   if (verdict !== "PASS") process.exitCode = 1;
 }
 
