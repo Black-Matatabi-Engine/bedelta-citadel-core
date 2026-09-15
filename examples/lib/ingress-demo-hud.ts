@@ -7,11 +7,16 @@ import { isDemoJsonArgv, releaseDemoStdin } from "./demo-utils";
 import { printModuleBIngressBanner, printOpSecFootnote } from "./demo-module-banners";
 
 const BOX_W = 74;
-const MODULE_TAG = `${CYAN}${BOLD}[Module B: Sanctuary]${R}`;
-const TAG_ESCORT = `${CYAN}${BOLD}[PILLAR SET X]${R}`;
+const DETAIL_LABEL_W = 14;
+const MODULE_TAG = `${CYAN}${BOLD}[Module B: Sanctuary · Pillar Set X Ingress]${R}`;
 const TAG_GATE = `${RED}${BOLD}[PRE-CONSENSUS GATE]${R}`;
 
 export type IngressScenarioId = "A" | "B" | "C";
+
+export interface IngressScenarioDetail {
+  label: string;
+  value: string;
+}
 
 export interface IngressScenarioHud {
   id: IngressScenarioId;
@@ -19,7 +24,7 @@ export interface IngressScenarioHud {
   frameColor: string;
   limitation: string;
   enhancement: string;
-  detailLines: readonly string[];
+  detailFields: readonly IngressScenarioDetail[];
   latencyUs?: number;
   pass: boolean;
   resultLine: string;
@@ -77,8 +82,8 @@ export function printIngressScenario(hud: IngressScenarioHud): void {
   boxLine(` ${GREEN}${BOLD}🛡️  SLIVERVINE SANCTUARY ENHANCEMENT${R}`, frameColor);
   boxLine(` ${GRAY}${hud.enhancement}${R}`, frameColor);
   boxRule(frameColor);
-  for (const line of hud.detailLines) {
-    boxLine(` ${TAG_ESCORT} ${GRAY}${line}${R}`, frameColor);
+  for (const { label, value } of hud.detailFields) {
+    boxLine(` ${GRAY}${label.padEnd(DETAIL_LABEL_W)}${R} ${value}`, frameColor);
   }
   if (hud.latencyUs !== undefined) {
     boxLine(

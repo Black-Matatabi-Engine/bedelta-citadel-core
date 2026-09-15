@@ -86,9 +86,15 @@ function runScenarioA(trip: boolean, t0: number, { interactive }: ScenarioOpts):
         frameColor: RED,
         limitation,
         enhancement,
-        detailLines: [
-          `chain ${ROBINHOOD_TESTNET_CHAIN_ID} → ${ARBITRUM_ONE_CHAIN_ID} · timeout>${DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS}ms`,
-          `capitalLabel=${state.capitalLabel} · deployable=${state.deployable} · lostUsd=$${state.lostUsd}`,
+        detailFields: [
+          {
+            label: "Direction",
+            value: `chain ${ROBINHOOD_TESTNET_CHAIN_ID} → ${ARBITRUM_ONE_CHAIN_ID} · timeout>${DEFAULT_ACROSS_BRIDGE_TIMEOUT_MS}ms`,
+          },
+          {
+            label: "Capital",
+            value: `capitalLabel=${state.capitalLabel} · deployable=${state.deployable} · lostUsd=$${state.lostUsd}`,
+          },
         ],
         latencyUs,
         pass: false,
@@ -131,10 +137,19 @@ function runScenarioA(trip: boolean, t0: number, { interactive }: ScenarioOpts):
       frameColor: GREEN,
       limitation,
       enhancement,
-      detailLines: [
-        `direction ok=${dir.ok} · chain ${ROBINHOOD_TESTNET_CHAIN_ID} → ${ARBITRUM_ONE_CHAIN_ID}`,
-        `IN_FLIGHT: capitalLabel=${inflight.capitalLabel} · inFlight=$${inflight.inFlightUsd}`,
-        `SETTLED: capitalLabel=${settled.capitalLabel} · deployable NAV → GMX / Pendle pre-flight`,
+      detailFields: [
+        {
+          label: "Direction",
+          value: `ok=${dir.ok} · chain ${ROBINHOOD_TESTNET_CHAIN_ID} → ${ARBITRUM_ONE_CHAIN_ID}`,
+        },
+        {
+          label: "IN_FLIGHT",
+          value: `capitalLabel=${inflight.capitalLabel} · inFlight=$${inflight.inFlightUsd}`,
+        },
+        {
+          label: "SETTLED",
+          value: `capitalLabel=${settled.capitalLabel} · deployable NAV → GMX / Pendle pre-flight`,
+        },
       ],
       latencyUs,
       pass: true,
@@ -168,10 +183,13 @@ function runScenarioB({ interactive }: ScenarioOpts): IngressScenarioJsonResult 
         "Unsafe direct L1 routing (Robinhood → Hyperliquid) bypasses Arbitrum sequencer escort plane — unguarded cross-venue capital topology.",
       enhancement:
         "Route Topology Switch enforces 46630 → 42161 (Pillar 2 SETTLED) → HL session hedge (Pillar 3); direct RH→HL rejected at pre-flight.",
-      detailLines: [
-        `direct ${ROBINHOOD_TESTNET_CHAIN_ID} → ${HL_L1_CHAIN_ID}: ok=${direct.ok}`,
-        `reasons: ${direct.reasons.join(" · ")}`,
-        `recommended: 46630 → 42161 (SETTLED) → HL session hedge`,
+      detailFields: [
+        {
+          label: "Direct Route",
+          value: `${ROBINHOOD_TESTNET_CHAIN_ID} → ${HL_L1_CHAIN_ID} · ok=${direct.ok}`,
+        },
+        { label: "Reasons", value: direct.reasons.join(" · ") },
+        { label: "Recommended", value: "46630 → 42161 (SETTLED) → HL session hedge" },
       ],
       pass: false,
       resultLine: "BRIDGE_ROUTE_UNSUPPORTED · direct L1 topology blocked",
@@ -203,10 +221,16 @@ function runScenarioC({ interactive }: ScenarioOpts): IngressScenarioJsonResult 
         "Unchecked AML reverse liquidity injection — outbound Arb→Base and inbound Arb→Robinhood lack pre-execution compliance hooks on standard bridges.",
       enhancement:
         "ERC-7579 Isomorphic Inbound AML Block AML_INBOUND_TO_ROBINHOOD_BLOCKED · Pillar Set X compliance pre-execution strategy (Edge isomorphic).",
-      detailLines: [
-        `outbound ${ARBITRUM_ONE_CHAIN_ID} → ${BASE_CHAIN_ID}: ok=${outbound.ok} · ${outbound.reasons.join(" · ")}`,
-        `inbound AML ${ARBITRUM_ONE_CHAIN_ID} → ${ROBINHOOD_TESTNET_CHAIN_ID}: blocked=${aml.inboundBlocked}`,
-        `reason: ${aml.reasons[0] ?? AML_INBOUND_TO_ROBINHOOD_BLOCKED}`,
+      detailFields: [
+        {
+          label: "Outbound",
+          value: `${ARBITRUM_ONE_CHAIN_ID} → ${BASE_CHAIN_ID} · ok=${outbound.ok} · ${outbound.reasons.join(" · ")}`,
+        },
+        {
+          label: "Inbound AML",
+          value: `${ARBITRUM_ONE_CHAIN_ID} → ${ROBINHOOD_TESTNET_CHAIN_ID} · blocked=${aml.inboundBlocked}`,
+        },
+        { label: "Reason", value: aml.reasons[0] ?? AML_INBOUND_TO_ROBINHOOD_BLOCKED },
       ],
       pass: aml.inboundBlocked,
       resultLine: `${AML_INBOUND_TO_ROBINHOOD_BLOCKED} enforced · reverse liquidity injection fail-closed`,
