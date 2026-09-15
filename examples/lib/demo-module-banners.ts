@@ -16,8 +16,8 @@ export const MODULE_B_BANNER_LINES = [
 ] as const;
 
 export const MODULE_B_INGRESS_BANNER_LINES = [
-  "🏛️ SliverVine Sanctuary — Treasury Escort Router (Pillar Set X Ingress)",
-  "Across / Robinhood AML Compliance Ingress · In-Flight Capital Escort",
+  "🏛️ SliverVine Sanctuary (Module B · ~30% Architectural Surface)",
+  "Pillar Set X Treasury Ingress & ERC-7683 / ERC-7579 Escort Router",
   "Engine: SliverVine Stylus ReflexCore (SSRC) · soil_core.wasm FFI Boundary",
 ] as const;
 
