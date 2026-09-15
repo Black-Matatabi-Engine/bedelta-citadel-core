@@ -26,7 +26,7 @@ export const EIP1193_DEMO = {
   usdc: "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
   malicious: "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
   permit2: "0x000000000022d473030f116ddee9f6b43ac78ba3",
-  rdns: "com.slivervine.citadel",
+  rdns: "com.slivervine.exomesh",
   arbChainId: 42161,
   boxW: 88,
 } as const;
