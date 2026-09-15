@@ -10,33 +10,25 @@ import {
   type ParsedErc7540,
   type RetailGuardConfig,
 } from "../src/sdk/exomesh-agentic-wallet-guard";
-import { BOLD, CYAN, GREEN, GRAY, RED, R } from "./adapters/citadel-ansi-hud";
 import { ensureDemoWasmSoft, wrapDemoExecution } from "./lib/demo-harness";
-import { printModuleBBanner, printOpSecFootnote } from "./lib/demo-module-banners";
 import {
-  CORE_BRIGHT_CYAN,
   captureDemoBenchmark,
-  formatLatencyLabel,
   measureProbe,
   measureSync,
-  printPerfHierarchyHud,
   type DemoBenchmarkSnapshot,
 } from "./lib/demo-timing";
+import {
+  printSanctuaryBanner,
+  printSanctuaryMatrixComplete,
+  printSanctuaryScenario,
+  SANCTUARY_SCENARIO_TITLES,
+} from "./lib/sanctuary-demo-hud";
+import { GREEN, RED } from "./adapters/citadel-ansi-hud";
 
 const WALLET = "0x1111111111111111111111111111111111111111";
 const VAULT = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
 const TRUSTED_OPERATOR = "0xdddddddddddddddddddddddddddddddddddddddd";
 const MALICIOUS = "0xbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
-const SCENARIO_RULE = "═".repeat(88);
-const TAG_VAULT = `${CYAN}${BOLD}[ERC-7540 ASYNC VAULT]${R}`;
-const TAG_WASM = `${CYAN}${BOLD}[WASM REFLEX]${R}`;
-const TAG_GATE = `${RED}${BOLD}[PRE-CONSENSUS GATE]${R}`;
-
-const SCENARIOS = {
-  A: "🟢 ALLOW_DEPOSIT — Valid requestDeposit() · Whitelisted Controller",
-  B: "🛑 REJECT_UNAUTHORIZED_OPERATOR — Malicious setOperator() Blocked",
-  C: "🛑 REJECT_ASYNC_SLIPPAGE — High-Slippage Async Vault Request Rejected",
-} as const;
 
 function requireErc7540(parsed: ReturnType<typeof parseTransactionCalldata>): ParsedErc7540 {
   if (!parsed) {
@@ -54,24 +46,6 @@ function baseConfig(overrides: Partial<RetailGuardConfig> = {}): RetailGuardConf
     erc7540MaxSlippageBps: 50,
     ...overrides,
   };
-}
-
-function printScenarioHeader(id: keyof typeof SCENARIOS, color: string): void {
-  console.log(`\n${SCENARIO_RULE}`);
-  console.log(`${color}${BOLD}Scenario ${id}: ${SCENARIOS[id]}${R}`);
-  console.log(`${SCENARIO_RULE}\n`);
-}
-
-function printVaultLine(detail: string): void {
-  console.log(`  ${TAG_VAULT} ${GRAY}${detail}${R}`);
-}
-
-function printResult(color: string, detail: string): void {
-  console.log(`  ${color}${BOLD}[RESULT]${R} ${detail}`);
-}
-
-function printWasmReflex(us: number): void {
-  console.log(`  ${TAG_WASM} ${CORE_BRIGHT_CYAN}${BOLD}⚡ ${formatLatencyLabel(us)} SSRC Escort Eval${R}`);
 }
 
 function captureSanctuaryBenchmark(): DemoBenchmarkSnapshot {
@@ -101,70 +75,104 @@ function captureSanctuaryBenchmark(): DemoBenchmarkSnapshot {
   });
 }
 
-function runScenarioA(): void {
-  printScenarioHeader("A", GREEN);
-  const amountWei = 1_000_000n;
-  const claimableWei = 999_800n;
-  const data = encodeErc7540RequestDepositCalldata(amountWei, TRUSTED_OPERATOR, WALLET);
-  const cfg = baseConfig({ erc7540AsyncQuote: { requestAmountWei: amountWei, claimableAmountWei: claimableWei, maxSlippageBps: 50 } });
-  printVaultLine(`target=${VAULT} · selector=requestDeposit(0xb2d9f201)`);
-  printVaultLine(`amount=${amountWei} wei · operator=${TRUSTED_OPERATOR} · controller=${WALLET}`);
-  printVaultLine(`Pending→Claimable quote: ${amountWei} → ${claimableWei} wei · drift=${computeErc7540SlippageDriftBps(amountWei, claimableWei)} bps (≤50)`);
-  const parsed = requireErc7540(parseTransactionCalldata({ to: VAULT, data }));
+function evalScenario(
+  parsed: ParsedErc7540,
+  cfg: RetailGuardConfig,
+): { wasmUs: number; reject: ReturnType<typeof evaluateErc7540AsyncEscortGuard> } {
   const wasmUs = measureProbe(() => evaluateErc7540AsyncEscortGuard(parsed, cfg));
   const { value: reject } = measureSync(() => evaluateErc7540AsyncEscortGuard(parsed, cfg));
-  printWasmReflex(wasmUs);
-  printResult(GREEN, `ALLOW_DEPOSIT · escort_clear=${reject === null} · 0-Gas pre-consensus passthrough`);
-  printOpSecFootnote();
+  return { wasmUs, reject };
+}
+
+function runScenarioA(): void {
+  const amountWei = 1_000_000n;
+  const claimableWei = 999_800n;
+  const driftBps = computeErc7540SlippageDriftBps(amountWei, claimableWei);
+  const data = encodeErc7540RequestDepositCalldata(amountWei, TRUSTED_OPERATOR, WALLET);
+  const cfg = baseConfig({
+    erc7540AsyncQuote: { requestAmountWei: amountWei, claimableAmountWei: claimableWei, maxSlippageBps: 50 },
+  });
+  const parsed = requireErc7540(parseTransactionCalldata({ to: VAULT, data }));
+  const { wasmUs, reject } = evalScenario(parsed, cfg);
+  printSanctuaryScenario({
+    id: "A",
+    title: SANCTUARY_SCENARIO_TITLES.A,
+    frameColor: GREEN,
+    limitation:
+      "Standard ERC-7540 has no wallet-side guard on requestDeposit — Pending→Claimable async drift is unchecked before signature broadcast.",
+    enhancement:
+      "Pre-sign Wasm escort intercepts requestDeposit(0xb2d9f201) · whitelisted controller + evalAsyncVaultDriftBps fuse · 0-Gas fail-closed on breach.",
+    detailLines: [
+      `target=${VAULT} · amount=${amountWei} wei · operator=${TRUSTED_OPERATOR}`,
+      `Pending→Claimable: ${amountWei} → ${claimableWei} wei · drift=${driftBps} bps (≤50)`,
+    ],
+    wasmUs,
+    pass: reject === null,
+    resultLine: "ALLOW_DEPOSIT · escort_clear=true · 0-Gas pre-consensus passthrough",
+  });
 }
 
 function runScenarioB(): void {
-  printScenarioHeader("B", RED);
   const data = encodeErc7540SetOperatorCalldata(MALICIOUS, true);
-  printVaultLine(`target=${VAULT} · selector=setOperator(0x9cc233d6)`);
-  printVaultLine(`operator=${MALICIOUS} · approved=true · whitelist=${TRUSTED_OPERATOR}`);
   const parsed = requireErc7540(parseTransactionCalldata({ to: VAULT, data }));
-  const wasmUs = measureProbe(() => evaluateErc7540AsyncEscortGuard(parsed, baseConfig()));
-  const { value: reject } = measureSync(() => evaluateErc7540AsyncEscortGuard(parsed, baseConfig()));
-  printWasmReflex(wasmUs);
-  console.log(`  ${TAG_GATE} ${RED}0-Gas intercept · operator not in allowedOperators${R}`);
-  printResult(RED, `${reject?.code ?? "ALLOW"} · malicious setOperator blocked before broadcast`);
+  const { wasmUs, reject } = evalScenario(parsed, baseConfig());
   if (reject?.code !== ERC7540_CODES.OPERATOR_REJECTED) process.exit(1);
-  printOpSecFootnote();
+  printSanctuaryScenario({
+    id: "B",
+    title: SANCTUARY_SCENARIO_TITLES.B,
+    frameColor: RED,
+    limitation:
+      "ERC-7540 setOperator(approved=true) grants vault control with no standard wallet whitelist — attacker can hijack Pending share claims.",
+    enhancement:
+      "Selector-level interception on setOperator(0x9cc233d6) · allowedOperators lock · malicious operator blocked before mock provider receives request().",
+    detailLines: [
+      `target=${VAULT} · operator=${MALICIOUS} · approved=true`,
+      `whitelist=${TRUSTED_OPERATOR} · 0xbbbb… ∉ allowedOperators`,
+    ],
+    wasmUs,
+    pass: false,
+    gateLine: "0-Gas intercept · operator not in allowedOperators",
+    resultLine: `${reject.code} · malicious setOperator blocked before broadcast`,
+  });
 }
 
 function runScenarioC(): void {
-  printScenarioHeader("C", RED);
   const amountWei = 1_000_000n;
   const claimableWei = 800_000n;
+  const driftBps = computeErc7540SlippageDriftBps(amountWei, claimableWei);
   const data = encodeErc7540RequestDepositCalldata(amountWei, TRUSTED_OPERATOR, WALLET);
-  const cfg = baseConfig({ erc7540AsyncQuote: { requestAmountWei: amountWei, claimableAmountWei: claimableWei, maxSlippageBps: 50 } });
-  printVaultLine(`target=${VAULT} · selector=requestDeposit(0xb2d9f201)`);
-  printVaultLine(`Pending→Claimable drift: ${amountWei} → ${claimableWei} wei · drift=${computeErc7540SlippageDriftBps(amountWei, claimableWei)} bps (>50)`);
+  const cfg = baseConfig({
+    erc7540AsyncQuote: { requestAmountWei: amountWei, claimableAmountWei: claimableWei, maxSlippageBps: 50 },
+  });
   const parsed = requireErc7540(parseTransactionCalldata({ to: VAULT, data }));
-  const wasmUs = measureProbe(() => evaluateErc7540AsyncEscortGuard(parsed, cfg));
-  const { value: reject } = measureSync(() => evaluateErc7540AsyncEscortGuard(parsed, cfg));
-  printWasmReflex(wasmUs);
-  console.log(`  ${TAG_GATE} ${RED}async vault drift fail-closed · Pending→Claimable slip exceeds erc7540MaxSlippageBps${R}`);
-  printResult(RED, `${reject?.code ?? "ALLOW"} · high-slippage requestDeposit rejected (0-Gas)`);
+  const { wasmUs, reject } = evalScenario(parsed, cfg);
   if (reject?.code !== ERC7540_CODES.ASYNC_SLIPPAGE_DRIFT) process.exit(1);
-  printOpSecFootnote();
+  printSanctuaryScenario({
+    id: "C",
+    title: SANCTUARY_SCENARIO_TITLES.C,
+    frameColor: RED,
+    limitation:
+      "Raw ERC-7540 exposes an un-guarded Pending→Claimable window — oracle lag / de-peg can erode claimable amount with no pre-consensus slippage cap.",
+    enhancement:
+      "evalAsyncVaultDriftBps at pre-sign Wasm check on requestDeposit · erc7540MaxSlippageBps=50 enforced · 0-Gas FAIL_CLOSED before broadcast.",
+    detailLines: [
+      `target=${VAULT} · selector=requestDeposit(0xb2d9f201)`,
+      `Pending→Claimable: ${amountWei} → ${claimableWei} wei · drift=${driftBps} bps (>50)`,
+    ],
+    wasmUs,
+    pass: false,
+    gateLine: "async vault drift fail-closed · Pending→Claimable slip exceeds erc7540MaxSlippageBps",
+    resultLine: `${reject.code} · high-slippage requestDeposit rejected (0-Gas)`,
+  });
 }
 
 wrapDemoExecution(() => {
   ensureDemoWasmSoft();
-  printModuleBBanner();
-  captureSanctuaryBenchmark();
   const benchmark = captureSanctuaryBenchmark();
   benchmark.pureInvariantUs = measureProbe(() => computeErc7540SlippageDriftBps(1_000_000n, 999_800n));
-  printPerfHierarchyHud(benchmark);
+  printSanctuaryBanner(benchmark);
   runScenarioA();
   runScenarioB();
   runScenarioC();
-  const line = "═".repeat(88);
-  console.log(`\n${GREEN}${line}${R}`);
-  console.log(
-    `${GREEN}${BOLD}RESULT: ✅ Sanctuary Async Escort Matrix Complete — Scenarios A–C Replayed (ALLOW · REJECT_OPERATOR · REJECT_SLIPPAGE)${R}`,
-  );
-  console.log(`${GREEN}${line}${R}\n`);
+  printSanctuaryMatrixComplete();
 });
