@@ -1,8 +1,9 @@
 #!/usr/bin/env tsx
 /** Propagate docs/audit/SYSTEM_METRICS_SSOT.json → public markdown files. */
-import { existsSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
+/// <reference types="node" />
+import { existsSync } from "fs";
+import { dirname, join } from "path";
+import { fileURLToPath } from "url";
 import { loadSystemMetricsSsot, syncMarkdownFile } from "./_shared/sync-ssot-docs-lib";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");

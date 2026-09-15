@@ -1,6 +1,7 @@
 /** SSOT → public markdown sync helpers. */
-import { readFileSync, writeFileSync } from "node:fs";
-import { join } from "node:path";
+/// <reference types="node" />
+import { readFileSync, writeFileSync } from "fs";
+import { join } from "path";
 
 export const SSOT_PATH = "docs/audit/SYSTEM_METRICS_SSOT.json";
 
@@ -68,6 +69,21 @@ function gateLink(address: string): string {
   return `[\`0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1\`](https://arbiscan.io/address/${address})`;
 }
 
+/** shields.io segment — encodeURIComponent skips `(` `)`; markdown treats `)` as URL end. */
+function shieldsEncode(value: string): string {
+  return encodeURIComponent(value).replace(/\(/g, "%28").replace(/\)/g, "%29");
+}
+
+/** shields.io static badge — encode label/message so markdown `)` does not truncate URLs. */
+export function shieldsStaticBadge(label: string, message: string, color: string, logo?: string): string {
+  const query = logo ? `?logo=${shieldsEncode(logo)}` : "";
+  return `https://img.shields.io/badge/${shieldsEncode(label)}-${shieldsEncode(message)}-${color}${query}`;
+}
+
+function shieldsMarkdown(alt: string, label: string, message: string, color: string, logo?: string): string {
+  return `![${alt}](${shieldsStaticBadge(label, message, color, logo)})`;
+}
+
 export function buildReadmeBadges(ssot: SystemMetricsSsot): string {
   const v = ssot.badges.vitest;
   const lat = ssot.badges.latency;
@@ -76,15 +92,27 @@ export function buildReadmeBadges(ssot: SystemMetricsSsot): string {
   const cm = ssot.badges.chaos_matrix;
   const arb = ssot.badges.arbitrum;
   return [
-    `![Vitest](https://img.shields.io/badge/Vitest-${v.total_tests_passed}%20PASS%20%28${v.test_files_passed}%20files%29-brightgreen?logo=vitest)`,
-    `![Zero-Alloc Hot-Path](https://img.shields.io/badge/Zero--Alloc_Hot--Path-${encodeURIComponent(`${hp.alloc} / ${hp.iterations} iterations`)}-blue?logo=vitest)`,
-    `![V2.0 Stylus Probe](https://img.shields.io/badge/V2.0_Stylus_Probe-${sp.passed}%2F${sp.total}_PASS_(${sp.stage})-blue?logo=rust)`,
-    `[![risk-control.ts coverage](https://img.shields.io/badge/risk--control.ts-${encodeURIComponent(ssot.badges.coverage.percentage)}%20coverage-success?logo=vitest)](src/services/risk-control.ts)`,
-    `![Chaos Matrix](https://img.shields.io/badge/Chaos%20Matrix-${cm.cases}%2F${cm.total}%20${encodeURIComponent(cm.mode)}-blue?logo=github)`,
-    `![Benchmark Latency](https://img.shields.io/badge/Latency-E2E_p50_${lat.e2e_p50_us}%CE%BCs_|_Reflex_p50_${lat.reflex_p50_us}%CE%BCs-blueviolet?logo=speedtest)`,
-    `![TypeScript](https://img.shields.io/badge/TypeScript-${ssot.badges.typescript.errors}%20errors-blue?logo=typescript)`,
-    `![License](https://img.shields.io/badge/License-${encodeURIComponent(ssot.badges.license)}-orange)`,
-    `![Arbitrum One Gate](https://img.shields.io/badge/Arbitrum_One_Gate-${encodeURIComponent(`${arb.status} (${arb.target_chain_id} ${arb.readiness})`)}-28A0F0?logo=arbitrum)`,
+    shieldsMarkdown("Vitest", "Vitest", `${v.total_tests_passed} PASS (${v.test_files_passed} files)`, "brightgreen", "vitest"),
+    shieldsMarkdown("Zero-Alloc Hot-Path", "Zero-Alloc Hot-Path", `${hp.alloc} / ${hp.iterations} iterations`, "blue", "vitest"),
+    shieldsMarkdown("V2.0 Stylus Probe", "V2.0 Stylus Probe", `${sp.passed}/${sp.total} PASS (${sp.stage})`, "blue", "rust"),
+    `[![risk-control.ts coverage](${shieldsStaticBadge("risk--control.ts", `${ssot.badges.coverage.percentage} coverage`, "success", "vitest")})](src/services/risk-control.ts)`,
+    shieldsMarkdown("Chaos Matrix", "Chaos Matrix", `${cm.cases}/${cm.total} ${cm.mode}`, "blue", "github"),
+    shieldsMarkdown(
+      "Benchmark Latency",
+      "Latency",
+      `E2E p50 ${lat.e2e_p50_us}µs | Reflex p50 ${lat.reflex_p50_us}µs`,
+      "blueviolet",
+      "speedtest",
+    ),
+    shieldsMarkdown("TypeScript", "TypeScript", `${ssot.badges.typescript.errors} errors`, "blue", "typescript"),
+    shieldsMarkdown("License", "License", ssot.badges.license, "orange"),
+    shieldsMarkdown(
+      "Arbitrum One Gate",
+      "Arbitrum One Gate",
+      `${arb.status} (${arb.target_chain_id} ${arb.readiness})`,
+      "28A0F0",
+      "arbitrum",
+    ),
   ].join("\n");
 }
 
@@ -106,7 +134,6 @@ export function buildSepsbTable(ssot: SystemMetricsSsot): string {
 
 export function buildDualTelemetryBlock(ssot: SystemMetricsSsot): string {
   const [shield, sepsb] = ssot.badges.dune_telemetry.dashboards;
-  const gate = ssot.onchain_indexer_pipeline.gate_contract;
   const venues = (sepsb?.venues ?? [])
     .map((v) => ({ gmx: "GMX", pendle: "Pendle", usdai: "USD.ai", hyperliquid: "Hyperliquid", variational: "Variational" })[v] ?? v)
     .join(", ");

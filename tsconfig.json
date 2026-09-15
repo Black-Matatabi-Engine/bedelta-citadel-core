@@ -4,7 +4,7 @@
     "module": "ES2022",
     "moduleResolution": "Bundler",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
-    "types": ["@cloudflare/workers-types"],
+    "types": ["@cloudflare/workers-types", "node"],
     "strict": true,
     "noEmit": true,
     "skipLibCheck": true,
@@ -16,6 +16,6 @@
     "verbatimModuleSyntax": true,
     "resolveJsonModule": true
   },
-  "include": ["src/**/*.ts", "apps/**/*.ts"],
+  "include": ["src/**/*.ts", "apps/**/*.ts", "scripts/_shared/sync-ssot-docs-lib.ts", "scripts/sync-ssot-docs.ts"],
   "exclude": ["node_modules", "dist", "tests", "vitest.config.ts"]
 }
