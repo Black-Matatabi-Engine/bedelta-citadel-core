@@ -5,7 +5,6 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   __clearCitadelCooldownsForTests,
-  withCitadelShield,
   withExoMeshShield,
 } from "../../src/sdk/decorator";
 import { checkSoilResistance } from "../../src/services/risk-control";
@@ -149,19 +148,5 @@ describe("withExoMeshShield", () => {
     vi.advanceTimersByTime(60_001);
     await expect(shielded(healthyIntent)).resolves.toBe("ok");
     expect(executionFn).toHaveBeenCalledTimes(2);
-  });
-
-  it("preserves backward compatibility via withCitadelShield legacy alias", async () => {
-    vi.spyOn(riskControl, "checkSoilResistance").mockReturnValue({
-      ok: true,
-      tripped: false,
-      crossVenueSlippage: 0,
-      spotPerpSlippage: 0,
-      reasons: [],
-    });
-    const executionFn = vi.fn().mockResolvedValue("legacy-ok");
-    const shielded = withCitadelShield(executionFn);
-    await expect(shielded(healthyIntent)).resolves.toBe("legacy-ok");
-    expect(withCitadelShield).toBe(withExoMeshShield);
   });
 });

@@ -297,7 +297,7 @@ SliverVine does not interpret natural-language LLM prompts. ExoMesh (via ReflexC
 | Surface | Status | Module SSOT | Entry point | Verify |
 |---------|--------|-------------|-------------|--------|
 | **ExoMesh Agentic Guard (EIP-1193/5792/6963+)** | ✅ V1.0 Live | [`provider.ts`](../../src/sdk/exomesh-agentic-wallet-guard/provider.ts) | `withRetailGuardProvider()` | `npx vitest run tests/sdk/retail-guard-provider.test.ts` **35/35** |
-| **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` (legacy: `withCitadelShield`) · `verifyAgentIntent()` | `pnpm demo:agent` |
+| **B2B Agent Decorator** | ✅ V1.0 Live | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` · `verifyAgentIntent()` | `pnpm demo:agent` |
 | **5-Core Venue Guards** | ✅ V1.0 Live | [`src/adapters/{gmx,pendle,usdai,hl,variational*}`](../../src/adapters/) | Per-venue evaluators | `pnpm demo:{gmx,pendle,usdai,hl,variational}` |
 | **Stabilizer Protocol** | ✅ V1.0 Live (Sepolia) | [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) | `evaluateStabilizerSwapGuard()` | `pnpm demo:stabilizer` |
 | **Deprecated v1.0 harnesses** | 🗑️ Pruned v1.1 | Wayfinder · ElizaOS · Virtuals · LangChain | Replaced by ExoMesh Agentic Guard + B2B decorator | **RESERVED_ABI_V2** holes preserved |
@@ -599,7 +599,7 @@ allowedToSign =
 | Consumer | Integration | Reflex hook |
 |----------|-------------|-------------|
 | **Wallet / dApp (C-End)** | `@slivervine/exomesh-agentic-wallet-guard` · `withRetailGuardProvider()` · [§0.3](#03-c-end--b-end-integration-v11-ssot) | EIP-1193 pre-consensus intercept · 0-Gas on reject |
-| **B2B agents** | `@slivervine/exomesh-agentic-wallet-guard` · `verifyAgentIntent()` · `withExoMeshShield` (legacy: `withCitadelShield`) | Apache-2.0 · sub-ms soil gate |
+| **B2B agents** | `@slivervine/exomesh-agentic-wallet-guard` · `verifyAgentIntent()` · `withExoMeshShield` | Apache-2.0 · sub-ms soil gate |
 | **5-Core venues** | GMX · Pendle · USD.ai · Variational · HL guards · [§0.3](#03-c-end--b-end-integration-v11-ssot) | Per-venue `checkSoilResistance()` |
 | **Stabilizer** | ✅ V1.0 Live (Sepolia) — [`stabilizer-adapter.ts`](../../src/adapters/stabilizer/stabilizer-adapter.ts) · [§0.4](#04-stabilizer-sepolia-universal-testnet-sandbox-cross-pass-layer-v10-live) | `evaluateStabilizerSwapGuard()` |
 | **CrewAI / AutoGen (enterprise)** | ⏳ V1.5 Ecosystem Roadmap / Modular Integration Spec — `SlivervineCrewAIGuardTool` · AutoGen `citadel_soil_guard` · adapter spec (removed from repo per `docs/logging/0911_chaos_sandbox_audit.md`) · [§6.9](#69-strategic-blue-chip-ecosystem-settlement-integrations-v10-core-v15-v20) | `checkSoilResistance()` · Pillar Set X AML escort boundary |

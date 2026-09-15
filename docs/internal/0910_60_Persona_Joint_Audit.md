@@ -231,8 +231,8 @@
 |-------------|-------------|----------------------|
 | **Venue switching (A → B)** | `intentDigest` binds `{chainId, venueKey, action}` at approval time · session-key **`allowedVenues[]`** whitelist | Unauthorized protocol switch → **`ATTESTATION_DIGEST_MISMATCH`** or **`VENUE_DRIFT_REJECTED`** (`verifyAgentIntent` · `evaluateAttestation`) |
 | **Cross-chain hallucination** | Soil fuse + R20 bitmask pre-broadcast | `checkSoilResistance()` · `severSigningChannel()` · 0-Gas |
-| **Retry storms (e.g. 10×)** | `withCitadelShield` **60s** mandatory cooldown · **max 3-attempt** budget per intent digest · immediate `severSigningChannel()` on budget exhaust | `MANDATORY_COOLDOWN_ACTIVE` · **`MAX_ATTEMPTS_EXCEEDED_SEVERED`** |
-| **Third-party bundlers (unintegrated)** | **DISCLOSED OUT OF SCOPE** — no Citadel hook upstream of relayer | Operators must integrate `withCitadelShield` / `verifyAgentIntent` or accept residual drift risk |
+| **Retry storms (e.g. 10×)** | `withExoMeshShield` **60s** mandatory cooldown · **max 3-attempt** budget per intent digest · immediate `severSigningChannel()` on budget exhaust | `MANDATORY_COOLDOWN_ACTIVE` · **`MAX_ATTEMPTS_EXCEEDED_SEVERED`** |
+| **Third-party bundlers (unintegrated)** | **DISCLOSED OUT OF SCOPE** — no Citadel hook upstream of relayer | Operators must integrate `withExoMeshShield` / `verifyAgentIntent` or accept residual drift risk |
 
 ##### 4.5.1 Venue Drift & Intent Mandate Enforcement (`VENUE_DRIFT_REJECTED`)
 
@@ -246,7 +246,7 @@
 
 - **`trackAttemptBudgetPure()`:** `BigInt64Array` heap slot 0 · per `intentDigest` (or `agentId` fallback) · **`MAX_ATTEMPTS_PER_INTENT = 3`**
 - **4th attempt:** immediate `severSigningChannel()` · `FLAGS_SEVERED` · **`MAX_ATTEMPTS_EXCEEDED_SEVERED`**
-- **Decorator:** `withCitadelShield` passes `agentId` · post-trip **60s** `MANDATORY_COOLDOWN_ACTIVE`
+- **Decorator:** `withExoMeshShield` passes `agentId` · post-trip **60s** `MANDATORY_COOLDOWN_ACTIVE`
 - **Vitest:** 4th attempt asserts `signingChannelOpen=false` · `hardlock=true`
 
 **Goldfeder addendum (4.5):** Intent drift across **Bundlers / AA UserOps** is only safe if the signing channel sever is **physically upstream** of any relayer — Citadel's `severSigningChannel()` satisfies this for **integrated** agents; **unintegrated third-party bundlers operating entirely outside the Citadel hook are explicitly DISCLOSED OUT OF SCOPE.**

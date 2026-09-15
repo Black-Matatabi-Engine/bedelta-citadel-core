@@ -77,6 +77,3 @@ export function withExoMeshShield<T extends CitadelShieldIntent>(
     }
   };
 }
-
-/** @deprecated Use withExoMeshShield instead. Legacy alias maintained for backward compatibility. */
-export const withCitadelShield = withExoMeshShield;

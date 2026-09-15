@@ -47,7 +47,7 @@
 | **RPS** | 9.30 | **9.41** | +0.11 | **228/1063 PASS** · `[ExoMesh]` / `[Sanctuary]` CLI 標籤 · `eip5792` 3/3 · `erc7540` 3/3 |
 | **加權均分** | **9.35** | **9.42** | **+0.07** | 零 flaky · 零 TS regression · 零技術債 |
 
-**核心決策：** 以 **`f0027e3` / 228·1063** 作為 9/14 提交基線。不再回頭使用 Citadel Shield 作對外英雄標題。`withCitadelShield` / `decorator.ts` 錯誤字串屬 Pass 2，**不構成提交阻斷**。
+**核心決策：** 以 **`f0027e3` / 228·1063** 作為 9/14 提交基線。不再回頭使用 Citadel Shield 作對外英雄標題。`withExoMeshShield` / `decorator.ts` 錯誤字串屬 Pass 2，**不構成提交阻斷**。
 
 ---
 
@@ -61,7 +61,7 @@
 | Pillar Set Y | ExoMesh Engine Substrate | R01–R20 · `rootProtection()` | `docs/01_architecture/02_DEFENSE_MATRIX_AND_SSRC_CORE.md` |
 | Pillar Set X | Sanctuary Escrow Substrate | 單向外送 · AML inbound block | `across-ingress-bridge.ts` |
 
-**刻意保留（Pass 2  backlog）：** `withCitadelShield` 識別符 · `[Citadel Shield Trip]` decorator 字串 · `docs/internal/**` 歷史卷不改寫。
+**刻意保留（Pass 2  backlog）：** `withExoMeshShield` 識別符 · `[Citadel Shield Trip]` decorator 字串 · `docs/internal/**` 歷史卷不改寫。
 
 ---
 

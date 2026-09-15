@@ -8,7 +8,7 @@
 | **協議** | SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ) |
 | **實體** | SilverVine Labs |
 | **賽事** | Arbitrum Open House Singapore Online Buildathon |
-| **分支 / HEAD** | `V1.0_b4_Buildaton_Submisson` · `9c0bc1a`（含 `withCitadelShield`） |
+| **分支 / HEAD** | `V1.0_b4_Buildaton_Submisson` · `9c0bc1a`（含 `withExoMeshShield`） |
 | **測試 SSOT** | **193 test files \| 840 PASS Clean (100% PASS)**（`pnpm test -- --run`） |
 | **評審面板** | 20 人（10 男 / 10 女）· 官方四維度各 25% |
 | **對外鎖定總分** | **8.26 / 10**（算術平均 **8.22**；主席加權敘事帶 **8.2+**） |
@@ -23,7 +23,7 @@
 |--------|------|------|
 | **Arbitrum One 主網點火** | ✅ 已上鏈 | [Tx `0x54c153e9…`](https://arbiscan.io/tx/0x54c153e9a41f704b5eb0ae554eac593d1110d62bd826ff094e72f2bd60c1b0c6) · Gate `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` · chainId **42161** |
 | **Bootstrap Keys 透明披露** | ✅ 已文件化 | SUBMISSION / README / VERIFICATION_MATRIX 脚注 |
-| **`withCitadelShield` SDK** | ✅ 已交付 | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · 導出於 `@slivervine/exomesh-agentic-wallet-guard` |
+| **`withExoMeshShield` SDK** | ✅ 已交付 | [`src/sdk/decorator.ts`](../src/sdk/decorator.ts) · 導出於 `@slivervine/exomesh-agentic-wallet-guard` |
 | **Agent Reference Harness** | ✅ 誠實量測 | [`examples/agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) — uncapped `latencyUs` + Edge p50 對照 |
 | **形式驗證敘事** | ✅ 已中性化 | 原生 Foundry `SliverVineGate.t.sol` + `SliverVineGate.invariant.t.sol`；Halmos 軌道已移除 |
 | **Pendle 邊界** | ✅ 已鎖定 | Safety Sentinel（非 YT 收益競品） |
@@ -36,10 +36,10 @@
 | 基線 B — P0 修復後 | **7.20** | — |
 | Post-Agent Hook（無主網） | **7.78** | +0.58 |
 | **+ Mainnet Ignition（42161）** | **8.13** | +0.35 |
-| **+ `withCitadelShield` + 敘事掃尾（本卷宗鎖定）** | **8.26** | +0.13 |
+| **+ `withExoMeshShield` + 敘事掃尾（本卷宗鎖定）** | **8.26** | +0.13 |
 | **累計 vs 基線 B** | — | **+1.06** |
 
-**主席結論：** 主網 Tx 解鎖 **Smart Contract** 與 **Real Problem Solving** 軸的「Sepolia-only 上限」；`withCitadelShield` 將 **Innovation / PMF** 從「可演示 harness」推進到「可一行接入的 SDK 標準」。Overall $40k 仍取決於 **雙片影片品質** 與 **Bootstrap signer 口播誠實度**，而非再堆功能。
+**主席結論：** 主網 Tx 解鎖 **Smart Contract** 與 **Real Problem Solving** 軸的「Sepolia-only 上限」；`withExoMeshShield` 將 **Innovation / PMF** 從「可演示 harness」推進到「可一行接入的 SDK 標準」。Overall $40k 仍取決於 **雙片影片品質** 與 **Bootstrap signer 口播誠實度**，而非再堆功能。
 
 ---
 
@@ -71,7 +71,7 @@
 | "World's first" | 最高級用語 red-flag | ✅ 已替換為工程術語 | `SUBMISSION.md` Innovation 行 |
 | 主網 placeholder | `PASTE_AFTER_BROADCAST` | ✅ 已嵌入 live Tx hash | 三份公開 SSOT 文檔 |
 | Pendle 身份模糊 | 易被讀成 YT 競品 | ✅ Safety Sentinel 邊界鎖定 | `SUBMISSION.md` § Pendle |
-| Agent 過度宣稱 | "Inaugural Integration" | ✅ Reference Harness + `withCitadelShield` | `decorator.ts` |
+| Agent 過度宣稱 | "Inaugural Integration" | ✅ Reference Harness + `withExoMeshShield` | `decorator.ts` |
 
 ---
 
@@ -80,12 +80,12 @@
 | 官方標準 (25% each) | 基線 B | Post-Agent | + Mainnet | **最終鎖定** | 主要證據 |
 |---------------------|--------|------------|-----------|--------------|-----------|
 | **Smart Contract Quality** | 7.35 | 7.72 | 8.38 | **8.42** | 主網 Gate · Foundry 62/62 · consume-once invariant · Bootstrap 透明 |
-| **Product-Market Fit** | 6.85 | 7.95 | 8.08 | **8.18** | GMX +10 bps · Agent harness · **`withCitadelShield`** · Pendle sentinel |
+| **Product-Market Fit** | 6.85 | 7.95 | 8.08 | **8.18** | GMX +10 bps · Agent harness · **`withExoMeshShield`** · Pendle sentinel |
 | **Innovation and Creativity** | 7.55 | 7.88 | 7.92 | **8.05** | Wasm p50 ~106µs · Zero-Touch Plugin Standard · ERC-8196 (Final) |
 | **Real Problem Solving** | 7.15 | 7.58 | 8.15 | **8.20** | 0-Gas pre-broadcast · `lostUsd ≡ 0` · 42161 可索引 Gate |
 | **加權總分** | **7.20** | **7.78** | **8.13** | **8.26** | — |
 
-**Δ 解讀（最終 vs Post-Agent）：** SC **+0.70** · PMF **+0.23** · Inno **+0.17** · RPS **+0.62**。主網主導 SC/RPS；`withCitadelShield` 主導 Inno/PMF 邊際增量。
+**Δ 解讀（最終 vs Post-Agent）：** SC **+0.70** · PMF **+0.23** · Inno **+0.17** · RPS **+0.62**。主網主導 SC/RPS；`withExoMeshShield` 主導 Inno/PMF 邊際增量。
 
 ---
 
@@ -133,7 +133,7 @@
 
 > **說明：** 算術平均 **8.10**；主席 / Foundation 權重與主網「排名效應」使對外可誠實表述為 **8.2+ 競爭帶**（精確加權 **8.26** 為內部鎖定值，未進 9.0 無爭議帶）。
 
-**最大單人躍遷：** Chloe Dubois **+0.43**（`withCitadelShield` 直接回應 DevRel 軸）；Tara Patel **+0.49**（42161 可索引）。
+**最大單人躍遷：** Chloe Dubois **+0.43**（`withExoMeshShield` 直接回應 DevRel 軸）；Tara Patel **+0.49**（42161 可索引）。
 
 **最嚴：** 吳佩珊 **7.74**（Pendle 仍是 guard 非深度整合）；Alex Rivera **7.99**（期望第三方審計報告）。
 
@@ -146,7 +146,7 @@
 | Mainnet Gate | `0xb174118bC0B84e8D6D59EEF2339e29bF7FCf8BF1` | ✅ | ✅ |
 | Ignition Tx | `0x54c153e9…` + Arbiscan URL | ✅ | ✅ |
 | Bootstrap Keys 脚注 | ✅ | ✅ | ✅ |
-| `withCitadelShield` | ✅ Innovation/PMF + harness | ✅ Stage 1 | ✅ SSOT 表 |
+| `withExoMeshShield` | ✅ Innovation/PMF + harness | ✅ Stage 1 | ✅ SSOT 表 |
 | Dune Sepolia / One SQL | ✅ 分離敘事 | ✅ | ✅ |
 | 775 PASS / 176 files | ✅ | ✅ | ✅ |
 
@@ -156,7 +156,7 @@
 
 | 獎項 | Post-Agent | **最終鎖定** | 必要條件 |
 |------|------------|--------------|----------|
-| **Promising Track $15k** | 28% | **40%** | Agent `--trip` 錄進 Demo · `withCitadelShield` 一行展示 |
+| **Promising Track $15k** | 28% | **40%** | Agent `--trip` 錄進 Demo · `withExoMeshShield` 一行展示 |
 | **GMX Builder Grant** | 26% | **38%** | +10 bps + 主網 Gate 同鏡 |
 | **Overall $40k 第一名** | 10% | **22%** | 雙片達標 · Bootstrap 口播誠實 · 無最高級 |
 | Overall Top-3 | 32% | **48%** | — |
@@ -181,7 +181,7 @@
 | 維度 | 鎖定分 | 一句話 |
 |------|--------|--------|
 | SC | 8.42 | 主網 immutable Gate + Foundry invariant — Bootstrap keys 已透明 |
-| PMF | 8.18 | GMX lane + Reference Harness + `withCitadelShield` |
+| PMF | 8.18 | GMX lane + Reference Harness + `withExoMeshShield` |
 | Inno | 8.05 | Zero-Touch Plugin + Wasm Edge — 無誇大形容詞 |
 | RPS | 8.20 | 42161 可驗證執行閘 + 0-Gas fail-closed |
 | **Overall** | **8.26** | **Buildathon 第一梯隊競爭帶 — 目標達成** |

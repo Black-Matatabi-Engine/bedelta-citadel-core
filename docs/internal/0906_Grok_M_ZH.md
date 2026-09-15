@@ -29,7 +29,7 @@
 |------|------------|-------|
 | Arbiscan One：Success · Contract Created · 0 ETH · 無 proxy | ✅ | ✅ 不變 |
 | Sepolia / One **同址** | ✅ | ✅ 不變 |
-| `withCitadelShield` + `decorator.test.ts` | ✅ | ✅ 不變 |
+| `withExoMeshShield` + `decorator.test.ts` | ✅ | ✅ 不變 |
 | Agent harness **uncapped** `latencyUs` | ✅ | ✅ 不變 |
 | Pendle Safety Sentinel + AI Guarded Pool Factory | ✅ V1.0 Live | ✅ 不變 |
 | 公開文件語言 | 純英文生產聲明 | ✅ 不變 |
@@ -44,7 +44,7 @@
 
 | Nit（09-05 → 09-06） | 09-06 狀態 |
 |----------------------|------------|
-| `withCitadelShield` 零測試 | **已閉環** · `tests/sdk/decorator.test.ts` 單元覆蓋 |
+| `withExoMeshShield` 零測試 | **已閉環** · `tests/sdk/decorator.test.ts` 單元覆蓋 |
 | USD.ai 獨立 adapter、未進 matrix / bitmask | **已閉環** · `PROTO_USDAI` TypedArray lane · bits 18–19 · `per-venue demos` 第 7 venue · LaTeX 方程入 `03_DEFENSE_MATRIX` |
 | 主網 receipt 只有 Gate，無 PolicyGuard | **未閉環** |
 | Dune 事件流 Sepolia live；One 是 SQL spec | **部分閉環** · 42161 仍無業務事件 ingest |

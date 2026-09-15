@@ -23,13 +23,13 @@
 **加分**
 - Arbiscan One：Success · Contract Created · 0 ETH · 無 proxy
 - Sepolia / One **同址**
-- `withCitadelShield`（`src/sdk/decorator.ts`）一行包 `checkSoilResistance()`，Apache-2.0，已從 SDK barrel export
+- `withExoMeshShield`（`src/sdk/decorator.ts`）一行包 `checkSoilResistance()`，Apache-2.0，已從 SDK barrel export
 - Agent harness **uncapped** `latencyUs`
 - Pendle 公開敘事鎖在 Safety Sentinel
 - Halmos 失敗 JSON 已從公開敘事撤出
 
 **殘餘 nit（會進個人評語）**
-- `withCitadelShield` **零測試命中**
+- `withExoMeshShield` **零測試命中**
 - README 7 個 badge 仍連 `bedelta-living-water`（HackQuest / Foundation 第一印象）
 - 主網 receipt **只有 Gate**，無 PolicyGuard
 - Dune 事件流仍以 **Sepolia** 為 live；One 是 SQL spec
@@ -124,7 +124,7 @@
 
 ### 5. Virtuals / ElizaOS Core Contributor（SDK DX、plugin、sub-ms）
 
-- **說服：** `withCitadelShield` 真的是一行 wrap；harness 生命週期 JSON（EMITTED → SOIL → SEVERED/DISPATCH）對 agent 作者可讀；`--trip` fail-closed 符合「不要讓 LLM 把 UserOp 送進 bundler」。
+- **說服：** `withExoMeshShield` 真的是一行 wrap；harness 生命週期 JSON（EMITTED → SOIL → SEVERED/DISPATCH）對 agent 作者可讀；`--trip` fail-closed 符合「不要讓 LLM 把 UserOp 送進 bundler」。
 - **Nit：** **不是** npm 上的 `@virtuals-protocol/*` / ElizaOS action plugin；`decorator.ts` **無測試**；`seedDemoProbes()` 仍是自演 agentId。他會說：*ship a plugin folder or a 15-line Eliza action, then talk DX.*
 - **分數驅動：** Inno 8.55（本面板創新最高之一）。
 

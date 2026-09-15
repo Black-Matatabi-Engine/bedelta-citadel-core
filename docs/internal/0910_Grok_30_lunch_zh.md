@@ -86,7 +86,7 @@
 | 12 | Patrick McCorry | Researcher @ Arbitrum Foundation | **Verified X** [`@paddymccorry`](https://x.com/paddymccorry) | L2 擴展、博弈論安全、糾紛證明、抗審查 |
 | 13 | Ed Felten | Co-founder & Chief Scientist @ Offchain Labs | **Verified X** [`@EdFelten`](https://x.com/EdFelten) | 密碼學/Nitro VM 是否有真實突破 vs 工程 fortify |
 | 14 | Nina Rong | Head of Ecosystem @ Arbitrum Foundation | **Verified X** [`@Web3Nina`](https://x.com/Web3Nina) | 亞太生態適配、協同、公開文件可讀性 |
-| 15 | Tano Kahn | VP of Product @ Offchain Labs | **Verified X** [`@tanokahn`](https://x.com/tanokahn) | DX、SDK、`withCitadelShield` 門檻 |
+| 15 | Tano Kahn | VP of Product @ Offchain Labs | **Verified X** [`@tanokahn`](https://x.com/tanokahn) | DX、SDK、`withExoMeshShield` 門檻 |
 | 16 | Fredrik Haga | Co-founder & CEO @ Dune | **Verified X** [`@hagaetas`](https://x.com/hagaetas)（公開常用；表列 `@haga_fredrik` **非**其核實 handle） | 鏈上透明度、結構化事件、42161 ingest |
 | 17 | TN Lee | Co-founder @ Pendle | **Panel role** · Pendle Co-founder 席（個人 X 本卷不臆造） | PT/YT 時間價值、衍生品互動、邊界誠實 |
 | 18 | Filip Janssen | Foundry Core Contributor | **Panel role** · Foundry / EVM Tooling 席 | fork-trace、狀態模擬、Foundry 覆蓋 |
@@ -250,7 +250,7 @@
 - **McCorry：** 抗審查在 Edge 切斷，不在 L2 糾紛證明。**8.95**
 - **Felten：** 工程優秀，**不是** Nitro VM 密碼學突破 —— Inno **8.35** 壓低。**8.77**
 - **Rong：** 亞太 CLI 可演示。**9.04**
-- **Kahn：** `withCitadelShield` DX 清楚。**9.12**
+- **Kahn：** `withExoMeshShield` DX 清楚。**9.12**
 
 ### 16. Fredrik Haga — Dune
 

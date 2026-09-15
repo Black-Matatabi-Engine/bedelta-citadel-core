@@ -29,7 +29,7 @@
 |------|-------|-------|
 | Arbiscan One：Success · Contract Created · 0 ETH · 無 proxy | ✅ | ✅ 不變 |
 | Sepolia / One **同址** | ✅ | ✅ 不變 |
-| `withCitadelShield` + `decorator.test.ts` | ✅ | ✅ 不變 |
+| `withExoMeshShield` + `decorator.test.ts` | ✅ | ✅ 不變 |
 | Agent harness **uncapped** `latencyUs` | ✅ | ✅ 不變 |
 | Pendle Safety Sentinel（非 yield） | ✅ V1.0 Live | ✅ **雙交付**：Sentinel **+ AI Guarded Pool Factory**（`validateAIPoolSelection()` · 5 Invariants） |
 | Halmos 失敗 JSON 已撤公開敘事 | ✅ | ✅ |
@@ -46,7 +46,7 @@
 
 | Nit（09-03 → 09-04） | 09-05 狀態 |
 |----------------------|------------|
-| `withCitadelShield` 零測試 | **維持閉環** |
+| `withExoMeshShield` 零測試 | **維持閉環** |
 | README / JUDGE_BRIEF 超連結 `bedelta-living-water` | **惡化後再半閉環**：Git 已隔離，但 **公開超連結仍指向 living-water**；該庫現在是 **V0.9 `b739480`** → 評審點擊 = **錯產品版本** |
 | 主網 receipt 只有 Gate，無 PolicyGuard | **未閉環** |
 | Dune 事件流 Sepolia live；One 是 SQL spec | **部分閉環** · 公開文件已分開標 Sepolia vs 42161；**42161 仍無業務事件 ingest** |

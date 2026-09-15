@@ -233,7 +233,7 @@ Optional bridges (Robinhood / Across) are **Pillar Set X Reference Escort Adapte
 | **GMX** | Builder lane + pre-broadcast soil fuse | +10 bps `uiFeeReceiver`; blocks toxic GM intents pre-DataStore | `src/services/adapters/gmx-v2-order-payload.ts` |
 | **EIP-1193 Retail Guard** | Universal C-end wallet middleware | `withRetailGuardProvider()` · 0-Gas pre-consensus intercept | `src/sdk/exomesh-agentic-wallet-guard/` · `npx vitest run tests/sdk/retail-guard-provider.test.ts` |
 | **Stabilizer** | Universal Sepolia sandbox & cross-pass layer on **421614** | Stabilizer → GMX v2 → Pendle routing · identical `checkSoilResistance()` gates | `src/adapters/stabilizer/stabilizer-adapter.ts` · `pnpm demo:stabilizer` |
-| **B2B Agent Decorator** | Framework-agnostic pre-consensus firewall | `withExoMeshShield()` (legacy: `withCitadelShield`) · `verifyAgentIntent()` | [`decorator.ts`](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
+| **B2B Agent Decorator** | Framework-agnostic pre-consensus firewall | `withExoMeshShield()` · `verifyAgentIntent()` | [`decorator.ts`](../../src/sdk/decorator.ts) · `pnpm demo:agent` |
 | **Robinhood** | Pillar Set X RWA ingress firewall | Outbound-only `46630/4663 → 42161` · **`lostUsd ≡ 0`** · inbound AML BLOCK · ArbOS Elara compatible | Unit-Verified Vitest SSOT — [`tests/adapters/across-ingress-bridge.test.ts`](../../tests/adapters/across-ingress-bridge.test.ts) **6/6** · [`src/adapters/across-ingress-bridge.ts`](../../src/adapters/across-ingress-bridge.ts) · `IngressSafetySwitch.sol` |
 
 ---
@@ -452,7 +452,7 @@ SliverVine Protocol enforces a strict two-stage strategy balancing Zero-Friction
 ## Post-Hackathon Expansion Roadmap
 
 * **Milestone 1 (Weeks 2–3 post-grant approval): Native Upstream Plugin PRs**
- * Submit official native plugin Pull Requests (PRs) to **ElizaOS** (`@elizaos/plugin-citadel`) and **Virtuals GAME** (`@virtuals/plugin-citadel`) monorepos, transitioning from the current zero-overhead SDK Wrapper decorator (`withExoMeshShield` (legacy: `withCitadelShield`)) to official upstream integration.
+ * Submit official native plugin Pull Requests (PRs) to **ElizaOS** (`@elizaos/plugin-citadel`) and **Virtuals GAME** (`@virtuals/plugin-citadel`) monorepos, transitioning from the current zero-overhead SDK Wrapper decorator (`withExoMeshShield`) to official upstream integration.
 * **Phase 1: Milestone Dune & PoV (Day 7 – 30)**
  * Deploy live Dune Analytics dashboards and onboarding 3 design partners (AI Agent creators on Virtuals/ElizaOS and GMX Vault Managers) for $0-fee Proof-of-Value testing.
 * **Phase 2: Milestone Prediction (Design Spec / Post-Hackathon Roadmap)**

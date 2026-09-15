@@ -92,13 +92,13 @@ pnpm demo:spot-loop -- --trip     # Loop B: USD.ai collateral lane
 
 ---
 
-## (c) B2B Agent Decorator (`withExoMeshShield` (legacy: `withCitadelShield`))
+## (c) B2B Agent Decorator (`withExoMeshShield`)
 
 Framework-agnostic B2B integration — no per-framework npm plugins:
 
 | Layer | Module | Behavior |
 |-------|--------|----------|
-| Decorator | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` (legacy: `withCitadelShield`) — zero-touch pre-broadcast wrapper |
+| Decorator | [`decorator.ts`](../../src/sdk/decorator.ts) | `withExoMeshShield()` — zero-touch pre-broadcast wrapper |
 | Intent verify | [`agent-intent.ts`](../../src/sdk/agent-intent.ts) | `verifyAgentIntent()` — 8-dimension mandate gate |
 | Demo | [`agent-interceptor-demo.ts`](../../examples/agent-interceptor-demo.ts) | `pnpm demo:agent` |
 

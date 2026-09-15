@@ -188,7 +188,7 @@ Rejected intents surface as **structured, actionable errors** — never silent d
 | **Core exception** | `RiskLimitExceeded` (`src/services/risk-control`) with `reason` + `details.reasons[]` | Machine-readable trip code (e.g. `GMX_POOL_IMBALANCE_BREACH`) |
 | **HUD / SPA** | `resolveComplianceAlertsFromReasons()` · `COMPLIANCE_TRIP_ALERTS` in [`compliance-trip-alerts.ts`](../../src/lib/gui-bridge/compliance-trip-alerts.ts) | Title + severity (`critical` / `warning`) + plain-language remediation |
 | **SSE telemetry** | `GET /api/hud-stream` · [`section1-soil-probes.ts`](../../src/lib/gui-bridge/section1-hud-engine/section1-hud-engine-lib/section1-soil-probes.ts) log templates | Live `SOIL_RESISTANCE_PROBE: REJECTED` with reason list |
-| **SDK / decorator** | `withExoMeshShield` (legacy: `withCitadelShield`) · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
+| **SDK / decorator** | `withExoMeshShield` · `evaluate*Guard()` adapters | Thrown `RiskLimitExceeded` or `{ allowed: false, reasons }` before wallet sign |
 | **Grant audit archive** | `GET /api/grant-audit` · static Buildathon telemetry snapshot · Robinhood audit provenance | `lostUsd: 0` · `tradeAllowed: false` on trip paths |
 
 **Example operator messages (UI SSOT):**
@@ -618,7 +618,7 @@ zerodev-aa-gate.ts → evaluateStaticBreakerMatrix() + Citadel risk gate
 | **Grant E2E Demo** | `pnpm demo:delta-neutral` (default **dry-run**) | Full Citadel pipeline simulation; pass `--live` only for controlled mainnet ignition |
 | **5-TX Verified Proof** | `pnpm verify:5tx` / `pnpm verify:grant` | Hyperliquid testnet 5-TX anchor with notional tiers ($1K / $100K / $1M) |
 | **Negative Proofs** | `pnpm verify:negative` | Confirms soil trips on depth breach (`DEPTH_USD < MIN_DEPTH_USD`) |
-| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/exomesh-agentic-wallet-guard` `withExoMeshShield` (legacy: `withCitadelShield`) — ALLOW / `--trip` FAIL_CLOSED |
+| **AI Agent Interceptor** | `pnpm demo:agent` | `@slivervine/exomesh-agentic-wallet-guard` `withExoMeshShield` — ALLOW / `--trip` FAIL_CLOSED |
 
 > Production soil fuse on Edge remains **`checkSoilResistance()`** — dry-run harnesses validate adjacent paths without replacing the Worker SSOT.
 

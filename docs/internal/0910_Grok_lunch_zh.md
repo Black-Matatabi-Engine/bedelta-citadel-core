@@ -140,7 +140,7 @@ npx vitest run tests/core/intent-sinking-audit.test.ts
 | # | Vector | 攻擊模型 | Mitigation | SSOT |
 |---|--------|----------|------------|------|
 | **1** | **Multicall leg-sequencing griefing** | 重排 `sendWnt` / `sendTokens` / `createOrder`（或 GM withdraw 三腿），使 OrderVault 欠款、partial fill、或把 LP 與 perp 綁進同一原子包 | **嚴格 fail-closed 順序**：編碼器固定腿序；soil / PolicyGuard 在錯誤序或 skew 時拒絕；Wallet B **禁止** 進入 perp multicall | `gmx-market-increase-multicall.ts` · `gmx-v2-wallet-a-short-builder.ts` · PolicyGuardV2 `0xfd98…8781` |
-| **2** | **Retry storm / attempt budget exhaustion** | Agent 對同一 `intentDigest` 以 10× 重試灌爆 Isolate、RPC、以及（若切斷失敗）sequencer | **Max 3 attempts** per digest on ring slab · `withCitadelShield` **60s** cooldown · 超限 → `MAX_ATTEMPTS_EXCEEDED_SEVERED` + `severSigningChannel()` | `INTENT_MAX_ATTEMPTS_DEFAULT=3` · `intent-mandate.ts` · `intent-core-ring.ts` |
+| **2** | **Retry storm / attempt budget exhaustion** | Agent 對同一 `intentDigest` 以 10× 重試灌爆 Isolate、RPC、以及（若切斷失敗）sequencer | **Max 3 attempts** per digest on ring slab · `withExoMeshShield` **60s** cooldown · 超限 → `MAX_ATTEMPTS_EXCEEDED_SEVERED` + `severSigningChannel()` | `INTENT_MAX_ATTEMPTS_DEFAULT=3` · `intent-mandate.ts` · `intent-core-ring.ts` |
 
 **Vector 1 細節：** GMX ExchangeRouter 對 `msg.value` / WNT deposit 順序敏感。錯誤序不是「多付 gas」，而是 **狀態機不變量破壞**。Citadel 不在 Edge 上「修復」錯誤序；它 **拒絕簽名**。跨 venue 不得用單一 multicall 同時移動 Wallet B GM 與 Wallet A short。
 

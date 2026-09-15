@@ -50,7 +50,7 @@
 | **RPS** | 9.41 | **9.50** | **+0.09** | **1065/1065 PASS** · 構成表披露 · 0 trivial/no-op 断言掃描 · `tsc` 0 errors |
 | **加權均分** | **9.42** | **9.54** | **+0.12** | 零 flaky · 零 TS regression · 零技術債 |
 
-**核心決策：** 以 **`a771b72` / 228·1065** 作為 Buildathon 提交基線。對外僅使用 **SliverVine Protocol** 傘品牌 · **ExoMesh**（Module A）· **Sanctuary**（Module B）· **SSRC**（微秒引擎基質）。`withCitadelShield` 保留為相容 API，不作英雄標題。
+**核心決策：** 以 **`a771b72` / 228·1065** 作為 Buildathon 提交基線。對外僅使用 **SliverVine Protocol** 傘品牌 · **ExoMesh**（Module A）· **Sanctuary**（Module B）· **SSRC**（微秒引擎基質）。`withExoMeshShield` 保留為相容 API，不作英雄標題。
 
 ---
 

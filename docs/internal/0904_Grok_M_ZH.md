@@ -28,7 +28,7 @@
 |------|-------|-------|
 | Arbiscan One：Success · Contract Created · 0 ETH · 無 proxy | ✅ | ✅ 不變 |
 | Sepolia / One **同址** | ✅ | ✅ 不變 |
-| `withCitadelShield` 一行 wrap · Apache-2.0 barrel | ✅ | ✅ + **`tests/sdk/decorator.test.ts` 已命中** |
+| `withExoMeshShield` 一行 wrap · Apache-2.0 barrel | ✅ | ✅ + **`tests/sdk/decorator.test.ts` 已命中** |
 | Agent harness **uncapped** `latencyUs` | ✅ | ✅ + HUD 拆 Wasm &lt;60µs vs Node RTT |
 | Pendle 公開敘事鎖 Safety Sentinel | ✅ | ✅ Component of Pillar Set Y 已上線（非 yield 競品） |
 | Halmos 失敗 JSON 已撤公開敘事 | ✅ | ✅ |
@@ -44,7 +44,7 @@
 
 | Nit（09-03） | 09-04 狀態 |
 |--------------|------------|
-| `withCitadelShield` **零測試命中** | **閉環** · `tests/sdk/decorator.test.ts` |
+| `withExoMeshShield` **零測試命中** | **閉環** · `tests/sdk/decorator.test.ts` |
 | README 7 個 badge 連 `bedelta-living-water` | **部分閉環** · badge 改相對路徑；**Repo 超連結仍指向 `bedelta-living-water` slug**（HackQuest 第一像素仍在） |
 | 主網 receipt **只有 Gate**，無 PolicyGuard | **未閉環** |
 | Dune 事件流仍 **Sepolia live**；One 是 SQL spec | **部分閉環** · PEV Query spec + dashboard URL 對齊；**42161 仍無業務事件 ingest** |

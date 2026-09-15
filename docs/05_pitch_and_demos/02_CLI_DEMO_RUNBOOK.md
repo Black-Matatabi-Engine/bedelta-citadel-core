@@ -217,7 +217,7 @@ Live GM I/O proofs: deposit [`0xe3155220…`](https://arbiscan.io/tx/0xe3155220e
 
 ---
 
-## B2B Agent Integration (`withExoMeshShield` (legacy: `withCitadelShield`))
+## B2B Agent Integration (`withExoMeshShield`)
 
 Framework-agnostic B2B decorator — replaces v1.0 point-to-point AI framework adapters:
 
