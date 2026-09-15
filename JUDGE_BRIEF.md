@@ -52,19 +52,23 @@
   │  PRE-CONSENSUS REFLEX CORE  checkSoilResistance()  (pkg/soil_core.wasm)  │
   └──────────────────────────────────────────────────────────────────────────┘
            │
-     ┌─────┴──────────┬────────────────┬─────────────────┐
-     ▼                ▼                ▼                 ▼
-  ┌────────────┐  ┌────────────┐  ┌────────────┐  ┌──────────────┐
-  │ [A] Retail │  │ [B] 5-Core │  │ [C] Retry  │  │ [D] Cross-   │
-  │ Permit2    │  │ Venue Drift│  │ Storm /    │  │ chain & Vault│
-  │ Poisoning  │  │ & Haircut  │  │ Circuit Brk│  │ Escort       │
-  └─────┬──────┘  └─────┬──────┘  └─────┬──────┘  └──────┬───────┘
-        │               │               │                │
-        └───────┬───────┴───────┬───────┴────────┬───────┘
-                │               │                │
-                └───────────────┼────────────────┘
-                                ▼
-                   ( Verdict Engine )
+     ┌─────┴──────────────────────────┬──────────────────────────┐
+     │  [Module A: ExoMesh]           │  [Module B: Sanctuary]   │
+     │  wallet wrap · 5-venue soil    │  vault escort · AML      │
+     └─────┬──────────┬──────────┬────┴──────────┬───────────────┘
+           ▼          ▼          ▼               ▼
+  ┌────────────┐┌────────────┐┌────────────┐ ┌──────────────┐
+  │ [A] Retail ││ [B] 5-Core ││ [C] Retry  │ │ [D] Cross-   │
+  │ Permit2    ││ Venue Drift││ Storm /    │ │ chain & Vault│
+  │ Poisoning  ││ & Haircut  ││ Circuit Brk│ │ Escort       │
+  │ Module A   ││ Module A   ││ Module A   │ │ Module B     │
+  └─────┬──────┘└─────┬──────┘└─────┬──────┘ └──────┬───────┘
+        │             │             │               │
+        └──────┬──────┴──────┬──────┘               │
+               └──────┬──────┘                      │
+                      └─────────────┬───────────────┘
+                                    ▼
+                       ( Verdict Engine )
                          │
               ┌──────────┴──────────┐
               ▼                     ▼
@@ -79,12 +83,12 @@
   * x402 = orthogonal HTTP 402 dispatch (not implemented in freeze). Same wrap still gates sign.
 ```
 
-| ID | Core scenario | What we intercept | Proof (Vitest) |
-|----|---------------|-------------------|----------------|
-| **A** | Retail / Permit2 poisoning | Infinite approve · Permit2 · EIP-712 domain drift · EIP-5792 toxic batch | `tests/sdk/retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** |
-| **B** | 5-venue drift & Observatory haircut | GMX impact / Pendle oracle+expiry / USD.ai depeg / HL spread+WS / Variational stale quote — **close/reduce not mis-blocked** | `pnpm demo:gmx -- --trip` · `pendle-soil-guard.test.ts` · `usdai-adapter.test.ts` · `variational-rfq-adapter.test.ts` · `stylus-soil-wasm.test.ts` |
-| **C** | Retry storm / circuit breaker | 4th rapid submit severs channel · 5 RPS isolate · Dynamic Max SL (`Balance×1%+$100`) · R20 / CRI hardlock | `retail-guard-provider.test.ts` (4th submit) · `decorator.test.ts` · `root-protection.test.ts` · `edge-security.test.ts` |
-| **D** | Sanctuary vault & cross-chain | ERC-7540 operator hijack · ERC-7683 solver MEV · Across/Robinhood **inbound AML block** | `erc7540-async-escort.test.ts` · `erc7683-intent-guard.test.ts` · `across-ingress-bridge.test.ts` |
+| ID | Module | Core scenario | What we intercept | Proof (Vitest) |
+|----|--------|---------------|-------------------|----------------|
+| **A** | **[Module A: ExoMesh]** | Retail / Permit2 poisoning | Infinite approve · Permit2 · EIP-712 domain drift · EIP-5792 toxic batch | `tests/sdk/retail-guard-provider.test.ts` **35/35** · `eip5792-send-calls.test.ts` **3/3** |
+| **B** | **[Module A: ExoMesh]** | 5-venue drift & Observatory haircut | GMX impact / Pendle oracle+expiry / USD.ai depeg / HL spread+WS / Variational stale quote — **close/reduce not mis-blocked** | `pnpm demo:gmx -- --trip` · `pendle-soil-guard.test.ts` · `usdai-adapter.test.ts` · `variational-rfq-adapter.test.ts` · `stylus-soil-wasm.test.ts` |
+| **C** | **[Module A: ExoMesh]** | Retry storm / circuit breaker | 4th rapid submit severs channel · 5 RPS isolate · Dynamic Max SL (`Balance×1%+$100`) · R20 / CRI hardlock | `retail-guard-provider.test.ts` (4th submit) · `decorator.test.ts` · `root-protection.test.ts` · `edge-security.test.ts` |
+| **D** | **[Module B: Sanctuary]** | Sanctuary vault & cross-chain | ERC-7540 operator hijack · ERC-7683 solver MEV · Across/Robinhood **inbound AML block** | `erc7540-async-escort.test.ts` · `erc7683-intent-guard.test.ts` · `across-ingress-bridge.test.ts` |
 
 Full production catalog (additional vectors) → [`EXOMESH_PRODUCTION_SCENARIO_CATALOG.md`](./docs/00_ARB_Buildathon/EXOMESH_PRODUCTION_SCENARIO_CATALOG.md)
 
