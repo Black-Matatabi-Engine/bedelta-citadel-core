@@ -7,7 +7,7 @@
   "version_symbol": "BeΔ Living Water",
   "ssrc_codename": "SSRC",
   "ssrc_full_name": "Slivervine Stylus ReflexCore",
-  "generatedAt": "2026-09-15T00:14:57.271Z",
+  "generatedAt": "2026-09-15T00:19:42.464Z",
   "badges": {
     "vitest": {
       "test_files_passed": 238,
@@ -78,7 +78,7 @@
     "telemetry_rows": 264
   },
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T00:14:57.271Z",
+    "detectedAt": "2026-09-15T00:19:42.464Z",
     "platform": "linux",
     "arch": "x64",
     "nodeVersion": "v24.18.0",
@@ -89,12 +89,13 @@
   },
   "sepsb_benchmark": {
     "ssot": "docs/audit/SEPSB_BENCHMARK_SSOT.json",
+    "corpus_snapshot": "docs/audit/SEPSB_CORPUS_SNAPSHOT.json",
     "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
     "standard_version": "SEPSB-v1.0-Santenmoku",
     "verdict": "PASS",
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.284,
-    "reflexLatencyP99Us": 1.226
+    "reflexLatencyP50Us": 0.31,
+    "reflexLatencyP99Us": 2.334
   }
 }

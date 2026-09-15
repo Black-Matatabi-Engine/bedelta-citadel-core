@@ -4,9 +4,9 @@
   "harness": "sepsb-benchmark-runner",
   "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
   "standard_version": "SEPSB-v1.0-Santenmoku",
-  "generatedAt": "2026-09-15T00:14:57.271Z",
+  "generatedAt": "2026-09-15T00:19:42.464Z",
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T00:14:57.271Z",
+    "detectedAt": "2026-09-15T00:19:42.464Z",
     "platform": "linux",
     "arch": "x64",
     "nodeVersion": "v24.18.0",
@@ -22,8 +22,8 @@
   "metrics": {
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.284,
-    "reflexLatencyP99Us": 1.226,
+    "reflexLatencyP50Us": 0.31,
+    "reflexLatencyP99Us": 2.334,
     "observatoryParadoxMisblockCount": 0,
     "latencyIterations": 10000
   },
@@ -89,7 +89,7 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.5499999999999999%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "CROSS_VENUE_SLIPPAGE=14.2857%>0.54%|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
     },
     {
       "id": "toxic-pendle-gmx-open-thin-liquidity",
@@ -113,7 +113,7 @@
       "expected": "block",
       "actual": "block",
       "pass": true,
-      "detail": "DEPTH_USD=50000<100050|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
+      "detail": "DEPTH_USD=50000<100020|ARBITRUM_SEQUENCER_PROBE_MISSING|SOFT_CONFIRMATION_PROBE_MISSING"
     },
     {
       "id": "benign-normal-transfer-gmx",

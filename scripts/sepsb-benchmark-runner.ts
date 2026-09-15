@@ -6,13 +6,21 @@ import { fileURLToPath } from "node:url";
 import { computeSoilSlippageMetrics } from "../src/core/soil-resistance-math";
 import { detectBenchmarkEnvironment } from "../src/utils/hardware-detector";
 import { evaluateSepsbCase } from "./sepsb-benchmark-eval";
-import type { SepsbBenchmarkSsot, SepsbCaseResult, SepsbCorpusFile } from "./sepsb-benchmark-types";
+import type {
+  SepsbBenchmarkSsot,
+  SepsbCaseResult,
+  SepsbCorpusFile,
+  SepsbCorpusSnapshot,
+} from "./sepsb-benchmark-types";
 
 const ROOT = join(dirname(fileURLToPath(import.meta.url)), "..");
 const TOXIC_PATH = join(ROOT, "tests/p0/corpus/toxic-set.json");
 const BENIGN_PATH = join(ROOT, "tests/p0/corpus/benign-set.json");
 const SSOT_PATH = join(ROOT, "docs/audit/SEPSB_BENCHMARK_SSOT.json");
+const CORPUS_SNAPSHOT_PATH = join(ROOT, "docs/audit/SEPSB_CORPUS_SNAPSHOT.json");
 const METRICS_PATH = join(ROOT, "docs/audit/SYSTEM_METRICS_SSOT.json");
+const TOXIC_SOURCE = "tests/p0/corpus/toxic-set.json";
+const BENIGN_SOURCE = "tests/p0/corpus/benign-set.json";
 const LATENCY_ITERS = 10_000;
 const TPR_MIN = 99.5;
 const FPR_MAX = 0.5;
@@ -73,10 +81,33 @@ function computeRates(toxic: SepsbCaseResult[], benign: SepsbCaseResult[]) {
   return { tpr, fpr, observatoryMisblock, tp, fn, fp, tn };
 }
 
+function exportCorpusSnapshot(
+  generatedAt: string,
+  toxicFile: SepsbCorpusFile,
+  benignFile: SepsbCorpusFile,
+  toxicResults: SepsbCaseResult[],
+  benignResults: SepsbCaseResult[],
+  verdict: "PASS" | "FAIL",
+): void {
+  const snapshot: SepsbCorpusSnapshot = {
+    schema: "silvervine.sepsb-corpus-snapshot.v1",
+    benchmark_title: "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
+    standard_version: "SEPSB-v1.0-Santenmoku",
+    generatedAt,
+    sources: { toxic: TOXIC_SOURCE, benign: BENIGN_SOURCE },
+    corpus: { toxic: toxicFile, benign: benignFile },
+    lastRun: { verdict, toxicResults, benignResults },
+  };
+  mkdirSync(dirname(CORPUS_SNAPSHOT_PATH), { recursive: true });
+  writeFileSync(CORPUS_SNAPSHOT_PATH, `${JSON.stringify(snapshot, null, 2)}\n`);
+}
+
 function main(): void {
   const env = detectBenchmarkEnvironment();
-  const toxic = runCorpus(loadCorpus(TOXIC_PATH));
-  const benign = runCorpus(loadCorpus(BENIGN_PATH));
+  const toxicFile = loadCorpus(TOXIC_PATH);
+  const benignFile = loadCorpus(BENIGN_PATH);
+  const toxic = runCorpus(toxicFile);
+  const benign = runCorpus(benignFile);
   const rates = computeRates(toxic, benign);
   const latency = measureReflexLatencyUs();
   const killSwitch = rates.fpr > FPR_MAX;
@@ -110,12 +141,14 @@ function main(): void {
 
   mkdirSync(dirname(SSOT_PATH), { recursive: true });
   writeFileSync(SSOT_PATH, `${JSON.stringify(report, null, 2)}\n`);
+  exportCorpusSnapshot(env.detectedAt, toxicFile, benignFile, toxic, benign, verdict);
 
   const metrics = JSON.parse(readFileSync(METRICS_PATH, "utf8")) as Record<string, unknown>;
   metrics.benchmark_environment = env;
   metrics.generatedAt = env.detectedAt;
   metrics.sepsb_benchmark = {
     ssot: "docs/audit/SEPSB_BENCHMARK_SSOT.json",
+    corpus_snapshot: "docs/audit/SEPSB_CORPUS_SNAPSHOT.json",
     benchmark_title: report.benchmark_title,
     standard_version: report.standard_version,
     verdict: report.verdict,
@@ -132,6 +165,7 @@ function main(): void {
   console.log(`[SEPSB] Observatory mis-block ${rates.observatoryMisblock} (max 0)`);
   console.log(`[SEPSB] Verdict ${verdict}`);
   console.log(`[SSOT] ${SSOT_PATH}`);
+  console.log(`[SSOT] ${CORPUS_SNAPSHOT_PATH}`);
   if (verdict !== "PASS") process.exitCode = 1;
 }
 

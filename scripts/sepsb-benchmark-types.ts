@@ -37,6 +37,26 @@ export interface SepsbCaseResult {
   detail?: string;
 }
 
+export interface SepsbCorpusSnapshot {
+  schema: "silvervine.sepsb-corpus-snapshot.v1";
+  benchmark_title: "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)";
+  standard_version: "SEPSB-v1.0-Santenmoku";
+  generatedAt: string;
+  sources: {
+    toxic: string;
+    benign: string;
+  };
+  corpus: {
+    toxic: SepsbCorpusFile;
+    benign: SepsbCorpusFile;
+  };
+  lastRun: {
+    verdict: "PASS" | "FAIL";
+    toxicResults: SepsbCaseResult[];
+    benignResults: SepsbCaseResult[];
+  };
+}
+
 export interface SepsbBenchmarkSsot {
   schema: "silvervine.sepsb-benchmark.ssot.v1";
   protocol: "SliverVine Protocol";
