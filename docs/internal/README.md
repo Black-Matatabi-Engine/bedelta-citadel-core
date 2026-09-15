@@ -12,6 +12,15 @@
 
 ---
 
+## Pitch / Commercial (Internal)
+
+| Document | Role |
+|----------|------|
+| [pitch/COMMERCIAL_STRATEGY_AND_QA_PLAYBOOK.md](./pitch/COMMERCIAL_STRATEGY_AND_QA_PLAYBOOK.md) | Post-grant Dual-Engine (Brake + Turbo) GTM · Q&A defense · SEPSB disclosure (**EN**) |
+| [pitch/COMMERCIAL_STRATEGY_AND_QA_PLAYBOOK_ZH.md](./pitch/COMMERCIAL_STRATEGY_AND_QA_PLAYBOOK_ZH.md) | 同上 · 全中文版 |
+
+---
+
 ## Architecture SSOT
 
 | Document | Role |
