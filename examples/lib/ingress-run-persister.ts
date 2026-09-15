@@ -11,10 +11,10 @@ export const INGRESS_RUN_PATH = join(
   "../../docs/logging/last_ingress_run.json",
 );
 
-export type IngressRouteId = "A" | "B" | "C";
+export type IngressScenarioId = "A" | "B" | "C";
 
-export interface IngressRouteJsonResult {
-  route: IngressRouteId;
+export interface IngressScenarioJsonResult {
+  scenario: IngressScenarioId;
   status: string;
   latencyUs?: number;
   capitalLabel?: string;
@@ -37,11 +37,11 @@ export interface IngressRunPayload {
     fullMatrixUs: number;
     e2eHarnessUs: number;
   };
-  routes: IngressRouteJsonResult[];
+  scenarios: IngressScenarioJsonResult[];
 }
 
 export function buildIngressRunPayload(
-  routes: IngressRouteJsonResult[],
+  scenarios: IngressScenarioJsonResult[],
   benchmark: DemoBenchmarkSnapshot,
   timestamp: string,
   tripped: boolean,
@@ -57,7 +57,7 @@ export function buildIngressRunPayload(
       fullMatrixUs: benchmark.fullMatrixUs,
       e2eHarnessUs: benchmark.e2eHarnessUs,
     },
-    routes,
+    scenarios,
   };
 }
 

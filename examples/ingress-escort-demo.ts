@@ -18,12 +18,18 @@ import { GREEN, RED, R, printMode } from "./adapters/citadel-ansi-hud";
 import { roundWasmUs } from "./lib/eip1193-extension-helpers";
 import { captureDemoBenchmark, formatGuardTime, measureSync } from "./lib/demo-timing";
 import { IS_LIVINGWATER_MODE, isDemoTripArgv, wrapDemoExecution } from "./lib/demo-harness";
-import { isDemoJsonArgv, releaseDemoStdin } from "./lib/demo-utils";
-import { INGRESS_ROUTE_TITLES, printIngressBanner, printIngressResult, printIngressRoute } from "./lib/ingress-demo-hud";
+import { isDemoInteractiveArgv, isDemoJsonArgv, releaseDemoStdin } from "./lib/demo-utils";
+import {
+  INGRESS_SCENARIO_TITLES,
+  awaitIngressScenarioTransition,
+  printIngressBanner,
+  printIngressResult,
+  printIngressScenario,
+} from "./lib/ingress-demo-hud";
 import {
   buildIngressRunPayload,
   saveIngressRunPayload,
-  type IngressRouteJsonResult,
+  type IngressScenarioJsonResult,
 } from "./lib/ingress-run-persister";
 
 const WALLET = "0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -32,7 +38,7 @@ const HL_L1_CHAIN_ID = 999_001;
 const T0 = 1_700_000_000_000;
 const ESCORT_USD = 2_500;
 
-type RouteOpts = { interactive: boolean };
+type ScenarioOpts = { interactive: boolean };
 
 function resolveEscortT0(nowMs: number): number {
   return IS_LIVINGWATER_MODE ? nowMs - 180_000 : T0;
@@ -60,7 +66,7 @@ function assertLostUsdZero(state: ReturnType<typeof evaluateAcrossBridgeTransfer
   }
 }
 
-function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): IngressRouteJsonResult {
+function runScenarioA(trip: boolean, t0: number, { interactive }: ScenarioOpts): IngressScenarioJsonResult {
   const limitation =
     "Standard ERC-7683 cross-chain intents expose unlocked in-flight MEV risk — capital may deploy before solver settlement proof; no wallet-side IN_FLIGHT lock on naive bridge routing.";
   const enhancement =
@@ -74,9 +80,9 @@ function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): Ingre
     );
     assertLostUsdZero(state);
     if (interactive) {
-      printIngressRoute({
+      printIngressScenario({
         id: "A",
-        title: INGRESS_ROUTE_TITLES.A,
+        title: INGRESS_SCENARIO_TITLES.A,
         frameColor: RED,
         limitation,
         enhancement,
@@ -91,7 +97,7 @@ function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): Ingre
       });
     }
     return {
-      route: "A",
+      scenario: "A",
       status: "FAIL_CLOSED",
       latencyUs: roundWasmUs(latencyUs),
       capitalLabel: state.capitalLabel,
@@ -119,9 +125,9 @@ function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): Ingre
   );
   assertLostUsdZero(settled);
   if (interactive) {
-    printIngressRoute({
+    printIngressScenario({
       id: "A",
-      title: INGRESS_ROUTE_TITLES.A,
+      title: INGRESS_SCENARIO_TITLES.A,
       frameColor: GREEN,
       limitation,
       enhancement,
@@ -136,7 +142,7 @@ function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): Ingre
     });
   }
   return {
-    route: "A",
+    scenario: "A",
     status: "SETTLED",
     latencyUs: roundWasmUs(latencyUs),
     directionOk: dir.ok,
@@ -148,15 +154,15 @@ function runRouteA(trip: boolean, t0: number, { interactive }: RouteOpts): Ingre
   };
 }
 
-function runRouteB({ interactive }: RouteOpts): IngressRouteJsonResult {
+function runScenarioB({ interactive }: ScenarioOpts): IngressScenarioJsonResult {
   const direct = validateAcrossBridgeDirection({
     sourceChainId: ROBINHOOD_TESTNET_CHAIN_ID,
     destChainId: HL_L1_CHAIN_ID,
   });
   if (interactive) {
-    printIngressRoute({
+    printIngressScenario({
       id: "B",
-      title: INGRESS_ROUTE_TITLES.B,
+      title: INGRESS_SCENARIO_TITLES.B,
       frameColor: RED,
       limitation:
         "Unsafe direct L1 routing (Robinhood → Hyperliquid) bypasses Arbitrum sequencer escort plane — unguarded cross-venue capital topology.",
@@ -169,18 +175,17 @@ function runRouteB({ interactive }: RouteOpts): IngressRouteJsonResult {
       ],
       pass: false,
       resultLine: "BRIDGE_ROUTE_UNSUPPORTED · direct L1 topology blocked",
-      reasons: direct.reasons,
     });
   }
   return {
-    route: "B",
+    scenario: "B",
     status: "ROUTE_BLOCKED",
     directionOk: direct.ok,
     reasons: direct.reasons,
   };
 }
 
-function runRouteC({ interactive }: RouteOpts): IngressRouteJsonResult {
+function runScenarioC({ interactive }: ScenarioOpts): IngressScenarioJsonResult {
   const outbound = validateAcrossBridgeDirection({
     sourceChainId: ARBITRUM_ONE_CHAIN_ID,
     destChainId: BASE_CHAIN_ID,
@@ -190,9 +195,9 @@ function runRouteC({ interactive }: RouteOpts): IngressRouteJsonResult {
     destChainId: ROBINHOOD_TESTNET_CHAIN_ID,
   });
   if (interactive) {
-    printIngressRoute({
+    printIngressScenario({
       id: "C",
-      title: INGRESS_ROUTE_TITLES.C,
+      title: INGRESS_SCENARIO_TITLES.C,
       frameColor: RED,
       limitation:
         "Unchecked AML reverse liquidity injection — outbound Arb→Base and inbound Arb→Robinhood lack pre-execution compliance hooks on standard bridges.",
@@ -208,7 +213,7 @@ function runRouteC({ interactive }: RouteOpts): IngressRouteJsonResult {
     });
   }
   return {
-    route: "C",
+    scenario: "C",
     status: "AML_INBOUND_BLOCKED",
     directionOk: outbound.ok,
     inboundBlocked: aml.inboundBlocked,
@@ -216,36 +221,48 @@ function runRouteC({ interactive }: RouteOpts): IngressRouteJsonResult {
   };
 }
 
-wrapDemoExecution(({ nowMs }) => {
+wrapDemoExecution(async ({ nowMs }) => {
   const jsonMode = isDemoJsonArgv();
+  const interactive = isDemoInteractiveArgv();
   const trip = isDemoTripArgv();
   const t0 = resolveEscortT0(nowMs);
   const benchmark = captureEscortBenchmark(t0);
-  const interactive = !jsonMode;
-  const routes: IngressRouteJsonResult[] = [];
+  const scenarios: IngressScenarioJsonResult[] = [];
 
   if (!jsonMode) {
     printIngressBanner(benchmark);
     printMode(trip);
   }
 
-  routes.push(runRouteA(trip, t0, { interactive }));
+  scenarios.push(runScenarioA(trip, t0, { interactive }));
   if (!trip) {
-    routes.push(runRouteB({ interactive }));
-    routes.push(runRouteC({ interactive }));
+    if (interactive) await awaitIngressScenarioTransition("B");
+    scenarios.push(runScenarioB({ interactive }));
+    if (interactive) await awaitIngressScenarioTransition("C");
+    scenarios.push(runScenarioC({ interactive }));
   }
 
   const timestamp = new Date(nowMs).toISOString();
-  const payload = buildIngressRunPayload(routes, benchmark, timestamp, trip, trip ? BRIDGE_TIMEOUT_FAIL_CLOSED : undefined);
+  const payload = buildIngressRunPayload(
+    scenarios,
+    benchmark,
+    timestamp,
+    trip,
+    trip ? BRIDGE_TIMEOUT_FAIL_CLOSED : undefined,
+  );
 
   if (jsonMode) {
     saveIngressRunPayload(payload);
-    process.stdout.write(`${JSON.stringify(payload, null, 2)}\n`);
+    process.stdout.write(`${JSON.stringify(scenarios, null, 2)}\n`);
     releaseDemoStdin();
-    return { tripped: trip, reason: trip ? BRIDGE_TIMEOUT_FAIL_CLOSED : "COMPLIANCE_ESCORT_SETTLED", suppressInterceptBanner: true };
+    return {
+      tripped: trip,
+      reason: trip ? BRIDGE_TIMEOUT_FAIL_CLOSED : "INGRESS_MATRIX_VERIFIED",
+      suppressInterceptBanner: true,
+    };
   }
 
-  const latencyUs = routes[0]?.latencyUs ?? 0;
+  const latencyUs = scenarios[0]?.latencyUs ?? 0;
   console.log(`\n${R}escort guard · ${formatGuardTime(latencyUs)} · lostUsd invariant ✓${R}\n`);
   printIngressResult(trip);
   saveIngressRunPayload(payload);
