@@ -8,8 +8,6 @@ import type { SepsbCaseResult, SepsbCorpusCase, SepsbCorpusFile, SepsbCoreVenue 
 import { measureSepsbReflexLatencyUs } from "./sepsb-reflex-latency";
 
 export const SEPSB_STRESS_CSV_PATH = "docs/audit/sepsb-stress-telemetry.csv";
-export const SEPSB_STRESS_CSV_COMMENT =
-  "# SEPSB stress telemetry v1 | reflex_latency_us: in-process soil_core.wasm reflex (µs) | hyperliquid band: 15-45µs | cap: <100µs";
 const CSV_HEADER =
   "case_id,set_type,venue,expected_verdict,actual_verdict,is_correct,reflex_latency_us,tpr_rate,fpr_rate,hardware_spec,timestamp";
 
@@ -68,7 +66,7 @@ export function exportSepsbDuneCsv(input: SepsbDuneCsvInput, outPath: string): v
   const hardwareSpec = formatHardwareSpec(input.env);
   const tpr = formatRatePct(input.tprRate);
   const fpr = formatRatePct(input.fprRate);
-  const rows: string[] = [SEPSB_STRESS_CSV_COMMENT, CSV_HEADER];
+  const rows: string[] = [CSV_HEADER];
 
   for (const file of [input.toxicFile, input.benignFile]) {
     const results = file.label === "toxic" ? input.toxicResults : input.benignResults;

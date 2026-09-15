@@ -7,7 +7,7 @@
   "version_symbol": "BeΔ Living Water",
   "ssrc_codename": "SSRC",
   "ssrc_full_name": "Slivervine Stylus ReflexCore",
-  "generatedAt": "2026-09-15T01:35:44.479Z",
+  "generatedAt": "2026-09-15T03:23:24.628Z",
   "badges": {
     "vitest": {
       "test_files_passed": 238,
@@ -78,7 +78,7 @@
     "telemetry_rows": 264
   },
   "benchmark_environment": {
-    "detectedAt": "2026-09-15T01:35:44.479Z",
+    "detectedAt": "2026-09-15T03:23:24.628Z",
     "platform": "linux",
     "arch": "x64",
     "nodeVersion": "v24.18.0",
@@ -96,7 +96,7 @@
     "verdict": "PASS",
     "truePositiveRatePct": 100,
     "falsePositiveRatePct": 0,
-    "reflexLatencyP50Us": 0.263,
-    "reflexLatencyP99Us": 0.954
+    "reflexLatencyP50Us": 0.293,
+    "reflexLatencyP99Us": 1.145
   }
 }
