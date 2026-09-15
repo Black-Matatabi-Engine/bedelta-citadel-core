@@ -1,0 +1,86 @@
+{
+  "version": 1,
+  "schema": "silvervine.exomesh.dune-telemetry.v1",
+  "kvKey": "telemetry:exomesh-intercepts",
+  "lastUpdated": "2026-09-14T14:27:29.384Z",
+  "entries": [
+    {
+      "timestamp": "2026-09-14T14:22:17.330Z",
+      "timestampMs": 1789395737330,
+      "venue": "gmx",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 14934.073,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 8608,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:gmx:trip:1789395737330",
+      "reason": "GMX_FAIL_CLOSED"
+    },
+    {
+      "timestamp": "2026-09-14T14:24:32.306Z",
+      "timestampMs": 1789395872306,
+      "venue": "pendle",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 52127.827,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 13660,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:pendle:trip:1789395872306",
+      "reason": "PENDLE_FAIL_CLOSED"
+    },
+    {
+      "timestamp": "2026-09-14T14:26:09.477Z",
+      "timestampMs": 1789395969477,
+      "venue": "pendle",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 20120.564,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 11289,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:pendle:trip:1789395969477",
+      "reason": "PENDLE_FAIL_CLOSED"
+    },
+    {
+      "timestamp": "2026-09-14T14:26:57.423Z",
+      "timestampMs": 1789396017423,
+      "venue": "usdai",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 26179.642,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 14175,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:usdai:trip:1789396017423",
+      "reason": "USDAI_FAIL_CLOSED"
+    },
+    {
+      "timestamp": "2026-09-14T14:27:08.062Z",
+      "timestampMs": 1789396028062,
+      "venue": "hyperliquid",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 12671.962,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 10979,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:hyperliquid:trip:1789396028061",
+      "reason": "HL_FAIL_CLOSED"
+    },
+    {
+      "timestamp": "2026-09-14T14:27:29.384Z",
+      "timestampMs": 1789396049384,
+      "venue": "variational",
+      "intercept_type": "SOIL_RESISTANCE_TRIP",
+      "reflex_latency_us": 15651.025,
+      "gas_burned": 0,
+      "potential_loss_saved_usd": 9124,
+      "gas_saved_usd": 0.25,
+      "status": "FAIL_CLOSED",
+      "source": "demo:variational:trip:1789396049384",
+      "reason": "VARIATIONAL_FAIL_CLOSED"
+    }
+  ]
+}

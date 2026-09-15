@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "lastUpdated": "2026-09-14T14:27:29.384Z",
+  "entries": [
+    {
+      "at": "2026-09-14T14:22:17.330Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "GMX_FAIL_CLOSED"
+    },
+    {
+      "at": "2026-09-14T14:24:32.306Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "PENDLE_FAIL_CLOSED"
+    },
+    {
+      "at": "2026-09-14T14:26:09.477Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "PENDLE_FAIL_CLOSED"
+    },
+    {
+      "at": "2026-09-14T14:26:57.423Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "USDAI_FAIL_CLOSED"
+    },
+    {
+      "at": "2026-09-14T14:27:08.062Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "HL_FAIL_CLOSED"
+    },
+    {
+      "at": "2026-09-14T14:27:29.384Z",
+      "level": "warn",
+      "module": "exomesh-demo",
+      "event": "SOIL_RESISTANCE_TRIP",
+      "message": "VARIATIONAL_FAIL_CLOSED"
+    }
+  ]
+}
