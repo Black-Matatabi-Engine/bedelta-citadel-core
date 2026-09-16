@@ -1,0 +1,57 @@
+{
+  "protocol": "SliverVine Protocol (BeDelta Living Water v1.0 / BeΔ)",
+  "harness": "grant-advanced-resilience-benchmark",
+  "tests": {
+    "toctou": {
+      "pass": true,
+      "phase1Pass": true,
+      "phase2FailClosed": true,
+      "sagaPhase": "COMPENSATE",
+      "compensationTriggered": true,
+      "orderTimeout": true,
+      "reasons": [
+        "INVALID_ORACLE_TIMESTAMP_FAIL_CLOSED",
+        "CROSS_VENUE_SLIPPAGE=2.0000%>0.5%"
+      ],
+      "keeperDelayMs": 2000
+    },
+    "failover": {
+      "pass": false,
+      "maxFailoverMs": 237.99711099999968,
+      "falseNegatives": 0,
+      "gateChecks": 6,
+      "routes": [
+        {
+          "route": "https://rpc.ankr.com/arbitrum",
+          "failoverMs": 237.99711099999968,
+          "primaryFailed": true,
+          "statusCode": 200
+        },
+        {
+          "route": "https://rpc.ankr.com/arbitrum",
+          "failoverMs": 2.661073000000215,
+          "primaryFailed": true,
+          "statusCode": 200
+        },
+        {
+          "route": "https://rpc.ankr.com/arbitrum",
+          "failoverMs": 41.9994999999999,
+          "primaryFailed": true,
+          "statusCode": 200
+        }
+      ]
+    },
+    "benchmark": {
+      "pass": true,
+      "meanLatencyMs": 0.002,
+      "heapDeltaMb": 0.3819,
+      "gcUsed": true,
+      "iterations": 10000,
+      "sloTargetMs": 1,
+      "soilSloMs": 500
+    }
+  },
+  "allPass": false,
+  "durationMs": 2982,
+  "generatedAt": "2026-08-24T07:41:44.333Z"
+}

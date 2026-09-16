@@ -1,0 +1,33 @@
+{
+  "balances": {
+    "ethWei": "0",
+    "usdc": "0",
+    "minCollateral": "10000000"
+  },
+  "meta": {
+    "blockNumber": "504624611",
+    "chainId": 42161,
+    "walletA": "0xef0752df6387248B897F3A59A180af42D801960d",
+    "fixture": "contracts/test/fixtures/gmx-wallet-a-short-multicall.json",
+    "msgValue": "1000000000000000",
+    "router": "0x7dE39FF2e232A2203196788d37e234cF8F1b83f1",
+    "forkMode": false
+  },
+  "telemetry": {
+    "acceptablePrice": "2483817249000000000000000000000000",
+    "executionFee": "1000000000000000",
+    "collateral": "10000000",
+    "sizeDeltaUsd": "10000000000000000000000000000000",
+    "isLong": false,
+    "multicallLegs": 3,
+    "router": "0x7dE39FF2e232A2203196788d37e234cF8F1b83f1"
+  },
+  "simulate": {
+    "ok": false,
+    "error": "INSUFFICIENT_USDC"
+  },
+  "audit": {
+    "isLong": false,
+    "acceptablePrice": "2483817249000000000000000000000000"
+  }
+}

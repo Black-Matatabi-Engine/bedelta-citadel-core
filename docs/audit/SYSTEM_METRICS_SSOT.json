@@ -1,0 +1,163 @@
+{
+  "schema": "silvervine.system-metrics.ssot.v1",
+  "protocol": "SliverVine Protocol",
+  "tagline": "SliverVine ExoMesh — Dual-Plug Pre-Consensus Intent Firewall for AI Agents & Retail on Arbitrum",
+  "version": "v1.0",
+  "version_name": "BeDelta Living Water v1.0",
+  "version_symbol": "BeΔ Living Water",
+  "ssrc_codename": "SSRC",
+  "ssrc_full_name": "Slivervine Stylus ReflexCore",
+  "generatedAt": "2026-09-15T04:52:00.000Z",
+  "badges": {
+    "vitest": {
+      "test_files_passed": 243,
+      "total_tests_passed": 1123,
+      "status": "100% PASS"
+    },
+    "dune_telemetry": {
+      "architecture": "dual_dashboard",
+      "dashboards": [
+        {
+          "id": "operational_shield",
+          "slug": "slivervine-protocol",
+          "url": "https://dune.com/silvervinelabs/slivervine-protocol",
+          "role": "Operational Shield",
+          "export_command": "pnpm export:dune",
+          "csv_ssot": "docs/audit/exomesh-dune-telemetry.csv",
+          "mode": "daily_cumulative_append",
+          "features": [
+            "live_operational_volume",
+            "gas_saved_usd",
+            "fail_closed_intercept_donut",
+            "simulated_loss_prevented_usd"
+          ]
+        },
+        {
+          "id": "sepsb_stress_matrix",
+          "slug": "slivervine-sepsb-stress",
+          "url": "https://dune.com/silvervinelabs/slivervine-sepsb-stress",
+          "role": "SEPSB Quant Matrix",
+          "export_command": "pnpm audit:sepsb",
+          "csv_ssot": "docs/audit/sepsb-stress-telemetry.csv",
+          "true_positive_rate_pct": 100,
+          "false_positive_rate_pct": 0,
+          "venues": ["gmx", "pendle", "usdai", "hyperliquid", "variational"],
+          "reflex_latency_cap_us": 50,
+          "hardware_context": "Intel(R) Core(TM) Ultra 7 155H"
+        }
+      ]
+    },
+    "historical_backtest": {
+      "tier1_scenarios_passed": "3/3 FAIL_CLOSED",
+      "tier2_adversarial_intercepts": "2/2 (MEV + Honeypot RPC)",
+      "tier3_monte_carlo_runs": 10000,
+      "tier3_intercept_rate": "100%",
+      "reflex_latency_p50_us": 0.43,
+      "total_loss_prevented_usd": 1326412.79,
+      "ssot": "docs/audit/HISTORICAL_BLACKSWAN_BACKTEST_SSOT.json"
+    },
+    "hot_path": {
+      "alloc": "<16 KiB",
+      "iterations": "10k"
+    },
+    "stylus_probe": {
+      "version": "V2.0",
+      "passed": 9,
+      "total": 9,
+      "stage": "Roadmap"
+    },
+    "coverage": {
+      "target": "risk-control.ts",
+      "percentage": "100%"
+    },
+    "chaos_matrix": {
+      "cases": 255,
+      "total": 255,
+      "mode": "Fail-Closed"
+    },
+    "latency": {
+      "e2e_p50_us": 106,
+      "reflex_p50_us": 15
+    },
+    "typescript": {
+      "errors": 0
+    },
+    "codebase_freeze": {
+      "active": true,
+      "phase": 4,
+      "frozenAt": "2026-09-14"
+    },
+    "license": "BUSL-1.1",
+    "arbitrum": {
+      "status": "Sepolia Verified",
+      "target_chain_id": 42161,
+      "readiness": "Ready"
+    }
+  },
+  "bundle_telemetry": {
+    "rawKiB": 166.51,
+    "gzipKiB": 58.72,
+    "wranglerTotalUploadKiB": 166.51,
+    "wranglerTotalGzipKiB": 58.72,
+    "limitKiB": 150,
+    "leanWarnRawKiB": 285,
+    "leanWarnGzipKiB": 71,
+    "pass": true
+  },
+  "protocol_scope": {
+    "total_venues": 5,
+    "chaos_cases": 255,
+    "historical_backtest_runs": 10000,
+    "telemetry_rows": 264
+  },
+  "system_architecture": {
+    "capabilities": {
+      "x402_compatibility": "ORTHOGONAL_PRE_CONSENSUS_SAFEGUARD"
+    },
+    "tags": [
+      "pre_consensus_risk_engine",
+      "v8_wasm_isolate",
+      "x402_orthogonal",
+      "erc7683_orthogonal",
+      "agentic_commerce_safeguard"
+    ]
+  },
+  "benchmark_environment": {
+    "detectedAt": "2026-09-15T03:25:27.710Z",
+    "platform": "linux",
+    "arch": "x64",
+    "nodeVersion": "v22.23.1",
+    "cpuModel": "Intel(R) Core(TM) Ultra 7 155H",
+    "cpuCores": 22,
+    "cpuSpeedMhz": 0,
+    "totalMemoryMb": 7694
+  },
+  "sepsb_benchmark": {
+    "ssot": "docs/audit/SEPSB_BENCHMARK_SSOT.json",
+    "corpus_snapshot": "docs/audit/SEPSB_CORPUS_SNAPSHOT.json",
+    "stress_telemetry_csv": "docs/audit/sepsb-stress-telemetry.csv",
+    "benchmark_title": "SliverVine ExoMesh Pre-Consensus Security Benchmark (SEPSB)",
+    "standard_version": "SEPSB-v1.0-Santenmoku",
+    "verdict": "PASS",
+    "truePositiveRatePct": 100,
+    "falsePositiveRatePct": 0,
+    "reflexLatencyP50Us": 0.233,
+    "reflexLatencyP99Us": 2.299,
+    "venue_count": 5,
+    "venue_reflex_latency_cap_us": 50,
+    "hardware_context": "Intel(R) Core(TM) Ultra 7 155H"
+  },
+  "onchain_indexer_pipeline": {
+    "status": "INTERFACE_READY",
+    "script": "scripts/fetch-onchain-dune-telemetry.ts",
+    "command": "pnpm export:dune:onchain",
+    "csv_ssot": "docs/audit/onchain-dune-telemetry.csv",
+    "gate_contract": "0xb174118bc0b84e8d6d59eef2339e29bf7fcf8bf1",
+    "networks": ["arbitrum_one", "arbitrum_sepolia"],
+    "indexed_events": ["IntentAttested", "SoilResistanceTripped"],
+    "on_chain_event_aliases": {
+      "SoilResistanceTripped": "RiskTripBlocked"
+    },
+    "readiness_note": "Pre-consensus ready to index live mainnet IntentAttested and SoilResistanceTripped logs post-grant"
+  }
+}

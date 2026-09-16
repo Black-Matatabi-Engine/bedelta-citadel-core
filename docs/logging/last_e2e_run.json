@@ -1,0 +1,55 @@
+{
+  "event": "GRANT_E2E_CITADEL_DEMO",
+  "mode": "dry-run",
+  "pipelineSteps": 4,
+  "steps": {
+    "1_verifyAgentIntent": {
+      "ok": true,
+      "wasmUsed": true,
+      "deadmanOk": true,
+      "wasmHotPathUs": 0.66,
+      "wasmP50Us": 0.76,
+      "wasmP50BandStatus": "FAST_LOCAL",
+      "nodeE2eRttUs": 5149.93
+    },
+    "2_robinhoodUnidirectionalEscort": {
+      "ok": true,
+      "outboundOk": true,
+      "inboundBlocked": true,
+      "capitalLabel": "AML_INBOUND_TO_ROBINHOOD_BLOCKED"
+    },
+    "3_gmxGmPoolDeposit": {
+      "ok": true,
+      "gmDepositUsd": 2400,
+      "ethLongExposureUsd": 1200,
+      "underweightSide": "short",
+      "uiFeeBps": 10,
+      "uiFeeReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
+      "payloadRef": "sha256:8242e57f70d8fd71"
+    },
+    "4_hlSessionKeyHedge": {
+      "ok": true,
+      "dryRun": true,
+      "notionalUsd": 1200,
+      "ethShortSize": "0.3463",
+      "oid": null,
+      "detail": "SIMULATED_SESSION_KEY_HEDGE"
+    }
+  },
+  "capitalInvariant": {
+    "initialUsd": 2500,
+    "finalUsd": 2500,
+    "principalUsd": 2500,
+    "lostUsd": 0,
+    "token": "USDC",
+    "gmxGmDepositUsd": 2400,
+    "hlMarginUsd": 100,
+    "gmxLongExposureUsd": 1200,
+    "hlShortExposureUsd": 1200,
+    "builderFeeUsd": 2.4,
+    "protocolTreasuryRebateUsd": 2.4,
+    "protocolTreasuryReceiver": "0xc9BddABD80982d2201376195DD9B85fb7951546f",
+    "deltaNetEth": "0.0000"
+  },
+  "timestamp": "2026-09-15T08:56:09.264Z"
+}
